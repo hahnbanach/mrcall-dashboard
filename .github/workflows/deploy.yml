@@ -1,0 +1,138 @@
+# Build and deploy the dashboard to Scaleway Object Storage.
+#
+# A tag names both the release and where it goes, so the same commit can be sent
+# to one environment and later to the next without merging anything:
+#
+#   v2.0.24-test       -> mrcall-dashboard-test
+#   v2.0.24-beta       -> mrcall-dashboard-beta
+#   v2.0.24-production -> mrcall-dashboard
+#
+# A bare v2.0.24 marks a release and deploys nothing, by design: it never matches
+# the trigger below, so no run is started at all.
+#
+# Secrets live on the environments, not on the repository, so a run only ever has
+# the credentials of the environment it is deploying to. A mistake in this file
+# cannot reach production's keys from a test tag, and a leaked test key cannot
+# write to the production bucket.
+#
+# Each environment (test, beta, production) holds:
+#   SCW_ACCESS_KEY / SCW_SECRET_KEY : Scaleway API keys, scoped to that bucket
+#   ENV_FILE                        : full contents of that .env file. Not in git,
+#     see .env.example. vue-cli inlines every VUE_APP_* value into the public
+#     bundle, so it holds configuration, never secrets.
+#
+# This repository is public. Secrets are encrypted, never readable from the source,
+# and never given to workflows triggered from forks. This one runs on tag pushes,
+# which need write access, and does not use pull_request_target.
+
+name: deploy
+
+on:
+  push:
+    tags:
+      - 'v*-test'
+      - 'v*-beta'
+      - 'v*-production'
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  # One deploy at a time per environment; two tags for the same one queue up.
+  group: deploy-${{ github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    # Derived from the tag rather than from a step, because the environment is bound
+    # when the job starts: it is what decides which secrets exist at all.
+    environment: >-
+      ${{ endsWith(github.ref_name, '-production') && 'production'
+       || endsWith(github.ref_name, '-beta') && 'beta'
+       || 'test' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Resolve environment from the tag
+        id: meta
+        run: |
+          ref="${GITHUB_REF_NAME}"
+          case "$ref" in
+            v*-test)       mode=test;       bucket=mrcall-dashboard-test ;;
+            v*-beta)       mode=beta;       bucket=mrcall-dashboard-beta ;;
+            v*-production) mode=production; bucket=mrcall-dashboard ;;
+            *) echo "not a deploy tag: $ref" >&2; exit 1 ;;
+          esac
+          version="${ref#v}"
+          version="${version%-test}"; version="${version%-beta}"; version="${version%-production}"
+          if ! printf '%s' "$version" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+            echo "unexpected version '$version' from tag '$ref'" >&2; exit 1
+          fi
+          echo "mode=$mode"     >> "$GITHUB_OUTPUT"
+          echo "bucket=$bucket" >> "$GITHUB_OUTPUT"
+          echo "tag=$ref version=$version mode=$mode bucket=$bucket"
+
+      - name: Write the environment file
+        env:
+          ENV_CONTENT: ${{ secrets.ENV_FILE }}
+        run: |
+          if [ -z "$ENV_CONTENT" ]; then
+            echo "ENV_FILE is not set on this environment" >&2
+            exit 1
+          fi
+          printf '%s\n' "$ENV_CONTENT" > ".env.${{ steps.meta.outputs.mode }}"
+          echo "wrote .env.${{ steps.meta.outputs.mode }} ($(wc -l < .env.${{ steps.meta.outputs.mode }}) lines)"
+
+      - run: npm install
+
+      - name: Build
+        # --mode picks the .env file. NODE_ENV picks the optimisation level, and
+        # they are not the same knob: Vue CLI derives NODE_ENV from the mode name
+        # and only recognises "production" and "test", so --mode beta silently
+        # resolved to development. Every optimisation is gated on the literal
+        # string "production", so test and beta were shipping unminified, unhashed,
+        # uncompressed bundles with CSS inlined into the JS, and test additionally
+        # skipped splitChunks entirely (app.js:42 keys that off NODE_ENV === 'test'),
+        # which is how a 19MB single /js/app.js with readable source comments ended
+        # up being served to anyone who visited the test or beta site. Production
+        # was always correct, because there --mode and NODE_ENV happen to agree.
+        #
+        # This env block must stay on the step. At job level it would also reach
+        # `npm install` above, which then omits devDependencies, and @vue/cli-service,
+        # webpack, less-loader and vue-cli-plugin-compression all live there.
+        #
+        # --modern was dropped: verified to produce identical output here.
+        env:
+          NODE_ENV: production
+          BABEL_ENV: production
+        run: ./node_modules/.bin/vue-cli-service build --mode "${{ steps.meta.outputs.mode }}" --dest dist
+
+      # sync, not "rm --recursive" then "cp". The old pipeline emptied the bucket and
+      # then refilled it, so for the length of a deploy the site was a 404. sync
+      # writes in place and never empties it.
+      #
+      # Nothing else writes to these buckets: the SDK is consumed from npm and has
+      # no CDN copy, so --delete can own the whole prefix.
+      - name: Deploy
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.SCW_ACCESS_KEY }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.SCW_SECRET_KEY }}
+          AWS_DEFAULT_REGION: fr-par
+        run: |
+          # `gh secret set` with nothing on stdin stores an empty string rather than
+          # failing, so a secret can exist and be blank. Without this check the AWS
+          # CLI just says "Unable to locate credentials", which reads like a missing
+          # secret rather than an empty one.
+          if [ -z "$AWS_ACCESS_KEY_ID" ] || [ -z "$AWS_SECRET_ACCESS_KEY" ]; then
+            echo "SCW_ACCESS_KEY or SCW_SECRET_KEY is empty on the '${{ steps.meta.outputs.mode }}' environment" >&2
+            exit 1
+          fi
+          aws s3 sync dist/ "s3://${{ steps.meta.outputs.bucket }}" \
+            --delete \
+            --endpoint-url https://s3.fr-par.scw.cloud

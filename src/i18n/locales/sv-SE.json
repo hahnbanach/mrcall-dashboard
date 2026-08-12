@@ -1,0 +1,1742 @@
+{
+  "language": "Språk",
+  "locale": {
+    "en-US": "Engelska",
+    "it-IT": "Italienska",
+    "es-ES": "Spanska",
+    "fr-FR": "Franska",
+    "de-DE": "Tyska",
+    "nl-NL": "Nederländska",
+    "sv-SE": "Svenska",
+    "da-DK": "Danska",
+    "nb-NO": "Norska",
+    "fi-FI": "Finska",
+    "et-EE": "Estniska",
+    "el-GR": "Grekiska"
+  },
+  "languages": {
+    "italian": "Italienska",
+    "englishGB": "Engelska (Storbritannien)",
+    "englishUS": "Engelska (USA)",
+    "spanishES": "Spanska (Spanien)",
+    "spanishUS": "Spanska (USA)",
+    "frenchFR": "Franska (Frankrike)",
+    "germanDE": "Tyska (Tyskland)",
+    "portuguesePT": "Portugisiska (Portugal)",
+    "portugueseBR": "Portugisiska (Brasilien)",
+    "norwegianNO": "Norska",
+    "swedishSW": "Svenska",
+    "finnishFI": "Finska",
+    "greekGR": "Grekiska",
+    "turkeyTK": "Turkiska",
+    "dutchNL": "Nederländska",
+    "danishDK": "Danska",
+    "estonianEE": "Estniska"
+  },
+  "isoAlpha2Country": {
+    "IT": "Italien",
+    "US": "Förenta staterna",
+    "GB": "Storbritannien",
+    "ES": "Spanien",
+    "FR": "Frankrike",
+    "PT": "Portugal",
+    "DE": "Tyskland",
+    "CH": "Schweiz",
+    "AU": "Australien",
+    "NO": "Norge",
+    "BR": "Brasilien",
+    "IN": "Indien",
+    "CA": "Kanada",
+    "SW": "Sverige",
+    "FI": "Finland",
+    "GR": "Grekland",
+    "TK": "Turkiet",
+    "NL": "Nederländerna",
+    "DK": "Danmark",
+    "EE": "Estland"
+  },
+  "days": {
+    "monday": "Måndag",
+    "tuesday": "Tisdag",
+    "wednesday": "Onsdag",
+    "thursday": "Torsdag",
+    "friday": "Fredag",
+    "saturday": "Lördag",
+    "sunday": "Söndag"
+  },
+  "timeSlots": {
+    "invalid": "Ogiltig specifikation, kontrollera intervallen, det får inte finnas några överlappningar."
+  },
+  "utils": {
+    "phonecompanies": {
+      "other": "Annan operatör"
+    },
+    "common": {
+      "or": "eller"
+    }
+  },
+  "widgets": {
+    "tuplesvariables": {
+      "removeitem": "Ta bort objekt",
+      "additem": "Nytt objekt"
+    },
+    "agentSkills": {
+      "loading": "Laddar tillgängliga skills...",
+      "noSkills": "Inga skills tillgängliga. Ladda upp beslutstabellen Agent Skills först.",
+      "configuration": "Konfiguration",
+      "phasePrefetch": "Före samtal",
+      "phaseDuring": "Under samtal",
+      "phaseFinal": "Efter samtal",
+      "phasePrefetchHint": "Körs innan samtalet startar",
+      "phaseDuringHint": "Tillgänglig som verktyg under samtalet",
+      "phaseFinalHint": "Körs när samtalet avslutats",
+      "skills": "skills",
+      "addSkill": "Lägg till skill...",
+      "addAnother": "lägg till en till",
+      "removeSkill": "Ta bort",
+      "noSkillsInPhase": "Inga skills konfigurerade i den här fasen",
+      "oauthConnect": "Anslut",
+      "oauthConnected": "Ansluten",
+      "oauthDisconnect": "Koppla från",
+      "addPair": "Lägg till header",
+      "skillUnavailable": "Den här skillen finns inte längre på servern. Ta bort den eller kontakta supporten.",
+      "oauthScopeUnavailable": "Den här integrationen kräver en Google-behörighet som MrCall inte får begära. Kontakta supporten."
+    }
+  },
+  "components": {
+    "accountTitle": "Konto",
+    "account": {
+      "createAssistantSubtitle": "Skapa en ny röstassistent för ett annat telefonnummer eller företag.",
+      "securitySectionTitle": "Säkerhet",
+      "integrationsSectionTitle": "Integrationer",
+      "dangerZoneSectionTitle": "Riskzon",
+      "mcpConnectors": {
+        "title": "MCP-anslutningar",
+        "description": "Koppla Claude eller en annan MCP-kompatibel AI-klient till ditt MrCall-konto. Generera autentiseringsuppgifter med behörigheter per anslutning.",
+        "manage": "Hantera MCP-anslutningar"
+      }
+    },
+    "zylchChat": {
+      "inputPlaceholder": "Skriv ett meddelande eller kommando...",
+      "welcome": "Chatta med din assistentkonfigurator",
+      "welcomeDescription": "Beskriv vad du vill ändra så uppdaterar jag din assistents inställningar. Skriv bara naturligt!",
+      "exampleCommands": "Exempelkommandon:",
+      "cmdSync": "/sync - Synkronisera data",
+      "cmdGaps": "/gaps - Hitta luckor i schemat",
+      "cmdArchive": "/archive - Arkivera konversationer",
+      "cmdHelp": "/help - Visa tillgängliga kommandon"
+    },
+    "directVoice": {
+      "talkToAssistant": "Prata med assistenten",
+      "connecting": "Ansluter...",
+      "hangup": "Lägg på",
+      "ending": "Avslutar..."
+    },
+    "navbar": {
+      "login": "Logga in",
+      "subscribe": "Prenumerera",
+      "assistants": "Min assistent",
+      "account": "Mitt konto",
+      "logout": "Logga ut",
+      "closeWebview": "Stäng",
+      "createAssistant": "Skapa ny assistent",
+      "resendVerificationEmail": "Skicka verifieringslänken igen",
+      "resellerDashboard": "Återförsäljarpanel",
+      "invitationCodes": "Inbjudningskoder",
+      "resellerManagement": "Återförsäljarhantering",
+      "userManagement": "Användarhantering",
+      "agentTemplates": "Agentmallar"
+    },
+    "businessphonenumberverification": {
+      "businessPhoneNumberTitle": "Angav du fel nummer? Du kan ändra det",
+      "phoneNumberCountrySelectorPlaceholder": "Landskod",
+      "phoneNumberCountrySelectorError": "Fel",
+      "phoneNumberPhoneInputPlaceholder": "Telefonnummer",
+      "phoneNumberPhoneInputExample": "Exempel: ",
+      "businessPhoneNumberIsNotValid": "Kontrollera att du har angett ditt telefonnummer korrekt",
+      "settingsSuccessfullySaved": "Inställningarna har sparats",
+      "errorSavingSettings": "Det uppstod problem vid sparandet",
+      "activationBannerTitle": "Aktivera och få ett telefonnummer",
+      "activationBannerSubtitle": "1 veckas gratis provperiod!",
+      "activationBannerButton": "Aktivera nu",
+      "talkToYourAssistant": "Prata med din assistent",
+      "changeBusinessPhoneNumberButtonLabel": "Ändra",
+      "gotoBusinessesCustomize": "Anpassa",
+      "justVerifiedTheNumberButton": "Jag har ringt",
+      "assistantWasCreated": "Verifiera ditt telefonnummer och lämna ett meddelande.",
+      "callTheNumberInstructions1": "Det här är bara en testassistent, inget behöver installeras eller konfigureras på din telefon.",
+      "callTheNumberInstructions2a": "Ring det här numret från ditt telefonnummer",
+      "callTheNumberInstructions2b": "och ta emot aviseringen via e-post",
+      "callTheNumberInstructions3": "Klicka på 'Jag har ringt' och börja konfigurera din assistent.",
+      "afterNumberVerificationTitle1": "Bra gjort!",
+      "afterNumberVerificationTitle2": "Nu kan du börja konfigurera din assistent.",
+      "seemsYouDidntCall": "Det verkar som att du inte har ringt för nummerverifiering ännu.",
+      "issuesContactCustomerService": "Ett fel uppstod, vänligen kontakta kundtjänst på customer.service@mrcall.it"
+    },
+    "businesscreatesimple": {
+      "nicknameTitlePrivate": "Ditt namn",
+      "nicknameTitleBusiness": "Ditt företagsnamn",
+      "businessPhoneNumberTitle": "Telefonnummer där vi kan nå dig",
+      "selectAssistantLanguage": "Välj språket som din assistent ska tala",
+      "whichCustomerAreYou": "Vilken typ av MrCall-användare är du?",
+      "templateHighLevelDescriptionPrivate": "Privat användarprofil. Obs: assistenten skapas på våra servrar. Inget installeras på din telefon",
+      "templateHighLevelDescriptionBusiness": "Företagsanvändarprofil, utan VoIP-växel. Obs: assistenten skapas på våra servrar. Inget installeras på din telefon",
+      "templateHighLevelDescriptionBusinessPlus": "Företagsanvändarprofil med VoIP-växel. Obs: assistenten skapas på våra servrar. Inget installeras på din telefon",
+      "searchYourBusinessTitle": "Koppla din assistent till Google Business",
+      "searchYourBusinessSubtitle": "Hitta ditt företag, fortsätt med följande fält",
+      "searchYourBusinessNoResultFound": "Inga resultat hittades, du kan fortfarande konfigurera din assistent",
+      "searchYourBusinessPlaceholder": "Ange namn och adress för ditt företag",
+      "searchYourBusinessButtonLabel": "Sök",
+      "selectGoogleBusinessItemButtonLabel": "Använd dessa uppgifter",
+      "searchBusinessResultLabelName": "Namn",
+      "searchBusinessResultLabelAddress": "Adress",
+      "phoneNumberCountrySelectorPlaceholder": "Landskod",
+      "phoneNumberCountrySelectorError": "Fel",
+      "phoneNumberPhoneInputPlaceholder": "Telefonnummer",
+      "phoneNumberPhoneInputExample": "Exempel: ",
+      "searchBusinessResultLabelBusinessPhoneNumber": "Telefon",
+      "businessPhoneNumberIsNotValid": "Kontrollera att du har angett ditt telefonnummer korrekt",
+      "nicknameIsNotValid": "Kontrollera att du har angett ditt smeknamn korrekt",
+      "createAssistantButton": "Skapa assistenten"
+    },
+    "businesses": {
+      "addFieldMatch": "Sök",
+      "createNewBusiness": "Skapa en assistent",
+      "editAssistant": "Konfigurera assistent",
+      "onboardinConfigureAndTest": "Gör ett testsamtal",
+      "onboardingActivateAssistant": "Aktivera den nu!",
+      "planSubscription": "Betalningsmetoder och prenumerationer",
+      "startFreeTrial": "Starta gratis provperiod",
+      "activationBanner": {
+        "title": "Aktivera din assistent",
+        "subtitle": "Anslut din assistent till ett telefonnummer eller din VoIP PBX och låt den svara på dina samtal.",
+        "cta": "Aktivera"
+      },
+      "newAssistantCreated": "Utmärkt! Din nya assistent har skapats.",
+      "numberNotAssignedContactSupport": "Permanent nummer ej tilldelat, vänligen kontakta supporten",
+      "businessPhoneNumberVerified": "inte verifierat, ring din assistent för att verifiera det",
+      "plan": "Betalningar",
+      "invoicingButtonLabel": "Fakturering",
+      "partnerProgramButtonLabel": "Presentera oss för en vän",
+      "gotoCallForwardingInstructionsButtonLabel": "Konfigurera vidarekoppling",
+      "conversationsViewButtonLabel": "Visa meddelanden",
+      "form": {
+        "businessId": "Företagets id",
+        "nickname": "Smeknamn",
+        "email": "E-post",
+        "plan": "Assistent",
+        "businessPhoneNumber": "Ditt telefonnummer",
+        "serviceNumber": "Din assistents nummer",
+        "trial": "Återstående dagar av din provperiod",
+        "renewalDateTime": "Datum för nästa förnyelse",
+        "subscriptionStatus": "Prenumerationsstatus",
+        "subscriptionStatusLabels": {
+          "ACTIVE": "Aktiv",
+          "CANCELED": "Avbruten",
+          "EXPIRED": "Utgången",
+          "INCOMPLETE": "Ofullständig",
+          "INCOMPLETE_EXPIRED": "Ofullständig och utgången",
+          "ONBOARDING": "Väntar på aktivering",
+          "PAST_DUE": "Betalning förfallen",
+          "SUSPENDED": "Uppskjuten",
+          "FREE": "Gratis prenumeration",
+          "TEST": "Väntar på aktivering",
+          "EXPIRING": "Utgår snart",
+          "EXTERNAL": "Hanteras av kundtjänst",
+          "TRIALING": "Provperiod",
+          "UNPAID": "Obetald",
+          "UNKNOWN": "Okänd"
+        },
+        "resourcesCallCredit": "Återstående minuter",
+        "resourcesCallCount": "Tillgängliga samtal",
+        "resourcesSmsCount": "Tillgängliga SMS"
+      },
+      "analyticsButtonLabel": "Analys",
+      "platformAnalyticsButtonLabel": "Plattformsanalys",
+      "contactsButtonLabel": "Kontakter",
+      "moreActions": "Fler åtgärder",
+      "health": {
+        "phoneVerified": "Telefon verifierad",
+        "phoneNotVerified": "Telefon ej verifierad",
+        "planActive": "Plan aktiv",
+        "noPlan": "Ingen aktiv plan",
+        "hasMinutes": "Tillgängliga minuter",
+        "noMinutes": "Inga minuter kvar"
+      },
+      "selectButtonTooltip": {
+        "enabled": "Åtkomst till assistentens anpassning",
+        "disabled": "Anpassning av din assistent är inaktiverad, vänligen verifiera ditt telefonnummer"
+      }
+    },
+    "contacts": {
+      "title": "Kontakter",
+      "addContact": "Lägg till kontakt",
+      "editContact": "Redigera kontakt",
+      "deleteAll": "Ta bort alla",
+      "save": "Spara",
+      "cancel": "Avbryt",
+      "actions": "Åtgärder",
+      "search": "Sök",
+      "searchPlaceholder": "Sök efter namn, telefon eller e-post...",
+      "searchContact": "Sök kontakt",
+      "noContactFound": "Ingen kontakt hittades för detta nummer",
+      "recentContacts": "Nyligen tillagda kontakter",
+      "bulkUpload": "Massuppladdning",
+      "bulkUploadDescription": "Klistra in en JSON-array med kontakter nedan. Varning: detta ersätter ALLA befintliga kontakter.",
+      "bulkUploadSubmit": "Ladda upp kontakter",
+      "provider": "Källa",
+      "providerBusiness": "Dina kontakter",
+      "providerHb": "MrCall",
+      "importContact": "Importera kontakt",
+      "downloadVcard": "Ladda ner kontaktkort",
+      "blockContact": "Blockera kontakt",
+      "unblockContact": "Avblockera kontakt",
+      "confirmDeleteTitle": "Bekräfta borttagning",
+      "confirmDeleteMessage": "Är du säker på att du vill ta bort kontakten {name}?",
+      "confirmDeleteAllMessage": "Är du säker på att du vill ta bort ALLA kontakter? Denna åtgärd kan inte ångras.",
+      "form": {
+        "displayName": "Visningsnamn",
+        "firstName": "Förnamn",
+        "lastName": "Efternamn",
+        "nickname": "Smeknamn",
+        "phone": "Telefon",
+        "phonePlaceholder": "+1234567890",
+        "email": "E-post",
+        "emailPlaceholder": "email{'@'}example.com",
+        "company": "Företag",
+        "notes": "Anteckningar",
+        "type": "Typ",
+        "addPhone": "Lägg till telefon",
+        "addEmail": "Lägg till e-post"
+      },
+      "toast": {
+        "success": "Lyckades",
+        "error": "Fel",
+        "validationError": "Validering",
+        "nameOrPhoneRequired": "Ange minst ett namn eller ett telefonnummer",
+        "contactCreated": "Kontakten har skapats",
+        "contactUpdated": "Kontakten har uppdaterats",
+        "contactDeleted": "Kontakten har tagits bort",
+        "allContactsDeleted": "Alla kontakter har tagits bort",
+        "saveFailed": "Det gick inte att spara kontakten",
+        "deleteFailed": "Det gick inte att ta bort kontakten",
+        "searchFailed": "Det gick inte att söka kontakter",
+        "invalidJson": "Ogiltigt JSON-format",
+        "jsonMustBeArray": "JSON måste vara en array av kontakter",
+        "bulkUploadSuccess": "Kontakter har laddats upp",
+        "bulkUploadFailed": "Det gick inte att ladda upp kontakter",
+        "contactBlocked": "Kontakten har blockerats",
+        "contactUnblocked": "Kontakten har avblockerats",
+        "blockFailed": "Det gick inte att blockera/avblockera kontakten",
+        "contactImported": "Kontakten har importerats"
+      }
+    },
+    "business": {
+      "configuration": {
+        "businessNotFound": "Ingen assistent hittades",
+        "errorRetrievingDataMessage": "Det uppstod fel vid sparande av inställningarna"
+      },
+      "saveButtonText": "Spara",
+      "settingsSuccessfullySaved": "Inställningarna har sparats korrekt",
+      "errorSavingSettings": "Det uppstod fel vid sparande av inställningarna",
+      "yourAssistantIsReadyPleaseTry": "Din assistent är redo, testa den innan du fortsätter",
+      "unableToSave": "Det gick inte att spara inställningarna",
+      "mandatoryParameterMissing": "Obligatorisk parameter ej angiven: {param}",
+      "tabPanelYourProfile": "Din profil",
+      "tabPanelContacts": "Kontakter",
+      "tabPanelCustomizeYourAssistant": "Anpassa assistenten",
+      "additionalParameters": {
+        "password": {
+          "legend": "Lösenord",
+          "tooltip": "Ändra lösenord"
+        }
+      },
+      "voiceGender": {
+        "MALE": "Man",
+        "FEMALE": "Kvinna"
+      },
+      "onboardingDialog": {
+        "editParametersButtonText": "Jag vill ändra",
+        "continueToPaymentButtonText": "Jag gillar det som det är."
+      },
+      "configureWithAI": "Konfigurera med AI",
+      "aladminAI": "AladMin AI",
+      "configureViaChat": "Konfigurera via chatt",
+      "talkToYourAssistant": "Prata med din assistent",
+      "actionPanelIntro": "Konfigurera och testa din assistent",
+      "howToCard1Title": "Hur svarar min assistent?",
+      "howToCard1Text": "MrCall presenterar sig och känner igen uppringaren på numret. Vill du ändra det? Klicka på 'Konfigurera med AI' och beskriv vad du önskar.",
+      "howToCard2Title": "Hur sätter jag den i drift?",
+      "howToCard2Text": "Aktivera en plan, få ett nummer och vidarekoppla samtalen från din telefon till MrCall. Med planen Professional kan du koppla den till din VoIP-växel.",
+      "howToCard3Title": "Kan jag byta röst?",
+      "howToCard3Text": "Ja! Under 'Röstinställningar' väljer du mellan manlig och kvinnlig röst. MrCall talar det språk du valde vid konfigurationen.",
+      "howToCard4Title": "Kan MrCall ta emot bokningar?",
+      "howToCard4Text": "Absolut. Under 'Bokningar' anger du lediga tider och kopplar din kalender. MrCall hanterar tidsbokningarna åt dig.",
+      "howToCard5Title": "Hur får jag aviseringar?",
+      "howToCard5Text": "Varje samtal ger en avisering via e-post med en sammanfattning. Under 'Dina aviseringar' väljer du vad du vill få och hur.",
+      "howToCard6Title": "Kan jag lägga till frågor och svar?",
+      "howToCard6Text": "Under 'Frågor och svar' lär du MrCall hur den ska svara om öppettider, priser och tjänster. Ju mer information du lägger till, desto mer träffsäker blir den.",
+      "howToCard7Title": "Vad händer när ni har stängt?",
+      "howToCard7Text": "Ange dina stängningsdagar så informerar MrCall automatiskt de som ringer och föreslår när de kan höra av sig igen.",
+      "howToCard8Title": "Kan jag använda en fast text?",
+      "howToCard8Text": "Stäng av MrCall AI så läser assistenten upp en fast text som du skriver. Mindre smart, men du har full kontroll över varje ord.",
+      "activateMrCallCta": "Aktivera MrCall",
+      "needHelp": "Behöver du hjälp?",
+      "activationBannerTitle": "Aktivera och få ett telefonnummer",
+      "activationBannerSubtitle": "1 veckas gratis provperiod!",
+      "activationBannerButton": "Aktivera nu"
+    },
+    "changepassword": {
+      "changePasswordTitle": "Ändra lösenord",
+      "changePasswordSubtitle": "Skriv in det nya lösenordet",
+      "operationSuccess": "Lösenordet har ändrats",
+      "operationSuccessExtended": "Du kan använda det nya lösenordet för att logga in. Du kan också alltid begära en magisk länk via e-post för att logga in utan lösenord.",
+      "operationFailed": "Ändra lösenord",
+      "operationFailedExtended": "Det uppstod problem med att ändra lösenordet",
+      "submitButton": "Ändra",
+      "formText": {
+        "pickAPassword": "Lösenordsstyrka",
+        "suggestions": "Tips",
+        "oneLowecase": "Minst en liten bokstav",
+        "oneUppercase": "Minst en stor bokstav",
+        "oneNumeric": "Minst ett alfanumeriskt tecken",
+        "oneSymbol": "Minst en symbol",
+        "atLeastNChars": "Minst 8 tecken"
+      }
+    },
+    "changeemail": {
+      "changeEmailTitle": "Ändra e-post",
+      "changeEmailSubtitle": "Skriv in den nya e-postadressen",
+      "operationSuccess": "Begäran om e-poständring har skickats",
+      "operationSuccessExtended": "Vi har skickat dig en länk för att verifiera den nya e-postadressen, klicka på länken för att bekräfta den nya adressen.",
+      "operationFailed": "Ändra e-post",
+      "operationFailedExtended": "Det uppstod problem med att ändra e-postadressen",
+      "submitButton": "Ändra"
+    },
+    "conversations": {
+      "downloadDataButtonLabel": "Ladda ner",
+      "noMessages": "Inga meddelanden ännu",
+      "noMessagesDescription": "När du tar emot samtal visas din konversationshistorik här.",
+      "filterTitle": "Filter och export",
+      "dateRangeLabel": "Datumintervall",
+      "dateRangePlaceholder": "Välj datumintervall",
+      "pageFilterLabel": "Filtrera denna sida",
+      "pageFilterPlaceholder": "Skriv för att filtrera resultat på denna sida...",
+      "exportLabel": "Exportera data",
+      "viewModeLabel": "Meddelandevy",
+      "expandedView": "Fullständiga meddelanden",
+      "collapsedView": "Kompakt vy",
+      "hideReadLabel": "Lästa meddelanden",
+      "hideReadOn": "Dolda",
+      "hideReadOff": "Synliga",
+      "showMore": "Visa mer",
+      "showLess": "Visa mindre",
+      "duration": "{minutes}m {seconds}s",
+      "unknownContact": "Okänd uppringare",
+      "justNow": "Just nu",
+      "minutesAgo": "{count} min sedan",
+      "hoursAgo": "{count} timmar sedan",
+      "daysAgo": "{count} dagar sedan",
+      "loading": "Laddar konversationer...",
+      "table": {
+        "body": "Meddelande",
+        "audioFile": "Ljud",
+        "audioNotSupported": "Din webbläsare stöder inte ljudelement",
+        "contactName": "Kontakt",
+        "contactNumber": "Uppringarens nummer"
+      },
+      "audio": {
+        "play": "Spela upp ljud",
+        "pause": "Pausa ljud"
+      },
+      "views": {
+        "inbox": "Inkorg",
+        "archive": "Arkiv",
+        "trash": "Papperskorg"
+      },
+      "actions": {
+        "archive": "Arkivera",
+        "unarchive": "Flytta till inkorgen",
+        "delete": "Ta bort",
+        "restore": "Återställ",
+        "markAsRead": "Markera som läst",
+        "markAsUnread": "Markera som oläst",
+        "archiveAll": "Arkivera alla",
+        "deleteAll": "Ta bort alla",
+        "restoreAll": "Återställ alla",
+        "moveAllToInbox": "Flytta alla till inkorgen"
+      },
+      "toast": {
+        "conversationArchived": "Konversation arkiverad",
+        "conversationDeleted": "Konversation borttagen",
+        "conversationRestored": "Konversation återställd",
+        "conversationUnarchived": "Konversation flyttad till inkorgen",
+        "undo": "Ångra",
+        "actionFailed": "Åtgärden misslyckades, försök igen",
+        "bulkArchived": "Konversationer arkiverade",
+        "bulkDeleted": "Konversationer borttagna",
+        "bulkRestored": "Konversationer återställda",
+        "bulkUnarchived": "Konversationer flyttade till inkorgen"
+      },
+      "confirmBulk": {
+        "title": "Bekräfta massåtgärd",
+        "archiveMessage": "Är du säker på att du vill arkivera alla konversationer som matchar aktuella filter?",
+        "deleteMessage": "Är du säker på att du vill ta bort alla konversationer som matchar aktuella filter?",
+        "restoreMessage": "Är du säker på att du vill återställa alla konversationer som matchar aktuella filter?",
+        "unarchiveMessage": "Är du säker på att du vill flytta alla konversationer till inkorgen som matchar aktuella filter?"
+      },
+      "bulkActionsLabel": "Massåtgärder",
+      "emptyStates": {
+        "inboxEmpty": "Allt är uppdaterat!",
+        "inboxEmptyDescription": "Inga nya konversationer i din inkorg.",
+        "archiveEmpty": "Arkivet är tomt",
+        "archiveEmptyDescription": "Arkiverade konversationer visas här.",
+        "trashEmpty": "Papperskorgen är tom",
+        "trashEmptyDescription": "Borttagna konversationer visas här."
+      },
+      "unreadCount": "{count} olästa"
+    },
+    "deleteaccount": {
+      "deleteAccountTitle": "Ta bort ditt konto",
+      "submitButtonLabel": "Ta bort",
+      "confirmationRequest": "Varning: din aktiva prenumeration kommer att avbrytas, ditt konto och dina uppgifter kommer att markeras för borttagning och raderas automatiskt. Efter raderingen kommer dina uppgifter inte längre att vara tillgängliga eller återställbara. Kom ihåg att det är nödvändigt att ta bort vidarekopplingen från dina enheter. Är du säker på att du vill fortsätta?",
+      "operationCompleted": "Avbokningen av din prenumeration och assistenter är slutförd",
+      "removeCompletedHeader": "Avbokning",
+      "logoutAfterCancellationLabel": "Logga ut",
+      "confirmCancellation": "Bekräfta avbokning",
+      "toastCancelSubscriptionSummary": "Avbokning av kontot och relaterade uppgifter",
+      "toastCancellingOperationSummary": "Avbryt åtgärden",
+      "toastErrorSummary": "Vänligen meddela kundtjänst om problemet, vi kommer att verifiera att avbokningen genomfördes korrekt",
+      "toastNotifyFortcomingCancelOperation": "Tar bort ditt konto enligt begäran",
+      "toastNotifyCanceledCancelAccountOperation": "Borttagningen av kontot har avbrutits"
+    },
+    "deletecontacts": {
+      "deleteContactsTitle": "Ta bort dina kontakter från MrCall",
+      "submitButtonLabel": "Ta bort",
+      "confirmationRequest": "Dina kontakter, både dina egna och de som samlats in av MrCall, kommer att raderas. Efter raderingen kommer kontakterna inte längre att anropas vid namn av MrCall, precis som när de ringer för första gången. Bekräftar du?",
+      "operationCompleted": "Dina kontakter har raderats.",
+      "removeCompletedHeader": "Ta bort kontakter",
+      "logoutAfterCancellationLabel": "Ok",
+      "confirmCancellation": "Bekräfta borttagning",
+      "toastCancelContactsSummary": "Tar bort kontakter",
+      "toastCancellingOperationSummary": "Avbryt åtgärden",
+      "toastErrorSummary": "Vänligen meddela kundtjänst om problemet, vi kommer att verifiera att borttagningen av kontakterna slutförs",
+      "toastNotifyFortcomingCancelOperation": "Tar bort dina kontakter",
+      "toastNotifyCanceledCancelContactsOperation": "Borttagning av kontakter har avbrutits"
+    },
+    "products": {
+      "buyButtonLabel": "Köp",
+      "cancelButtonLabel": "Avbryt",
+      "confirmCancellation": "Bekräfta avbokning",
+      "confirmationCancellationRequest": "Du är på väg att avbryta prenumerationen och de tillhörande funktionerna kommer att inaktiveras. Är du säker?",
+      "disableTopupButtonLabel": "Inaktivera påfyllning",
+      "enableTopupButtonLabel": "Aktivera påfyllning",
+      "manageSubscriptionLabel": "Betalningsinformation",
+      "reactivateButtonLabel": "Återaktivera",
+      "toastCancelSubscriptionSummary": "Avbokning",
+      "toastCancellingOperationSummary": "Avbokning pågår",
+      "toastPaymentSubscriptionSummary": "Behandlar betalningsbegäran",
+      "toastErrorSummary": "Det uppstod ett problem, vänligen kontakta supporten",
+      "toastNotifyFortcomingCancelOperation": "Vi avbokar din prenumeration enligt begäran",
+      "toastNotifyCanceledCancelSubscriptionOperation": "Avbokningen av prenumerationen har avbrutits",
+      "toastReactivateSubscriptionSummary": "Återaktivering av prenumeration",
+      "confirmCompletedReactivationSubscriptionSummary": "Återaktivering av prenumeration slutförd",
+      "confirmCompletedCancelationSubscriptionSummary": "Avbokning av prenumeration slutförd",
+      "toastNotifyFortcomingReactivateOperation": "Vi återaktiverar din prenumeration enligt begäran",
+      "errorCreatingPaymentData": "Det uppstod ett fel vid behandlingen av dina betalningsuppgifter, vänligen kontakta supporten"
+    },
+    "subscription": {
+      "buyButtonLabel": "Köp",
+      "cancelButtonLabel": "Avbryt",
+      "reactivateButtonLabel": "Återaktivera",
+      "manageSubscriptionLabel": "Betalningsinformation",
+      "confirmationCancellationRequest": "Varning: Denna åtgärd kommer att avbryta din prenumeration. Du kan fortsätta använda MrCall under de återstående dagarna av din prenumeration, därefter inaktiveras din assistent. Är du säker?",
+      "managedThroughAppleInApp": "Prenumerationen hanteras via Apple-betalning, öppna prenumerationer på din iOS-enhet",
+      "confirmCancellation": "Bekräfta avbokning",
+      "toastPaymentSubscriptionSummary": "Behandlar betalningsbegäran",
+      "toastCancelSubscriptionSummary": "Avbokning",
+      "toastCancellingOperationSummary": "Avbokning",
+      "toastErrorSummary": "Det har uppstått problem, vänligen kontakta supporten",
+      "toastNotifyFortcomingCancelOperation": "Vi avbokar din prenumeration enligt begäran",
+      "toastNotifyCanceledCancelSubscriptionOperation": "Avbokningen av prenumerationen har avbrutits",
+      "toastReactivateSubscriptionSummary": "Återaktivera prenumeration",
+      "confirmCompletedReactivationSubscriptionSummary": "Återaktivering av prenumeration slutförd",
+      "confirmCompletedCancelationSubscriptionSummary": "Avbokning av prenumeration slutförd",
+      "toastNotifyFortcomingReactivateOperation": "Vi återaktiverar din prenumeration enligt begäran",
+      "errorCreatingPaymentData": "Det uppstod ett fel vid behandlingen av dina betalningsuppgifter, vänligen kontakta supporten"
+    },
+    "templates": {
+      "onboarding": {
+        "doYouNeedAssistance": "Behöver du hjälp?",
+        "supportsection": {
+          "doYouNeedAssistance": "Behöver du hjälp?",
+          "callUs": "Ring oss på",
+          "callUsNumber": "+12027419420 or +442080595420",
+          "writeUs": "eller skriv till {param}",
+          "bookAnAppointment": "Alternativt kan du boka ett möte med våra experter.",
+          "bookAppointmentButtonLabel": "Boka ett möte"
+        }
+      },
+      "sign": {
+        "magicklink": {
+          "emailInputboxTitle": "E-post",
+          "emailInputboxPlaceholder": "Ange din e-postadress",
+          "successSent": "Magisk länk skickad",
+          "failedSent": "Magisk länk ej skickad",
+          "magicLinkSentMessage": "Din magiska länk har skickats till din e-postinkorg",
+          "checkYourMagicLinkMessage": "Klicka på länken i e-postmeddelandet vi skickade till dig för att logga in",
+          "magicLinkErrorMessage": "Det uppstod ett fel vid sändningen av den magiska länken till din e-postinkorg",
+          "submitButton": "Skicka magisk länk",
+          "attention": "Observera",
+          "checkSpamFolder": "Om du inte får e-postmeddelandet, kontrollera att adressen är korrekt och att e-posten inte hamnade i skräpposten"
+        },
+        "signin": {
+          "emailInputboxTitle": "E-post",
+          "emailInputboxPlaceholder": "Ange din e-postadress",
+          "passwordInputboxTitle": "Lösenord",
+          "passwordInputboxPlaceholder": "Ange ditt lösenord",
+          "loginFailedGenericTitle": "Inloggningsfel",
+          "loginFailedWrongPasswordTitle": "Felaktigt lösenord",
+          "loginFailedWrongPasswordMessageFirstPart": "Lösenordet som angavs för användaren",
+          "loginFailedWrongPasswordMessageSecondPart": "är ogiltigt.",
+          "loginFailedUserNotFoundTitle": "Användaren hittades inte",
+          "loginFailedUserNotFoundMessageFirstPart": "Användaren",
+          "loginFailedUserNotFoundMessageSecondPart": "är inte registrerad.",
+          "loginFailedNetworkErrorTitle": "Nätverks- eller anslutningsfel",
+          "loginFailedNetworkErrorMessageFirstPart": "Det gick inte att logga in med användaren",
+          "loginFailedNetworkErrorMessageSecondPart": "Kontrollera att enheten är ansluten till internet",
+          "signupButtonLabel": "Skapa konto",
+          "signupLinkCompanionText": "Har du inget konto ännu?",
+          "loginFailedWithEmail": "Det gick inte att logga in med den angivna e-postadressen",
+          "loginButtonLabel": "Logga in",
+          "dismissButtonLabel": "Avbryt",
+          "didYouForgetPassword": "Har du glömt ditt lösenord?",
+          "emailNotVerifiedTitle": "Du har inte verifierat din e-postadress",
+          "emailNotVerifiedFirstPart": "Klicka på länken i e-postmeddelandet vi skickade till adressen",
+          "emailNotVerifiedSecondPart": "Fick du inte e-postmeddelandet med länken? Kontrollera din skräppost eller klicka på knappen nedan för att skicka ett nytt verifieringsmeddelande.",
+          "emailNotVerifiedReSendEmail": "Skicka e-post",
+          "sessionExpiredTitle": "Sessionen har löpt ut",
+          "sessionExpiredMessage": "Din session har löpt ut. Vänligen logga in igen."
+        },
+        "signup": {
+          "emailInputboxTitle": "E-postadress",
+          "emailInputboxPlaceholder": "Ange din e-postadress",
+          "passwordInputboxTitle": "Lösenord",
+          "passwordInputboxPlaceholder": "Välj ditt lösenord",
+          "registrationSuccess": "Kontrollera din e-post!",
+          "accountRegistered": "Ditt konto har skapats och kopplats till e-postadressen",
+          "activationInstructions": "Kontrollera din e-postinkorg för aktiveringsinstruktioner",
+          "registrationFailedGenericTitle": "Kontoregistreringen misslyckades.",
+          "registrationFailedMessage": "Det uppstod fel vid skapandet av ditt konto med e-postadressen",
+          "submitButton": "Skapa konto",
+          "signinLinkCompanionText": "Har du redan ett konto?",
+          "signinLinkLabel": "Logga in",
+          "signupWithGoogleButtonLabel": "Logga in med Google",
+          "formText": {
+            "qualityPasswordSubtitle": "Kvalitet på ditt lösenord",
+            "passwordPromptLabel": "Inget lösenord angivet",
+            "passwordWeakLabel": "Svagt lösenord, lätt att gissa",
+            "passwordMediumLabel": "Lösenord med medelsäkerhet",
+            "passwordStrongLabel": "Starkt lösenord",
+            "suggestions": "Förslag",
+            "oneLowecase": "Minst en liten bokstav",
+            "oneUppercase": "Minst en stor bokstav",
+            "oneNumeric": "Minst ett numeriskt tecken",
+            "oneSymbol": "Minst en symbol",
+            "atLeastNChars": "Minst 8 tecken"
+          },
+          "temsAndPrivacyPolicyStatement": {
+            "firstStatement": "Genom att klicka på knappen Skicka godkänner du",
+            "terms": {
+              "text": "Allmänna villkor för tjänsten",
+              "link": "https://www.mrcall.ai/en/terms-of-use/",
+              "path": "/termsandconditions"
+            },
+            "connective": "och",
+            "privacy": {
+              "text": "Integritetspolicy",
+              "link": "https://www.mrcall.ai/en/privacy/",
+              "path": "/privacypolicy"
+            }
+          },
+          "errorUserAlreadyExistsTitle": "Kontot finns redan",
+          "errorUserAlreadyExistsMessageFirstPart": "Användaren med e-postadress",
+          "errorUserAlreadyExistsMessageSecondPart": "finns redan. Klicka på Logga in för att logga in",
+          "errorNetworkTitle": "Nätverks- eller anslutningsfel",
+          "errorNetworkMessageFirstPart": "Registreringen misslyckades med användaren",
+          "errorNetworkMessageSecondPart": "Kontrollera att enheten är ansluten till internet",
+          "errorUserAlreadyExistsAccessLink": "Logga in",
+          "errorDismissButton": "Avbryt"
+        }
+      }
+    },
+    "whatsappweb": {
+      "tabWhatsappWeb": "WhatsApp Web",
+      "establishingConnectionTitle": "Anslutning",
+      "establishingConnectionSubtitle": "Vi upprättar anslutningen till WhatsApp-tjänsten",
+      "logoutTitle": "Koppla från ditt konto",
+      "logoutSubtitle": "Efter frånkoppling kommer tjänsten inte att kunna skicka meddelanden. Du kan återansluta senare.",
+      "testTitle": "Testa meddelandesändning",
+      "testSubtitle": "Skicka ett meddelande till din WhatsApp, om allt har gått korrekt får du ett meddelande med aktuell tid. Du kan koppla från kontot från WhatsApp-inställningarna på din enhet.",
+      "accountNotConnectedTitle": "Koppla ditt WhatsApp-konto till MrCall",
+      "accountNotConnectedSubtitle": "Skanna QR-koden med din WhatsApp-app för att godkänna anslutningen"
+    },
+    "whatsappCloud": {
+      "tabTitle": "WhatsApp Cloud API",
+      "connectTitle": "Connect WhatsApp Cloud API",
+      "connectSubtitle": "Connect your business to WhatsApp Cloud API for official messaging through Meta",
+      "connectButton": "Connect Official WhatsApp",
+      "statusTitle": "Connection Status",
+      "connected": "Connected",
+      "phoneNumber": "Phone Number",
+      "displayName": "Display Name",
+      "qualityRating": "Quality Rating",
+      "revoke": "Disconnect",
+      "revokeConfirmTitle": "Confirm Disconnection",
+      "revokeConfirmMessage": "Are you sure you want to disconnect WhatsApp Cloud API? You will no longer be able to send or receive messages through the official API.",
+      "sendMessageTitle": "Send Message",
+      "recipientPhone": "Recipient Phone Number",
+      "messageType": "Message Type",
+      "messageText": "Message Text",
+      "templateName": "Template Name",
+      "sendButton": "Send",
+      "chatHistoryTitle": "Chat History",
+      "filterByContact": "Filter by contact...",
+      "direction": "Direction",
+      "contact": "Contact",
+      "type": "Type",
+      "message": "Message",
+      "timestamp": "Timestamp",
+      "toast": {
+        "success": "Operation completed successfully",
+        "error": "An error occurred",
+        "signupSuccess": "WhatsApp Cloud API connected successfully",
+        "signupFailed": "Failed to connect WhatsApp Cloud API",
+        "messageSent": "Message sent successfully",
+        "sendFailed": "Failed to send message",
+        "revokeSuccess": "WhatsApp Cloud API disconnected successfully",
+        "revokeFailed": "Failed to disconnect WhatsApp Cloud API"
+      }
+    },
+    "connectCalendar": {
+      "title": "Koppla Google Kalender",
+      "description": "Koppla Google Kalender för att automatiskt hantera bokningar. MrCall läser dina upptagna tider och skapar bokningar. Dina uppgifter stannar i din kalender.",
+      "connectButton": "Koppla kalender",
+      "disconnectButton": "Koppla från kalender",
+      "selectCalendarTitle": "Välj en kalender",
+      "confirmButton": "Bekräfta",
+      "connectedTo": "Ansluten till:",
+      "changeCalendar": "Byt kalender",
+      "loadingCalendars": "Laddar kalendrar...",
+      "noCalendarsFound": "Inga skrivbara kalendrar hittades"
+    },
+    "analytics": {
+      "title": "Analys",
+      "overview": "Översikt",
+      "dateRangePlaceholder": "Välj datumintervall",
+      "presets": {
+        "7d": "7 dagar",
+        "30d": "30 dagar",
+        "90d": "90 dagar"
+      },
+      "kpi": {
+        "totalCalls": "Totalt antal samtal",
+        "avgDuration": "Genomsnittlig varaktighet",
+        "totalDuration": "Total varaktighet",
+        "uniqueCallers": "Unika uppringare"
+      },
+      "timeseries": {
+        "title": "Samtalsvolym över tid",
+        "totalCalls": "Totalt antal samtal"
+      },
+      "duration": {
+        "title": "Fördelning av samtalsvaraktighet",
+        "callCount": "Antal samtal"
+      },
+      "heatmap": {
+        "title": "Värmekarta för aktivitet per timme",
+        "calls": "samtal",
+        "days": {
+          "mon": "Mån",
+          "tue": "Tis",
+          "wed": "Ons",
+          "thu": "Tor",
+          "fri": "Fre",
+          "sat": "Lör",
+          "sun": "Sön"
+        }
+      },
+      "callers": {
+        "title": "Uppringaranalys",
+        "number": "Nummer",
+        "callCount": "Samtal",
+        "totalDuration": "Total varaktighet",
+        "lastCall": "Senaste samtal"
+      },
+      "emptyState": {
+        "title": "Inga data tillgängliga",
+        "description": "Det finns inga analysdata för den valda perioden."
+      },
+      "errors": {
+        "title": "Fel",
+        "fetchFailed": "Det gick inte att ladda data för {section}."
+      },
+      "adminMode": {
+        "title": "Plattformsanalys (alla företag)"
+      },
+      "breakdown": {
+        "title": "Fördelning per Företag",
+        "businessId": "Företags-ID",
+        "totalCalls": "Totala Samtal",
+        "avgDuration": "Sn. Längd",
+        "totalDuration": "Total Längd",
+        "uniqueCallers": "Unika Uppringare",
+        "callPercentage": "Samtal-%",
+        "totalBusinesses": "Aktiva Företag"
+      }
+    },
+    "reseller": {
+      "ownerSelector": {
+        "placeholder": "Välj konto",
+        "allAccounts": "Alla hanterade konton",
+        "myAccount": "Mitt konto"
+      },
+      "dashboard": {
+        "title": "Återförsäljarpanel",
+        "profile": "Profil",
+        "displayName": "Visningsnamn",
+        "email": "E-post",
+        "feeRate": "Avgiftssats",
+        "stats": "Översikt (Senaste 30 dagarna)",
+        "totalCalls": "Totalt antal samtal",
+        "managedAccounts": "Hanterade konton",
+        "avgDuration": "Genomsnittlig varaktighet",
+        "uniqueCallers": "Unika uppringare",
+        "managedOwnersList": "Hanterade ägare",
+        "ownerName": "Namn",
+        "ownerEmail": "E-post",
+        "ownerUid": "UID",
+        "source": "Källa",
+        "invitationCode": "Inbjudningskod",
+        "quickActions": "Snabbåtgärder",
+        "manageCodes": "Hantera koder",
+        "viewBusinesses": "Visa företag",
+        "viewAnalytics": "Visa analys",
+        "viewProfile": "Visa profil",
+        "error": "Fel"
+      },
+      "codes": {
+        "title": "Inbjudningskoder",
+        "generateTitle": "Generera ny kod",
+        "label": "Etikett",
+        "labelPlaceholder": "t.ex. Kampanj våren 2026",
+        "maxUses": "Max användningar",
+        "maxUsesPlaceholder": "Obegränsat",
+        "expiresAt": "Utgår",
+        "generate": "Generera",
+        "listTitle": "Dina koder",
+        "code": "Kod",
+        "labelHeader": "Etikett",
+        "uses": "Användningar",
+        "status": "Status",
+        "created": "Skapad",
+        "actions": "Åtgärder",
+        "copyLink": "Kopiera länk",
+        "deactivate": "Inaktivera",
+        "deactivateConfirm": "Är du säker på att du vill inaktivera denna kod?",
+        "deactivateHeader": "Inaktivera kod",
+        "statusActive": "Aktiv",
+        "statusFull": "Full",
+        "statusExpired": "Utgången",
+        "statusInactive": "Inaktiv",
+        "success": "Lyckades",
+        "error": "Fel",
+        "generated": "Inbjudningskoden har genererats",
+        "deactivated": "Koden har inaktiverats",
+        "linkCopied": "Inbjudningslänken har kopierats till urklipp",
+        "fetchError": "Kunde inte ladda inbjudningskoder",
+        "generateError": "Kunde inte generera inbjudningskod",
+        "deactivateError": "Kunde inte inaktivera koden"
+      },
+      "profile": {
+        "title": "Återförsäljarprofil",
+        "displayName": "Visningsnamn",
+        "email": "E-post",
+        "feeRate": "Avgiftssats",
+        "canGenerateCodes": "Kan generera koder",
+        "canAcceptExistingOwners": "Acceptera befintliga ägare",
+        "stripeConnect": "Stripe Connect",
+        "createdAt": "Skapad",
+        "updatedAt": "Senast uppdaterad",
+        "noProfile": "Ingen återförsäljarprofil hittades"
+      },
+      "managedBy": {
+        "label": "Hanteras av {name} — {email}"
+      }
+    },
+    "admin": {
+      "templates": {
+        "title": "Agentmallar",
+        "createTemplate": "Ny mall",
+        "editTemplate": "Redigera mall",
+        "deleteConfirm": "Är du säker på att du vill ta bort mallen '{name}'?",
+        "name": "Namn",
+        "description": "Beskrivning",
+        "provider": "Leverantör",
+        "model": "Modell",
+        "temperature": "Temperatur",
+        "maxTokens": "Max tokens",
+        "systemPrompt": "Systemprompt",
+        "tools": "Verktyg",
+        "enableMemory": "Konversationsminne",
+        "maxHistory": "Max antal historikmeddelanden",
+        "maxToolIterations": "Max antal verktygsiterationer",
+        "timeout": "Timeout för begäran (s)",
+        "version": "Version",
+        "enabled": "Aktiv",
+        "save": "Spara",
+        "saved": "Mallen har sparats",
+        "created": "Mallen har skapats",
+        "deleted": "Mallen har tagits bort",
+        "test": "Testa",
+        "back": "Tillbaka",
+        "versionHistory": "Versionshistorik",
+        "rollback": "Återställ",
+        "rollbackConfirm": "Återställ till version {version}?",
+        "rolledBack": "Återställd till version {version}",
+        "aiChat": "AI-promptredigerare",
+        "aiChatPlaceholder": "Be AI:n förbättra prompten...",
+        "applyToPrompt": "Tillämpa på prompten",
+        "unsavedChanges": "Du har osparade ändringar. Vill du kasta dem?",
+        "testChat": "Testchatt",
+        "testPlaceholder": "Skriv ett testmeddelande...",
+        "enableToolCallValidation": "Validering av verktygsanrop",
+        "enableInputSanitization": "Sanering av indata",
+        "scope": "Omfattning",
+        "scopeGlobal": "Global",
+        "scopeBusiness": "Företag"
+      },
+      "reseller": {
+        "listTitle": "Återförsäljarhantering",
+        "newReseller": "Ny återförsäljare",
+        "displayName": "Visningsnamn",
+        "email": "E-post",
+        "feeRate": "Avgiftssats",
+        "ownerCount": "Ägare",
+        "actions": "Åtgärder",
+        "error": "Fel",
+        "success": "Lyckades",
+        "fetchError": "Kunde inte ladda återförsäljardata",
+        "backToList": "Tillbaka till listan",
+        "profileTitle": "Återförsäljarprofil",
+        "editProfile": "Redigera profil",
+        "resellerId": "Återförsäljar-ID",
+        "canGenerateCodes": "Kan generera koder",
+        "canAcceptExistingOwners": "Acceptera befintliga ägare",
+        "stripeConnectAccountId": "Stripe Connect konto-ID",
+        "stripeConnectPlaceholder": "acct_...",
+        "stripeConnect": "Stripe Connect",
+        "feeRates": "Avgiftssatser",
+        "targetType": "Måltyp",
+        "targetName": "Målnamn",
+        "addFeeRate": "Lägg till avgiftssats",
+        "feeRateAdded": "Avgiftssats tillagd",
+        "feeRateRemoved": "Avgiftssats borttagen",
+        "feeRateError": "Kunde inte hantera avgiftssats",
+        "removeFeeRateConfirm": "Är du säker på att du vill ta bort denna avgiftssats?",
+        "removeFeeRateHeader": "Ta bort avgiftssats",
+        "ownerEmail": "E-post",
+        "source": "Källa",
+        "invitationCode": "Inbjudningskod",
+        "managedOwners": "Hanterade ägare",
+        "ownerUidPlaceholder": "Ange ägar-UID eller e-post",
+        "addMapping": "Lägg till koppling",
+        "ownerId": "Ägar-ID",
+        "removeMappingConfirm": "Är du säker på att du vill ta bort denna ägarkoppling?",
+        "removeMappingHeader": "Ta bort koppling",
+        "dangerZone": "Farozon",
+        "revokeDescription": "Att återkalla en återförsäljare tar bort alla ägarkopplingar, avbryter oskyddade verksamheter, raderar profilen och återställer användarrollen. Detta kan inte ångras.",
+        "revokeReseller": "Återkalla återförsäljare",
+        "revokeConfirmTextUnprotected": "Detta kommer att avbryta alla hanterade ägares verksamheter. För att bekräfta, skriv återförsäljarens namn: {name}",
+        "revokeConfirmTextProtected": "Hanterade ägares verksamheter fortsätter att köra (skyddat läge). För att bekräfta, skriv återförsäljarens namn: {name}",
+        "typeNameToConfirm": "Skriv namn för att bekräfta",
+        "cancel": "Avbryt",
+        "save": "Spara",
+        "profileUpdated": "Återförsäljarprofilen har uppdaterats",
+        "saveError": "Kunde inte spara profilen",
+        "mappingAdded": "Ägarkoppling har lagts till",
+        "mappingRemoved": "Ägarkoppling har tagits bort",
+        "mappingError": "Kunde inte hantera kopplingen",
+        "revoked": "Återförsäljaren har återkallats",
+        "revokeError": "Kunde inte återkalla återförsäljaren",
+        "provisionTitle": "Skapa ny återförsäljare",
+        "step1Title": "Steg 1: Sök upp användare",
+        "uidPlaceholder": "Ange Firebase UID",
+        "emailPlaceholder": "Ange e-postadress",
+        "lookupUser": "Sök",
+        "currentRole": "Nuvarande roll",
+        "setRoleReseller": "Sätt rollen till återförsäljare",
+        "alreadyReseller": "Användaren är redan en återförsäljare",
+        "step2Title": "Steg 2: Skapa återförsäljarprofil",
+        "createProfile": "Skapa profil",
+        "lookupError": "Kunde inte söka upp användaren",
+        "roleSet": "Rollen har satts till återförsäljare",
+        "roleError": "Kunde inte sätta rollen",
+        "profileCreated": "Återförsäljarprofilen har skapats",
+        "createError": "Kunde inte skapa profilen",
+        "userRoleTitle": "Hantering av användarroller",
+        "search": "Sök",
+        "newRole": "Ny roll",
+        "selectRole": "Välj roll",
+        "roleUpdated": "Användarrollen har uppdaterats",
+        "userNotFoundByEmail": "Ingen Firebase-användare hittades med denna e-post",
+        "roleChangeConfirm": "Ändra rollen för {uid} till {role}?",
+        "roleChangeHeader": "Bekräfta rolländring",
+        "protected": "Skyddad",
+        "protectedHint": "När aktiverad överlever hanterade ägares verksamheter återförsäljarens borttagning",
+        "transferOwner": "Överför ägare",
+        "transferToReseller": "Mål-återförsäljar-ID",
+        "transferToResellerPlaceholder": "Ange mål-återförsäljarens UID",
+        "ownerTransferred": "Ägaren har överförts",
+        "transferError": "Kunde inte överföra ägaren",
+        "revokedDetail": "Återförsäljare borttagen: {owners} ägare påverkade, {businesses} verksamheter avbrutna"
+      }
+    }
+  },
+  "views": {
+    "onboarding": {
+      "choosedevice": {
+        "titleText": "Vad konfigurerar du?",
+        "moveForward": "Nästa",
+        "moveBackward": "Tillbaka",
+        "subtitleText": "Välj enhet att konfigurera",
+        "mobilePhone": "En mobiltelefon",
+        "landLine": "En fast telefon",
+        "switchBoard": "En växel",
+        "headingMessageTitle": "Tack!",
+        "headingMessageSubtitle": "Din 7-dagars kostnadsfria provperiod har börjat!"
+      },
+      "language": {
+        "titleText": "Välkommen!",
+        "moveForward": "Nästa",
+        "subtitleText": "Välj språk för din assistent",
+        "defaultLang": "Italienska",
+        "pickALang": "På vilket språk ska din assistent svara?",
+        "pickALangPlaceholder": "välj ett språk",
+        "pickALangSubtitle": "Huvudspråk: assistenten kan svara på olika språk",
+        "pickCountryPlaceholder": "välj ett land",
+        "numberCountry": "Telefonnumrets nationalitet för din assistent",
+        "numberCountrySubtitle": "Din assistent svarar på ett dedikerat nummer av vald nationalitet",
+        "mainLanguageHint": "Du kan ändra detta senare, och din assistent kan även vara flerspråkig.",
+        "funFactTitle": "Visste du att?",
+        "funFactText": "Den första talande maskinen byggdes 1791 av den österrikisk-ungerske uppfinnaren Wolfgang von Kempelen. Hon var min anmoder! Och kunde stolt uttala \"Konstantinopel\". Inte illa, va?"
+      },
+      "business": {
+        "funFactTitle": "MrCall, din smarta assistent",
+        "funFactText": "MrCall föddes i Italien – och det gjorde idén om en personlig assistent också! De gamla romarna hade en nomenclator, en specialiserad slav vars enda uppgift var att memorera namn, ansikten och social ställning hos varje person som hans herre kunde tänkas möta. MrCall gör samma sak… men är politiskt korrekt."
+      },
+      "searchbusinessfunfact": {
+        "funFactTitle": "Varför är Gula sidorna gula?",
+        "funFactText": "Gula sidorna uppfanns 1883 för att ett tryckeri i Cheyenne, Wyoming, fick slut på vitt papper. Det blev världens första företagskatalog. I dag hoppar vi över både papperet och väntmusiken. Koppla ditt Google Business så kan din assistent börja ta emot samtal direkt."
+      },
+      "assistantcreatedfunfact": {
+        "funFactTitle": "Från kylskåp till telefon",
+        "funFactText": "Innan telefonsvararen blev en digital fil var den en människa med anteckningsblock. På 1930-talet var den första 'telefonsvararen' ett skåp stort som ett kylskåp. I dag är MrCall din personliga telefonist – utan utrustning i kylskåpsformat och utan visslingar."
+      },
+      "forwardinggeneric": {
+        "selectOperator": "Välj din operatör",
+        "dialTheNumber": "Slå följande nummer på din telefons knappsats ",
+        "pressTheDialButton": "och tryck på uppringningsknappen. Operatören kan spela upp ett meddelande med resultatet av åtgärden.",
+        "doYouWhantToSet": "Vill du ställa in ",
+        "numberOfSecondsBeforeForwarding": "antalet sekunder innan vidarekopplingen startar?",
+        "tryThisOption": "Prova detta alternativ: **61*{param}**ANTAL_SEKUNDER#.",
+        "forInstanceToForward": "Till exempel, för att starta vidarekoppling efter 15 sekunder: ",
+        "deactivation": "Avaktivering",
+        "compose": "slå",
+        "andPressDialButton": "och tryck på uppringningsknappen.",
+        "thisOperatorMayApplyAFee": "Denna operatör kan ta ut en avgift för vidarekoppling.",
+        "officialProcedure": "Klicka här för de officiella instruktionerna från din telefonoperatör.",
+        "tryToContactTheOperatorFastweb": "Om vidarekopplingskoderna inte fungerar kan du försöka fylla på från Fastweb-appen eller be om bekräftelse från din operatörs kundtjänst.",
+        "genericDisclaimer1": "Vidarekoppling är en procedur som hanteras av din operatör och inte av MrCall.",
+        "genericDisclaimer2": "Om vidarekopplingskoderna inte fungerar kan det bero på ditt avtal; vi rekommenderar att du kontaktar din operatör för att aktivera vidarekoppling."
+      },
+      "forwardingonlandline": {
+        "titleText": "Konfigurera vidarekoppling från fast telefon",
+        "subtitleText": "Slå procedurkoderna för att aktivera vidarekoppling",
+        "moveBackward": "Tillbaka",
+        "moveForward": "Jag har konfigurerat"
+      },
+      "forwardingonotherdevice": {
+        "titleText": "Konfiguration av vidarekoppling på en mobiltelefon",
+        "subtitleText": "Slå koderna för att aktivera vidarekopplingen"
+      },
+      "configureassistant": {
+        "titleText": "Skapa nu din assistent",
+        "subtitleText": "",
+        "moveForward": "Skapa!",
+        "moveBackward": "Tillbaka",
+        "mandatoryParameter": "Detta fält är obligatoriskt",
+        "nicknameTitle": "Assistentens identifierare (användbart om du har flera)",
+        "nicknamePlaceholder": "Ditt namn eller företagsnamn",
+        "nicknameSubtitle": "Ditt smeknamn eller företagsnamn",
+        "voiceGenderTitle": "Rösttyp",
+        "welcomeMessageTitle": "Välkomstmeddelande efter hälsning",
+        "welcomeMessageSubtitle": "Du kan redigera detta meddelande när du vill!",
+        "voiceGenderDefault": "FEMALE",
+        "nickNamePlaceHolder": "DittFöretag",
+        "voiceGender": [
+          {
+            "label": "Man",
+            "value": "MALE"
+          },
+          {
+            "label": "Kvinna",
+            "value": "FEMALE"
+          }
+        ],
+        "errorDialogAlreadyExistsTitle": [
+          "En assistent är redan kopplad till ditt nummer"
+        ],
+        "errorDialogUnknownErrorTitle": [
+          "Ett fel uppstod"
+        ],
+        "errorDialogUnknownErrorBody": [
+          "Om problemet kvarstår, kontakta supporten."
+        ],
+        "errorDialogAlreadyExistsBody": [
+          "Du kan gå tillbaka och välja ett annat nummer.",
+          "Eller så kan du gå till ditt personliga område för att ändra den tidigare skapade assistenten."
+        ],
+        "alreadyExistsBusinessErrorLeftButtonLabel": "Tillbaka",
+        "alreadyExistsBusinessErrorRightButtonLabel": "Assistenter",
+        "unknownErrorBusinessErrorLeftButtonLabel": "Försök igen",
+        "unknownErrorBusinessErrorRightButtonLabel": "Be om hjälp"
+      },
+      "chooseplan": {
+        "title": "Starta din kostnadsfria 1-veckas provperiod",
+        "subtitle": "Prova i en vecka, utan förpliktelser – avbryt när som helst, inga avgifter!",
+        "textForFreeTrial": "VILL DU TESTA DIN ASSISTENT FÖRST? KLICKA PÅ ",
+        "myAssistantLink": "Min assistent ⇪",
+        "plans": [
+          {
+            "id": "essential",
+            "title": "Essential",
+            "highlight": "Starta riskfritt",
+            "pricing": {
+              "number": "29",
+              "currency": "$",
+              "periodicity": "per månad"
+            },
+            "buttonLabel": "BÖRJA ANVÄNDA",
+            "functionalities": {
+              "title": "Snabb installation och naturlig konversation",
+              "items": [
+                {
+                  "value": "200 minuter Grundläggande AI (ca 100 samtal)"
+                },
+                {
+                  "value": "Användarredigerbart samtalssvar"
+                },
+                {
+                  "value": "Frågar efter namn, e-postadress"
+                },
+                {
+                  "value": "Meddelande till uppringaren via WhatsApp/SMS med förinställt meddelande"
+                },
+                {
+                  "value": "Aviseringar till företaget via app och e-post"
+                },
+                {
+                  "value": "Extraherar nyckelinformation från samtal"
+                },
+                {
+                  "value": "Ansluter med Google My Business"
+                },
+                {
+                  "value": "Skapande av en kunskapsbas för assistenten"
+                },
+                {
+                  "value": "Kontakthantering"
+                },
+                {
+                  "value": "Samtalsstatistik och analyser"
+                },
+                {
+                  "value": "MrCall Desktop: e-post, WhatsApp och telefon från din dator (ingår)"
+                }
+              ]
+            }
+          },
+          {
+            "id": "starter",
+            "title": "Starter",
+            "highlight": "Avancerad konfiguration",
+            "pricing": {
+              "number": "55",
+              "currency": "$",
+              "periodicity": "per månad"
+            },
+            "buttonLabel": "STARTA!",
+            "functionalities": {
+              "title": "Bokningar, vidarekoppling och prioriterad support",
+              "includesFrom": "Allt från Essential, plus:",
+              "items": [
+                {
+                  "value": "250 minuter Avancerad AI (ca 130 samtal)"
+                },
+                {
+                  "value": "Smart samtalssvar, baserat på uppringarhistorik"
+                },
+                {
+                  "value": "Flerspråkig assistent"
+                },
+                {
+                  "value": "AI-personaliserade WhatsApp-meddelanden till uppringaren efter varje samtal"
+                },
+                {
+                  "value": "WhatsApp-aviseringar till företaget med samtalssammanfattning (betaltillägg)"
+                },
+                {
+                  "value": "Bokningsmodul (Google Kalender)"
+                },
+                {
+                  "value": "Prioriterad e-postsupport (max 5 dagar)"
+                },
+                {
+                  "value": "Inloggningsuppgifter för VoIP PBX-anslutning via SIP Trunk"
+                },
+                {
+                  "value": "Webhook efter samtal: automatisk dataöverföring till CRM, hanteringsverktyg eller automatiseringar"
+                },
+                {
+                  "value": "Assistenten vidarebefordrar samtal till anknytninar eller telefonnummer"
+                },
+                {
+                  "value": "MrCall Desktop: e-post, WhatsApp och telefon från din dator (ingår)"
+                }
+              ]
+            }
+          },
+          {
+            "id": "professional",
+            "title": "Professional",
+            "highlight": "Byggd för ditt företag",
+            "pricing": {
+              "number": "160",
+              "currency": "$",
+              "periodicity": "per månad"
+            },
+            "buttonLabel": "STARTA!",
+            "functionalities": {
+              "title": "Avancerade konfigurationer och anslutningar till tredjepartssystem",
+              "includesFrom": "Allt från Starter, plus:",
+              "items": [
+                {
+                  "value": "700 minuter Avancerad AI, ca 350 samtal"
+                },
+                {
+                  "value": "Smart samtalssvar, baserat på uppringarhistorik"
+                },
+                {
+                  "value": "E-postsupport inom 2 arbetsdagar"
+                },
+                {
+                  "value": "WhatsApp-aviseringar till företaget inkluderade i planen (sammanfattning, transkription)"
+                },
+                {
+                  "value": "Läs/skriv data från externa källor (webbplats, CRM, etc.) med 2 timmars konsulttid inkluderad"
+                },
+                {
+                  "value": "Anpassning av information att extrahera (produktkod, etc.)"
+                },
+                {
+                  "value": "Priset inkluderar inte moms om sådan är tillämplig"
+                },
+                {
+                  "value": "MrCall Desktop: e-post, WhatsApp och telefon från din dator (ingår)"
+                }
+              ]
+            }
+          }
+        ],
+        "errorDialogUnknownErrorTitle": [
+          "Ett fel har uppstått"
+        ],
+        "errorDialogUnknownErrorBody": [
+          "Om problemet kvarstår, kontakta supporten."
+        ],
+        "unknownErrorBusinessErrorRightButtonLabel": "Avbryt",
+        "moveBackward": "Tillbaka",
+        "recommendedLabel": "Rekommenderad",
+        "trustSignals": {
+          "securePayment": "Säker betalning via Stripe",
+          "cancelAnytime": "Avbryt när som helst, inga avgifter",
+          "noChargesDuringTrial": "Inga avgifter under provperioden"
+        },
+        "supportWriteUs": "Skriv till {email}",
+        "supportBookMeeting": "eller boka ett möte med våra experter",
+        "advisor": {
+          "toggleLabel": "Osäker på vilket plan som passar? Vi hjälper dig!",
+          "toggleLabelCollapse": "Dölj planrådgivare",
+          "callVolumeTitle": "Hur många samtal förväntar du per månad?",
+          "callVolumeOptions": {
+            "low": "Upp till 100",
+            "medium": "100–300",
+            "high": "300+"
+          },
+          "featuresTitle": "Vilka funktioner behöver du?",
+          "features": {
+            "smart_response": "Smartare samtal",
+            "multilingual": "Flerspråkig",
+            "dynamic_whatsapp": "Personaliserad WhatsApp",
+            "booking": "Tidsbokning",
+            "voip_sip": "Telefonväxel-integration",
+            "webhook": "App- & CRM-automatiseringar",
+            "call_transfer": "Samtalsöverföring",
+            "call_transcription": "Samtalssammanfattning via WhatsApp",
+            "external_sources": "Anslut extern data",
+            "custom_extraction": "Anpassad datainsamling"
+          },
+          "resetLabel": "Återställ filter",
+          "bestMatchBadge": "Den ideala planen för dig",
+          "noMatchTitle": "Ingen matchande plan",
+          "noMatchMessage": "Ingen plan uppfyller alla dina kriterier. Försök ta bort några funktioner eller ändra samtalsvolymen."
+        }
+      },
+      "forwardingonthisdevice": {
+        "titleText": "Konfiguration av vidarekoppling från mobil",
+        "subtitleText": "Ring procedurkoderna för att aktivera vidarekoppling",
+        "moveBackward": "Tillbaka",
+        "moveForward": "Jag har konfigurerat",
+        "activateCode": "Aktivera",
+        "deactivateCode": "Avaktivera",
+        "activateItemTitle": "Aktivera vidarekoppling",
+        "deactivateItemTitle": "Avaktivera vidarekoppling",
+        "activateItemSubtitle": "Fungerar det inte? Se instruktioner för 'Annan enhet'",
+        "deactivateItemSubtitle": "Slå avaktiveringskoden"
+      },
+      "makeatestcall": {
+        "titleText": "Testa din MrCall-assistent!",
+        "moveBackward": "Tillbaka",
+        "moveForward": "Nästa",
+        "skip": "Hoppa över",
+        "subtitleText": "ring från ditt nummer ",
+        "callGeneralService": "Ring detta nummer och prata med integrationsassistenten ",
+        "callYourTestAssistant": "din assistents tillfälliga nummer",
+        "changeNumberCountry": "Vill du ha ett nummer från ett annat land? Kontakta oss så ändrar vi det åt dig! ",
+        "modalDialogNoTestCallTitle": [
+          "Uppstod det ett problem?"
+        ],
+        "modalDialogNoTestCallSubtitle": "Det verkar som att vi inte tog emot ditt testsamtal",
+        "modalDialogNoTestCallLeftButtonLabel": "Försök ringa igen",
+        "modalDialogNoTestCallRightButtonLabel": "Kontakta en av våra experter",
+        "modalDialogNoTestCallBodyMessageTitle": "Vi påminner dig om att",
+        "modalDialogNoTestCallBodyMessage1": "du måste använda ditt telefonnummer för att göra testsamtalet",
+        "modalDialogNoTestCallBodyMessage2_1": "Om du behöver hjälp kan du kontakta oss på numret",
+        "modalDialogNoTestCallBodyMessage2_2": "eller skriva till",
+        "modalDialogNoTestCallBodyMessageSupportNumber": "+12027419420",
+        "tryAssistantWithWebcallOrPhone": "Prova webbsamtalet eller ring assistenten direkt",
+        "trialReminder": "Din 7-dagars gratis provperiod börjar vid aktivering — inga avgifter fram till dess.",
+        "skipActivateNow": "Hoppa över, aktivera nu",
+        "skipGoToDashboard": "Hoppa över, gå till kontrollpanelen"
+      },
+      "assistantcreated": {
+        "titleText": "Din AI-assistent har skapats!",
+        "moveBackward": "Tillbaka till konfiguration",
+        "moveForward": "Testa din assistent nu",
+        "subtitleText": "Din assistent är redo. Här är vad som kommer:",
+        "benefit1": "7 dagars gratis provperiod — inga avgifter förrän du bestämmer dig",
+        "benefit3": "Avbryt när som helst med ett klick"
+      },
+      "namephone": {
+        "titleText": "Din profil",
+        "moveForward": "Nästa",
+        "moveBackward": "Tillbaka",
+        "subtitleText": "Fyll i din profil med följande information:",
+        "yourNameTitle": "Ditt namn",
+        "yourNamePlaceholder": "Ange ditt namn",
+        "phoneNumberTitle": "Ditt mobilnummer",
+        "phoneNumberPlaceholder": "Ange ditt mobilnummer",
+        "phoneNumberSubtitle": "Detta nummer används för det första funktionalitetstestet av assistenten",
+        "nameErrorMessage": "Namn krävs",
+        "phoneNumberErrorMessage": "Nummer krävs",
+        "phoneNumberCountrySelectorPlaceholder": "Landskod",
+        "phoneNumberCountrySelectorError": "Fel",
+        "phoneNumberPhoneInputPlaceholder": "Telefonnummer",
+        "phoneNumberPhoneInputExample": "Exempel: "
+      },
+      "notificationpreview": {
+        "titleText": "Ditt testsamtal lyckades!",
+        "moveBackward": "Tillbaka",
+        "moveForward": "Nästa",
+        "subtitleText": "Nu är det sparat i ditt konto och du kan utföra fler tester senare.",
+        "audioNotSupported": "Ljud stöds inte",
+        "transcriptionBoxTitle": "Ditt samtal",
+        "table": {
+          "body": "Meddelande",
+          "audioFile": "Ljud",
+          "audioNotSupported": "Din webbläsare stöder inte ljudelement",
+          "contactName": "Kontakt",
+          "contactNumber": "Uppringarens nummer"
+        }
+      },
+      "prebookappointment": {
+        "titleText": "Du kan boka ett möte med en specialist",
+        "moveBackward": "Dina assistenter",
+        "moveForward": "Boka ett möte",
+        "subtitleText": "Det hjälper dig att konfigurera MrCall efter dina behov eller lösa eventuella problem"
+      },
+      "searchbusiness": {
+        "titleText": "Anslut med Google My Business",
+        "moveForward": "Nästa",
+        "moveBackward": "Tillbaka",
+        "continueButtonLabel": "Fortsätt",
+        "removeSelection": "Ta bort",
+        "subtitleText": "MrCall synkroniserar öppettider och adress",
+        "searchYourBusiness": "Sök efter ditt företag",
+        "searchYourCompanyPlaceholder": "Sök på Google",
+        "searchParametersEmptyMessage": "Du måste ange ditt företagsnamn för att starta sökningen",
+        "doNotOwnABusiness": "Jag har ingen företagsprofil, eller så gör jag det senare",
+        "noSearchResults": "Sökningen gav inga resultat",
+        "notFoundSubtitle": "Försök ange det fullständiga namnet och adressen.",
+        "yourSearchOf": "Din sökning på",
+        "didNotProduceResults": "gav inga resultat",
+        "noBusinessSelectedTitle": "Ingen synkronisering",
+        "noBusinessSelectedMessage": "Om du inte vill synkronisera, fortsätt bara. Annars gå tillbaka"
+      },
+      "searchbusinessinfo": {
+        "titleText": "Information om ditt företag",
+        "moveForward": "Nästa",
+        "moveBackward": "Tillbaka",
+        "reload": "Ny sökning",
+        "loading": "Söker...",
+        "continueButtonLabel": "Nästa",
+        "removeSelection": "Ta bort",
+        "subtitleText": "Du kan redigera din företagsinformation eller ändra den när som helst.",
+        "subtitleTextSearch": "Vi söker efter offentlig information om ditt företag för en första konfiguration.",
+        "businessInformation": "Information om ditt företag",
+        "searchYourCompanyPlaceholder": "Sök på Google Business",
+        "skipInfo": "Fortsätt utan att använda denna information",
+        "searchFailedTitle": "Sökning inte tillgänglig",
+        "searchFailedMessage": "Vi kunde inte hämta företagsinformationen automatiskt. Du kan ange den manuellt eller hoppa över detta steg.",
+        "noSearchResults": "Inga sökresultat hittades",
+        "notFoundSubtitle": "Försök ange det fullständiga namnet och adressen."
+      },
+      "switchboardconfiguration": {
+        "titleText": "Boka ett möte för växelkonfiguration",
+        "moveBackward": "Tillbaka",
+        "moveForward": "Boka ett möte",
+        "subtitleText": "Vi hjälper dig att ansluta din växel och konfigurera MrCall efter dina behov"
+      },
+      "thisorotherdevice": {
+        "titleText": "Vilken enhet vill du konfigurera?",
+        "moveForward": "Nästa",
+        "moveBackward": "Tillbaka",
+        "subtitleText": "Ange om du konfigurerar denna enhet eller en annan enhet",
+        "thisPhone": "Denna enhet",
+        "otherPhone": "Annan enhet"
+      }
+    },
+    "sign": {
+      "magiclink": {
+        "titleText": "Magisk länk",
+        "didYouForgetPassword": "Har du glömt lösenordet?"
+      },
+      "signin": {
+        "titleText": "Logga in",
+        "heroHeadline": "Welcome back.",
+        "heroSubheadline": "Sign in to manage your AI assistant and keep your business running smoothly."
+      },
+      "signup": {
+        "titleText": "Skapa ett konto",
+        "heroHeadline": "Turn every call",
+        "heroAccent": "into opportunity.",
+        "heroSubheadline": "Are you a business or a solo professional? Choose MrCall, a true AI digital agent that autonomously handles phone conversations with your customers, interacts with them in clear, natural language, and syncs with your company's business systems.",
+        "benefit1": "Free 7-day trial, no credit card required",
+        "benefit2": "Set up in under 5 minutes",
+        "benefit3": "Cancel anytime, no commitment",
+        "trustBadge": "Trusted by 1,000+ businesses since 2021"
+      }
+    },
+    "callbooking": {
+      "backwardLinkText": "Tillbaka",
+      "redirecting": "Redirecting to the contact page…"
+    },
+    "customtokensignin": {
+      "title": "Verifiering av identitet och laddning av den begärda sidan"
+    },
+    "failedpayment": {
+      "failedPayment": "Registreringen av betalningsmetoden lyckades inte, kontakta kundtjänst om du behöver support",
+      "gotoAssistant": "Återgå till assistentsidan"
+    },
+    "failedpaymentproduct": {
+      "failedPayment": "Betalningen lyckades inte, vänligen kontakta kundtjänst",
+      "gotoAssistant": "Återgå till assistentsidan"
+    },
+    "onboardingprepayment": {
+      "title1": "Utmärkt!",
+      "title2": "Vi är nästan klara",
+      "subtitle": "Starta den kostnadsfria provperioden",
+      "textTrialPeriod": "Efter att du har lagt till betalningsmetoden kommer din assistent att ha alla funktioner aktiverade! Och kom ihåg: du kan avbryta prenumerationen när som helst utan någon avgift.",
+      "voipMessageText": "Du kan omedelbart boka ett möte med en av våra experter för att ansluta din VoIP-växel med MrCall.",
+      "numberForwardingMessages": "Du kommer att få instruktioner för att konfigurera vidarekoppling till din MrCall-assistent.",
+      "okMoveOnButtonText": "Fortsätt"
+    },
+    "payment": {
+      "redirectToPaymentMethod": "Du kommer att omdirigeras till registreringen av betalningsmetoden"
+    },
+    "privacypolicy": {
+      "privacyOfTheService": "Integritetspolicy för MrCall-tjänsten"
+    },
+    "successpayment": {
+      "successPayment": "Registreringen av betalningsmetoden lyckades",
+      "callForwardingPage": "Som med alla digitala assistanstjänster eller fjärrsekreterare behöver du konfigurera vidarekoppling.",
+      "callForwardingPageBusinessPlus": "Om du inte har en VoIP-växel behöver du konfigurera vidarekoppling.",
+      "gotoCallForwardingInstructionsButtonLabel": "Konfigurera vidarekoppling",
+      "furtherInfoAboutPersonalArea": "I sektionen \"Assistent\" hittar du all information om tjänsten, din prenumerationsstatus och de funktioner du aktiverade när du startade prenumerationen, som att ansluta till Google Kalender, skicka SMS till dina kunder eller aktivera telefonbokningar.",
+      "announcementApp": "Har du redan laddat ner MrCall-appen? Den är gratis och låter dig hantera din assistent, ta emot samtalsutskrifter, synkronisera dina kontakter och mycket mer.",
+      "androidButtonLabel": "Google Play",
+      "appleButtonLabel": "Apple Store",
+      "bookAnAppointment": "Boka ett möte för anslutningen av din VoIP-växel, så hjälper vi dig steg för steg.",
+      "alreadyAssignedNumber": "Din assistent har redan ett tilldelat nummer. Gå till din assistents sida för att ändra eller verifiera inställningarna.",
+      "alreadyAssignedNumberButtonLabel": "Gå till din assistent",
+      "appointmentButtonText": "Boka ett möte",
+      "contactSupport": "Det uppstod ett problem med att tilldela ditt nummer. Vänligen kontakta supporten.",
+      "yourAssistantIsActive": "Din assistent är aktiv!",
+      "yourNumber": "Din assistents telefonnummer",
+      "setupForwarding": "Konfigurera vidarekoppling",
+      "goToDashboard": "Gå till kontrollpanelen"
+    },
+    "activation": {
+      "titleText": "Aktivera din assistent",
+      "subtitleText": "Få ett eget telefonnummer med en veckas gratis provperiod",
+      "multilingualQuestion": "Ska din assistent tala ett eller flera språk?",
+      "oneLanguage": "Ett språk",
+      "multipleLanguages": "Flera språk",
+      "phoneNationalityTitle": "Land för telefonnumret",
+      "phoneNationalitySubtitle": "Välj land för din assistents telefonnummer",
+      "continueButton": "Fortsätt till val av plan"
+    },
+    "successpaymentproduct": {
+      "failedPayment": "Betalningen lyckades och produkten har köpts. Om du har några frågor, kontakta supporten.",
+      "gotoAssistant": "Återgå till assistentsidan"
+    },
+    "termsandconditions": {
+      "pageTitle": "Villkor för MrCall-tjänsten"
+    },
+    "partnerprogram": {
+      "mainTitle": "Ta med en vän",
+      "bringAFriend": "För varje vän du tar med till MrCall",
+      "aFreeMonthForYou": "En gratis månad för dig",
+      "aFreeMonthForYourContact": "En gratis månad för din kontakt",
+      "yourPersonalCode": "Här är din personliga kod att dela:",
+      "yourContactMustUseTheCode": "Din kontakt måste ange den vid registreringen av betalningsmetoden.",
+      "freeMonthAfterPayment": "Från och med din kontakts första betalning lägger vi till en gratis månad även för dig."
+    },
+    "configureAI": {
+      "title": "Konfigurera med AI",
+      "subtitle": "Använd naturligt språk för att konfigurera din telefonassistent",
+      "quickActions": "Snabbåtgärder",
+      "backToSettings": "Tillbaka till Inställningar",
+      "classicConfigurator": "Klassisk konfigurator",
+      "loadingMessage": "Ansluter till din assistent...",
+      "trainButton": "Träna assistenten",
+      "trainingInProgress": "Tränar...",
+      "trainingMessage": "Tränar assistenten på dina företagsdata...",
+      "thinkingMessages": [
+        "Lär mig hur din assistent svarar i telefon...",
+        "Gräver mig igenom konfigurationslabyrinten...",
+        "Läser bruksanvisningen... baklänges, för skojs skull.",
+        "Lär din assistent konsten att smågprata...",
+        "Analyserar din bokningskonfiguration med kirurgisk precision...",
+        "Övertygar assistenten om att måndagar också kan vara bra...",
+        "Kartlägger varje samtalsväg... det finns ganska många.",
+        "Pluggar din kunskapsbas som kvällen före tentan...",
+        "Korskontrollerar konfigurationer med en kopp virtuellt kaffe...",
+        "Ser till att välkomsthälsningen inte låter som en robot...",
+        "Tränar assistenten att vara artig, även före morgonkaffet...",
+        "Laddar ner tålamod... beräknad tid: snart.",
+        "Går igenom dina inställningar med luskam...",
+        "Lär assistenten att inte avbryta uppringare... svårare än man tror.",
+        "Bearbetar aviseringsinställningar, för ingen gillar spam...",
+        "Lär mig hur du vill att uppföljningsmeddelanden ska låta...",
+        "Repeterar den perfekta hälsningen, en sista gång...",
+        "Nästan klar... dubbelkollar bara det finstilta.",
+        "Synkroniserar med MrCall-moderskeppet...",
+        "Kalibrerar samtalsflödesdetektorn...",
+        "Optimerar uppringarupplevelsen, en variabel i taget...",
+        "Lär assistenten att hantera pinsamma tystnader med stil...",
+        "Memorerar dina vidarekopplingsregler... pip boop.",
+        "Kör slutliga kvalitetskontroller på alla funktioner...",
+        "Polerar konfigurationen tills den glänser..."
+      ],
+      "quickAction1Label": "Vad är välkomsthälsningen?",
+      "quickAction1Command": "Hur svarar assistenten i telefon?",
+      "quickAction2Label": "Ändra välkomsthälsning",
+      "quickAction2Command": "Om den som ringer redan har ringt tidigare och vi har alla deras uppgifter, berätta att vi ringer tillbaka",
+      "quickAction3Label": "Kontrollera samtalsflöde",
+      "quickAction3Command": "Hur hanterar assistenten samtalet?",
+      "quickAction4Label": "Ändra samtalsflöde",
+      "quickAction4Command": "Hantera samtalet så att uppringarens namn (om okänt), adress och anledningen till samtalet samlas in.",
+      "quickAction5Label": "Assistentens kunskap",
+      "quickAction5Command": "Vilka ämnen kan assistenten svara på?",
+      "quickAction6Label": "Lägg till kunskap",
+      "quickAction6Command": "Om uppringaren vill bli uppringd men inte har sagt varför, ska assistenten alltid fråga efter anledningen och sedan säga att förfrågan skickas vidare till en handläggare"
+    },
+    "aladminConfigurator": {
+      "title": "AladMin-konfigurator",
+      "subtitle": "Chatta med AladMin för att konfigurera hur din röstassistent beter sig",
+      "backToSettings": "Tillbaka till Inställningar",
+      "suggestionsLabel": "Förslag",
+      "suggestion1": "Aktivera konversationsprompten för att hantera bokningar",
+      "suggestion2": "Fråga uppringaren efter namn och e-postadress",
+      "suggestion3": "Hur hälsar assistenten på uppringaren?",
+      "suggestion4": "Vilka funktioner är aktiverade just nu?",
+      "messagePlaceholder": "Beskriv vad du vill ändra eller ställ en fråga...",
+      "emptyChat": "Starta en konversation med AladMin för att konfigurera din assistent",
+      "newConversation": "Ny konversation",
+      "errorApplying": "Fel",
+      "noBusinessSelected": "Inget företag valt. Gå tillbaka till konfigurationssidan för företaget.",
+      "previewLabel": "Förhandsgranskning av ändringar",
+      "applyChanges": "Tillämpa ändringar",
+      "cancelChanges": "Avbryt",
+      "confirmApply": "Bekräfta, tillämpa ändringarna",
+      "cancelApply": "Avbryt, tillämpa inte ändringarna"
+    },
+    "mcpConnectors": {
+      "title": "MCP-anslutningar",
+      "subtitle": "Generera autentiseringsuppgifter för att koppla ditt MrCall-konto till Claude (eller en annan MCP-kompatibel AI-klient).",
+      "back": "Tillbaka",
+      "info": {
+        "title": "Så här ansluter du",
+        "intro": "Skapa en anslutning nedan och lägg sedan till den som en egen MCP-anslutning i din AI-klient (Claude, Cursor med flera) med MCP-URL:en samt det Client ID och Client Secret du får.",
+        "mcpUrl": "MCP-URL",
+        "advanced": "Avancerat (tekniska detaljer)",
+        "allowedScopes": "Tillåtna scopes",
+        "protectedResource": "Metadata för protected resource",
+        "authServer": "Metadata för authorization server"
+      },
+      "create": {
+        "title": "Skapa en ny anslutning",
+        "help": "Varje anslutning är en egen uppsättning autentiseringsuppgifter. Använd en per AI-klient så kan du återkalla dem var för sig.",
+        "nameLabel": "Namn",
+        "namePlaceholder": "t.ex. Min Claude.ai-anslutning",
+        "descriptionLabel": "Beskrivning (valfritt)",
+        "descriptionPlaceholder": "Kort notering om var anslutningen används",
+        "submit": "Skapa anslutning"
+      },
+      "list": {
+        "title": "Dina anslutningar",
+        "empty": "Inga anslutningar ännu. Skapa en ovan för att komma igång.",
+        "createdAt": "Skapad",
+        "permissions": "Behörigheter",
+        "rotate": "Rotera secret",
+        "rotateConfirm": "Rotera client secret? Den nuvarande secreten slutar fungera direkt och du ser den nya bara en gång."
+      },
+      "scopes": {
+        "title": "Behörigheter",
+        "help": "Välj vad den här anslutningen får göra å dina vägnar. Du kan återkalla den senare genom att rotera dess secret eller ta bort den.",
+        "selectAll": "Markera alla",
+        "clearAll": "Rensa",
+        "sensitive": "Känslig",
+        "groups": {
+          "business": "Företagsprofil",
+          "contacts": "Kontakter (CRM)",
+          "sessions": "Konversationer",
+          "templates": "Assistenter"
+        }
+      },
+      "reveal": {
+        "title": "Spara dina uppgifter nu",
+        "warningTitle": "Dessa värden visas inte igen.",
+        "warningBody": "Kopiera URL, client ID och client secret till din AI-klient innan du stänger kortet. Secreten hashas på servern; tappar du bort den måste du rotera.",
+        "mcpUrl": "MCP-URL",
+        "clientId": "Client ID",
+        "clientSecret": "Client secret",
+        "copy": "Kopiera",
+        "copied": "Kopierat!",
+        "howTo": "I Claude → Inställningar → Custom Connectors → Lägg till egen connector. Klistra in värdena ovan. Claude öppnar en samtyckessida i webbläsaren för att slutföra auktoriseringen.",
+        "acknowledge": "Jag har sparat värdena"
+      },
+      "errors": {
+        "serviceDisabled": "MCP-anslutningar är inte aktiverade i den här miljön. Be din administratör att sätta MCP_ENABLED=true.",
+        "loadFailed": "Det gick inte att läsa in data för MCP-anslutningarna.",
+        "createFailed": "Det gick inte att skapa en ny anslutning.",
+        "rotateFailed": "Det gick inte att rotera secreten.",
+        "clipboardFailed": "Det gick inte att kopiera till urklipp. Markera värdet manuellt."
+      }
+    },
+    "wizard": {
+      "pageTitle": "Assistentkonfiguration",
+      "stepOf": "Steg {current} av {total}",
+      "loading": "Ansluter till din assistent...",
+      "nextStep": "Nästa",
+      "skipStep": "Ändra inget och gå vidare till nästa steg",
+      "goToDashboard": "Gå till kontrollpanelen",
+      "changeSomething": "Vill du ändra något?",
+      "changeSomethingHint": "Kom ihåg att du alltid kan göra det senare!",
+      "inputPlaceholder": "Skriv vad du vill ändra...",
+      "sendInstructions": "Skicka instruktionerna",
+      "orSeparator": "eller",
+      "saveChanges": "Spara ändringar",
+      "saving": "Sparar...",
+      "accept": "Acceptera",
+      "pendingChangesTitle": "Ändringar att spara",
+      "notSavedWarning": "⚠️ Ändringarna är INTE sparade ännu. Assistenten ändras INTE förrän du klickar på \"Spara ändringar\".",
+      "saveSuccess": "Ändringarna sparades!",
+      "saveError": "Fel vid sparandet. Försök igen.",
+      "analyzeError": "Fel vid analysen. Försök igen.",
+      "steps": {
+        "welcome": {
+          "title": "Välkomstmeddelande",
+          "loading": "Analyserar hur din assistent svarar i telefon...",
+          "analyzePrompt": "Beskriv i 2–3 korta meningar hur den här assistenten svarar på inkommande samtal och vad den frågar uppringaren om. Var konkret om vad den som ringer hör. Föreslå inga ändringar."
+        },
+        "knowledge": {
+          "title": "Kunskapsbas",
+          "loading": "Analyserar din assistents kunskaper...",
+          "analyzePrompt": "Beskriv i 2 koncisa meningar vilka ämnen den här assistenten kan svara på, enbart utifrån den nuvarande kunskapsbasen. Nämn INTE webbsökning: assistenten söker INTE på webben under samtal (det vore för långsamt). Lägg till en mening: om användaren vill utöka kunskapen kan hen be mig söka information på webben och lägga till den i kunskapsbasen. Föreslå inga ändringar på eget initiativ."
+        },
+        "booking": {
+          "title": "Bokningar",
+          "loading": "Analyserar bokningskonfigurationen...",
+          "analyzePrompt": "Beskriv i 2–3 korta meningar hur bokningarna är konfigurerade. Är de aktiva? Om ja, hur fungerar de (tider, längd på tidsluckor)? Förklara att bokningar kräver att åtkomsten till Google Kalender godkänns. Föreslå inga ändringar."
+        },
+        "transfer": {
+          "title": "Samtalsöverföring",
+          "loading": "Analyserar samtalsöverföringen...",
+          "analyzePrompt": "Förklara i 3–4 meningar hur samtalsöverföring fungerar: assistenten kan koppla samtalet till ett telefonnummer utifrån konfigurerbara regler (t.ex. tid på dygnet, uppringarens begäran). Påpeka att funktionen finns från och med planen Starter och aktiveras efter den första betalningen. Under den kostnadsfria provperioden är den inte tillgänglig."
+        },
+        "notifications_biz": {
+          "title": "Aviseringar till ägaren",
+          "loading": "Analyserar e-postaviseringarna...",
+          "analyzePrompt": "Beskriv i 2–3 korta meningar hur företagets ägare aviseras om samtal via e-post. Till vilken adress kommer de? Vad innehåller de (sammanfattning, transkribering, inspelning)? Föreslå inga ändringar."
+        },
+        "notifications_caller": {
+          "title": "Aviseringar till uppringaren",
+          "loading": "Analyserar aviseringarna till uppringaren...",
+          "analyzePrompt": "Beskriv i 2–3 korta meningar vad uppringaren får efter samtalet. Är WhatsApp eller SMS aktivt? Om WhatsApp är aktivt, vilken tjänst används (gratis/officiell)? Föreslå inga ändringar."
+        },
+        "integrations": {
+          "title": "Integrationer",
+          "loading": "Analyserar integrationerna...",
+          "analyzePrompt": "Fråga användaren om hen använder ett affärssystem, ett CRM eller någon annan programvara som hen vill koppla till sin MrCall-assistent. Om ja, fråga efter programvarans namn och webbadress."
+        },
+        "summary": {
+          "title": "Sammanfattning",
+          "loading": "Förbereder sammanfattningen...",
+          "analyzePrompt": "SLUTLIG mycket kortfattad sammanfattning. EN mening per kategori (max 7 meningar totalt): välkomstmeddelande, kunskapsbas, bokningar, samtalsöverföring, aviseringar till ägaren, aviseringar till uppringaren, integrationer. Avsluta med EN mening som uppmanar användaren att prova assistenten och när som helst ändra inställningar från kontrollpanelen. FRÅGA INTE om hen vill ändra något. ANVÄND INTE punktlistor. Föreslå inga ändringar."
+        }
+      }
+    }
+  },
+  "common": {
+    "cancel": "Avbryt",
+    "confirm": "Bekräfta",
+    "retry": "Försök igen"
+  },
+  "mrcallCredits": {
+    "title": "Credits remaining",
+    "tooltip": "A phone call burns ~{factor} credits per minute. Configurator chat and MrCall Desktop burn in proportion to tokens consumed."
+  }
+}

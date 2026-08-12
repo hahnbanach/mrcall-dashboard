@@ -1,0 +1,1694 @@
+{
+  "language": "Language",
+  "locale": {
+    "en-US": "English",
+    "it-IT": "Italian",
+    "es-ES": "Spanish",
+    "fr-FR": "French",
+    "de-DE": "German",
+    "nl-NL": "Dutch",
+    "sv-SE": "Swedish",
+    "da-DK": "Danish",
+    "nb-NO": "Norwegian",
+    "fi-FI": "Finnish",
+    "et-EE": "Estonian",
+    "el-GR": "Greek"
+  },
+  "languages": {
+    "italian": "Italian",
+    "englishGB": "English (UK)",
+    "englishUS": "English (US)",
+    "spanishES": "Spanish (ES)",
+    "spanishUS": "Spanish (US)",
+    "frenchFR": "French (FR)",
+    "germanDE": "German (DE)",
+    "portuguesePT": "Portuguese (PT)",
+    "portugueseBR": "Portuguese (BR)",
+    "norwegianNO": "Norwegian",
+    "swedishSW": "Swedish",
+    "finnishFI": "Finnish",
+    "greekGR": "Greek",
+    "turkeyTK": "Turkish",
+    "dutchNL": "Dutch",
+    "danishDK": "Danish",
+    "estonianEE": "Estonian"
+  },
+  "isoAlpha2Country": {
+    "IT": "Italy",
+    "US": "United States",
+    "GB": "United Kingdom",
+    "ES": "Spain",
+    "FR": "France",
+    "PT": "Portugal",
+    "DE": "Germany",
+    "CH": "Switzerland",
+    "AU": "Australia",
+    "NO": "Norway",
+    "BR": "Brazil",
+    "IN": "India",
+    "CA": "Canada",
+    "SW": "Sweden",
+    "FI": "Finland",
+    "GR": "Greece",
+    "TK": "Turkey",
+    "NL": "Netherlands",
+    "DK": "Denmark",
+    "EE": "Estonia"
+  },
+  "days": {
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday",
+    "sunday": "Sunday"
+  },
+  "timeSlots": {
+    "invalid": "Invalid specification, check the intervals, there must be no overlaps."
+  },
+  "utils": {
+    "phonecompanies": {
+      "other": "Other operator"
+    },
+    "common": {
+      "or": "or"
+    }
+  },
+  "widgets": {
+    "tuplesvariables": {
+      "removeitem": "Remove item",
+      "additem": "New item"
+    },
+    "agentSkills": {
+      "loading": "Loading available skills...",
+      "noSkills": "No agent skills available. Upload the Agent Skills decision table first.",
+      "configuration": "Configuration",
+      "phasePrefetch": "Pre-call",
+      "phaseDuring": "During call",
+      "phaseFinal": "Post-call",
+      "phasePrefetchHint": "Runs before the call starts",
+      "phaseDuringHint": "Available as a tool during the call",
+      "phaseFinalHint": "Runs after the call ends",
+      "skills": "skills",
+      "addSkill": "Add skill...",
+      "addAnother": "add another",
+      "removeSkill": "Remove",
+      "noSkillsInPhase": "No skills configured in this phase",
+      "oauthConnect": "Connect",
+      "oauthConnected": "Connected",
+      "oauthDisconnect": "Disconnect",
+      "addPair": "Add header",
+      "skillUnavailable": "This skill is no longer available on the server. Remove it or contact support.",
+      "oauthScopeUnavailable": "This integration needs a Google permission MrCall is not authorised to request. Contact support."
+    }
+  },
+  "components": {
+    "accountTitle": "Account",
+    "account": {
+      "createAssistantSubtitle": "Set up a new voice assistant for another phone number or business.",
+      "securitySectionTitle": "Security",
+      "integrationsSectionTitle": "Integrations",
+      "dangerZoneSectionTitle": "Danger Zone",
+      "mcpConnectors": {
+        "title": "MCP Connectors",
+        "description": "Connect Claude or another MCP-compatible AI client to your MrCall account. Mint credentials with per-connector permissions.",
+        "manage": "Manage MCP connectors"
+      }
+    },
+    "zylchChat": {
+      "inputPlaceholder": "Type a message or command...",
+      "welcome": "Chat with your assistant configurator",
+      "welcomeDescription": "Describe what you'd like to change and I'll update your assistant's settings. Just type naturally!",
+      "exampleCommands": "Example commands:",
+      "cmdSync": "/sync - Synchronize data",
+      "cmdGaps": "/gaps - Find scheduling gaps",
+      "cmdArchive": "/archive - Archive conversations",
+      "cmdHelp": "/help - Show available commands"
+    },
+    "directVoice": {
+      "talkToAssistant": "Talk to the assistant",
+      "connecting": "Connecting...",
+      "hangup": "Hang up",
+      "ending": "Ending..."
+    },
+    "navbar": {
+      "login": "Sign in",
+      "subscribe": "Subscribe",
+      "assistants": "My Assistant",
+      "account": "My account",
+      "logout": "Exit",
+      "closeWebview": "Close",
+      "createAssistant": "Create New Assistant",
+      "resendVerificationEmail": "Re-send the email verification link",
+      "resellerDashboard": "Reseller Dashboard",
+      "invitationCodes": "Invitation Codes",
+      "resellerManagement": "Reseller Management",
+      "userManagement": "User Management",
+      "agentTemplates": "Agent Templates"
+    },
+    "businessphonenumberverification": {
+      "businessPhoneNumberTitle": "Did you enter the wrong number? You can change it",
+      "phoneNumberCountrySelectorPlaceholder": "Country code",
+      "phoneNumberCountrySelectorError": "Error",
+      "phoneNumberPhoneInputPlaceholder": "Phone number",
+      "phoneNumberPhoneInputExample": "Example: ",
+      "businessPhoneNumberIsNotValid": "Please make sure you have entered your phone number correctly",
+      "settingsSuccessfullySaved": "Settings successfully saved",
+      "errorSavingSettings": "There were issues while saving",
+      "activationBannerTitle": "Activate & get a phone number",
+      "activationBannerSubtitle": "1 week free trial!",
+      "activationBannerButton": "Activate now",
+      "talkToYourAssistant": "Talk to your assistant",
+      "changeBusinessPhoneNumberButtonLabel": "Change",
+      "gotoBusinessesCustomize": "Customize",
+      "justVerifiedTheNumberButton": "I called",
+      "assistantWasCreated": "Verify your phone and leave a message.",
+      "callTheNumberInstructions1": "This is just a test assistant, nothing needs to be installed or configured on your phone.",
+      "callTheNumberInstructions2a": "Call this number from your phone number",
+      "callTheNumberInstructions2b": "and receive the notification via email",
+      "callTheNumberInstructions3": "Click 'I called' and start setting up your assistant.",
+      "afterNumberVerificationTitle1": "Well done!",
+      "afterNumberVerificationTitle2": "Now you can start configuring your assistant.",
+      "seemsYouDidntCall": "It seems you haven't called for number verification yet.",
+      "issuesContactCustomerService": "There was an error, please contact customer service at customer.service@mrcall.it"
+    },
+    "businesscreatesimple": {
+      "nicknameTitlePrivate": "Your name",
+      "nicknameTitleBusiness": "Your business name",
+      "businessPhoneNumberTitle": "Phone number we can contact you at",
+      "selectAssistantLanguage": "Select the language your assistant will speak",
+      "whichCustomerAreYou": "Which MrCall are you?",
+      "templateHighLevelDescriptionPrivate": "Private user profile. Note: the assistant is created on our computers. Nothing is installed on your phone",
+      "templateHighLevelDescriptionBusiness": "Business user profile, without VoIP switchboard. Note: the assistant is created on our computers. Nothing is installed on your phone",
+      "templateHighLevelDescriptionBusinessPlus": "Business user profile with VoIP switchboard. Note: the assistant is created on our computers. Nothing is installed on your phone",
+      "searchYourBusinessTitle": "Connect your assistant to Google Business",
+      "searchYourBusinessSubtitle": "Find your business, proceed with the following fields",
+      "searchYourBusinessNoResultFound": "No result found, you can still configure your assistant",
+      "searchYourBusinessPlaceholder": "Enter the name and address of your business",
+      "searchYourBusinessButtonLabel": "Search",
+      "selectGoogleBusinessItemButtonLabel": "Use this data",
+      "searchBusinessResultLabelName": "Name",
+      "searchBusinessResultLabelAddress": "Address",
+      "phoneNumberCountrySelectorPlaceholder": "Country code",
+      "phoneNumberCountrySelectorError": "Error",
+      "phoneNumberPhoneInputPlaceholder": "Phone number",
+      "phoneNumberPhoneInputExample": "Example: ",
+      "searchBusinessResultLabelBusinessPhoneNumber": "Phone",
+      "businessPhoneNumberIsNotValid": "Please check if you have entered your phone number correctly",
+      "nicknameIsNotValid": "Please check if you have entered your nickname correctly",
+      "createAssistantButton": "Create the assistant"
+    },
+    "businesses": {
+      "addFieldMatch": "Search",
+      "createNewBusiness": "Create an assistant",
+      "editAssistant": "Configure Assistant",
+      "onboardinConfigureAndTest": "Make a test call",
+      "onboardingActivateAssistant": "Activate it now!",
+      "planSubscription": "Payment Methods & Subscriptions",
+      "startFreeTrial": "Start free trial",
+      "activationBanner": {
+        "title": "Activate your assistant",
+        "subtitle": "Connect your assistant to a phone number or your VoIP PBX and let it answer your phone calls.",
+        "cta": "Activate"
+      },
+      "newAssistantCreated": "Great! your new assistant was created.",
+      "numberNotAssignedContactSupport": "Permanent number not assigned, please contact the support",
+      "businessPhoneNumberVerified": "not verified, call your assistant to verify it",
+      "plan": "Payments",
+      "invoicingButtonLabel": "Invoicing",
+      "partnerProgramButtonLabel": "Introduce us to a friend",
+      "gotoCallForwardingInstructionsButtonLabel": "Setup Forwarding",
+      "conversationsViewButtonLabel": "Show Messages",
+      "form": {
+        "businessId": "Id of the business",
+        "nickname": "Nickname",
+        "email": "Email",
+        "plan": "Assistant",
+        "businessPhoneNumber": "Your phone number",
+        "serviceNumber": "Your assistant number",
+        "trial": "Remaining days for your trial",
+        "renewalDateTime": "Date of the next renewal",
+        "subscriptionStatus": "Subscription status",
+        "subscriptionStatusLabels": {
+          "ACTIVE": "Active",
+          "CANCELED": "Canceled",
+          "EXPIRED": "Expired",
+          "INCOMPLETE": "Incomplete",
+          "INCOMPLETE_EXPIRED": "Incomplete and expired",
+          "ONBOARDING": "Pending activation",
+          "PAST_DUE": "Payment expired",
+          "SUSPENDED": "Suspended",
+          "FREE": "Free subscription",
+          "TEST": "Pending activation",
+          "EXPIRING": "Expiring",
+          "EXTERNAL": "Managed by the customer service",
+          "TRIALING": "Trial period",
+          "UNPAID": "Not paid",
+          "UNKNOWN": "Unknown"
+        },
+        "resourcesCallCredit": "Remaining minutes",
+        "resourcesCallCount": "Available calls",
+        "resourcesSmsCount": "Available Sms"
+      },
+      "analyticsButtonLabel": "Analytics",
+      "platformAnalyticsButtonLabel": "Platform Analytics",
+      "contactsButtonLabel": "Contacts",
+      "moreActions": "More actions",
+      "health": {
+        "phoneVerified": "Phone verified",
+        "phoneNotVerified": "Phone not verified",
+        "planActive": "Plan active",
+        "noPlan": "No active plan",
+        "hasMinutes": "Minutes available",
+        "noMinutes": "No minutes left"
+      },
+      "selectButtonTooltip": {
+        "enabled": "Access to the assistant personalization",
+        "disabled": "Personalization of your assistant is disabled, please verify your phone number"
+      }
+    },
+    "contacts": {
+      "title": "Contacts",
+      "addContact": "Add Contact",
+      "editContact": "Edit Contact",
+      "deleteAll": "Delete All",
+      "save": "Save",
+      "cancel": "Cancel",
+      "actions": "Actions",
+      "search": "Search",
+      "searchPlaceholder": "Search by name, phone or email...",
+      "searchContact": "Search Contact",
+      "noContactFound": "No contact found for this number",
+      "recentContacts": "Recently Added Contacts",
+      "bulkUpload": "Bulk Upload",
+      "bulkUploadDescription": "Paste a JSON array of contacts below. Warning: this will replace ALL existing contacts.",
+      "bulkUploadSubmit": "Upload Contacts",
+      "provider": "Source",
+      "providerBusiness": "Your contacts",
+      "providerHb": "MrCall",
+      "importContact": "Import Contact",
+      "downloadVcard": "Download contact card",
+      "blockContact": "Block contact",
+      "unblockContact": "Unblock contact",
+      "confirmDeleteTitle": "Confirm Delete",
+      "confirmDeleteMessage": "Are you sure you want to delete the contact {name}?",
+      "confirmDeleteAllMessage": "Are you sure you want to delete ALL contacts? This action cannot be undone.",
+      "form": {
+        "displayName": "Display Name",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "nickname": "Nickname",
+        "phone": "Phone",
+        "phonePlaceholder": "+1234567890",
+        "email": "Email",
+        "emailPlaceholder": "email{'@'}example.com",
+        "company": "Company",
+        "notes": "Notes",
+        "type": "Type",
+        "addPhone": "Add phone",
+        "addEmail": "Add email"
+      },
+      "toast": {
+        "success": "Success",
+        "error": "Error",
+        "validationError": "Validation",
+        "nameOrPhoneRequired": "Please provide at least a name or a phone number",
+        "contactCreated": "Contact created successfully",
+        "contactUpdated": "Contact updated successfully",
+        "contactDeleted": "Contact deleted successfully",
+        "allContactsDeleted": "All contacts deleted successfully",
+        "saveFailed": "Failed to save the contact",
+        "deleteFailed": "Failed to delete the contact",
+        "searchFailed": "Failed to search contacts",
+        "invalidJson": "Invalid JSON format",
+        "jsonMustBeArray": "JSON must be an array of contacts",
+        "bulkUploadSuccess": "Contacts uploaded successfully",
+        "bulkUploadFailed": "Failed to upload contacts",
+        "contactBlocked": "Contact blocked",
+        "contactUnblocked": "Contact unblocked",
+        "blockFailed": "Failed to block/unblock the contact",
+        "contactImported": "Contact imported successfully"
+      }
+    },
+    "business": {
+      "configuration": {
+        "businessNotFound": "No assistant found",
+        "errorRetrievingDataMessage": "They were error saving the settings"
+      },
+      "saveButtonText": "Save",
+      "settingsSuccessfullySaved": "Settings correctly saved",
+      "errorSavingSettings": "They were error saving the settings",
+      "yourAssistantIsReadyPleaseTry": "Your assistant is ready, try it before continue",
+      "unableToSave": "Unable to save the settings",
+      "mandatoryParameterMissing": "Mandatory parameter not set: {param}",
+      "tabPanelYourProfile": "Your profile",
+      "tabPanelContacts": "Contacts",
+      "tabPanelCustomizeYourAssistant": "Personalize the assistant",
+      "additionalParameters": {
+        "password": {
+          "legend": "Password",
+          "tooltip": "Change password"
+        }
+      },
+      "voiceGender": {
+        "MALE": "Male",
+        "FEMALE": "Female"
+      },
+      "onboardingDialog": {
+        "editParametersButtonText": "I would like to change",
+        "continueToPaymentButtonText": "I like just as it is."
+      },
+      "configureWithAI": "Configure with AI",
+      "aladminAI": "AladMin AI",
+      "configureViaChat": "Configure via chat",
+      "talkToYourAssistant": "Talk to your assistant",
+      "actionPanelIntro": "Configure and test your assistant",
+      "howToCard1Title": "How does my assistant respond?",
+      "howToCard1Text": "MrCall introduces itself and recognizes callers by number. Want to change it? Click 'Configure with AI' and describe what you'd like.",
+      "howToCard2Title": "How do I go live?",
+      "howToCard2Text": "Activate a plan, get a number, and forward calls from your phone to MrCall. With the Professional plan you can connect it to your VoIP PBX.",
+      "howToCard3Title": "Can I change the voice?",
+      "howToCard3Text": "Yes! In 'Voice settings' choose between male and female voice. MrCall speaks in the language you selected during setup.",
+      "howToCard4Title": "Can MrCall take bookings?",
+      "howToCard4Text": "Absolutely. In 'Bookings' you can define available slots and connect your calendar. MrCall will handle appointments for you.",
+      "howToCard5Title": "How do I get notifications?",
+      "howToCard5Text": "Every call generates an email notification with a summary. In 'Your notifications' you can choose what to receive and how.",
+      "howToCard6Title": "Can I add Q&A?",
+      "howToCard6Text": "In 'Q&A' you teach MrCall how to answer about hours, prices, services. The more info you add, the more accurate it gets.",
+      "howToCard7Title": "What about closing days?",
+      "howToCard7Text": "Set your closing days and MrCall will automatically inform callers, suggesting when to call back.",
+      "howToCard8Title": "Can I use a fixed script?",
+      "howToCard8Text": "Turn off MrCall AI and the assistant will read a fixed text you write. Less smart, but you have full control over every word.",
+      "activateMrCallCta": "Activate MrCall",
+      "needHelp": "Need help?",
+      "activationBannerTitle": "Activate & get a phone number",
+      "activationBannerSubtitle": "1 week free trial!",
+      "activationBannerButton": "Activate now"
+    },
+    "changepassword": {
+      "changePasswordTitle": "Change password",
+      "changePasswordSubtitle": "Type the new password",
+      "operationSuccess": "Password successfully changed",
+      "operationSuccessExtended": "You can use the new password to login. Though you can ever request a magick link via email to login without password.",
+      "operationFailed": "Change password",
+      "operationFailedExtended": "They where problems setting the new password",
+      "submitButton": "Change",
+      "formText": {
+        "pickAPassword": "Password strength",
+        "suggestions": "Hints",
+        "oneLowecase": "At least a lowercase character",
+        "oneUppercase": "At least a uppercase character",
+        "oneNumeric": "At least an alphanumeric character",
+        "oneSymbol": "At least a symbol",
+        "atLeastNChars": "At least 8 character"
+      }
+    },
+    "changeemail": {
+      "changeEmailTitle": "Change email",
+      "changeEmailSubtitle": "Type the new email",
+      "operationSuccess": "Email change request successfully forwarded",
+      "operationSuccessExtended": "We have sent you a link to verify the new email address, click on the link to confirm the new address.",
+      "operationFailed": "Change email",
+      "operationFailedExtended": "They where problems setting the new email",
+      "submitButton": "Change"
+    },
+    "conversations": {
+      "downloadDataButtonLabel": "Download",
+      "noMessages": "No messages yet",
+      "noMessagesDescription": "When you receive calls, your conversation history will appear here.",
+      "filterTitle": "Filters & Export",
+      "dateRangeLabel": "Date range",
+      "dateRangePlaceholder": "Select date range",
+      "pageFilterLabel": "Filter this page",
+      "pageFilterPlaceholder": "Type to filter results on this page...",
+      "exportLabel": "Export data",
+      "viewModeLabel": "Message view",
+      "expandedView": "Full messages",
+      "collapsedView": "Compact view",
+      "hideReadLabel": "Read messages",
+      "hideReadOn": "Hidden",
+      "hideReadOff": "Visible",
+      "showMore": "Show more",
+      "showLess": "Show less",
+      "duration": "{minutes}m {seconds}s",
+      "unknownContact": "Unknown caller",
+      "justNow": "Just now",
+      "minutesAgo": "{count} min ago",
+      "hoursAgo": "{count} hours ago",
+      "daysAgo": "{count} days ago",
+      "loading": "Loading conversations...",
+      "table": {
+        "body": "Message",
+        "audioFile": "Audio",
+        "audioNotSupported": "Your browser doesn't support audio elements",
+        "contactName": "Contact",
+        "contactNumber": "Callee number"
+      },
+      "audio": {
+        "play": "Play audio",
+        "pause": "Pause audio"
+      },
+      "views": {
+        "inbox": "Inbox",
+        "archive": "Archive",
+        "trash": "Trash"
+      },
+      "actions": {
+        "archive": "Archive",
+        "unarchive": "Move to Inbox",
+        "delete": "Delete",
+        "restore": "Restore",
+        "markAsRead": "Mark as read",
+        "markAsUnread": "Mark as unread",
+        "archiveAll": "Archive All",
+        "deleteAll": "Delete All",
+        "restoreAll": "Restore All",
+        "moveAllToInbox": "Move All to Inbox"
+      },
+      "toast": {
+        "conversationArchived": "Conversation archived",
+        "conversationDeleted": "Conversation deleted",
+        "conversationRestored": "Conversation restored",
+        "conversationUnarchived": "Conversation moved to inbox",
+        "undo": "Undo",
+        "actionFailed": "Action failed, please try again",
+        "bulkArchived": "Conversations archived",
+        "bulkDeleted": "Conversations deleted",
+        "bulkRestored": "Conversations restored",
+        "bulkUnarchived": "Conversations moved to inbox"
+      },
+      "confirmBulk": {
+        "title": "Confirm Bulk Action",
+        "archiveMessage": "Are you sure you want to archive all conversations matching the current filters?",
+        "deleteMessage": "Are you sure you want to delete all conversations matching the current filters?",
+        "restoreMessage": "Are you sure you want to restore all conversations matching the current filters?",
+        "unarchiveMessage": "Are you sure you want to move all conversations to inbox matching the current filters?"
+      },
+      "bulkActionsLabel": "Bulk actions",
+      "emptyStates": {
+        "inboxEmpty": "All caught up!",
+        "inboxEmptyDescription": "No new conversations in your inbox.",
+        "archiveEmpty": "Archive is empty",
+        "archiveEmptyDescription": "Archived conversations will appear here.",
+        "trashEmpty": "Trash is empty",
+        "trashEmptyDescription": "Deleted conversations will appear here."
+      },
+      "unreadCount": "{count} unread"
+    },
+    "deleteaccount": {
+      "deleteAccountTitle": "Delete your account",
+      "submitButtonLabel": "Delete",
+      "confirmationRequest": "Warning: your active subscription will be canceled, your account and your data will be marked for removal and canceled automatically. After the cancelation your data will not be accessible nor recoverable anymore. Remember that is necessary to remove the forwarding from your devices. Are you sure to proceed?",
+      "operationCompleted": "The cancelation of your subscription and assistants is completed",
+      "removeCompletedHeader": "Cancellation",
+      "logoutAfterCancellationLabel": "Exit",
+      "confirmCancellation": "Confirm cancellation",
+      "toastCancelSubscriptionSummary": "Cancellation of the account and related data",
+      "toastCancellingOperationSummary": "Cancel the operation",
+      "toastErrorSummary": "Please communicate the problem to the customer service, we will verify that the cancellation was successfully carried on",
+      "toastNotifyFortcomingCancelOperation": "Canceling your account as requested",
+      "toastNotifyCanceledCancelAccountOperation": "Removal of the account was canceled"
+    },
+    "deletecontacts": {
+      "deleteContactsTitle": "Delete your contacts from MrCall",
+      "submitButtonLabel": "Delete",
+      "confirmationRequest": "Your contacts, both those from your and those acquired by MrCall will be deleted. After the cancellation the contacts will not be called by name by MrCall like when they call for the first time. Do you confirm?",
+      "operationCompleted": "Your contacts have been deleted.",
+      "removeCompletedHeader": "Delete contacts",
+      "logoutAfterCancellationLabel": "Ok",
+      "confirmCancellation": "Confirm delete",
+      "toastCancelContactsSummary": "Deleting contacts",
+      "toastCancellingOperationSummary": "Cancel the operation",
+      "toastErrorSummary": "Please communicate the problem to the customer service, we will verify that the cancellation of the contacts will be completed",
+      "toastNotifyFortcomingCancelOperation": "Deleting your contacts",
+      "toastNotifyCanceledCancelContactsOperation": "Deleting contacts canceled"
+    },
+    "products": {
+      "buyButtonLabel": "Purchase",
+      "cancelButtonLabel": "Cancel",
+      "confirmCancellation": "Confirm Cancellation",
+      "confirmationCancellationRequest": "You are about to cancel the subscription, and the associated features will be deactivated. Are you sure?",
+      "disableTopupButtonLabel": "Disable top-up",
+      "enableTopupButtonLabel": "Enable top-up",
+      "manageSubscriptionLabel": "Payment Information",
+      "reactivateButtonLabel": "Reactivate",
+      "toastCancelSubscriptionSummary": "Cancellation",
+      "toastCancellingOperationSummary": "Cancellation in progress",
+      "toastPaymentSubscriptionSummary": "Processing payment request",
+      "toastErrorSummary": "There was a problem, please contact support",
+      "toastNotifyFortcomingCancelOperation": "We are canceling your subscription as requested",
+      "toastNotifyCanceledCancelSubscriptionOperation": "Subscription cancellation canceled",
+      "toastReactivateSubscriptionSummary": "Subscription reactivation",
+      "confirmCompletedReactivationSubscriptionSummary": "Subscription reactivation completed",
+      "confirmCompletedCancelationSubscriptionSummary": "Subscription cancellation completed",
+      "toastNotifyFortcomingReactivateOperation": "We are reactivating your subscription as requested",
+      "errorCreatingPaymentData": "There was an error processing your payment data, please contact support"
+    },
+    "subscription": {
+      "buyButtonLabel": "Purchase",
+      "cancelButtonLabel": "Cancel",
+      "reactivateButtonLabel": "Reactivate",
+      "manageSubscriptionLabel": "Payment Information",
+      "confirmationCancellationRequest": "Warning: This operation will cancel your subscription. You can continue to use MrCall for the remaining days of your subscription, after which your assistant will be deactivated. Are you sure?",
+      "managedThroughAppleInApp": "Subscription managed through Apple payment, access subscriptions on your iOS device",
+      "confirmCancellation": "Confirm Cancellation",
+      "toastPaymentSubscriptionSummary": "Processing payment request",
+      "toastCancelSubscriptionSummary": "Cancellation",
+      "toastCancellingOperationSummary": "Cancellation",
+      "toastErrorSummary": "There have been problems, please contact support",
+      "toastNotifyFortcomingCancelOperation": "We are canceling your subscription as requested",
+      "toastNotifyCanceledCancelSubscriptionOperation": "Cancellation of the subscription has been canceled",
+      "toastReactivateSubscriptionSummary": "Reactivate Subscription",
+      "confirmCompletedReactivationSubscriptionSummary": "Reactivation of subscription completed",
+      "confirmCompletedCancelationSubscriptionSummary": "Cancellation of subscription completed",
+      "toastNotifyFortcomingReactivateOperation": "We are reactivating your subscription as requested",
+      "errorCreatingPaymentData": "There was an error processing your payment data, please contact support"
+    },
+    "templates": {
+      "onboarding": {
+        "doYouNeedAssistance": "Do you need assistance?",
+        "supportsection": {
+          "doYouNeedAssistance": "Do you need assistance?",
+          "callUs": "Call us at",
+          "callUsNumber": "+12027419420 or +442080595420",
+          "writeUs": "or write to {param}",
+          "bookAnAppointment": "Alternatively, book a meeting with our experts.",
+          "bookAppointmentButtonLabel": "Book a Meeting"
+        }
+      },
+      "sign": {
+        "magicklink": {
+          "emailInputboxTitle": "Email",
+          "emailInputboxPlaceholder": "Enter your email",
+          "successSent": "Magic link sent",
+          "failedSent": "Magic link not sent",
+          "magicLinkSentMessage": "Your magic link has been sent to your email inbox",
+          "checkYourMagicLinkMessage": "Click on the link you will find in the email we sent you to access",
+          "magicLinkErrorMessage": "There was an error sending the magic link to your email inbox",
+          "submitButton": "Send the magic link",
+          "attention": "Attention",
+          "checkSpamFolder": "If you don't receive the email, check that the address is correct and that the email didn't end up in Spam"
+        },
+        "signin": {
+          "emailInputboxTitle": "Email",
+          "emailInputboxPlaceholder": "Enter your email",
+          "passwordInputboxTitle": "Password",
+          "passwordInputboxPlaceholder": "Enter your password",
+          "loginFailedGenericTitle": "Login Error",
+          "loginFailedWrongPasswordTitle": "Incorrect Password",
+          "loginFailedWrongPasswordMessageFirstPart": "The password entered for the user",
+          "loginFailedWrongPasswordMessageSecondPart": "is not valid.",
+          "loginFailedUserNotFoundTitle": "User Not Found",
+          "loginFailedUserNotFoundMessageFirstPart": "The user",
+          "loginFailedUserNotFoundMessageSecondPart": "is not registered.",
+          "loginFailedNetworkErrorTitle": "Network or Connection Error",
+          "loginFailedNetworkErrorMessageFirstPart": "Unable to log in with the user",
+          "loginFailedNetworkErrorMessageSecondPart": "Please check that the device is connected to the internet",
+          "signupButtonLabel": "Sign Up",
+          "signupLinkCompanionText": "Don't have an account yet?",
+          "loginFailedWithEmail": "Unable to log in with the provided email",
+          "loginButtonLabel": "Sign in",
+          "dismissButtonLabel": "Cancel",
+          "didYouForgetPassword": "Did you forget your password?",
+          "emailNotVerifiedTitle": "You have not verified your email",
+          "emailNotVerifiedFirstPart": "Click on the link in the email we sent you to the address",
+          "emailNotVerifiedSecondPart": "Did you not receive the email with the link? Check your spam folder or click the button below to send a new verification email.",
+          "emailNotVerifiedReSendEmail": "Send Email",
+          "sessionExpiredTitle": "Session Expired",
+          "sessionExpiredMessage": "Your session has expired. Please sign in again."
+        },
+        "signup": {
+          "emailInputboxTitle": "Email address",
+          "emailInputboxPlaceholder": "Enter your email",
+          "passwordInputboxTitle": "Password",
+          "passwordInputboxPlaceholder": "Choose your password",
+          "registrationSuccess": "Check your email!",
+          "accountRegistered": "Your account has been created and associated with the email address",
+          "activationInstructions": "Please check your email inbox for activation instructions",
+          "registrationFailedGenericTitle": "Account registration failed.",
+          "registrationFailedMessage": "There were errors in creating your account with the email address",
+          "submitButton": "Sign up",
+          "signinLinkCompanionText": "Already have an account?",
+          "signinLinkLabel": "Sign in",
+          "signupWithGoogleButtonLabel": "Access with Google",
+          "formText": {
+            "qualityPasswordSubtitle": "Quality of your password",
+            "passwordPromptLabel": "No password entered",
+            "passwordWeakLabel": "Weak password, easy to guess",
+            "passwordMediumLabel": "Medium security password",
+            "passwordStrongLabel": "Strong password",
+            "suggestions": "Suggestions",
+            "oneLowecase": "At least one lowercase letter",
+            "oneUppercase": "At least one uppercase letter",
+            "oneNumeric": "At least one numeric character",
+            "oneSymbol": "At least one symbol",
+            "atLeastNChars": "At least 8 characters"
+          },
+          "temsAndPrivacyPolicyStatement": {
+            "firstStatement": "By clicking on the Submit button, you accept the",
+            "terms": {
+              "text": "Terms and Conditions of Service",
+              "link": "https://www.mrcall.ai/en/terms-of-use/",
+              "path": "/termsandconditions"
+            },
+            "connective": "and the",
+            "privacy": {
+              "text": "Privacy Policy",
+              "link": "https://www.mrcall.ai/en/privacy/",
+              "path": "/privacypolicy"
+            }
+          },
+          "errorUserAlreadyExistsTitle": "Account already exists",
+          "errorUserAlreadyExistsMessageFirstPart": "The user with email",
+          "errorUserAlreadyExistsMessageSecondPart": "already exists. Click on Sign In to log in",
+          "errorNetworkTitle": "Network or connection error",
+          "errorNetworkMessageFirstPart": "Registration failed with user",
+          "errorNetworkMessageSecondPart": "Please check that the device is connected to the internet",
+          "errorUserAlreadyExistsAccessLink": "Sign In",
+          "errorDismissButton": "Cancel"
+        }
+      }
+    },
+    "whatsappweb": {
+      "tabWhatsappWeb": "WhatsApp Web",
+      "establishingConnectionTitle": "Connection",
+      "establishingConnectionSubtitle": "We are establishing the connection with the Whatsapp service",
+      "logoutTitle": "Disconnect your account",
+      "logoutSubtitle": "After disconnection, the service will not be able to send messages. You can reconnect later.",
+      "testTitle": "Test Message Sending",
+      "testSubtitle": "Send a message to your WhatsApp, if everything has gone correctly, you will receive a message with the current time. You can disconnect the account from the WhatsApp settings on your device.",
+      "accountNotConnectedTitle": "Connect your Whatsapp account to MrCall",
+      "accountNotConnectedSubtitle": "Scan the QR code with your Whatsapp app to authorize the connection"
+    },
+    "whatsappCloud": {
+      "tabTitle": "WhatsApp Cloud API",
+      "connectTitle": "Connect WhatsApp Cloud API",
+      "connectSubtitle": "Connect your business to WhatsApp Cloud API for official messaging through Meta",
+      "connectButton": "Connect Official WhatsApp",
+      "statusTitle": "Connection Status",
+      "connected": "Connected",
+      "phoneNumber": "Phone Number",
+      "displayName": "Display Name",
+      "qualityRating": "Quality Rating",
+      "revoke": "Disconnect",
+      "revokeConfirmTitle": "Confirm Disconnection",
+      "revokeConfirmMessage": "Are you sure you want to disconnect WhatsApp Cloud API? You will no longer be able to send or receive messages through the official API.",
+      "sendMessageTitle": "Send Message",
+      "recipientPhone": "Recipient Phone Number",
+      "messageType": "Message Type",
+      "messageText": "Message Text",
+      "templateName": "Template Name",
+      "sendButton": "Send",
+      "chatHistoryTitle": "Chat History",
+      "filterByContact": "Filter by contact...",
+      "direction": "Direction",
+      "contact": "Contact",
+      "type": "Type",
+      "message": "Message",
+      "timestamp": "Timestamp",
+      "toast": {
+        "success": "Operation completed successfully",
+        "error": "An error occurred",
+        "signupSuccess": "WhatsApp Cloud API connected successfully",
+        "signupFailed": "Failed to connect WhatsApp Cloud API",
+        "messageSent": "Message sent successfully",
+        "sendFailed": "Failed to send message",
+        "revokeSuccess": "WhatsApp Cloud API disconnected successfully",
+        "revokeFailed": "Failed to disconnect WhatsApp Cloud API"
+      }
+    },
+    "connectCalendar": {
+      "title": "Connect Google Calendar",
+      "description": "Connect Google Calendar to automatically manage appointments MrCall will read your busy times and create appointments. Your data stays in your calendar.",
+      "connectButton": "Connect Calendar",
+      "disconnectButton": "Disconnect Calendar",
+      "selectCalendarTitle": "Select a calendar",
+      "confirmButton": "Confirm",
+      "connectedTo": "Connected to:",
+      "changeCalendar": "Change Calendar",
+      "loadingCalendars": "Loading calendars...",
+      "noCalendarsFound": "No writable calendars found"
+    },
+    "analytics": {
+      "title": "Analytics",
+      "overview": "Overview",
+      "dateRangePlaceholder": "Select date range",
+      "presets": {
+        "7d": "7 days",
+        "30d": "30 days",
+        "90d": "90 days"
+      },
+      "kpi": {
+        "totalCalls": "Total Calls",
+        "avgDuration": "Avg Duration",
+        "totalDuration": "Total Duration",
+        "uniqueCallers": "Unique Callers"
+      },
+      "timeseries": {
+        "title": "Call Volume Over Time",
+        "totalCalls": "Total Calls"
+      },
+      "duration": {
+        "title": "Call Duration Distribution",
+        "callCount": "Number of Calls"
+      },
+      "heatmap": {
+        "title": "Hourly Activity Heatmap",
+        "calls": "calls",
+        "days": {
+          "mon": "Mon",
+          "tue": "Tue",
+          "wed": "Wed",
+          "thu": "Thu",
+          "fri": "Fri",
+          "sat": "Sat",
+          "sun": "Sun"
+        }
+      },
+      "callers": {
+        "title": "Caller Analytics",
+        "number": "Number",
+        "callCount": "Calls",
+        "totalDuration": "Total Duration",
+        "lastCall": "Last Call"
+      },
+      "emptyState": {
+        "title": "No data available",
+        "description": "There is no analytics data for the selected period."
+      },
+      "errors": {
+        "title": "Error",
+        "fetchFailed": "Failed to load {section} data."
+      },
+      "adminMode": {
+        "title": "Platform Analytics (all businesses)"
+      },
+      "breakdown": {
+        "title": "Business Breakdown",
+        "businessId": "Business ID",
+        "totalCalls": "Total Calls",
+        "avgDuration": "Avg Duration",
+        "totalDuration": "Total Duration",
+        "uniqueCallers": "Unique Callers",
+        "callPercentage": "Call %",
+        "totalBusinesses": "Active Businesses"
+      }
+    },
+    "reseller": {
+      "ownerSelector": {
+        "placeholder": "Select account",
+        "allAccounts": "All managed accounts",
+        "myAccount": "My Account"
+      },
+      "dashboard": {
+        "title": "Reseller Dashboard",
+        "profile": "Profile",
+        "displayName": "Display Name",
+        "email": "Email",
+        "feeRate": "Fee Rate",
+        "stats": "Overview (Last 30 days)",
+        "totalCalls": "Total Calls",
+        "managedAccounts": "Managed Accounts",
+        "avgDuration": "Avg Duration",
+        "uniqueCallers": "Unique Callers",
+        "managedOwnersList": "Managed Owners",
+        "ownerName": "Name",
+        "ownerEmail": "Email",
+        "ownerUid": "UID",
+        "source": "Source",
+        "invitationCode": "Invitation Code",
+        "quickActions": "Quick Actions",
+        "manageCodes": "Manage Codes",
+        "viewBusinesses": "View Businesses",
+        "viewAnalytics": "View Analytics",
+        "viewProfile": "View Profile",
+        "error": "Error"
+      },
+      "codes": {
+        "title": "Invitation Codes",
+        "generateTitle": "Generate New Code",
+        "label": "Label",
+        "labelPlaceholder": "e.g. Campaign Spring 2026",
+        "maxUses": "Max Uses",
+        "maxUsesPlaceholder": "Unlimited",
+        "expiresAt": "Expires At",
+        "generate": "Generate",
+        "listTitle": "Your Codes",
+        "code": "Code",
+        "labelHeader": "Label",
+        "uses": "Uses",
+        "status": "Status",
+        "created": "Created",
+        "actions": "Actions",
+        "copyLink": "Copy Link",
+        "deactivate": "Deactivate",
+        "deactivateConfirm": "Are you sure you want to deactivate this code?",
+        "deactivateHeader": "Deactivate Code",
+        "statusActive": "Active",
+        "statusFull": "Full",
+        "statusExpired": "Expired",
+        "statusInactive": "Inactive",
+        "success": "Success",
+        "error": "Error",
+        "generated": "Invitation code generated successfully",
+        "deactivated": "Code deactivated successfully",
+        "linkCopied": "Invitation link copied to clipboard",
+        "fetchError": "Failed to load invitation codes",
+        "generateError": "Failed to generate invitation code",
+        "deactivateError": "Failed to deactivate code"
+      },
+      "profile": {
+        "title": "Reseller Profile",
+        "displayName": "Display Name",
+        "email": "Email",
+        "feeRate": "Fee Rate",
+        "canGenerateCodes": "Can Generate Codes",
+        "canAcceptExistingOwners": "Accept Existing Owners",
+        "stripeConnect": "Stripe Connect",
+        "createdAt": "Created",
+        "updatedAt": "Last Updated",
+        "noProfile": "No reseller profile found"
+      },
+      "managedBy": {
+        "label": "Managed by {name} — {email}"
+      }
+    },
+    "admin": {
+      "templates": {
+        "title": "Agent Templates",
+        "createTemplate": "New Template",
+        "editTemplate": "Edit Template",
+        "deleteConfirm": "Are you sure you want to delete template '{name}'?",
+        "name": "Name",
+        "description": "Description",
+        "provider": "Provider",
+        "model": "Model",
+        "temperature": "Temperature",
+        "maxTokens": "Max Tokens",
+        "systemPrompt": "System Prompt",
+        "tools": "Tools",
+        "enableMemory": "Conversation Memory",
+        "maxHistory": "Max History Messages",
+        "maxToolIterations": "Max Tool Iterations",
+        "timeout": "Request Timeout (s)",
+        "version": "Version",
+        "enabled": "Enabled",
+        "save": "Save",
+        "saved": "Template saved successfully",
+        "created": "Template created successfully",
+        "deleted": "Template deleted successfully",
+        "test": "Test",
+        "back": "Back",
+        "versionHistory": "Version History",
+        "rollback": "Rollback",
+        "rollbackConfirm": "Rollback to version {version}?",
+        "rolledBack": "Rolled back to version {version}",
+        "aiChat": "AI Prompt Editor",
+        "aiChatPlaceholder": "Ask AI to improve the prompt...",
+        "applyToPrompt": "Apply to prompt",
+        "unsavedChanges": "You have unsaved changes. Discard?",
+        "testChat": "Test Chat",
+        "testPlaceholder": "Type a test message...",
+        "enableToolCallValidation": "Tool Call Validation",
+        "enableInputSanitization": "Input Sanitization",
+        "scope": "Scope",
+        "scopeGlobal": "Global",
+        "scopeBusiness": "Business"
+      },
+      "reseller": {
+        "listTitle": "Reseller Management",
+        "newReseller": "New Reseller",
+        "displayName": "Display Name",
+        "email": "Email",
+        "feeRate": "Fee Rate",
+        "ownerCount": "Owners",
+        "actions": "Actions",
+        "error": "Error",
+        "success": "Success",
+        "fetchError": "Failed to load reseller data",
+        "backToList": "Back to list",
+        "profileTitle": "Reseller Profile",
+        "editProfile": "Edit Profile",
+        "resellerId": "Reseller ID",
+        "canGenerateCodes": "Can Generate Codes",
+        "canAcceptExistingOwners": "Accept Existing Owners",
+        "stripeConnectAccountId": "Stripe Connect Account ID",
+        "stripeConnectPlaceholder": "acct_...",
+        "stripeConnect": "Stripe Connect",
+        "feeRates": "Fee Rates",
+        "targetType": "Target Type",
+        "targetName": "Target Name",
+        "addFeeRate": "Add Fee Rate",
+        "feeRateAdded": "Fee rate added",
+        "feeRateRemoved": "Fee rate removed",
+        "feeRateError": "Failed to manage fee rate",
+        "removeFeeRateConfirm": "Are you sure you want to remove this fee rate?",
+        "removeFeeRateHeader": "Remove Fee Rate",
+        "ownerEmail": "Email",
+        "source": "Source",
+        "invitationCode": "Invitation Code",
+        "managedOwners": "Managed Owners",
+        "ownerUidPlaceholder": "Enter owner UID or email",
+        "addMapping": "Add Mapping",
+        "ownerId": "Owner ID",
+        "removeMappingConfirm": "Are you sure you want to remove this owner mapping?",
+        "removeMappingHeader": "Remove Mapping",
+        "dangerZone": "Danger Zone",
+        "revokeDescription": "Revoking a reseller will remove all owner mappings, cancel unprotected businesses, delete the profile, and reset the user role. This cannot be undone.",
+        "revokeReseller": "Revoke Reseller",
+        "revokeConfirmTextUnprotected": "This will cancel all managed owners' businesses. To confirm, type the reseller name: {name}",
+        "revokeConfirmTextProtected": "Managed owners' businesses will keep running (protected mode). To confirm, type the reseller name: {name}",
+        "typeNameToConfirm": "Type name to confirm",
+        "cancel": "Cancel",
+        "save": "Save",
+        "profileUpdated": "Reseller profile updated",
+        "saveError": "Failed to save profile",
+        "mappingAdded": "Owner mapping added",
+        "mappingRemoved": "Owner mapping removed",
+        "mappingError": "Failed to manage mapping",
+        "revoked": "Reseller revoked successfully",
+        "revokeError": "Failed to revoke reseller",
+        "provisionTitle": "Provision New Reseller",
+        "step1Title": "Step 1: Look up user",
+        "uidPlaceholder": "Enter Firebase UID",
+        "emailPlaceholder": "Enter email address",
+        "lookupUser": "Look Up",
+        "currentRole": "Current Role",
+        "setRoleReseller": "Set Role to Reseller",
+        "alreadyReseller": "User is already a reseller",
+        "step2Title": "Step 2: Create reseller profile",
+        "createProfile": "Create Profile",
+        "lookupError": "Failed to look up user",
+        "roleSet": "Role set to reseller",
+        "roleError": "Failed to set role",
+        "profileCreated": "Reseller profile created",
+        "createError": "Failed to create profile",
+        "userRoleTitle": "User Role Management",
+        "search": "Search",
+        "newRole": "New Role",
+        "selectRole": "Select role",
+        "roleUpdated": "User role updated",
+        "userNotFoundByEmail": "No Firebase user found with this email",
+        "roleChangeConfirm": "Change role of {uid} to {role}?",
+        "roleChangeHeader": "Confirm Role Change",
+        "protected": "Protected",
+        "protectedHint": "When enabled, managed owners' businesses survive reseller removal",
+        "transferOwner": "Transfer Owner",
+        "transferToReseller": "Target Reseller ID",
+        "transferToResellerPlaceholder": "Enter target reseller UID",
+        "ownerTransferred": "Owner transferred successfully",
+        "transferError": "Failed to transfer owner",
+        "revokedDetail": "Reseller removed: {owners} owners affected, {businesses} businesses canceled"
+      }
+    }
+  },
+  "views": {
+    "onboarding": {
+      "choosedevice": {
+        "titleText": "What are you setting up?",
+        "moveForward": "Next",
+        "moveBackward": "Back",
+        "subtitleText": "Choose the device to configure",
+        "mobilePhone": "A mobile phone",
+        "landLine": "A landline phone",
+        "switchBoard": "A switchboard",
+        "headingMessageTitle": "Thank you!",
+        "headingMessageSubtitle": "Your 7-day free trial has started!"
+      },
+      "language": {
+        "titleText": "Welcome!",
+        "moveForward": "Next",
+        "subtitleText": "Choose a language for your assistant",
+        "defaultLang": "Italian",
+        "pickALang": "In which language will your assistant respond?",
+        "pickALangPlaceholder": "select a language",
+        "pickALangSubtitle": "Main language: the assistant will be able to answer in different languages",
+        "pickCountryPlaceholder": "select a country",
+        "numberCountry": "Phone number nationality of your assistant",
+        "numberCountrySubtitle": "Your assistant will respond to a dedicated number of the chosen nationality",
+        "mainLanguageHint": "You can change this later, and your assistant can also be multilingual.",
+        "funFactTitle": "Did you know?",
+        "funFactText": "The first talking machine was built in 1791 by the Austro-Hungarian inventor Wolfgang von Kempelen. She was my ancestor! And could proudly pronounce \"Constantinople\". Not bad, right?"
+      },
+      "business": {
+        "funFactTitle": "MrCall, your smart assistant",
+        "funFactText": "MrCall was born in Italy — and so was the idea of a personal assistant! Ancient Romans had a Nomenclator, a specialised slave whose sole job was to memorise the names, faces and social standing of every person their master might encounter. MrCall does the same thing… but is politically correct."
+      },
+      "searchbusinessfunfact": {
+        "funFactTitle": "Why are Yellow Pages yellow?",
+        "funFactText": "The Yellow Pages were invented in 1883 because a printer in Cheyenne, Wyoming ran out of white paper. It became the world's first business directory. Today, we're skipping the paper and the on-hold music. Let's link your Google Business so your assistant can start taking calls right away."
+      },
+      "assistantcreatedfunfact": {
+        "funFactTitle": "From fridge to phone",
+        "funFactText": "Before voicemail was a digital file, it was a human being with a notepad. In the 1930s, the first 'answering machine' was a cabinet the size of a fridge. Today, MrCall is your personal operator — no fridge-sized equipment or whistling required."
+      },
+      "forwardinggeneric": {
+        "selectOperator": "Select your operator",
+        "dialTheNumber": "Dial the following number on your phone keypad ",
+        "pressTheDialButton": "and press the dial key. The operator may play a message with the result of the operation.",
+        "doYouWhantToSet": "Do you want to set ",
+        "numberOfSecondsBeforeForwarding": "the number of seconds to start forwarding?",
+        "tryThisOption": "Try this option: **61*{param}**NUMBER_SECONDS#.",
+        "forInstanceToForward": "For example, to start forwarding after 15 seconds: ",
+        "deactivation": "Deactivation",
+        "compose": "compose",
+        "andPressDialButton": "and press the dial button.",
+        "thisOperatorMayApplyAFee": "This operator may apply a fee for call forwarding.",
+        "officialProcedure": "Click here for the official instructions by your phone operators.",
+        "tryToContactTheOperatorFastweb": "If the forwarding codes don't work, you can try topping up from the Fastweb app or ask for confirmation from your operator's customer service.",
+        "genericDisclaimer1": "Call forwarding is a procedure managed by your operator and not by MrCall.",
+        "genericDisclaimer2": "If the forwarding codes don't work, it may depend on your contract; we recommend contacting your operator to activate call forwarding."
+      },
+      "forwardingonlandline": {
+        "titleText": "Configuring Call Forwarding from a Landline",
+        "subtitleText": "Dial the procedure codes to activate call forwarding",
+        "moveBackward": "Back",
+        "moveForward": "I have configured"
+      },
+      "forwardingonotherdevice": {
+        "titleText": "Forwarding configuration on a mobile phone",
+        "subtitleText": "Dial the codes to activate the forwarding"
+      },
+      "configureassistant": {
+        "titleText": "Now create your assistant",
+        "subtitleText": "",
+        "moveForward": "Create!",
+        "moveBackward": "Back",
+        "mandatoryParameter": "This field is mandatory",
+        "nicknameTitle": "Assistant's identifier (useful if you have more than one)",
+        "nicknamePlaceholder": "Your name or company name",
+        "nicknameSubtitle": "Your nickname or business name",
+        "voiceGenderTitle": "Voice gender",
+        "welcomeMessageTitle": "Welcome message after greetings",
+        "welcomeMessageSubtitle": "You can edit this message whenever you want!",
+        "voiceGenderDefault": "FEMALE",
+        "nickNamePlaceHolder": "YourCompany",
+        "voiceGender": [
+          {
+            "label": "Male",
+            "value": "MALE"
+          },
+          {
+            "label": "Female",
+            "value": "FEMALE"
+          }
+        ],
+        "errorDialogAlreadyExistsTitle": [
+          "An assistant is already associated with your number"
+        ],
+        "errorDialogUnknownErrorTitle": [
+          "An error occurred"
+        ],
+        "errorDialogUnknownErrorBody": [
+          "If the problem persists, contact support."
+        ],
+        "errorDialogAlreadyExistsBody": [
+          "You can go back and choose a different number.",
+          "Or you can go to your personal area to modify the previously created assistant."
+        ],
+        "alreadyExistsBusinessErrorLeftButtonLabel": "Back",
+        "alreadyExistsBusinessErrorRightButtonLabel": "Assistants",
+        "unknownErrorBusinessErrorLeftButtonLabel": "Retry",
+        "unknownErrorBusinessErrorRightButtonLabel": "Ask for assistance"
+      },
+      "chooseplan": {
+        "title": "Start your free 1-week trial",
+        "subtitle": "Try it for a week, no commitment—cancel anytime, no charges!",
+        "textForFreeTrial": "WANT TO PLAY WITH YOUR ASSISTANT BEFORE? CLICK ON ",
+        "myAssistantLink": "My Assistant ⇪",
+        "plans": [
+          {
+            "id": "essential",
+            "title": "Essential",
+            "highlight": "Start risk-free",
+            "pricing": {
+              "number": "29",
+              "currency": "$",
+              "periodicity": "per month"
+            },
+            "buttonLabel": "START USING IT",
+            "functionalities": {
+              "title": "Quick setup and natural conversation",
+              "items": [
+                {
+                  "value": "200 minutes of Basic AI (approx. 100 calls)"
+                },
+                {
+                  "value": "User-editable call response"
+                },
+                {
+                  "value": "Asks for name, email address"
+                },
+                {
+                  "value": "Notifies caller via WhatsApp/SMS with a preset message"
+                },
+                {
+                  "value": "Business notifications via app and email"
+                },
+                {
+                  "value": "Extracts key information from calls"
+                },
+                {
+                  "value": "Connects with Google My Business"
+                },
+                {
+                  "value": "Creation of a knowledge base for the assistant"
+                },
+                {
+                  "value": "Contact management"
+                },
+                {
+                  "value": "Call statistics and analytics"
+                },
+                {
+                  "value": "MrCall Desktop: email, WhatsApp, and phone from your computer (included)"
+                }
+              ]
+            }
+          },
+          {
+            "id": "starter",
+            "title": "Starter",
+            "highlight": "Advanced configuration",
+            "pricing": {
+              "number": "55",
+              "currency": "$",
+              "periodicity": "per month"
+            },
+            "buttonLabel": "START!",
+            "functionalities": {
+              "title": "Bookings, call forwarding and priority support",
+              "includesFrom": "Everything in Essential, plus:",
+              "items": [
+                {
+                  "value": "250 minutes of Advanced AI (approx. 130 calls)"
+                },
+                {
+                  "value": "Smart call response, based on caller history"
+                },
+                {
+                  "value": "Multilingual assistant"
+                },
+                {
+                  "value": "AI-personalized WhatsApp messages to the caller after each call"
+                },
+                {
+                  "value": "WhatsApp notifications to the business with call summary (paid add-on)"
+                },
+                {
+                  "value": "Booking module (Google Calendar)"
+                },
+                {
+                  "value": "Priority email support (max 5 days)"
+                },
+                {
+                  "value": "Credentials for VoIP PBX connection via SIP Trunk"
+                },
+                {
+                  "value": "Post-call webhook: automatic data delivery to CRM, management tools or automations"
+                },
+                {
+                  "value": "The assistant transfers calls to extensions or phone numbers"
+                },
+                {
+                  "value": "MrCall Desktop: email, WhatsApp, and phone from your computer (included)"
+                }
+              ]
+            }
+          },
+          {
+            "id": "professional",
+            "title": "Professional",
+            "highlight": "Built for your business",
+            "pricing": {
+              "number": "160",
+              "currency": "$",
+              "periodicity": "per month"
+            },
+            "buttonLabel": "START!",
+            "functionalities": {
+              "title": "Advanced configurations and connections to third-party systems",
+              "includesFrom": "Everything in Starter, plus:",
+              "items": [
+                {
+                  "value": "700 minutes of Advanced AI, approx. 350 calls"
+                },
+                {
+                  "value": "Smart call response, based on caller history"
+                },
+                {
+                  "value": "Email support within 2 business days"
+                },
+                {
+                  "value": "WhatsApp notifications to the business included in plan (summary, transcription)"
+                },
+                {
+                  "value": "Read/write data on external sources (website, CRM, etc.) with 2 hours of consulting included"
+                },
+                {
+                  "value": "Customization of information to extract (product code, etc.)"
+                },
+                {
+                  "value": "Price does not include tax if due"
+                },
+                {
+                  "value": "MrCall Desktop: email, WhatsApp, and phone from your computer (included)"
+                }
+              ]
+            }
+          }
+        ],
+        "errorDialogUnknownErrorTitle": [
+          "An error has occurred"
+        ],
+        "errorDialogUnknownErrorBody": [
+          "If the problem persists, contact support."
+        ],
+        "unknownErrorBusinessErrorRightButtonLabel": "Cancel",
+        "moveBackward": "Back",
+        "recommendedLabel": "Recommended",
+        "trustSignals": {
+          "securePayment": "Secure payment via Stripe",
+          "cancelAnytime": "Cancel anytime, no fees",
+          "noChargesDuringTrial": "No charges during trial"
+        },
+        "supportWriteUs": "Write to {email}",
+        "supportBookMeeting": "or book a meeting with our experts",
+        "advisor": {
+          "toggleLabel": "Not sure which plan fits? Let us help!",
+          "toggleLabelCollapse": "Hide plan advisor",
+          "callVolumeTitle": "How many calls do you expect per month?",
+          "callVolumeOptions": {
+            "low": "Up to 100",
+            "medium": "100–300",
+            "high": "300+"
+          },
+          "featuresTitle": "Which features do you need?",
+          "features": {
+            "smart_response": "Smarter conversations",
+            "multilingual": "Multilingual",
+            "dynamic_whatsapp": "Personalized WhatsApp",
+            "booking": "Appointment booking",
+            "voip_sip": "Office phone integration",
+            "webhook": "App & CRM automations",
+            "call_transfer": "Call transfer",
+            "call_transcription": "Call summary on WhatsApp",
+            "external_sources": "Connect external data",
+            "custom_extraction": "Custom data capture"
+          },
+          "resetLabel": "Reset filters",
+          "bestMatchBadge": "Best match for you",
+          "noMatchTitle": "No matching plan",
+          "noMatchMessage": "No plan matches all your criteria. Try removing some features or changing the call volume."
+        }
+      },
+      "forwardingonthisdevice": {
+        "titleText": "Call Forwarding Configuration from Mobile",
+        "subtitleText": "Call the procedure codes to activate call forwarding",
+        "moveBackward": "Back",
+        "moveForward": "I have configured",
+        "activateCode": "Activate",
+        "deactivateCode": "Deactivate",
+        "activateItemTitle": "Activate Call Forwarding",
+        "deactivateItemTitle": "Deactivate Call Forwarding",
+        "activateItemSubtitle": "Not working? See instructions for 'Other device'",
+        "deactivateItemSubtitle": "Dial the deactivation code"
+      },
+      "makeatestcall": {
+        "titleText": "Test your MrCall assistant!",
+        "moveBackward": "Back",
+        "moveForward": "Next",
+        "skip": "Skip",
+        "subtitleText": "call from your number ",
+        "callGeneralService": "Call this number and talk to the integration assistant ",
+        "callYourTestAssistant": "your assistant's provisional number",
+        "changeNumberCountry": "Want a number from another country? Contact us and we will change it for you! ",
+        "modalDialogNoTestCallTitle": [
+          "Was there a problem?"
+        ],
+        "modalDialogNoTestCallSubtitle": "It seems that we did not receive your test call",
+        "modalDialogNoTestCallLeftButtonLabel": "Try calling again",
+        "modalDialogNoTestCallRightButtonLabel": "Contact one of our experts",
+        "modalDialogNoTestCallBodyMessageTitle": "We remind you that",
+        "modalDialogNoTestCallBodyMessage1": "you must use your phone number to make the test call",
+        "modalDialogNoTestCallBodyMessage2_1": "If you need assistance, you can contact us at the number",
+        "modalDialogNoTestCallBodyMessage2_2": "or write to",
+        "modalDialogNoTestCallBodyMessageSupportNumber": "+12027419420",
+        "tryAssistantWithWebcallOrPhone": "Try the webcall or call the assistant directly",
+        "trialReminder": "Your 7-day free trial starts when you activate — no charges until then.",
+        "skipActivateNow": "Skip, activate now",
+        "skipGoToDashboard": "Skip, go to dashboard"
+      },
+      "assistantcreated": {
+        "titleText": "Your assistant is ready!",
+        "moveBackward": "Back",
+        "moveForward": "Configure your assistant",
+        "subtitleText": "You have free credit to configure and test your assistant. When you're ready to go live, just get a phone number and set up forwarding — it only takes a minute.",
+        "benefit1": "Configure your assistant's personality and responses",
+        "benefit3": "Test it with a free call right now"
+      },
+      "namephone": {
+        "titleText": "Your profile",
+        "moveForward": "Next",
+        "moveBackward": "Back",
+        "subtitleText": "Complete your profile with the following information:",
+        "yourNameTitle": "Your name",
+        "yourNamePlaceholder": "Enter your name",
+        "phoneNumberTitle": "Your mobile number",
+        "phoneNumberPlaceholder": "Enter your mobile number",
+        "phoneNumberSubtitle": "This number will be used for the first assistant functionality test",
+        "nameErrorMessage": "Name is required",
+        "phoneNumberErrorMessage": "Number is required",
+        "phoneNumberCountrySelectorPlaceholder": "Country code",
+        "phoneNumberCountrySelectorError": "Error",
+        "phoneNumberPhoneInputPlaceholder": "Phone number",
+        "phoneNumberPhoneInputExample": "Example: "
+      },
+      "notificationpreview": {
+        "titleText": "Your test call was successful!",
+        "moveBackward": "Back",
+        "moveForward": "Next",
+        "subtitleText": "Now it's saved in your account, and you can perform more tests later.",
+        "audioNotSupported": "Audio not supported",
+        "transcriptionBoxTitle": "Your call",
+        "table": {
+          "body": "Message",
+          "audioFile": "Audio",
+          "audioNotSupported": "Your browser does not support audio elements",
+          "contactName": "Contact",
+          "contactNumber": "Caller's Number"
+        }
+      },
+      "prebookappointment": {
+        "titleText": "You can book an appointment with a specialist",
+        "moveBackward": "Your assistants",
+        "moveForward": "Book an appointment",
+        "subtitleText": "It will help you set up MrCall for your needs or solve any issues"
+      },
+      "searchbusiness": {
+        "titleText": "Connect with Google My Business",
+        "moveForward": "Next",
+        "moveBackward": "Back",
+        "continueButtonLabel": "Continue",
+        "removeSelection": "Delete",
+        "subtitleText": "MrCall will sync opening time and address",
+        "searchYourBusiness": "Search for your business",
+        "searchYourCompanyPlaceholder": "Search on Google",
+        "searchParametersEmptyMessage": "You must enter your company name to start the search",
+        "doNotOwnABusiness": "I have no Business profile, or I'll do it later",
+        "noSearchResults": "The search produced no results",
+        "notFoundSubtitle": "Try entering the complete name and address.",
+        "yourSearchOf": "Your search of",
+        "didNotProduceResults": "did not produce any results",
+        "noBusinessSelectedTitle": "No syncronization",
+        "noBusinessSelectedMessage": "If you don't want to sync, just continue. Otherwise go back"
+      },
+      "switchboardconfiguration": {
+        "titleText": "Book an appointment for switchboard configuration",
+        "moveBackward": "Back",
+        "moveForward": "Book an appointment",
+        "subtitleText": "We will help you connect your switchboard and configure MrCall according to your needs"
+      },
+      "thisorotherdevice": {
+        "titleText": "Which device do you want to set up?",
+        "moveForward": "Next",
+        "moveBackward": "Back",
+        "subtitleText": "Specify whether you are setting up this device or another device",
+        "thisPhone": "This device",
+        "otherPhone": "Other device"
+      }
+    },
+    "sign": {
+      "magiclink": {
+        "titleText": "Magic link",
+        "didYouForgetPassword": "Did you forget the password?"
+      },
+      "signin": {
+        "titleText": "Sign in",
+        "heroHeadline": "Welcome back.",
+        "heroSubheadline": "Sign in to manage your AI assistant and keep your business running smoothly."
+      },
+      "signup": {
+        "titleText": "Create your free account",
+        "heroHeadline": "Turn every call",
+        "heroAccent": "into opportunity.",
+        "heroSubheadline": "Are you a business or a solo professional? Choose MrCall, a true AI digital agent that autonomously handles phone conversations with your customers, interacts with them in clear, natural language, and syncs with your company's business systems.",
+        "benefit1": "Free 7-day trial, no credit card required",
+        "benefit2": "Set up in under 5 minutes",
+        "benefit3": "Cancel anytime, no commitment",
+        "trustBadge": "Trusted by 1,000+ businesses since 2021"
+      }
+    },
+    "callbooking": {
+      "backwardLinkText": "Back",
+      "redirecting": "Redirecting to the contact page…"
+    },
+    "customtokensignin": {
+      "title": "Verification of identity and loading of the requested page"
+    },
+    "failedpayment": {
+      "failedPayment": "Payment method registration was not successful, if you need support, contact customer assistance",
+      "gotoAssistant": "Return to the assistants page"
+    },
+    "failedpaymentproduct": {
+      "failedPayment": "Payment was not successful, please contact customer assistance",
+      "gotoAssistant": "Return to the assistants page"
+    },
+    "onboardingprepayment": {
+      "title1": "Great!",
+      "title2": "We're almost done",
+      "subtitle": "Start the free trial",
+      "textTrialPeriod": "After adding the payment method, your assistant will have all features active! And remember: you can cancel the subscription at any time without any charge.",
+      "voipMessageText": "You can immediately schedule an appointment with one of our experts to connect your VoIP switchboard with MrCall.",
+      "numberForwardingMessages": "You will receive instructions to set up call forwarding on your MrCall assistant.",
+      "okMoveOnButtonText": "Proceed"
+    },
+    "payment": {
+      "redirectToPaymentMethod": "You are about to be redirected to the payment method registration"
+    },
+    "privacypolicy": {
+      "privacyOfTheService": "MrCall Service Privacy Policy"
+    },
+    "successpayment": {
+      "successPayment": "Payment method registration was successful",
+      "callForwardingPage": "As with all digital assistance services or remote secretaries, you need to set up call forwarding.",
+      "callForwardingPageBusinessPlus": "If you don't have a VoIP switchboard, you need to set up call forwarding.",
+      "gotoCallForwardingInstructionsButtonLabel": "Set up forwarding",
+      "furtherInfoAboutPersonalArea": "In the \"Assistant\" section, you will find all information about the service, the status of your subscription, and the features you activated when starting the subscription, such as connecting to Google Calendar, sending SMS to your clients, or activating phone bookings.",
+      "announcementApp": "Have you already downloaded the MrCall App? It's free and allows you to manage your assistant, receive call transcriptions, sync your contacts, and much more.",
+      "androidButtonLabel": "Google Play",
+      "appleButtonLabel": "Apple Store",
+      "bookAnAppointment": "Schedule an appointment for the connection of your VoIP switchboard, and we will assist you step by step.",
+      "alreadyAssignedNumber": "Your assistant already has an assigned number. Go to your assistant's page to modify or verify the settings.",
+      "alreadyAssignedNumberButtonLabel": "Go to your assistant",
+      "appointmentButtonText": "Book an appointment",
+      "contactSupport": "There was a problem assigning your number. Please contact support.",
+      "yourAssistantIsActive": "Your assistant is active!",
+      "yourNumber": "Your assistant's phone number",
+      "setupForwarding": "Set up call forwarding",
+      "goToDashboard": "Go to dashboard"
+    },
+    "activation": {
+      "titleText": "Activate your assistant",
+      "subtitleText": "Get a dedicated phone number with a 1-week free trial",
+      "multilingualQuestion": "Will your assistant speak one language or multiple?",
+      "oneLanguage": "One language",
+      "multipleLanguages": "Multiple languages",
+      "phoneNationalityTitle": "Phone number country",
+      "phoneNationalitySubtitle": "Choose the country for your assistant's phone number",
+      "continueButton": "Continue to plan selection"
+    },
+    "successpaymentproduct": {
+      "failedPayment": "The payment was successful, and the product has been purchased. If you have any questions, please contact support.",
+      "gotoAssistant": "Return to the assistants' page"
+    },
+    "termsandconditions": {
+      "pageTitle": "Terms and conditions of the MrCall service"
+    },
+    "partnerprogram": {
+      "mainTitle": "Bring a friend",
+      "bringAFriend": "For each friend you bring to MrCall",
+      "aFreeMonthForYou": "One free month for you",
+      "aFreeMonthForYourContact": "One free month for your contact",
+      "yourPersonalCode": "Here is your personal code to share:",
+      "yourContactMustUseTheCode": "Your contact will need to enter it during the payment method registration.",
+      "freeMonthAfterPayment": "Starting from your contact's first payment, we will add a free month for you as well."
+    },
+    "configureAI": {
+      "title": "Configure with AI",
+      "subtitle": "Use natural language to configure your phone assistant",
+      "quickActions": "Quick Actions",
+      "backToSettings": "Back to Settings",
+      "classicConfigurator": "Classic configurator",
+      "loadingMessage": "Connecting to your assistant...",
+      "quickAction1Label": "What's the welcome message?",
+      "quickAction1Command": "How does the assistant answer the phone?",
+      "quickAction2Label": "Modify welcome message",
+      "quickAction2Command": "If the caller has already called in the past, and we have all their data, tell them we will call them back",
+      "quickAction3Label": "Check conversation flow",
+      "quickAction3Command": "How does the assistant manage the conversation?",
+      "quickAction4Label": "Change conversation flow",
+      "quickAction4Command": "Manage the conversation in order to get from the caller their name if unknown, address and why they called.",
+      "quickAction5Label": "The assistant's knowledge",
+      "quickAction5Command": "On which topic can the assistant answer?",
+      "quickAction6Label": "Add knowledge",
+      "quickAction6Command": "If the user wants to be called back, but hasn't said why, the assistant should always ask for the reason, and then say that it will send the request to an operator"
+    },
+    "aladminConfigurator": {
+      "title": "AladMin Configurator",
+      "subtitle": "Chat with AladMin to configure your voice assistant's behavior",
+      "backToSettings": "Back to Settings",
+      "suggestionsLabel": "Suggestions",
+      "suggestion1": "Enable the conversation prompt for managing reservations",
+      "suggestion2": "Ask callers for their name and email address",
+      "suggestion3": "How does the assistant greet callers?",
+      "suggestion4": "What features are currently enabled?",
+      "messagePlaceholder": "Describe what you want to change or ask a question...",
+      "emptyChat": "Start a conversation with AladMin to configure your assistant",
+      "newConversation": "New conversation",
+      "errorApplying": "Error",
+      "noBusinessSelected": "No business selected. Please go back to the business configuration page.",
+      "previewLabel": "Changes preview",
+      "applyChanges": "Apply changes",
+      "cancelChanges": "Cancel",
+      "confirmApply": "Confirm, apply the changes",
+      "cancelApply": "Cancel, do not apply the changes"
+    },
+    "mcpConnectors": {
+      "title": "MCP Connectors",
+      "subtitle": "Generate credentials to connect your MrCall account to Claude (or another MCP-compatible AI client).",
+      "back": "Back",
+      "info": {
+        "title": "How to connect",
+        "intro": "Mint a connector below, then add it as a custom MCP connector in your AI client (Claude, Cursor, etc.) using the MCP URL plus the Client ID and Client Secret returned by the mint step.",
+        "mcpUrl": "MCP URL",
+        "advanced": "Advanced (technical details)",
+        "allowedScopes": "Allowed scopes",
+        "protectedResource": "Protected resource metadata",
+        "authServer": "Authorization server metadata"
+      },
+      "create": {
+        "title": "Mint a new connector",
+        "help": "Each connector is a separate set of credentials. Use one per AI client so you can revoke them independently.",
+        "nameLabel": "Name",
+        "namePlaceholder": "e.g. My Claude.ai connector",
+        "descriptionLabel": "Description (optional)",
+        "descriptionPlaceholder": "Short note about where this connector is used",
+        "submit": "Create connector"
+      },
+      "list": {
+        "title": "Your connectors",
+        "empty": "No connectors yet. Mint one above to get started.",
+        "createdAt": "Created",
+        "permissions": "Permissions",
+        "rotate": "Rotate secret",
+        "rotateConfirm": "Rotate the client secret? The current secret will stop working immediately and you will see the new one only once."
+      },
+      "scopes": {
+        "title": "Permissions",
+        "help": "Choose what this connector is allowed to do on your behalf. You can revoke it later by rotating its secret or deleting it.",
+        "selectAll": "Select all",
+        "clearAll": "Clear",
+        "sensitive": "Sensitive",
+        "groups": {
+          "business": "Business profile",
+          "contacts": "Contacts (CRM)",
+          "sessions": "Conversations",
+          "templates": "Assistants"
+        }
+      },
+      "reveal": {
+        "title": "Save your credentials now",
+        "warningTitle": "These values will not be shown again.",
+        "warningBody": "Copy the URL, client ID, and client secret into your AI client before closing this card. The secret is hashed server-side; if you lose it you must rotate.",
+        "mcpUrl": "MCP URL",
+        "clientId": "Client ID",
+        "clientSecret": "Client secret",
+        "copy": "Copy",
+        "copied": "Copied!",
+        "howTo": "In Claude → Settings → Custom Connectors → Add custom connector. Paste the values above. Claude will open a browser consent page to finish authorization.",
+        "acknowledge": "I have saved these values"
+      },
+      "errors": {
+        "serviceDisabled": "MCP connectors are not enabled on this environment. Ask your administrator to set MCP_ENABLED=true.",
+        "loadFailed": "Failed to load MCP connector data.",
+        "createFailed": "Failed to mint a new connector.",
+        "rotateFailed": "Failed to rotate the secret.",
+        "clipboardFailed": "Could not copy to the clipboard. Select the value manually."
+      }
+    },
+    "wizard": {
+      "pageTitle": "Assistant Configuration",
+      "stepOf": "Step {current} of {total}",
+      "loading": "Connecting to your assistant...",
+      "nextStep": "Next",
+      "skipStep": "Skip and go to the next step",
+      "goToDashboard": "Go to dashboard",
+      "changeSomething": "Would you like to change something?",
+      "changeSomethingHint": "Remember, you can always do it later!",
+      "inputPlaceholder": "Describe what you'd like to change...",
+      "sendInstructions": "Send instructions",
+      "orSeparator": "or",
+      "saveChanges": "Save changes",
+      "saving": "Saving...",
+      "accept": "Accept",
+      "pendingChangesTitle": "Pending changes",
+      "notSavedWarning": "⚠️ Changes are NOT saved yet. The assistant is NOT modified until you click \"Save changes\".",
+      "saveSuccess": "Changes saved!",
+      "saveError": "Error saving. Try again.",
+      "analyzeError": "Analysis error. Try again.",
+      "steps": {
+        "welcome": {
+          "title": "Welcome Message",
+          "loading": "Analyzing how your assistant answers the phone...",
+          "analyzePrompt": "Describe in 2-3 short sentences how this assistant answers incoming calls and what it asks the caller. Be specific about what the caller hears. Do not suggest changes."
+        },
+        "knowledge": {
+          "title": "Knowledge Base",
+          "loading": "Analyzing your assistant's knowledge...",
+          "analyzePrompt": "In 2 concise sentences, describe what topics this assistant can answer about, based only on the current knowledge base. Do NOT mention web search: the assistant does NOT search the web during calls (too slow). Add one sentence: if the user wants to expand the knowledge, they can ask me to search the web and add the info to the knowledge base. Do not suggest changes on your own."
+        },
+        "booking": {
+          "title": "Bookings",
+          "loading": "Analyzing booking configuration...",
+          "analyzePrompt": "Describe in 2-3 short sentences how bookings are configured. Are they active? If so, how do they work (hours, slot duration)? Explain that bookings require Google Calendar authorization. Do not suggest changes."
+        },
+        "transfer": {
+          "title": "Call Transfer",
+          "loading": "Analyzing call transfer...",
+          "analyzePrompt": "Explain in 3-4 sentences how call transfer works: the assistant can transfer the call to a phone number based on configurable rules (e.g., time, caller request). Note that this feature is available from the Starter plan and activates after the first payment. It is not available during the free trial."
+        },
+        "notifications_biz": {
+          "title": "Business Notifications",
+          "loading": "Analyzing email notifications...",
+          "analyzePrompt": "Describe in 2-3 short sentences how the business owner is notified about calls via email. To which address? What do they contain (summary, transcription, recording)? Do not suggest changes."
+        },
+        "notifications_caller": {
+          "title": "Caller Notifications",
+          "loading": "Analyzing caller notifications...",
+          "analyzePrompt": "Describe in 2-3 short sentences what the caller receives after the call. Is WhatsApp or SMS active? If WhatsApp is active, which service does it use (free/official)? Do not suggest changes."
+        },
+        "integrations": {
+          "title": "Integrations",
+          "loading": "Analyzing integrations...",
+          "analyzePrompt": "Ask the user if they use a management system, CRM, or any software they'd like to connect to their MrCall assistant. If yes, ask for the software name and web address."
+        },
+        "summary": {
+          "title": "Summary",
+          "loading": "Preparing the summary...",
+          "analyzePrompt": "FINAL very concise summary. ONE sentence per category (max 7 sentences total): welcome message, knowledge base, bookings, call transfer, business notifications, caller notifications, integrations. Close with ONE sentence inviting the user to try the assistant and adjust any setting from the dashboard at any time. DO NOT ask if they want to change anything. DO NOT use bullets. Do not suggest changes."
+        }
+      }
+    }
+  },
+  "common": {
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "retry": "Retry"
+  },
+  "mrcallCredits": {
+    "title": "Credits remaining",
+    "tooltip": "A phone call burns ~{factor} credits per minute. Configurator chat and MrCall Desktop burn in proportion to tokens consumed."
+  }
+}

@@ -1,0 +1,81 @@
+@import "./configuration_items";
+
+.item {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+
+  //margin-top: auto;
+  margin-bottom: auto;
+
+  padding-top: 2em;
+  padding-bottom: 2em;
+
+  @media screen and (max-width: 640px) {
+    height: 100%;
+  }
+
+  @media screen and (min-width: 640px) {
+    height: 100%;
+  }
+
+  .p-component {
+    width: 100%;
+  }
+
+  //phone number inputbox
+  --maz-font-family: 'Inter',serif, 'primeicons';
+  --maz-border-radius: 3px;
+  --maz-border-width: 1px;
+}
+
+#footer {
+  display: flex;
+
+  @media screen and (max-width: 640px) {
+    flex-direction: column;
+  }
+
+  @media screen and (min-width: 640px) {
+    flex-direction: row;
+  }
+
+  .p-button {
+    font-family: 'Inter', serif, 'primeicons';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 1em;
+    line-height: 1em;
+    margin: 0.2em 0.2em 0.2em auto;
+  }
+
+  .button-left {
+    @media screen and (max-width: 640px) {
+    }
+
+    @media screen and (min-width: 640px) {
+      margin-right: auto;
+      padding-right: 1em;
+    }
+
+    .p-button-left.p-button {
+      font-family: 'Inter',serif, 'primeicons';
+      font-style: normal;
+      font-weight: 700;
+      font-size: 1em;
+      line-height: 1em;
+
+      color: @mrcall_grey_text2;
+      background: transparent;
+      border: 1px solid @mrcall_grey_text2;
+      padding: 0.5rem 1em;
+      margin: 0.2em 0.2em 0.2em auto;
+      border-radius: 33px;
+    }
+
+    .p-button-left.p-button:hover {
+      background: @mrcall_grey_text2;
+      color: @mrcall_white;
+    }
+  }
+}

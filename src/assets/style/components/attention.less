@@ -1,0 +1,60 @@
+@import "../colors";
+
+/*
+ * Reusable attention patterns.
+ *
+ * Use `.attention-pulse` on any interactive element (button, link, badge) that
+ * should draw the user's eye without being flashy. Alternates between
+ * @mrcall_blue and @mrcall_blue_highlight every 1.6s. Also applies a subtle
+ * scale + glow so it reads as a "call to action" even on busy screens.
+ *
+ * Compose with PrimeVue's p-button-success / p-button-primary / etc.
+ * Example: <Button class="p-button-success attention-pulse" ... />
+ *
+ * The animation respects prefers-reduced-motion.
+ */
+
+@keyframes mrcall-attention-pulse-bg {
+  0%, 100% {
+    background-color: @mrcall_blue;
+    box-shadow: 0 0 0 0 fade(@mrcall_blue, 45%);
+  }
+  50% {
+    background-color: @mrcall_blue_highlight;
+    box-shadow: 0 0 0 6px fade(@mrcall_blue_highlight, 0%);
+  }
+}
+
+@keyframes mrcall-attention-pulse-scale {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.035); }
+}
+
+.attention-pulse {
+  animation: mrcall-attention-pulse-bg 1.6s ease-in-out infinite,
+             mrcall-attention-pulse-scale 1.6s ease-in-out infinite;
+  border-color: transparent !important;
+}
+
+/* PrimeVue paints its own background on .p-button — override it */
+.attention-pulse.p-button,
+.attention-pulse.p-button:not(:disabled):hover,
+.attention-pulse.p-button:not(:disabled):focus {
+  background: @mrcall_blue;
+  border-color: transparent;
+  color: @mrcall_white;
+}
+
+.attention-pulse:disabled,
+.attention-pulse.p-disabled {
+  animation: none;
+  box-shadow: none;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .attention-pulse {
+    animation: none;
+    box-shadow: 0 0 0 3px fade(@mrcall_blue_highlight, 30%);
+  }
+}

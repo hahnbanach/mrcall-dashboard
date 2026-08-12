@@ -1,0 +1,1742 @@
+{
+  "language": "Keel",
+  "locale": {
+    "en-US": "Inglise",
+    "it-IT": "Itaalia",
+    "es-ES": "Hispaania",
+    "fr-FR": "Prantsuse",
+    "de-DE": "Saksa",
+    "nl-NL": "Hollandi",
+    "sv-SE": "Rootsi",
+    "da-DK": "Taani",
+    "nb-NO": "Norra",
+    "fi-FI": "Soome",
+    "et-EE": "Eesti",
+    "el-GR": "Kreeka"
+  },
+  "languages": {
+    "italian": "Itaalia",
+    "englishGB": "Inglise (GB)",
+    "englishUS": "Inglise (US)",
+    "spanishES": "Hispaania (ES)",
+    "spanishUS": "Hispaania (US)",
+    "frenchFR": "Prantsuse (FR)",
+    "germanDE": "Saksa (DE)",
+    "portuguesePT": "Portugali (PT)",
+    "portugueseBR": "Portugali (BR)",
+    "norwegianNO": "Norra",
+    "swedishSW": "Rootsi",
+    "finnishFI": "Soome",
+    "greekGR": "Kreeka",
+    "turkeyTK": "Türgi",
+    "dutchNL": "Hollandi",
+    "danishDK": "Taani",
+    "estonianEE": "Eesti"
+  },
+  "isoAlpha2Country": {
+    "IT": "Itaalia",
+    "US": "Ühendriigid",
+    "GB": "Suurbritannia",
+    "ES": "Hispaania",
+    "FR": "Prantsusmaa",
+    "PT": "Portugal",
+    "DE": "Saksamaa",
+    "CH": "Šveits",
+    "AU": "Austraalia",
+    "NO": "Norra",
+    "BR": "Brasiilia",
+    "IN": "India",
+    "CA": "Kanada",
+    "SW": "Rootsi",
+    "FI": "Soome",
+    "GR": "Kreeka",
+    "TK": "Türgimaa",
+    "NL": "Holland",
+    "DK": "Taani",
+    "EE": "Eesti"
+  },
+  "days": {
+    "monday": "Esmaspäev",
+    "tuesday": "Teisipäev",
+    "wednesday": "Kolmapäev",
+    "thursday": "Neljapäev",
+    "friday": "Reede",
+    "saturday": "Laupäev",
+    "sunday": "Pühapäev"
+  },
+  "timeSlots": {
+    "invalid": "Vigane määrang, kontrollige intervalle, kattumisi ei tohi olla."
+  },
+  "utils": {
+    "phonecompanies": {
+      "other": "Muu operaator"
+    },
+    "common": {
+      "or": "või"
+    }
+  },
+  "widgets": {
+    "tuplesvariables": {
+      "removeitem": "Eemalda element",
+      "additem": "Uus element"
+    },
+    "agentSkills": {
+      "loading": "Laadin saadaolevaid oskusi...",
+      "noSkills": "Agendi oskusi pole saadaval. Laadige esmalt üles Agent Skillsi otsustustabel.",
+      "configuration": "Seadistus",
+      "phasePrefetch": "Enne kõnet",
+      "phaseDuring": "Kõne ajal",
+      "phaseFinal": "Pärast kõnet",
+      "phasePrefetchHint": "Käivitub enne kõne algust",
+      "phaseDuringHint": "Saadaval tööriistana kõne ajal",
+      "phaseFinalHint": "Käivitub pärast kõne lõppu",
+      "skills": "oskust",
+      "addSkill": "Lisa oskus...",
+      "addAnother": "lisa veel",
+      "removeSkill": "Eemalda",
+      "noSkillsInPhase": "Selles etapis pole oskusi seadistatud",
+      "oauthConnect": "Ühenda",
+      "oauthConnected": "Ühendatud",
+      "oauthDisconnect": "Katkesta ühendus",
+      "addPair": "Lisa päis",
+      "skillUnavailable": "Seda oskust pole serveris enam saadaval. Eemaldage see või pöörduge klienditoe poole.",
+      "oauthScopeUnavailable": "See integratsioon vajab Google'i luba, mida MrCallil pole õigust küsida. Pöörduge klienditoe poole."
+    }
+  },
+  "components": {
+    "accountTitle": "Konto",
+    "account": {
+      "createAssistantSubtitle": "Seadistage uus häälassistent teise telefoninumbri või ettevõtte jaoks.",
+      "securitySectionTitle": "Turvalisus",
+      "integrationsSectionTitle": "Integratsioonid",
+      "dangerZoneSectionTitle": "Ohutsoon",
+      "mcpConnectors": {
+        "title": "MCP-konnektorid",
+        "description": "Ühendage Claude või mõni muu MCP-ühilduv AI-klient oma MrCalli kontoga. Looge juurdepääsuandmed, määrates igale konnektorile eraldi õigused.",
+        "manage": "Halda MCP-konnektoreid"
+      }
+    },
+    "zylchChat": {
+      "inputPlaceholder": "Sisesta sõnum või käsk...",
+      "welcome": "Vestle oma assistendi konfiguraatoriga",
+      "welcomeDescription": "Kirjelda, mida soovid muuta, ja ma uuendan sinu assistendi seadeid. Kirjuta lihtsalt loomulikult!",
+      "exampleCommands": "Näidiskäsud:",
+      "cmdSync": "/sync - Sünkroniseeri andmed",
+      "cmdGaps": "/gaps - Leia lüngad kalendris",
+      "cmdArchive": "/archive - Arhiveeri vestlused",
+      "cmdHelp": "/help - Kuva saadaolevad käsud"
+    },
+    "directVoice": {
+      "talkToAssistant": "Räägi assistendiga",
+      "connecting": "Ühendamine...",
+      "hangup": "Lõpeta kõne",
+      "ending": "Lõpetamine..."
+    },
+    "navbar": {
+      "login": "Logi sisse",
+      "subscribe": "Telli",
+      "assistants": "Minu assistent",
+      "account": "Minu konto",
+      "logout": "Välju",
+      "closeWebview": "Sulge",
+      "createAssistant": "Loo uus assistent",
+      "resendVerificationEmail": "Saada e-posti kinnituslink uuesti",
+      "resellerDashboard": "Edasimüüja juhtpaneel",
+      "invitationCodes": "Kutsekoodid",
+      "resellerManagement": "Edasimüüjate haldamine",
+      "userManagement": "Kasutajate haldamine",
+      "agentTemplates": "Agentide mallid"
+    },
+    "businessphonenumberverification": {
+      "businessPhoneNumberTitle": "Kas sisestasite vale numbri? Saate seda muuta",
+      "phoneNumberCountrySelectorPlaceholder": "Riigi kood",
+      "phoneNumberCountrySelectorError": "Viga",
+      "phoneNumberPhoneInputPlaceholder": "Telefoninumber",
+      "phoneNumberPhoneInputExample": "Näide: ",
+      "businessPhoneNumberIsNotValid": "Palun veenduge, et olete oma telefoninumbri õigesti sisestanud",
+      "settingsSuccessfullySaved": "Seaded edukalt salvestatud",
+      "errorSavingSettings": "Salvestamisel tekkis probleeme",
+      "activationBannerTitle": "Aktiveeri ja saa telefoninumber",
+      "activationBannerSubtitle": "1 nädal tasuta prooviperioodi!",
+      "activationBannerButton": "Aktiveeri kohe",
+      "talkToYourAssistant": "Räägi oma assistendiga",
+      "changeBusinessPhoneNumberButtonLabel": "Muuda",
+      "gotoBusinessesCustomize": "Kohanda",
+      "justVerifiedTheNumberButton": "Helistasin",
+      "assistantWasCreated": "Kinnitage oma telefon ja jätke sõnum.",
+      "callTheNumberInstructions1": "See on lihtsalt testassistent, teie telefoni ei pea midagi installima ega seadistama.",
+      "callTheNumberInstructions2a": "Helistage sellele numbrile oma telefoninumbrilt",
+      "callTheNumberInstructions2b": "ja saate teavituse e-postiga",
+      "callTheNumberInstructions3": "Klõpsake 'Helistasin' ja alustage oma assistendi seadistamist.",
+      "afterNumberVerificationTitle1": "Tubli!",
+      "afterNumberVerificationTitle2": "Nüüd saate alustada oma assistendi seadistamist.",
+      "seemsYouDidntCall": "Tundub, et te pole veel numbri kinnitamiseks helistanud.",
+      "issuesContactCustomerService": "Tekkis viga, palun pöörduge klienditeenindusse customer.service@mrcall.it"
+    },
+    "businesscreatesimple": {
+      "nicknameTitlePrivate": "Teie nimi",
+      "nicknameTitleBusiness": "Teie ettevõtte nimi",
+      "businessPhoneNumberTitle": "Telefoninumber, millel saame teiega ühendust võtta",
+      "selectAssistantLanguage": "Valige keel, milles teie assistent räägib",
+      "whichCustomerAreYou": "Milline MrCall te olete?",
+      "templateHighLevelDescriptionPrivate": "Erakasutaja profiil. Märkus: assistent luuakse meie serverites. Teie telefoni ei installita midagi",
+      "templateHighLevelDescriptionBusiness": "Ärikasutaja profiil, ilma VoIP-lülitita. Märkus: assistent luuakse meie serverites. Teie telefoni ei installita midagi",
+      "templateHighLevelDescriptionBusinessPlus": "Ärikasutaja profiil VoIP-lülitiga. Märkus: assistent luuakse meie serverites. Teie telefoni ei installita midagi",
+      "searchYourBusinessTitle": "Ühendage oma assistent Google Businessiga",
+      "searchYourBusinessSubtitle": "Leidke oma ettevõte ja jätkake järgmiste väljadega",
+      "searchYourBusinessNoResultFound": "Tulemusi ei leitud, saate siiski oma assistendi seadistada",
+      "searchYourBusinessPlaceholder": "Sisestage oma ettevõtte nimi ja aadress",
+      "searchYourBusinessButtonLabel": "Otsi",
+      "selectGoogleBusinessItemButtonLabel": "Kasuta neid andmeid",
+      "searchBusinessResultLabelName": "Nimi",
+      "searchBusinessResultLabelAddress": "Aadress",
+      "phoneNumberCountrySelectorPlaceholder": "Riigi kood",
+      "phoneNumberCountrySelectorError": "Viga",
+      "phoneNumberPhoneInputPlaceholder": "Telefoninumber",
+      "phoneNumberPhoneInputExample": "Näide: ",
+      "searchBusinessResultLabelBusinessPhoneNumber": "Telefon",
+      "businessPhoneNumberIsNotValid": "Palun kontrollige, kas olete oma telefoninumbri õigesti sisestanud",
+      "nicknameIsNotValid": "Palun kontrollige, kas olete oma hüüdnime õigesti sisestanud",
+      "createAssistantButton": "Loo assistent"
+    },
+    "businesses": {
+      "addFieldMatch": "Otsi",
+      "createNewBusiness": "Loo assistent",
+      "editAssistant": "Seadista assistent",
+      "onboardinConfigureAndTest": "Tee testkone",
+      "onboardingActivateAssistant": "Aktiveeri kohe!",
+      "planSubscription": "Makseviisid ja tellimused",
+      "startFreeTrial": "Alusta tasuta prooviperiood",
+      "activationBanner": {
+        "title": "Aktiveeri oma assistent",
+        "subtitle": "Ühenda oma assistent telefoninumbri või VoIP PBX-iga ja lase tal vastata sinu kõnedele.",
+        "cta": "Aktiveeri"
+      },
+      "newAssistantCreated": "Suurepärane! Teie uus assistent on loodud.",
+      "numberNotAssignedContactSupport": "Püsiv number pole määratud, palun pöörduge klienditoe poole",
+      "businessPhoneNumberVerified": "kinnitamata, helistage oma assistendile selle kinnitamiseks",
+      "plan": "Maksed",
+      "invoicingButtonLabel": "Arveldamine",
+      "partnerProgramButtonLabel": "Tutvustage meid sõbrale",
+      "gotoCallForwardingInstructionsButtonLabel": "Seadista suunamine",
+      "conversationsViewButtonLabel": "Näita sõnumeid",
+      "form": {
+        "businessId": "Ettevõtte ID",
+        "nickname": "Hüüdnimi",
+        "email": "E-post",
+        "plan": "Assistent",
+        "businessPhoneNumber": "Teie telefoninumber",
+        "serviceNumber": "Teie assistendi number",
+        "trial": "Prooviperioodi jäänud päevad",
+        "renewalDateTime": "Järgmise uuendamise kuupäev",
+        "subscriptionStatus": "Tellimuse olek",
+        "subscriptionStatusLabels": {
+          "ACTIVE": "Aktiivne",
+          "CANCELED": "Tühistatud",
+          "EXPIRED": "Aegunud",
+          "INCOMPLETE": "Puudulik",
+          "INCOMPLETE_EXPIRED": "Puudulik ja aegunud",
+          "ONBOARDING": "Aktiveerimise ootel",
+          "PAST_DUE": "Makse aegunud",
+          "SUSPENDED": "Peatatud",
+          "FREE": "Tasuta tellimus",
+          "TEST": "Aktiveerimise ootel",
+          "EXPIRING": "Aegumas",
+          "EXTERNAL": "Hallatakse klienditoe poolt",
+          "TRIALING": "Prooviperiood",
+          "UNPAID": "Maksmata",
+          "UNKNOWN": "Teadmata"
+        },
+        "resourcesCallCredit": "Jäänud minutid",
+        "resourcesCallCount": "Saadaolevad kõned",
+        "resourcesSmsCount": "Saadaolevad SMS-id"
+      },
+      "analyticsButtonLabel": "Analüütika",
+      "platformAnalyticsButtonLabel": "Platvormi analüütika",
+      "contactsButtonLabel": "Kontaktid",
+      "moreActions": "Rohkem toiminguid",
+      "health": {
+        "phoneVerified": "Telefon kinnitatud",
+        "phoneNotVerified": "Telefon kinnitamata",
+        "planActive": "Pakett aktiivne",
+        "noPlan": "Aktiivne pakett puudub",
+        "hasMinutes": "Minutid saadaval",
+        "noMinutes": "Minuteid pole järel"
+      },
+      "selectButtonTooltip": {
+        "enabled": "Juurdepääs assistendi kohandamisele",
+        "disabled": "Assistendi kohandamine on keelatud, palun kinnitage oma telefoninumber"
+      }
+    },
+    "contacts": {
+      "title": "Kontaktid",
+      "addContact": "Lisa kontakt",
+      "editContact": "Muuda kontakti",
+      "deleteAll": "Kustuta kõik",
+      "save": "Salvesta",
+      "cancel": "Tühista",
+      "actions": "Toimingud",
+      "search": "Otsi",
+      "searchPlaceholder": "Otsi nime, telefoni või e-posti järgi...",
+      "searchContact": "Otsi kontakti",
+      "noContactFound": "Selle numbri jaoks kontakti ei leitud",
+      "recentContacts": "Hiljuti lisatud kontaktid",
+      "bulkUpload": "Hulgilaadimine",
+      "bulkUploadDescription": "Kleepige allpool JSON-massiiv kontaktidest. Hoiatus: see asendab KÕIK olemasolevad kontaktid.",
+      "bulkUploadSubmit": "Laadi kontaktid üles",
+      "provider": "Allikas",
+      "providerBusiness": "Sinu kontaktid",
+      "providerHb": "MrCall",
+      "importContact": "Impordi kontakt",
+      "downloadVcard": "Laadi kontaktikaart alla",
+      "blockContact": "Blokeeri kontakt",
+      "unblockContact": "Eemalda kontakti blokeering",
+      "confirmDeleteTitle": "Kinnita kustutamine",
+      "confirmDeleteMessage": "Kas olete kindel, et soovite kontakti {name} kustutada?",
+      "confirmDeleteAllMessage": "Kas olete kindel, et soovite KÕIK kontaktid kustutada? Seda toimingut ei saa tagasi võtta.",
+      "form": {
+        "displayName": "Kuvatav nimi",
+        "firstName": "Eesnimi",
+        "lastName": "Perekonnanimi",
+        "nickname": "Hüüdnimi",
+        "phone": "Telefon",
+        "phonePlaceholder": "+1234567890",
+        "email": "E-post",
+        "emailPlaceholder": "email{'@'}example.com",
+        "company": "Ettevõte",
+        "notes": "Märkused",
+        "type": "Tüüp",
+        "addPhone": "Lisa telefon",
+        "addEmail": "Lisa e-post"
+      },
+      "toast": {
+        "success": "Edukas",
+        "error": "Viga",
+        "validationError": "Valideerimine",
+        "nameOrPhoneRequired": "Palun sisestage vähemalt nimi või telefoninumber",
+        "contactCreated": "Kontakt edukalt loodud",
+        "contactUpdated": "Kontakt edukalt uuendatud",
+        "contactDeleted": "Kontakt edukalt kustutatud",
+        "allContactsDeleted": "Kõik kontaktid edukalt kustutatud",
+        "saveFailed": "Kontakti salvestamine ebaõnnestus",
+        "deleteFailed": "Kontakti kustutamine ebaõnnestus",
+        "searchFailed": "Kontaktide otsimine ebaõnnestus",
+        "invalidJson": "Vigane JSON-vorming",
+        "jsonMustBeArray": "JSON peab olema kontaktide massiiv",
+        "bulkUploadSuccess": "Kontaktid edukalt üles laaditud",
+        "bulkUploadFailed": "Kontaktide üleslaadimine ebaõnnestus",
+        "contactBlocked": "Kontakt blokeeritud",
+        "contactUnblocked": "Kontakti blokeering eemaldatud",
+        "blockFailed": "Kontakti blokeerimine/blokeeringu eemaldamine ebaõnnestus",
+        "contactImported": "Kontakt edukalt imporditud"
+      }
+    },
+    "business": {
+      "configuration": {
+        "businessNotFound": "Assistenti ei leitud",
+        "errorRetrievingDataMessage": "Seadete salvestamisel tekkisid vead"
+      },
+      "saveButtonText": "Salvesta",
+      "settingsSuccessfullySaved": "Seaded edukalt salvestatud",
+      "errorSavingSettings": "Seadete salvestamisel tekkisid vead",
+      "yourAssistantIsReadyPleaseTry": "Teie assistent on valmis, proovige seda enne jätkamist",
+      "unableToSave": "Seadeid ei saa salvestada",
+      "mandatoryParameterMissing": "Kohustuslik parameeter on määramata: {param}",
+      "tabPanelYourProfile": "Teie profiil",
+      "tabPanelContacts": "Kontaktid",
+      "tabPanelCustomizeYourAssistant": "Kohanda assistenti",
+      "additionalParameters": {
+        "password": {
+          "legend": "Parool",
+          "tooltip": "Muuda parooli"
+        }
+      },
+      "voiceGender": {
+        "MALE": "Mees",
+        "FEMALE": "Naine"
+      },
+      "onboardingDialog": {
+        "editParametersButtonText": "Soovin muuta",
+        "continueToPaymentButtonText": "Mulle meeldib nii nagu on."
+      },
+      "configureWithAI": "Seadista tehisaruga",
+      "aladminAI": "AladMin AI",
+      "configureViaChat": "Seadista vestluse kaudu",
+      "talkToYourAssistant": "Räägi oma assistendiga",
+      "actionPanelIntro": "Seadista ja testi oma assistenti",
+      "howToCard1Title": "Kuidas minu assistent vastab?",
+      "howToCard1Text": "MrCall tutvustab end ja tunneb helistaja numbri järgi ära. Kas soovite seda muuta? Klõpsake \"Seadista tehisaruga\" ja kirjeldage, mida sooviksite.",
+      "howToCard2Title": "Kuidas võtan selle päriselt kasutusele?",
+      "howToCard2Text": "Aktiveerige pakett, saate numbri ja suunake kõned oma telefonilt MrCallile. Professional paketiga saate ühendada selle oma VoIP-keskjaamaga.",
+      "howToCard3Title": "Kas saan häält muuta?",
+      "howToCard3Text": "Jah! Jaotises \"Hääleseaded\" valige mees- või naishääl. MrCall räägib keeles, mille seadistamisel valisite.",
+      "howToCard4Title": "Kas MrCall võtab vastu broneeringuid?",
+      "howToCard4Text": "Muidugi. Jaotises \"Broneeringud\" saate määrata vabad ajad ja ühendada oma kalendri. MrCall haldab kohtumisi teie eest.",
+      "howToCard5Title": "Kuidas ma teavitusi saan?",
+      "howToCard5Text": "Iga kõne kohta saadetakse e-postiga teavitus koos kokkuvõttega. Jaotises \"Teie teavitused\" saate valida, mida ja kuidas saada.",
+      "howToCard6Title": "Kas saan lisada küsimusi ja vastuseid?",
+      "howToCard6Text": "Jaotises \"Küsimused ja vastused\" õpetate MrCallile, kuidas vastata lahtiolekuaegade, hindade ja teenuste kohta. Mida rohkem infot lisate, seda täpsem ta on.",
+      "howToCard7Title": "Mis juhtub suletud päevadel?",
+      "howToCard7Text": "Määrake päevad, mil olete suletud, ja MrCall teavitab helistajaid automaatselt ning soovitab, millal tagasi helistada.",
+      "howToCard8Title": "Kas saan kasutada kindlat teksti?",
+      "howToCard8Text": "Kui lülitate MrCall AI välja, loeb assistent ette kindla teksti, mille ise kirjutate. Vähem nutikas, kuid iga sõna üle on teil täielik kontroll.",
+      "activateMrCallCta": "Aktiveeri MrCall",
+      "needHelp": "Vajate abi?",
+      "activationBannerTitle": "Aktiveeri ja saa telefoninumber",
+      "activationBannerSubtitle": "1 nädal tasuta prooviperioodi!",
+      "activationBannerButton": "Aktiveeri kohe"
+    },
+    "changepassword": {
+      "changePasswordTitle": "Muuda parooli",
+      "changePasswordSubtitle": "Sisestage uus parool",
+      "operationSuccess": "Parool edukalt muudetud",
+      "operationSuccessExtended": "Saate kasutada uut parooli sisselogimiseks. Samas saate alati taotleda maagilist linki e-posti teel, et logida sisse ilma paroolita.",
+      "operationFailed": "Parooli muutmine",
+      "operationFailedExtended": "Uue parooli määramisel tekkisid probleemid",
+      "submitButton": "Muuda",
+      "formText": {
+        "pickAPassword": "Parooli tugevus",
+        "suggestions": "Vihjed",
+        "oneLowecase": "Vähemalt üks väiketäht",
+        "oneUppercase": "Vähemalt üks suurtäht",
+        "oneNumeric": "Vähemalt üks number",
+        "oneSymbol": "Vähemalt üks sümbol",
+        "atLeastNChars": "Vähemalt 8 tähemärki"
+      }
+    },
+    "changeemail": {
+      "changeEmailTitle": "Muuda e-posti",
+      "changeEmailSubtitle": "Sisestage uus e-posti aadress",
+      "operationSuccess": "E-posti muutmise taotlus edukalt edastatud",
+      "operationSuccessExtended": "Oleme teile saatnud lingi uue e-posti aadressi kinnitamiseks, klõpsake lingil uue aadressi kinnitamiseks.",
+      "operationFailed": "E-posti muutmine",
+      "operationFailedExtended": "Uue e-posti määramisel tekkisid probleemid",
+      "submitButton": "Muuda"
+    },
+    "conversations": {
+      "downloadDataButtonLabel": "Laadi alla",
+      "noMessages": "Sõnumeid pole veel",
+      "noMessagesDescription": "Kui saate kõnesid, ilmub siia teie vestluste ajalugu.",
+      "filterTitle": "Filtrid ja eksport",
+      "dateRangeLabel": "Kuupäevavahemik",
+      "dateRangePlaceholder": "Valige kuupäevavahemik",
+      "pageFilterLabel": "Filtreeri seda lehte",
+      "pageFilterPlaceholder": "Sisestage, et filtreerida tulemusi sellel lehel...",
+      "exportLabel": "Ekspordi andmed",
+      "viewModeLabel": "Sõnumite vaade",
+      "expandedView": "Täissõnumid",
+      "collapsedView": "Kompaktne vaade",
+      "hideReadLabel": "Loetud sõnumid",
+      "hideReadOn": "Peidetud",
+      "hideReadOff": "Nähtav",
+      "showMore": "Näita rohkem",
+      "showLess": "Näita vähem",
+      "duration": "{minutes}m {seconds}s",
+      "unknownContact": "Tundmatu helistaja",
+      "justNow": "Just praegu",
+      "minutesAgo": "{count} min tagasi",
+      "hoursAgo": "{count} tundi tagasi",
+      "daysAgo": "{count} päeva tagasi",
+      "loading": "Vestluste laadimine...",
+      "table": {
+        "body": "Sõnum",
+        "audioFile": "Heli",
+        "audioNotSupported": "Teie brauser ei toeta helielemente",
+        "contactName": "Kontakt",
+        "contactNumber": "Helistaja number"
+      },
+      "audio": {
+        "play": "Esita heli",
+        "pause": "Peata heli"
+      },
+      "views": {
+        "inbox": "Postkast",
+        "archive": "Arhiiv",
+        "trash": "Prügikast"
+      },
+      "actions": {
+        "archive": "Arhiveeri",
+        "unarchive": "Liiguta postkasti",
+        "delete": "Kustuta",
+        "restore": "Taasta",
+        "markAsRead": "Märgi loetuks",
+        "markAsUnread": "Märgi mitteloetuks",
+        "archiveAll": "Arhiveeri kõik",
+        "deleteAll": "Kustuta kõik",
+        "restoreAll": "Taasta kõik",
+        "moveAllToInbox": "Liiguta kõik postkasti"
+      },
+      "toast": {
+        "conversationArchived": "Vestlus arhiveeritud",
+        "conversationDeleted": "Vestlus kustutatud",
+        "conversationRestored": "Vestlus taastatud",
+        "conversationUnarchived": "Vestlus liigutatud postkasti",
+        "undo": "Võta tagasi",
+        "actionFailed": "Toiming ebaõnnestus, palun proovige uuesti",
+        "bulkArchived": "Vestlused arhiveeritud",
+        "bulkDeleted": "Vestlused kustutatud",
+        "bulkRestored": "Vestlused taastatud",
+        "bulkUnarchived": "Vestlused liigutatud postkasti"
+      },
+      "confirmBulk": {
+        "title": "Kinnita hulgitoiming",
+        "archiveMessage": "Kas olete kindel, et soovite arhiveerida kõik praegustele filtritele vastavad vestlused?",
+        "deleteMessage": "Kas olete kindel, et soovite kustutada kõik praegustele filtritele vastavad vestlused?",
+        "restoreMessage": "Kas olete kindel, et soovite taastada kõik praegustele filtritele vastavad vestlused?",
+        "unarchiveMessage": "Kas olete kindel, et soovite liigutada kõik praegustele filtritele vastavad vestlused postkasti?"
+      },
+      "bulkActionsLabel": "Hulgitoimingud",
+      "emptyStates": {
+        "inboxEmpty": "Kõik on loetud!",
+        "inboxEmptyDescription": "Teie postkastis pole uusi vestlusi.",
+        "archiveEmpty": "Arhiiv on tühi",
+        "archiveEmptyDescription": "Arhiveeritud vestlused ilmuvad siia.",
+        "trashEmpty": "Prügikast on tühi",
+        "trashEmptyDescription": "Kustutatud vestlused ilmuvad siia."
+      },
+      "unreadCount": "{count} lugemata"
+    },
+    "deleteaccount": {
+      "deleteAccountTitle": "Kustutage oma konto",
+      "submitButtonLabel": "Kustuta",
+      "confirmationRequest": "Hoiatus: teie aktiivne tellimus tühistatakse, teie konto ja andmed märgitakse eemaldamiseks ning kustutatakse automaatselt. Pärast tühistamist ei ole teie andmed enam kättesaadavad ega taastatavad. Pidage meeles, et peate oma seadmetest suunamise eemaldama. Kas soovite jätkata?",
+      "operationCompleted": "Teie tellimuse ja assistentide tühistamine on lõpetatud",
+      "removeCompletedHeader": "Tühistamine",
+      "logoutAfterCancellationLabel": "Välju",
+      "confirmCancellation": "Kinnita tühistamine",
+      "toastCancelSubscriptionSummary": "Konto ja seotud andmete tühistamine",
+      "toastCancellingOperationSummary": "Tühista toiming",
+      "toastErrorSummary": "Palun teavitage probleemist klienditeenindusse, me kontrollime, kas tühistamine viidi edukalt läbi",
+      "toastNotifyFortcomingCancelOperation": "Tühistame teie konto nagu soovitud",
+      "toastNotifyCanceledCancelAccountOperation": "Konto eemaldamine tühistati"
+    },
+    "deletecontacts": {
+      "deleteContactsTitle": "Kustutage oma kontaktid MrCallist",
+      "submitButtonLabel": "Kustuta",
+      "confirmationRequest": "Teie kontaktid, nii teie enda omad kui ka MrCalli poolt omandatud, kustutatakse. Pärast kustutamist ei kutsu MrCall helistajaid enam nimepidi nagu esimesel helistamisel. Kas kinnitate?",
+      "operationCompleted": "Teie kontaktid on kustutatud.",
+      "removeCompletedHeader": "Kustuta kontaktid",
+      "logoutAfterCancellationLabel": "Olgu",
+      "confirmCancellation": "Kinnita kustutamine",
+      "toastCancelContactsSummary": "Kontaktide kustutamine",
+      "toastCancellingOperationSummary": "Tühista toiming",
+      "toastErrorSummary": "Palun teavitage probleemist klienditeenindusse, me kontrollime, kas kontaktide kustutamine viiakse lõpule",
+      "toastNotifyFortcomingCancelOperation": "Kustutame teie kontakte",
+      "toastNotifyCanceledCancelContactsOperation": "Kontaktide kustutamine tühistati"
+    },
+    "products": {
+      "buyButtonLabel": "Osta",
+      "cancelButtonLabel": "Tühista",
+      "confirmCancellation": "Kinnita tühistamine",
+      "confirmationCancellationRequest": "Olete tellimust tühistamas ja seotud funktsioonid deaktiveeritakse. Kas olete kindel?",
+      "disableTopupButtonLabel": "Keela automaatne täiendamine",
+      "enableTopupButtonLabel": "Luba automaatne täiendamine",
+      "manageSubscriptionLabel": "Makseandmed",
+      "reactivateButtonLabel": "Taasaktiveeri",
+      "toastCancelSubscriptionSummary": "Tühistamine",
+      "toastCancellingOperationSummary": "Tühistamine käib",
+      "toastPaymentSubscriptionSummary": "Maksetaotluse töötlemine",
+      "toastErrorSummary": "Tekkis probleem, palun pöörduge klienditoe poole",
+      "toastNotifyFortcomingCancelOperation": "Tühistame teie tellimuse nagu soovitud",
+      "toastNotifyCanceledCancelSubscriptionOperation": "Tellimuse tühistamine peatati",
+      "toastReactivateSubscriptionSummary": "Tellimuse taasaktiveerimine",
+      "confirmCompletedReactivationSubscriptionSummary": "Tellimuse taasaktiveerimine lõpetatud",
+      "confirmCompletedCancelationSubscriptionSummary": "Tellimuse tühistamine lõpetatud",
+      "toastNotifyFortcomingReactivateOperation": "Taasaktiveerime teie tellimuse nagu soovitud",
+      "errorCreatingPaymentData": "Teie makseandmete töötlemisel tekkis viga, palun pöörduge klienditoe poole"
+    },
+    "subscription": {
+      "buyButtonLabel": "Osta",
+      "cancelButtonLabel": "Tühista",
+      "reactivateButtonLabel": "Taasaktiveeri",
+      "manageSubscriptionLabel": "Makseandmed",
+      "confirmationCancellationRequest": "Hoiatus: see toiming tühistab teie tellimuse. Saate MrCalli kasutamist jätkata tellimuse jäänud päevade jooksul, pärast mida teie assistent deaktiveeritakse. Kas olete kindel?",
+      "managedThroughAppleInApp": "Tellimust hallatakse Apple'i makse kaudu, avage tellimused oma iOS-seadmes",
+      "confirmCancellation": "Kinnita tühistamine",
+      "toastPaymentSubscriptionSummary": "Maksetaotluse töötlemine",
+      "toastCancelSubscriptionSummary": "Tühistamine",
+      "toastCancellingOperationSummary": "Tühistamine",
+      "toastErrorSummary": "Tekkisid probleemid, palun pöörduge klienditoe poole",
+      "toastNotifyFortcomingCancelOperation": "Tühistame teie tellimuse nagu soovitud",
+      "toastNotifyCanceledCancelSubscriptionOperation": "Tellimuse tühistamine peatati",
+      "toastReactivateSubscriptionSummary": "Taasaktiveeri tellimus",
+      "confirmCompletedReactivationSubscriptionSummary": "Tellimuse taasaktiveerimine lõpetatud",
+      "confirmCompletedCancelationSubscriptionSummary": "Tellimuse tühistamine lõpetatud",
+      "toastNotifyFortcomingReactivateOperation": "Taasaktiveerime teie tellimuse nagu soovitud",
+      "errorCreatingPaymentData": "Teie makseandmete töötlemisel tekkis viga, palun pöörduge klienditoe poole"
+    },
+    "templates": {
+      "onboarding": {
+        "doYouNeedAssistance": "Kas vajate abi?",
+        "supportsection": {
+          "doYouNeedAssistance": "Kas vajate abi?",
+          "callUs": "Helistage meile",
+          "callUsNumber": "+12027419420 or +442080595420",
+          "writeUs": "või kirjutage aadressil {param}",
+          "bookAnAppointment": "Samuti saate broneerida kohtumise meie ekspertidega.",
+          "bookAppointmentButtonLabel": "Broneeri kohtumine"
+        }
+      },
+      "sign": {
+        "magicklink": {
+          "emailInputboxTitle": "E-post",
+          "emailInputboxPlaceholder": "Sisestage oma e-posti aadress",
+          "successSent": "Maagiline link saadetud",
+          "failedSent": "Maagilist linki ei saadetud",
+          "magicLinkSentMessage": "Teie maagiline link on saadetud teie e-posti postkasti",
+          "checkYourMagicLinkMessage": "Klõpsake lingil, mille leiate meie saadetud e-kirjast, et siseneda",
+          "magicLinkErrorMessage": "Maagilise lingi saatmisel teie e-posti postkasti tekkis viga",
+          "submitButton": "Saada maagiline link",
+          "attention": "Tähelepanu",
+          "checkSpamFolder": "Kui te ei saa e-kirja, kontrollige, kas aadress on õige ja kas e-kiri ei sattunud rämpsposti kausta"
+        },
+        "signin": {
+          "emailInputboxTitle": "E-post",
+          "emailInputboxPlaceholder": "Sisestage oma e-posti aadress",
+          "passwordInputboxTitle": "Parool",
+          "passwordInputboxPlaceholder": "Sisestage oma parool",
+          "loginFailedGenericTitle": "Sisselogimise viga",
+          "loginFailedWrongPasswordTitle": "Vale parool",
+          "loginFailedWrongPasswordMessageFirstPart": "Kasutajale sisestatud parool",
+          "loginFailedWrongPasswordMessageSecondPart": "ei ole kehtiv.",
+          "loginFailedUserNotFoundTitle": "Kasutajat ei leitud",
+          "loginFailedUserNotFoundMessageFirstPart": "Kasutaja",
+          "loginFailedUserNotFoundMessageSecondPart": "ei ole registreeritud.",
+          "loginFailedNetworkErrorTitle": "Võrgu- või ühendusviga",
+          "loginFailedNetworkErrorMessageFirstPart": "Kasutajaga sisselogimine ebaõnnestus",
+          "loginFailedNetworkErrorMessageSecondPart": "Palun kontrollige, kas seade on internetiga ühendatud",
+          "signupButtonLabel": "Registreeru",
+          "signupLinkCompanionText": "Pole veel kontot?",
+          "loginFailedWithEmail": "Sisselogimine esitatud e-postiga ebaõnnestus",
+          "loginButtonLabel": "Logi sisse",
+          "dismissButtonLabel": "Tühista",
+          "didYouForgetPassword": "Kas unustasite parooli?",
+          "emailNotVerifiedTitle": "Te ei ole oma e-posti kinnitanud",
+          "emailNotVerifiedFirstPart": "Klõpsake lingil e-kirjas, mille saatsime aadressile",
+          "emailNotVerifiedSecondPart": "Kas te ei saanud lingiga e-kirja? Kontrollige oma rämpsposti kausta või klõpsake alloleval nupul, et saata uus kinnituse-kiri.",
+          "emailNotVerifiedReSendEmail": "Saada e-kiri",
+          "sessionExpiredTitle": "Seanss aegunud",
+          "sessionExpiredMessage": "Teie seanss on aegunud. Palun logige uuesti sisse."
+        },
+        "signup": {
+          "emailInputboxTitle": "E-posti aadress",
+          "emailInputboxPlaceholder": "Sisestage oma e-posti aadress",
+          "passwordInputboxTitle": "Parool",
+          "passwordInputboxPlaceholder": "Valige oma parool",
+          "registrationSuccess": "Kontrollige oma e-posti!",
+          "accountRegistered": "Teie konto on loodud ja seotud e-posti aadressiga",
+          "activationInstructions": "Palun kontrollige oma e-posti postkasti aktiveerimise juhiste saamiseks",
+          "registrationFailedGenericTitle": "Konto registreerimine ebaõnnestus.",
+          "registrationFailedMessage": "Teie konto loomisel e-posti aadressiga tekkisid vead",
+          "submitButton": "Registreeru",
+          "signinLinkCompanionText": "Konto juba olemas?",
+          "signinLinkLabel": "Logi sisse",
+          "signupWithGoogleButtonLabel": "Sisene Google'iga",
+          "formText": {
+            "qualityPasswordSubtitle": "Teie parooli kvaliteet",
+            "passwordPromptLabel": "Parooli pole sisestatud",
+            "passwordWeakLabel": "Nõrk parool, kergesti äraarvav",
+            "passwordMediumLabel": "Keskmise turvalisusega parool",
+            "passwordStrongLabel": "Tugev parool",
+            "suggestions": "Soovitused",
+            "oneLowecase": "Vähemalt üks väiketäht",
+            "oneUppercase": "Vähemalt üks suurtäht",
+            "oneNumeric": "Vähemalt üks number",
+            "oneSymbol": "Vähemalt üks sümbol",
+            "atLeastNChars": "Vähemalt 8 tähemärki"
+          },
+          "temsAndPrivacyPolicyStatement": {
+            "firstStatement": "Esita-nupule klõpsates nõustute",
+            "terms": {
+              "text": "Teenuse tingimustega",
+              "link": "https://www.mrcall.ai/en/terms-of-use/",
+              "path": "/termsandconditions"
+            },
+            "connective": "ja",
+            "privacy": {
+              "text": "Privaatsuspoliitikaga",
+              "link": "https://www.mrcall.ai/en/privacy/",
+              "path": "/privacypolicy"
+            }
+          },
+          "errorUserAlreadyExistsTitle": "Konto on juba olemas",
+          "errorUserAlreadyExistsMessageFirstPart": "Kasutaja e-postiga",
+          "errorUserAlreadyExistsMessageSecondPart": "on juba olemas. Sisselogimiseks klõpsake Logi sisse",
+          "errorNetworkTitle": "Võrgu- või ühendusviga",
+          "errorNetworkMessageFirstPart": "Registreerimine ebaõnnestus kasutajaga",
+          "errorNetworkMessageSecondPart": "Palun kontrollige, kas seade on internetiga ühendatud",
+          "errorUserAlreadyExistsAccessLink": "Logi sisse",
+          "errorDismissButton": "Tühista"
+        }
+      }
+    },
+    "whatsappweb": {
+      "tabWhatsappWeb": "WhatsApp Web",
+      "establishingConnectionTitle": "Ühendus",
+      "establishingConnectionSubtitle": "Loome ühendust WhatsAppi teenusega",
+      "logoutTitle": "Katkestage oma konto ühendus",
+      "logoutSubtitle": "Pärast ühenduse katkestamist ei saa teenus sõnumeid saata. Saate hiljem uuesti ühenduda.",
+      "testTitle": "Testsõnumi saatmine",
+      "testSubtitle": "Saatke sõnum oma WhatsAppi, kui kõik on õigesti läinud, saate sõnumi praeguse kellaajaga. Saate konto lahti ühendada oma seadme WhatsAppi sätetest.",
+      "accountNotConnectedTitle": "Ühendage oma WhatsAppi konto MrCalliga",
+      "accountNotConnectedSubtitle": "Skaneerige QR-kood oma WhatsAppi rakendusega, et ühendust autoriseerida"
+    },
+    "whatsappCloud": {
+      "tabTitle": "WhatsApp Cloud API",
+      "connectTitle": "Connect WhatsApp Cloud API",
+      "connectSubtitle": "Connect your business to WhatsApp Cloud API for official messaging through Meta",
+      "connectButton": "Connect Official WhatsApp",
+      "statusTitle": "Connection Status",
+      "connected": "Connected",
+      "phoneNumber": "Phone Number",
+      "displayName": "Display Name",
+      "qualityRating": "Quality Rating",
+      "revoke": "Disconnect",
+      "revokeConfirmTitle": "Confirm Disconnection",
+      "revokeConfirmMessage": "Are you sure you want to disconnect WhatsApp Cloud API? You will no longer be able to send or receive messages through the official API.",
+      "sendMessageTitle": "Send Message",
+      "recipientPhone": "Recipient Phone Number",
+      "messageType": "Message Type",
+      "messageText": "Message Text",
+      "templateName": "Template Name",
+      "sendButton": "Send",
+      "chatHistoryTitle": "Chat History",
+      "filterByContact": "Filter by contact...",
+      "direction": "Direction",
+      "contact": "Contact",
+      "type": "Type",
+      "message": "Message",
+      "timestamp": "Timestamp",
+      "toast": {
+        "success": "Operation completed successfully",
+        "error": "An error occurred",
+        "signupSuccess": "WhatsApp Cloud API connected successfully",
+        "signupFailed": "Failed to connect WhatsApp Cloud API",
+        "messageSent": "Message sent successfully",
+        "sendFailed": "Failed to send message",
+        "revokeSuccess": "WhatsApp Cloud API disconnected successfully",
+        "revokeFailed": "Failed to disconnect WhatsApp Cloud API"
+      }
+    },
+    "connectCalendar": {
+      "title": "Ühenda Google Calendar",
+      "description": "Ühendage Google Calendar, et automaatselt kohtumisi hallata. MrCall loeb teie hõivatud aegu ja loob kohtumisi. Teie andmed jäävad teie kalendrisse.",
+      "connectButton": "Ühenda kalender",
+      "disconnectButton": "Katkesta kalendri ühendus",
+      "selectCalendarTitle": "Vali kalender",
+      "confirmButton": "Kinnita",
+      "connectedTo": "Ühendatud:",
+      "changeCalendar": "Muuda kalendrit",
+      "loadingCalendars": "Kalendrite laadimine...",
+      "noCalendarsFound": "Kirjutatavaid kalendreid ei leitud"
+    },
+    "analytics": {
+      "title": "Analüütika",
+      "overview": "Ülevaade",
+      "dateRangePlaceholder": "Valige kuupäevavahemik",
+      "presets": {
+        "7d": "7 päeva",
+        "30d": "30 päeva",
+        "90d": "90 päeva"
+      },
+      "kpi": {
+        "totalCalls": "Kõnesid kokku",
+        "avgDuration": "Keskmine kestus",
+        "totalDuration": "Kogukestus",
+        "uniqueCallers": "Unikaalsed helistajad"
+      },
+      "timeseries": {
+        "title": "Kõnede maht ajas",
+        "totalCalls": "Kõnesid kokku"
+      },
+      "duration": {
+        "title": "Kõne kestuse jaotus",
+        "callCount": "Kõnede arv"
+      },
+      "heatmap": {
+        "title": "Tunnipõhine aktiivsuse kuumuskaart",
+        "calls": "kõned",
+        "days": {
+          "mon": "E",
+          "tue": "T",
+          "wed": "K",
+          "thu": "N",
+          "fri": "R",
+          "sat": "L",
+          "sun": "P"
+        }
+      },
+      "callers": {
+        "title": "Helistajate analüütika",
+        "number": "Number",
+        "callCount": "Kõned",
+        "totalDuration": "Kogukestus",
+        "lastCall": "Viimane kõne"
+      },
+      "emptyState": {
+        "title": "Andmed puuduvad",
+        "description": "Valitud perioodi kohta analüütikaandmed puuduvad."
+      },
+      "errors": {
+        "title": "Viga",
+        "fetchFailed": "{section} andmete laadimine ebaõnnestus."
+      },
+      "adminMode": {
+        "title": "Platvormi analüütika (kõik ettevõtted)"
+      },
+      "breakdown": {
+        "title": "Jaotus ettevõtte järgi",
+        "businessId": "Ettevõtte ID",
+        "totalCalls": "Kõnesid kokku",
+        "avgDuration": "Kesk. kestus",
+        "totalDuration": "Kogukestus",
+        "uniqueCallers": "Unikaalsed helistajad",
+        "callPercentage": "Kõne-%",
+        "totalBusinesses": "Aktiivsed ettevõtted"
+      }
+    },
+    "reseller": {
+      "ownerSelector": {
+        "placeholder": "Valige konto",
+        "allAccounts": "Kõik hallatavad kontod",
+        "myAccount": "Minu konto"
+      },
+      "dashboard": {
+        "title": "Edasimüüja juhtpaneel",
+        "profile": "Profiil",
+        "displayName": "Kuvatav nimi",
+        "email": "E-post",
+        "feeRate": "Tasumäär",
+        "stats": "Ülevaade (viimased 30 päeva)",
+        "totalCalls": "Kõnesid kokku",
+        "managedAccounts": "Hallatavad kontod",
+        "avgDuration": "Keskmine kestus",
+        "uniqueCallers": "Unikaalsed helistajad",
+        "managedOwnersList": "Hallatavad omanikud",
+        "ownerName": "Nimi",
+        "ownerEmail": "E-post",
+        "ownerUid": "UID",
+        "source": "Allikas",
+        "invitationCode": "Kutsekood",
+        "quickActions": "Kiirtoimingud",
+        "manageCodes": "Halda koode",
+        "viewBusinesses": "Vaata ettevõtteid",
+        "viewAnalytics": "Vaata analüütikat",
+        "viewProfile": "Vaata profiili",
+        "error": "Viga"
+      },
+      "codes": {
+        "title": "Kutsekoodid",
+        "generateTitle": "Loo uus kood",
+        "label": "Silt",
+        "labelPlaceholder": "nt Kampaania kevad 2026",
+        "maxUses": "Maksimaalne kasutuskordade arv",
+        "maxUsesPlaceholder": "Piiramatu",
+        "expiresAt": "Aegub",
+        "generate": "Loo",
+        "listTitle": "Teie koodid",
+        "code": "Kood",
+        "labelHeader": "Silt",
+        "uses": "Kasutuskorrad",
+        "status": "Olek",
+        "created": "Loodud",
+        "actions": "Toimingud",
+        "copyLink": "Kopeeri link",
+        "deactivate": "Deaktiveeri",
+        "deactivateConfirm": "Kas olete kindel, et soovite selle koodi deaktiveerida?",
+        "deactivateHeader": "Deaktiveeri kood",
+        "statusActive": "Aktiivne",
+        "statusFull": "Täis",
+        "statusExpired": "Aegunud",
+        "statusInactive": "Mitteaktiivne",
+        "success": "Edukas",
+        "error": "Viga",
+        "generated": "Kutsekood edukalt loodud",
+        "deactivated": "Kood edukalt deaktiveeritud",
+        "linkCopied": "Kutselink kopeeritud lõikelauale",
+        "fetchError": "Kutsekoodide laadimine ebaõnnestus",
+        "generateError": "Kutsekoodi loomine ebaõnnestus",
+        "deactivateError": "Koodi deaktiveerimine ebaõnnestus"
+      },
+      "profile": {
+        "title": "Edasimüüja profiil",
+        "displayName": "Kuvatav nimi",
+        "email": "E-post",
+        "feeRate": "Tasumäär",
+        "canGenerateCodes": "Saab luua koode",
+        "canAcceptExistingOwners": "Aktsepteeri olemasolevaid omanikke",
+        "stripeConnect": "Stripe Connect",
+        "createdAt": "Loodud",
+        "updatedAt": "Viimati uuendatud",
+        "noProfile": "Edasimüüja profiili ei leitud"
+      },
+      "managedBy": {
+        "label": "Haldaja: {name} — {email}"
+      }
+    },
+    "admin": {
+      "templates": {
+        "title": "Agentide mallid",
+        "createTemplate": "Uus mall",
+        "editTemplate": "Muuda malli",
+        "deleteConfirm": "Kas olete kindel, et soovite malli '{name}' kustutada?",
+        "name": "Nimi",
+        "description": "Kirjeldus",
+        "provider": "Pakkuja",
+        "model": "Mudel",
+        "temperature": "Temperatuur",
+        "maxTokens": "Max tokeneid",
+        "systemPrompt": "Süsteemiprompt",
+        "tools": "Tööriistad",
+        "enableMemory": "Vestluse mälu",
+        "maxHistory": "Max ajaloo sõnumeid",
+        "maxToolIterations": "Max tööriistade iteratsioone",
+        "timeout": "Päringu ajalimiit (s)",
+        "version": "Versioon",
+        "enabled": "Aktiivne",
+        "save": "Salvesta",
+        "saved": "Mall on salvestatud",
+        "created": "Mall on loodud",
+        "deleted": "Mall on kustutatud",
+        "test": "Testi",
+        "back": "Tagasi",
+        "versionHistory": "Versioonide ajalugu",
+        "rollback": "Taasta",
+        "rollbackConfirm": "Kas taastada versioon {version}?",
+        "rolledBack": "Taastatud versioonile {version}",
+        "aiChat": "AI-prompti redaktor",
+        "aiChatPlaceholder": "Palu AI-l prompti parandada...",
+        "applyToPrompt": "Rakenda prompti",
+        "unsavedChanges": "Teil on salvestamata muudatusi. Kas hüljata?",
+        "testChat": "Testvestlus",
+        "testPlaceholder": "Kirjuta testsõnum...",
+        "enableToolCallValidation": "Tööriistakutsete valideerimine",
+        "enableInputSanitization": "Sisendi puhastamine",
+        "scope": "Ulatus",
+        "scopeGlobal": "Globaalne",
+        "scopeBusiness": "Ettevõte"
+      },
+      "reseller": {
+        "listTitle": "Edasimüüjate haldamine",
+        "newReseller": "Uus edasimüüja",
+        "displayName": "Kuvatav nimi",
+        "email": "E-post",
+        "feeRate": "Tasumäär",
+        "ownerCount": "Omanikud",
+        "actions": "Toimingud",
+        "error": "Viga",
+        "success": "Edukas",
+        "fetchError": "Edasimüüja andmete laadimine ebaõnnestus",
+        "backToList": "Tagasi nimekirja",
+        "profileTitle": "Edasimüüja profiil",
+        "editProfile": "Muuda profiili",
+        "resellerId": "Edasimüüja ID",
+        "canGenerateCodes": "Saab luua koode",
+        "canAcceptExistingOwners": "Aktsepteeri olemasolevaid omanikke",
+        "stripeConnectAccountId": "Stripe Connect konto ID",
+        "stripeConnectPlaceholder": "acct_...",
+        "stripeConnect": "Stripe Connect",
+        "feeRates": "Tasumäärad",
+        "targetType": "Sihtmärgi tüüp",
+        "targetName": "Sihtmärgi nimi",
+        "addFeeRate": "Lisa tasumäär",
+        "feeRateAdded": "Tasumäär lisatud",
+        "feeRateRemoved": "Tasumäär eemaldatud",
+        "feeRateError": "Tasumäära haldamine ebaõnnestus",
+        "removeFeeRateConfirm": "Kas olete kindel, et soovite selle tasumäära eemaldada?",
+        "removeFeeRateHeader": "Eemalda tasumäär",
+        "ownerEmail": "E-post",
+        "source": "Allikas",
+        "invitationCode": "Kutsekood",
+        "managedOwners": "Hallatavad omanikud",
+        "ownerUidPlaceholder": "Sisestage omaniku UID või e-post",
+        "addMapping": "Lisa seostamine",
+        "ownerId": "Omaniku ID",
+        "removeMappingConfirm": "Kas olete kindel, et soovite selle omaniku seostamise eemaldada?",
+        "removeMappingHeader": "Eemalda seostamine",
+        "dangerZone": "Ohutsoon",
+        "revokeDescription": "Edasimüüja tühistamine eemaldab kõik omaniku seostamised, tühistab kaitsmata ettevõtted, kustutab profiili ja lähtestab kasutajarolli. Seda ei saa tagasi võtta.",
+        "revokeReseller": "Tühista edasimüüja",
+        "revokeConfirmTextUnprotected": "See tühistab kõik hallatavate omanike ettevõtted. Kinnitamiseks sisestage edasimüüja nimi: {name}",
+        "revokeConfirmTextProtected": "Hallatavate omanike ettevõtted jätkavad tööd (kaitstud režiim). Kinnitamiseks sisestage edasimüüja nimi: {name}",
+        "typeNameToConfirm": "Sisestage nimi kinnitamiseks",
+        "cancel": "Tühista",
+        "save": "Salvesta",
+        "profileUpdated": "Edasimüüja profiil uuendatud",
+        "saveError": "Profiili salvestamine ebaõnnestus",
+        "mappingAdded": "Omaniku seostamine lisatud",
+        "mappingRemoved": "Omaniku seostamine eemaldatud",
+        "mappingError": "Seostamise haldamine ebaõnnestus",
+        "revoked": "Edasimüüja edukalt tühistatud",
+        "revokeError": "Edasimüüja tühistamine ebaõnnestus",
+        "provisionTitle": "Loo uus edasimüüja",
+        "step1Title": "Samm 1: Otsi kasutajat",
+        "uidPlaceholder": "Sisestage Firebase UID",
+        "emailPlaceholder": "Sisestage e-posti aadress",
+        "lookupUser": "Otsi",
+        "currentRole": "Praegune roll",
+        "setRoleReseller": "Määra rolliks edasimüüja",
+        "alreadyReseller": "Kasutaja on juba edasimüüja",
+        "step2Title": "Samm 2: Loo edasimüüja profiil",
+        "createProfile": "Loo profiil",
+        "lookupError": "Kasutaja otsimine ebaõnnestus",
+        "roleSet": "Roll määratud edasimüüjaks",
+        "roleError": "Rolli määramine ebaõnnestus",
+        "profileCreated": "Edasimüüja profiil loodud",
+        "createError": "Profiili loomine ebaõnnestus",
+        "userRoleTitle": "Kasutajarollide haldamine",
+        "search": "Otsi",
+        "newRole": "Uus roll",
+        "selectRole": "Valige roll",
+        "roleUpdated": "Kasutajaroll uuendatud",
+        "userNotFoundByEmail": "Selle e-postiga Firebase'i kasutajat ei leitud",
+        "roleChangeConfirm": "Muuta kasutaja {uid} roll rolliks {role}?",
+        "roleChangeHeader": "Kinnita rolli muutmine",
+        "protected": "Kaitstud",
+        "protectedHint": "Kui lubatud, jäävad hallatavate omanike ettevõtted edasimüüja eemaldamisel alles",
+        "transferOwner": "Kanna omanik üle",
+        "transferToReseller": "Siht-edasimüüja ID",
+        "transferToResellerPlaceholder": "Sisestage siht-edasimüüja UID",
+        "ownerTransferred": "Omanik edukalt üle kantud",
+        "transferError": "Omaniku ülekandmine ebaõnnestus",
+        "revokedDetail": "Edasimüüja eemaldatud: {owners} omanikku mõjutatud, {businesses} ettevõtet tühistatud"
+      }
+    }
+  },
+  "views": {
+    "onboarding": {
+      "choosedevice": {
+        "titleText": "Mida te seadistate?",
+        "moveForward": "Edasi",
+        "moveBackward": "Tagasi",
+        "subtitleText": "Valige seadistatav seade",
+        "mobilePhone": "Mobiiltelefon",
+        "landLine": "Lauatelefon",
+        "switchBoard": "Lüliti",
+        "headingMessageTitle": "Aitäh!",
+        "headingMessageSubtitle": "Teie 7-päevane tasuta prooviperiood on alanud!"
+      },
+      "language": {
+        "titleText": "Tere tulemast!",
+        "moveForward": "Edasi",
+        "subtitleText": "Valige oma assistendi keel",
+        "defaultLang": "Itaalia",
+        "pickALang": "Mis keeles teie assistent vastab?",
+        "pickALangPlaceholder": "valige keel",
+        "pickALangSubtitle": "Põhikeel: assistent suudab vastata erinevates keeltes",
+        "pickCountryPlaceholder": "valige riik",
+        "numberCountry": "Teie assistendi telefoninumbri riik",
+        "numberCountrySubtitle": "Teie assistent vastab valitud riigi pühendatud numbrile",
+        "mainLanguageHint": "Saate seda hiljem muuta ja teie assistent võib olla ka mitmekeelne.",
+        "funFactTitle": "Kas teadsite?",
+        "funFactText": "Esimese rääkiva masina ehitas 1791. aastal austria-ungari leiutaja Wolfgang von Kempelen. Ta oli minu esiema! Ja suutis uhkelt hääldada \"Konstantinoopol\". Pole paha, eks?"
+      },
+      "business": {
+        "funFactTitle": "MrCall, teie nutikas assistent",
+        "funFactText": "MrCall sündis Itaalias, nagu ka idee isiklikust assistendist! Vanadel roomlastel oli nomenclator, spetsiaalne ori, kelle ainus ülesanne oli meelde jätta iga inimese nimi, nägu ja ühiskondlik seisus, keda tema isand võis kohata. MrCall teeb sedasama, kuid on poliitiliselt korrektne."
+      },
+      "searchbusinessfunfact": {
+        "funFactTitle": "Miks on Kollased Leheküljed kollased?",
+        "funFactText": "Kollased Leheküljed leiutati 1883. aastal, sest Wyomingis Cheyenne'i trükkalil sai valge paber otsa. Sellest sai maailma esimene ettevõtete kataloog. Täna jätame nii paberi kui ka ootemuusika vahele. Ühendage oma Google Business, et teie assistent saaks kohe kõnedele vastama hakata."
+      },
+      "assistantcreatedfunfact": {
+        "funFactTitle": "Külmkapist telefoni",
+        "funFactText": "Enne kui kõnepost muutus digitaalseks failiks, oli see märkmikuga inimene. 1930. aastatel oli esimene automaatvastaja külmkapisuurune kapp. Täna on MrCall teie isiklik telefonist, ilma külmkapisuuruse tehnika ja vilistamiseta."
+      },
+      "forwardinggeneric": {
+        "selectOperator": "Valige oma operaator",
+        "dialTheNumber": "Valige oma telefoni klahvistikul järgmine number ",
+        "pressTheDialButton": "ja vajutage helistamisklahvi. Operaator võib esitada teate toimingu tulemusega.",
+        "doYouWhantToSet": "Kas soovite määrata ",
+        "numberOfSecondsBeforeForwarding": "sekundite arvu enne suunamise alustamist?",
+        "tryThisOption": "Proovige seda valikut: **61*{param}**SEKUNDITE_ARV#.",
+        "forInstanceToForward": "Näiteks suunamise alustamiseks 15 sekundi pärast: ",
+        "deactivation": "Deaktiveerimine",
+        "compose": "valige",
+        "andPressDialButton": "ja vajutage helistamisklahvi.",
+        "thisOperatorMayApplyAFee": "See operaator võib kõne suunamise eest tasu küsida.",
+        "officialProcedure": "Klõpsake siin oma telefonioperaatori ametlike juhiste vaatamiseks.",
+        "tryToContactTheOperatorFastweb": "Kui suunamiskoodid ei tööta, võite proovida täiendamist Fastweb rakendusest või küsida kinnitust oma operaatori klienditoelt.",
+        "genericDisclaimer1": "Kõne suunamine on protseduur, mida haldab teie operaator, mitte MrCall.",
+        "genericDisclaimer2": "Kui suunamiskoodid ei tööta, võib see sõltuda teie lepingust; soovitame pöörduda oma operaatori poole kõne suunamise aktiveerimiseks."
+      },
+      "forwardingonlandline": {
+        "titleText": "Kõne suunamise seadistamine lauatelefonilt",
+        "subtitleText": "Valige protseduurikoodid kõne suunamise aktiveerimiseks",
+        "moveBackward": "Tagasi",
+        "moveForward": "Olen seadistanud"
+      },
+      "forwardingonotherdevice": {
+        "titleText": "Suunamise seadistamine mobiiltelefonil",
+        "subtitleText": "Valige koodid suunamise aktiveerimiseks"
+      },
+      "configureassistant": {
+        "titleText": "Nüüd looge oma assistent",
+        "subtitleText": "",
+        "moveForward": "Loo!",
+        "moveBackward": "Tagasi",
+        "mandatoryParameter": "See väli on kohustuslik",
+        "nicknameTitle": "Assistendi tunnus (kasulik, kui teil on mitu)",
+        "nicknamePlaceholder": "Teie nimi või ettevõtte nimi",
+        "nicknameSubtitle": "Teie hüüdnimi või ettevõtte nimi",
+        "voiceGenderTitle": "Hääle sugu",
+        "welcomeMessageTitle": "Tervitussõnum pärast tervitust",
+        "welcomeMessageSubtitle": "Saate seda sõnumit igal ajal muuta!",
+        "voiceGenderDefault": "FEMALE",
+        "nickNamePlaceHolder": "TeieEttevõte",
+        "voiceGender": [
+          {
+            "label": "Mees",
+            "value": "MALE"
+          },
+          {
+            "label": "Naine",
+            "value": "FEMALE"
+          }
+        ],
+        "errorDialogAlreadyExistsTitle": [
+          "Assistent on juba teie numbriga seotud"
+        ],
+        "errorDialogUnknownErrorTitle": [
+          "Tekkis viga"
+        ],
+        "errorDialogUnknownErrorBody": [
+          "Kui probleem püsib, pöörduge klienditoe poole."
+        ],
+        "errorDialogAlreadyExistsBody": [
+          "Saate minna tagasi ja valida teise numbri.",
+          "Või saate minna oma isiklikku alasse, et muuta varem loodud assistenti."
+        ],
+        "alreadyExistsBusinessErrorLeftButtonLabel": "Tagasi",
+        "alreadyExistsBusinessErrorRightButtonLabel": "Assistendid",
+        "unknownErrorBusinessErrorLeftButtonLabel": "Proovi uuesti",
+        "unknownErrorBusinessErrorRightButtonLabel": "Küsi abi"
+      },
+      "chooseplan": {
+        "title": "Alustage tasuta 1-nädalast prooviperioodi",
+        "subtitle": "Proovige nädala jooksul, ilma kohustuseta – tühistage igal ajal, ilma tasudeta!",
+        "textForFreeTrial": "KAS SOOVITE ENNE OMA ASSISTENDIGA MÄNGIDA? KLÕPSAKE ",
+        "myAssistantLink": "Minu assistent ⇧",
+        "plans": [
+          {
+            "id": "essential",
+            "title": "Põhipakett",
+            "highlight": "Alustage riskivabalt",
+            "pricing": {
+              "number": "29",
+              "currency": "$",
+              "periodicity": "kuus"
+            },
+            "buttonLabel": "ALUSTA KASUTAMIST",
+            "functionalities": {
+              "title": "Kiire seadistus ja loomulik vestlus",
+              "items": [
+                {
+                  "value": "200 minutit põhi-AI-d (umbes 100 kõnet)"
+                },
+                {
+                  "value": "Kasutaja poolt muudetav kõnevastus"
+                },
+                {
+                  "value": "Küsib nime ja e-posti aadressi"
+                },
+                {
+                  "value": "Teavitus helistajale WhatsApp/SMS-i kaudu eelseadistatud sõnumiga"
+                },
+                {
+                  "value": "Teavitused ettevõttele rakenduse ja e-posti kaudu"
+                },
+                {
+                  "value": "Eraldab kõnedest põhiteavet"
+                },
+                {
+                  "value": "Ühendub Google My Businessiga"
+                },
+                {
+                  "value": "Assistendi teadmusbaasi loomine"
+                },
+                {
+                  "value": "Kontaktide haldamine"
+                },
+                {
+                  "value": "Kõnestatistika ja analüütika"
+                },
+                {
+                  "value": "MrCall Desktop: e-post, WhatsApp ja telefon teie arvutist (sisaldub)"
+                }
+              ]
+            }
+          },
+          {
+            "id": "starter",
+            "title": "Algpakett",
+            "highlight": "Täiustatud seadistus",
+            "pricing": {
+              "number": "55",
+              "currency": "$",
+              "periodicity": "kuus"
+            },
+            "buttonLabel": "ALUSTA!",
+            "functionalities": {
+              "title": "Broneeringud, kõne suunamine ja prioriteetne tugi",
+              "includesFrom": "Kõik Essentialist, lisaks:",
+              "items": [
+                {
+                  "value": "250 minutit täiustatud AI-d (umbes 130 kõnet)"
+                },
+                {
+                  "value": "Nutikas kõnevastus helistaja ajaloo põhjal"
+                },
+                {
+                  "value": "Mitmekeelne assistent"
+                },
+                {
+                  "value": "Tehisintellekti personaliseeritud WhatsApp-sõnumid helistajale pärast iga kõnet"
+                },
+                {
+                  "value": "WhatsApp-teavitused ettevõttele kõne kokkuvõttega (tasuline lisand)"
+                },
+                {
+                  "value": "Broneerimismoodul (Google Calendar)"
+                },
+                {
+                  "value": "Prioriteetne e-posti tugi (kuni 5 päeva)"
+                },
+                {
+                  "value": "Mandaadid VoIP PBX-ühenduseks SIP Trunki kaudu"
+                },
+                {
+                  "value": "Kõnejärgne webhook: automaatne andmeedastus CRM-i, haldustööriistadesse või automatiseerimistesse"
+                },
+                {
+                  "value": "Assistent suunab kõned läbinumbritele või telefoninumbritele"
+                },
+                {
+                  "value": "MrCall Desktop: e-post, WhatsApp ja telefon teie arvutist (sisaldub)"
+                }
+              ]
+            }
+          },
+          {
+            "id": "professional",
+            "title": "Professionaal",
+            "highlight": "Loodud teie ettevõttele",
+            "pricing": {
+              "number": "160",
+              "currency": "$",
+              "periodicity": "kuus"
+            },
+            "buttonLabel": "ALUSTA!",
+            "functionalities": {
+              "title": "Täiustatud seadistused ja ühendused kolmandate osapoolte süsteemidega",
+              "includesFrom": "Kõik Starterist, lisaks:",
+              "items": [
+                {
+                  "value": "700 minutit täiustatud AI-d, umbes 350 kõnet"
+                },
+                {
+                  "value": "Nutikas kõnevastus helistaja ajaloo põhjal"
+                },
+                {
+                  "value": "E-posti tugi 2 tööpäeva jooksul"
+                },
+                {
+                  "value": "WhatsApp-teavitused ettevõttele kaasatud plaanis (kokkuvõte, transkriptsioon)"
+                },
+                {
+                  "value": "Andmete lugemine/kirjutamine välistest allikatest (veebisait, CRM jne) 2 tunni konsultatsiooniga"
+                },
+                {
+                  "value": "Eralduva teabe kohandamine (tootekood jne)"
+                },
+                {
+                  "value": "Hind ei sisalda maksu, kui see on kohaldatav"
+                },
+                {
+                  "value": "MrCall Desktop: e-post, WhatsApp ja telefon teie arvutist (sisaldub)"
+                }
+              ]
+            }
+          }
+        ],
+        "errorDialogUnknownErrorTitle": [
+          "Tekkis viga"
+        ],
+        "errorDialogUnknownErrorBody": [
+          "Kui probleem püsib, pöörduge klienditoe poole."
+        ],
+        "unknownErrorBusinessErrorRightButtonLabel": "Tühista",
+        "moveBackward": "Tagasi",
+        "recommendedLabel": "Soovitatav",
+        "trustSignals": {
+          "securePayment": "Turvaline makse Stripe kaudu",
+          "cancelAnytime": "Tühista igal ajal, ilma tasudeta",
+          "noChargesDuringTrial": "Prooviperioodil tasuta"
+        },
+        "supportWriteUs": "Kirjuta aadressile {email}",
+        "supportBookMeeting": "või broneeri kohtumine meie ekspertidega",
+        "advisor": {
+          "toggleLabel": "Pole kindel, milline pakett sobib? Aitame!",
+          "toggleLabelCollapse": "Peida paketisoovitaja",
+          "callVolumeTitle": "Mitu kõnet ootate kuus?",
+          "callVolumeOptions": {
+            "low": "Kuni 100",
+            "medium": "100–300",
+            "high": "300+"
+          },
+          "featuresTitle": "Milliseid funktsioone vajate?",
+          "features": {
+            "smart_response": "Nutikamad vestlused",
+            "multilingual": "Mitmekeelne",
+            "dynamic_whatsapp": "Isikupärastatud WhatsApp",
+            "booking": "Kohtumiste broneerimine",
+            "voip_sip": "Telefonikeskjaama ühendus",
+            "webhook": "Rakenduste ja CRM automatiseerimine",
+            "call_transfer": "Kõne suunamine",
+            "call_transcription": "Kõne kokkuvõte WhatsAppis",
+            "external_sources": "Väliste andmete ühendamine",
+            "custom_extraction": "Kohandatud andmete kogumine"
+          },
+          "resetLabel": "Lähtesta filtrid",
+          "bestMatchBadge": "Ideaalne pakett teile",
+          "noMatchTitle": "Sobivat paketti ei leitud",
+          "noMatchMessage": "Ükski pakett ei vasta kõigile teie kriteeriumidele. Proovige eemaldada mõned funktsioonid või muuta kõnede mahtu."
+        }
+      },
+      "forwardingonthisdevice": {
+        "titleText": "Kõne suunamise seadistamine mobiiltelefonilt",
+        "subtitleText": "Valige protseduurikoodid kõne suunamise aktiveerimiseks",
+        "moveBackward": "Tagasi",
+        "moveForward": "Olen seadistanud",
+        "activateCode": "Aktiveeri",
+        "deactivateCode": "Deaktiveeri",
+        "activateItemTitle": "Aktiveeri kõne suunamine",
+        "deactivateItemTitle": "Deaktiveeri kõne suunamine",
+        "activateItemSubtitle": "Ei tööta? Vaadake juhiseid 'Muu seade' alt",
+        "deactivateItemSubtitle": "Valige deaktiveerimiskood"
+      },
+      "makeatestcall": {
+        "titleText": "Testige oma MrCalli assistenti!",
+        "moveBackward": "Tagasi",
+        "moveForward": "Järgmine",
+        "skip": "Jäta vahele",
+        "subtitleText": "helistage oma numbrilt ",
+        "callGeneralService": "Helistage sellele numbrile ja rääkige integratsiooniassistendiga ",
+        "callYourTestAssistant": "teie assistendi ajutine number",
+        "changeNumberCountry": "Soovite numbrit teisest riigist? Võtke meiega ühendust ja me muudame selle teile! ",
+        "modalDialogNoTestCallTitle": [
+          "Kas tekkis probleem?"
+        ],
+        "modalDialogNoTestCallSubtitle": "Tundub, et me ei saanud teie testkõnet",
+        "modalDialogNoTestCallLeftButtonLabel": "Proovige uuesti helistada",
+        "modalDialogNoTestCallRightButtonLabel": "Võtke ühendust meie eksperdiga",
+        "modalDialogNoTestCallBodyMessageTitle": "Tuletame meelde, et",
+        "modalDialogNoTestCallBodyMessage1": "peate testkõne tegemiseks kasutama oma telefoninumbrit",
+        "modalDialogNoTestCallBodyMessage2_1": "Kui vajate abi, saate meiega ühendust võtta numbril",
+        "modalDialogNoTestCallBodyMessage2_2": "või kirjutage aadressil",
+        "modalDialogNoTestCallBodyMessageSupportNumber": "+12027419420",
+        "tryAssistantWithWebcallOrPhone": "Proovige veebikõnet või helistage assistendile otse",
+        "trialReminder": "Sinu 7-päevane tasuta prooviperiood algab aktiveerimisel — kuni selle ajani tasuta.",
+        "skipActivateNow": "Jäta vahele, aktiveeri kohe",
+        "skipGoToDashboard": "Jäta vahele, mine juhtpaneelile"
+      },
+      "assistantcreated": {
+        "titleText": "Teie AI-assistent on loodud!",
+        "moveBackward": "Tagasi seadistusse",
+        "moveForward": "Proovi oma assistenti",
+        "subtitleText": "Sinu assistent on valmis. Järgmisena:",
+        "benefit1": "7-päevane tasuta prooviperiood — tasuta kuni otsustamiseni",
+        "benefit3": "Tühista igal ajal ühe klikiga"
+      },
+      "namephone": {
+        "titleText": "Sinu profiil",
+        "moveForward": "Järgmine",
+        "moveBackward": "Tagasi",
+        "subtitleText": "Täiendage oma profiili järgmise teabega:",
+        "yourNameTitle": "Teie nimi",
+        "yourNamePlaceholder": "Sisestage oma nimi",
+        "phoneNumberTitle": "Teie mobiilinumber",
+        "phoneNumberPlaceholder": "Sisestage oma mobiilinumber",
+        "phoneNumberSubtitle": "Seda numbrit kasutatakse esimese assistendi funktsionaalsuse testi jaoks",
+        "nameErrorMessage": "Nimi on kohustuslik",
+        "phoneNumberErrorMessage": "Number on kohustuslik",
+        "phoneNumberCountrySelectorPlaceholder": "Riigi kood",
+        "phoneNumberCountrySelectorError": "Viga",
+        "phoneNumberPhoneInputPlaceholder": "Telefoninumber",
+        "phoneNumberPhoneInputExample": "Näide: "
+      },
+      "notificationpreview": {
+        "titleText": "Teie testkõne õnnestus!",
+        "moveBackward": "Tagasi",
+        "moveForward": "Järgmine",
+        "subtitleText": "Nüüd on see teie kontole salvestatud ja saate hiljem rohkem teste teha.",
+        "audioNotSupported": "Heli ei ole toetatud",
+        "transcriptionBoxTitle": "Teie kõne",
+        "table": {
+          "body": "Sõnum",
+          "audioFile": "Heli",
+          "audioNotSupported": "Teie brauser ei toeta helielemente",
+          "contactName": "Kontakt",
+          "contactNumber": "Helistaja number"
+        }
+      },
+      "prebookappointment": {
+        "titleText": "Saate broneerida kohtumise spetsialistiga",
+        "moveBackward": "Teie assistendid",
+        "moveForward": "Broneeri kohtumine",
+        "subtitleText": "See aitab teil seadistada MrCalli vastavalt teie vajadustele või lahendada probleeme"
+      },
+      "searchbusiness": {
+        "titleText": "Ühenduge Google My Businessiga",
+        "moveForward": "Edasi",
+        "moveBackward": "Tagasi",
+        "continueButtonLabel": "Jätka",
+        "removeSelection": "Kustuta",
+        "subtitleText": "MrCall sünkroniseerib lahtiolekuajad ja aadressi",
+        "searchYourBusiness": "Otsige oma ettevõtet",
+        "searchYourCompanyPlaceholder": "Otsige Google'ist",
+        "searchParametersEmptyMessage": "Otsingu alustamiseks peate sisestama oma ettevõtte nime",
+        "doNotOwnABusiness": "Mul ei ole ettevõtteprofiili või teen seda hiljem",
+        "noSearchResults": "Otsing ei andnud tulemusi",
+        "notFoundSubtitle": "Proovige sisestada täielik nimi ja aadress.",
+        "yourSearchOf": "Teie otsing",
+        "didNotProduceResults": "ei andnud tulemusi",
+        "noBusinessSelectedTitle": "Sünkroniseerimine puudub",
+        "noBusinessSelectedMessage": "Kui te ei soovi sünkroniseerida, jätkake lihtsalt. Vastasel juhul minge tagasi"
+      },
+      "searchbusinessinfo": {
+        "titleText": "Teave teie ettevõtte kohta",
+        "moveForward": "Edasi",
+        "moveBackward": "Tagasi",
+        "reload": "Uus otsing",
+        "loading": "Otsimine...",
+        "continueButtonLabel": "Edasi",
+        "removeSelection": "Kustuta",
+        "subtitleText": "Saate oma ettevõtte teavet muuta või muuta seda hiljem igal ajal.",
+        "subtitleTextSearch": "Otsime teie ettevõtte kohta avalikku teavet algse seadistuse jaoks.",
+        "businessInformation": "Teave teie ettevõtte kohta",
+        "searchYourCompanyPlaceholder": "Otsige Google Businessist",
+        "skipInfo": "Jätkake ilma seda teavet kasutamata",
+        "searchFailedTitle": "Otsing pole saadaval",
+        "searchFailedMessage": "Ettevõtte teavet ei õnnestunud automaatselt hankida. Saate selle käsitsi sisestada või selle sammu vahele jätta.",
+        "noSearchResults": "Otsingutulemusi ei leitud",
+        "notFoundSubtitle": "Proovige sisestada täielik nimi ja aadress."
+      },
+      "switchboardconfiguration": {
+        "titleText": "Broneerige kohtumine lüliti seadistamiseks",
+        "moveBackward": "Tagasi",
+        "moveForward": "Broneeri kohtumine",
+        "subtitleText": "Aitame teil ühendada oma lüliti ja seadistada MrCalli vastavalt teie vajadustele"
+      },
+      "thisorotherdevice": {
+        "titleText": "Millist seadet soovite seadistada?",
+        "moveForward": "Edasi",
+        "moveBackward": "Tagasi",
+        "subtitleText": "Määrake, kas seadistate seda seadet või teist seadet",
+        "thisPhone": "See seade",
+        "otherPhone": "Teine seade"
+      }
+    },
+    "sign": {
+      "magiclink": {
+        "titleText": "Maagiline link",
+        "didYouForgetPassword": "Kas unustasite parooli?"
+      },
+      "signin": {
+        "titleText": "Logi sisse",
+        "heroHeadline": "Welcome back.",
+        "heroSubheadline": "Sign in to manage your AI assistant and keep your business running smoothly."
+      },
+      "signup": {
+        "titleText": "Loo konto",
+        "heroHeadline": "Turn every call",
+        "heroAccent": "into opportunity.",
+        "heroSubheadline": "Are you a business or a solo professional? Choose MrCall, a true AI digital agent that autonomously handles phone conversations with your customers, interacts with them in clear, natural language, and syncs with your company's business systems.",
+        "benefit1": "Free 7-day trial, no credit card required",
+        "benefit2": "Set up in under 5 minutes",
+        "benefit3": "Cancel anytime, no commitment",
+        "trustBadge": "Trusted by 1,000+ businesses since 2021"
+      }
+    },
+    "callbooking": {
+      "backwardLinkText": "Tagasi",
+      "redirecting": "Redirecting to the contact page…"
+    },
+    "customtokensignin": {
+      "title": "Identiteedi kontroll ja soovitud lehe laadimine"
+    },
+    "failedpayment": {
+      "failedPayment": "Makseviisi registreerimine ei õnnestunud, kui vajate abi, pöörduge klienditoe poole",
+      "gotoAssistant": "Naaske assistentide lehele"
+    },
+    "failedpaymentproduct": {
+      "failedPayment": "Makse ei õnnestunud, palun pöörduge klienditoe poole",
+      "gotoAssistant": "Naaske assistentide lehele"
+    },
+    "onboardingprepayment": {
+      "title1": "Suurepärane!",
+      "title2": "Oleme peaaegu valmis",
+      "subtitle": "Alustage tasuta prooviperioodi",
+      "textTrialPeriod": "Pärast makseviisi lisamist on teie assistendil kõik funktsioonid aktiivsed! Ja pidage meeles: saate tellimuse igal ajal tühistada ilma tasuta.",
+      "voipMessageText": "Saate kohe broneerida kohtumise meie eksperdiga, et ühendada oma VoIP-lüliti MrCalliga.",
+      "numberForwardingMessages": "Saate juhised kõne suunamise seadistamiseks oma MrCalli assistendile.",
+      "okMoveOnButtonText": "Jätka"
+    },
+    "payment": {
+      "redirectToPaymentMethod": "Teid suunatakse makseviisi registreerimisele"
+    },
+    "privacypolicy": {
+      "privacyOfTheService": "MrCalli teenuse privaatsuspoliitika"
+    },
+    "successpayment": {
+      "successPayment": "Makseviisi registreerimine õnnestus",
+      "callForwardingPage": "Nagu kõigi digitaalsete abiteenuste või kaugsekretäride puhul, peate seadistama kõne suunamise.",
+      "callForwardingPageBusinessPlus": "Kui teil ei ole VoIP-lülitit, peate seadistama kõne suunamise.",
+      "gotoCallForwardingInstructionsButtonLabel": "Seadista suunamine",
+      "furtherInfoAboutPersonalArea": "Jaotises \"Assistent\" leiate kogu teabe teenuse, tellimuse oleku ja tellimuse alustamisel aktiveeritud funktsioonide kohta, nagu Google Calendari ühendamine, SMS-ide saatmine klientidele või telefoni teel broneerimise aktiveerimine.",
+      "announcementApp": "Kas olete juba MrCalli rakenduse alla laadinud? See on tasuta ja võimaldab teil hallata oma assistenti, saada kõnede ümberkirjutusi, sünkroniseerida kontakte ja palju muud.",
+      "androidButtonLabel": "Google Play",
+      "appleButtonLabel": "Apple Store",
+      "bookAnAppointment": "Broneerige kohtumine oma VoIP-lüliti ühendamiseks ja me aitame teid samm-sammult.",
+      "alreadyAssignedNumber": "Teie assistendil on juba määratud number. Minge oma assistendi lehele seadete muutmiseks või kontrollimiseks.",
+      "alreadyAssignedNumberButtonLabel": "Mine oma assistendi juurde",
+      "appointmentButtonText": "Broneeri kohtumine",
+      "contactSupport": "Numbri määramisel tekkis probleem. Palun pöörduge klienditoe poole.",
+      "yourAssistantIsActive": "Teie assistent on aktiivne!",
+      "yourNumber": "Teie assistendi telefoninumber",
+      "setupForwarding": "Seadista suunamine",
+      "goToDashboard": "Mine juhtpaneelile"
+    },
+    "activation": {
+      "titleText": "Aktiveerige oma assistent",
+      "subtitleText": "Hankige pühendatud telefoninumber koos 1-nädalase tasuta prooviperioodiga",
+      "multilingualQuestion": "Kas teie assistent räägib ühte või mitut keelt?",
+      "oneLanguage": "Üks keel",
+      "multipleLanguages": "Mitu keelt",
+      "phoneNationalityTitle": "Telefoninumbri riik",
+      "phoneNationalitySubtitle": "Valige oma assistendi telefoninumbri riik",
+      "continueButton": "Jätka paketi valikuga"
+    },
+    "successpaymentproduct": {
+      "failedPayment": "Makse õnnestus ja toode on ostetud. Kui teil on küsimusi, pöörduge klienditoe poole.",
+      "gotoAssistant": "Naaske assistentide lehele"
+    },
+    "termsandconditions": {
+      "pageTitle": "MrCalli teenuse tingimused"
+    },
+    "partnerprogram": {
+      "mainTitle": "Tooge sõber",
+      "bringAFriend": "Iga sõbra eest, kelle toote MrCalli",
+      "aFreeMonthForYou": "Üks tasuta kuu teile",
+      "aFreeMonthForYourContact": "Üks tasuta kuu teie kontaktile",
+      "yourPersonalCode": "Siin on teie isiklik kood jagamiseks:",
+      "yourContactMustUseTheCode": "Teie kontakt peab selle sisestama makseviisi registreerimise ajal.",
+      "freeMonthAfterPayment": "Alates teie kontakti esimesest maksest lisame ka teile tasuta kuu."
+    },
+    "configureAI": {
+      "title": "Seadista tehisaruga",
+      "subtitle": "Kasutage loomuliku keelt oma telefoniassistendi seadistamiseks",
+      "quickActions": "Kiirtoimingud",
+      "backToSettings": "Tagasi Seadetesse",
+      "classicConfigurator": "Klassikaline konfiguraator",
+      "loadingMessage": "Ühendan teie assistendiga...",
+      "trainButton": "Koolitada assistenti",
+      "trainingInProgress": "Koolitamine...",
+      "trainingMessage": "Assistendi koolitamine teie ettevõtte andmetega...",
+      "thinkingMessages": [
+        "Uurin, kuidas teie assistent telefonile vastab...",
+        "Kaevan end läbi seadistuste labürindi...",
+        "Loen kasutusjuhendit... tagurpidi, lõbu pärast.",
+        "Õpetan teie assistendile viisakalt lobisemise kunsti...",
+        "Analüüsin teie broneeringute seadistust ülima täpsusega...",
+        "Veenmas assistenti, et esmaspäevad on ka toredad...",
+        "Kaardistan iga vestlustee... neid on päris palju.",
+        "Tuubin teie teadmusbaasi nagu oleks homme eksam...",
+        "Kontrollin seadistusi virtuaalse kohvitassi saatel...",
+        "Hoolitsen, et tervitussõnum ei kõlaks nagu robot...",
+        "Treenim assistenti viisakaks olema ka enne hommikukohvi...",
+        "Laadin alla kannatlikkust... eeldatav aeg: varsti.",
+        "Käin teie seadistused peene kammiga üle...",
+        "Õpetan assistenti helistajaid mitte segama... raskem kui arvaks.",
+        "Töödeldes teavituse-eelistusi, sest keegi ei taha späm...",
+        "Õpin, kuidas soovite järelsõnumeid kõlama panna...",
+        "Harjutan täiuslikku tervitust veel korra...",
+        "Peaaegu valmis... kontrollin veel peent kirja.",
+        "Sünkroniseerin MrCalli emalaevaga...",
+        "Kalibreerin vestlusvoolu detektorit...",
+        "Optimeerin helistaja kogemust, üks muutuja korraga...",
+        "Õpetan assistenti piinlikke pause graatsiliselt taluma...",
+        "Pähin pähe teie kõnede suunamise reegleid... piiks puuks.",
+        "Viin läbi viimased kvaliteedikontrollid...",
+        "Lihvin seadistust, kuni see särab..."
+      ],
+      "quickAction1Label": "Mis on tervitussõnum?",
+      "quickAction1Command": "Kuidas assistent telefonile vastab?",
+      "quickAction2Label": "Muuda tervitussõnumit",
+      "quickAction2Command": "Kui helistaja on varem juba helistanud ja meil on kõik tema andmed olemas, ütle talle, et helistame talle tagasi",
+      "quickAction3Label": "Kontrolli vestlusvoogu",
+      "quickAction3Command": "Kuidas assistent vestlust juhib?",
+      "quickAction4Label": "Muuda vestlusvoogu",
+      "quickAction4Command": "Juhi vestlust nii, et saada helistajalt teada tema nimi (kui pole teada), aadress ja helistamise põhjus.",
+      "quickAction5Label": "Assistendi teadmised",
+      "quickAction5Command": "Mis teemadel oskab assistent vastata?",
+      "quickAction6Label": "Lisa teadmisi",
+      "quickAction6Command": "Kui kasutaja soovib tagasihelistamist, kuid pole öelnud miks, peab assistent alati küsima põhjust ja seejärel ütlema, et edastab soovi operaatorile"
+    },
+    "aladminConfigurator": {
+      "title": "AladMin Configurator",
+      "subtitle": "Vestelge AladMiniga, et seadistada oma häälassistendi käitumist",
+      "backToSettings": "Tagasi seadetesse",
+      "suggestionsLabel": "Soovitused",
+      "suggestion1": "Luba vestlusprompt broneeringute haldamiseks",
+      "suggestion2": "Küsi helistajatelt nimi ja e-posti aadress",
+      "suggestion3": "Kuidas assistent helistajaid tervitab?",
+      "suggestion4": "Millised funktsioonid on praegu sisse lülitatud?",
+      "messagePlaceholder": "Kirjeldage, mida soovite muuta, või esitage küsimus...",
+      "emptyChat": "Alustage AladMiniga vestlust, et oma assistenti seadistada",
+      "newConversation": "Uus vestlus",
+      "errorApplying": "Viga",
+      "noBusinessSelected": "Ühtegi ettevõtet pole valitud. Palun minge tagasi ettevõtte seadistamise lehele.",
+      "previewLabel": "Muudatuste eelvaade",
+      "applyChanges": "Rakenda muudatused",
+      "cancelChanges": "Tühista",
+      "confirmApply": "Kinnitan, rakenda muudatused",
+      "cancelApply": "Tühista, ära rakenda muudatusi"
+    },
+    "mcpConnectors": {
+      "title": "MCP-konnektorid",
+      "subtitle": "Looge juurdepääsuandmed, et ühendada oma MrCalli konto Claude'iga (või mõne muu MCP-ühilduva AI-kliendiga).",
+      "back": "Tagasi",
+      "info": {
+        "title": "Kuidas ühendada",
+        "intro": "Looge allpool konnektor ja lisage see oma AI-kliendis (Claude, Cursor jne) kohandatud MCP-konnektorina, kasutades MCP-URL-i ning loomisel kuvatud Client ID-d ja Client Secretit.",
+        "mcpUrl": "MCP-URL",
+        "advanced": "Täpsem (tehnilised üksikasjad)",
+        "allowedScopes": "Lubatud scope'id",
+        "protectedResource": "Kaitstud ressursi metaandmed",
+        "authServer": "Autoriseerimisserveri metaandmed"
+      },
+      "create": {
+        "title": "Loo uus konnektor",
+        "help": "Iga konnektor on eraldi juurdepääsuandmete komplekt. Kasutage igale AI-kliendile eraldi konnektorit, et saaksite neid teineteisest sõltumatult tühistada.",
+        "nameLabel": "Nimi",
+        "namePlaceholder": "nt Minu Claude.ai konnektor",
+        "descriptionLabel": "Kirjeldus (valikuline)",
+        "descriptionPlaceholder": "Lühike märkus selle kohta, kus konnektorit kasutatakse",
+        "submit": "Loo konnektor"
+      },
+      "list": {
+        "title": "Teie konnektorid",
+        "empty": "Konnektoreid veel pole. Looge alustamiseks üks ülal.",
+        "createdAt": "Loodud",
+        "permissions": "Õigused",
+        "rotate": "Vaheta secret",
+        "rotateConfirm": "Kas vahetada client secret? Praegune secret lakkab kohe töötamast ja uut näete ainult üks kord."
+      },
+      "scopes": {
+        "title": "Õigused",
+        "help": "Valige, mida see konnektor tohib teie nimel teha. Saate selle hiljem tühistada, vahetades secreti või kustutades konnektori.",
+        "selectAll": "Vali kõik",
+        "clearAll": "Tühjenda",
+        "sensitive": "Tundlik",
+        "groups": {
+          "business": "Ettevõtte profiil",
+          "contacts": "Kontaktid (CRM)",
+          "sessions": "Vestlused",
+          "templates": "Assistendid"
+        }
+      },
+      "reveal": {
+        "title": "Salvestage oma juurdepääsuandmed kohe",
+        "warningTitle": "Neid väärtusi rohkem ei kuvata.",
+        "warningBody": "Kopeerige URL, client ID ja client secret oma AI-kliendile enne selle kaardi sulgemist. Secret on serveris räsitud; kui kaotate selle, tuleb see vahetada.",
+        "mcpUrl": "MCP-URL",
+        "clientId": "Client ID",
+        "clientSecret": "Client secret",
+        "copy": "Kopeeri",
+        "copied": "Kopeeritud!",
+        "howTo": "Claude'is → Settings → Custom Connectors → Add custom connector. Kleepige ülaltoodud väärtused. Claude avab autoriseerimise lõpetamiseks brauseris nõusolekulehe.",
+        "acknowledge": "Olen väärtused salvestanud"
+      },
+      "errors": {
+        "serviceDisabled": "MCP-konnektorid ei ole selles keskkonnas lubatud. Paluge administraatoril määrata MCP_ENABLED=true.",
+        "loadFailed": "MCP-konnektorite andmete laadimine ebaõnnestus.",
+        "createFailed": "Uue konnektori loomine ebaõnnestus.",
+        "rotateFailed": "Secreti vahetamine ebaõnnestus.",
+        "clipboardFailed": "Lõikelauale kopeerimine ebaõnnestus. Valige väärtus käsitsi."
+      }
+    },
+    "wizard": {
+      "pageTitle": "Assistendi seadistamine",
+      "stepOf": "Samm {current}/{total}",
+      "loading": "Ühendan teie assistendiga...",
+      "nextStep": "Edasi",
+      "skipStep": "Jäta vahele ja mine edasi",
+      "goToDashboard": "Mine juhtpaneelile",
+      "changeSomething": "Kas soovite midagi muuta?",
+      "changeSomethingHint": "Pidage meeles, et saate seda alati ka hiljem teha!",
+      "inputPlaceholder": "Kirjutage, mida sooviksite muuta...",
+      "sendInstructions": "Saada juhised",
+      "orSeparator": "või",
+      "saveChanges": "Salvesta muudatused",
+      "saving": "Salvestan...",
+      "accept": "Kinnita",
+      "pendingChangesTitle": "Salvestamata muudatused",
+      "notSavedWarning": "⚠️ Muudatused EI OLE veel salvestatud. Assistenti EI muudeta enne, kui klõpsate \"Salvesta muudatused\".",
+      "saveSuccess": "Muudatused salvestatud!",
+      "saveError": "Salvestamisel tekkis viga. Proovige uuesti.",
+      "analyzeError": "Analüüsimisel tekkis viga. Proovige uuesti.",
+      "steps": {
+        "welcome": {
+          "title": "Tervitussõnum",
+          "loading": "Analüüsin, kuidas teie assistent telefonile vastab...",
+          "analyzePrompt": "Kirjelda 2-3 lühikese lausega, kuidas see assistent sissetulevatele kõnedele vastab ja mida ta helistajalt küsib. Ole täpne selles, mida helistaja kuuleb. Ära paku muudatusi."
+        },
+        "knowledge": {
+          "title": "Teadmusbaas",
+          "loading": "Analüüsin teie assistendi teadmisi...",
+          "analyzePrompt": "Kirjelda 2 lühikese lausega, millistel teemadel see assistent vastata oskab, tuginedes ainult praegusele teadmusbaasile. ÄRA maini veebiotsingut: assistent EI otsi kõne ajal veebist (see oleks liiga aeglane). Lisa üks lause: kui kasutaja soovib teadmisi täiendada, võib ta paluda mul veebist infot otsida ja teadmusbaasi lisada. Ära paku omal algatusel muudatusi."
+        },
+        "booking": {
+          "title": "Broneeringud",
+          "loading": "Analüüsin broneeringute seadistust...",
+          "analyzePrompt": "Kirjelda 2-3 lühikese lausega, kuidas broneeringud on seadistatud. Kas need on aktiivsed? Kui jah, kuidas need töötavad (kellaajad, ajavahemiku pikkus)? Selgita, et broneeringute kasutamiseks tuleb anda ligipääs Google'i kalendrile. Ära paku muudatusi."
+        },
+        "transfer": {
+          "title": "Kõne edastamine",
+          "loading": "Analüüsin kõne edastamist...",
+          "analyzePrompt": "Selgita 3-4 lausega, kuidas kõne edastamine töötab: assistent saab kõne edastada telefoninumbrile seadistatavate reeglite alusel (nt kellaaeg, helistaja soov). Märgi, et see funktsioon on saadaval alates Starteri paketist ja aktiveerub pärast esimest makset. Tasuta prooviperioodi ajal see saadaval ei ole."
+        },
+        "notifications_biz": {
+          "title": "Teavitused omanikule",
+          "loading": "Analüüsin e-posti teavitusi...",
+          "analyzePrompt": "Kirjelda 2-3 lühikese lausega, kuidas ettevõtte omanikku kõnedest e-postiga teavitatakse. Millisele aadressile kirjad tulevad? Mida need sisaldavad (kokkuvõte, transkriptsioon, salvestus)? Ära paku muudatusi."
+        },
+        "notifications_caller": {
+          "title": "Teavitused helistajale",
+          "loading": "Analüüsin helistajale saadetavaid teavitusi...",
+          "analyzePrompt": "Kirjelda 2-3 lühikese lausega, mida helistaja pärast kõnet saab. Kas WhatsApp või SMS on aktiivne? Kui WhatsApp on aktiivne, millist teenust see kasutab (tasuta/ametlik)? Ära paku muudatusi."
+        },
+        "integrations": {
+          "title": "Integratsioonid",
+          "loading": "Analüüsin integratsioone...",
+          "analyzePrompt": "Küsi kasutajalt, kas ta kasutab mõnda haldustarkvara, CRM-i või muud tarkvara, mida ta sooviks oma MrCalli assistendiga ühendada. Kui jah, küsi tarkvara nime ja veebiaadressi."
+        },
+        "summary": {
+          "title": "Kokkuvõte",
+          "loading": "Koostan kokkuvõtet...",
+          "analyzePrompt": "LÕPLIK väga lühike seadistuse kokkuvõte. ÜKS lause kategooria kohta (kokku maksimaalselt 7 lauset): tervitussõnum, teadmusbaas, broneeringud, kõne edastamine, teavitused omanikule, teavitused helistajale, integratsioonid. Lõpeta ÜHE lausega, mis kutsub kasutajat assistenti proovima ja iga seadet igal ajal juhtpaneelilt muutma. ÄRA küsi, kas ta soovib midagi muuta. ÄRA kasuta täpploendit. Ära paku muudatusi."
+        }
+      }
+    }
+  },
+  "common": {
+    "cancel": "Tühista",
+    "confirm": "Kinnita",
+    "retry": "Proovi uuesti"
+  },
+  "mrcallCredits": {
+    "title": "Credits remaining",
+    "tooltip": "A phone call burns ~{factor} credits per minute. Configurator chat and MrCall Desktop burn in proportion to tokens consumed."
+  }
+}

@@ -1,0 +1,17 @@
+.list-group {
+  .list-group-item {
+    padding: 1rem 0;
+
+    & + .list-group-item {
+      border-top: 1px solid #ced4da;
+    }
+
+    &:last-child {
+      border-bottom: 1px solid #ced4da;
+    }
+
+    &:first-child {
+      border-top: 1px solid #ced4da;
+    }
+  }
+}

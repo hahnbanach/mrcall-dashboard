@@ -1,0 +1,24 @@
+# Secret scanning for this repository.
+#
+# Run locally with:  gitleaks dir . --config .gitleaks.toml
+#
+# The repository is public. Anything matched here and not allowlisted below is a
+# credential that must be rotated, not merely deleted: git keeps what it is told.
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Vendored and generated output, not source we control"
+paths = [
+  '''node_modules/''',
+  '''dist/''',
+  # Minified third-party webcall bundle. The hit is `var key = <obj>.h39_1;`,
+  # a variable assignment in mangled code, not a credential.
+  '''public/MrCallWebCall\.bundle\.js''',
+  '''public/webcallbundle/''',
+]
+
+[[allowlists]]
+description = "Template files carry empty placeholders by construction"
+paths = ['''\.env\.example''']

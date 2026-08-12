@@ -1,0 +1,310 @@
+@import "fonts";
+@import "colors";
+
+//FIXME: the following imports shouldn't be imported on default, they should import default istead
+@import "./views/business";
+@import "./views/onboarding";
+@import "./views/payment";
+@import "./components/list-group";
+@import "./components/dialog";
+@import "./components/attention";
+
+/* base styles */
+html {
+  width: 100%;
+}
+
+body {
+  //font-family: Montserrat, serif ;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-style: normal;
+  margin: 0;
+  padding: 0;
+  border-style: none;
+  width: 100%;
+  height: 100vh;
+  max-height: 100vh;
+  display: flex !important;
+  flex-direction: column !important;
+  background: @mrcall_background;
+
+  .m-input-wrapper {
+    width: 100%;
+  }
+  .p-password {
+    width: 100%;
+  }
+  input {
+    width: 100%;
+  }
+
+  .p-button {
+    //font-family: Montserrat, serif;
+    //font-size: 1.2em;
+    //font-weight: bold;
+
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-style: normal;
+    //font-size: 1.2em;
+
+    color: @mrcall_white;
+    background: @mrcall_blue;
+    border: 1px solid @mrcall_blue;
+    //padding: 0.5em 1em;
+    //margin: 0.2em 0 0.2em 0;
+    //margin: 0.2em 0.2em 0.2em auto;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+    border-radius: 33px;
+  }
+
+  .p-button:enabled:hover {
+    color: @mrcall_blue;
+    background: @mrcall_light_grey_1;
+  }
+  .p-button:enabled:active {
+    color: @mrcall_blue;
+    background: @mrcall_light_grey_1;
+  }
+
+  /*FIXME: to make nicer createsimple, but is to be removed once the new onboarding is in place*/
+  .business-page .p-tabview .p-tabview-nav {
+    background: transparent;
+  }
+
+  .signin-signup-form {
+    .link {
+      margin-top: auto;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-style: normal;
+      font-weight: 700;
+      font-size: 14px;
+      line-height: 17px;
+      color: #0068FF;
+      text-decoration: none;
+    }
+
+    .link-smaller {
+      margin-top: auto;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-style: normal;
+      font-weight: 700;
+      font-size: 10.5px;
+      line-height: 13px;
+      color: #0068FF;
+      text-decoration: none;
+    }
+
+    .signin-signup-button-text{
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-style: normal;
+      font-weight: 700;
+      font-size: 14px;
+      line-height: 17px;
+    }
+
+    .companion-text {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-style: normal;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 17px;
+      /* identical to box height */
+
+
+      /* Lara/Global/textColor */
+
+      color: #495057;
+    }
+
+    .companion-text-smaller {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-style: normal;
+      font-weight: 400;
+      font-size: 10.5px;
+      line-height: 13px;
+      /* identical to box height */
+
+
+      /* Lara/Global/textColor */
+
+      color: #495057;
+    }
+  }
+
+  @media screen and (max-width: 640px) {
+    max-width: 100%;
+    .main-page-content-section {
+      margin: auto;
+      //padding-left: 1em;
+      //padding-right: 1em;
+      padding-top: 1em;
+      padding-bottom: 1em;
+
+      .title {
+        font-size: 1.4em;
+        font-weight: bold;
+        color: @mrcall_blue;
+      }
+
+      .title-white {
+        font-size: 1.4em;
+        font-weight: bold;
+        color: @mrcall_white;
+      }
+
+      .subtitle {
+        font-size: 1em;
+        font-weight: normal;
+        color: @mrcall_blue;
+      }
+
+      .bold{
+        font-weight: bold;
+      }
+
+      p {
+        font-size: 1.2em;
+        font-weight: normal;
+        color: @mrcall_black;
+      }
+    }
+  }
+  @media screen and (min-width: 640px) {
+    .main-page-content-section {
+      margin: auto;
+      padding-left: 4em;
+      padding-right: 4em;
+      padding-top: 2em;
+      padding-bottom: 2em;
+
+      .title {
+        font-size: 2.8em;
+        font-weight: bold;
+        color: @mrcall_blue;
+      }
+
+      .title-white {
+        font-size: 2.8em;
+        font-weight: bold;
+        color: @mrcall_white;
+      }
+
+      .subtitle {
+        font-size: 2em;
+        font-weight: normal;
+        color: @mrcall_blue;
+      }
+
+      .bold{
+        font-weight: bold;
+      }
+
+      p {
+        font-size: 1.4em;
+        font-weight: normal;
+        color: @mrcall_black;
+      }
+    }
+  }
+
+  #app {
+    border: 0;
+    padding: 0;
+    margin: 0;
+
+    #app-container {
+      position: absolute;
+      //height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+
+      #navbar {
+        position: sticky;
+        top:0;
+        left:0;
+        right:0;
+        z-index: 100;
+      }
+
+      #app-central-content {
+        //position: fixed;
+        //top:0;
+        //left:0;
+        //right:0;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        flex-grow: 1;
+        //max-height: 100vh;
+        overflow-y: auto;
+      }
+    }
+  }
+}
+
+//
+*, ::before, ::after {
+  margin: 0;
+}
+//
+
+:root {
+  @media screen and (min-width: 640px) {
+    .p-button {
+      margin: 0.2em;
+    }
+  }
+
+  .p-menubar .p-menubar-button {
+    color: @mrcall_black;
+    position: absolute;
+    right: 2em;
+  }
+
+  .p-menubar-root-list {
+    color: @mrcall_black;
+    margin-left: auto;
+  }
+
+  .p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link .p-menuitem-icon {
+    color: @mrcall_black;
+  }
+
+  .p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link .p-menuitem-text {
+    color: @mrcall_black;
+  }
+
+  .p-menubar .p-menubar-root-list > .p-menuitem > .p-menuitem-link:not(.p-disabled):hover {
+    background: @mrcall_menu_navbar_background;
+  }
+
+  .p-menubar.p-menubar-mobile-active .p-menubar-root-list {
+    background: @mrcall_menu_navbar_background;
+  }
+
+  .center {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }
+
+  //for the modal window of onboarding process
+  .p-dialog .p-dialog-header {
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;
+  }
+  .p-dialog .p-dialog-footer {
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+  }
+  .p-dialog-header {
+    display: flex ;
+    flex-direction: row-reverse;
+  }
+
+}
+
+#app {
+  flex-shrink: 0!important;
+}

@@ -1,0 +1,1742 @@
+{
+  "language": "Kieli",
+  "locale": {
+    "en-US": "Englanti",
+    "it-IT": "Italia",
+    "es-ES": "Espanja",
+    "fr-FR": "Ranska",
+    "de-DE": "Saksa",
+    "nl-NL": "Hollanti",
+    "sv-SE": "Ruotsi",
+    "da-DK": "Tanska",
+    "nb-NO": "Norja",
+    "fi-FI": "Suomi",
+    "et-EE": "Viro",
+    "el-GR": "Kreikka"
+  },
+  "languages": {
+    "italian": "Italia",
+    "englishGB": "Englanti (UK)",
+    "englishUS": "Englanti (US)",
+    "spanishES": "Espanja (ES)",
+    "spanishUS": "Espanja (US)",
+    "frenchFR": "Ranska (FR)",
+    "germanDE": "Saksa (DE)",
+    "portuguesePT": "Portugali (PT)",
+    "portugueseBR": "Portugali (BR)",
+    "norwegianNO": "Norja",
+    "swedishSW": "Ruotsi",
+    "finnishFI": "Suomi",
+    "greekGR": "Kreikka",
+    "turkeyTK": "Turkki",
+    "dutchNL": "Hollanti",
+    "danishDK": "Tanska",
+    "estonianEE": "Viro"
+  },
+  "isoAlpha2Country": {
+    "IT": "Italia",
+    "US": "Yhdysvallat",
+    "GB": "Yhdistynyt kuningaskunta",
+    "ES": "Espanja",
+    "FR": "Ranska",
+    "PT": "Portugali",
+    "DE": "Saksa",
+    "CH": "Sveitsi",
+    "AU": "Australia",
+    "NO": "Norja",
+    "BR": "Brasilia",
+    "IN": "Intia",
+    "CA": "Kanada",
+    "SW": "Ruotsi",
+    "FI": "Suomi",
+    "GR": "Kreikka",
+    "TK": "Turkki",
+    "NL": "Alankomaat",
+    "DK": "Tanska",
+    "EE": "Viro"
+  },
+  "days": {
+    "monday": "Maanantai",
+    "tuesday": "Tiistai",
+    "wednesday": "Keskiviikko",
+    "thursday": "Torstai",
+    "friday": "Perjantai",
+    "saturday": "Lauantai",
+    "sunday": "Sunnuntai"
+  },
+  "timeSlots": {
+    "invalid": "Virheellinen asetus, tarkista aikavälit, päällekkäisyyksiä ei saa olla."
+  },
+  "utils": {
+    "phonecompanies": {
+      "other": "Muu operaattori"
+    },
+    "common": {
+      "or": "tai"
+    }
+  },
+  "widgets": {
+    "tuplesvariables": {
+      "removeitem": "Poista kohde",
+      "additem": "Uusi kohde"
+    },
+    "agentSkills": {
+      "loading": "Ladataan saatavilla olevia taitoja...",
+      "noSkills": "Ei taitoja saatavilla. Lataa ensin Agent Skills -päätöstaulukko.",
+      "configuration": "Määritykset",
+      "phasePrefetch": "Ennen puhelua",
+      "phaseDuring": "Puhelun aikana",
+      "phaseFinal": "Puhelun jälkeen",
+      "phasePrefetchHint": "Suoritetaan ennen puhelun alkua",
+      "phaseDuringHint": "Käytettävissä työkaluna puhelun aikana",
+      "phaseFinalHint": "Suoritetaan puhelun päätyttyä",
+      "skills": "taitoa",
+      "addSkill": "Lisää taito...",
+      "addAnother": "lisää toinen",
+      "removeSkill": "Poista",
+      "noSkillsInPhase": "Tähän vaiheeseen ei ole määritetty taitoja",
+      "oauthConnect": "Yhdistä",
+      "oauthConnected": "Yhdistetty",
+      "oauthDisconnect": "Katkaise yhteys",
+      "addPair": "Lisää otsake",
+      "skillUnavailable": "Tämä taito ei ole enää saatavilla palvelimella. Poista se tai ota yhteyttä tukeen.",
+      "oauthScopeUnavailable": "Tämä integraatio vaatii Google-oikeuden, jota MrCall ei ole valtuutettu pyytämään. Ota yhteyttä tukeen."
+    }
+  },
+  "components": {
+    "accountTitle": "Tili",
+    "account": {
+      "createAssistantSubtitle": "Luo uusi puheassistentti toiselle puhelinnumerolle tai yritykselle.",
+      "securitySectionTitle": "Turvallisuus",
+      "integrationsSectionTitle": "Integraatiot",
+      "dangerZoneSectionTitle": "Vaaravyöhyke",
+      "mcpConnectors": {
+        "title": "MCP-liittimet",
+        "description": "Yhdistä Claude tai muu MCP-yhteensopiva tekoälysovellus MrCall-tiliisi. Luo tunnukset liitinkohtaisilla käyttöoikeuksilla.",
+        "manage": "Hallinnoi MCP-liittimiä"
+      }
+    },
+    "zylchChat": {
+      "inputPlaceholder": "Kirjoita viesti tai komento...",
+      "welcome": "Keskustele assistenttisi määrittäjän kanssa",
+      "welcomeDescription": "Kuvaile mitä haluat muuttaa, niin päivitän assistenttisi asetukset. Kirjoita vain luonnollisesti!",
+      "exampleCommands": "Esimerkkikomennot:",
+      "cmdSync": "/sync - Synkronoi tiedot",
+      "cmdGaps": "/gaps - Etsi aukkoja kalenterista",
+      "cmdArchive": "/archive - Arkistoi keskustelut",
+      "cmdHelp": "/help - Näytä käytettävissä olevat komennot"
+    },
+    "directVoice": {
+      "talkToAssistant": "Puhu assistentin kanssa",
+      "connecting": "Yhdistetään...",
+      "hangup": "Sulje puhelu",
+      "ending": "Lopetetaan..."
+    },
+    "navbar": {
+      "login": "Kirjaudu sisään",
+      "subscribe": "Tilaa",
+      "assistants": "Avustajani",
+      "account": "Oma tili",
+      "logout": "Poistu",
+      "closeWebview": "Sulje",
+      "createAssistant": "Luo uusi avustaja",
+      "resendVerificationEmail": "Lähetä sähköpostin vahvistuslinkki uudelleen",
+      "resellerDashboard": "Jälleenmyyjän hallintapaneeli",
+      "invitationCodes": "Kutsukoodit",
+      "resellerManagement": "Jälleenmyyjien hallinta",
+      "userManagement": "Käyttäjien hallinta",
+      "agentTemplates": "Agenttien mallipohjat"
+    },
+    "businessphonenumberverification": {
+      "businessPhoneNumberTitle": "Syötitkö väärän numeron? Voit vaihtaa sen",
+      "phoneNumberCountrySelectorPlaceholder": "Maakoodi",
+      "phoneNumberCountrySelectorError": "Virhe",
+      "phoneNumberPhoneInputPlaceholder": "Puhelinnumero",
+      "phoneNumberPhoneInputExample": "Esimerkki: ",
+      "businessPhoneNumberIsNotValid": "Varmista, että olet syöttänyt puhelinnumerosi oikein",
+      "settingsSuccessfullySaved": "Asetukset tallennettu onnistuneesti",
+      "errorSavingSettings": "Tallennuksessa ilmeni ongelmia",
+      "activationBannerTitle": "Aktivoi ja hanki puhelinnumero",
+      "activationBannerSubtitle": "Viikon ilmainen kokeilu!",
+      "activationBannerButton": "Aktivoi nyt",
+      "talkToYourAssistant": "Puhu avustajasi kanssa",
+      "changeBusinessPhoneNumberButtonLabel": "Vaihda",
+      "gotoBusinessesCustomize": "Mukauta",
+      "justVerifiedTheNumberButton": "Soitin",
+      "assistantWasCreated": "Vahvista puhelinnumerosi ja jätä viesti.",
+      "callTheNumberInstructions1": "Tämä on vain testiavustaja, puhelimeesi ei tarvitse asentaa tai määrittää mitään.",
+      "callTheNumberInstructions2a": "Soita tähän numeroon puhelinnumerostasi",
+      "callTheNumberInstructions2b": "ja saat ilmoituksen sähköpostitse",
+      "callTheNumberInstructions3": "Napsauta 'Soitin' ja aloita avustajan määrittäminen.",
+      "afterNumberVerificationTitle1": "Hienoa!",
+      "afterNumberVerificationTitle2": "Nyt voit aloittaa avustajasi määrittämisen.",
+      "seemsYouDidntCall": "Vaikuttaa siltä, ettet ole vielä soittanut numeron vahvistamiseksi.",
+      "issuesContactCustomerService": "Tapahtui virhe, ota yhteyttä asiakaspalveluun osoitteessa customer.service@mrcall.it"
+    },
+    "businesscreatesimple": {
+      "nicknameTitlePrivate": "Nimesi",
+      "nicknameTitleBusiness": "Yrityksesi nimi",
+      "businessPhoneNumberTitle": "Puhelinnumero, josta sinut tavoittaa",
+      "selectAssistantLanguage": "Valitse kieli, jota avustajasi puhuu",
+      "whichCustomerAreYou": "Millainen MrCall-käyttäjä olet?",
+      "templateHighLevelDescriptionPrivate": "Yksityiskäyttäjän profiili. Huomaa: avustaja luodaan palvelimillamme. Puhelimeesi ei asenneta mitään",
+      "templateHighLevelDescriptionBusiness": "Yrityskäyttäjän profiili, ilman VoIP-puhelinkeskusta. Huomaa: avustaja luodaan palvelimillamme. Puhelimeesi ei asenneta mitään",
+      "templateHighLevelDescriptionBusinessPlus": "Yrityskäyttäjän profiili VoIP-puhelinkeskuksella. Huomaa: avustaja luodaan palvelimillamme. Puhelimeesi ei asenneta mitään",
+      "searchYourBusinessTitle": "Yhdistä avustajasi Google Businessiin",
+      "searchYourBusinessSubtitle": "Etsi yrityksesi ja täytä seuraavat kentät",
+      "searchYourBusinessNoResultFound": "Tuloksia ei löytynyt, voit silti määrittää avustajasi",
+      "searchYourBusinessPlaceholder": "Syötä yrityksesi nimi ja osoite",
+      "searchYourBusinessButtonLabel": "Hae",
+      "selectGoogleBusinessItemButtonLabel": "Käytä näitä tietoja",
+      "searchBusinessResultLabelName": "Nimi",
+      "searchBusinessResultLabelAddress": "Osoite",
+      "phoneNumberCountrySelectorPlaceholder": "Maakoodi",
+      "phoneNumberCountrySelectorError": "Virhe",
+      "phoneNumberPhoneInputPlaceholder": "Puhelinnumero",
+      "phoneNumberPhoneInputExample": "Esimerkki: ",
+      "searchBusinessResultLabelBusinessPhoneNumber": "Puhelin",
+      "businessPhoneNumberIsNotValid": "Tarkista, oletko syöttänyt puhelinnumerosi oikein",
+      "nicknameIsNotValid": "Tarkista, oletko syöttänyt nimimerkkisi oikein",
+      "createAssistantButton": "Luo avustaja"
+    },
+    "businesses": {
+      "addFieldMatch": "Hae",
+      "createNewBusiness": "Luo avustaja",
+      "editAssistant": "Määritä avustaja",
+      "onboardinConfigureAndTest": "Tee testipuhelu",
+      "onboardingActivateAssistant": "Aktivoi nyt!",
+      "planSubscription": "Maksutavat ja tilaukset",
+      "startFreeTrial": "Aloita ilmainen kokeilu",
+      "activationBanner": {
+        "title": "Aktivoi avustajasi",
+        "subtitle": "Yhdistä avustajasi puhelinnumeroon tai VoIP-puhelinkeskukseesi ja anna sen vastata puheluihisi.",
+        "cta": "Aktivoi"
+      },
+      "newAssistantCreated": "Hienoa! Uusi avustajasi on luotu.",
+      "numberNotAssignedContactSupport": "Pysyvää numeroa ei ole määritetty, ota yhteyttä tukeen",
+      "businessPhoneNumberVerified": "ei vahvistettu, soita assistentillesi vahvistaaksesi sen",
+      "plan": "Maksut",
+      "invoicingButtonLabel": "Laskutus",
+      "partnerProgramButtonLabel": "Esittele meidät ystävällesi",
+      "gotoCallForwardingInstructionsButtonLabel": "Määritä soitonsiirto",
+      "conversationsViewButtonLabel": "Näytä viestit",
+      "form": {
+        "businessId": "Yrityksen tunniste",
+        "nickname": "Nimimerkki",
+        "email": "Sähköposti",
+        "plan": "Avustaja",
+        "businessPhoneNumber": "Puhelinnumerosi",
+        "serviceNumber": "Avustajasi numero",
+        "trial": "Kokeilujakson jäljellä olevat päivät",
+        "renewalDateTime": "Seuraavan uusimisen päivämäärä",
+        "subscriptionStatus": "Tilauksen tila",
+        "subscriptionStatusLabels": {
+          "ACTIVE": "Aktiivinen",
+          "CANCELED": "Peruutettu",
+          "EXPIRED": "Vanhentunut",
+          "INCOMPLETE": "Keskeneräinen",
+          "INCOMPLETE_EXPIRED": "Keskeneräinen ja vanhentunut",
+          "ONBOARDING": "Odottaa aktivointia",
+          "PAST_DUE": "Maksu erääntynyt",
+          "SUSPENDED": "Keskeytetty",
+          "FREE": "Ilmainen tilaus",
+          "TEST": "Odottaa aktivointia",
+          "EXPIRING": "Vanhenemassa",
+          "EXTERNAL": "Asiakaspalvelun hallinnoima",
+          "TRIALING": "Kokeilujakso",
+          "UNPAID": "Maksamaton",
+          "UNKNOWN": "Tuntematon"
+        },
+        "resourcesCallCredit": "Jäljellä olevat minuutit",
+        "resourcesCallCount": "Käytettävissä olevat puhelut",
+        "resourcesSmsCount": "Käytettävissä olevat tekstiviestit"
+      },
+      "analyticsButtonLabel": "Analytiikka",
+      "platformAnalyticsButtonLabel": "Alustan analytiikka",
+      "contactsButtonLabel": "Yhteystiedot",
+      "moreActions": "Lisää toimintoja",
+      "health": {
+        "phoneVerified": "Puhelin vahvistettu",
+        "phoneNotVerified": "Puhelinta ei vahvistettu",
+        "planActive": "Paketti aktiivinen",
+        "noPlan": "Ei aktiivista pakettia",
+        "hasMinutes": "Minuutteja käytettävissä",
+        "noMinutes": "Minuutit loppu"
+      },
+      "selectButtonTooltip": {
+        "enabled": "Avustajan mukauttamiseen pääsy",
+        "disabled": "Avustajan mukauttaminen on poistettu käytöstä, vahvista puhelinnumerosi"
+      }
+    },
+    "contacts": {
+      "title": "Yhteystiedot",
+      "addContact": "Lisää yhteystieto",
+      "editContact": "Muokkaa yhteystietoa",
+      "deleteAll": "Poista kaikki",
+      "save": "Tallenna",
+      "cancel": "Peruuta",
+      "actions": "Toiminnot",
+      "search": "Hae",
+      "searchPlaceholder": "Hae nimellä, puhelinnumerolla tai sähköpostilla...",
+      "searchContact": "Hae yhteystietoa",
+      "noContactFound": "Yhteystietoa ei löytynyt tälle numerolle",
+      "recentContacts": "Viimeksi lisätyt yhteystiedot",
+      "bulkUpload": "Joukkolataus",
+      "bulkUploadDescription": "Liitä JSON-taulukko yhteystiedoista alle. Varoitus: tämä korvaa KAIKKI olemassa olevat yhteystiedot.",
+      "bulkUploadSubmit": "Lataa yhteystiedot",
+      "provider": "Lähde",
+      "providerBusiness": "Omat yhteystiedot",
+      "providerHb": "MrCall",
+      "importContact": "Tuo yhteystieto",
+      "downloadVcard": "Lataa käyntikortti",
+      "blockContact": "Estä yhteystieto",
+      "unblockContact": "Poista yhteystiedon esto",
+      "confirmDeleteTitle": "Vahvista poistaminen",
+      "confirmDeleteMessage": "Haluatko varmasti poistaa yhteystiedon {name}?",
+      "confirmDeleteAllMessage": "Haluatko varmasti poistaa KAIKKI yhteystiedot? Tätä toimintoa ei voi perua.",
+      "form": {
+        "displayName": "Näyttönimi",
+        "firstName": "Etunimi",
+        "lastName": "Sukunimi",
+        "nickname": "Nimimerkki",
+        "phone": "Puhelin",
+        "phonePlaceholder": "+1234567890",
+        "email": "Sähköposti",
+        "emailPlaceholder": "email{'@'}example.com",
+        "company": "Yritys",
+        "notes": "Muistiinpanot",
+        "type": "Tyyppi",
+        "addPhone": "Lisää puhelin",
+        "addEmail": "Lisää sähköposti"
+      },
+      "toast": {
+        "success": "Onnistui",
+        "error": "Virhe",
+        "validationError": "Validointi",
+        "nameOrPhoneRequired": "Anna vähintään nimi tai puhelinnumero",
+        "contactCreated": "Yhteystieto luotu onnistuneesti",
+        "contactUpdated": "Yhteystieto päivitetty onnistuneesti",
+        "contactDeleted": "Yhteystieto poistettu onnistuneesti",
+        "allContactsDeleted": "Kaikki yhteystiedot poistettu onnistuneesti",
+        "saveFailed": "Yhteystiedon tallentaminen epäonnistui",
+        "deleteFailed": "Yhteystiedon poistaminen epäonnistui",
+        "searchFailed": "Yhteystietojen hakeminen epäonnistui",
+        "invalidJson": "Virheellinen JSON-muoto",
+        "jsonMustBeArray": "JSON:n on oltava yhteystietotaulukko",
+        "bulkUploadSuccess": "Yhteystiedot ladattu onnistuneesti",
+        "bulkUploadFailed": "Yhteystietojen lataaminen epäonnistui",
+        "contactBlocked": "Yhteystieto estetty",
+        "contactUnblocked": "Yhteystiedon esto poistettu",
+        "blockFailed": "Yhteystiedon estäminen/eston poistaminen epäonnistui",
+        "contactImported": "Yhteystieto tuotu onnistuneesti"
+      }
+    },
+    "business": {
+      "configuration": {
+        "businessNotFound": "Avustajaa ei löytynyt",
+        "errorRetrievingDataMessage": "Asetusten tallentamisessa tapahtui virhe"
+      },
+      "saveButtonText": "Tallenna",
+      "settingsSuccessfullySaved": "Asetukset tallennettu onnistuneesti",
+      "errorSavingSettings": "Asetusten tallentamisessa tapahtui virhe",
+      "yourAssistantIsReadyPleaseTry": "Avustajasi on valmis, kokeile sitä ennen jatkamista",
+      "unableToSave": "Asetusten tallentaminen ei onnistu",
+      "mandatoryParameterMissing": "Pakollinen parametri puuttuu: {param}",
+      "tabPanelYourProfile": "Profiilisi",
+      "tabPanelContacts": "Yhteystiedot",
+      "tabPanelCustomizeYourAssistant": "Mukauta avustaja",
+      "additionalParameters": {
+        "password": {
+          "legend": "Salasana",
+          "tooltip": "Vaihda salasana"
+        }
+      },
+      "voiceGender": {
+        "MALE": "Mies",
+        "FEMALE": "Nainen"
+      },
+      "onboardingDialog": {
+        "editParametersButtonText": "Haluan muuttaa",
+        "continueToPaymentButtonText": "Pidän siitä sellaisenaan."
+      },
+      "configureWithAI": "Määritä tekoälyllä",
+      "aladminAI": "AladMin AI",
+      "configureViaChat": "Määritä chatin kautta",
+      "talkToYourAssistant": "Puhu avustajasi kanssa",
+      "actionPanelIntro": "Määritä ja testaa avustajasi",
+      "howToCard1Title": "Miten avustajani vastaa?",
+      "howToCard1Text": "MrCall esittelee itsensä ja tunnistaa soittajan numerosta. Haluatko muuttaa sitä? Napsauta 'Määritä tekoälyllä' ja kerro, mitä haluaisit.",
+      "howToCard2Title": "Miten otan sen käyttöön?",
+      "howToCard2Text": "Aktivoi paketti, hanki numero ja siirrä puhelut puhelimestasi MrCallille. Professional-paketilla voit yhdistää sen VoIP-puhelinkeskukseesi.",
+      "howToCard3Title": "Voinko vaihtaa äänen?",
+      "howToCard3Text": "Kyllä! Kohdassa 'Ääniasetukset' voit valita mies- ja naisäänen välillä. MrCall puhuu kieltä, jonka valitsit määrityksen aikana.",
+      "howToCard4Title": "Voiko MrCall ottaa vastaan varauksia?",
+      "howToCard4Text": "Totta kai. Kohdassa 'Varaukset' voit määrittää vapaat ajat ja yhdistää kalenterisi. MrCall hoitaa ajanvaraukset puolestasi.",
+      "howToCard5Title": "Miten saan ilmoitukset?",
+      "howToCard5Text": "Jokaisesta puhelusta lähtee sähköposti-ilmoitus, jossa on yhteenveto. Kohdassa 'Ilmoituksesi' voit valita, mitä ilmoituksia saat ja miten.",
+      "howToCard6Title": "Voinko lisätä kysymyksiä ja vastauksia?",
+      "howToCard6Text": "Kohdassa 'Kysymykset ja vastaukset' opetat MrCallille, miten vastata aukioloajoista, hinnoista ja palveluista. Mitä enemmän tietoa lisäät, sitä tarkempi se on.",
+      "howToCard7Title": "Entä sulkupäivät?",
+      "howToCard7Text": "Määritä sulkupäiväsi, niin MrCall kertoo niistä soittajille automaattisesti ja ehdottaa, milloin kannattaa soittaa uudelleen.",
+      "howToCard8Title": "Voinko käyttää kiinteää tekstiä?",
+      "howToCard8Text": "Kun poistat MrCall AI:n käytöstä, avustaja lukee kirjoittamasi kiinteän tekstin. Vähemmän älykäs, mutta hallitset jokaisen sanan.",
+      "activateMrCallCta": "Aktivoi MrCall",
+      "needHelp": "Tarvitsetko apua?",
+      "activationBannerTitle": "Aktivoi ja hanki puhelinnumero",
+      "activationBannerSubtitle": "Viikon ilmainen kokeilu!",
+      "activationBannerButton": "Aktivoi nyt"
+    },
+    "changepassword": {
+      "changePasswordTitle": "Vaihda salasana",
+      "changePasswordSubtitle": "Kirjoita uusi salasana",
+      "operationSuccess": "Salasana vaihdettu onnistuneesti",
+      "operationSuccessExtended": "Voit käyttää uutta salasanaa kirjautumiseen. Voit myös aina pyytää taikalinkin sähköpostitse kirjautuaksesi ilman salasanaa.",
+      "operationFailed": "Salasanan vaihto",
+      "operationFailedExtended": "Uuden salasanan asettamisessa ilmeni ongelmia",
+      "submitButton": "Vaihda",
+      "formText": {
+        "pickAPassword": "Salasanan vahvuus",
+        "suggestions": "Vinkit",
+        "oneLowecase": "Vähintään yksi pieni kirjain",
+        "oneUppercase": "Vähintään yksi iso kirjain",
+        "oneNumeric": "Vähintään yksi numero",
+        "oneSymbol": "Vähintään yksi erikoismerkki",
+        "atLeastNChars": "Vähintään 8 merkkiä"
+      }
+    },
+    "changeemail": {
+      "changeEmailTitle": "Vaihda sähköposti",
+      "changeEmailSubtitle": "Kirjoita uusi sähköpostiosoite",
+      "operationSuccess": "Sähköpostin vaihtopyyntö lähetetty onnistuneesti",
+      "operationSuccessExtended": "Olemme lähettäneet sinulle linkin uuden sähköpostiosoitteen vahvistamiseksi, napsauta linkkiä vahvistaaksesi uuden osoitteen.",
+      "operationFailed": "Sähköpostin vaihto",
+      "operationFailedExtended": "Uuden sähköpostiosoitteen asettamisessa ilmeni ongelmia",
+      "submitButton": "Vaihda"
+    },
+    "conversations": {
+      "downloadDataButtonLabel": "Lataa",
+      "noMessages": "Ei viestejä vielä",
+      "noMessagesDescription": "Kun vastaanotat puheluita, keskusteluhistoriasi näkyy täällä.",
+      "filterTitle": "Suodattimet ja vienti",
+      "dateRangeLabel": "Aikaväli",
+      "dateRangePlaceholder": "Valitse aikaväli",
+      "pageFilterLabel": "Suodata tämä sivu",
+      "pageFilterPlaceholder": "Kirjoita suodattaaksesi tämän sivun tuloksia...",
+      "exportLabel": "Vie tiedot",
+      "viewModeLabel": "Viestinäkymä",
+      "expandedView": "Täydet viestit",
+      "collapsedView": "Tiivistetty näkymä",
+      "hideReadLabel": "Luetut viestit",
+      "hideReadOn": "Piilotettu",
+      "hideReadOff": "Näkyvissä",
+      "showMore": "Näytä lisää",
+      "showLess": "Näytä vähemmän",
+      "duration": "{minutes}m {seconds}s",
+      "unknownContact": "Tuntematon soittaja",
+      "justNow": "Juuri nyt",
+      "minutesAgo": "{count} min sitten",
+      "hoursAgo": "{count} tuntia sitten",
+      "daysAgo": "{count} päivää sitten",
+      "loading": "Ladataan keskusteluja...",
+      "table": {
+        "body": "Viesti",
+        "audioFile": "Ääni",
+        "audioNotSupported": "Selaimesi ei tue äänielementtejä",
+        "contactName": "Yhteystieto",
+        "contactNumber": "Soittajan numero"
+      },
+      "audio": {
+        "play": "Toista ääni",
+        "pause": "Keskeytä ääni"
+      },
+      "views": {
+        "inbox": "Saapuneet",
+        "archive": "Arkisto",
+        "trash": "Roskakori"
+      },
+      "actions": {
+        "archive": "Arkistoi",
+        "unarchive": "Siirrä saapuneisiin",
+        "delete": "Poista",
+        "restore": "Palauta",
+        "markAsRead": "Merkitse luetuksi",
+        "markAsUnread": "Merkitse lukemattomaksi",
+        "archiveAll": "Arkistoi kaikki",
+        "deleteAll": "Poista kaikki",
+        "restoreAll": "Palauta kaikki",
+        "moveAllToInbox": "Siirrä kaikki saapuneisiin"
+      },
+      "toast": {
+        "conversationArchived": "Keskustelu arkistoitu",
+        "conversationDeleted": "Keskustelu poistettu",
+        "conversationRestored": "Keskustelu palautettu",
+        "conversationUnarchived": "Keskustelu siirretty saapuneisiin",
+        "undo": "Kumoa",
+        "actionFailed": "Toiminto epäonnistui, yritä uudelleen",
+        "bulkArchived": "Keskustelut arkistoitu",
+        "bulkDeleted": "Keskustelut poistettu",
+        "bulkRestored": "Keskustelut palautettu",
+        "bulkUnarchived": "Keskustelut siirretty saapuneisiin"
+      },
+      "confirmBulk": {
+        "title": "Vahvista joukkotoiminto",
+        "archiveMessage": "Haluatko varmasti arkistoida kaikki nykyisten suodattimien mukaiset keskustelut?",
+        "deleteMessage": "Haluatko varmasti poistaa kaikki nykyisten suodattimien mukaiset keskustelut?",
+        "restoreMessage": "Haluatko varmasti palauttaa kaikki nykyisten suodattimien mukaiset keskustelut?",
+        "unarchiveMessage": "Haluatko varmasti siirtää kaikki nykyisten suodattimien mukaiset keskustelut saapuneisiin?"
+      },
+      "bulkActionsLabel": "Joukkotoiminnot",
+      "emptyStates": {
+        "inboxEmpty": "Kaikki käsitelty!",
+        "inboxEmptyDescription": "Saapuneissa ei ole uusia keskusteluja.",
+        "archiveEmpty": "Arkisto on tyhjä",
+        "archiveEmptyDescription": "Arkistoidut keskustelut näkyvät täällä.",
+        "trashEmpty": "Roskakori on tyhjä",
+        "trashEmptyDescription": "Poistetut keskustelut näkyvät täällä."
+      },
+      "unreadCount": "{count} lukematonta"
+    },
+    "deleteaccount": {
+      "deleteAccountTitle": "Poista tilisi",
+      "submitButtonLabel": "Poista",
+      "confirmationRequest": "Varoitus: aktiivinen tilauksesi peruutetaan, tilisi ja tietosi merkitään poistettaviksi ja poistetaan automaattisesti. Poistamisen jälkeen tietojasi ei voi enää käyttää eikä palauttaa. Muista, että soitonsiirto on poistettava laitteistasi. Haluatko varmasti jatkaa?",
+      "operationCompleted": "Tilauksesi ja avustajiesi peruuttaminen on valmis",
+      "removeCompletedHeader": "Peruuttaminen",
+      "logoutAfterCancellationLabel": "Poistu",
+      "confirmCancellation": "Vahvista peruuttaminen",
+      "toastCancelSubscriptionSummary": "Tilin ja siihen liittyvien tietojen peruuttaminen",
+      "toastCancellingOperationSummary": "Peruuta toiminto",
+      "toastErrorSummary": "Ilmoita ongelmasta asiakaspalveluun, tarkistamme, että peruuttaminen suoritettiin onnistuneesti",
+      "toastNotifyFortcomingCancelOperation": "Peruutetaan tiliäsi pyyntösi mukaisesti",
+      "toastNotifyCanceledCancelAccountOperation": "Tilin poistaminen peruutettu"
+    },
+    "deletecontacts": {
+      "deleteContactsTitle": "Poista yhteystietosi MrCallista",
+      "submitButtonLabel": "Poista",
+      "confirmationRequest": "Yhteystietosi, sekä omat että MrCallin hankkimat, poistetaan. Poistamisen jälkeen MrCall ei kutsu yhteystietoja nimellä kuten ensimmäisellä soittokerralla. Vahvistatko?",
+      "operationCompleted": "Yhteystietosi on poistettu.",
+      "removeCompletedHeader": "Poista yhteystiedot",
+      "logoutAfterCancellationLabel": "Ok",
+      "confirmCancellation": "Vahvista poistaminen",
+      "toastCancelContactsSummary": "Poistetaan yhteystietoja",
+      "toastCancellingOperationSummary": "Peruuta toiminto",
+      "toastErrorSummary": "Ilmoita ongelmasta asiakaspalveluun, tarkistamme, että yhteystietojen poistaminen suoritetaan loppuun",
+      "toastNotifyFortcomingCancelOperation": "Poistetaan yhteystietojasi",
+      "toastNotifyCanceledCancelContactsOperation": "Yhteystietojen poistaminen peruutettu"
+    },
+    "products": {
+      "buyButtonLabel": "Osta",
+      "cancelButtonLabel": "Peruuta",
+      "confirmCancellation": "Vahvista peruuttaminen",
+      "confirmationCancellationRequest": "Olet peruuttamassa tilauksen, ja siihen liittyvät ominaisuudet poistetaan käytöstä. Oletko varma?",
+      "disableTopupButtonLabel": "Poista lisälataus käytöstä",
+      "enableTopupButtonLabel": "Ota lisälataus käyttöön",
+      "manageSubscriptionLabel": "Maksutiedot",
+      "reactivateButtonLabel": "Aktivoi uudelleen",
+      "toastCancelSubscriptionSummary": "Peruuttaminen",
+      "toastCancellingOperationSummary": "Peruuttaminen käynnissä",
+      "toastPaymentSubscriptionSummary": "Käsitellään maksupyyntöä",
+      "toastErrorSummary": "Ilmeni ongelma, ota yhteyttä tukeen",
+      "toastNotifyFortcomingCancelOperation": "Peruutamme tilauksesi pyyntösi mukaisesti",
+      "toastNotifyCanceledCancelSubscriptionOperation": "Tilauksen peruuttaminen peruutettu",
+      "toastReactivateSubscriptionSummary": "Tilauksen uudelleenaktivointi",
+      "confirmCompletedReactivationSubscriptionSummary": "Tilauksen uudelleenaktivointi valmis",
+      "confirmCompletedCancelationSubscriptionSummary": "Tilauksen peruuttaminen valmis",
+      "toastNotifyFortcomingReactivateOperation": "Aktivoimme tilauksesi uudelleen pyyntösi mukaisesti",
+      "errorCreatingPaymentData": "Maksutietojesi käsittelyssä tapahtui virhe, ota yhteyttä tukeen"
+    },
+    "subscription": {
+      "buyButtonLabel": "Osta",
+      "cancelButtonLabel": "Peruuta",
+      "reactivateButtonLabel": "Aktivoi uudelleen",
+      "manageSubscriptionLabel": "Maksutiedot",
+      "confirmationCancellationRequest": "Varoitus: Tämä toiminto peruuttaa tilauksesi. Voit jatkaa MrCallin käyttöä tilauksen jäljellä olevien päivien ajan, jonka jälkeen avustajasi poistetaan käytöstä. Oletko varma?",
+      "managedThroughAppleInApp": "Tilaus hallinnoidaan Apple-maksun kautta, siirry tilausten hallintaan iOS-laitteellasi",
+      "confirmCancellation": "Vahvista peruuttaminen",
+      "toastPaymentSubscriptionSummary": "Käsitellään maksupyyntöä",
+      "toastCancelSubscriptionSummary": "Peruuttaminen",
+      "toastCancellingOperationSummary": "Peruuttaminen",
+      "toastErrorSummary": "Ilmeni ongelmia, ota yhteyttä tukeen",
+      "toastNotifyFortcomingCancelOperation": "Peruutamme tilauksesi pyyntösi mukaisesti",
+      "toastNotifyCanceledCancelSubscriptionOperation": "Tilauksen peruuttaminen on peruutettu",
+      "toastReactivateSubscriptionSummary": "Aktivoi tilaus uudelleen",
+      "confirmCompletedReactivationSubscriptionSummary": "Tilauksen uudelleenaktivointi valmis",
+      "confirmCompletedCancelationSubscriptionSummary": "Tilauksen peruuttaminen valmis",
+      "toastNotifyFortcomingReactivateOperation": "Aktivoimme tilauksesi uudelleen pyyntösi mukaisesti",
+      "errorCreatingPaymentData": "Maksutietojesi käsittelyssä tapahtui virhe, ota yhteyttä tukeen"
+    },
+    "templates": {
+      "onboarding": {
+        "doYouNeedAssistance": "Tarvitsetko apua?",
+        "supportsection": {
+          "doYouNeedAssistance": "Tarvitsetko apua?",
+          "callUs": "Soita meille numeroon",
+          "callUsNumber": "+12027419420 or +442080595420",
+          "writeUs": "tai kirjoita osoitteeseen {param}",
+          "bookAnAppointment": "Vaihtoehtoisesti varaa tapaaminen asiantuntijoidemme kanssa.",
+          "bookAppointmentButtonLabel": "Varaa tapaaminen"
+        }
+      },
+      "sign": {
+        "magicklink": {
+          "emailInputboxTitle": "Sähköposti",
+          "emailInputboxPlaceholder": "Syötä sähköpostiosoitteesi",
+          "successSent": "Taikalinkki lähetetty",
+          "failedSent": "Taikalinkkiä ei lähetetty",
+          "magicLinkSentMessage": "Taikalinkki on lähetetty sähköpostiisi",
+          "checkYourMagicLinkMessage": "Napsauta sähköpostissa olevaa linkkiä päästäksesi sisään",
+          "magicLinkErrorMessage": "Taikalinkin lähettämisessä sähköpostiisi tapahtui virhe",
+          "submitButton": "Lähetä taikalinkki",
+          "attention": "Huomio",
+          "checkSpamFolder": "Jos et saa sähköpostia, tarkista, että osoite on oikein ja ettei viesti ole päätynyt roskapostiin"
+        },
+        "signin": {
+          "emailInputboxTitle": "Sähköposti",
+          "emailInputboxPlaceholder": "Syötä sähköpostiosoitteesi",
+          "passwordInputboxTitle": "Salasana",
+          "passwordInputboxPlaceholder": "Syötä salasanasi",
+          "loginFailedGenericTitle": "Kirjautumisvirhe",
+          "loginFailedWrongPasswordTitle": "Väärä salasana",
+          "loginFailedWrongPasswordMessageFirstPart": "Käyttäjälle syötetty salasana",
+          "loginFailedWrongPasswordMessageSecondPart": "ei ole kelvollinen.",
+          "loginFailedUserNotFoundTitle": "Käyttäjää ei löydy",
+          "loginFailedUserNotFoundMessageFirstPart": "Käyttäjä",
+          "loginFailedUserNotFoundMessageSecondPart": "ei ole rekisteröitynyt.",
+          "loginFailedNetworkErrorTitle": "Verkko- tai yhteysvirhe",
+          "loginFailedNetworkErrorMessageFirstPart": "Kirjautuminen käyttäjällä ei onnistu",
+          "loginFailedNetworkErrorMessageSecondPart": "Tarkista, että laite on yhdistetty internetiin",
+          "signupButtonLabel": "Rekisteröidy",
+          "signupLinkCompanionText": "Eikö sinulla ole vielä tiliä?",
+          "loginFailedWithEmail": "Kirjautuminen annetulla sähköpostilla ei onnistunut",
+          "loginButtonLabel": "Kirjaudu sisään",
+          "dismissButtonLabel": "Peruuta",
+          "didYouForgetPassword": "Unohditko salasanasi?",
+          "emailNotVerifiedTitle": "Et ole vahvistanut sähköpostiasi",
+          "emailNotVerifiedFirstPart": "Napsauta osoitteeseen lähettämässämme sähköpostissa olevaa linkkiä",
+          "emailNotVerifiedSecondPart": "Etkö saanut linkin sisältävää sähköpostia? Tarkista roskapostikansio tai napsauta alla olevaa painiketta lähettääksesi uuden vahvistussähköpostin.",
+          "emailNotVerifiedReSendEmail": "Lähetä sähköposti",
+          "sessionExpiredTitle": "Istunto vanhentunut",
+          "sessionExpiredMessage": "Istuntosi on vanhentunut. Kirjaudu uudelleen sisään."
+        },
+        "signup": {
+          "emailInputboxTitle": "Sähköpostiosoite",
+          "emailInputboxPlaceholder": "Syötä sähköpostiosoitteesi",
+          "passwordInputboxTitle": "Salasana",
+          "passwordInputboxPlaceholder": "Valitse salasanasi",
+          "registrationSuccess": "Tarkista sähköpostisi!",
+          "accountRegistered": "Tilisi on luotu ja liitetty sähköpostiosoitteeseen",
+          "activationInstructions": "Tarkista sähköpostistasi aktivointiohjeet",
+          "registrationFailedGenericTitle": "Tilin rekisteröinti epäonnistui.",
+          "registrationFailedMessage": "Tilin luomisessa sähköpostiosoitteella ilmeni virheitä",
+          "submitButton": "Rekisteröidy",
+          "signinLinkCompanionText": "Onko sinulla jo tili?",
+          "signinLinkLabel": "Kirjaudu sisään",
+          "signupWithGoogleButtonLabel": "Kirjaudu Googlella",
+          "formText": {
+            "qualityPasswordSubtitle": "Salasanasi vahvuus",
+            "passwordPromptLabel": "Salasanaa ei syötetty",
+            "passwordWeakLabel": "Heikko salasana, helppo arvata",
+            "passwordMediumLabel": "Keskitasoinen salasana",
+            "passwordStrongLabel": "Vahva salasana",
+            "suggestions": "Ehdotukset",
+            "oneLowecase": "Vähintään yksi pieni kirjain",
+            "oneUppercase": "Vähintään yksi iso kirjain",
+            "oneNumeric": "Vähintään yksi numero",
+            "oneSymbol": "Vähintään yksi erikoismerkki",
+            "atLeastNChars": "Vähintään 8 merkkiä"
+          },
+          "temsAndPrivacyPolicyStatement": {
+            "firstStatement": "Napsauttamalla Lähetä-painiketta hyväksyt",
+            "terms": {
+              "text": "Palvelun käyttöehdot",
+              "link": "https://www.mrcall.ai/en/terms-of-use/",
+              "path": "/termsandconditions"
+            },
+            "connective": "ja",
+            "privacy": {
+              "text": "Tietosuojakäytännön",
+              "link": "https://www.mrcall.ai/en/privacy/",
+              "path": "/privacypolicy"
+            }
+          },
+          "errorUserAlreadyExistsTitle": "Tili on jo olemassa",
+          "errorUserAlreadyExistsMessageFirstPart": "Käyttäjä sähköpostilla",
+          "errorUserAlreadyExistsMessageSecondPart": "on jo olemassa. Napsauta Kirjaudu sisään kirjautuaksesi",
+          "errorNetworkTitle": "Verkko- tai yhteysvirhe",
+          "errorNetworkMessageFirstPart": "Rekisteröityminen käyttäjällä epäonnistui",
+          "errorNetworkMessageSecondPart": "Tarkista, että laite on yhdistetty internetiin",
+          "errorUserAlreadyExistsAccessLink": "Kirjaudu sisään",
+          "errorDismissButton": "Peruuta"
+        }
+      }
+    },
+    "whatsappweb": {
+      "tabWhatsappWeb": "WhatsApp Web",
+      "establishingConnectionTitle": "Yhteys",
+      "establishingConnectionSubtitle": "Muodostamme yhteyttä WhatsApp-palveluun",
+      "logoutTitle": "Katkaise tilisi yhteys",
+      "logoutSubtitle": "Yhteyden katkaisemisen jälkeen palvelu ei voi lähettää viestejä. Voit yhdistää uudelleen myöhemmin.",
+      "testTitle": "Testiviestin lähetys",
+      "testSubtitle": "Lähetä viesti WhatsAppiisi. Jos kaikki meni oikein, saat viestin, jossa on nykyinen aika. Voit katkaista tilin yhteyden laitteesi WhatsApp-asetuksista.",
+      "accountNotConnectedTitle": "Yhdistä WhatsApp-tilisi MrCalliin",
+      "accountNotConnectedSubtitle": "Skannaa QR-koodi WhatsApp-sovelluksellasi valtuuttaaksesi yhteyden"
+    },
+    "whatsappCloud": {
+      "tabTitle": "WhatsApp Cloud API",
+      "connectTitle": "Connect WhatsApp Cloud API",
+      "connectSubtitle": "Connect your business to WhatsApp Cloud API for official messaging through Meta",
+      "connectButton": "Connect Official WhatsApp",
+      "statusTitle": "Connection Status",
+      "connected": "Connected",
+      "phoneNumber": "Phone Number",
+      "displayName": "Display Name",
+      "qualityRating": "Quality Rating",
+      "revoke": "Disconnect",
+      "revokeConfirmTitle": "Confirm Disconnection",
+      "revokeConfirmMessage": "Are you sure you want to disconnect WhatsApp Cloud API? You will no longer be able to send or receive messages through the official API.",
+      "sendMessageTitle": "Send Message",
+      "recipientPhone": "Recipient Phone Number",
+      "messageType": "Message Type",
+      "messageText": "Message Text",
+      "templateName": "Template Name",
+      "sendButton": "Send",
+      "chatHistoryTitle": "Chat History",
+      "filterByContact": "Filter by contact...",
+      "direction": "Direction",
+      "contact": "Contact",
+      "type": "Type",
+      "message": "Message",
+      "timestamp": "Timestamp",
+      "toast": {
+        "success": "Operation completed successfully",
+        "error": "An error occurred",
+        "signupSuccess": "WhatsApp Cloud API connected successfully",
+        "signupFailed": "Failed to connect WhatsApp Cloud API",
+        "messageSent": "Message sent successfully",
+        "sendFailed": "Failed to send message",
+        "revokeSuccess": "WhatsApp Cloud API disconnected successfully",
+        "revokeFailed": "Failed to disconnect WhatsApp Cloud API"
+      }
+    },
+    "connectCalendar": {
+      "title": "Yhdistä Google-kalenteri",
+      "description": "Yhdistä Google-kalenteri hallitaksesi tapaamisia automaattisesti. MrCall lukee varatut aikasi ja luo tapaamisia. Tietosi pysyvät kalenterissasi.",
+      "connectButton": "Yhdistä kalenteri",
+      "disconnectButton": "Katkaise kalenterin yhteys",
+      "selectCalendarTitle": "Valitse kalenteri",
+      "confirmButton": "Vahvista",
+      "connectedTo": "Yhdistetty:",
+      "changeCalendar": "Vaihda kalenteri",
+      "loadingCalendars": "Ladataan kalentereita...",
+      "noCalendarsFound": "Kirjoitettavia kalentereita ei löytynyt"
+    },
+    "analytics": {
+      "title": "Analytiikka",
+      "overview": "Yleiskatsaus",
+      "dateRangePlaceholder": "Valitse aikaväli",
+      "presets": {
+        "7d": "7 päivää",
+        "30d": "30 päivää",
+        "90d": "90 päivää"
+      },
+      "kpi": {
+        "totalCalls": "Puhelut yhteensä",
+        "avgDuration": "Keskim. kesto",
+        "totalDuration": "Kokonaiskesto",
+        "uniqueCallers": "Eri soittajat"
+      },
+      "timeseries": {
+        "title": "Puhelumäärä ajan kuluessa",
+        "totalCalls": "Puhelut yhteensä"
+      },
+      "duration": {
+        "title": "Puheluiden kestojakauma",
+        "callCount": "Puheluiden määrä"
+      },
+      "heatmap": {
+        "title": "Tuntikohtainen aktiivisuuskartta",
+        "calls": "puhelua",
+        "days": {
+          "mon": "Ma",
+          "tue": "Ti",
+          "wed": "Ke",
+          "thu": "To",
+          "fri": "Pe",
+          "sat": "La",
+          "sun": "Su"
+        }
+      },
+      "callers": {
+        "title": "Soittaja-analytiikka",
+        "number": "Numero",
+        "callCount": "Puhelut",
+        "totalDuration": "Kokonaiskesto",
+        "lastCall": "Viimeisin puhelu"
+      },
+      "emptyState": {
+        "title": "Tietoja ei ole saatavilla",
+        "description": "Valitulta ajanjaksolta ei ole analytiikkatietoja."
+      },
+      "errors": {
+        "title": "Virhe",
+        "fetchFailed": "Osion {section} tietojen lataaminen epäonnistui."
+      },
+      "adminMode": {
+        "title": "Alustan analytiikka (kaikki yritykset)"
+      },
+      "breakdown": {
+        "title": "Erittely yrityksen mukaan",
+        "businessId": "Yrityksen ID",
+        "totalCalls": "Puhelut yhteensä",
+        "avgDuration": "Keskim. kesto",
+        "totalDuration": "Kokonaiskesto",
+        "uniqueCallers": "Yksilölliset soittajat",
+        "callPercentage": "Puhelu-%",
+        "totalBusinesses": "Aktiiviset yritykset"
+      }
+    },
+    "reseller": {
+      "ownerSelector": {
+        "placeholder": "Valitse tili",
+        "allAccounts": "Kaikki hallinnoidut tilit",
+        "myAccount": "Oma tili"
+      },
+      "dashboard": {
+        "title": "Jälleenmyyjän hallintapaneeli",
+        "profile": "Profiili",
+        "displayName": "Näyttönimi",
+        "email": "Sähköposti",
+        "feeRate": "Palkkioprosentti",
+        "stats": "Yleiskatsaus (viimeiset 30 päivää)",
+        "totalCalls": "Puhelut yhteensä",
+        "managedAccounts": "Hallinnoidut tilit",
+        "avgDuration": "Keskim. kesto",
+        "uniqueCallers": "Eri soittajat",
+        "managedOwnersList": "Hallinnoidut omistajat",
+        "ownerName": "Nimi",
+        "ownerEmail": "Sähköposti",
+        "ownerUid": "UID",
+        "source": "Lähde",
+        "invitationCode": "Kutsukoodi",
+        "quickActions": "Pikatoiminnot",
+        "manageCodes": "Hallinnoi koodeja",
+        "viewBusinesses": "Näytä yritykset",
+        "viewAnalytics": "Näytä analytiikka",
+        "viewProfile": "Näytä profiili",
+        "error": "Virhe"
+      },
+      "codes": {
+        "title": "Kutsukoodit",
+        "generateTitle": "Luo uusi koodi",
+        "label": "Nimi",
+        "labelPlaceholder": "esim. Kampanja kevät 2026",
+        "maxUses": "Käyttökertojen enimmäismäärä",
+        "maxUsesPlaceholder": "Rajoittamaton",
+        "expiresAt": "Vanhenee",
+        "generate": "Luo",
+        "listTitle": "Koodisi",
+        "code": "Koodi",
+        "labelHeader": "Nimi",
+        "uses": "Käyttökerrat",
+        "status": "Tila",
+        "created": "Luotu",
+        "actions": "Toiminnot",
+        "copyLink": "Kopioi linkki",
+        "deactivate": "Poista käytöstä",
+        "deactivateConfirm": "Haluatko varmasti poistaa tämän koodin käytöstä?",
+        "deactivateHeader": "Poista koodi käytöstä",
+        "statusActive": "Aktiivinen",
+        "statusFull": "Täynnä",
+        "statusExpired": "Vanhentunut",
+        "statusInactive": "Ei käytössä",
+        "success": "Onnistui",
+        "error": "Virhe",
+        "generated": "Kutsukoodi luotu onnistuneesti",
+        "deactivated": "Koodi poistettu käytöstä onnistuneesti",
+        "linkCopied": "Kutsulinkki kopioitu leikepöydälle",
+        "fetchError": "Kutsukoodien lataaminen epäonnistui",
+        "generateError": "Kutsukoodin luominen epäonnistui",
+        "deactivateError": "Koodin käytöstä poistaminen epäonnistui"
+      },
+      "profile": {
+        "title": "Jälleenmyyjän profiili",
+        "displayName": "Näyttönimi",
+        "email": "Sähköposti",
+        "feeRate": "Palkkioprosentti",
+        "canGenerateCodes": "Voi luoda koodeja",
+        "canAcceptExistingOwners": "Hyväksy olemassa olevat omistajat",
+        "stripeConnect": "Stripe Connect",
+        "createdAt": "Luotu",
+        "updatedAt": "Viimeksi päivitetty",
+        "noProfile": "Jälleenmyyjän profiilia ei löytynyt"
+      },
+      "managedBy": {
+        "label": "Hallinnoija: {name} — {email}"
+      }
+    },
+    "admin": {
+      "templates": {
+        "title": "Agenttien mallipohjat",
+        "createTemplate": "Uusi mallipohja",
+        "editTemplate": "Muokkaa mallipohjaa",
+        "deleteConfirm": "Haluatko varmasti poistaa mallipohjan '{name}'?",
+        "name": "Nimi",
+        "description": "Kuvaus",
+        "provider": "Palveluntarjoaja",
+        "model": "Malli",
+        "temperature": "Lämpötila",
+        "maxTokens": "Maks. tokenit",
+        "systemPrompt": "Järjestelmäkehote",
+        "tools": "Työkalut",
+        "enableMemory": "Keskustelumuisti",
+        "maxHistory": "Maks. historiaviestit",
+        "maxToolIterations": "Maks. työkaluiteraatiot",
+        "timeout": "Pyynnön aikakatkaisu (s)",
+        "version": "Versio",
+        "enabled": "Käytössä",
+        "save": "Tallenna",
+        "saved": "Mallipohja tallennettu onnistuneesti",
+        "created": "Mallipohja luotu onnistuneesti",
+        "deleted": "Mallipohja poistettu onnistuneesti",
+        "test": "Testaa",
+        "back": "Takaisin",
+        "versionHistory": "Versiohistoria",
+        "rollback": "Palauta",
+        "rollbackConfirm": "Palautetaanko versio {version}?",
+        "rolledBack": "Palautettiin versioon {version}",
+        "aiChat": "Tekoälykehotteen editori",
+        "aiChatPlaceholder": "Pyydä tekoälyä parantamaan kehotetta...",
+        "applyToPrompt": "Käytä kehotteeseen",
+        "unsavedChanges": "Sinulla on tallentamattomia muutoksia. Hylätäänkö ne?",
+        "testChat": "Testichat",
+        "testPlaceholder": "Kirjoita testiviesti...",
+        "enableToolCallValidation": "Työkalukutsujen validointi",
+        "enableInputSanitization": "Syötteen puhdistus",
+        "scope": "Laajuus",
+        "scopeGlobal": "Globaali",
+        "scopeBusiness": "Yritys"
+      },
+      "reseller": {
+        "listTitle": "Jälleenmyyjien hallinta",
+        "newReseller": "Uusi jälleenmyyjä",
+        "displayName": "Näyttönimi",
+        "email": "Sähköposti",
+        "feeRate": "Palkkioprosentti",
+        "ownerCount": "Omistajat",
+        "actions": "Toiminnot",
+        "error": "Virhe",
+        "success": "Onnistui",
+        "fetchError": "Jälleenmyyjätietojen lataaminen epäonnistui",
+        "backToList": "Takaisin luetteloon",
+        "profileTitle": "Jälleenmyyjän profiili",
+        "editProfile": "Muokkaa profiilia",
+        "resellerId": "Jälleenmyyjän tunnus",
+        "canGenerateCodes": "Voi luoda koodeja",
+        "canAcceptExistingOwners": "Hyväksy olemassa olevat omistajat",
+        "stripeConnectAccountId": "Stripe Connect -tilin tunnus",
+        "stripeConnectPlaceholder": "acct_...",
+        "stripeConnect": "Stripe Connect",
+        "feeRates": "Palkkioprosentit",
+        "targetType": "Kohdetyyppi",
+        "targetName": "Kohteen nimi",
+        "addFeeRate": "Lisää palkkioprosentti",
+        "feeRateAdded": "Palkkioprosentti lisätty",
+        "feeRateRemoved": "Palkkioprosentti poistettu",
+        "feeRateError": "Palkkioprosentin hallinta epäonnistui",
+        "removeFeeRateConfirm": "Haluatko varmasti poistaa tämän palkkioprosentin?",
+        "removeFeeRateHeader": "Poista palkkioprosentti",
+        "ownerEmail": "Sähköposti",
+        "source": "Lähde",
+        "invitationCode": "Kutsukoodi",
+        "managedOwners": "Hallinnoidut omistajat",
+        "ownerUidPlaceholder": "Syötä omistajan UID tai sähköposti",
+        "addMapping": "Lisää yhdistäminen",
+        "ownerId": "Omistajan tunnus",
+        "removeMappingConfirm": "Haluatko varmasti poistaa tämän omistajayhdistämisen?",
+        "removeMappingHeader": "Poista yhdistäminen",
+        "dangerZone": "Vaaravyöhyke",
+        "revokeDescription": "Jälleenmyyjän peruuttaminen poistaa kaikki omistajayhdistämiset, peruuttaa suojaamattomat yritykset, poistaa profiilin ja nollaa käyttäjäroolin. Tätä ei voi perua.",
+        "revokeReseller": "Peruuta jälleenmyyjä",
+        "revokeConfirmTextUnprotected": "Tämä peruuttaa kaikkien hallinnoitujen omistajien yritykset. Vahvista kirjoittamalla jälleenmyyjän nimi: {name}",
+        "revokeConfirmTextProtected": "Hallinnoitujen omistajien yritykset jatkavat toimintaansa (suojattu tila). Vahvista kirjoittamalla jälleenmyyjän nimi: {name}",
+        "typeNameToConfirm": "Kirjoita nimi vahvistaaksesi",
+        "cancel": "Peruuta",
+        "save": "Tallenna",
+        "profileUpdated": "Jälleenmyyjän profiili päivitetty",
+        "saveError": "Profiilin tallentaminen epäonnistui",
+        "mappingAdded": "Omistajayhdistäminen lisätty",
+        "mappingRemoved": "Omistajayhdistäminen poistettu",
+        "mappingError": "Yhdistämisen hallinta epäonnistui",
+        "revoked": "Jälleenmyyjä peruutettu onnistuneesti",
+        "revokeError": "Jälleenmyyjän peruuttaminen epäonnistui",
+        "provisionTitle": "Luo uusi jälleenmyyjä",
+        "step1Title": "Vaihe 1: Hae käyttäjä",
+        "uidPlaceholder": "Syötä Firebase UID",
+        "emailPlaceholder": "Syötä sähköpostiosoite",
+        "lookupUser": "Hae",
+        "currentRole": "Nykyinen rooli",
+        "setRoleReseller": "Aseta rooliksi jälleenmyyjä",
+        "alreadyReseller": "Käyttäjä on jo jälleenmyyjä",
+        "step2Title": "Vaihe 2: Luo jälleenmyyjäprofiili",
+        "createProfile": "Luo profiili",
+        "lookupError": "Käyttäjän hakeminen epäonnistui",
+        "roleSet": "Rooli asetettu jälleenmyyjäksi",
+        "roleError": "Roolin asettaminen epäonnistui",
+        "profileCreated": "Jälleenmyyjäprofiili luotu",
+        "createError": "Profiilin luominen epäonnistui",
+        "userRoleTitle": "Käyttäjäroolien hallinta",
+        "search": "Hae",
+        "newRole": "Uusi rooli",
+        "selectRole": "Valitse rooli",
+        "roleUpdated": "Käyttäjärooli päivitetty",
+        "userNotFoundByEmail": "Firebase-käyttäjää ei löytynyt tällä sähköpostilla",
+        "roleChangeConfirm": "Vaihda käyttäjän {uid} rooli rooliin {role}?",
+        "roleChangeHeader": "Vahvista roolimuutos",
+        "protected": "Suojattu",
+        "protectedHint": "Kun käytössä, hallinnoitujen omistajien yritykset säilyvät jälleenmyyjän poistossa",
+        "transferOwner": "Siirrä omistaja",
+        "transferToReseller": "Kohde-jälleenmyyjän ID",
+        "transferToResellerPlaceholder": "Syötä kohde-jälleenmyyjän UID",
+        "ownerTransferred": "Omistaja siirretty onnistuneesti",
+        "transferError": "Omistajan siirtäminen epäonnistui",
+        "revokedDetail": "Jälleenmyyjä poistettu: {owners} omistajaa vaikutettu, {businesses} yritystä peruutettu"
+      }
+    }
+  },
+  "views": {
+    "onboarding": {
+      "choosedevice": {
+        "titleText": "Mitä olet määrittämässä?",
+        "moveForward": "Seuraava",
+        "moveBackward": "Takaisin",
+        "subtitleText": "Valitse määritettävä laite",
+        "mobilePhone": "Matkapuhelin",
+        "landLine": "Lankapuhelin",
+        "switchBoard": "Puhelinkeskus",
+        "headingMessageTitle": "Kiitos!",
+        "headingMessageSubtitle": "7 päivän ilmainen kokeilujaksosi on alkanut!"
+      },
+      "language": {
+        "titleText": "Tervetuloa!",
+        "moveForward": "Seuraava",
+        "subtitleText": "Valitse avustajasi kieli",
+        "defaultLang": "Italia",
+        "pickALang": "Millä kielellä avustajasi vastaa?",
+        "pickALangPlaceholder": "valitse kieli",
+        "pickALangSubtitle": "Pääkieli: avustaja osaa vastata eri kielillä",
+        "pickCountryPlaceholder": "valitse maa",
+        "numberCountry": "Avustajasi puhelinnumeron kansallisuus",
+        "numberCountrySubtitle": "Avustajasi vastaa valitun maan omistettuun numeroon",
+        "mainLanguageHint": "Voit muuttaa tätä myöhemmin, ja avustajasi voi olla myös monikielinen.",
+        "funFactTitle": "Tiesitkö?",
+        "funFactText": "Ensimmäisen puhuvan koneen rakensi vuonna 1791 itävaltalais-unkarilainen keksijä Wolfgang von Kempelen. Se oli esi-isäni! Ja se osasi ylpeänä lausua \"Konstantinopoli\". Ei hassumpaa, vai mitä?"
+      },
+      "business": {
+        "funFactTitle": "MrCall, älykäs avustajasi",
+        "funFactText": "MrCall syntyi Italiassa, ja niin syntyi myös ajatus henkilökohtaisesta avustajasta! Antiikin roomalaisilla oli Nomenclator, erikoistunut orja, jonka ainoa tehtävä oli painaa mieleen jokaisen isäntänsä mahdollisesti kohtaaman henkilön nimi, kasvot ja yhteiskunnallinen asema. MrCall tekee samaa… mutta on poliittisesti korrekti."
+      },
+      "searchbusinessfunfact": {
+        "funFactTitle": "Miksi keltaiset sivut ovat keltaisia?",
+        "funFactText": "Keltaiset sivut keksittiin vuonna 1883, koska eräältä kirjapainolta Cheyennessä, Wyomingissa, loppui valkoinen paperi. Siitä tuli maailman ensimmäinen yrityshakemisto. Nykyään jätämme väliin sekä paperin että odotusmusiikin. Yhdistä Google Business -tilisi, niin avustajasi voi alkaa vastata puheluihin heti."
+      },
+      "assistantcreatedfunfact": {
+        "funFactTitle": "Jääkaapista puhelimeen",
+        "funFactText": "Ennen kuin puhelinvastaaja oli digitaalinen tiedosto, se oli ihminen ja muistilehtiö. 1930-luvulla ensimmäinen 'vastaaja' oli jääkaapin kokoinen kaappi. Nykyään MrCall on henkilökohtainen vaihteenhoitajasi, ilman jääkaapin kokoisia laitteita tai viheltelyä."
+      },
+      "forwardinggeneric": {
+        "selectOperator": "Valitse operaattorisi",
+        "dialTheNumber": "Näppäile seuraava numero puhelimesi näppäimistöllä ",
+        "pressTheDialButton": "ja paina soittopainiketta. Operaattori saattaa toistaa viestin toiminnon tuloksesta.",
+        "doYouWhantToSet": "Haluatko asettaa ",
+        "numberOfSecondsBeforeForwarding": "sekuntien määrän ennen soitonsiirtoa?",
+        "tryThisOption": "Kokeile tätä vaihtoehtoa: **61*{param}**SEKUNTIEN_MÄÄRÄ#.",
+        "forInstanceToForward": "Esimerkiksi 15 sekunnin jälkeen siirtämiseksi: ",
+        "deactivation": "Käytöstäpoisto",
+        "compose": "näppäile",
+        "andPressDialButton": "ja paina soittopainiketta.",
+        "thisOperatorMayApplyAFee": "Tämä operaattori saattaa periä maksun soitonsiirrosta.",
+        "officialProcedure": "Napsauta tästä nähdäksesi operaattorisi viralliset ohjeet.",
+        "tryToContactTheOperatorFastweb": "Jos soitonsiirtokoodit eivät toimi, voit kokeilla latausta Fastweb-sovelluksesta tai pyytää vahvistusta operaattorisi asiakaspalvelusta.",
+        "genericDisclaimer1": "Soitonsiirto on operaattorisi hallinnoima toimenpide, ei MrCallin.",
+        "genericDisclaimer2": "Jos soitonsiirtokoodit eivät toimi, se voi johtua sopimuksestasi; suosittelemme ottamaan yhteyttä operaattoriisi soitonsiirron aktivoimiseksi."
+      },
+      "forwardingonlandline": {
+        "titleText": "Soitonsiirron määritys lankapuhelimesta",
+        "subtitleText": "Näppäile toimintokoodit aktivoidaksesi soitonsiirron",
+        "moveBackward": "Takaisin",
+        "moveForward": "Olen määrittänyt"
+      },
+      "forwardingonotherdevice": {
+        "titleText": "Soitonsiirron määritys matkapuhelimessa",
+        "subtitleText": "Näppäile koodit aktivoidaksesi soitonsiirron"
+      },
+      "configureassistant": {
+        "titleText": "Luo nyt avustajasi",
+        "subtitleText": "",
+        "moveForward": "Luo!",
+        "moveBackward": "Takaisin",
+        "mandatoryParameter": "Tämä kenttä on pakollinen",
+        "nicknameTitle": "Avustajan tunniste (hyödyllinen, jos sinulla on useampi)",
+        "nicknamePlaceholder": "Nimesi tai yrityksesi nimi",
+        "nicknameSubtitle": "Nimimerkkisi tai yrityksesi nimi",
+        "voiceGenderTitle": "Äänen sukupuoli",
+        "welcomeMessageTitle": "Tervetuloviesti tervehdyksen jälkeen",
+        "welcomeMessageSubtitle": "Voit muokata tätä viestiä milloin tahansa!",
+        "voiceGenderDefault": "FEMALE",
+        "nickNamePlaceHolder": "YrityksenNimi",
+        "voiceGender": [
+          {
+            "label": "Mies",
+            "value": "MALE"
+          },
+          {
+            "label": "Nainen",
+            "value": "FEMALE"
+          }
+        ],
+        "errorDialogAlreadyExistsTitle": [
+          "Avustaja on jo liitetty numeroosi"
+        ],
+        "errorDialogUnknownErrorTitle": [
+          "Tapahtui virhe"
+        ],
+        "errorDialogUnknownErrorBody": [
+          "Jos ongelma jatkuu, ota yhteyttä tukeen."
+        ],
+        "errorDialogAlreadyExistsBody": [
+          "Voit palata takaisin ja valita toisen numeron.",
+          "Tai voit siirtyä henkilökohtaiselle alueellesi muokkaamaan aiemmin luotua avustajaa."
+        ],
+        "alreadyExistsBusinessErrorLeftButtonLabel": "Takaisin",
+        "alreadyExistsBusinessErrorRightButtonLabel": "Avustajat",
+        "unknownErrorBusinessErrorLeftButtonLabel": "Yritä uudelleen",
+        "unknownErrorBusinessErrorRightButtonLabel": "Pyydä apua"
+      },
+      "chooseplan": {
+        "title": "Aloita ilmainen viikon kokeilujakso",
+        "subtitle": "Kokeile viikon ajan, ei sitoumuksia — peruuta milloin tahansa, ei veloituksia!",
+        "textForFreeTrial": "HALUATKO KOKEILLA AVUSTAJAASI ENSIN? NAPSAUTA ",
+        "myAssistantLink": "Avustajani ⇪",
+        "plans": [
+          {
+            "id": "essential",
+            "title": "Essential",
+            "highlight": "Aloita riskittömästi",
+            "pricing": {
+              "number": "29",
+              "currency": "$",
+              "periodicity": "kuukaudessa"
+            },
+            "buttonLabel": "ALOITA KÄYTTÖ",
+            "functionalities": {
+              "title": "Nopea käyttöönotto ja luonnollinen keskustelu",
+              "items": [
+                {
+                  "value": "200 minuuttia perustekoälyä (noin 100 puhelua)"
+                },
+                {
+                  "value": "Käyttäjän muokattavissa oleva puheluvastaus"
+                },
+                {
+                  "value": "Kysyy nimen ja sähköpostiosoitteen"
+                },
+                {
+                  "value": "Ilmoitus soittajalle WhatsApp/SMS-viestillä esimääritetyllä viestillä"
+                },
+                {
+                  "value": "Ilmoitukset yritykselle sovelluksen ja sähköpostin kautta"
+                },
+                {
+                  "value": "Poimii puheluista keskeiset tiedot"
+                },
+                {
+                  "value": "Yhdistyy Google My Businessiin"
+                },
+                {
+                  "value": "Tietopankin luominen avustajalle"
+                },
+                {
+                  "value": "Yhteystietojen hallinta"
+                },
+                {
+                  "value": "Puhelutilastot ja analytiikka"
+                },
+                {
+                  "value": "MrCall Desktop: sähköposti, WhatsApp ja puhelin tietokoneeltasi (sisältyy)"
+                }
+              ]
+            }
+          },
+          {
+            "id": "starter",
+            "title": "Starter",
+            "highlight": "Edistynyt määritys",
+            "pricing": {
+              "number": "55",
+              "currency": "$",
+              "periodicity": "kuukaudessa"
+            },
+            "buttonLabel": "ALOITA!",
+            "functionalities": {
+              "title": "Varaukset, soitonsiirto ja prioriteettituki",
+              "includesFrom": "Kaikki Essential-paketista, lisäksi:",
+              "items": [
+                {
+                  "value": "250 minuuttia edistynyttä tekoälyä (noin 130 puhelua)"
+                },
+                {
+                  "value": "Älykäs puheluvastaus soittajan historian perusteella"
+                },
+                {
+                  "value": "Monikielinen avustaja"
+                },
+                {
+                  "value": "Tekoälyn personoidut WhatsApp-viestit soittajalle jokaisen puhelun jälkeen"
+                },
+                {
+                  "value": "WhatsApp-ilmoitukset yritykselle puheluyhteenvedolla (maksullinen lisäosa)"
+                },
+                {
+                  "value": "Varausmoduuli (Google-kalenteri)"
+                },
+                {
+                  "value": "Prioriteettisähköpostituki (enintään 5 päivää)"
+                },
+                {
+                  "value": "Tunnukset VoIP-puhelinkeskuksen yhdistämiseen SIP Trunkin kautta"
+                },
+                {
+                  "value": "Puhelun jälkeinen webhook: automaattinen tietojen toimitus CRM:ään, hallintajärjestelmiin tai automaatioihin"
+                },
+                {
+                  "value": "Avustaja siirtää puhelut alanumeroihin tai puhelinnumeroihin"
+                },
+                {
+                  "value": "MrCall Desktop: sähköposti, WhatsApp ja puhelin tietokoneeltasi (sisältyy)"
+                }
+              ]
+            }
+          },
+          {
+            "id": "professional",
+            "title": "Professional",
+            "highlight": "Rakennettu yrityksellesi",
+            "pricing": {
+              "number": "160",
+              "currency": "$",
+              "periodicity": "kuukaudessa"
+            },
+            "buttonLabel": "ALOITA!",
+            "functionalities": {
+              "title": "Edistyneet määritykset ja yhteydet kolmannen osapuolen järjestelmiin",
+              "includesFrom": "Kaikki Starter-paketista, lisäksi:",
+              "items": [
+                {
+                  "value": "700 minuuttia edistynyttä tekoälyä, noin 350 puhelua"
+                },
+                {
+                  "value": "Älykäs puheluvastaus soittajan historian perusteella"
+                },
+                {
+                  "value": "Sähköpostituki 2 arkipäivän kuluessa"
+                },
+                {
+                  "value": "WhatsApp-ilmoitukset yritykselle sisältyvät suunnitelmaan (yhteenveto, litterointi)"
+                },
+                {
+                  "value": "Tietojen luku/kirjoitus ulkoisista lähteistä (verkkosivusto, CRM jne.) 2 tunnin konsultointi sisältyy"
+                },
+                {
+                  "value": "Poimittavien tietojen mukauttaminen (tuotekoodi jne.)"
+                },
+                {
+                  "value": "Hinta ei sisällä mahdollista veroa"
+                },
+                {
+                  "value": "MrCall Desktop: sähköposti, WhatsApp ja puhelin tietokoneeltasi (sisältyy)"
+                }
+              ]
+            }
+          }
+        ],
+        "errorDialogUnknownErrorTitle": [
+          "Tapahtui virhe"
+        ],
+        "errorDialogUnknownErrorBody": [
+          "Jos ongelma jatkuu, ota yhteyttä tukeen."
+        ],
+        "unknownErrorBusinessErrorRightButtonLabel": "Peruuta",
+        "moveBackward": "Takaisin",
+        "recommendedLabel": "Suositeltu",
+        "trustSignals": {
+          "securePayment": "Turvallinen maksu Stripen kautta",
+          "cancelAnytime": "Peru milloin tahansa, ei maksuja",
+          "noChargesDuringTrial": "Ei veloituksia kokeilun aikana"
+        },
+        "supportWriteUs": "Kirjoita osoitteeseen {email}",
+        "supportBookMeeting": "tai varaa tapaaminen asiantuntijoidemme kanssa",
+        "advisor": {
+          "toggleLabel": "Etkö tiedä mikä paketti sopii? Autamme sinua!",
+          "toggleLabelCollapse": "Piilota pakettisuositus",
+          "callVolumeTitle": "Kuinka monta puhelua odotat kuukaudessa?",
+          "callVolumeOptions": {
+            "low": "Enintään 100",
+            "medium": "100–300",
+            "high": "300+"
+          },
+          "featuresTitle": "Mitä ominaisuuksia tarvitset?",
+          "features": {
+            "smart_response": "Älykkäämmät keskustelut",
+            "multilingual": "Monikielinen",
+            "dynamic_whatsapp": "Henkilökohtainen WhatsApp",
+            "booking": "Ajanvaraus",
+            "voip_sip": "Puhelinkeskus-integraatio",
+            "webhook": "Sovellus- ja CRM-automaatiot",
+            "call_transfer": "Puhelunsiirto",
+            "call_transcription": "Puheluyhteenveto WhatsAppissa",
+            "external_sources": "Ulkoisen datan yhdistäminen",
+            "custom_extraction": "Mukautettu tiedonkeruu"
+          },
+          "resetLabel": "Nollaa suodattimet",
+          "bestMatchBadge": "Ihanteellinen paketti sinulle",
+          "noMatchTitle": "Ei vastaavaa pakettia",
+          "noMatchMessage": "Mikään paketti ei täytä kaikkia kriteerejäsi. Kokeile poistaa joitakin ominaisuuksia tai muuttaa puhelumäärää."
+        }
+      },
+      "forwardingonthisdevice": {
+        "titleText": "Soitonsiirron määritys matkapuhelimesta",
+        "subtitleText": "Soita toimintokoodit aktivoidaksesi soitonsiirron",
+        "moveBackward": "Takaisin",
+        "moveForward": "Olen määrittänyt",
+        "activateCode": "Aktivoi",
+        "deactivateCode": "Poista käytöstä",
+        "activateItemTitle": "Aktivoi soitonsiirto",
+        "deactivateItemTitle": "Poista soitonsiirto käytöstä",
+        "activateItemSubtitle": "Eikö toimi? Katso ohjeet kohdasta 'Toinen laite'",
+        "deactivateItemSubtitle": "Näppäile deaktivointikoodi"
+      },
+      "makeatestcall": {
+        "titleText": "Testaa MrCall-avustajaasi!",
+        "moveBackward": "Takaisin",
+        "moveForward": "Seuraava",
+        "skip": "Ohita",
+        "subtitleText": "soita numerostasi ",
+        "callGeneralService": "Soita tähän numeroon ja puhu integraatioavustajan kanssa ",
+        "callYourTestAssistant": "avustajasi väliaikainen numero",
+        "changeNumberCountry": "Haluatko numeron toisesta maasta? Ota meihin yhteyttä, niin vaihdamme sen! ",
+        "modalDialogNoTestCallTitle": [
+          "Oliko ongelma?"
+        ],
+        "modalDialogNoTestCallSubtitle": "Vaikuttaa siltä, ettemme vastaanottaneet testipuheluasi",
+        "modalDialogNoTestCallLeftButtonLabel": "Yritä soittaa uudelleen",
+        "modalDialogNoTestCallRightButtonLabel": "Ota yhteyttä asiantuntijaamme",
+        "modalDialogNoTestCallBodyMessageTitle": "Muistutamme, että",
+        "modalDialogNoTestCallBodyMessage1": "sinun on käytettävä omaa puhelinnumeroasi testipuhelun soittamiseen",
+        "modalDialogNoTestCallBodyMessage2_1": "Jos tarvitset apua, voit ottaa meihin yhteyttä numerossa",
+        "modalDialogNoTestCallBodyMessage2_2": "tai kirjoittaa osoitteeseen",
+        "modalDialogNoTestCallBodyMessageSupportNumber": "+12027419420",
+        "tryAssistantWithWebcallOrPhone": "Kokeile verkkopuhelua tai soita avustajalle suoraan",
+        "trialReminder": "7 päivän ilmainen kokeilusi alkaa aktivoinnin yhteydessä — ei veloituksia siihen asti.",
+        "skipActivateNow": "Ohita, aktivoi nyt",
+        "skipGoToDashboard": "Ohita, siirry hallintapaneeliin"
+      },
+      "assistantcreated": {
+        "titleText": "Tekoälyavustajasi on luotu!",
+        "moveBackward": "Takaisin asetuksiin",
+        "moveForward": "Kokeile avustajaasi",
+        "subtitleText": "Avustajasi on valmis. Seuraavaksi:",
+        "benefit1": "7 päivän ilmainen kokeilu — ei veloituksia ennen päätöstäsi",
+        "benefit3": "Peru milloin tahansa yhdellä napsautuksella"
+      },
+      "namephone": {
+        "titleText": "Profiilisi",
+        "moveForward": "Seuraava",
+        "moveBackward": "Takaisin",
+        "subtitleText": "Täydennä profiilisi seuraavilla tiedoilla:",
+        "yourNameTitle": "Nimesi",
+        "yourNamePlaceholder": "Syötä nimesi",
+        "phoneNumberTitle": "Matkapuhelinnumerosi",
+        "phoneNumberPlaceholder": "Syötä matkapuhelinnumerosi",
+        "phoneNumberSubtitle": "Tätä numeroa käytetään ensimmäiseen avustajan toimintatestiin",
+        "nameErrorMessage": "Nimi on pakollinen",
+        "phoneNumberErrorMessage": "Numero on pakollinen",
+        "phoneNumberCountrySelectorPlaceholder": "Maakoodi",
+        "phoneNumberCountrySelectorError": "Virhe",
+        "phoneNumberPhoneInputPlaceholder": "Puhelinnumero",
+        "phoneNumberPhoneInputExample": "Esimerkki: "
+      },
+      "notificationpreview": {
+        "titleText": "Testipuhelusi onnistui!",
+        "moveBackward": "Takaisin",
+        "moveForward": "Seuraava",
+        "subtitleText": "Nyt se on tallennettu tiliisi, ja voit tehdä lisätestejä myöhemmin.",
+        "audioNotSupported": "Ääntä ei tueta",
+        "transcriptionBoxTitle": "Puhelusi",
+        "table": {
+          "body": "Viesti",
+          "audioFile": "Ääni",
+          "audioNotSupported": "Selaimesi ei tue äänielementtejä",
+          "contactName": "Yhteystieto",
+          "contactNumber": "Soittajan numero"
+        }
+      },
+      "prebookappointment": {
+        "titleText": "Voit varata ajan asiantuntijan kanssa",
+        "moveBackward": "Avustajasi",
+        "moveForward": "Varaa aika",
+        "subtitleText": "Hän auttaa sinua määrittämään MrCallin tarpeisiisi tai ratkaisemaan mahdolliset ongelmat"
+      },
+      "searchbusiness": {
+        "titleText": "Yhdistä Google My Businessiin",
+        "moveForward": "Seuraava",
+        "moveBackward": "Takaisin",
+        "continueButtonLabel": "Jatka",
+        "removeSelection": "Poista",
+        "subtitleText": "MrCall synkronoi aukioloajat ja osoitteen",
+        "searchYourBusiness": "Hae yritystäsi",
+        "searchYourCompanyPlaceholder": "Hae Googlesta",
+        "searchParametersEmptyMessage": "Syötä yrityksesi nimi aloittaaksesi haun",
+        "doNotOwnABusiness": "Minulla ei ole yritysprofiilia, tai teen tämän myöhemmin",
+        "noSearchResults": "Haku ei tuottanut tuloksia",
+        "notFoundSubtitle": "Kokeile syöttää täydellinen nimi ja osoite.",
+        "yourSearchOf": "Hakusi",
+        "didNotProduceResults": "ei tuottanut tuloksia",
+        "noBusinessSelectedTitle": "Ei synkronointia",
+        "noBusinessSelectedMessage": "Jos et halua synkronoida, jatka eteenpäin. Muussa tapauksessa palaa takaisin"
+      },
+      "searchbusinessinfo": {
+        "titleText": "Tietoja yrityksestäsi",
+        "moveForward": "Seuraava",
+        "moveBackward": "Takaisin",
+        "reload": "Uusi haku",
+        "loading": "Haetaan...",
+        "continueButtonLabel": "Seuraava",
+        "removeSelection": "Poista",
+        "subtitleText": "Voit muokata yritystietojasi tai muuttaa niitä myöhemmin milloin tahansa.",
+        "subtitleTextSearch": "Etsimme julkisia tietoja yrityksestäsi alkuasetuksia varten.",
+        "businessInformation": "Tietoja yrityksestäsi",
+        "searchYourCompanyPlaceholder": "Hae Google Businessista",
+        "skipInfo": "Jatka käyttämättä näitä tietoja",
+        "searchFailedTitle": "Haku ei käytettävissä",
+        "searchFailedMessage": "Yritystietoja ei voitu hakea automaattisesti. Voit syöttää ne manuaalisesti tai ohittaa tämän vaiheen.",
+        "noSearchResults": "Hakutuloksia ei löytynyt",
+        "notFoundSubtitle": "Kokeile syöttää täydellinen nimi ja osoite."
+      },
+      "switchboardconfiguration": {
+        "titleText": "Varaa aika puhelinkeskuksen määritykseen",
+        "moveBackward": "Takaisin",
+        "moveForward": "Varaa aika",
+        "subtitleText": "Autamme sinua yhdistämään puhelinkeskuksesi ja määrittämään MrCallin tarpeisiisi"
+      },
+      "thisorotherdevice": {
+        "titleText": "Minkä laitteen haluat määrittää?",
+        "moveForward": "Seuraava",
+        "moveBackward": "Takaisin",
+        "subtitleText": "Määritä, onko kyseessä tämä laite vai toinen laite",
+        "thisPhone": "Tämä laite",
+        "otherPhone": "Toinen laite"
+      }
+    },
+    "sign": {
+      "magiclink": {
+        "titleText": "Taikalinkki",
+        "didYouForgetPassword": "Unohditko salasanan?"
+      },
+      "signin": {
+        "titleText": "Kirjaudu sisään",
+        "heroHeadline": "Welcome back.",
+        "heroSubheadline": "Sign in to manage your AI assistant and keep your business running smoothly."
+      },
+      "signup": {
+        "titleText": "Luo tili",
+        "heroHeadline": "Turn every call",
+        "heroAccent": "into opportunity.",
+        "heroSubheadline": "Are you a business or a solo professional? Choose MrCall, a true AI digital agent that autonomously handles phone conversations with your customers, interacts with them in clear, natural language, and syncs with your company's business systems.",
+        "benefit1": "Free 7-day trial, no credit card required",
+        "benefit2": "Set up in under 5 minutes",
+        "benefit3": "Cancel anytime, no commitment",
+        "trustBadge": "Trusted by 1,000+ businesses since 2021"
+      }
+    },
+    "callbooking": {
+      "backwardLinkText": "Takaisin",
+      "redirecting": "Redirecting to the contact page…"
+    },
+    "customtokensignin": {
+      "title": "Henkilöllisyyden tarkistus ja pyydetyn sivun lataaminen"
+    },
+    "failedpayment": {
+      "failedPayment": "Maksutavan rekisteröinti ei onnistunut. Jos tarvitset tukea, ota yhteyttä asiakaspalveluun",
+      "gotoAssistant": "Palaa avustajien sivulle"
+    },
+    "failedpaymentproduct": {
+      "failedPayment": "Maksu ei onnistunut, ota yhteyttä asiakaspalveluun",
+      "gotoAssistant": "Palaa avustajien sivulle"
+    },
+    "onboardingprepayment": {
+      "title1": "Hienoa!",
+      "title2": "Olemme melkein valmiit",
+      "subtitle": "Aloita ilmainen kokeilujakso",
+      "textTrialPeriod": "Maksutavan lisäämisen jälkeen avustajallasi on kaikki ominaisuudet käytössä! Ja muista: voit peruuttaa tilauksen milloin tahansa ilman veloitusta.",
+      "voipMessageText": "Voit heti varata ajan asiantuntijamme kanssa yhdistääksesi VoIP-puhelinkeskuksesi MrCalliin.",
+      "numberForwardingMessages": "Saat ohjeet soitonsiirron määrittämiseen MrCall-avustajallesi.",
+      "okMoveOnButtonText": "Jatka"
+    },
+    "payment": {
+      "redirectToPaymentMethod": "Sinut ohjataan maksutavan rekisteröintiin"
+    },
+    "privacypolicy": {
+      "privacyOfTheService": "MrCall-palvelun tietosuojakäytäntö"
+    },
+    "successpayment": {
+      "successPayment": "Maksutavan rekisteröinti onnistui",
+      "callForwardingPage": "Kuten kaikkien digitaalisten avustajapalveluiden tai etäsihteerien kohdalla, sinun on määritettävä soitonsiirto.",
+      "callForwardingPageBusinessPlus": "Jos sinulla ei ole VoIP-puhelinkeskusta, sinun on määritettävä soitonsiirto.",
+      "gotoCallForwardingInstructionsButtonLabel": "Määritä soitonsiirto",
+      "furtherInfoAboutPersonalArea": "\"Avustaja\"-osiosta löydät kaikki tiedot palvelusta, tilauksesi tilasta ja ominaisuuksista, jotka aktivoit tilauksen aloittaessa, kuten Google-kalenterin yhdistämisen, tekstiviestien lähettämisen asiakkaillesi tai puhelinvarausten aktivoinnin.",
+      "announcementApp": "Oletko jo ladannut MrCall-sovelluksen? Se on ilmainen ja sen avulla voit hallita avustajaasi, vastaanottaa puheluiden litterointeja, synkronoida yhteystietojasi ja paljon muuta.",
+      "androidButtonLabel": "Google Play",
+      "appleButtonLabel": "Apple Store",
+      "bookAnAppointment": "Varaa aika VoIP-puhelinkeskuksesi yhdistämiseen, ja autamme sinua askel askeleelta.",
+      "alreadyAssignedNumber": "Avustajallasi on jo määritetty numero. Siirry avustajasi sivulle muokataksesi tai tarkistaaksesi asetukset.",
+      "alreadyAssignedNumberButtonLabel": "Siirry avustajaasi",
+      "appointmentButtonText": "Varaa aika",
+      "contactSupport": "Numeron määrittämisessä ilmeni ongelma. Ota yhteyttä tukeen.",
+      "yourAssistantIsActive": "Avustajasi on aktiivinen!",
+      "yourNumber": "Avustajasi puhelinnumero",
+      "setupForwarding": "Määritä soitonsiirto",
+      "goToDashboard": "Siirry hallintapaneeliin"
+    },
+    "activation": {
+      "titleText": "Aktivoi avustajasi",
+      "subtitleText": "Hanki oma puhelinnumero ja viikon ilmainen kokeilu",
+      "multilingualQuestion": "Puhuuko avustajasi yhtä vai useampaa kieltä?",
+      "oneLanguage": "Yksi kieli",
+      "multipleLanguages": "Useita kieliä",
+      "phoneNationalityTitle": "Puhelinnumeron maa",
+      "phoneNationalitySubtitle": "Valitse avustajasi puhelinnumeron maa",
+      "continueButton": "Jatka paketin valintaan"
+    },
+    "successpaymentproduct": {
+      "failedPayment": "Maksu onnistui ja tuote on ostettu. Jos sinulla on kysyttävää, ota yhteyttä tukeen.",
+      "gotoAssistant": "Palaa avustajien sivulle"
+    },
+    "termsandconditions": {
+      "pageTitle": "MrCall-palvelun käyttöehdot"
+    },
+    "partnerprogram": {
+      "mainTitle": "Tuo ystävä",
+      "bringAFriend": "Jokaisesta ystävästä, jonka tuot MrCalliin",
+      "aFreeMonthForYou": "Yksi ilmainen kuukausi sinulle",
+      "aFreeMonthForYourContact": "Yksi ilmainen kuukausi yhteystiedollesi",
+      "yourPersonalCode": "Tässä on henkilökohtainen koodisi jaettavaksi:",
+      "yourContactMustUseTheCode": "Yhteystietosi on syötettävä se maksutavan rekisteröinnin yhteydessä.",
+      "freeMonthAfterPayment": "Yhteystietosi ensimmäisestä maksusta alkaen lisäämme sinulle ilmaisen kuukauden."
+    },
+    "configureAI": {
+      "title": "Määritä tekoälyllä",
+      "subtitle": "Käytä luonnollista kieltä puhelinassistenttisi määrittämiseen",
+      "quickActions": "Pikatoiminnot",
+      "backToSettings": "Takaisin Asetuksiin",
+      "trainButton": "Kouluta avustaja",
+      "trainingInProgress": "Koulutetaan...",
+      "trainingMessage": "Koulutetaan avustajaa yrityksesi tiedoilla...",
+      "thinkingMessages": [
+        "Opetellaan miten avustajasi vastaa puhelimeen...",
+        "Sukelletaan asetuslabyrinttiin...",
+        "Luetaan käyttöohjetta... takaperin, ihan huvin vuoksi.",
+        "Opetetaan avustajalle small talkin jaloa taitoa...",
+        "Analysoidaan ajanvarausasetuksiasi äärimmäisellä tarkkuudella...",
+        "Vakuutetaan avustajalle, että maanantaitkin ovat kivoja...",
+        "Kartoitetaan jokaista keskustelureittiä... niitä on aika paljon.",
+        "Pänttätään tietopankkiasi kuin kokeeseen illan viimeisinä tunteina...",
+        "Ristiintarkistetaan asetuksia virtuaalisen kahvikupin äärellä...",
+        "Varmistetaan, ettei tervetuloviesti kuulosta robotilta...",
+        "Koulutetaan avustajaa olemaan kohtelias, jopa ennen aamukahvia...",
+        "Ladataan kärsivällisyyttä... arvioitu aika: pian.",
+        "Käydään asetuksiasi läpi hienosäätökammalla...",
+        "Opetetaan avustajaa olemaan keskeyttämättä soittajia... vaikeampaa kuin luulisi.",
+        "Käsitellään ilmoitusasetuksia, koska kukaan ei pidä roskapostista...",
+        "Opitaan miltä haluat seurantaviestien kuulostavan...",
+        "Harjoitellaan täydellistä tervehdystä, vielä kerran...",
+        "Melkein valmista... tarkistetaan vielä pieni printti.",
+        "Synkronoidaan MrCall-emoaluksen kanssa...",
+        "Kalibroidaan keskusteluvirran tunnistinta...",
+        "Optimoidaan soittajakokemusta, yksi muuttuja kerrallaan...",
+        "Opetetaan avustajalle kiusallisten hiljaisuuksien hallintaa tyylikkäästi...",
+        "Opetellaan soitonsiirtosääntöjäsi ulkoa... piip poop.",
+        "Ajetaan viimeiset laatutarkistukset kaikille ominaisuuksille...",
+        "Kiillotetaan asetuksia kunnes ne loistavat..."
+      ],
+      "classicConfigurator": "Perinteinen määritys",
+      "loadingMessage": "Yhdistetään avustajaasi...",
+      "quickAction1Label": "Mikä on tervetuloviesti?",
+      "quickAction1Command": "Miten avustaja vastaa puhelimeen?",
+      "quickAction2Label": "Muokkaa tervetuloa",
+      "quickAction2Command": "Jos soittaja on soittanut aiemmin ja meillä on kaikki hänen tietonsa, kerro että soitamme hänelle takaisin",
+      "quickAction3Label": "Tarkista keskustelun kulku",
+      "quickAction3Command": "Miten avustaja hoitaa keskustelun?",
+      "quickAction4Label": "Muuta keskustelun kulkua",
+      "quickAction4Command": "Hoida keskustelu siten, että soittajalta saadaan nimi jos tuntematon, osoite ja soiton syy.",
+      "quickAction5Label": "Avustajan tietämys",
+      "quickAction5Command": "Mistä aiheista avustaja osaa vastata?",
+      "quickAction6Label": "Lisää tietämystä",
+      "quickAction6Command": "Jos käyttäjä haluaa takaisinsoiton, mutta ei ole kertonut miksi, avustajan tulee aina kysyä syytä, ja sitten kertoa että pyyntö välitetään operaattorille"
+    },
+    "aladminConfigurator": {
+      "title": "AladMin Configurator",
+      "subtitle": "Keskustele AladMinin kanssa ja määritä puheavustajasi toimintaa",
+      "backToSettings": "Takaisin Asetuksiin",
+      "suggestionsLabel": "Ehdotukset",
+      "suggestion1": "Ota käyttöön keskustelukehote varausten hallintaan",
+      "suggestion2": "Kysy soittajilta nimi ja sähköpostiosoite",
+      "suggestion3": "Miten avustaja tervehtii soittajia?",
+      "suggestion4": "Mitkä ominaisuudet ovat tällä hetkellä käytössä?",
+      "messagePlaceholder": "Kuvaile, mitä haluat muuttaa, tai esitä kysymys...",
+      "emptyChat": "Aloita keskustelu AladMinin kanssa ja määritä avustajasi",
+      "newConversation": "Uusi keskustelu",
+      "errorApplying": "Virhe",
+      "noBusinessSelected": "Yritystä ei ole valittu. Palaa yrityksen määrityssivulle.",
+      "previewLabel": "Muutosten esikatselu",
+      "applyChanges": "Ota muutokset käyttöön",
+      "cancelChanges": "Peruuta",
+      "confirmApply": "Vahvista, ota muutokset käyttöön",
+      "cancelApply": "Peruuta, älä ota muutoksia käyttöön"
+    },
+    "mcpConnectors": {
+      "title": "MCP-liittimet",
+      "subtitle": "Luo tunnukset, joilla yhdistät MrCall-tilisi Claudeen (tai muuhun MCP-yhteensopivaan tekoälysovellukseen).",
+      "back": "Takaisin",
+      "info": {
+        "title": "Näin yhdistät",
+        "intro": "Luo liitin alta ja lisää se sitten mukautettuna MCP-liittimenä tekoälysovellukseesi (Claude, Cursor jne.) käyttäen MCP-URL-osoitetta sekä saamiasi Client ID- ja Client Secret -arvoja.",
+        "mcpUrl": "MCP-URL",
+        "advanced": "Lisätiedot (tekniset yksityiskohdat)",
+        "allowedScopes": "Sallitut scopet",
+        "protectedResource": "Suojatun resurssin metatiedot",
+        "authServer": "Valtuutuspalvelimen metatiedot"
+      },
+      "create": {
+        "title": "Luo uusi liitin",
+        "help": "Jokainen liitin on oma tunnusparinsa. Käytä yhtä liitintä kutakin tekoälysovellusta kohden, jotta voit peruuttaa ne erikseen.",
+        "nameLabel": "Nimi",
+        "namePlaceholder": "esim. Claude.ai-liittimeni",
+        "descriptionLabel": "Kuvaus (valinnainen)",
+        "descriptionPlaceholder": "Lyhyt muistiinpano siitä, missä tätä liitintä käytetään",
+        "submit": "Luo liitin"
+      },
+      "list": {
+        "title": "Liittimesi",
+        "empty": "Ei vielä liittimiä. Luo ensimmäinen yltä.",
+        "createdAt": "Luotu",
+        "permissions": "Käyttöoikeudet",
+        "rotate": "Vaihda secret",
+        "rotateConfirm": "Vaihdetaanko client secret? Nykyinen secret lakkaa toimimasta välittömästi ja näet uuden vain kerran."
+      },
+      "scopes": {
+        "title": "Käyttöoikeudet",
+        "help": "Valitse, mitä tämä liitin saa tehdä puolestasi. Voit peruuttaa oikeudet milloin tahansa vaihtamalla secretin tai poistamalla liittimen.",
+        "selectAll": "Valitse kaikki",
+        "clearAll": "Tyhjennä valinnat",
+        "sensitive": "Arkaluonteinen",
+        "groups": {
+          "business": "Yritysprofiili",
+          "contacts": "Yhteystiedot (CRM)",
+          "sessions": "Keskustelut",
+          "templates": "Avustajat"
+        }
+      },
+      "reveal": {
+        "title": "Tallenna tunnuksesi nyt",
+        "warningTitle": "Näitä arvoja ei näytetä uudelleen.",
+        "warningBody": "Kopioi URL, client ID ja client secret tekoälysovellukseesi ennen kuin suljet tämän kortin. Secret tallennetaan palvelimelle vain tiivisteenä; jos hukkaat sen, sinun on vaihdettava se.",
+        "mcpUrl": "MCP-URL",
+        "clientId": "Client ID",
+        "clientSecret": "Client secret",
+        "copy": "Kopioi",
+        "copied": "Kopioitu!",
+        "howTo": "Claudessa: Asetukset → Custom Connectors → Add custom connector. Liitä yllä olevat arvot. Claude avaa selaimeen suostumussivun valtuutuksen viimeistelemiseksi.",
+        "acknowledge": "Olen tallentanut nämä arvot"
+      },
+      "errors": {
+        "serviceDisabled": "MCP-liittimet eivät ole käytössä tässä ympäristössä. Pyydä järjestelmänvalvojaa asettamaan MCP_ENABLED=true.",
+        "loadFailed": "MCP-liittimien tietojen lataaminen epäonnistui.",
+        "createFailed": "Uuden liittimen luominen epäonnistui.",
+        "rotateFailed": "Secretin vaihtaminen epäonnistui.",
+        "clipboardFailed": "Leikepöydälle kopiointi ei onnistunut. Valitse arvo manuaalisesti."
+      }
+    },
+    "wizard": {
+      "pageTitle": "Avustajan määritys",
+      "stepOf": "Vaihe {current} / {total}",
+      "loading": "Yhdistetään avustajaasi...",
+      "nextStep": "Seuraava",
+      "skipStep": "Älä muuta mitään, siirry seuraavaan",
+      "goToDashboard": "Siirry hallintapaneeliin",
+      "changeSomething": "Haluatko muuttaa jotain?",
+      "changeSomethingHint": "Muista, että voit tehdä sen myös myöhemmin!",
+      "inputPlaceholder": "Kirjoita, mitä haluaisit muuttaa...",
+      "sendInstructions": "Lähetä ohjeet",
+      "orSeparator": "tai",
+      "saveChanges": "Tallenna muutokset",
+      "saving": "Tallennetaan...",
+      "accept": "Hyväksy",
+      "pendingChangesTitle": "Tallentamattomat muutokset",
+      "notSavedWarning": "⚠️ Muutoksia EI ole vielä tallennettu. Avustaja EI muutu ennen kuin napsautat ”Tallenna muutokset”.",
+      "saveSuccess": "Muutokset tallennettu!",
+      "saveError": "Tallennus epäonnistui. Yritä uudelleen.",
+      "analyzeError": "Analyysi epäonnistui. Yritä uudelleen.",
+      "steps": {
+        "welcome": {
+          "title": "Tervetuloviesti",
+          "loading": "Analysoidaan, miten avustajasi vastaa puhelimeen...",
+          "analyzePrompt": "Kuvaile 2-3 lyhyellä lauseella, miten tämä avustaja vastaa saapuviin puheluihin ja mitä se kysyy soittajalta. Kerro tarkasti, mitä soittaja kuulee. Älä ehdota muutoksia."
+        },
+        "knowledge": {
+          "title": "Tietopohja",
+          "loading": "Analysoidaan avustajasi tietämystä...",
+          "analyzePrompt": "Kuvaile kahdella tiiviillä lauseella, mistä aiheista tämä avustaja osaa vastata, pelkästään nykyisen tietopohjan perusteella. ÄLÄ mainitse verkkohakua: avustaja EI hae verkosta puhelun aikana (se olisi liian hidasta). Lisää yksi lause: jos haluat laajentaa tietämystä, voit pyytää minua etsimään tietoa verkosta ja lisäämään sen tietopohjaan. Älä ehdota muutoksia oma-aloitteisesti."
+        },
+        "booking": {
+          "title": "Varaukset",
+          "loading": "Analysoidaan varausten määrityksiä...",
+          "analyzePrompt": "Kuvaile 2-3 lyhyellä lauseella, miten varaukset on määritetty. Ovatko ne käytössä? Jos ovat, miten ne toimivat (kellonajat, varausvälin kesto)? Selitä, että varausten käyttöönotto edellyttää Google-kalenterin käyttöoikeuden myöntämistä. Älä ehdota muutoksia."
+        },
+        "transfer": {
+          "title": "Puhelunsiirto",
+          "loading": "Analysoidaan puhelunsiirtoa...",
+          "analyzePrompt": "Selitä 3-4 lauseella, miten puhelunsiirto toimii: avustaja voi siirtää puhelun puhelinnumeroon määritettävien sääntöjen perusteella (esim. kellonaika, soittajan pyyntö). Täsmennä, että tämä ominaisuus on käytettävissä Starter-paketista alkaen ja aktivoituu ensimmäisen maksun jälkeen. Ilmaisen kokeilun aikana se ei ole käytettävissä."
+        },
+        "notifications_biz": {
+          "title": "Ilmoitukset omistajalle",
+          "loading": "Analysoidaan sähköposti-ilmoituksia...",
+          "analyzePrompt": "Kuvaile 2-3 lyhyellä lauseella, miten yrityksen omistaja saa tiedon puheluista sähköpostitse. Mihin osoitteeseen viestit tulevat? Mitä ne sisältävät (yhteenveto, litterointi, tallenne)? Älä ehdota muutoksia."
+        },
+        "notifications_caller": {
+          "title": "Ilmoitukset soittajalle",
+          "loading": "Analysoidaan soittajalle lähetettäviä ilmoituksia...",
+          "analyzePrompt": "Kuvaile 2-3 lyhyellä lauseella, mitä soittaja saa puhelun jälkeen. Onko WhatsApp vai tekstiviesti käytössä? Jos WhatsApp on käytössä, mitä palvelua se käyttää (ilmainen/virallinen)? Älä ehdota muutoksia."
+        },
+        "integrations": {
+          "title": "Integraatiot",
+          "loading": "Analysoidaan integraatioita...",
+          "analyzePrompt": "Kysy käyttäjältä, käyttääkö hän toiminnanohjausjärjestelmää, CRM:ää tai jotain muuta ohjelmistoa, jonka hän haluaisi yhdistää MrCall-avustajaansa. Jos kyllä, kysy ohjelmiston nimi ja verkko-osoite."
+        },
+        "summary": {
+          "title": "Yhteenveto",
+          "loading": "Valmistellaan yhteenvetoa...",
+          "analyzePrompt": "LOPULLINEN erittäin tiivis yhteenveto määrityksistä. YKSI lause kutakin osa-aluetta kohden (enintään 7 lausetta yhteensä): tervetuloviesti, tietopohja, varaukset, puhelunsiirto, ilmoitukset omistajalle, ilmoitukset soittajalle, integraatiot. Päätä YHTEEN lauseeseen, joka kehottaa käyttäjää kokeilemaan avustajaa ja muuttamaan mitä tahansa asetusta hallintapaneelista milloin tahansa. ÄLÄ kysy, haluaako hän muuttaa jotain. ÄLÄ käytä luettelomerkkejä. Älä ehdota muutoksia."
+        }
+      }
+    }
+  },
+  "common": {
+    "cancel": "Peruuta",
+    "confirm": "Vahvista",
+    "retry": "Yritä uudelleen"
+  },
+  "mrcallCredits": {
+    "title": "Credits remaining",
+    "tooltip": "A phone call burns ~{factor} credits per minute. Configurator chat and MrCall Desktop burn in proportion to tokens consumed."
+  }
+}

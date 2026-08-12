@@ -1,0 +1,56 @@
+.DS_Store
+node_modules
+/dist
+
+
+# local env files
+.env.local
+.env.*.local
+.env
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Playwright
+test-results/
+playwright-report/
+tests/screenshots/diff/
+.env~*
+
+# Claude Code worktrees
+.claude/worktrees/
+
+# Mrcall
+package-lock.json
+# Credentials. Never track these: vue-cli inlines every VUE_APP_* value into the
+# public bundle. CI writes them from masked variables; locally, copy
+# .env.example. Keep .env.example tracked.
+.env
+.env.*
+!.env.example
+*.pem
+*.p12
+serviceAccountKey.json
+**/serviceAccountKey.json
+
+# Local agent tooling, not part of the project
+.claude/
+.opencode/
+
+# Debug captures written by page.screenshot() during E2E runs. Nothing asserts
+# on them, so tracking them only meant every test run dirtied the working tree
+# with binary diffs nobody reads. Visual regression baselines are the separate,
+# genuinely tracked ones under tests/e2e/visual/*-snapshots/.
+/tests/screenshots/

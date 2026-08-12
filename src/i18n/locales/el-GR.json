@@ -1,0 +1,1742 @@
+{
+  "language": "Γλώσσα",
+  "locale": {
+    "en-US": "Αγγλικά",
+    "it-IT": "Ιταλικά",
+    "es-ES": "Ισπανικά",
+    "fr-FR": "Γαλλικά",
+    "de-DE": "Γερμανικά",
+    "nl-NL": "Ολλανδικά",
+    "sv-SE": "Σουηδικά",
+    "da-DK": "Δανικά",
+    "nb-NO": "Νορβηγικά",
+    "fi-FI": "Φινλανδικά",
+    "et-EE": "Εσθονικά",
+    "el-GR": "Ελληνικά"
+  },
+  "languages": {
+    "italian": "Ιταλικά",
+    "englishGB": "Αγγλικά (ΗΒ)",
+    "englishUS": "Αγγλικά (ΗΠΑ)",
+    "spanishES": "Ισπανικά (Ισπανία)",
+    "spanishUS": "Ισπανικά (ΗΠΑ)",
+    "frenchFR": "Γαλλικά (Γαλλία)",
+    "germanDE": "Γερμανικά (Γερμανία)",
+    "portuguesePT": "Πορτογαλικά (Πορτογαλία)",
+    "portugueseBR": "Πορτογαλικά (Βραζιλία)",
+    "norwegianNO": "Νορβηγικά",
+    "swedishSW": "Σουηδικά",
+    "finnishFI": "Φινλανδικά",
+    "greekGR": "Ελληνικά",
+    "turkeyTK": "Τουρκικά",
+    "dutchNL": "Ολλανδικά",
+    "danishDK": "Δανικά",
+    "estonianEE": "Εσθονικά"
+  },
+  "isoAlpha2Country": {
+    "IT": "Ιταλία",
+    "US": "Ηνωμένες Πολιτείες",
+    "GB": "Ηνωμένο Βασίλειο",
+    "ES": "Ισπανία",
+    "FR": "Γαλλία",
+    "PT": "Πορτογαλία",
+    "DE": "Γερμανία",
+    "CH": "Ελβετία",
+    "AU": "Αυστραλία",
+    "NO": "Νορβηγία",
+    "BR": "Βραζιλία",
+    "IN": "Ινδία",
+    "CA": "Καναδάς",
+    "SW": "Σουηδία",
+    "FI": "Φινλανδία",
+    "GR": "Ελλάδα",
+    "TK": "Τουρκία",
+    "NL": "Ολλανδία",
+    "DK": "Δανία",
+    "EE": "Εσθονία"
+  },
+  "days": {
+    "monday": "Δευτέρα",
+    "tuesday": "Τρίτη",
+    "wednesday": "Τετάρτη",
+    "thursday": "Πέμπτη",
+    "friday": "Παρασκευή",
+    "saturday": "Σάββατο",
+    "sunday": "Κυριακή"
+  },
+  "timeSlots": {
+    "invalid": "Μη έγκυρος ορισμός, ελέγξτε τα χρονικά διαστήματα, δεν πρέπει να υπάρχουν επικαλύψεις."
+  },
+  "utils": {
+    "phonecompanies": {
+      "other": "Άλλος πάροχος"
+    },
+    "common": {
+      "or": "ή"
+    }
+  },
+  "widgets": {
+    "tuplesvariables": {
+      "removeitem": "Αφαίρεση στοιχείου",
+      "additem": "Νέο στοιχείο"
+    },
+    "agentSkills": {
+      "loading": "Φόρτωση διαθέσιμων δεξιοτήτων...",
+      "noSkills": "Δεν υπάρχουν διαθέσιμες δεξιότητες. Ανεβάστε πρώτα τον πίνακα αποφάσεων Agent Skills.",
+      "configuration": "Ρυθμίσεις",
+      "phasePrefetch": "Πριν την κλήση",
+      "phaseDuring": "Κατά την κλήση",
+      "phaseFinal": "Μετά την κλήση",
+      "phasePrefetchHint": "Εκτελείται πριν ξεκινήσει η κλήση",
+      "phaseDuringHint": "Διαθέσιμη ως εργαλείο κατά τη διάρκεια της κλήσης",
+      "phaseFinalHint": "Εκτελείται μετά το τέλος της κλήσης",
+      "skills": "δεξιότητες",
+      "addSkill": "Προσθήκη δεξιότητας...",
+      "addAnother": "προσθήκη κι άλλης",
+      "removeSkill": "Αφαίρεση",
+      "noSkillsInPhase": "Καμία δεξιότητα σε αυτή τη φάση",
+      "oauthConnect": "Σύνδεση",
+      "oauthConnected": "Συνδεδεμένο",
+      "oauthDisconnect": "Αποσύνδεση",
+      "addPair": "Προσθήκη κεφαλίδας",
+      "skillUnavailable": "Αυτή η δεξιότητα δεν είναι πλέον διαθέσιμη στον διακομιστή. Αφαιρέστε την ή επικοινωνήστε με την υποστήριξη.",
+      "oauthScopeUnavailable": "Αυτή η ενσωμάτωση απαιτεί μια άδεια Google που το MrCall δεν είναι εξουσιοδοτημένο να ζητήσει. Επικοινωνήστε με την υποστήριξη."
+    }
+  },
+  "components": {
+    "accountTitle": "Λογαριασμός",
+    "account": {
+      "createAssistantSubtitle": "Ρυθμίστε έναν νέο φωνητικό βοηθό για άλλο αριθμό τηλεφώνου ή επιχείρηση.",
+      "securitySectionTitle": "Ασφάλεια",
+      "integrationsSectionTitle": "Ενσωματώσεις",
+      "dangerZoneSectionTitle": "Επικίνδυνη ζώνη",
+      "mcpConnectors": {
+        "title": "Συνδέσεις MCP",
+        "description": "Συνδέστε το Claude ή άλλο AI client συμβατό με MCP στον λογαριασμό σας MrCall. Δημιουργήστε διαπιστευτήρια με ξεχωριστά δικαιώματα ανά σύνδεση.",
+        "manage": "Διαχείριση συνδέσεων MCP"
+      }
+    },
+    "zylchChat": {
+      "inputPlaceholder": "Πληκτρολογήστε ένα μήνυμα ή εντολή...",
+      "welcome": "Συνομιλήστε με τον διαμορφωτή του βοηθού σας",
+      "welcomeDescription": "Περιγράψτε τι θέλετε να αλλάξετε και θα ενημερώσω τις ρυθμίσεις του βοηθού σας. Απλά γράψτε φυσικά!",
+      "exampleCommands": "Παραδείγματα εντολών:",
+      "cmdSync": "/sync - Συγχρονισμός δεδομένων",
+      "cmdGaps": "/gaps - Εύρεση κενών στο πρόγραμμα",
+      "cmdArchive": "/archive - Αρχειοθέτηση συνομιλιών",
+      "cmdHelp": "/help - Εμφάνιση διαθέσιμων εντολών"
+    },
+    "directVoice": {
+      "talkToAssistant": "Μιλήστε με τον βοηθό",
+      "connecting": "Σύνδεση...",
+      "hangup": "Κλείσιμο",
+      "ending": "Τερματισμός..."
+    },
+    "navbar": {
+      "login": "Σύνδεση",
+      "subscribe": "Εγγραφή",
+      "assistants": "Ο Βοηθός μου",
+      "account": "Ο λογαριασμός μου",
+      "logout": "Έξοδος",
+      "closeWebview": "Κλείσιμο",
+      "createAssistant": "Δημιουργία Νέου Βοηθού",
+      "resendVerificationEmail": "Επαναποστολή συνδέσμου επαλήθευσης email",
+      "resellerDashboard": "Πίνακας ελέγχου μεταπωλητή",
+      "invitationCodes": "Κωδικοί πρόσκλησης",
+      "resellerManagement": "Διαχείριση μεταπωλητών",
+      "userManagement": "Διαχείριση χρηστών",
+      "agentTemplates": "Πρότυπα Βοηθών"
+    },
+    "businessphonenumberverification": {
+      "businessPhoneNumberTitle": "Εισαγάγατε λάθος αριθμό; Μπορείτε να τον αλλάξετε",
+      "phoneNumberCountrySelectorPlaceholder": "Κωδικός χώρας",
+      "phoneNumberCountrySelectorError": "Σφάλμα",
+      "phoneNumberPhoneInputPlaceholder": "Αριθμός τηλεφώνου",
+      "phoneNumberPhoneInputExample": "Παράδειγμα: ",
+      "businessPhoneNumberIsNotValid": "Βεβαιωθείτε ότι εισαγάγατε σωστά τον αριθμό τηλεφώνου σας",
+      "settingsSuccessfullySaved": "Οι ρυθμίσεις αποθηκεύτηκαν επιτυχώς",
+      "errorSavingSettings": "Παρουσιάστηκαν προβλήματα κατά την αποθήκευση",
+      "activationBannerTitle": "Ενεργοποιήστε και αποκτήστε αριθμό τηλεφώνου",
+      "activationBannerSubtitle": "1 εβδομάδα δωρεάν δοκιμή!",
+      "activationBannerButton": "Ενεργοποίηση τώρα",
+      "talkToYourAssistant": "Μιλήστε με τον βοηθό σας",
+      "changeBusinessPhoneNumberButtonLabel": "Αλλαγή",
+      "gotoBusinessesCustomize": "Προσαρμογή",
+      "justVerifiedTheNumberButton": "Κάλεσα",
+      "assistantWasCreated": "Επαληθεύστε τον αριθμό σας και αφήστε ένα μήνυμα.",
+      "callTheNumberInstructions1": "Αυτός είναι απλώς ένας δοκιμαστικός βοηθός, δεν χρειάζεται να εγκατασταθεί ή να ρυθμιστεί τίποτα στο τηλέφωνό σας.",
+      "callTheNumberInstructions2a": "Καλέστε αυτόν τον αριθμό από τον αριθμό τηλεφώνου σας",
+      "callTheNumberInstructions2b": "και λάβετε την ειδοποίηση μέσω email",
+      "callTheNumberInstructions3": "Κάντε κλικ στο 'Κάλεσα' και ξεκινήστε τη ρύθμιση του βοηθού σας.",
+      "afterNumberVerificationTitle1": "Μπράβο!",
+      "afterNumberVerificationTitle2": "Τώρα μπορείτε να ξεκινήσετε τη ρύθμιση του βοηθού σας.",
+      "seemsYouDidntCall": "Φαίνεται ότι δεν έχετε καλέσει ακόμα για επαλήθευση αριθμού.",
+      "issuesContactCustomerService": "Παρουσιάστηκε σφάλμα, παρακαλούμε επικοινωνήστε με την εξυπηρέτηση πελατών στο customer.service@mrcall.it"
+    },
+    "businesscreatesimple": {
+      "nicknameTitlePrivate": "Το όνομά σας",
+      "nicknameTitleBusiness": "Η επωνυμία της επιχείρησής σας",
+      "businessPhoneNumberTitle": "Αριθμός τηλεφώνου στον οποίο μπορούμε να επικοινωνήσουμε μαζί σας",
+      "selectAssistantLanguage": "Επιλέξτε τη γλώσσα στην οποία θα μιλάει ο βοηθός σας",
+      "whichCustomerAreYou": "Τι τύπος χρήστη MrCall είστε;",
+      "templateHighLevelDescriptionPrivate": "Προφίλ ιδιώτη χρήστη. Σημείωση: ο βοηθός δημιουργείται στους υπολογιστές μας. Δεν εγκαθίσταται τίποτα στο τηλέφωνό σας",
+      "templateHighLevelDescriptionBusiness": "Προφίλ επαγγελματία χρήστη, χωρίς τηλεφωνικό κέντρο VoIP. Σημείωση: ο βοηθός δημιουργείται στους υπολογιστές μας. Δεν εγκαθίσταται τίποτα στο τηλέφωνό σας",
+      "templateHighLevelDescriptionBusinessPlus": "Προφίλ επαγγελματία χρήστη με τηλεφωνικό κέντρο VoIP. Σημείωση: ο βοηθός δημιουργείται στους υπολογιστές μας. Δεν εγκαθίσταται τίποτα στο τηλέφωνό σας",
+      "searchYourBusinessTitle": "Συνδέστε τον βοηθό σας με το Google Business",
+      "searchYourBusinessSubtitle": "Βρείτε την επιχείρησή σας, συνεχίστε με τα παρακάτω πεδία",
+      "searchYourBusinessNoResultFound": "Δεν βρέθηκαν αποτελέσματα, μπορείτε ακόμα να ρυθμίσετε τον βοηθό σας",
+      "searchYourBusinessPlaceholder": "Εισαγάγετε το όνομα και τη διεύθυνση της επιχείρησής σας",
+      "searchYourBusinessButtonLabel": "Αναζήτηση",
+      "selectGoogleBusinessItemButtonLabel": "Χρήση αυτών των δεδομένων",
+      "searchBusinessResultLabelName": "Όνομα",
+      "searchBusinessResultLabelAddress": "Διεύθυνση",
+      "phoneNumberCountrySelectorPlaceholder": "Κωδικός χώρας",
+      "phoneNumberCountrySelectorError": "Σφάλμα",
+      "phoneNumberPhoneInputPlaceholder": "Αριθμός τηλεφώνου",
+      "phoneNumberPhoneInputExample": "Παράδειγμα: ",
+      "searchBusinessResultLabelBusinessPhoneNumber": "Τηλέφωνο",
+      "businessPhoneNumberIsNotValid": "Ελέγξτε αν εισαγάγατε σωστά τον αριθμό τηλεφώνου σας",
+      "nicknameIsNotValid": "Ελέγξτε αν εισαγάγατε σωστά το ψευδώνυμό σας",
+      "createAssistantButton": "Δημιουργία βοηθού"
+    },
+    "businesses": {
+      "addFieldMatch": "Αναζήτηση",
+      "createNewBusiness": "Δημιουργία βοηθού",
+      "editAssistant": "Ρύθμιση Βοηθού",
+      "onboardinConfigureAndTest": "Πραγματοποιήστε μια δοκιμαστική κλήση",
+      "onboardingActivateAssistant": "Ενεργοποιήστε τον τώρα!",
+      "planSubscription": "Μέθοδοι Πληρωμής & Συνδρομές",
+      "startFreeTrial": "Ξεκινήστε δωρεάν δοκιμή",
+      "activationBanner": {
+        "title": "Ενεργοποιήστε τον βοηθό σας",
+        "subtitle": "Συνδέστε τον βοηθό σας σε έναν αριθμό τηλεφώνου ή στο VoIP PBX σας και αφήστε τον να απαντά στις κλήσεις σας.",
+        "cta": "Ενεργοποίηση"
+      },
+      "newAssistantCreated": "Υπέροχα! Ο νέος βοηθός σας δημιουργήθηκε.",
+      "numberNotAssignedContactSupport": "Δεν έχει εκχωρηθεί μόνιμος αριθμός, παρακαλούμε επικοινωνήστε με την υποστήριξη",
+      "businessPhoneNumberVerified": "μη επαληθευμένο, καλέστε τον βοηθό σας για επαλήθευση",
+      "plan": "Πληρωμές",
+      "invoicingButtonLabel": "Τιμολόγηση",
+      "partnerProgramButtonLabel": "Συστήστε μας σε έναν φίλο",
+      "gotoCallForwardingInstructionsButtonLabel": "Ρύθμιση Προώθησης",
+      "conversationsViewButtonLabel": "Εμφάνιση Μηνυμάτων",
+      "form": {
+        "businessId": "Αναγνωριστικό επιχείρησης",
+        "nickname": "Ψευδώνυμο",
+        "email": "Email",
+        "plan": "Βοηθός",
+        "businessPhoneNumber": "Ο αριθμός τηλεφώνου σας",
+        "serviceNumber": "Ο αριθμός του βοηθού σας",
+        "trial": "Υπολειπόμενες ημέρες δοκιμαστικής περιόδου",
+        "renewalDateTime": "Ημερομηνία επόμενης ανανέωσης",
+        "subscriptionStatus": "Κατάσταση συνδρομής",
+        "subscriptionStatusLabels": {
+          "ACTIVE": "Ενεργή",
+          "CANCELED": "Ακυρωμένη",
+          "EXPIRED": "Ληγμένη",
+          "INCOMPLETE": "Ημιτελής",
+          "INCOMPLETE_EXPIRED": "Ημιτελής και ληγμένη",
+          "ONBOARDING": "Εκκρεμεί ενεργοποίηση",
+          "PAST_DUE": "Ληξιπρόθεσμη πληρωμή",
+          "SUSPENDED": "Ανασταλμένη",
+          "FREE": "Δωρεάν συνδρομή",
+          "TEST": "Εκκρεμεί ενεργοποίηση",
+          "EXPIRING": "Λήγει σύντομα",
+          "EXTERNAL": "Διαχείριση από την εξυπηρέτηση πελατών",
+          "TRIALING": "Δοκιμαστική περίοδος",
+          "UNPAID": "Απλήρωτη",
+          "UNKNOWN": "Άγνωστη"
+        },
+        "resourcesCallCredit": "Υπολειπόμενα λεπτά",
+        "resourcesCallCount": "Διαθέσιμες κλήσεις",
+        "resourcesSmsCount": "Διαθέσιμα SMS"
+      },
+      "analyticsButtonLabel": "Αναλυτικά στοιχεία",
+      "platformAnalyticsButtonLabel": "Αναλυτικά Πλατφόρμας",
+      "contactsButtonLabel": "Επαφές",
+      "moreActions": "Περισσότερες ενέργειες",
+      "selectButtonTooltip": {
+        "enabled": "Πρόσβαση στην προσαρμογή του βοηθού",
+        "disabled": "Η προσαρμογή του βοηθού σας είναι απενεργοποιημένη, παρακαλούμε επαληθεύστε τον αριθμό τηλεφώνου σας"
+      },
+      "health": {
+        "phoneVerified": "Τηλέφωνο επαληθευμένο",
+        "phoneNotVerified": "Τηλέφωνο μη επαληθευμένο",
+        "planActive": "Ενεργό πλάνο",
+        "noPlan": "Χωρίς ενεργό πλάνο",
+        "hasMinutes": "Διαθέσιμα λεπτά",
+        "noMinutes": "Δεν απομένουν λεπτά"
+      }
+    },
+    "contacts": {
+      "title": "Επαφές",
+      "addContact": "Προσθήκη Επαφής",
+      "editContact": "Επεξεργασία Επαφής",
+      "deleteAll": "Διαγραφή Όλων",
+      "save": "Αποθήκευση",
+      "cancel": "Ακύρωση",
+      "actions": "Ενέργειες",
+      "search": "Αναζήτηση",
+      "searchPlaceholder": "Αναζήτηση με όνομα, τηλέφωνο ή email...",
+      "searchContact": "Αναζήτηση Επαφής",
+      "noContactFound": "Δεν βρέθηκε επαφή για αυτόν τον αριθμό",
+      "recentContacts": "Πρόσφατα Προστεθείσες Επαφές",
+      "bulkUpload": "Μαζική Μεταφόρτωση",
+      "bulkUploadDescription": "Επικολλήστε έναν πίνακα JSON με επαφές παρακάτω. Προσοχή: αυτό θα αντικαταστήσει ΟΛΕΣ τις υπάρχουσες επαφές.",
+      "bulkUploadSubmit": "Μεταφόρτωση Επαφών",
+      "provider": "Πηγή",
+      "providerBusiness": "Οι επαφές σου",
+      "providerHb": "MrCall",
+      "importContact": "Εισαγωγή Επαφής",
+      "downloadVcard": "Λήψη κάρτας επαφής",
+      "blockContact": "Αποκλεισμός επαφής",
+      "unblockContact": "Άρση αποκλεισμού επαφής",
+      "confirmDeleteTitle": "Επιβεβαίωση Διαγραφής",
+      "confirmDeleteMessage": "Είστε βέβαιοι ότι θέλετε να διαγράψετε την επαφή {name};",
+      "confirmDeleteAllMessage": "Είστε βέβαιοι ότι θέλετε να διαγράψετε ΟΛΕΣ τις επαφές; Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.",
+      "form": {
+        "displayName": "Εμφανιζόμενο Όνομα",
+        "firstName": "Όνομα",
+        "lastName": "Επώνυμο",
+        "nickname": "Ψευδώνυμο",
+        "phone": "Τηλέφωνο",
+        "phonePlaceholder": "+1234567890",
+        "email": "Email",
+        "emailPlaceholder": "email{'@'}example.com",
+        "company": "Εταιρεία",
+        "notes": "Σημειώσεις",
+        "type": "Τύπος",
+        "addPhone": "Προσθήκη τηλεφώνου",
+        "addEmail": "Προσθήκη email"
+      },
+      "toast": {
+        "success": "Επιτυχία",
+        "error": "Σφάλμα",
+        "validationError": "Επικύρωση",
+        "nameOrPhoneRequired": "Παρακαλούμε εισαγάγετε τουλάχιστον ένα όνομα ή έναν αριθμό τηλεφώνου",
+        "contactCreated": "Η επαφή δημιουργήθηκε επιτυχώς",
+        "contactUpdated": "Η επαφή ενημερώθηκε επιτυχώς",
+        "contactDeleted": "Η επαφή διαγράφηκε επιτυχώς",
+        "allContactsDeleted": "Όλες οι επαφές διαγράφηκαν επιτυχώς",
+        "saveFailed": "Αποτυχία αποθήκευσης της επαφής",
+        "deleteFailed": "Αποτυχία διαγραφής της επαφής",
+        "searchFailed": "Αποτυχία αναζήτησης επαφών",
+        "invalidJson": "Μη έγκυρη μορφή JSON",
+        "jsonMustBeArray": "Το JSON πρέπει να είναι πίνακας επαφών",
+        "bulkUploadSuccess": "Οι επαφές μεταφορτώθηκαν επιτυχώς",
+        "bulkUploadFailed": "Αποτυχία μεταφόρτωσης επαφών",
+        "contactBlocked": "Η επαφή αποκλείστηκε",
+        "contactUnblocked": "Ο αποκλεισμός της επαφής αφαιρέθηκε",
+        "blockFailed": "Αποτυχία αποκλεισμού/άρσης αποκλεισμού της επαφής",
+        "contactImported": "Η επαφή εισήχθη επιτυχώς"
+      }
+    },
+    "business": {
+      "configuration": {
+        "businessNotFound": "Δεν βρέθηκε βοηθός",
+        "errorRetrievingDataMessage": "Παρουσιάστηκαν σφάλματα κατά την αποθήκευση των ρυθμίσεων"
+      },
+      "saveButtonText": "Αποθήκευση",
+      "settingsSuccessfullySaved": "Οι ρυθμίσεις αποθηκεύτηκαν επιτυχώς",
+      "errorSavingSettings": "Παρουσιάστηκαν σφάλματα κατά την αποθήκευση των ρυθμίσεων",
+      "yourAssistantIsReadyPleaseTry": "Ο βοηθός σας είναι έτοιμος, δοκιμάστε τον πριν συνεχίσετε",
+      "unableToSave": "Αδυναμία αποθήκευσης των ρυθμίσεων",
+      "mandatoryParameterMissing": "Η υποχρεωτική παράμετρος δεν έχει οριστεί: {param}",
+      "tabPanelYourProfile": "Το προφίλ σας",
+      "tabPanelContacts": "Επαφές",
+      "tabPanelCustomizeYourAssistant": "Προσαρμογή του βοηθού",
+      "additionalParameters": {
+        "password": {
+          "legend": "Κωδικός πρόσβασης",
+          "tooltip": "Αλλαγή κωδικού πρόσβασης"
+        }
+      },
+      "voiceGender": {
+        "MALE": "Αρσενική",
+        "FEMALE": "Θηλυκή"
+      },
+      "onboardingDialog": {
+        "editParametersButtonText": "Θα ήθελα να αλλάξω",
+        "continueToPaymentButtonText": "Μου αρέσει όπως είναι."
+      },
+      "configureWithAI": "Ρύθμιση με AI",
+      "aladminAI": "AladMin AI",
+      "configureViaChat": "Ρύθμιση μέσω chat",
+      "talkToYourAssistant": "Μιλήστε με τον βοηθό σας",
+      "actionPanelIntro": "Ρυθμίστε και δοκιμάστε τον βοηθό σας",
+      "howToCard1Title": "Πώς απαντάει ο βοηθός μου;",
+      "howToCard1Text": "Το MrCall συστήνεται και αναγνωρίζει τον καλούντα από τον αριθμό του. Θέλετε να το αλλάξετε; Πατήστε «Ρύθμιση με AI» και περιγράψτε τι θα θέλατε.",
+      "howToCard2Title": "Πώς το βάζω σε λειτουργία;",
+      "howToCard2Text": "Ενεργοποιήστε ένα πλάνο, αποκτήστε αριθμό και προωθήστε τις κλήσεις από το τηλέφωνό σας στο MrCall. Με το πλάνο Professional μπορείτε να το συνδέσετε στο VoIP τηλεφωνικό σας κέντρο.",
+      "howToCard3Title": "Μπορώ να αλλάξω τη φωνή;",
+      "howToCard3Text": "Ναι! Στις «Ρυθμίσεις φωνής» επιλέγετε ανάμεσα σε ανδρική και γυναικεία φωνή. Το MrCall μιλάει στη γλώσσα που επιλέξατε κατά τη ρύθμιση.",
+      "howToCard4Title": "Μπορεί το MrCall να κλείνει ραντεβού;",
+      "howToCard4Text": "Βεβαίως. Στην ενότητα «Κρατήσεις» ορίζετε τα διαθέσιμα χρονικά διαστήματα και συνδέετε το ημερολόγιό σας. Το MrCall θα διαχειρίζεται τα ραντεβού για εσάς.",
+      "howToCard5Title": "Πώς λαμβάνω ειδοποιήσεις;",
+      "howToCard5Text": "Κάθε κλήση παράγει μια ειδοποίηση email με σύνοψη. Στις «Ειδοποιήσεις σας» επιλέγετε τι θα λαμβάνετε και πώς.",
+      "howToCard6Title": "Μπορώ να προσθέσω ερωτήσεις και απαντήσεις;",
+      "howToCard6Text": "Στις «Ερωτήσεις και απαντήσεις» μαθαίνετε στο MrCall πώς να απαντά για ωράρια, τιμές και υπηρεσίες. Όσο περισσότερες πληροφορίες προσθέτετε, τόσο πιο ακριβής γίνεται.",
+      "howToCard7Title": "Τι γίνεται με τις ημέρες αργίας;",
+      "howToCard7Text": "Ορίστε τις ημέρες αργίας και το MrCall θα ενημερώνει αυτόματα τους καλούντες, προτείνοντας πότε να ξανακαλέσουν.",
+      "howToCard8Title": "Μπορώ να χρησιμοποιήσω σταθερό κείμενο;",
+      "howToCard8Text": "Απενεργοποιώντας το MrCall AI, ο βοηθός θα διαβάζει ένα σταθερό κείμενο που γράφετε εσείς. Λιγότερο έξυπνο, αλλά έχετε πλήρη έλεγχο σε κάθε λέξη.",
+      "activateMrCallCta": "Ενεργοποίηση MrCall",
+      "needHelp": "Χρειάζεστε βοήθεια;",
+      "activationBannerTitle": "Ενεργοποιήστε και αποκτήστε αριθμό τηλεφώνου",
+      "activationBannerSubtitle": "1 εβδομάδα δωρεάν δοκιμή!",
+      "activationBannerButton": "Ενεργοποίηση τώρα"
+    },
+    "changepassword": {
+      "changePasswordTitle": "Αλλαγή κωδικού πρόσβασης",
+      "changePasswordSubtitle": "Πληκτρολογήστε τον νέο κωδικό πρόσβασης",
+      "operationSuccess": "Ο κωδικός πρόσβασης άλλαξε επιτυχώς",
+      "operationSuccessExtended": "Μπορείτε να χρησιμοποιήσετε τον νέο κωδικό πρόσβασης για σύνδεση. Ωστόσο, μπορείτε πάντα να ζητήσετε μαγικό σύνδεσμο μέσω email για σύνδεση χωρίς κωδικό.",
+      "operationFailed": "Αλλαγή κωδικού πρόσβασης",
+      "operationFailedExtended": "Παρουσιάστηκαν προβλήματα κατά τον ορισμό του νέου κωδικού πρόσβασης",
+      "submitButton": "Αλλαγή",
+      "formText": {
+        "pickAPassword": "Ισχύς κωδικού πρόσβασης",
+        "suggestions": "Υποδείξεις",
+        "oneLowecase": "Τουλάχιστον ένας πεζός χαρακτήρας",
+        "oneUppercase": "Τουλάχιστον ένας κεφαλαίος χαρακτήρας",
+        "oneNumeric": "Τουλάχιστον ένας αλφαριθμητικός χαρακτήρας",
+        "oneSymbol": "Τουλάχιστον ένα σύμβολο",
+        "atLeastNChars": "Τουλάχιστον 8 χαρακτήρες"
+      }
+    },
+    "changeemail": {
+      "changeEmailTitle": "Αλλαγή email",
+      "changeEmailSubtitle": "Πληκτρολογήστε το νέο email",
+      "operationSuccess": "Το αίτημα αλλαγής email προωθήθηκε επιτυχώς",
+      "operationSuccessExtended": "Σας στείλαμε έναν σύνδεσμο για επαλήθευση της νέας διεύθυνσης email, κάντε κλικ στον σύνδεσμο για να επιβεβαιώσετε τη νέα διεύθυνση.",
+      "operationFailed": "Αλλαγή email",
+      "operationFailedExtended": "Παρουσιάστηκαν προβλήματα κατά τον ορισμό του νέου email",
+      "submitButton": "Αλλαγή"
+    },
+    "conversations": {
+      "downloadDataButtonLabel": "Λήψη",
+      "noMessages": "Δεν υπάρχουν μηνύματα ακόμα",
+      "noMessagesDescription": "Όταν λαμβάνετε κλήσεις, το ιστορικό συνομιλιών σας θα εμφανιστεί εδώ.",
+      "filterTitle": "Φίλτρα & Εξαγωγή",
+      "dateRangeLabel": "Εύρος ημερομηνιών",
+      "dateRangePlaceholder": "Επιλέξτε εύρος ημερομηνιών",
+      "pageFilterLabel": "Φιλτράρισμα αυτής της σελίδας",
+      "pageFilterPlaceholder": "Πληκτρολογήστε για φιλτράρισμα αποτελεσμάτων σε αυτή τη σελίδα...",
+      "exportLabel": "Εξαγωγή δεδομένων",
+      "viewModeLabel": "Προβολή μηνυμάτων",
+      "expandedView": "Πλήρη μηνύματα",
+      "collapsedView": "Συμπαγής προβολή",
+      "hideReadLabel": "Αναγνωσμένα μηνύματα",
+      "hideReadOn": "Κρυφά",
+      "hideReadOff": "Ορατά",
+      "showMore": "Εμφάνιση περισσότερων",
+      "showLess": "Εμφάνιση λιγότερων",
+      "duration": "{minutes}λ {seconds}δ",
+      "unknownContact": "Άγνωστος καλών",
+      "justNow": "Μόλις τώρα",
+      "minutesAgo": "{count} λεπτά πριν",
+      "hoursAgo": "{count} ώρες πριν",
+      "daysAgo": "{count} ημέρες πριν",
+      "loading": "Φόρτωση συνομιλιών...",
+      "table": {
+        "body": "Μήνυμα",
+        "audioFile": "Ήχος",
+        "audioNotSupported": "Ο περιηγητής σας δεν υποστηρίζει στοιχεία ήχου",
+        "contactName": "Επαφή",
+        "contactNumber": "Αριθμός καλούντος"
+      },
+      "audio": {
+        "play": "Αναπαραγωγή ήχου",
+        "pause": "Παύση ήχου"
+      },
+      "views": {
+        "inbox": "Εισερχόμενα",
+        "archive": "Αρχείο",
+        "trash": "Κάδος"
+      },
+      "actions": {
+        "archive": "Αρχειοθέτηση",
+        "unarchive": "Μετακίνηση στα Εισερχόμενα",
+        "delete": "Διαγραφή",
+        "restore": "Επαναφορά",
+        "markAsRead": "Σήμανση ως αναγνωσμένο",
+        "markAsUnread": "Σήμανση ως μη αναγνωσμένο",
+        "archiveAll": "Αρχειοθέτηση Όλων",
+        "deleteAll": "Διαγραφή Όλων",
+        "restoreAll": "Επαναφορά Όλων",
+        "moveAllToInbox": "Μετακίνηση Όλων στα Εισερχόμενα"
+      },
+      "toast": {
+        "conversationArchived": "Η συνομιλία αρχειοθετήθηκε",
+        "conversationDeleted": "Η συνομιλία διαγράφηκε",
+        "conversationRestored": "Η συνομιλία επαναφέρθηκε",
+        "conversationUnarchived": "Η συνομιλία μετακινήθηκε στα εισερχόμενα",
+        "undo": "Αναίρεση",
+        "actionFailed": "Η ενέργεια απέτυχε, παρακαλούμε δοκιμάστε ξανά",
+        "bulkArchived": "Οι συνομιλίες αρχειοθετήθηκαν",
+        "bulkDeleted": "Οι συνομιλίες διαγράφηκαν",
+        "bulkRestored": "Οι συνομιλίες επαναφέρθηκαν",
+        "bulkUnarchived": "Οι συνομιλίες μετακινήθηκαν στα εισερχόμενα"
+      },
+      "confirmBulk": {
+        "title": "Επιβεβαίωση Μαζικής Ενέργειας",
+        "archiveMessage": "Είστε βέβαιοι ότι θέλετε να αρχειοθετήσετε όλες τις συνομιλίες που αντιστοιχούν στα τρέχοντα φίλτρα;",
+        "deleteMessage": "Είστε βέβαιοι ότι θέλετε να διαγράψετε όλες τις συνομιλίες που αντιστοιχούν στα τρέχοντα φίλτρα;",
+        "restoreMessage": "Είστε βέβαιοι ότι θέλετε να επαναφέρετε όλες τις συνομιλίες που αντιστοιχούν στα τρέχοντα φίλτρα;",
+        "unarchiveMessage": "Είστε βέβαιοι ότι θέλετε να μετακινήσετε στα εισερχόμενα όλες τις συνομιλίες που αντιστοιχούν στα τρέχοντα φίλτρα;"
+      },
+      "bulkActionsLabel": "Μαζικές ενέργειες",
+      "emptyStates": {
+        "inboxEmpty": "Όλα ενημερωμένα!",
+        "inboxEmptyDescription": "Δεν υπάρχουν νέες συνομιλίες στα εισερχόμενά σας.",
+        "archiveEmpty": "Το αρχείο είναι κενό",
+        "archiveEmptyDescription": "Οι αρχειοθετημένες συνομιλίες θα εμφανιστούν εδώ.",
+        "trashEmpty": "Ο κάδος είναι κενός",
+        "trashEmptyDescription": "Οι διαγραμμένες συνομιλίες θα εμφανιστούν εδώ."
+      },
+      "unreadCount": "{count} μη αναγνωσμένα"
+    },
+    "deleteaccount": {
+      "deleteAccountTitle": "Διαγραφή του λογαριασμού σας",
+      "submitButtonLabel": "Διαγραφή",
+      "confirmationRequest": "Προσοχή: η ενεργή συνδρομή σας θα ακυρωθεί, ο λογαριασμός σας και τα δεδομένα σας θα επισημανθούν για αφαίρεση και θα ακυρωθούν αυτόματα. Μετά την ακύρωση, τα δεδομένα σας δεν θα είναι προσβάσιμα ούτε ανακτήσιμα. Θυμηθείτε ότι πρέπει να αφαιρέσετε την προώθηση κλήσεων από τις συσκευές σας. Είστε βέβαιοι ότι θέλετε να προχωρήσετε;",
+      "operationCompleted": "Η ακύρωση της συνδρομής σας και των βοηθών ολοκληρώθηκε",
+      "removeCompletedHeader": "Ακύρωση",
+      "logoutAfterCancellationLabel": "Έξοδος",
+      "confirmCancellation": "Επιβεβαίωση ακύρωσης",
+      "toastCancelSubscriptionSummary": "Ακύρωση του λογαριασμού και των σχετικών δεδομένων",
+      "toastCancellingOperationSummary": "Ακύρωση της ενέργειας",
+      "toastErrorSummary": "Παρακαλούμε ενημερώστε την εξυπηρέτηση πελατών για το πρόβλημα, θα επαληθεύσουμε ότι η ακύρωση ολοκληρώθηκε επιτυχώς",
+      "toastNotifyFortcomingCancelOperation": "Ακυρώνουμε τον λογαριασμό σας σύμφωνα με το αίτημά σας",
+      "toastNotifyCanceledCancelAccountOperation": "Η αφαίρεση του λογαριασμού ακυρώθηκε"
+    },
+    "deletecontacts": {
+      "deleteContactsTitle": "Διαγραφή των επαφών σας από το MrCall",
+      "submitButtonLabel": "Διαγραφή",
+      "confirmationRequest": "Οι επαφές σας, τόσο οι δικές σας όσο και αυτές που αποκτήθηκαν από το MrCall, θα διαγραφούν. Μετά τη διαγραφή, οι επαφές δεν θα αναγνωρίζονται με το όνομά τους από το MrCall, όπως όταν καλούν για πρώτη φορά. Επιβεβαιώνετε;",
+      "operationCompleted": "Οι επαφές σας διαγράφηκαν.",
+      "removeCompletedHeader": "Διαγραφή επαφών",
+      "logoutAfterCancellationLabel": "Εντάξει",
+      "confirmCancellation": "Επιβεβαίωση διαγραφής",
+      "toastCancelContactsSummary": "Διαγραφή επαφών",
+      "toastCancellingOperationSummary": "Ακύρωση της ενέργειας",
+      "toastErrorSummary": "Παρακαλούμε ενημερώστε την εξυπηρέτηση πελατών για το πρόβλημα, θα επαληθεύσουμε ότι η διαγραφή των επαφών θα ολοκληρωθεί",
+      "toastNotifyFortcomingCancelOperation": "Διαγραφή των επαφών σας",
+      "toastNotifyCanceledCancelContactsOperation": "Η διαγραφή των επαφών ακυρώθηκε"
+    },
+    "products": {
+      "buyButtonLabel": "Αγορά",
+      "cancelButtonLabel": "Ακύρωση",
+      "confirmCancellation": "Επιβεβαίωση Ακύρωσης",
+      "confirmationCancellationRequest": "Πρόκειται να ακυρώσετε τη συνδρομή και οι σχετικές λειτουργίες θα απενεργοποιηθούν. Είστε βέβαιοι;",
+      "disableTopupButtonLabel": "Απενεργοποίηση αυτόματης ανανέωσης",
+      "enableTopupButtonLabel": "Ενεργοποίηση αυτόματης ανανέωσης",
+      "manageSubscriptionLabel": "Στοιχεία Πληρωμής",
+      "reactivateButtonLabel": "Επανενεργοποίηση",
+      "toastCancelSubscriptionSummary": "Ακύρωση",
+      "toastCancellingOperationSummary": "Ακύρωση σε εξέλιξη",
+      "toastPaymentSubscriptionSummary": "Επεξεργασία αιτήματος πληρωμής",
+      "toastErrorSummary": "Παρουσιάστηκε πρόβλημα, παρακαλούμε επικοινωνήστε με την υποστήριξη",
+      "toastNotifyFortcomingCancelOperation": "Ακυρώνουμε τη συνδρομή σας σύμφωνα με το αίτημά σας",
+      "toastNotifyCanceledCancelSubscriptionOperation": "Η ακύρωση της συνδρομής ακυρώθηκε",
+      "toastReactivateSubscriptionSummary": "Επανενεργοποίηση συνδρομής",
+      "confirmCompletedReactivationSubscriptionSummary": "Η επανενεργοποίηση της συνδρομής ολοκληρώθηκε",
+      "confirmCompletedCancelationSubscriptionSummary": "Η ακύρωση της συνδρομής ολοκληρώθηκε",
+      "toastNotifyFortcomingReactivateOperation": "Επανενεργοποιούμε τη συνδρομή σας σύμφωνα με το αίτημά σας",
+      "errorCreatingPaymentData": "Παρουσιάστηκε σφάλμα κατά την επεξεργασία των δεδομένων πληρωμής σας, παρακαλούμε επικοινωνήστε με την υποστήριξη"
+    },
+    "subscription": {
+      "buyButtonLabel": "Αγορά",
+      "cancelButtonLabel": "Ακύρωση",
+      "reactivateButtonLabel": "Επανενεργοποίηση",
+      "manageSubscriptionLabel": "Στοιχεία Πληρωμής",
+      "confirmationCancellationRequest": "Προσοχή: Αυτή η ενέργεια θα ακυρώσει τη συνδρομή σας. Μπορείτε να συνεχίσετε να χρησιμοποιείτε το MrCall για τις υπολειπόμενες ημέρες της συνδρομής σας, μετά από τις οποίες ο βοηθός σας θα απενεργοποιηθεί. Είστε βέβαιοι;",
+      "managedThroughAppleInApp": "Η συνδρομή διαχειρίζεται μέσω πληρωμής Apple, αποκτήστε πρόσβαση στις συνδρομές από τη συσκευή iOS σας",
+      "confirmCancellation": "Επιβεβαίωση Ακύρωσης",
+      "toastPaymentSubscriptionSummary": "Επεξεργασία αιτήματος πληρωμής",
+      "toastCancelSubscriptionSummary": "Ακύρωση",
+      "toastCancellingOperationSummary": "Ακύρωση",
+      "toastErrorSummary": "Παρουσιάστηκαν προβλήματα, παρακαλούμε επικοινωνήστε με την υποστήριξη",
+      "toastNotifyFortcomingCancelOperation": "Ακυρώνουμε τη συνδρομή σας σύμφωνα με το αίτημά σας",
+      "toastNotifyCanceledCancelSubscriptionOperation": "Η ακύρωση της συνδρομής ακυρώθηκε",
+      "toastReactivateSubscriptionSummary": "Επανενεργοποίηση Συνδρομής",
+      "confirmCompletedReactivationSubscriptionSummary": "Η επανενεργοποίηση της συνδρομής ολοκληρώθηκε",
+      "confirmCompletedCancelationSubscriptionSummary": "Η ακύρωση της συνδρομής ολοκληρώθηκε",
+      "toastNotifyFortcomingReactivateOperation": "Επανενεργοποιούμε τη συνδρομή σας σύμφωνα με το αίτημά σας",
+      "errorCreatingPaymentData": "Παρουσιάστηκε σφάλμα κατά την επεξεργασία των δεδομένων πληρωμής σας, παρακαλούμε επικοινωνήστε με την υποστήριξη"
+    },
+    "templates": {
+      "onboarding": {
+        "doYouNeedAssistance": "Χρειάζεστε βοήθεια;",
+        "supportsection": {
+          "doYouNeedAssistance": "Χρειάζεστε βοήθεια;",
+          "callUs": "Καλέστε μας στο",
+          "callUsNumber": "+12027419420 or +442080595420",
+          "writeUs": "ή γράψτε μας στο {param}",
+          "bookAnAppointment": "Εναλλακτικά, κλείστε ένα ραντεβού με τους ειδικούς μας.",
+          "bookAppointmentButtonLabel": "Κλείστε Ραντεβού"
+        }
+      },
+      "sign": {
+        "magicklink": {
+          "emailInputboxTitle": "Email",
+          "emailInputboxPlaceholder": "Εισαγάγετε το email σας",
+          "successSent": "Ο μαγικός σύνδεσμος στάλθηκε",
+          "failedSent": "Ο μαγικός σύνδεσμος δεν στάλθηκε",
+          "magicLinkSentMessage": "Ο μαγικός σύνδεσμός σας στάλθηκε στα εισερχόμενα του email σας",
+          "checkYourMagicLinkMessage": "Κάντε κλικ στον σύνδεσμο που θα βρείτε στο email που σας στείλαμε για να αποκτήσετε πρόσβαση",
+          "magicLinkErrorMessage": "Παρουσιάστηκε σφάλμα κατά την αποστολή του μαγικού συνδέσμου στα εισερχόμενα του email σας",
+          "submitButton": "Αποστολή μαγικού συνδέσμου",
+          "attention": "Προσοχή",
+          "checkSpamFolder": "Αν δεν λάβετε το email, ελέγξτε ότι η διεύθυνση είναι σωστή και ότι το email δεν κατέληξε στα Ανεπιθύμητα"
+        },
+        "signin": {
+          "emailInputboxTitle": "Email",
+          "emailInputboxPlaceholder": "Εισαγάγετε το email σας",
+          "passwordInputboxTitle": "Κωδικός πρόσβασης",
+          "passwordInputboxPlaceholder": "Εισαγάγετε τον κωδικό πρόσβασής σας",
+          "loginFailedGenericTitle": "Σφάλμα Σύνδεσης",
+          "loginFailedWrongPasswordTitle": "Λάθος Κωδικός Πρόσβασης",
+          "loginFailedWrongPasswordMessageFirstPart": "Ο κωδικός πρόσβασης που εισαγάγατε για τον χρήστη",
+          "loginFailedWrongPasswordMessageSecondPart": "δεν είναι έγκυρος.",
+          "loginFailedUserNotFoundTitle": "Ο Χρήστης Δεν Βρέθηκε",
+          "loginFailedUserNotFoundMessageFirstPart": "Ο χρήστης",
+          "loginFailedUserNotFoundMessageSecondPart": "δεν είναι εγγεγραμμένος.",
+          "loginFailedNetworkErrorTitle": "Σφάλμα Δικτύου ή Σύνδεσης",
+          "loginFailedNetworkErrorMessageFirstPart": "Αδυναμία σύνδεσης με τον χρήστη",
+          "loginFailedNetworkErrorMessageSecondPart": "Ελέγξτε ότι η συσκευή είναι συνδεδεμένη στο διαδίκτυο",
+          "signupButtonLabel": "Εγγραφή",
+          "signupLinkCompanionText": "Δεν έχετε ακόμα λογαριασμό;",
+          "loginFailedWithEmail": "Αδυναμία σύνδεσης με το παρεχόμενο email",
+          "loginButtonLabel": "Σύνδεση",
+          "dismissButtonLabel": "Ακύρωση",
+          "didYouForgetPassword": "Ξεχάσατε τον κωδικό πρόσβασής σας;",
+          "emailNotVerifiedTitle": "Δεν έχετε επαληθεύσει το email σας",
+          "emailNotVerifiedFirstPart": "Κάντε κλικ στον σύνδεσμο στο email που σας στείλαμε στη διεύθυνση",
+          "emailNotVerifiedSecondPart": "Δεν λάβατε το email με τον σύνδεσμο; Ελέγξτε τον φάκελο ανεπιθύμητων ή κάντε κλικ στο παρακάτω κουμπί για αποστολή νέου email επαλήθευσης.",
+          "emailNotVerifiedReSendEmail": "Αποστολή Email",
+          "sessionExpiredTitle": "Η Συνεδρία Έληξε",
+          "sessionExpiredMessage": "Η συνεδρία σας έληξε. Παρακαλούμε συνδεθείτε ξανά."
+        },
+        "signup": {
+          "emailInputboxTitle": "Διεύθυνση email",
+          "emailInputboxPlaceholder": "Εισαγάγετε το email σας",
+          "passwordInputboxTitle": "Κωδικός πρόσβασης",
+          "passwordInputboxPlaceholder": "Επιλέξτε τον κωδικό πρόσβασής σας",
+          "registrationSuccess": "Ελέγξτε το email σας!",
+          "accountRegistered": "Ο λογαριασμός σας δημιουργήθηκε και συσχετίστηκε με τη διεύθυνση email",
+          "activationInstructions": "Ελέγξτε τα εισερχόμενα του email σας για οδηγίες ενεργοποίησης",
+          "registrationFailedGenericTitle": "Η εγγραφή λογαριασμού απέτυχε.",
+          "registrationFailedMessage": "Παρουσιάστηκαν σφάλματα κατά τη δημιουργία του λογαριασμού σας με τη διεύθυνση email",
+          "submitButton": "Εγγραφή",
+          "signinLinkCompanionText": "Έχετε ήδη λογαριασμό;",
+          "signinLinkLabel": "Σύνδεση",
+          "signupWithGoogleButtonLabel": "Πρόσβαση μέσω Google",
+          "formText": {
+            "qualityPasswordSubtitle": "Ποιότητα του κωδικού πρόσβασής σας",
+            "passwordPromptLabel": "Δεν εισαγάγατε κωδικό πρόσβασης",
+            "passwordWeakLabel": "Αδύναμος κωδικός, εύκολα αναγνωρίσιμος",
+            "passwordMediumLabel": "Κωδικός μέτριας ασφάλειας",
+            "passwordStrongLabel": "Ισχυρός κωδικός πρόσβασης",
+            "suggestions": "Υποδείξεις",
+            "oneLowecase": "Τουλάχιστον ένας πεζός χαρακτήρας",
+            "oneUppercase": "Τουλάχιστον ένας κεφαλαίος χαρακτήρας",
+            "oneNumeric": "Τουλάχιστον ένας αριθμητικός χαρακτήρας",
+            "oneSymbol": "Τουλάχιστον ένα σύμβολο",
+            "atLeastNChars": "Τουλάχιστον 8 χαρακτήρες"
+          },
+          "temsAndPrivacyPolicyStatement": {
+            "firstStatement": "Κάνοντας κλικ στο κουμπί Υποβολή, αποδέχεστε τους",
+            "terms": {
+              "text": "Όρους και Προϋποθέσεις Υπηρεσίας",
+              "link": "https://www.mrcall.ai/en/terms-of-use/",
+              "path": "/termsandconditions"
+            },
+            "connective": "και την",
+            "privacy": {
+              "text": "Πολιτική Απορρήτου",
+              "link": "https://www.mrcall.ai/en/privacy/",
+              "path": "/privacypolicy"
+            }
+          },
+          "errorUserAlreadyExistsTitle": "Ο λογαριασμός υπάρχει ήδη",
+          "errorUserAlreadyExistsMessageFirstPart": "Ο χρήστης με email",
+          "errorUserAlreadyExistsMessageSecondPart": "υπάρχει ήδη. Κάντε κλικ στη Σύνδεση για να συνδεθείτε",
+          "errorNetworkTitle": "Σφάλμα δικτύου ή σύνδεσης",
+          "errorNetworkMessageFirstPart": "Η εγγραφή απέτυχε με τον χρήστη",
+          "errorNetworkMessageSecondPart": "Ελέγξτε ότι η συσκευή είναι συνδεδεμένη στο διαδίκτυο",
+          "errorUserAlreadyExistsAccessLink": "Σύνδεση",
+          "errorDismissButton": "Ακύρωση"
+        }
+      }
+    },
+    "whatsappweb": {
+      "tabWhatsappWeb": "WhatsApp Web",
+      "establishingConnectionTitle": "Σύνδεση",
+      "establishingConnectionSubtitle": "Δημιουργούμε τη σύνδεση με την υπηρεσία Whatsapp",
+      "logoutTitle": "Αποσύνδεση του λογαριασμού σας",
+      "logoutSubtitle": "Μετά την αποσύνδεση, η υπηρεσία δεν θα μπορεί να στέλνει μηνύματα. Μπορείτε να επανασυνδεθείτε αργότερα.",
+      "testTitle": "Δοκιμαστική Αποστολή Μηνύματος",
+      "testSubtitle": "Στείλτε ένα μήνυμα στο WhatsApp σας, αν όλα πήγαν σωστά, θα λάβετε ένα μήνυμα με την τρέχουσα ώρα. Μπορείτε να αποσυνδέσετε τον λογαριασμό από τις ρυθμίσεις WhatsApp στη συσκευή σας.",
+      "accountNotConnectedTitle": "Συνδέστε τον λογαριασμό Whatsapp σας με το MrCall",
+      "accountNotConnectedSubtitle": "Σαρώστε τον κωδικό QR με την εφαρμογή Whatsapp σας για να εγκρίνετε τη σύνδεση"
+    },
+    "whatsappCloud": {
+      "tabTitle": "WhatsApp Cloud API",
+      "connectTitle": "Connect WhatsApp Cloud API",
+      "connectSubtitle": "Connect your business to WhatsApp Cloud API for official messaging through Meta",
+      "connectButton": "Connect Official WhatsApp",
+      "statusTitle": "Connection Status",
+      "connected": "Connected",
+      "phoneNumber": "Phone Number",
+      "displayName": "Display Name",
+      "qualityRating": "Quality Rating",
+      "revoke": "Disconnect",
+      "revokeConfirmTitle": "Confirm Disconnection",
+      "revokeConfirmMessage": "Are you sure you want to disconnect WhatsApp Cloud API? You will no longer be able to send or receive messages through the official API.",
+      "sendMessageTitle": "Send Message",
+      "recipientPhone": "Recipient Phone Number",
+      "messageType": "Message Type",
+      "messageText": "Message Text",
+      "templateName": "Template Name",
+      "sendButton": "Send",
+      "chatHistoryTitle": "Chat History",
+      "filterByContact": "Filter by contact...",
+      "direction": "Direction",
+      "contact": "Contact",
+      "type": "Type",
+      "message": "Message",
+      "timestamp": "Timestamp",
+      "toast": {
+        "success": "Operation completed successfully",
+        "error": "An error occurred",
+        "signupSuccess": "WhatsApp Cloud API connected successfully",
+        "signupFailed": "Failed to connect WhatsApp Cloud API",
+        "messageSent": "Message sent successfully",
+        "sendFailed": "Failed to send message",
+        "revokeSuccess": "WhatsApp Cloud API disconnected successfully",
+        "revokeFailed": "Failed to disconnect WhatsApp Cloud API"
+      }
+    },
+    "connectCalendar": {
+      "title": "Σύνδεση με το Ημερολόγιο Google",
+      "description": "Συνδέστε το Ημερολόγιο Google για αυτόματη διαχείριση ραντεβού. Το MrCall θα διαβάζει τις κατειλημμένες ώρες σας και θα δημιουργεί ραντεβού. Τα δεδομένα σας παραμένουν στο ημερολόγιό σας.",
+      "connectButton": "Σύνδεση Ημερολογίου",
+      "disconnectButton": "Αποσύνδεση Ημερολογίου",
+      "selectCalendarTitle": "Επιλογή ημερολογίου",
+      "confirmButton": "Επιβεβαίωση",
+      "connectedTo": "Συνδεδεμένο με:",
+      "changeCalendar": "Αλλαγή ημερολογίου",
+      "loadingCalendars": "Φόρτωση ημερολογίων...",
+      "noCalendarsFound": "Δεν βρέθηκαν εγγράψιμα ημερολόγια"
+    },
+    "analytics": {
+      "title": "Αναλυτικά Στοιχεία",
+      "overview": "Επισκόπηση",
+      "dateRangePlaceholder": "Επιλέξτε εύρος ημερομηνιών",
+      "presets": {
+        "7d": "7 ημέρες",
+        "30d": "30 ημέρες",
+        "90d": "90 ημέρες"
+      },
+      "kpi": {
+        "totalCalls": "Συνολικές Κλήσεις",
+        "avgDuration": "Μέση Διάρκεια",
+        "totalDuration": "Συνολική Διάρκεια",
+        "uniqueCallers": "Μοναδικοί Καλούντες"
+      },
+      "timeseries": {
+        "title": "Όγκος Κλήσεων στο Χρόνο",
+        "totalCalls": "Συνολικές Κλήσεις"
+      },
+      "duration": {
+        "title": "Κατανομή Διάρκειας Κλήσεων",
+        "callCount": "Αριθμός Κλήσεων"
+      },
+      "heatmap": {
+        "title": "Θερμικός Χάρτης Ωριαίας Δραστηριότητας",
+        "calls": "κλήσεις",
+        "days": {
+          "mon": "Δευ",
+          "tue": "Τρι",
+          "wed": "Τετ",
+          "thu": "Πεμ",
+          "fri": "Παρ",
+          "sat": "Σαβ",
+          "sun": "Κυρ"
+        }
+      },
+      "callers": {
+        "title": "Αναλυτικά Στοιχεία Καλούντων",
+        "number": "Αριθμός",
+        "callCount": "Κλήσεις",
+        "totalDuration": "Συνολική Διάρκεια",
+        "lastCall": "Τελευταία Κλήση"
+      },
+      "emptyState": {
+        "title": "Δεν υπάρχουν διαθέσιμα δεδομένα",
+        "description": "Δεν υπάρχουν αναλυτικά δεδομένα για την επιλεγμένη περίοδο."
+      },
+      "errors": {
+        "title": "Σφάλμα",
+        "fetchFailed": "Αποτυχία φόρτωσης δεδομένων {section}."
+      },
+      "adminMode": {
+        "title": "Αναλυτικά Πλατφόρμας (όλες οι επιχειρήσεις)"
+      },
+      "breakdown": {
+        "title": "Ανάλυση ανά Επιχείρηση",
+        "businessId": "ID Επιχείρησης",
+        "totalCalls": "Συνολικές Κλήσεις",
+        "avgDuration": "Μέση Διάρκεια",
+        "totalDuration": "Συνολική Διάρκεια",
+        "uniqueCallers": "Μοναδικοί Καλούντες",
+        "callPercentage": "% Κλήσεων",
+        "totalBusinesses": "Ενεργές Επιχειρήσεις"
+      }
+    },
+    "reseller": {
+      "ownerSelector": {
+        "placeholder": "Επιλέξτε λογαριασμό",
+        "allAccounts": "Όλοι οι διαχειριζόμενοι λογαριασμοί",
+        "myAccount": "Ο λογαριασμός μου"
+      },
+      "dashboard": {
+        "title": "Πίνακας ελέγχου μεταπωλητή",
+        "profile": "Προφίλ",
+        "displayName": "Εμφανιζόμενο όνομα",
+        "email": "Email",
+        "feeRate": "Ποσοστό προμήθειας",
+        "stats": "Επισκόπηση (τελευταίες 30 ημέρες)",
+        "totalCalls": "Συνολικές κλήσεις",
+        "managedAccounts": "Διαχειριζόμενοι λογαριασμοί",
+        "avgDuration": "Μέση διάρκεια",
+        "uniqueCallers": "Μοναδικοί καλούντες",
+        "managedOwnersList": "Διαχειριζόμενοι ιδιοκτήτες",
+        "ownerName": "Όνομα",
+        "ownerEmail": "Email",
+        "ownerUid": "UID",
+        "source": "Πηγή",
+        "invitationCode": "Κωδικός Πρόσκλησης",
+        "quickActions": "Γρήγορες ενέργειες",
+        "manageCodes": "Διαχείριση κωδικών",
+        "viewBusinesses": "Προβολή επιχειρήσεων",
+        "viewAnalytics": "Προβολή αναλυτικών",
+        "viewProfile": "Προβολή προφίλ",
+        "error": "Σφάλμα"
+      },
+      "codes": {
+        "title": "Κωδικοί πρόσκλησης",
+        "generateTitle": "Δημιουργία νέου κωδικού",
+        "label": "Ετικέτα",
+        "labelPlaceholder": "π.χ. Καμπάνια Άνοιξη 2026",
+        "maxUses": "Μέγιστες χρήσεις",
+        "maxUsesPlaceholder": "Απεριόριστες",
+        "expiresAt": "Λήγει στις",
+        "generate": "Δημιουργία",
+        "listTitle": "Οι κωδικοί σας",
+        "code": "Κωδικός",
+        "labelHeader": "Ετικέτα",
+        "uses": "Χρήσεις",
+        "status": "Κατάσταση",
+        "created": "Δημιουργήθηκε",
+        "actions": "Ενέργειες",
+        "copyLink": "Αντιγραφή συνδέσμου",
+        "deactivate": "Απενεργοποίηση",
+        "deactivateConfirm": "Είστε βέβαιοι ότι θέλετε να απενεργοποιήσετε αυτόν τον κωδικό;",
+        "deactivateHeader": "Απενεργοποίηση κωδικού",
+        "statusActive": "Ενεργός",
+        "statusFull": "Πλήρης",
+        "statusExpired": "Ληγμένος",
+        "statusInactive": "Ανενεργός",
+        "success": "Επιτυχία",
+        "error": "Σφάλμα",
+        "generated": "Ο κωδικός πρόσκλησης δημιουργήθηκε με επιτυχία",
+        "deactivated": "Ο κωδικός απενεργοποιήθηκε με επιτυχία",
+        "linkCopied": "Ο σύνδεσμος πρόσκλησης αντιγράφηκε στο πρόχειρο",
+        "fetchError": "Αποτυχία φόρτωσης κωδικών πρόσκλησης",
+        "generateError": "Αποτυχία δημιουργίας κωδικού πρόσκλησης",
+        "deactivateError": "Αποτυχία απενεργοποίησης κωδικού"
+      },
+      "profile": {
+        "title": "Προφίλ μεταπωλητή",
+        "displayName": "Εμφανιζόμενο όνομα",
+        "email": "Email",
+        "feeRate": "Ποσοστό προμήθειας",
+        "canGenerateCodes": "Μπορεί να δημιουργεί κωδικούς",
+        "canAcceptExistingOwners": "Αποδοχή υπαρχόντων ιδιοκτητών",
+        "stripeConnect": "Stripe Connect",
+        "createdAt": "Δημιουργήθηκε",
+        "updatedAt": "Τελευταία ενημέρωση",
+        "noProfile": "Δεν βρέθηκε προφίλ μεταπωλητή"
+      },
+      "managedBy": {
+        "label": "Διαχειρίζεται από {name} — {email}"
+      }
+    },
+    "admin": {
+      "reseller": {
+        "listTitle": "Διαχείριση μεταπωλητών",
+        "newReseller": "Νέος μεταπωλητής",
+        "displayName": "Εμφανιζόμενο όνομα",
+        "email": "Email",
+        "feeRate": "Ποσοστό προμήθειας",
+        "ownerCount": "Ιδιοκτήτες",
+        "actions": "Ενέργειες",
+        "error": "Σφάλμα",
+        "success": "Επιτυχία",
+        "fetchError": "Αποτυχία φόρτωσης δεδομένων μεταπωλητή",
+        "backToList": "Επιστροφή στη λίστα",
+        "profileTitle": "Προφίλ μεταπωλητή",
+        "editProfile": "Επεξεργασία προφίλ",
+        "resellerId": "ID μεταπωλητή",
+        "canGenerateCodes": "Μπορεί να δημιουργεί κωδικούς",
+        "canAcceptExistingOwners": "Αποδοχή υπαρχόντων ιδιοκτητών",
+        "stripeConnectAccountId": "ID λογαριασμού Stripe Connect",
+        "stripeConnectPlaceholder": "acct_...",
+        "stripeConnect": "Stripe Connect",
+        "feeRates": "Ποσοστά προμήθειας",
+        "targetType": "Τύπος στόχου",
+        "targetName": "Όνομα στόχου",
+        "addFeeRate": "Προσθήκη ποσοστού",
+        "feeRateAdded": "Το ποσοστό προμήθειας προστέθηκε",
+        "feeRateRemoved": "Το ποσοστό προμήθειας αφαιρέθηκε",
+        "feeRateError": "Αποτυχία διαχείρισης ποσοστού",
+        "removeFeeRateConfirm": "Είστε σίγουροι ότι θέλετε να αφαιρέσετε αυτό το ποσοστό;",
+        "removeFeeRateHeader": "Αφαίρεση ποσοστού",
+        "ownerEmail": "Email",
+        "source": "Πηγή",
+        "invitationCode": "Κωδικός Πρόσκλησης",
+        "managedOwners": "Διαχειριζόμενοι ιδιοκτήτες",
+        "ownerUidPlaceholder": "Εισαγάγετε UID ή email ιδιοκτήτη",
+        "addMapping": "Προσθήκη αντιστοίχισης",
+        "ownerId": "ID ιδιοκτήτη",
+        "removeMappingConfirm": "Είστε βέβαιοι ότι θέλετε να αφαιρέσετε αυτήν την αντιστοίχιση ιδιοκτήτη;",
+        "removeMappingHeader": "Αφαίρεση αντιστοίχισης",
+        "dangerZone": "Επικίνδυνη ζώνη",
+        "revokeDescription": "Η ανάκληση ενός μεταπωλητή θα αφαιρέσει όλες τις αντιστοιχίσεις ιδιοκτητών, θα ακυρώσει τις μη προστατευμένες επιχειρήσεις, θα διαγράψει το προφίλ και θα επαναφέρει τον ρόλο χρήστη. Αυτή η ενέργεια δεν μπορεί να αναιρεθεί.",
+        "revokeReseller": "Ανάκληση μεταπωλητή",
+        "revokeConfirmTextUnprotected": "Αυτό θα ακυρώσει τις επιχειρήσεις όλων των διαχειριζόμενων ιδιοκτητών. Για επιβεβαίωση, πληκτρολογήστε το όνομα του μεταπωλητή: {name}",
+        "revokeConfirmTextProtected": "Οι επιχειρήσεις των διαχειριζόμενων ιδιοκτητών θα συνεχίσουν να λειτουργούν (προστατευμένη λειτουργία). Για επιβεβαίωση, πληκτρολογήστε το όνομα του μεταπωλητή: {name}",
+        "typeNameToConfirm": "Πληκτρολογήστε το όνομα για επιβεβαίωση",
+        "cancel": "Ακύρωση",
+        "save": "Αποθήκευση",
+        "profileUpdated": "Το προφίλ του μεταπωλητή ενημερώθηκε",
+        "saveError": "Αποτυχία αποθήκευσης προφίλ",
+        "mappingAdded": "Η αντιστοίχιση ιδιοκτήτη προστέθηκε",
+        "mappingRemoved": "Η αντιστοίχιση ιδιοκτήτη αφαιρέθηκε",
+        "mappingError": "Αποτυχία διαχείρισης αντιστοίχισης",
+        "revoked": "Ο μεταπωλητής ανακλήθηκε με επιτυχία",
+        "revokeError": "Αποτυχία ανάκλησης μεταπωλητή",
+        "provisionTitle": "Δημιουργία νέου μεταπωλητή",
+        "step1Title": "Βήμα 1: Αναζήτηση χρήστη",
+        "uidPlaceholder": "Εισαγάγετε Firebase UID",
+        "emailPlaceholder": "Εισαγάγετε διεύθυνση email",
+        "lookupUser": "Αναζήτηση",
+        "currentRole": "Τρέχων ρόλος",
+        "setRoleReseller": "Ορισμός ρόλου σε μεταπωλητή",
+        "alreadyReseller": "Ο χρήστης είναι ήδη μεταπωλητής",
+        "step2Title": "Βήμα 2: Δημιουργία προφίλ μεταπωλητή",
+        "createProfile": "Δημιουργία προφίλ",
+        "lookupError": "Αποτυχία αναζήτησης χρήστη",
+        "roleSet": "Ο ρόλος ορίστηκε σε μεταπωλητή",
+        "roleError": "Αποτυχία ορισμού ρόλου",
+        "profileCreated": "Το προφίλ μεταπωλητή δημιουργήθηκε",
+        "createError": "Αποτυχία δημιουργίας προφίλ",
+        "userRoleTitle": "Διαχείριση ρόλων χρηστών",
+        "search": "Αναζήτηση",
+        "newRole": "Νέος ρόλος",
+        "selectRole": "Επιλέξτε ρόλο",
+        "roleUpdated": "Ο ρόλος χρήστη ενημερώθηκε",
+        "userNotFoundByEmail": "Δεν βρέθηκε χρήστης Firebase με αυτό το email",
+        "roleChangeConfirm": "Αλλαγή ρόλου του {uid} σε {role};",
+        "roleChangeHeader": "Επιβεβαίωση αλλαγής ρόλου",
+        "protected": "Προστατευμένο",
+        "protectedHint": "Όταν είναι ενεργοποιημένο, οι επιχειρήσεις των διαχειριζόμενων ιδιοκτητών επιβιώνουν από την αφαίρεση του μεταπωλητή",
+        "transferOwner": "Μεταφορά ιδιοκτήτη",
+        "transferToReseller": "ID μεταπωλητή προορισμού",
+        "transferToResellerPlaceholder": "Εισαγάγετε UID μεταπωλητή προορισμού",
+        "ownerTransferred": "Ο ιδιοκτήτης μεταφέρθηκε με επιτυχία",
+        "transferError": "Αποτυχία μεταφοράς ιδιοκτήτη",
+        "revokedDetail": "Μεταπωλητής αφαιρέθηκε: {owners} ιδιοκτήτες επηρεάστηκαν, {businesses} επιχειρήσεις ακυρώθηκαν"
+      },
+      "templates": {
+        "title": "Πρότυπα Βοηθών",
+        "createTemplate": "Νέο πρότυπο",
+        "editTemplate": "Επεξεργασία προτύπου",
+        "deleteConfirm": "Είστε βέβαιοι ότι θέλετε να διαγράψετε το πρότυπο «{name}»;",
+        "name": "Όνομα",
+        "description": "Περιγραφή",
+        "provider": "Πάροχος",
+        "model": "Μοντέλο",
+        "temperature": "Θερμοκρασία",
+        "maxTokens": "Μέγιστα tokens",
+        "systemPrompt": "System Prompt",
+        "tools": "Εργαλεία",
+        "enableMemory": "Μνήμη συνομιλίας",
+        "maxHistory": "Μέγιστα μηνύματα ιστορικού",
+        "maxToolIterations": "Μέγιστες επαναλήψεις εργαλείων",
+        "timeout": "Χρονικό όριο αιτήματος (δευτ.)",
+        "version": "Έκδοση",
+        "enabled": "Ενεργό",
+        "save": "Αποθήκευση",
+        "saved": "Το πρότυπο αποθηκεύτηκε με επιτυχία",
+        "created": "Το πρότυπο δημιουργήθηκε με επιτυχία",
+        "deleted": "Το πρότυπο διαγράφηκε με επιτυχία",
+        "test": "Δοκιμή",
+        "back": "Πίσω",
+        "versionHistory": "Ιστορικό εκδόσεων",
+        "rollback": "Επαναφορά",
+        "rollbackConfirm": "Επαναφορά στην έκδοση {version};",
+        "rolledBack": "Έγινε επαναφορά στην έκδοση {version}",
+        "aiChat": "Επεξεργαστής prompt AI",
+        "aiChatPlaceholder": "Ζητήστε από το AI να βελτιώσει το prompt...",
+        "applyToPrompt": "Εφαρμογή στο prompt",
+        "unsavedChanges": "Έχετε μη αποθηκευμένες αλλαγές. Απόρριψη;",
+        "testChat": "Δοκιμαστικό chat",
+        "testPlaceholder": "Γράψτε ένα δοκιμαστικό μήνυμα...",
+        "enableToolCallValidation": "Έλεγχος κλήσεων εργαλείων",
+        "enableInputSanitization": "Καθαρισμός εισόδου",
+        "scope": "Εμβέλεια",
+        "scopeGlobal": "Καθολική",
+        "scopeBusiness": "Επιχείρηση"
+      }
+    }
+  },
+  "views": {
+    "onboarding": {
+      "choosedevice": {
+        "titleText": "Τι ρυθμίζετε;",
+        "moveForward": "Επόμενο",
+        "moveBackward": "Πίσω",
+        "subtitleText": "Επιλέξτε τη συσκευή προς ρύθμιση",
+        "mobilePhone": "Κινητό τηλέφωνο",
+        "landLine": "Σταθερό τηλέφωνο",
+        "switchBoard": "Τηλεφωνικό κέντρο",
+        "headingMessageTitle": "Ευχαριστούμε!",
+        "headingMessageSubtitle": "Η 7-ημερη δωρεάν δοκιμαστική περίοδός σας ξεκίνησε!"
+      },
+      "language": {
+        "titleText": "Καλώς ήρθατε!",
+        "moveForward": "Επόμενο",
+        "subtitleText": "Επιλέξτε γλώσσα για τον βοηθό σας",
+        "defaultLang": "Ιταλικά",
+        "pickALang": "Σε ποια γλώσσα θα απαντάει ο βοηθός σας;",
+        "pickALangPlaceholder": "επιλέξτε μια γλώσσα",
+        "pickALangSubtitle": "Κύρια γλώσσα: ο βοηθός θα μπορεί να απαντάει σε διαφορετικές γλώσσες",
+        "pickCountryPlaceholder": "επιλέξτε μια χώρα",
+        "numberCountry": "Εθνικότητα αριθμού τηλεφώνου του βοηθού σας",
+        "numberCountrySubtitle": "Ο βοηθός σας θα απαντάει σε έναν αποκλειστικό αριθμό της επιλεγμένης εθνικότητας",
+        "mainLanguageHint": "Μπορείτε να το αλλάξετε αργότερα και ο βοηθός σας μπορεί να είναι και πολύγλωσσος.",
+        "funFactTitle": "Το ξέρατε;",
+        "funFactText": "Η πρώτη ομιλούσα μηχανή κατασκευάστηκε το 1791 από τον αυστροούγγρο εφευρέτη Wolfgang von Kempelen. Ήταν πρόγονός μου! Και πρόφερε με περηφάνια τη λέξη «Κωνσταντινούπολη». Καθόλου άσχημα, έτσι;"
+      },
+      "forwardinggeneric": {
+        "selectOperator": "Επιλέξτε τον πάροχό σας",
+        "dialTheNumber": "Πληκτρολογήστε τον ακόλουθο αριθμό στο πληκτρολόγιο του τηλεφώνου σας ",
+        "pressTheDialButton": "και πατήστε το πλήκτρο κλήσης. Ο πάροχος μπορεί να αναπαράγει ένα μήνυμα με το αποτέλεσμα της ενέργειας.",
+        "doYouWhantToSet": "Θέλετε να ρυθμίσετε ",
+        "numberOfSecondsBeforeForwarding": "τον αριθμό δευτερολέπτων πριν ξεκινήσει η προώθηση;",
+        "tryThisOption": "Δοκιμάστε αυτή την επιλογή: **61*{param}**ΑΡΙΘΜΟΣ_ΔΕΥΤΕΡΟΛΕΠΤΩΝ#.",
+        "forInstanceToForward": "Για παράδειγμα, για έναρξη προώθησης μετά από 15 δευτερόλεπτα: ",
+        "deactivation": "Απενεργοποίηση",
+        "compose": "πληκτρολογήστε",
+        "andPressDialButton": "και πατήστε το πλήκτρο κλήσης.",
+        "thisOperatorMayApplyAFee": "Αυτός ο πάροχος μπορεί να χρεώσει για την προώθηση κλήσεων.",
+        "officialProcedure": "Κάντε κλικ εδώ για τις επίσημες οδηγίες του παρόχου τηλεφωνίας σας.",
+        "tryToContactTheOperatorFastweb": "Αν οι κωδικοί προώθησης δεν λειτουργούν, μπορείτε να δοκιμάσετε από την εφαρμογή Fastweb ή να ζητήσετε επιβεβαίωση από την εξυπηρέτηση πελατών του παρόχου σας.",
+        "genericDisclaimer1": "Η προώθηση κλήσεων είναι μια διαδικασία που διαχειρίζεται ο πάροχός σας και όχι το MrCall.",
+        "genericDisclaimer2": "Αν οι κωδικοί προώθησης δεν λειτουργούν, μπορεί να εξαρτάται από το συμβόλαιό σας. Σας συνιστούμε να επικοινωνήσετε με τον πάροχό σας για ενεργοποίηση της προώθησης κλήσεων."
+      },
+      "forwardingonlandline": {
+        "titleText": "Ρύθμιση Προώθησης Κλήσεων από Σταθερό Τηλέφωνο",
+        "subtitleText": "Πληκτρολογήστε τους κωδικούς διαδικασίας για ενεργοποίηση της προώθησης κλήσεων",
+        "moveBackward": "Πίσω",
+        "moveForward": "Έχω ρυθμίσει"
+      },
+      "forwardingonotherdevice": {
+        "titleText": "Ρύθμιση προώθησης σε κινητό τηλέφωνο",
+        "subtitleText": "Πληκτρολογήστε τους κωδικούς για ενεργοποίηση της προώθησης"
+      },
+      "configureassistant": {
+        "titleText": "Τώρα δημιουργήστε τον βοηθό σας",
+        "subtitleText": "",
+        "moveForward": "Δημιουργία!",
+        "moveBackward": "Πίσω",
+        "mandatoryParameter": "Αυτό το πεδίο είναι υποχρεωτικό",
+        "nicknameTitle": "Αναγνωριστικό βοηθού (χρήσιμο αν έχετε περισσότερους από έναν)",
+        "nicknamePlaceholder": "Το όνομά σας ή η επωνυμία της εταιρείας",
+        "nicknameSubtitle": "Το ψευδώνυμό σας ή η επωνυμία της επιχείρησης",
+        "voiceGenderTitle": "Φύλο φωνής",
+        "welcomeMessageTitle": "Μήνυμα καλωσορίσματος μετά τον χαιρετισμό",
+        "welcomeMessageSubtitle": "Μπορείτε να επεξεργαστείτε αυτό το μήνυμα όποτε θέλετε!",
+        "voiceGenderDefault": "FEMALE",
+        "nickNamePlaceHolder": "ΗΕταιρείαΣας",
+        "voiceGender": [
+          {
+            "label": "Αρσενική",
+            "value": "MALE"
+          },
+          {
+            "label": "Θηλυκή",
+            "value": "FEMALE"
+          }
+        ],
+        "errorDialogAlreadyExistsTitle": [
+          "Ένας βοηθός είναι ήδη συνδεδεμένος με τον αριθμό σας"
+        ],
+        "errorDialogUnknownErrorTitle": [
+          "Παρουσιάστηκε σφάλμα"
+        ],
+        "errorDialogUnknownErrorBody": [
+          "Αν το πρόβλημα επιμένει, επικοινωνήστε με την υποστήριξη."
+        ],
+        "errorDialogAlreadyExistsBody": [
+          "Μπορείτε να επιστρέψετε και να επιλέξετε διαφορετικό αριθμό.",
+          "Ή μπορείτε να μεταβείτε στην προσωπική σας περιοχή για να τροποποιήσετε τον βοηθό που δημιουργήθηκε προηγουμένως."
+        ],
+        "alreadyExistsBusinessErrorLeftButtonLabel": "Πίσω",
+        "alreadyExistsBusinessErrorRightButtonLabel": "Βοηθοί",
+        "unknownErrorBusinessErrorLeftButtonLabel": "Επανάληψη",
+        "unknownErrorBusinessErrorRightButtonLabel": "Ζητήστε βοήθεια"
+      },
+      "chooseplan": {
+        "title": "Ξεκινήστε τη δωρεάν δοκιμαστική περίοδο 1 εβδομάδας",
+        "subtitle": "Δοκιμάστε το για μια εβδομάδα, χωρίς δέσμευση - ακυρώστε οποτεδήποτε, χωρίς χρεώσεις!",
+        "textForFreeTrial": "ΘΕΛΕΤΕ ΝΑ ΔΟΚΙΜΑΣΕΤΕ ΤΟΝ ΒΟΗΘΟ ΣΑΣ ΠΡΩΤΑ; ΚΑΝΕΤΕ ΚΛΙΚ ΣΤΟ ",
+        "myAssistantLink": "Ο Βοηθός μου ⇪",
+        "plans": [
+          {
+            "id": "essential",
+            "title": "Βασικό",
+            "highlight": "Ξεκινήστε χωρίς ρίσκο",
+            "pricing": {
+              "number": "29",
+              "currency": "$",
+              "periodicity": "ανά μήνα"
+            },
+            "buttonLabel": "ΞΕΚΙΝΗΣΤΕ ΝΑ ΤΟ ΧΡΗΣΙΜΟΠΟΙΕΙΤΕ",
+            "functionalities": {
+              "title": "Γρήγορη εγκατάσταση και φυσική συνομιλία",
+              "items": [
+                {
+                  "value": "200 λεπτά Βασικής ΤΝ (περίπου 100 κλήσεις)"
+                },
+                {
+                  "value": "Επεξεργάσιμη απάντηση κλήσης από τον χρήστη"
+                },
+                {
+                  "value": "Ζητάει όνομα, διεύθυνση email"
+                },
+                {
+                  "value": "Ειδοποίηση στον καλούντα μέσω WhatsApp/SMS με προκαθορισμένο μήνυμα"
+                },
+                {
+                  "value": "Ειδοποιήσεις στην επιχείρηση μέσω εφαρμογής και email"
+                },
+                {
+                  "value": "Εξάγει βασικές πληροφορίες από τις κλήσεις"
+                },
+                {
+                  "value": "Σύνδεση με το Google My Business"
+                },
+                {
+                  "value": "Δημιουργία βάσης γνώσεων για τον βοηθό"
+                },
+                {
+                  "value": "Διαχείριση επαφών"
+                },
+                {
+                  "value": "Στατιστικά και αναλύσεις κλήσεων"
+                },
+                {
+                  "value": "MrCall Desktop: email, WhatsApp και τηλέφωνο από τον υπολογιστή σας (περιλαμβάνεται)"
+                }
+              ]
+            }
+          },
+          {
+            "id": "starter",
+            "title": "Εκκίνηση",
+            "highlight": "Προηγμένη ρύθμιση",
+            "pricing": {
+              "number": "55",
+              "currency": "$",
+              "periodicity": "ανά μήνα"
+            },
+            "buttonLabel": "ΞΕΚΙΝΗΣΤΕ!",
+            "functionalities": {
+              "title": "Κρατήσεις, προώθηση κλήσεων και υποστήριξη προτεραιότητας",
+              "includesFrom": "Όλα από το Essential, επιπλέον:",
+              "items": [
+                {
+                  "value": "250 λεπτά Προηγμένης ΤΝ (περίπου 130 κλήσεις)"
+                },
+                {
+                  "value": "Έξυπνη απάντηση κλήσης, βασισμένη στο ιστορικό καλούντος"
+                },
+                {
+                  "value": "Πολύγλωσσος βοηθός"
+                },
+                {
+                  "value": "Εξατομικευμένα μηνύματα WhatsApp από AI στον καλούντα μετά από κάθε κλήση"
+                },
+                {
+                  "value": "Ειδοποιήσεις WhatsApp στην επιχείρηση με περίληψη κλήσης (επί πληρωμή)"
+                },
+                {
+                  "value": "Ενότητα κρατήσεων (Ημερολόγιο Google)"
+                },
+                {
+                  "value": "Υποστήριξη μέσω email με προτεραιότητα (μέγ. 5 ημέρες)"
+                },
+                {
+                  "value": "Διαπιστευτήρια για σύνδεση τηλεφωνικού κέντρου VoIP μέσω SIP Trunk"
+                },
+                {
+                  "value": "Webhook μετά την κλήση: αυτόματη αποστολή δεδομένων σε CRM, εργαλεία διαχείρισης ή αυτοματισμούς"
+                },
+                {
+                  "value": "Ο βοηθός μεταφέρει κλήσεις σε εσωτερικούς ή αριθμούς τηλεφώνου"
+                },
+                {
+                  "value": "MrCall Desktop: email, WhatsApp και τηλέφωνο από τον υπολογιστή σας (περιλαμβάνεται)"
+                }
+              ]
+            }
+          },
+          {
+            "id": "professional",
+            "title": "Επαγγελματικό",
+            "highlight": "Σχεδιασμένο για την επιχείρησή σας",
+            "pricing": {
+              "number": "160",
+              "currency": "$",
+              "periodicity": "ανά μήνα"
+            },
+            "buttonLabel": "ΞΕΚΙΝΗΣΤΕ!",
+            "functionalities": {
+              "title": "Προηγμένες ρυθμίσεις και συνδέσεις με συστήματα τρίτων",
+              "includesFrom": "Όλα από το Starter, επιπλέον:",
+              "items": [
+                {
+                  "value": "700 λεπτά Προηγμένης ΤΝ, περίπου 350 κλήσεις"
+                },
+                {
+                  "value": "Έξυπνη απάντηση κλήσης, βασισμένη στο ιστορικό καλούντος"
+                },
+                {
+                  "value": "Υποστήριξη μέσω email εντός 2 εργάσιμων ημερών"
+                },
+                {
+                  "value": "Ειδοποιήσεις WhatsApp στην επιχείρηση περιλαμβάνονται στο πλάνο (περίληψη, απομαγνητοφώνηση)"
+                },
+                {
+                  "value": "Ανάγνωση/εγγραφή δεδομένων σε εξωτερικές πηγές (ιστότοπος, CRM κ.λπ.) με 2 ώρες συμβουλευτικής συμπεριλαμβανόμενες"
+                },
+                {
+                  "value": "Προσαρμογή πληροφοριών προς εξαγωγή (κωδικός προϊόντος κ.λπ.)"
+                },
+                {
+                  "value": "Η τιμή δεν περιλαμβάνει φόρο αν οφείλεται"
+                },
+                {
+                  "value": "MrCall Desktop: email, WhatsApp και τηλέφωνο από τον υπολογιστή σας (περιλαμβάνεται)"
+                }
+              ]
+            }
+          }
+        ],
+        "errorDialogUnknownErrorTitle": [
+          "Παρουσιάστηκε σφάλμα"
+        ],
+        "errorDialogUnknownErrorBody": [
+          "Αν το πρόβλημα επιμένει, επικοινωνήστε με την υποστήριξη."
+        ],
+        "unknownErrorBusinessErrorRightButtonLabel": "Ακύρωση",
+        "moveBackward": "Πίσω",
+        "recommendedLabel": "Προτεινόμενο",
+        "trustSignals": {
+          "securePayment": "Ασφαλής πληρωμή μέσω Stripe",
+          "cancelAnytime": "Ακύρωση ανά πάσα στιγμή, χωρίς χρεώσεις",
+          "noChargesDuringTrial": "Χωρίς χρεώσεις κατά τη δοκιμή"
+        },
+        "supportWriteUs": "Γράψτε στο {email}",
+        "supportBookMeeting": "ή κλείστε ένα ραντεβού με τους ειδικούς μας",
+        "advisor": {
+          "toggleLabel": "Δεν ξέρετε ποιο πλάνο ταιριάζει; Σας βοηθάμε!",
+          "toggleLabelCollapse": "Απόκρυψη συμβούλου πλάνων",
+          "callVolumeTitle": "Πόσες κλήσεις περιμένετε τον μήνα;",
+          "callVolumeOptions": {
+            "low": "Έως 100",
+            "medium": "100–300",
+            "high": "300+"
+          },
+          "featuresTitle": "Ποιες λειτουργίες χρειάζεστε;",
+          "features": {
+            "smart_response": "Εξυπνότερες συνομιλίες",
+            "multilingual": "Πολύγλωσσο",
+            "dynamic_whatsapp": "Εξατομικευμένο WhatsApp",
+            "booking": "Κλείσιμο ραντεβού",
+            "voip_sip": "Σύνδεση τηλεφωνικού κέντρου",
+            "webhook": "Αυτοματισμοί εφαρμογών & CRM",
+            "call_transfer": "Μεταφορά κλήσεων",
+            "call_transcription": "Σύνοψη κλήσης στο WhatsApp",
+            "external_sources": "Σύνδεση εξωτερικών δεδομένων",
+            "custom_extraction": "Προσαρμοσμένη καταγραφή δεδομένων"
+          },
+          "resetLabel": "Επαναφορά φίλτρων",
+          "bestMatchBadge": "Το ιδανικό πλάνο για εσάς",
+          "noMatchTitle": "Κανένα αντίστοιχο πλάνο",
+          "noMatchMessage": "Κανένα πλάνο δεν πληροί όλα τα κριτήριά σας. Δοκιμάστε να αφαιρέσετε κάποιες λειτουργίες ή να αλλάξετε τον όγκο κλήσεων."
+        }
+      },
+      "forwardingonthisdevice": {
+        "titleText": "Ρύθμιση Προώθησης Κλήσεων από Κινητό",
+        "subtitleText": "Καλέστε τους κωδικούς διαδικασίας για ενεργοποίηση της προώθησης κλήσεων",
+        "moveBackward": "Πίσω",
+        "moveForward": "Έχω ρυθμίσει",
+        "activateCode": "Ενεργοποίηση",
+        "deactivateCode": "Απενεργοποίηση",
+        "activateItemTitle": "Ενεργοποίηση Προώθησης Κλήσεων",
+        "deactivateItemTitle": "Απενεργοποίηση Προώθησης Κλήσεων",
+        "activateItemSubtitle": "Δεν λειτουργεί; Δείτε τις οδηγίες για 'Άλλη συσκευή'",
+        "deactivateItemSubtitle": "Πληκτρολογήστε τον κωδικό απενεργοποίησης"
+      },
+      "makeatestcall": {
+        "titleText": "Δοκιμάστε τον βοηθό MrCall σας!",
+        "moveBackward": "Πίσω",
+        "moveForward": "Επόμενο",
+        "skip": "Παράλειψη",
+        "subtitleText": "καλέστε από τον αριθμό σας ",
+        "callGeneralService": "Καλέστε αυτόν τον αριθμό και μιλήστε στον βοηθό ολοκλήρωσης ",
+        "callYourTestAssistant": "ο προσωρινός αριθμός του βοηθού σας",
+        "changeNumberCountry": "Θέλετε αριθμό από άλλη χώρα; Επικοινωνήστε μαζί μας και θα τον αλλάξουμε! ",
+        "modalDialogNoTestCallTitle": [
+          "Υπήρξε κάποιο πρόβλημα;"
+        ],
+        "modalDialogNoTestCallSubtitle": "Φαίνεται ότι δεν λάβαμε τη δοκιμαστική κλήση σας",
+        "modalDialogNoTestCallLeftButtonLabel": "Δοκιμάστε να καλέσετε ξανά",
+        "modalDialogNoTestCallRightButtonLabel": "Επικοινωνήστε με έναν ειδικό μας",
+        "modalDialogNoTestCallBodyMessageTitle": "Σας υπενθυμίζουμε ότι",
+        "modalDialogNoTestCallBodyMessage1": "πρέπει να χρησιμοποιήσετε τον αριθμό τηλεφώνου σας για τη δοκιμαστική κλήση",
+        "modalDialogNoTestCallBodyMessage2_1": "Αν χρειάζεστε βοήθεια, μπορείτε να επικοινωνήσετε μαζί μας στον αριθμό",
+        "modalDialogNoTestCallBodyMessage2_2": "ή γράψτε στο",
+        "modalDialogNoTestCallBodyMessageSupportNumber": "+12027419420",
+        "tryAssistantWithWebcallOrPhone": "Δοκιμάστε τη διαδικτυακή κλήση ή καλέστε απευθείας τον βοηθό",
+        "trialReminder": "Η δωρεάν δοκιμή 7 ημερών ξεκινά με την ενεργοποίηση — χωρίς χρεώσεις μέχρι τότε.",
+        "skipActivateNow": "Παράλειψη, ενεργοποίηση τώρα",
+        "skipGoToDashboard": "Παράλειψη, μετάβαση στον πίνακα ελέγχου"
+      },
+      "assistantcreated": {
+        "titleText": "Ο Βοηθός ΤΝ σας δημιουργήθηκε!",
+        "moveBackward": "Πίσω στη ρύθμιση",
+        "moveForward": "Δοκιμάστε τον βοηθό σας",
+        "subtitleText": "Ο βοηθός σας είναι έτοιμος. Δείτε τι ακολουθεί:",
+        "benefit1": "7 ημέρες δωρεάν δοκιμή — χωρίς χρέωση μέχρι να αποφασίσετε",
+        "benefit3": "Ακύρωση ανά πάσα στιγμή με ένα κλικ"
+      },
+      "namephone": {
+        "titleText": "Το προφίλ σου",
+        "moveForward": "Επόμενο",
+        "moveBackward": "Πίσω",
+        "subtitleText": "Συμπληρώστε το προφίλ σας με τις ακόλουθες πληροφορίες:",
+        "yourNameTitle": "Το όνομά σας",
+        "yourNamePlaceholder": "Εισαγάγετε το όνομά σας",
+        "phoneNumberTitle": "Ο αριθμός κινητού σας",
+        "phoneNumberPlaceholder": "Εισαγάγετε τον αριθμό κινητού σας",
+        "phoneNumberSubtitle": "Αυτός ο αριθμός θα χρησιμοποιηθεί για την πρώτη δοκιμή λειτουργικότητας του βοηθού",
+        "nameErrorMessage": "Το όνομα είναι υποχρεωτικό",
+        "phoneNumberErrorMessage": "Ο αριθμός είναι υποχρεωτικός",
+        "phoneNumberCountrySelectorPlaceholder": "Κωδικός χώρας",
+        "phoneNumberCountrySelectorError": "Σφάλμα",
+        "phoneNumberPhoneInputPlaceholder": "Αριθμός τηλεφώνου",
+        "phoneNumberPhoneInputExample": "Παράδειγμα: "
+      },
+      "notificationpreview": {
+        "titleText": "Η δοκιμαστική κλήση σας ήταν επιτυχής!",
+        "moveBackward": "Πίσω",
+        "moveForward": "Επόμενο",
+        "subtitleText": "Τώρα αποθηκεύτηκε στον λογαριασμό σας και μπορείτε να κάνετε περισσότερες δοκιμές αργότερα.",
+        "audioNotSupported": "Ο ήχος δεν υποστηρίζεται",
+        "transcriptionBoxTitle": "Η κλήση σας",
+        "table": {
+          "body": "Μήνυμα",
+          "audioFile": "Ήχος",
+          "audioNotSupported": "Ο περιηγητής σας δεν υποστηρίζει στοιχεία ήχου",
+          "contactName": "Επαφή",
+          "contactNumber": "Αριθμός Καλούντος"
+        }
+      },
+      "prebookappointment": {
+        "titleText": "Μπορείτε να κλείσετε ραντεβού με έναν ειδικό",
+        "moveBackward": "Οι βοηθοί σας",
+        "moveForward": "Κλείστε ραντεβού",
+        "subtitleText": "Θα σας βοηθήσει να ρυθμίσετε το MrCall σύμφωνα με τις ανάγκες σας ή να λύσετε τυχόν προβλήματα"
+      },
+      "searchbusiness": {
+        "titleText": "Σύνδεση με το Google My Business",
+        "moveForward": "Επόμενο",
+        "moveBackward": "Πίσω",
+        "continueButtonLabel": "Συνέχεια",
+        "removeSelection": "Διαγραφή",
+        "subtitleText": "Το MrCall θα συγχρονίσει τις ώρες λειτουργίας και τη διεύθυνση",
+        "searchYourBusiness": "Αναζητήστε την επιχείρησή σας",
+        "searchYourCompanyPlaceholder": "Αναζήτηση στο Google",
+        "searchParametersEmptyMessage": "Πρέπει να εισαγάγετε το όνομα της εταιρείας σας για να ξεκινήσετε την αναζήτηση",
+        "doNotOwnABusiness": "Δεν έχω προφίλ Business ή θα το κάνω αργότερα",
+        "noSearchResults": "Η αναζήτηση δεν παρήγαγε αποτελέσματα",
+        "notFoundSubtitle": "Δοκιμάστε να εισαγάγετε το πλήρες όνομα και τη διεύθυνση.",
+        "yourSearchOf": "Η αναζήτησή σας για",
+        "didNotProduceResults": "δεν παρήγαγε αποτελέσματα",
+        "noBusinessSelectedTitle": "Χωρίς συγχρονισμό",
+        "noBusinessSelectedMessage": "Αν δεν θέλετε να συγχρονίσετε, απλά συνεχίστε. Διαφορετικά, επιστρέψτε"
+      },
+      "searchbusinessinfo": {
+        "titleText": "Πληροφορίες για την επιχείρησή σας",
+        "moveForward": "Επόμενο",
+        "moveBackward": "Πίσω",
+        "reload": "Νέα αναζήτηση",
+        "loading": "Αναζήτηση...",
+        "continueButtonLabel": "Επόμενο",
+        "removeSelection": "Διαγραφή",
+        "subtitleText": "Μπορείτε να επεξεργαστείτε τις πληροφορίες της επιχείρησής σας ή να τις αλλάξετε αργότερα ανά πάσα στιγμή.",
+        "subtitleTextSearch": "Αναζητούμε δημόσιες πληροφορίες για την επιχείρησή σας για μια αρχική ρύθμιση.",
+        "businessInformation": "Πληροφορίες για την επιχείρησή σας",
+        "searchYourCompanyPlaceholder": "Αναζήτηση στο Google Business",
+        "skipInfo": "Συνεχίστε χωρίς χρήση αυτών των πληροφοριών",
+        "searchFailedTitle": "Η αναζήτηση δεν είναι διαθέσιμη",
+        "searchFailedMessage": "Δεν μπορέσαμε να ανακτήσουμε αυτόματα τις πληροφορίες της επιχείρησης. Μπορείτε να τις εισάγετε χειροκίνητα ή να παραλείψετε αυτό το βήμα.",
+        "noSearchResults": "Δεν βρέθηκαν αποτελέσματα αναζήτησης",
+        "notFoundSubtitle": "Δοκιμάστε να εισαγάγετε το πλήρες όνομα και τη διεύθυνση."
+      },
+      "switchboardconfiguration": {
+        "titleText": "Κλείστε ραντεβού για ρύθμιση τηλεφωνικού κέντρου",
+        "moveBackward": "Πίσω",
+        "moveForward": "Κλείστε ραντεβού",
+        "subtitleText": "Θα σας βοηθήσουμε να συνδέσετε το τηλεφωνικό σας κέντρο και να ρυθμίσετε το MrCall σύμφωνα με τις ανάγκες σας"
+      },
+      "thisorotherdevice": {
+        "titleText": "Ποια συσκευή θέλετε να ρυθμίσετε;",
+        "moveForward": "Επόμενο",
+        "moveBackward": "Πίσω",
+        "subtitleText": "Καθορίστε αν ρυθμίζετε αυτή τη συσκευή ή μια άλλη συσκευή",
+        "thisPhone": "Αυτή η συσκευή",
+        "otherPhone": "Άλλη συσκευή"
+      },
+      "business": {
+        "funFactTitle": "MrCall, ο έξυπνος βοηθός σας",
+        "funFactText": "Το MrCall γεννήθηκε στην Ιταλία — όπως και η ιδέα του προσωπικού βοηθού! Οι αρχαίοι Ρωμαίοι είχαν τον Nomenclator, έναν εξειδικευμένο δούλο με μοναδική δουλειά να απομνημονεύει τα ονόματα, τα πρόσωπα και την κοινωνική θέση κάθε ανθρώπου που μπορούσε να συναντήσει ο κύριός του. Το MrCall κάνει το ίδιο… αλλά είναι πολιτικά ορθό."
+      },
+      "searchbusinessfunfact": {
+        "funFactTitle": "Γιατί οι Κίτρινες Σελίδες είναι κίτρινες;",
+        "funFactText": "Οι Κίτρινες Σελίδες επινοήθηκαν το 1883, επειδή σε ένα τυπογραφείο στο Cheyenne του Wyoming τελείωσε το λευκό χαρτί. Έτσι προέκυψε ο πρώτος επαγγελματικός κατάλογος στον κόσμο. Σήμερα παραλείπουμε και το χαρτί και τη μουσική αναμονής. Συνδέστε το Google Business σας, ώστε ο βοηθός σας να αρχίσει αμέσως να απαντά στις κλήσεις."
+      },
+      "assistantcreatedfunfact": {
+        "funFactTitle": "Από το ψυγείο στο τηλέφωνο",
+        "funFactText": "Πριν ο τηλεφωνητής γίνει ψηφιακό αρχείο, ήταν ένας άνθρωπος με ένα μπλοκάκι. Στη δεκαετία του 1930, ο πρώτος «αυτόματος τηλεφωνητής» ήταν ένα έπιπλο στο μέγεθος ψυγείου. Σήμερα το MrCall είναι ο προσωπικός σας τηλεφωνητής — χωρίς μηχανήματα σε μέγεθος ψυγείου και χωρίς σφυρίγματα."
+      }
+    },
+    "sign": {
+      "magiclink": {
+        "titleText": "Μαγικός σύνδεσμος",
+        "didYouForgetPassword": "Ξεχάσατε τον κωδικό πρόσβασης;"
+      },
+      "signin": {
+        "titleText": "Σύνδεση",
+        "heroHeadline": "Welcome back.",
+        "heroSubheadline": "Sign in to manage your AI assistant and keep your business running smoothly."
+      },
+      "signup": {
+        "titleText": "Δημιουργία λογαριασμού",
+        "heroHeadline": "Turn every call",
+        "heroAccent": "into opportunity.",
+        "heroSubheadline": "Are you a business or a solo professional? Choose MrCall, a true AI digital agent that autonomously handles phone conversations with your customers, interacts with them in clear, natural language, and syncs with your company's business systems.",
+        "benefit1": "Free 7-day trial, no credit card required",
+        "benefit2": "Set up in under 5 minutes",
+        "benefit3": "Cancel anytime, no commitment",
+        "trustBadge": "Trusted by 1,000+ businesses since 2021"
+      }
+    },
+    "callbooking": {
+      "backwardLinkText": "Πίσω",
+      "redirecting": "Redirecting to the contact page…"
+    },
+    "customtokensignin": {
+      "title": "Επαλήθευση ταυτότητας και φόρτωση της ζητούμενης σελίδας"
+    },
+    "failedpayment": {
+      "failedPayment": "Η εγγραφή μεθόδου πληρωμής δεν ήταν επιτυχής, αν χρειάζεστε υποστήριξη, επικοινωνήστε με την εξυπηρέτηση πελατών",
+      "gotoAssistant": "Επιστροφή στη σελίδα βοηθών"
+    },
+    "failedpaymentproduct": {
+      "failedPayment": "Η πληρωμή δεν ήταν επιτυχής, παρακαλούμε επικοινωνήστε με την εξυπηρέτηση πελατών",
+      "gotoAssistant": "Επιστροφή στη σελίδα βοηθών"
+    },
+    "onboardingprepayment": {
+      "title1": "Υπέροχα!",
+      "title2": "Σχεδόν τελειώσαμε",
+      "subtitle": "Ξεκινήστε τη δωρεάν δοκιμαστική περίοδο",
+      "textTrialPeriod": "Μετά την προσθήκη της μεθόδου πληρωμής, ο βοηθός σας θα έχει όλες τις λειτουργίες ενεργές! Και θυμηθείτε: μπορείτε να ακυρώσετε τη συνδρομή ανά πάσα στιγμή χωρίς καμία χρέωση.",
+      "voipMessageText": "Μπορείτε αμέσως να κλείσετε ραντεβού με έναν ειδικό μας για να συνδέσετε το τηλεφωνικό κέντρο VoIP σας με το MrCall.",
+      "numberForwardingMessages": "Θα λάβετε οδηγίες για τη ρύθμιση προώθησης κλήσεων στον βοηθό MrCall σας.",
+      "okMoveOnButtonText": "Συνέχεια"
+    },
+    "payment": {
+      "redirectToPaymentMethod": "Πρόκειται να ανακατευθυνθείτε στην εγγραφή μεθόδου πληρωμής"
+    },
+    "privacypolicy": {
+      "privacyOfTheService": "Πολιτική Απορρήτου της Υπηρεσίας MrCall"
+    },
+    "successpayment": {
+      "successPayment": "Η εγγραφή μεθόδου πληρωμής ήταν επιτυχής",
+      "callForwardingPage": "Όπως με όλες τις υπηρεσίες ψηφιακής βοήθειας ή απομακρυσμένης γραμματείας, πρέπει να ρυθμίσετε την προώθηση κλήσεων.",
+      "callForwardingPageBusinessPlus": "Αν δεν έχετε τηλεφωνικό κέντρο VoIP, πρέπει να ρυθμίσετε την προώθηση κλήσεων.",
+      "gotoCallForwardingInstructionsButtonLabel": "Ρύθμιση προώθησης",
+      "furtherInfoAboutPersonalArea": "Στην ενότητα \"Βοηθός\", θα βρείτε όλες τις πληροφορίες σχετικά με την υπηρεσία, την κατάσταση της συνδρομής σας και τις λειτουργίες που ενεργοποιήσατε κατά την έναρξη της συνδρομής, όπως η σύνδεση με το Ημερολόγιο Google, η αποστολή SMS στους πελάτες σας ή η ενεργοποίηση τηλεφωνικών κρατήσεων.",
+      "announcementApp": "Έχετε ήδη κατεβάσει την εφαρμογή MrCall; Είναι δωρεάν και σας επιτρέπει να διαχειρίζεστε τον βοηθό σας, να λαμβάνετε απομαγνητοφωνήσεις κλήσεων, να συγχρονίζετε τις επαφές σας και πολλά άλλα.",
+      "androidButtonLabel": "Google Play",
+      "appleButtonLabel": "Apple Store",
+      "bookAnAppointment": "Κλείστε ραντεβού για τη σύνδεση του τηλεφωνικού κέντρου VoIP σας και θα σας βοηθήσουμε βήμα προς βήμα.",
+      "alreadyAssignedNumber": "Ο βοηθός σας έχει ήδη εκχωρημένο αριθμό. Μεταβείτε στη σελίδα του βοηθού σας για να τροποποιήσετε ή να επαληθεύσετε τις ρυθμίσεις.",
+      "alreadyAssignedNumberButtonLabel": "Μεταβείτε στον βοηθό σας",
+      "appointmentButtonText": "Κλείστε ραντεβού",
+      "contactSupport": "Παρουσιάστηκε πρόβλημα κατά την εκχώρηση του αριθμού σας. Παρακαλούμε επικοινωνήστε με την υποστήριξη.",
+      "yourAssistantIsActive": "Ο βοηθός σας είναι ενεργός!",
+      "yourNumber": "Ο αριθμός τηλεφώνου του βοηθού σας",
+      "setupForwarding": "Ρύθμιση προώθησης κλήσεων",
+      "goToDashboard": "Μετάβαση στον πίνακα ελέγχου"
+    },
+    "successpaymentproduct": {
+      "failedPayment": "Η πληρωμή ήταν επιτυχής και το προϊόν αγοράστηκε. Αν έχετε ερωτήσεις, παρακαλούμε επικοινωνήστε με την υποστήριξη.",
+      "gotoAssistant": "Επιστροφή στη σελίδα βοηθών"
+    },
+    "termsandconditions": {
+      "pageTitle": "Όροι και προϋποθέσεις της υπηρεσίας MrCall"
+    },
+    "partnerprogram": {
+      "mainTitle": "Φέρτε έναν φίλο",
+      "bringAFriend": "Για κάθε φίλο που φέρνετε στο MrCall",
+      "aFreeMonthForYou": "Ένας δωρεάν μήνας για εσάς",
+      "aFreeMonthForYourContact": "Ένας δωρεάν μήνας για την επαφή σας",
+      "yourPersonalCode": "Εδώ είναι ο προσωπικός σας κωδικός για κοινοποίηση:",
+      "yourContactMustUseTheCode": "Η επαφή σας θα πρέπει να τον εισαγάγει κατά την εγγραφή μεθόδου πληρωμής.",
+      "freeMonthAfterPayment": "Από την πρώτη πληρωμή της επαφής σας, θα προσθέσουμε έναν δωρεάν μήνα και για εσάς."
+    },
+    "configureAI": {
+      "title": "Ρύθμιση με AI",
+      "subtitle": "Χρησιμοποιήστε φυσική γλώσσα για να ρυθμίσετε τον τηλεφωνικό σας βοηθό",
+      "quickActions": "Γρήγορες Ενέργειες",
+      "backToSettings": "Πίσω στις Ρυθμίσεις",
+      "classicConfigurator": "Κλασική ρύθμιση",
+      "loadingMessage": "Σύνδεση με τον βοηθό σας...",
+      "trainButton": "Εκπαίδευση βοηθού",
+      "trainingInProgress": "Εκπαίδευση...",
+      "trainingMessage": "Εκπαίδευση του βοηθού με τα δεδομένα της επιχείρησής σας...",
+      "thinkingMessages": [
+        "Μαθαίνω πώς ο βοηθός σας σηκώνει το τηλέφωνο...",
+        "Σκάβω μέσα στον λαβύρινθο των ρυθμίσεων...",
+        "Διαβάζω το εγχειρίδιο... ανάποδα, για πλάκα.",
+        "Μαθαίνω στον βοηθό σας την τέχνη της κουβεντούλας...",
+        "Αναλύω τις ρυθμίσεις κρατήσεων με χειρουργική ακρίβεια...",
+        "Πείθω τον βοηθό ότι και η Δευτέρα έχει τα καλά της...",
+        "Χαρτογραφώ κάθε πιθανή ροή συνομιλίας... είναι αρκετές.",
+        "Μελετάω τη βάση γνώσεων σαν να είναι βράδυ πριν τις εξετάσεις...",
+        "Διασταυρώνω ρυθμίσεις με ένα φλιτζάνι εικονικό καφέ...",
+        "Φροντίζω το μήνυμα υποδοχής να μην ακούγεται σαν ρομπότ...",
+        "Εκπαιδεύω τον βοηθό να είναι ευγενικός, ακόμα και πριν τον πρωινό καφέ...",
+        "Κατεβάζω υπομονή... εκτιμώμενος χρόνος: σύντομα.",
+        "Περνάω τις ρυθμίσεις σας με το κόσκινο...",
+        "Μαθαίνω στον βοηθό να μη διακόπτει τους καλούντες... πιο δύσκολο απ' ό,τι ακούγεται.",
+        "Επεξεργάζομαι τις προτιμήσεις ειδοποιήσεων, γιατί κανείς δεν θέλει spam...",
+        "Μαθαίνω πώς θέλετε να ακούγονται τα μηνύματα παρακολούθησης...",
+        "Κάνω πρόβα τον τέλειο χαιρετισμό, άλλη μια φορά...",
+        "Σχεδόν έτοιμο... απλά ελέγχω τα ψιλά γράμματα.",
+        "Συγχρονίζω με τη μητρόπολη του MrCall...",
+        "Βαθμονομώ τον ανιχνευτή ροής συνομιλίας...",
+        "Βελτιστοποιώ την εμπειρία του καλούντα, μία μεταβλητή τη φορά...",
+        "Μαθαίνω στον βοηθό να χειρίζεται τις αμήχανες σιωπές με χάρη...",
+        "Απομνημονεύω τους κανόνες προώθησης κλήσεων... μπιπ μπουπ.",
+        "Εκτελώ τελικούς ελέγχους ποιότητας σε όλα τα χαρακτηριστικά...",
+        "Γυαλίζω τις ρυθμίσεις μέχρι να λάμπουν..."
+      ],
+      "quickAction1Label": "Ποιο είναι το μήνυμα υποδοχής;",
+      "quickAction1Command": "Πώς απαντάει ο βοηθός στο τηλέφωνο;",
+      "quickAction2Label": "Αλλαγή μηνύματος υποδοχής",
+      "quickAction2Command": "Αν ο καλών έχει ξανακαλέσει στο παρελθόν και έχουμε όλα τα στοιχεία του, πες του ότι θα τον καλέσουμε πίσω",
+      "quickAction3Label": "Έλεγχος ροής συνομιλίας",
+      "quickAction3Command": "Πώς διαχειρίζεται ο βοηθός τη συνομιλία;",
+      "quickAction4Label": "Αλλαγή ροής συνομιλίας",
+      "quickAction4Command": "Διαχειρίσου τη συνομιλία ώστε να πάρεις από τον καλούντα το όνομά του αν δεν είναι γνωστό, τη διεύθυνσή του και τον λόγο που κάλεσε.",
+      "quickAction5Label": "Γνώσεις του βοηθού",
+      "quickAction5Command": "Σε ποια θέματα μπορεί να απαντήσει ο βοηθός;",
+      "quickAction6Label": "Προσθήκη γνώσεων",
+      "quickAction6Command": "Αν ο χρήστης θέλει να τον καλέσουν πίσω αλλά δεν έχει πει γιατί, ο βοηθός πρέπει πάντα να ρωτάει τον λόγο και μετά να λέει ότι θα προωθήσει το αίτημα σε έναν χειριστή"
+    },
+    "activation": {
+      "titleText": "Ενεργοποιήστε τον βοηθό σας",
+      "subtitleText": "Αποκτήστε αποκλειστικό αριθμό τηλεφώνου με μία εβδομάδα δωρεάν δοκιμή",
+      "multilingualQuestion": "Ο βοηθός σας θα μιλάει μία ή περισσότερες γλώσσες;",
+      "oneLanguage": "Μία γλώσσα",
+      "multipleLanguages": "Περισσότερες γλώσσες",
+      "phoneNationalityTitle": "Χώρα αριθμού τηλεφώνου",
+      "phoneNationalitySubtitle": "Επιλέξτε τη χώρα για τον αριθμό τηλεφώνου του βοηθού σας",
+      "continueButton": "Συνέχεια στην επιλογή πλάνου"
+    },
+    "aladminConfigurator": {
+      "title": "AladMin Configurator",
+      "subtitle": "Συνομιλήστε με τον AladMin για να ρυθμίσετε τη συμπεριφορά του φωνητικού σας βοηθού",
+      "backToSettings": "Πίσω στις Ρυθμίσεις",
+      "suggestionsLabel": "Προτάσεις",
+      "suggestion1": "Ενεργοποίησε το prompt συνομιλίας για τη διαχείριση κρατήσεων",
+      "suggestion2": "Ζήτα από τους καλούντες το όνομα και το email τους",
+      "suggestion3": "Πώς χαιρετά ο βοηθός τους καλούντες;",
+      "suggestion4": "Ποιες λειτουργίες είναι ενεργοποιημένες αυτή τη στιγμή;",
+      "messagePlaceholder": "Περιγράψτε τι θέλετε να αλλάξετε ή κάντε μια ερώτηση...",
+      "emptyChat": "Ξεκινήστε μια συνομιλία με τον AladMin για να ρυθμίσετε τον βοηθό σας",
+      "newConversation": "Νέα συνομιλία",
+      "errorApplying": "Σφάλμα",
+      "noBusinessSelected": "Δεν έχει επιλεγεί επιχείρηση. Επιστρέψτε στη σελίδα ρυθμίσεων της επιχείρησης.",
+      "previewLabel": "Προεπισκόπηση αλλαγών",
+      "applyChanges": "Εφαρμογή αλλαγών",
+      "cancelChanges": "Ακύρωση",
+      "confirmApply": "Επιβεβαίωση, εφαρμογή των αλλαγών",
+      "cancelApply": "Ακύρωση, να μην εφαρμοστούν οι αλλαγές"
+    },
+    "mcpConnectors": {
+      "title": "Συνδέσεις MCP",
+      "subtitle": "Δημιουργήστε διαπιστευτήρια για να συνδέσετε τον λογαριασμό σας MrCall με το Claude (ή άλλο AI client συμβατό με MCP).",
+      "back": "Πίσω",
+      "info": {
+        "title": "Πώς να συνδεθείτε",
+        "intro": "Δημιουργήστε μια σύνδεση παρακάτω και προσθέστε την ως custom MCP connector στο AI client σας (Claude, Cursor κ.λπ.), χρησιμοποιώντας το MCP URL μαζί με το Client ID και το Client Secret που θα εμφανιστούν.",
+        "mcpUrl": "MCP URL",
+        "advanced": "Για προχωρημένους (τεχνικές λεπτομέρειες)",
+        "allowedScopes": "Επιτρεπόμενα scopes",
+        "protectedResource": "Metadata protected resource",
+        "authServer": "Metadata authorization server"
+      },
+      "create": {
+        "title": "Δημιουργία νέας σύνδεσης",
+        "help": "Κάθε σύνδεση είναι ένα ξεχωριστό σύνολο διαπιστευτηρίων. Χρησιμοποιήστε μία για κάθε AI client, ώστε να μπορείτε να τις ανακαλείτε ανεξάρτητα.",
+        "nameLabel": "Όνομα",
+        "namePlaceholder": "π.χ. Η σύνδεσή μου με το Claude.ai",
+        "descriptionLabel": "Περιγραφή (προαιρετικά)",
+        "descriptionPlaceholder": "Σύντομη σημείωση για το πού χρησιμοποιείται αυτή η σύνδεση",
+        "submit": "Δημιουργία σύνδεσης"
+      },
+      "list": {
+        "title": "Οι συνδέσεις σας",
+        "empty": "Δεν υπάρχουν συνδέσεις ακόμη. Δημιουργήστε μία παραπάνω για να ξεκινήσετε.",
+        "createdAt": "Δημιουργήθηκε",
+        "permissions": "Δικαιώματα",
+        "rotate": "Ανανέωση secret",
+        "rotateConfirm": "Ανανέωση του client secret; Το τρέχον secret θα πάψει να λειτουργεί αμέσως και θα δείτε το νέο μόνο μία φορά."
+      },
+      "scopes": {
+        "title": "Δικαιώματα",
+        "help": "Επιλέξτε τι επιτρέπεται να κάνει αυτή η σύνδεση για λογαριασμό σας. Μπορείτε να την ανακαλέσετε αργότερα ανανεώνοντας το secret ή διαγράφοντάς την.",
+        "selectAll": "Επιλογή όλων",
+        "clearAll": "Αποεπιλογή",
+        "sensitive": "Ευαίσθητο",
+        "groups": {
+          "business": "Προφίλ επιχείρησης",
+          "contacts": "Επαφές (CRM)",
+          "sessions": "Συνομιλίες",
+          "templates": "Βοηθοί"
+        }
+      },
+      "reveal": {
+        "title": "Αποθηκεύστε τώρα τα διαπιστευτήριά σας",
+        "warningTitle": "Αυτές οι τιμές δεν θα εμφανιστούν ξανά.",
+        "warningBody": "Αντιγράψτε το URL, το client ID και το client secret στο AI client σας πριν κλείσετε αυτή την κάρτα. Το secret αποθηκεύεται ως hash στον διακομιστή: αν το χάσετε, πρέπει να το ανανεώσετε.",
+        "mcpUrl": "MCP URL",
+        "clientId": "Client ID",
+        "clientSecret": "Client secret",
+        "copy": "Αντιγραφή",
+        "copied": "Αντιγράφηκε!",
+        "howTo": "Στο Claude → Ρυθμίσεις → Custom Connectors → Add custom connector. Επικολλήστε τις παραπάνω τιμές. Το Claude θα ανοίξει μια σελίδα συγκατάθεσης στο πρόγραμμα περιήγησης για να ολοκληρωθεί η εξουσιοδότηση.",
+        "acknowledge": "Αποθήκευσα τις τιμές"
+      },
+      "errors": {
+        "serviceDisabled": "Οι συνδέσεις MCP δεν είναι ενεργοποιημένες σε αυτό το περιβάλλον. Ζητήστε από τον διαχειριστή σας να ορίσει MCP_ENABLED=true.",
+        "loadFailed": "Αποτυχία φόρτωσης των δεδομένων των συνδέσεων MCP.",
+        "createFailed": "Αποτυχία δημιουργίας νέας σύνδεσης.",
+        "rotateFailed": "Αποτυχία ανανέωσης του secret.",
+        "clipboardFailed": "Δεν ήταν δυνατή η αντιγραφή στο πρόχειρο. Επιλέξτε την τιμή χειροκίνητα."
+      }
+    },
+    "wizard": {
+      "pageTitle": "Ρύθμιση βοηθού",
+      "stepOf": "Βήμα {current} από {total}",
+      "loading": "Σύνδεση με τον βοηθό σας...",
+      "nextStep": "Επόμενο",
+      "skipStep": "Χωρίς αλλαγές, πάμε στο επόμενο βήμα",
+      "goToDashboard": "Μετάβαση στον πίνακα ελέγχου",
+      "changeSomething": "Θέλετε να αλλάξετε κάτι;",
+      "changeSomethingHint": "Θυμηθείτε: μπορείτε να το κάνετε και αργότερα!",
+      "inputPlaceholder": "Γράψτε τι θα θέλατε να αλλάξετε...",
+      "sendInstructions": "Αποστολή οδηγιών",
+      "orSeparator": "ή",
+      "saveChanges": "Αποθήκευση αλλαγών",
+      "saving": "Αποθήκευση...",
+      "accept": "Αποδοχή",
+      "pendingChangesTitle": "Αλλαγές προς αποθήκευση",
+      "notSavedWarning": "⚠️ Οι αλλαγές ΔΕΝ έχουν αποθηκευτεί ακόμη. Ο βοηθός ΔΕΝ τροποποιείται μέχρι να πατήσετε «Αποθήκευση αλλαγών».",
+      "saveSuccess": "Οι αλλαγές αποθηκεύτηκαν!",
+      "saveError": "Σφάλμα κατά την αποθήκευση. Δοκιμάστε ξανά.",
+      "analyzeError": "Σφάλμα κατά την ανάλυση. Δοκιμάστε ξανά.",
+      "steps": {
+        "welcome": {
+          "title": "Μήνυμα καλωσορίσματος",
+          "loading": "Αναλύω πώς απαντά ο βοηθός σας στο τηλέφωνο...",
+          "analyzePrompt": "Περίγραψε σε 2-3 σύντομες προτάσεις πώς αυτός ο βοηθός απαντά στις εισερχόμενες κλήσεις και τι ζητά από τον καλούντα. Να είσαι συγκεκριμένος για το τι ακούει αυτός που καλεί. Μην προτείνεις αλλαγές."
+        },
+        "knowledge": {
+          "title": "Βάση γνώσεων",
+          "loading": "Αναλύω τις γνώσεις του βοηθού σας...",
+          "analyzePrompt": "Σε 2 σύντομες προτάσεις, περίγραψε σε ποια θέματα μπορεί να απαντήσει αυτός ο βοηθός, με βάση μόνο την τρέχουσα βάση γνώσεων. ΜΗΝ αναφέρεις αναζήτηση στο web: ο βοηθός ΔΕΝ κάνει αναζήτηση στο web κατά τη διάρκεια των κλήσεων (θα ήταν πολύ αργό). Πρόσθεσε μία πρόταση: αν ο χρήστης θέλει να διευρύνει τις γνώσεις, μπορεί να μου ζητήσει να αναζητήσω πληροφορίες στο web και να τις προσθέσω στη βάση γνώσεων. Μην προτείνεις αλλαγές από μόνος σου."
+        },
+        "booking": {
+          "title": "Κρατήσεις",
+          "loading": "Αναλύω τη ρύθμιση των κρατήσεων...",
+          "analyzePrompt": "Περίγραψε σε 2-3 σύντομες προτάσεις πώς είναι ρυθμισμένες οι κρατήσεις. Είναι ενεργές; Αν ναι, πώς λειτουργούν (ωράρια, διάρκεια slot); Εξήγησε ότι για τις κρατήσεις απαιτείται εξουσιοδότηση πρόσβασης στο Ημερολόγιο Google. Μην προτείνεις αλλαγές."
+        },
+        "transfer": {
+          "title": "Μεταφορά κλήσης",
+          "loading": "Αναλύω τη μεταφορά κλήσης...",
+          "analyzePrompt": "Εξήγησε σε 3-4 προτάσεις πώς λειτουργεί η μεταφορά κλήσης: ο βοηθός μπορεί να μεταβιβάσει την κλήση σε έναν αριθμό τηλεφώνου με βάση παραμετροποιήσιμους κανόνες (π.χ. ώρα, αίτημα του καλούντος). Διευκρίνισε ότι η λειτουργία αυτή είναι διαθέσιμη από το πλάνο Starter και πάνω και ενεργοποιείται μετά την πρώτη πληρωμή. Κατά τη δωρεάν δοκιμή δεν είναι διαθέσιμη."
+        },
+        "notifications_biz": {
+          "title": "Ειδοποιήσεις στον ιδιοκτήτη",
+          "loading": "Αναλύω τις ειδοποιήσεις email...",
+          "analyzePrompt": "Περίγραψε σε 2-3 σύντομες προτάσεις πώς ειδοποιείται ο ιδιοκτήτης της επιχείρησης για τις κλήσεις μέσω email. Σε ποια διεύθυνση φτάνουν; Τι περιέχουν (σύνοψη, απομαγνητοφώνηση, ηχογράφηση); Μην προτείνεις αλλαγές."
+        },
+        "notifications_caller": {
+          "title": "Ειδοποιήσεις στον καλούντα",
+          "loading": "Αναλύω τις ειδοποιήσεις προς τον καλούντα...",
+          "analyzePrompt": "Περίγραψε σε 2-3 σύντομες προτάσεις τι λαμβάνει ο καλών μετά την κλήση. Είναι ενεργό το WhatsApp ή τα SMS; Αν είναι ενεργό το WhatsApp, ποια υπηρεσία χρησιμοποιεί (δωρεάν/επίσημη); Μην προτείνεις αλλαγές."
+        },
+        "integrations": {
+          "title": "Ενσωματώσεις",
+          "loading": "Αναλύω τις ενσωματώσεις...",
+          "analyzePrompt": "Ρώτησε τον χρήστη αν χρησιμοποιεί κάποιο σύστημα διαχείρισης, CRM ή άλλο λογισμικό που θα ήθελε να συνδέσει με τον βοηθό MrCall. Αν ναι, ζήτησε το όνομα του λογισμικού και τη διεύθυνση web."
+        },
+        "summary": {
+          "title": "Σύνοψη",
+          "loading": "Ετοιμάζω τη σύνοψη...",
+          "analyzePrompt": "ΤΕΛΙΚΗ πολύ συνοπτική σύνοψη της ρύθμισης. ΜΙΑ πρόταση ανά κατηγορία (μέγιστο 7 προτάσεις συνολικά): μήνυμα καλωσορίσματος, βάση γνώσεων, κρατήσεις, μεταφορά κλήσης, ειδοποιήσεις στον ιδιοκτήτη, ειδοποιήσεις στον καλούντα, ενσωματώσεις. Κλείσε με ΜΙΑ πρόταση που καλεί τον χρήστη να δοκιμάσει τον βοηθό και να αλλάξει οποιαδήποτε ρύθμιση από τον πίνακα ελέγχου όποτε θέλει. ΜΗΝ ρωτήσεις αν θέλει να αλλάξει κάτι. ΜΗΝ χρησιμοποιήσεις bullets. Μην προτείνεις αλλαγές."
+        }
+      }
+    }
+  },
+  "common": {
+    "cancel": "Ακύρωση",
+    "confirm": "Επιβεβαίωση",
+    "retry": "Επανάληψη"
+  },
+  "mrcallCredits": {
+    "title": "Credits remaining",
+    "tooltip": "A phone call burns ~{factor} credits per minute. Configurator chat and MrCall Desktop burn in proportion to tokens consumed."
+  }
+}

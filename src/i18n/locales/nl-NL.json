@@ -1,0 +1,1742 @@
+{
+  "language": "Taal",
+  "locale": {
+    "en-US": "Engels",
+    "it-IT": "Italiaans",
+    "es-ES": "Spaans",
+    "fr-FR": "Frans",
+    "de-DE": "Duits",
+    "nl-NL": "Nederlands",
+    "sv-SE": "Zweeds",
+    "da-DK": "Deens",
+    "nb-NO": "Noors",
+    "fi-FI": "Fins",
+    "et-EE": "Ests",
+    "el-GR": "Grieks"
+  },
+  "languages": {
+    "italian": "Italiaans",
+    "englishGB": "Engels (VK)",
+    "englishUS": "Engels (VS)",
+    "spanishES": "Spaans (ES)",
+    "spanishUS": "Spaans (VS)",
+    "frenchFR": "Frans (FR)",
+    "germanDE": "Duits (DE)",
+    "portuguesePT": "Portugees (PT)",
+    "portugueseBR": "Portugees (BR)",
+    "norwegianNO": "Noors",
+    "swedishSW": "Zweeds",
+    "finnishFI": "Fins",
+    "greekGR": "Grieks",
+    "turkeyTK": "Turks",
+    "dutchNL": "Nederlands",
+    "danishDK": "Deens",
+    "estonianEE": "Ests"
+  },
+  "isoAlpha2Country": {
+    "IT": "Italië",
+    "US": "Verenigde Staten",
+    "GB": "Verenigd Koninkrijk",
+    "ES": "Spanje",
+    "FR": "Frankrijk",
+    "PT": "Portugal",
+    "DE": "Duitsland",
+    "CH": "Zwitserland",
+    "AU": "Australië",
+    "NO": "Noorwegen",
+    "BR": "Brazilië",
+    "IN": "India",
+    "CA": "Canada",
+    "SW": "Zweden",
+    "FI": "Finland",
+    "GR": "Griekenland",
+    "TK": "Turkije",
+    "NL": "Nederland",
+    "DK": "Denemarken",
+    "EE": "Estland"
+  },
+  "days": {
+    "monday": "Maandag",
+    "tuesday": "Dinsdag",
+    "wednesday": "Woensdag",
+    "thursday": "Donderdag",
+    "friday": "Vrijdag",
+    "saturday": "Zaterdag",
+    "sunday": "Zondag"
+  },
+  "timeSlots": {
+    "invalid": "Ongeldige specificatie, controleer de intervallen, er mogen geen overlappingen zijn."
+  },
+  "utils": {
+    "phonecompanies": {
+      "other": "Andere operator"
+    },
+    "common": {
+      "or": "of"
+    }
+  },
+  "widgets": {
+    "tuplesvariables": {
+      "removeitem": "Item verwijderen",
+      "additem": "Nieuw item"
+    },
+    "agentSkills": {
+      "loading": "Beschikbare skills laden...",
+      "noSkills": "Geen skills beschikbaar. Upload eerst de Agent Skills-beslistabel.",
+      "configuration": "Configuratie",
+      "phasePrefetch": "Vóór het gesprek",
+      "phaseDuring": "Tijdens het gesprek",
+      "phaseFinal": "Na het gesprek",
+      "phasePrefetchHint": "Wordt uitgevoerd voordat het gesprek begint",
+      "phaseDuringHint": "Beschikbaar als tool tijdens het gesprek",
+      "phaseFinalHint": "Wordt uitgevoerd nadat het gesprek is beëindigd",
+      "skills": "skills",
+      "addSkill": "Skill toevoegen...",
+      "addAnother": "nog een toevoegen",
+      "removeSkill": "Verwijderen",
+      "noSkillsInPhase": "Geen skills geconfigureerd in deze fase",
+      "oauthConnect": "Verbinden",
+      "oauthConnected": "Verbonden",
+      "oauthDisconnect": "Verbinding verbreken",
+      "addPair": "Header toevoegen",
+      "skillUnavailable": "Deze skill is niet meer beschikbaar op de server. Verwijder hem of neem contact op met de ondersteuning.",
+      "oauthScopeUnavailable": "Deze integratie vereist een Google-machtiging die MrCall niet mag opvragen. Neem contact op met de ondersteuning."
+    }
+  },
+  "components": {
+    "accountTitle": "Account",
+    "account": {
+      "createAssistantSubtitle": "Stel een nieuwe spraakassistent in voor een ander telefoonnummer of bedrijf.",
+      "securitySectionTitle": "Beveiliging",
+      "integrationsSectionTitle": "Integraties",
+      "dangerZoneSectionTitle": "Gevarenzone",
+      "mcpConnectors": {
+        "title": "MCP-connectoren",
+        "description": "Verbind Claude of een andere MCP-compatibele AI-client met uw MrCall-account. Genereer inloggegevens met machtigingen per connector.",
+        "manage": "MCP-connectoren beheren"
+      }
+    },
+    "zylchChat": {
+      "inputPlaceholder": "Typ een bericht of commando...",
+      "welcome": "Chat met uw assistentconfigurator",
+      "welcomeDescription": "Beschrijf wat u wilt wijzigen en ik werk de instellingen van uw assistent bij. Typ gewoon op een natuurlijke manier!",
+      "exampleCommands": "Voorbeeldcommando's:",
+      "cmdSync": "/sync - Gegevens synchroniseren",
+      "cmdGaps": "/gaps - Gaten in de agenda vinden",
+      "cmdArchive": "/archive - Gesprekken archiveren",
+      "cmdHelp": "/help - Beschikbare commando's tonen"
+    },
+    "directVoice": {
+      "talkToAssistant": "Praat met de assistent",
+      "connecting": "Verbinden...",
+      "hangup": "Ophangen",
+      "ending": "Beëindigen..."
+    },
+    "navbar": {
+      "login": "Inloggen",
+      "subscribe": "Abonneren",
+      "assistants": "Mijn Assistent",
+      "account": "Mijn account",
+      "logout": "Uitloggen",
+      "closeWebview": "Sluiten",
+      "createAssistant": "Nieuwe Assistent Aanmaken",
+      "resendVerificationEmail": "Verificatie-e-mail opnieuw verzenden",
+      "resellerDashboard": "Reseller-dashboard",
+      "invitationCodes": "Uitnodigingscodes",
+      "resellerManagement": "Resellerbeheer",
+      "userManagement": "Gebruikersbeheer",
+      "agentTemplates": "Agent-templates"
+    },
+    "businessphonenumberverification": {
+      "businessPhoneNumberTitle": "Heeft u het verkeerde nummer ingevoerd? U kunt het wijzigen",
+      "phoneNumberCountrySelectorPlaceholder": "Landcode",
+      "phoneNumberCountrySelectorError": "Fout",
+      "phoneNumberPhoneInputPlaceholder": "Telefoonnummer",
+      "phoneNumberPhoneInputExample": "Voorbeeld: ",
+      "businessPhoneNumberIsNotValid": "Controleer of u uw telefoonnummer correct heeft ingevoerd",
+      "settingsSuccessfullySaved": "Instellingen succesvol opgeslagen",
+      "errorSavingSettings": "Er zijn problemen opgetreden bij het opslaan",
+      "activationBannerTitle": "Activeer en ontvang een telefoonnummer",
+      "activationBannerSubtitle": "1 week gratis proberen!",
+      "activationBannerButton": "Nu activeren",
+      "talkToYourAssistant": "Praat met uw assistent",
+      "changeBusinessPhoneNumberButtonLabel": "Wijzigen",
+      "gotoBusinessesCustomize": "Aanpassen",
+      "justVerifiedTheNumberButton": "Ik heb gebeld",
+      "assistantWasCreated": "Verifieer uw telefoonnummer en laat een bericht achter.",
+      "callTheNumberInstructions1": "Dit is slechts een testassistent, er hoeft niets geïnstalleerd of geconfigureerd te worden op uw telefoon.",
+      "callTheNumberInstructions2a": "Bel dit nummer vanaf uw telefoonnummer",
+      "callTheNumberInstructions2b": "en ontvang de melding per e-mail",
+      "callTheNumberInstructions3": "Klik op 'Ik heb gebeld' en begin met het instellen van uw assistent.",
+      "afterNumberVerificationTitle1": "Goed gedaan!",
+      "afterNumberVerificationTitle2": "Nu kunt u beginnen met het configureren van uw assistent.",
+      "seemsYouDidntCall": "Het lijkt erop dat u nog niet heeft gebeld voor nummerverificatie.",
+      "issuesContactCustomerService": "Er is een fout opgetreden, neem contact op met de klantenservice via customer.service@mrcall.it"
+    },
+    "businesscreatesimple": {
+      "nicknameTitlePrivate": "Uw naam",
+      "nicknameTitleBusiness": "Uw bedrijfsnaam",
+      "businessPhoneNumberTitle": "Telefoonnummer waarop we u kunnen bereiken",
+      "selectAssistantLanguage": "Selecteer de taal waarin uw assistent zal spreken",
+      "whichCustomerAreYou": "Welke MrCall bent u?",
+      "templateHighLevelDescriptionPrivate": "Particulier gebruikersprofiel. Opmerking: de assistent wordt aangemaakt op onze computers. Er wordt niets geïnstalleerd op uw telefoon",
+      "templateHighLevelDescriptionBusiness": "Zakelijk gebruikersprofiel, zonder VoIP-telefooncentrale. Opmerking: de assistent wordt aangemaakt op onze computers. Er wordt niets geïnstalleerd op uw telefoon",
+      "templateHighLevelDescriptionBusinessPlus": "Zakelijk gebruikersprofiel met VoIP-telefooncentrale. Opmerking: de assistent wordt aangemaakt op onze computers. Er wordt niets geïnstalleerd op uw telefoon",
+      "searchYourBusinessTitle": "Verbind uw assistent met Google Bedrijf",
+      "searchYourBusinessSubtitle": "Zoek uw bedrijf, ga verder met de volgende velden",
+      "searchYourBusinessNoResultFound": "Geen resultaat gevonden, u kunt uw assistent nog steeds configureren",
+      "searchYourBusinessPlaceholder": "Voer de naam en het adres van uw bedrijf in",
+      "searchYourBusinessButtonLabel": "Zoeken",
+      "selectGoogleBusinessItemButtonLabel": "Deze gegevens gebruiken",
+      "searchBusinessResultLabelName": "Naam",
+      "searchBusinessResultLabelAddress": "Adres",
+      "phoneNumberCountrySelectorPlaceholder": "Landcode",
+      "phoneNumberCountrySelectorError": "Fout",
+      "phoneNumberPhoneInputPlaceholder": "Telefoonnummer",
+      "phoneNumberPhoneInputExample": "Voorbeeld: ",
+      "searchBusinessResultLabelBusinessPhoneNumber": "Telefoon",
+      "businessPhoneNumberIsNotValid": "Controleer of u uw telefoonnummer correct heeft ingevoerd",
+      "nicknameIsNotValid": "Controleer of u uw bijnaam correct heeft ingevoerd",
+      "createAssistantButton": "De assistent aanmaken"
+    },
+    "businesses": {
+      "addFieldMatch": "Zoeken",
+      "createNewBusiness": "Een assistent aanmaken",
+      "editAssistant": "Assistent Configureren",
+      "onboardinConfigureAndTest": "Een testoproep doen",
+      "onboardingActivateAssistant": "Nu activeren!",
+      "planSubscription": "Betaalmethoden & Abonnementen",
+      "startFreeTrial": "Start gratis proefperiode",
+      "activationBanner": {
+        "title": "Activeer je assistent",
+        "subtitle": "Verbind uw assistent met een telefoonnummer of uw VoIP PBX en laat deze uw telefoontjes beantwoorden.",
+        "cta": "Activeren"
+      },
+      "newAssistantCreated": "Geweldig! Uw nieuwe assistent is aangemaakt.",
+      "numberNotAssignedContactSupport": "Permanent nummer niet toegewezen, neem contact op met de ondersteuning",
+      "businessPhoneNumberVerified": "niet geverifieerd, bel uw assistent om het te verifiëren",
+      "plan": "Betalingen",
+      "invoicingButtonLabel": "Facturering",
+      "partnerProgramButtonLabel": "Stel ons voor aan een vriend",
+      "gotoCallForwardingInstructionsButtonLabel": "Doorschakeling instellen",
+      "conversationsViewButtonLabel": "Berichten tonen",
+      "form": {
+        "businessId": "Id van het bedrijf",
+        "nickname": "Bijnaam",
+        "email": "E-mail",
+        "plan": "Assistent",
+        "businessPhoneNumber": "Uw telefoonnummer",
+        "serviceNumber": "Uw assistentnummer",
+        "trial": "Resterende dagen van uw proefperiode",
+        "renewalDateTime": "Datum van de volgende verlenging",
+        "subscriptionStatus": "Abonnementsstatus",
+        "subscriptionStatusLabels": {
+          "ACTIVE": "Actief",
+          "CANCELED": "Geannuleerd",
+          "EXPIRED": "Verlopen",
+          "INCOMPLETE": "Onvolledig",
+          "INCOMPLETE_EXPIRED": "Onvolledig en verlopen",
+          "ONBOARDING": "Wacht op activering",
+          "PAST_DUE": "Betaling verlopen",
+          "SUSPENDED": "Opgeschort",
+          "FREE": "Gratis abonnement",
+          "TEST": "Wacht op activering",
+          "EXPIRING": "Verloopt binnenkort",
+          "EXTERNAL": "Beheerd door de klantenservice",
+          "TRIALING": "Proefperiode",
+          "UNPAID": "Niet betaald",
+          "UNKNOWN": "Onbekend"
+        },
+        "resourcesCallCredit": "Resterende minuten",
+        "resourcesCallCount": "Beschikbare oproepen",
+        "resourcesSmsCount": "Beschikbare sms'en"
+      },
+      "analyticsButtonLabel": "Analyse",
+      "platformAnalyticsButtonLabel": "Platformanalyse",
+      "contactsButtonLabel": "Contacten",
+      "moreActions": "Meer acties",
+      "health": {
+        "phoneVerified": "Telefoon geverifieerd",
+        "phoneNotVerified": "Telefoon niet geverifieerd",
+        "planActive": "Abonnement actief",
+        "noPlan": "Geen actief abonnement",
+        "hasMinutes": "Minuten beschikbaar",
+        "noMinutes": "Geen minuten meer"
+      },
+      "selectButtonTooltip": {
+        "enabled": "Toegang tot de personalisatie van de assistent",
+        "disabled": "Personalisatie van uw assistent is uitgeschakeld, verifieer uw telefoonnummer"
+      }
+    },
+    "contacts": {
+      "title": "Contacten",
+      "addContact": "Contact toevoegen",
+      "editContact": "Contact bewerken",
+      "deleteAll": "Alles verwijderen",
+      "save": "Opslaan",
+      "cancel": "Annuleren",
+      "actions": "Acties",
+      "search": "Zoeken",
+      "searchPlaceholder": "Zoeken op naam, telefoon of e-mail...",
+      "searchContact": "Contact zoeken",
+      "noContactFound": "Geen contact gevonden voor dit nummer",
+      "recentContacts": "Recent toegevoegde contacten",
+      "bulkUpload": "Bulkupload",
+      "bulkUploadDescription": "Plak hieronder een JSON-array met contacten. Waarschuwing: dit vervangt ALLE bestaande contacten.",
+      "bulkUploadSubmit": "Contacten uploaden",
+      "provider": "Bron",
+      "providerBusiness": "Jouw contacten",
+      "providerHb": "MrCall",
+      "importContact": "Contact importeren",
+      "downloadVcard": "Contactkaart downloaden",
+      "blockContact": "Contact blokkeren",
+      "unblockContact": "Contact deblokkeren",
+      "confirmDeleteTitle": "Verwijdering bevestigen",
+      "confirmDeleteMessage": "Weet u zeker dat u het contact {name} wilt verwijderen?",
+      "confirmDeleteAllMessage": "Weet u zeker dat u ALLE contacten wilt verwijderen? Deze actie kan niet ongedaan worden gemaakt.",
+      "form": {
+        "displayName": "Weergavenaam",
+        "firstName": "Voornaam",
+        "lastName": "Achternaam",
+        "nickname": "Bijnaam",
+        "phone": "Telefoon",
+        "phonePlaceholder": "+1234567890",
+        "email": "E-mail",
+        "emailPlaceholder": "email{'@'}example.com",
+        "company": "Bedrijf",
+        "notes": "Notities",
+        "type": "Type",
+        "addPhone": "Telefoon toevoegen",
+        "addEmail": "E-mail toevoegen"
+      },
+      "toast": {
+        "success": "Gelukt",
+        "error": "Fout",
+        "validationError": "Validatie",
+        "nameOrPhoneRequired": "Geef ten minste een naam of een telefoonnummer op",
+        "contactCreated": "Contact succesvol aangemaakt",
+        "contactUpdated": "Contact succesvol bijgewerkt",
+        "contactDeleted": "Contact succesvol verwijderd",
+        "allContactsDeleted": "Alle contacten succesvol verwijderd",
+        "saveFailed": "Het opslaan van het contact is mislukt",
+        "deleteFailed": "Het verwijderen van het contact is mislukt",
+        "searchFailed": "Het zoeken naar contacten is mislukt",
+        "invalidJson": "Ongeldig JSON-formaat",
+        "jsonMustBeArray": "JSON moet een array van contacten zijn",
+        "bulkUploadSuccess": "Contacten succesvol geüpload",
+        "bulkUploadFailed": "Het uploaden van contacten is mislukt",
+        "contactBlocked": "Contact geblokkeerd",
+        "contactUnblocked": "Contact gedeblokkeerd",
+        "blockFailed": "Het blokkeren/deblokkeren van het contact is mislukt",
+        "contactImported": "Contact succesvol geïmporteerd"
+      }
+    },
+    "business": {
+      "configuration": {
+        "businessNotFound": "Geen assistent gevonden",
+        "errorRetrievingDataMessage": "Er zijn fouten opgetreden bij het opslaan van de instellingen"
+      },
+      "saveButtonText": "Opslaan",
+      "settingsSuccessfullySaved": "Instellingen correct opgeslagen",
+      "errorSavingSettings": "Er zijn fouten opgetreden bij het opslaan van de instellingen",
+      "yourAssistantIsReadyPleaseTry": "Uw assistent is klaar, probeer het voordat u verdergaat",
+      "unableToSave": "Kan de instellingen niet opslaan",
+      "mandatoryParameterMissing": "Verplicht veld niet ingevuld: {param}",
+      "tabPanelYourProfile": "Uw profiel",
+      "tabPanelContacts": "Contacten",
+      "tabPanelCustomizeYourAssistant": "De assistent personaliseren",
+      "additionalParameters": {
+        "password": {
+          "legend": "Wachtwoord",
+          "tooltip": "Wachtwoord wijzigen"
+        }
+      },
+      "voiceGender": {
+        "MALE": "Mannelijk",
+        "FEMALE": "Vrouwelijk"
+      },
+      "onboardingDialog": {
+        "editParametersButtonText": "Ik wil iets wijzigen",
+        "continueToPaymentButtonText": "Ik vind het goed zo."
+      },
+      "configureWithAI": "Configureren met AI",
+      "aladminAI": "AladMin AI",
+      "configureViaChat": "Configureren via chat",
+      "talkToYourAssistant": "Praat met uw assistent",
+      "actionPanelIntro": "Configureer en test uw assistent",
+      "howToCard1Title": "Hoe antwoordt mijn assistent?",
+      "howToCard1Text": "MrCall stelt zich voor en herkent de beller aan het nummer. Wilt u dit wijzigen? Klik op 'Configureren met AI' en beschrijf wat u wilt.",
+      "howToCard2Title": "Hoe ga ik live?",
+      "howToCard2Text": "Activeer een abonnement, ontvang een nummer en schakel uw telefoon door naar MrCall. Met het Professional-abonnement kunt u het koppelen aan uw VoIP-centrale.",
+      "howToCard3Title": "Kan ik de stem wijzigen?",
+      "howToCard3Text": "Ja! Kies bij 'Steminstellingen' tussen een mannelijke en een vrouwelijke stem. MrCall spreekt de taal die u bij de configuratie heeft gekozen.",
+      "howToCard4Title": "Kan MrCall reserveringen aannemen?",
+      "howToCard4Text": "Zeker. Bij 'Reserveringen' stelt u de beschikbare tijdslots in en koppelt u uw agenda. MrCall regelt de afspraken voor u.",
+      "howToCard5Title": "Hoe ontvang ik meldingen?",
+      "howToCard5Text": "Elk gesprek levert een e-mailmelding met een samenvatting op. Bij 'Uw meldingen' kiest u wat u ontvangt en hoe.",
+      "howToCard6Title": "Kan ik vragen en antwoorden toevoegen?",
+      "howToCard6Text": "Bij 'Vragen en antwoorden' leert u MrCall hoe het moet antwoorden over openingstijden, prijzen en diensten. Hoe meer informatie u toevoegt, hoe nauwkeuriger het wordt.",
+      "howToCard7Title": "Wat gebeurt er op sluitingsdagen?",
+      "howToCard7Text": "Stel uw sluitingsdagen in en MrCall informeert bellers automatisch en geeft aan wanneer ze kunnen terugbellen.",
+      "howToCard8Title": "Kan ik een vaste tekst gebruiken?",
+      "howToCard8Text": "Als u MrCall AI uitschakelt, leest de assistent een vaste tekst voor die u zelf schrijft. Minder slim, maar u heeft volledige controle over elk woord.",
+      "activateMrCallCta": "MrCall activeren",
+      "needHelp": "Hulp nodig?",
+      "activationBannerTitle": "Activeer en ontvang een telefoonnummer",
+      "activationBannerSubtitle": "1 week gratis proberen!",
+      "activationBannerButton": "Nu activeren"
+    },
+    "changepassword": {
+      "changePasswordTitle": "Wachtwoord wijzigen",
+      "changePasswordSubtitle": "Voer het nieuwe wachtwoord in",
+      "operationSuccess": "Wachtwoord succesvol gewijzigd",
+      "operationSuccessExtended": "U kunt het nieuwe wachtwoord gebruiken om in te loggen. U kunt echter altijd een magische link via e-mail aanvragen om zonder wachtwoord in te loggen.",
+      "operationFailed": "Wachtwoord wijzigen",
+      "operationFailedExtended": "Er zijn problemen opgetreden bij het instellen van het nieuwe wachtwoord",
+      "submitButton": "Wijzigen",
+      "formText": {
+        "pickAPassword": "Wachtwoordsterkte",
+        "suggestions": "Tips",
+        "oneLowecase": "Ten minste één kleine letter",
+        "oneUppercase": "Ten minste één hoofdletter",
+        "oneNumeric": "Ten minste één alfanumeriek teken",
+        "oneSymbol": "Ten minste één symbool",
+        "atLeastNChars": "Ten minste 8 tekens"
+      }
+    },
+    "changeemail": {
+      "changeEmailTitle": "E-mail wijzigen",
+      "changeEmailSubtitle": "Voer het nieuwe e-mailadres in",
+      "operationSuccess": "Verzoek tot e-mailwijziging succesvol doorgestuurd",
+      "operationSuccessExtended": "We hebben u een link gestuurd om het nieuwe e-mailadres te verifiëren, klik op de link om het nieuwe adres te bevestigen.",
+      "operationFailed": "E-mail wijzigen",
+      "operationFailedExtended": "Er zijn problemen opgetreden bij het instellen van het nieuwe e-mailadres",
+      "submitButton": "Wijzigen"
+    },
+    "conversations": {
+      "downloadDataButtonLabel": "Downloaden",
+      "noMessages": "Nog geen berichten",
+      "noMessagesDescription": "Wanneer u oproepen ontvangt, verschijnt uw gespreksgeschiedenis hier.",
+      "filterTitle": "Filters & Exporteren",
+      "dateRangeLabel": "Datumbereik",
+      "dateRangePlaceholder": "Selecteer datumbereik",
+      "pageFilterLabel": "Deze pagina filteren",
+      "pageFilterPlaceholder": "Typ om resultaten op deze pagina te filteren...",
+      "exportLabel": "Gegevens exporteren",
+      "viewModeLabel": "Berichtweergave",
+      "expandedView": "Volledige berichten",
+      "collapsedView": "Compacte weergave",
+      "hideReadLabel": "Gelezen berichten",
+      "hideReadOn": "Verborgen",
+      "hideReadOff": "Zichtbaar",
+      "showMore": "Meer tonen",
+      "showLess": "Minder tonen",
+      "duration": "{minutes}m {seconds}s",
+      "unknownContact": "Onbekende beller",
+      "justNow": "Zojuist",
+      "minutesAgo": "{count} min geleden",
+      "hoursAgo": "{count} uur geleden",
+      "daysAgo": "{count} dagen geleden",
+      "loading": "Gesprekken laden...",
+      "table": {
+        "body": "Bericht",
+        "audioFile": "Audio",
+        "audioNotSupported": "Uw browser ondersteunt geen audio-elementen",
+        "contactName": "Contact",
+        "contactNumber": "Nummer van de beller"
+      },
+      "audio": {
+        "play": "Audio afspelen",
+        "pause": "Audio pauzeren"
+      },
+      "views": {
+        "inbox": "Postvak IN",
+        "archive": "Archief",
+        "trash": "Prullenbak"
+      },
+      "actions": {
+        "archive": "Archiveren",
+        "unarchive": "Naar Postvak IN verplaatsen",
+        "delete": "Verwijderen",
+        "restore": "Herstellen",
+        "markAsRead": "Markeren als gelezen",
+        "markAsUnread": "Markeren als ongelezen",
+        "archiveAll": "Alles archiveren",
+        "deleteAll": "Alles verwijderen",
+        "restoreAll": "Alles herstellen",
+        "moveAllToInbox": "Alles naar Postvak IN verplaatsen"
+      },
+      "toast": {
+        "conversationArchived": "Gesprek gearchiveerd",
+        "conversationDeleted": "Gesprek verwijderd",
+        "conversationRestored": "Gesprek hersteld",
+        "conversationUnarchived": "Gesprek verplaatst naar postvak in",
+        "undo": "Ongedaan maken",
+        "actionFailed": "Actie mislukt, probeer het opnieuw",
+        "bulkArchived": "Gesprekken gearchiveerd",
+        "bulkDeleted": "Gesprekken verwijderd",
+        "bulkRestored": "Gesprekken hersteld",
+        "bulkUnarchived": "Gesprekken verplaatst naar postvak in"
+      },
+      "confirmBulk": {
+        "title": "Bulkactie bevestigen",
+        "archiveMessage": "Weet u zeker dat u alle gesprekken wilt archiveren die overeenkomen met de huidige filters?",
+        "deleteMessage": "Weet u zeker dat u alle gesprekken wilt verwijderen die overeenkomen met de huidige filters?",
+        "restoreMessage": "Weet u zeker dat u alle gesprekken wilt herstellen die overeenkomen met de huidige filters?",
+        "unarchiveMessage": "Weet u zeker dat u alle gesprekken naar het postvak in wilt verplaatsen die overeenkomen met de huidige filters?"
+      },
+      "bulkActionsLabel": "Bulkacties",
+      "emptyStates": {
+        "inboxEmpty": "Alles bijgewerkt!",
+        "inboxEmptyDescription": "Geen nieuwe gesprekken in uw postvak in.",
+        "archiveEmpty": "Archief is leeg",
+        "archiveEmptyDescription": "Gearchiveerde gesprekken verschijnen hier.",
+        "trashEmpty": "Prullenbak is leeg",
+        "trashEmptyDescription": "Verwijderde gesprekken verschijnen hier."
+      },
+      "unreadCount": "{count} ongelezen"
+    },
+    "deleteaccount": {
+      "deleteAccountTitle": "Uw account verwijderen",
+      "submitButtonLabel": "Verwijderen",
+      "confirmationRequest": "Waarschuwing: uw actieve abonnement wordt geannuleerd, uw account en uw gegevens worden gemarkeerd voor verwijdering en automatisch geannuleerd. Na de annulering zijn uw gegevens niet meer toegankelijk of herstelbaar. Vergeet niet dat het noodzakelijk is om de doorschakeling van uw apparaten te verwijderen. Weet u zeker dat u door wilt gaan?",
+      "operationCompleted": "De annulering van uw abonnement en assistenten is voltooid",
+      "removeCompletedHeader": "Annulering",
+      "logoutAfterCancellationLabel": "Uitloggen",
+      "confirmCancellation": "Annulering bevestigen",
+      "toastCancelSubscriptionSummary": "Annulering van het account en gerelateerde gegevens",
+      "toastCancellingOperationSummary": "De bewerking annuleren",
+      "toastErrorSummary": "Meld het probleem aan de klantenservice, wij zullen controleren of de annulering succesvol is uitgevoerd",
+      "toastNotifyFortcomingCancelOperation": "Uw account wordt geannuleerd zoals gevraagd",
+      "toastNotifyCanceledCancelAccountOperation": "Verwijdering van het account is geannuleerd"
+    },
+    "deletecontacts": {
+      "deleteContactsTitle": "Uw contacten verwijderen uit MrCall",
+      "submitButtonLabel": "Verwijderen",
+      "confirmationRequest": "Uw contacten, zowel die van u als die verkregen door MrCall, worden verwijderd. Na de verwijdering worden de contacten niet meer bij naam aangesproken door MrCall, zoals bij hun eerste oproep. Bevestigt u?",
+      "operationCompleted": "Uw contacten zijn verwijderd.",
+      "removeCompletedHeader": "Contacten verwijderen",
+      "logoutAfterCancellationLabel": "Ok",
+      "confirmCancellation": "Verwijdering bevestigen",
+      "toastCancelContactsSummary": "Contacten verwijderen",
+      "toastCancellingOperationSummary": "De bewerking annuleren",
+      "toastErrorSummary": "Meld het probleem aan de klantenservice, wij zullen controleren of de verwijdering van de contacten wordt voltooid",
+      "toastNotifyFortcomingCancelOperation": "Uw contacten worden verwijderd",
+      "toastNotifyCanceledCancelContactsOperation": "Verwijdering van contacten geannuleerd"
+    },
+    "products": {
+      "buyButtonLabel": "Kopen",
+      "cancelButtonLabel": "Annuleren",
+      "confirmCancellation": "Annulering bevestigen",
+      "confirmationCancellationRequest": "U staat op het punt het abonnement te annuleren, en de bijbehorende functies worden gedeactiveerd. Weet u het zeker?",
+      "disableTopupButtonLabel": "Opwaardering uitschakelen",
+      "enableTopupButtonLabel": "Opwaardering inschakelen",
+      "manageSubscriptionLabel": "Betalingsgegevens",
+      "reactivateButtonLabel": "Heractiveren",
+      "toastCancelSubscriptionSummary": "Annulering",
+      "toastCancellingOperationSummary": "Annulering in uitvoering",
+      "toastPaymentSubscriptionSummary": "Betalingsverzoek wordt verwerkt",
+      "toastErrorSummary": "Er is een probleem opgetreden, neem contact op met de ondersteuning",
+      "toastNotifyFortcomingCancelOperation": "We annuleren uw abonnement zoals gevraagd",
+      "toastNotifyCanceledCancelSubscriptionOperation": "Annulering van het abonnement geannuleerd",
+      "toastReactivateSubscriptionSummary": "Heractivering van het abonnement",
+      "confirmCompletedReactivationSubscriptionSummary": "Heractivering van het abonnement voltooid",
+      "confirmCompletedCancelationSubscriptionSummary": "Annulering van het abonnement voltooid",
+      "toastNotifyFortcomingReactivateOperation": "We heractiveren uw abonnement zoals gevraagd",
+      "errorCreatingPaymentData": "Er is een fout opgetreden bij het verwerken van uw betalingsgegevens, neem contact op met de ondersteuning"
+    },
+    "subscription": {
+      "buyButtonLabel": "Kopen",
+      "cancelButtonLabel": "Annuleren",
+      "reactivateButtonLabel": "Heractiveren",
+      "manageSubscriptionLabel": "Betalingsgegevens",
+      "confirmationCancellationRequest": "Waarschuwing: deze bewerking annuleert uw abonnement. U kunt MrCall blijven gebruiken voor de resterende dagen van uw abonnement, daarna wordt uw assistent gedeactiveerd. Weet u het zeker?",
+      "managedThroughAppleInApp": "Abonnement beheerd via Apple-betaling, ga naar abonnementen op uw iOS-apparaat",
+      "confirmCancellation": "Annulering bevestigen",
+      "toastPaymentSubscriptionSummary": "Betalingsverzoek wordt verwerkt",
+      "toastCancelSubscriptionSummary": "Annulering",
+      "toastCancellingOperationSummary": "Annulering",
+      "toastErrorSummary": "Er zijn problemen opgetreden, neem contact op met de ondersteuning",
+      "toastNotifyFortcomingCancelOperation": "We annuleren uw abonnement zoals gevraagd",
+      "toastNotifyCanceledCancelSubscriptionOperation": "Annulering van het abonnement is geannuleerd",
+      "toastReactivateSubscriptionSummary": "Abonnement heractiveren",
+      "confirmCompletedReactivationSubscriptionSummary": "Heractivering van het abonnement voltooid",
+      "confirmCompletedCancelationSubscriptionSummary": "Annulering van het abonnement voltooid",
+      "toastNotifyFortcomingReactivateOperation": "We heractiveren uw abonnement zoals gevraagd",
+      "errorCreatingPaymentData": "Er is een fout opgetreden bij het verwerken van uw betalingsgegevens, neem contact op met de ondersteuning"
+    },
+    "templates": {
+      "onboarding": {
+        "doYouNeedAssistance": "Heeft u hulp nodig?",
+        "supportsection": {
+          "doYouNeedAssistance": "Heeft u hulp nodig?",
+          "callUs": "Bel ons op",
+          "callUsNumber": "+12027419420 or +442080595420",
+          "writeUs": "of schrijf naar {param}",
+          "bookAnAppointment": "Of maak een afspraak met onze experts.",
+          "bookAppointmentButtonLabel": "Afspraak maken"
+        }
+      },
+      "sign": {
+        "magicklink": {
+          "emailInputboxTitle": "E-mail",
+          "emailInputboxPlaceholder": "Voer uw e-mailadres in",
+          "successSent": "Magische link verzonden",
+          "failedSent": "Magische link niet verzonden",
+          "magicLinkSentMessage": "Uw magische link is verzonden naar uw e-mail inbox",
+          "checkYourMagicLinkMessage": "Klik op de link die u in de door ons verzonden e-mail vindt om toegang te krijgen",
+          "magicLinkErrorMessage": "Er is een fout opgetreden bij het verzenden van de magische link naar uw e-mail inbox",
+          "submitButton": "Magische link verzenden",
+          "attention": "Let op",
+          "checkSpamFolder": "Als u de e-mail niet ontvangt, controleer dan of het adres correct is en of de e-mail niet in de spam is terechtgekomen"
+        },
+        "signin": {
+          "emailInputboxTitle": "E-mail",
+          "emailInputboxPlaceholder": "Voer uw e-mailadres in",
+          "passwordInputboxTitle": "Wachtwoord",
+          "passwordInputboxPlaceholder": "Voer uw wachtwoord in",
+          "loginFailedGenericTitle": "Inlogfout",
+          "loginFailedWrongPasswordTitle": "Onjuist wachtwoord",
+          "loginFailedWrongPasswordMessageFirstPart": "Het ingevoerde wachtwoord voor de gebruiker",
+          "loginFailedWrongPasswordMessageSecondPart": "is niet geldig.",
+          "loginFailedUserNotFoundTitle": "Gebruiker niet gevonden",
+          "loginFailedUserNotFoundMessageFirstPart": "De gebruiker",
+          "loginFailedUserNotFoundMessageSecondPart": "is niet geregistreerd.",
+          "loginFailedNetworkErrorTitle": "Netwerk- of verbindingsfout",
+          "loginFailedNetworkErrorMessageFirstPart": "Kan niet inloggen met de gebruiker",
+          "loginFailedNetworkErrorMessageSecondPart": "Controleer of het apparaat verbonden is met het internet",
+          "signupButtonLabel": "Registreren",
+          "signupLinkCompanionText": "Heeft u nog geen account?",
+          "loginFailedWithEmail": "Kan niet inloggen met het opgegeven e-mailadres",
+          "loginButtonLabel": "Inloggen",
+          "dismissButtonLabel": "Annuleren",
+          "didYouForgetPassword": "Bent u uw wachtwoord vergeten?",
+          "emailNotVerifiedTitle": "U heeft uw e-mail niet geverifieerd",
+          "emailNotVerifiedFirstPart": "Klik op de link in de e-mail die we naar het adres hebben gestuurd",
+          "emailNotVerifiedSecondPart": "Heeft u de e-mail met de link niet ontvangen? Controleer uw spammap of klik op de knop hieronder om een nieuwe verificatie-e-mail te sturen.",
+          "emailNotVerifiedReSendEmail": "E-mail verzenden",
+          "sessionExpiredTitle": "Sessie verlopen",
+          "sessionExpiredMessage": "Uw sessie is verlopen. Log opnieuw in."
+        },
+        "signup": {
+          "emailInputboxTitle": "E-mailadres",
+          "emailInputboxPlaceholder": "Voer uw e-mailadres in",
+          "passwordInputboxTitle": "Wachtwoord",
+          "passwordInputboxPlaceholder": "Kies uw wachtwoord",
+          "registrationSuccess": "Controleer uw e-mail!",
+          "accountRegistered": "Uw account is aangemaakt en gekoppeld aan het e-mailadres",
+          "activationInstructions": "Controleer uw e-mail inbox voor activatie-instructies",
+          "registrationFailedGenericTitle": "Accountregistratie mislukt.",
+          "registrationFailedMessage": "Er zijn fouten opgetreden bij het aanmaken van uw account met het e-mailadres",
+          "submitButton": "Registreren",
+          "signinLinkCompanionText": "Heeft u al een account?",
+          "signinLinkLabel": "Inloggen",
+          "signupWithGoogleButtonLabel": "Inloggen met Google",
+          "formText": {
+            "qualityPasswordSubtitle": "Kwaliteit van uw wachtwoord",
+            "passwordPromptLabel": "Geen wachtwoord ingevoerd",
+            "passwordWeakLabel": "Zwak wachtwoord, gemakkelijk te raden",
+            "passwordMediumLabel": "Wachtwoord met gemiddelde beveiliging",
+            "passwordStrongLabel": "Sterk wachtwoord",
+            "suggestions": "Suggesties",
+            "oneLowecase": "Ten minste één kleine letter",
+            "oneUppercase": "Ten minste één hoofdletter",
+            "oneNumeric": "Ten minste één numeriek teken",
+            "oneSymbol": "Ten minste één symbool",
+            "atLeastNChars": "Ten minste 8 tekens"
+          },
+          "temsAndPrivacyPolicyStatement": {
+            "firstStatement": "Door op de knop Registreren te klikken, accepteert u de",
+            "terms": {
+              "text": "Algemene Voorwaarden",
+              "link": "https://www.mrcall.ai/en/terms-of-use/",
+              "path": "/termsandconditions"
+            },
+            "connective": "en het",
+            "privacy": {
+              "text": "Privacybeleid",
+              "link": "https://www.mrcall.ai/en/privacy/",
+              "path": "/privacypolicy"
+            }
+          },
+          "errorUserAlreadyExistsTitle": "Account bestaat al",
+          "errorUserAlreadyExistsMessageFirstPart": "De gebruiker met e-mailadres",
+          "errorUserAlreadyExistsMessageSecondPart": "bestaat al. Klik op Inloggen om in te loggen",
+          "errorNetworkTitle": "Netwerk- of verbindingsfout",
+          "errorNetworkMessageFirstPart": "Registratie mislukt met gebruiker",
+          "errorNetworkMessageSecondPart": "Controleer of het apparaat verbonden is met het internet",
+          "errorUserAlreadyExistsAccessLink": "Inloggen",
+          "errorDismissButton": "Annuleren"
+        }
+      }
+    },
+    "whatsappweb": {
+      "tabWhatsappWeb": "WhatsApp Web",
+      "establishingConnectionTitle": "Verbinding",
+      "establishingConnectionSubtitle": "We zijn de verbinding met de WhatsApp-service aan het opzetten",
+      "logoutTitle": "Uw account ontkoppelen",
+      "logoutSubtitle": "Na ontkoppeling kan de service geen berichten meer versturen. U kunt later opnieuw verbinding maken.",
+      "testTitle": "Testbericht versturen",
+      "testSubtitle": "Stuur een bericht naar uw WhatsApp. Als alles goed is gegaan, ontvangt u een bericht met de huidige tijd. U kunt het account ontkoppelen via de WhatsApp-instellingen op uw apparaat.",
+      "accountNotConnectedTitle": "Verbind uw WhatsApp-account met MrCall",
+      "accountNotConnectedSubtitle": "Scan de QR-code met uw WhatsApp-app om de verbinding te autoriseren"
+    },
+    "whatsappCloud": {
+      "tabTitle": "WhatsApp Cloud API",
+      "connectTitle": "Connect WhatsApp Cloud API",
+      "connectSubtitle": "Connect your business to WhatsApp Cloud API for official messaging through Meta",
+      "connectButton": "Connect Official WhatsApp",
+      "statusTitle": "Connection Status",
+      "connected": "Connected",
+      "phoneNumber": "Phone Number",
+      "displayName": "Display Name",
+      "qualityRating": "Quality Rating",
+      "revoke": "Disconnect",
+      "revokeConfirmTitle": "Confirm Disconnection",
+      "revokeConfirmMessage": "Are you sure you want to disconnect WhatsApp Cloud API? You will no longer be able to send or receive messages through the official API.",
+      "sendMessageTitle": "Send Message",
+      "recipientPhone": "Recipient Phone Number",
+      "messageType": "Message Type",
+      "messageText": "Message Text",
+      "templateName": "Template Name",
+      "sendButton": "Send",
+      "chatHistoryTitle": "Chat History",
+      "filterByContact": "Filter by contact...",
+      "direction": "Direction",
+      "contact": "Contact",
+      "type": "Type",
+      "message": "Message",
+      "timestamp": "Timestamp",
+      "toast": {
+        "success": "Operation completed successfully",
+        "error": "An error occurred",
+        "signupSuccess": "WhatsApp Cloud API connected successfully",
+        "signupFailed": "Failed to connect WhatsApp Cloud API",
+        "messageSent": "Message sent successfully",
+        "sendFailed": "Failed to send message",
+        "revokeSuccess": "WhatsApp Cloud API disconnected successfully",
+        "revokeFailed": "Failed to disconnect WhatsApp Cloud API"
+      }
+    },
+    "connectCalendar": {
+      "title": "Google Agenda verbinden",
+      "description": "Verbind Google Agenda om automatisch afspraken te beheren. MrCall leest uw bezette tijden en maakt afspraken aan. Uw gegevens blijven in uw agenda.",
+      "connectButton": "Agenda verbinden",
+      "disconnectButton": "Agenda ontkoppelen",
+      "selectCalendarTitle": "Selecteer een agenda",
+      "confirmButton": "Bevestigen",
+      "connectedTo": "Verbonden met:",
+      "changeCalendar": "Agenda wijzigen",
+      "loadingCalendars": "Agenda's laden...",
+      "noCalendarsFound": "Geen beschrijfbare agenda's gevonden"
+    },
+    "analytics": {
+      "title": "Analyse",
+      "overview": "Overzicht",
+      "dateRangePlaceholder": "Selecteer datumbereik",
+      "presets": {
+        "7d": "7 dagen",
+        "30d": "30 dagen",
+        "90d": "90 dagen"
+      },
+      "kpi": {
+        "totalCalls": "Totaal oproepen",
+        "avgDuration": "Gem. duur",
+        "totalDuration": "Totale duur",
+        "uniqueCallers": "Unieke bellers"
+      },
+      "timeseries": {
+        "title": "Oproepvolume in de tijd",
+        "totalCalls": "Totaal oproepen"
+      },
+      "duration": {
+        "title": "Verdeling oproepduur",
+        "callCount": "Aantal oproepen"
+      },
+      "heatmap": {
+        "title": "Activiteits-heatmap per uur",
+        "calls": "oproepen",
+        "days": {
+          "mon": "Ma",
+          "tue": "Di",
+          "wed": "Wo",
+          "thu": "Do",
+          "fri": "Vr",
+          "sat": "Za",
+          "sun": "Zo"
+        }
+      },
+      "callers": {
+        "title": "Bellersanalyse",
+        "number": "Nummer",
+        "callCount": "Oproepen",
+        "totalDuration": "Totale duur",
+        "lastCall": "Laatste oproep"
+      },
+      "emptyState": {
+        "title": "Geen gegevens beschikbaar",
+        "description": "Er zijn geen analysegegevens voor de geselecteerde periode."
+      },
+      "errors": {
+        "title": "Fout",
+        "fetchFailed": "Het laden van {section}-gegevens is mislukt."
+      },
+      "adminMode": {
+        "title": "Platformanalyse (alle bedrijven)"
+      },
+      "breakdown": {
+        "title": "Uitsplitsing per Bedrijf",
+        "businessId": "Bedrijfs-ID",
+        "totalCalls": "Totaal Oproepen",
+        "avgDuration": "Gem. Duur",
+        "totalDuration": "Totale Duur",
+        "uniqueCallers": "Unieke Bellers",
+        "callPercentage": "Oproep-%",
+        "totalBusinesses": "Actieve Bedrijven"
+      }
+    },
+    "reseller": {
+      "ownerSelector": {
+        "placeholder": "Account selecteren",
+        "allAccounts": "Alle beheerde accounts",
+        "myAccount": "Mijn account"
+      },
+      "dashboard": {
+        "title": "Reseller-dashboard",
+        "profile": "Profiel",
+        "displayName": "Weergavenaam",
+        "email": "E-mail",
+        "feeRate": "Tariefpercentage",
+        "stats": "Overzicht (Laatste 30 dagen)",
+        "totalCalls": "Totaal oproepen",
+        "managedAccounts": "Beheerde accounts",
+        "avgDuration": "Gem. duur",
+        "uniqueCallers": "Unieke bellers",
+        "managedOwnersList": "Beheerde eigenaren",
+        "ownerName": "Naam",
+        "ownerEmail": "E-mail",
+        "ownerUid": "UID",
+        "source": "Bron",
+        "invitationCode": "Uitnodigingscode",
+        "quickActions": "Snelle acties",
+        "manageCodes": "Codes beheren",
+        "viewBusinesses": "Bedrijven bekijken",
+        "viewAnalytics": "Analyses bekijken",
+        "viewProfile": "Profiel bekijken",
+        "error": "Fout"
+      },
+      "codes": {
+        "title": "Uitnodigingscodes",
+        "generateTitle": "Nieuwe code genereren",
+        "label": "Label",
+        "labelPlaceholder": "bijv. Campagne Voorjaar 2026",
+        "maxUses": "Maximaal gebruik",
+        "maxUsesPlaceholder": "Onbeperkt",
+        "expiresAt": "Verloopt op",
+        "generate": "Genereren",
+        "listTitle": "Uw codes",
+        "code": "Code",
+        "labelHeader": "Label",
+        "uses": "Gebruik",
+        "status": "Status",
+        "created": "Aangemaakt",
+        "actions": "Acties",
+        "copyLink": "Link kopiëren",
+        "deactivate": "Deactiveren",
+        "deactivateConfirm": "Weet u zeker dat u deze code wilt deactiveren?",
+        "deactivateHeader": "Code deactiveren",
+        "statusActive": "Actief",
+        "statusFull": "Vol",
+        "statusExpired": "Verlopen",
+        "statusInactive": "Inactief",
+        "success": "Gelukt",
+        "error": "Fout",
+        "generated": "Uitnodigingscode succesvol gegenereerd",
+        "deactivated": "Code succesvol gedeactiveerd",
+        "linkCopied": "Uitnodigingslink gekopieerd naar klembord",
+        "fetchError": "Uitnodigingscodes konden niet worden geladen",
+        "generateError": "Uitnodigingscode kon niet worden gegenereerd",
+        "deactivateError": "Code kon niet worden gedeactiveerd"
+      },
+      "profile": {
+        "title": "Resellerprofiel",
+        "displayName": "Weergavenaam",
+        "email": "E-mail",
+        "feeRate": "Tariefpercentage",
+        "canGenerateCodes": "Kan codes genereren",
+        "canAcceptExistingOwners": "Bestaande eigenaren accepteren",
+        "stripeConnect": "Stripe Connect",
+        "createdAt": "Aangemaakt",
+        "updatedAt": "Laatst bijgewerkt",
+        "noProfile": "Geen resellerprofiel gevonden"
+      },
+      "managedBy": {
+        "label": "Beheerd door {name} — {email}"
+      }
+    },
+    "admin": {
+      "templates": {
+        "title": "Agent-templates",
+        "createTemplate": "Nieuwe template",
+        "editTemplate": "Template bewerken",
+        "deleteConfirm": "Weet u zeker dat u template '{name}' wilt verwijderen?",
+        "name": "Naam",
+        "description": "Beschrijving",
+        "provider": "Provider",
+        "model": "Model",
+        "temperature": "Temperatuur",
+        "maxTokens": "Max. tokens",
+        "systemPrompt": "System prompt",
+        "tools": "Tools",
+        "enableMemory": "Gespreksgeheugen",
+        "maxHistory": "Max. berichten in geschiedenis",
+        "maxToolIterations": "Max. tool-iteraties",
+        "timeout": "Time-out aanvraag (s)",
+        "version": "Versie",
+        "enabled": "Actief",
+        "save": "Opslaan",
+        "saved": "Template opgeslagen",
+        "created": "Template aangemaakt",
+        "deleted": "Template verwijderd",
+        "test": "Testen",
+        "back": "Terug",
+        "versionHistory": "Versiegeschiedenis",
+        "rollback": "Herstellen",
+        "rollbackConfirm": "Versie {version} terugzetten?",
+        "rolledBack": "Teruggezet naar versie {version}",
+        "aiChat": "AI-prompteditor",
+        "aiChatPlaceholder": "Vraag de AI om de prompt te verbeteren...",
+        "applyToPrompt": "Toepassen op prompt",
+        "unsavedChanges": "U heeft niet-opgeslagen wijzigingen. Verwerpen?",
+        "testChat": "Testchat",
+        "testPlaceholder": "Typ een testbericht...",
+        "enableToolCallValidation": "Validatie van tool calls",
+        "enableInputSanitization": "Invoer opschonen",
+        "scope": "Bereik",
+        "scopeGlobal": "Globaal",
+        "scopeBusiness": "Bedrijf"
+      },
+      "reseller": {
+        "listTitle": "Resellerbeheer",
+        "newReseller": "Nieuwe reseller",
+        "displayName": "Weergavenaam",
+        "email": "E-mail",
+        "feeRate": "Tariefpercentage",
+        "ownerCount": "Eigenaren",
+        "actions": "Acties",
+        "error": "Fout",
+        "success": "Gelukt",
+        "fetchError": "Resellergegevens konden niet worden geladen",
+        "backToList": "Terug naar lijst",
+        "profileTitle": "Resellerprofiel",
+        "editProfile": "Profiel bewerken",
+        "resellerId": "Reseller-ID",
+        "canGenerateCodes": "Kan codes genereren",
+        "canAcceptExistingOwners": "Bestaande eigenaren accepteren",
+        "stripeConnectAccountId": "Stripe Connect account-ID",
+        "stripeConnectPlaceholder": "acct_...",
+        "stripeConnect": "Stripe Connect",
+        "feeRates": "Commissietarieven",
+        "targetType": "Doeltype",
+        "targetName": "Doelnaam",
+        "addFeeRate": "Tarief toevoegen",
+        "feeRateAdded": "Commissietarief toegevoegd",
+        "feeRateRemoved": "Commissietarief verwijderd",
+        "feeRateError": "Tarief kon niet worden beheerd",
+        "removeFeeRateConfirm": "Weet u zeker dat u dit tarief wilt verwijderen?",
+        "removeFeeRateHeader": "Tarief verwijderen",
+        "ownerEmail": "E-mail",
+        "source": "Bron",
+        "invitationCode": "Uitnodigingscode",
+        "managedOwners": "Beheerde eigenaren",
+        "ownerUidPlaceholder": "Eigenaar-UID of e-mail invoeren",
+        "addMapping": "Toewijzing toevoegen",
+        "ownerId": "Eigenaar-ID",
+        "removeMappingConfirm": "Weet u zeker dat u deze eigenaarstoewijzing wilt verwijderen?",
+        "removeMappingHeader": "Toewijzing verwijderen",
+        "dangerZone": "Gevarenzone",
+        "revokeDescription": "Het intrekken van een reseller verwijdert alle eigenaarstoewijzingen, annuleert onbeschermde bedrijven, verwijdert het profiel en reset de gebruikersrol. Dit kan niet ongedaan worden gemaakt.",
+        "revokeReseller": "Reseller intrekken",
+        "revokeConfirmTextUnprotected": "Dit zal alle bedrijven van beheerde eigenaren annuleren. Typ ter bevestiging de resellernaam: {name}",
+        "revokeConfirmTextProtected": "Bedrijven van beheerde eigenaren blijven actief (beschermde modus). Typ ter bevestiging de resellernaam: {name}",
+        "typeNameToConfirm": "Typ naam ter bevestiging",
+        "cancel": "Annuleren",
+        "save": "Opslaan",
+        "profileUpdated": "Resellerprofiel bijgewerkt",
+        "saveError": "Profiel kon niet worden opgeslagen",
+        "mappingAdded": "Eigenaarstoewijzing toegevoegd",
+        "mappingRemoved": "Eigenaarstoewijzing verwijderd",
+        "mappingError": "Toewijzing kon niet worden beheerd",
+        "revoked": "Reseller succesvol ingetrokken",
+        "revokeError": "Reseller kon niet worden ingetrokken",
+        "provisionTitle": "Nieuwe reseller inrichten",
+        "step1Title": "Stap 1: Gebruiker opzoeken",
+        "uidPlaceholder": "Firebase-UID invoeren",
+        "emailPlaceholder": "E-mailadres invoeren",
+        "lookupUser": "Opzoeken",
+        "currentRole": "Huidige rol",
+        "setRoleReseller": "Rol instellen op reseller",
+        "alreadyReseller": "Gebruiker is al een reseller",
+        "step2Title": "Stap 2: Resellerprofiel aanmaken",
+        "createProfile": "Profiel aanmaken",
+        "lookupError": "Gebruiker kon niet worden opgezocht",
+        "roleSet": "Rol ingesteld op reseller",
+        "roleError": "Rol kon niet worden ingesteld",
+        "profileCreated": "Resellerprofiel aangemaakt",
+        "createError": "Profiel kon niet worden aangemaakt",
+        "userRoleTitle": "Gebruikersrolbeheer",
+        "search": "Zoeken",
+        "newRole": "Nieuwe rol",
+        "selectRole": "Rol selecteren",
+        "roleUpdated": "Gebruikersrol bijgewerkt",
+        "userNotFoundByEmail": "Geen Firebase-gebruiker gevonden met dit e-mailadres",
+        "roleChangeConfirm": "Rol van {uid} wijzigen naar {role}?",
+        "roleChangeHeader": "Rolwijziging bevestigen",
+        "protected": "Beschermd",
+        "protectedHint": "Wanneer ingeschakeld, overleven bedrijven van beheerde eigenaren de verwijdering van de reseller",
+        "transferOwner": "Eigenaar overdragen",
+        "transferToReseller": "Doel-reseller-ID",
+        "transferToResellerPlaceholder": "Voer doel-reseller-UID in",
+        "ownerTransferred": "Eigenaar succesvol overgedragen",
+        "transferError": "Eigenaar kon niet worden overgedragen",
+        "revokedDetail": "Reseller verwijderd: {owners} eigenaren getroffen, {businesses} bedrijven geannuleerd"
+      }
+    }
+  },
+  "views": {
+    "onboarding": {
+      "choosedevice": {
+        "titleText": "Wat gaat u instellen?",
+        "moveForward": "Volgende",
+        "moveBackward": "Terug",
+        "subtitleText": "Kies het apparaat om te configureren",
+        "mobilePhone": "Een mobiele telefoon",
+        "landLine": "Een vaste telefoon",
+        "switchBoard": "Een telefooncentrale",
+        "headingMessageTitle": "Bedankt!",
+        "headingMessageSubtitle": "Uw gratis proefperiode van 7 dagen is gestart!"
+      },
+      "language": {
+        "titleText": "Welkom!",
+        "moveForward": "Volgende",
+        "subtitleText": "Kies een taal voor uw assistent",
+        "defaultLang": "Italiaans",
+        "pickALang": "In welke taal zal uw assistent antwoorden?",
+        "pickALangPlaceholder": "selecteer een taal",
+        "pickALangSubtitle": "Hoofdtaal: de assistent kan in verschillende talen antwoorden",
+        "pickCountryPlaceholder": "selecteer een land",
+        "numberCountry": "Nationaliteit van het telefoonnummer van uw assistent",
+        "numberCountrySubtitle": "Uw assistent zal antwoorden op een toegewijd nummer van de gekozen nationaliteit",
+        "mainLanguageHint": "U kunt dit later wijzigen en uw assistent kan ook meertalig zijn.",
+        "funFactTitle": "Wist u dat?",
+        "funFactText": "De eerste sprekende machine werd in 1791 gebouwd door de Oostenrijks-Hongaarse uitvinder Wolfgang von Kempelen. Zij was mijn voorouder! En kon vol trots \"Constantinopel\" uitspreken. Niet slecht, toch?"
+      },
+      "business": {
+        "funFactTitle": "MrCall, uw slimme assistent",
+        "funFactText": "MrCall is in Italië ontstaan, en het idee van een persoonlijke assistent ook! De oude Romeinen hadden een Nomenclator: een gespecialiseerde slaaf wiens enige taak het was de namen, gezichten en sociale positie te onthouden van iedereen die zijn meester tegen het lijf kon lopen. MrCall doet hetzelfde… maar is politiek correct."
+      },
+      "searchbusinessfunfact": {
+        "funFactTitle": "Waarom zijn de gele pagina's geel?",
+        "funFactText": "De gele pagina's ontstonden in 1883 doordat een drukker in Cheyenne, Wyoming, zonder wit papier kwam te zitten. Het werd de eerste bedrijvengids ter wereld. Vandaag slaan we het papier en de wachtmuziek over. Koppel uw Google Business, dan kan uw assistent meteen beginnen met het beantwoorden van gesprekken."
+      },
+      "assistantcreatedfunfact": {
+        "funFactTitle": "Van koelkast naar telefoon",
+        "funFactText": "Voordat voicemail een digitaal bestand was, was het een mens met een notitieblok. In de jaren '30 was het eerste 'antwoordapparaat' een kast zo groot als een koelkast. Vandaag is MrCall uw persoonlijke telefonist: geen koelkastgrote apparatuur of gefluit nodig."
+      },
+      "forwardinggeneric": {
+        "selectOperator": "Selecteer uw operator",
+        "dialTheNumber": "Toets het volgende nummer op het toetsenbord van uw telefoon ",
+        "pressTheDialButton": "en druk op de beltoets. De operator kan een bericht afspelen met het resultaat van de bewerking.",
+        "doYouWhantToSet": "Wilt u instellen ",
+        "numberOfSecondsBeforeForwarding": "het aantal seconden voordat doorschakeling begint?",
+        "tryThisOption": "Probeer deze optie: **61*{param}**AANTAL_SECONDEN#.",
+        "forInstanceToForward": "Bijvoorbeeld, om door te schakelen na 15 seconden: ",
+        "deactivation": "Deactivering",
+        "compose": "toets",
+        "andPressDialButton": "en druk op de beltoets.",
+        "thisOperatorMayApplyAFee": "Deze operator kan kosten in rekening brengen voor doorschakeling.",
+        "officialProcedure": "Klik hier voor de officiële instructies van uw telefoonoperator.",
+        "tryToContactTheOperatorFastweb": "Als de doorschakelcodes niet werken, kunt u proberen op te waarderen via de Fastweb-app of bevestiging vragen aan de klantenservice van uw operator.",
+        "genericDisclaimer1": "Doorschakeling is een procedure die wordt beheerd door uw operator en niet door MrCall.",
+        "genericDisclaimer2": "Als de doorschakelcodes niet werken, kan dit afhangen van uw contract; wij raden aan contact op te nemen met uw operator om doorschakeling te activeren."
+      },
+      "forwardingonlandline": {
+        "titleText": "Doorschakeling configureren vanaf een vaste lijn",
+        "subtitleText": "Toets de procedurecodes om doorschakeling te activeren",
+        "moveBackward": "Terug",
+        "moveForward": "Ik heb geconfigureerd"
+      },
+      "forwardingonotherdevice": {
+        "titleText": "Doorschakelingsconfiguratie op een mobiele telefoon",
+        "subtitleText": "Toets de codes om de doorschakeling te activeren"
+      },
+      "configureassistant": {
+        "titleText": "Maak nu uw assistent aan",
+        "subtitleText": "",
+        "moveForward": "Aanmaken!",
+        "moveBackward": "Terug",
+        "mandatoryParameter": "Dit veld is verplicht",
+        "nicknameTitle": "Identificatie van de assistent (handig als u er meer dan één heeft)",
+        "nicknamePlaceholder": "Uw naam of bedrijfsnaam",
+        "nicknameSubtitle": "Uw bijnaam of bedrijfsnaam",
+        "voiceGenderTitle": "Stemgeslacht",
+        "welcomeMessageTitle": "Welkomstbericht na begroeting",
+        "welcomeMessageSubtitle": "U kunt dit bericht op elk moment aanpassen!",
+        "voiceGenderDefault": "FEMALE",
+        "nickNamePlaceHolder": "UwBedrijf",
+        "voiceGender": [
+          {
+            "label": "Mannelijk",
+            "value": "MALE"
+          },
+          {
+            "label": "Vrouwelijk",
+            "value": "FEMALE"
+          }
+        ],
+        "errorDialogAlreadyExistsTitle": [
+          "Er is al een assistent gekoppeld aan uw nummer"
+        ],
+        "errorDialogUnknownErrorTitle": [
+          "Er is een fout opgetreden"
+        ],
+        "errorDialogUnknownErrorBody": [
+          "Als het probleem aanhoudt, neem contact op met de ondersteuning."
+        ],
+        "errorDialogAlreadyExistsBody": [
+          "U kunt teruggaan en een ander nummer kiezen.",
+          "Of u kunt naar uw persoonlijke ruimte gaan om de eerder aangemaakte assistent te wijzigen."
+        ],
+        "alreadyExistsBusinessErrorLeftButtonLabel": "Terug",
+        "alreadyExistsBusinessErrorRightButtonLabel": "Assistenten",
+        "unknownErrorBusinessErrorLeftButtonLabel": "Opnieuw proberen",
+        "unknownErrorBusinessErrorRightButtonLabel": "Hulp vragen"
+      },
+      "chooseplan": {
+        "title": "Start uw gratis proefperiode van 1 week",
+        "subtitle": "Probeer het een week, zonder verplichtingen - annuleer op elk moment, zonder kosten!",
+        "textForFreeTrial": "WILT U EERST MET UW ASSISTENT SPELEN? KLIK OP ",
+        "myAssistantLink": "Mijn Assistent ⇪",
+        "plans": [
+          {
+            "id": "essential",
+            "title": "Essentieel",
+            "highlight": "Start zonder risico",
+            "pricing": {
+              "number": "29",
+              "currency": "$",
+              "periodicity": "per maand"
+            },
+            "buttonLabel": "BEGIN NU",
+            "functionalities": {
+              "title": "Snelle installatie en natuurlijk gesprek",
+              "items": [
+                {
+                  "value": "200 minuten Basis AI (ca. 100 oproepen)"
+                },
+                {
+                  "value": "Door gebruiker bewerkbaar oproepantwoord"
+                },
+                {
+                  "value": "Vraagt om naam en e-mailadres"
+                },
+                {
+                  "value": "Melding aan de beller via WhatsApp/SMS met vooraf ingesteld bericht"
+                },
+                {
+                  "value": "Meldingen aan het bedrijf via app en e-mail"
+                },
+                {
+                  "value": "Haalt belangrijke informatie uit oproepen"
+                },
+                {
+                  "value": "Verbindt met Google Mijn Bedrijf"
+                },
+                {
+                  "value": "Aanmaken van een kennisbank voor de assistent"
+                },
+                {
+                  "value": "Contactbeheer"
+                },
+                {
+                  "value": "Oproepstatistieken en analyses"
+                },
+                {
+                  "value": "MrCall Desktop: e-mail, WhatsApp en telefoon vanaf je computer (inbegrepen)"
+                }
+              ]
+            }
+          },
+          {
+            "id": "starter",
+            "title": "Starter",
+            "highlight": "Geavanceerde configuratie",
+            "pricing": {
+              "number": "55",
+              "currency": "$",
+              "periodicity": "per maand"
+            },
+            "buttonLabel": "START!",
+            "functionalities": {
+              "title": "Reserveringen, doorschakeling en prioriteitsondersteuning",
+              "includesFrom": "Alles van Essential, plus:",
+              "items": [
+                {
+                  "value": "250 minuten Geavanceerde AI (ca. 130 oproepen)"
+                },
+                {
+                  "value": "Slim oproepantwoord, gebaseerd op bellergeschiedenis"
+                },
+                {
+                  "value": "Meertalige assistent"
+                },
+                {
+                  "value": "AI-gepersonaliseerde WhatsApp-berichten aan de beller na elk gesprek"
+                },
+                {
+                  "value": "WhatsApp-meldingen aan het bedrijf met gespreksoverzicht (betaalde optie)"
+                },
+                {
+                  "value": "Reserveringsmodule (Google Agenda)"
+                },
+                {
+                  "value": "Prioriteits-e-mailondersteuning (max 5 dagen)"
+                },
+                {
+                  "value": "Inloggegevens voor VoIP PBX-verbinding via SIP Trunk"
+                },
+                {
+                  "value": "Post-gesprek webhook: automatische gegevenslevering aan CRM, beheertools of automatiseringen"
+                },
+                {
+                  "value": "De assistent schakelt oproepen door naar toestelnummers of telefoonnummers"
+                },
+                {
+                  "value": "MrCall Desktop: e-mail, WhatsApp en telefoon vanaf je computer (inbegrepen)"
+                }
+              ]
+            }
+          },
+          {
+            "id": "professional",
+            "title": "Professioneel",
+            "highlight": "Gebouwd voor uw bedrijf",
+            "pricing": {
+              "number": "160",
+              "currency": "$",
+              "periodicity": "per maand"
+            },
+            "buttonLabel": "START!",
+            "functionalities": {
+              "title": "Geavanceerde configuraties en koppelingen met externe systemen",
+              "includesFrom": "Alles van Starter, plus:",
+              "items": [
+                {
+                  "value": "700 minuten Geavanceerde AI, ca. 350 oproepen"
+                },
+                {
+                  "value": "Slim oproepantwoord, gebaseerd op bellergeschiedenis"
+                },
+                {
+                  "value": "E-mailondersteuning binnen 2 werkdagen"
+                },
+                {
+                  "value": "WhatsApp-meldingen aan het bedrijf inbegrepen in het plan (overzicht, transcriptie)"
+                },
+                {
+                  "value": "Lees-/schrijftoegang tot externe bronnen (website, CRM, enz.) met 2 uur advies inbegrepen"
+                },
+                {
+                  "value": "Aanpassing van te extraheren informatie (productcode, enz.)"
+                },
+                {
+                  "value": "Prijs is exclusief btw indien van toepassing"
+                },
+                {
+                  "value": "MrCall Desktop: e-mail, WhatsApp en telefoon vanaf je computer (inbegrepen)"
+                }
+              ]
+            }
+          }
+        ],
+        "errorDialogUnknownErrorTitle": [
+          "Er is een fout opgetreden"
+        ],
+        "errorDialogUnknownErrorBody": [
+          "Als het probleem aanhoudt, neem contact op met de ondersteuning."
+        ],
+        "unknownErrorBusinessErrorRightButtonLabel": "Annuleren",
+        "moveBackward": "Terug",
+        "recommendedLabel": "Aanbevolen",
+        "trustSignals": {
+          "securePayment": "Veilige betaling via Stripe",
+          "cancelAnytime": "Op elk moment opzeggen, geen kosten",
+          "noChargesDuringTrial": "Geen kosten tijdens de proefperiode"
+        },
+        "supportWriteUs": "Schrijf naar {email}",
+        "supportBookMeeting": "of boek een afspraak met onze experts",
+        "advisor": {
+          "toggleLabel": "Weet u niet welk plan bij u past? Wij helpen!",
+          "toggleLabelCollapse": "Planadviseur verbergen",
+          "callVolumeTitle": "Hoeveel gesprekken verwacht u per maand?",
+          "callVolumeOptions": {
+            "low": "Tot 100",
+            "medium": "100–300",
+            "high": "300+"
+          },
+          "featuresTitle": "Welke functies heeft u nodig?",
+          "features": {
+            "smart_response": "Slimmere gesprekken",
+            "multilingual": "Meertalig",
+            "dynamic_whatsapp": "Gepersonaliseerde WhatsApp",
+            "booking": "Afspraken boeken",
+            "voip_sip": "Telefooncentrale-integratie",
+            "webhook": "App- & CRM-automatiseringen",
+            "call_transfer": "Gespreksdoorschakeling",
+            "call_transcription": "Gesprekssamenvatting via WhatsApp",
+            "external_sources": "Externe data koppelen",
+            "custom_extraction": "Aangepaste datavastlegging"
+          },
+          "resetLabel": "Filters resetten",
+          "bestMatchBadge": "Het ideale plan voor u",
+          "noMatchTitle": "Geen passend plan",
+          "noMatchMessage": "Geen plan voldoet aan al uw criteria. Probeer enkele functies te verwijderen of het gespreksvolume te wijzigen."
+        }
+      },
+      "forwardingonthisdevice": {
+        "titleText": "Doorschakelingsconfiguratie vanaf mobiel",
+        "subtitleText": "Bel de procedurecodes om doorschakeling te activeren",
+        "moveBackward": "Terug",
+        "moveForward": "Ik heb geconfigureerd",
+        "activateCode": "Activeren",
+        "deactivateCode": "Deactiveren",
+        "activateItemTitle": "Doorschakeling activeren",
+        "deactivateItemTitle": "Doorschakeling deactiveren",
+        "activateItemSubtitle": "Werkt het niet? Zie instructies voor 'Ander apparaat'",
+        "deactivateItemSubtitle": "Toets de deactiveringscode"
+      },
+      "makeatestcall": {
+        "titleText": "Test uw MrCall-assistent!",
+        "moveBackward": "Terug",
+        "moveForward": "Volgende",
+        "skip": "Overslaan",
+        "subtitleText": "bel vanaf uw nummer ",
+        "callGeneralService": "Bel dit nummer en spreek met de integratie-assistent ",
+        "callYourTestAssistant": "het voorlopige nummer van uw assistent",
+        "changeNumberCountry": "Wilt u een nummer uit een ander land? Neem contact met ons op en wij wijzigen het voor u! ",
+        "modalDialogNoTestCallTitle": [
+          "Was er een probleem?"
+        ],
+        "modalDialogNoTestCallSubtitle": "Het lijkt erop dat we uw testoproep niet hebben ontvangen",
+        "modalDialogNoTestCallLeftButtonLabel": "Probeer opnieuw te bellen",
+        "modalDialogNoTestCallRightButtonLabel": "Neem contact op met een van onze experts",
+        "modalDialogNoTestCallBodyMessageTitle": "We herinneren u eraan dat",
+        "modalDialogNoTestCallBodyMessage1": "u uw telefoonnummer moet gebruiken om de testoproep te doen",
+        "modalDialogNoTestCallBodyMessage2_1": "Als u hulp nodig heeft, kunt u ons bereiken op het nummer",
+        "modalDialogNoTestCallBodyMessage2_2": "of schrijf naar",
+        "modalDialogNoTestCallBodyMessageSupportNumber": "+12027419420",
+        "tryAssistantWithWebcallOrPhone": "Probeer de weboproep of bel de assistent rechtstreeks",
+        "trialReminder": "Je 7-daagse gratis proefperiode begint bij activering — geen kosten tot dan.",
+        "skipActivateNow": "Overslaan, nu activeren",
+        "skipGoToDashboard": "Overslaan, naar het dashboard"
+      },
+      "assistantcreated": {
+        "titleText": "Uw AI-assistent is aangemaakt!",
+        "moveBackward": "Terug naar configuratie",
+        "moveForward": "Probeer je assistent nu",
+        "subtitleText": "Je assistent is klaar. Dit is wat er komt:",
+        "benefit1": "7 dagen gratis proefperiode — geen kosten tot je beslist",
+        "benefit3": "Op elk moment opzeggen met één klik"
+      },
+      "namephone": {
+        "titleText": "Je profiel",
+        "moveForward": "Volgende",
+        "moveBackward": "Terug",
+        "subtitleText": "Vul uw profiel aan met de volgende informatie:",
+        "yourNameTitle": "Uw naam",
+        "yourNamePlaceholder": "Voer uw naam in",
+        "phoneNumberTitle": "Uw mobiele nummer",
+        "phoneNumberPlaceholder": "Voer uw mobiele nummer in",
+        "phoneNumberSubtitle": "Dit nummer wordt gebruikt voor de eerste functionaliteitstest van de assistent",
+        "nameErrorMessage": "Naam is verplicht",
+        "phoneNumberErrorMessage": "Nummer is verplicht",
+        "phoneNumberCountrySelectorPlaceholder": "Landcode",
+        "phoneNumberCountrySelectorError": "Fout",
+        "phoneNumberPhoneInputPlaceholder": "Telefoonnummer",
+        "phoneNumberPhoneInputExample": "Voorbeeld: "
+      },
+      "notificationpreview": {
+        "titleText": "Uw testoproep was succesvol!",
+        "moveBackward": "Terug",
+        "moveForward": "Volgende",
+        "subtitleText": "Het is nu opgeslagen in uw account en u kunt later meer tests uitvoeren.",
+        "audioNotSupported": "Audio niet ondersteund",
+        "transcriptionBoxTitle": "Uw oproep",
+        "table": {
+          "body": "Bericht",
+          "audioFile": "Audio",
+          "audioNotSupported": "Uw browser ondersteunt geen audio-elementen",
+          "contactName": "Contact",
+          "contactNumber": "Nummer van de beller"
+        }
+      },
+      "prebookappointment": {
+        "titleText": "U kunt een afspraak maken met een specialist",
+        "moveBackward": "Uw assistenten",
+        "moveForward": "Afspraak maken",
+        "subtitleText": "Deze helpt u bij het instellen van MrCall voor uw behoeften of bij het oplossen van eventuele problemen"
+      },
+      "searchbusiness": {
+        "titleText": "Verbinden met Google Mijn Bedrijf",
+        "moveForward": "Volgende",
+        "moveBackward": "Terug",
+        "continueButtonLabel": "Doorgaan",
+        "removeSelection": "Verwijderen",
+        "subtitleText": "MrCall synchroniseert openingstijden en adres",
+        "searchYourBusiness": "Zoek uw bedrijf",
+        "searchYourCompanyPlaceholder": "Zoeken op Google",
+        "searchParametersEmptyMessage": "U moet uw bedrijfsnaam invoeren om de zoekopdracht te starten",
+        "doNotOwnABusiness": "Ik heb geen Bedrijfsprofiel, of ik doe het later",
+        "noSearchResults": "De zoekopdracht heeft geen resultaten opgeleverd",
+        "notFoundSubtitle": "Probeer de volledige naam en het adres in te voeren.",
+        "yourSearchOf": "Uw zoekopdracht naar",
+        "didNotProduceResults": "heeft geen resultaten opgeleverd",
+        "noBusinessSelectedTitle": "Geen synchronisatie",
+        "noBusinessSelectedMessage": "Als u niet wilt synchroniseren, ga dan gewoon verder. Ga anders terug"
+      },
+      "searchbusinessinfo": {
+        "titleText": "Informatie over uw bedrijf",
+        "moveForward": "Volgende",
+        "moveBackward": "Terug",
+        "reload": "Nieuwe zoekopdracht",
+        "loading": "Zoeken...",
+        "continueButtonLabel": "Volgende",
+        "removeSelection": "Verwijderen",
+        "subtitleText": "U kunt uw bedrijfsinformatie bewerken of later op elk moment wijzigen.",
+        "subtitleTextSearch": "We zoeken naar openbare informatie over uw bedrijf voor een eerste configuratie.",
+        "businessInformation": "Informatie over uw bedrijf",
+        "searchYourCompanyPlaceholder": "Zoeken op Google Bedrijf",
+        "skipInfo": "Doorgaan zonder deze informatie te gebruiken",
+        "searchFailedTitle": "Zoeken niet beschikbaar",
+        "searchFailedMessage": "We konden de bedrijfsinformatie niet automatisch ophalen. U kunt deze handmatig invoeren of deze stap overslaan.",
+        "noSearchResults": "Geen zoekresultaten gevonden",
+        "notFoundSubtitle": "Probeer de volledige naam en het adres in te voeren."
+      },
+      "switchboardconfiguration": {
+        "titleText": "Maak een afspraak voor de configuratie van de telefooncentrale",
+        "moveBackward": "Terug",
+        "moveForward": "Afspraak maken",
+        "subtitleText": "We helpen u bij het verbinden van uw telefooncentrale en het configureren van MrCall volgens uw behoeften"
+      },
+      "thisorotherdevice": {
+        "titleText": "Welk apparaat wilt u instellen?",
+        "moveForward": "Volgende",
+        "moveBackward": "Terug",
+        "subtitleText": "Geef aan of u dit apparaat of een ander apparaat instelt",
+        "thisPhone": "Dit apparaat",
+        "otherPhone": "Ander apparaat"
+      }
+    },
+    "sign": {
+      "magiclink": {
+        "titleText": "Magische link",
+        "didYouForgetPassword": "Bent u uw wachtwoord vergeten?"
+      },
+      "signin": {
+        "titleText": "Inloggen",
+        "heroHeadline": "Welcome back.",
+        "heroSubheadline": "Sign in to manage your AI assistant and keep your business running smoothly."
+      },
+      "signup": {
+        "titleText": "Account aanmaken",
+        "heroHeadline": "Turn every call",
+        "heroAccent": "into opportunity.",
+        "heroSubheadline": "Are you a business or a solo professional? Choose MrCall, a true AI digital agent that autonomously handles phone conversations with your customers, interacts with them in clear, natural language, and syncs with your company's business systems.",
+        "benefit1": "Free 7-day trial, no credit card required",
+        "benefit2": "Set up in under 5 minutes",
+        "benefit3": "Cancel anytime, no commitment",
+        "trustBadge": "Trusted by 1,000+ businesses since 2021"
+      }
+    },
+    "callbooking": {
+      "backwardLinkText": "Terug",
+      "redirecting": "Redirecting to the contact page…"
+    },
+    "customtokensignin": {
+      "title": "Verificatie van identiteit en laden van de gevraagde pagina"
+    },
+    "failedpayment": {
+      "failedPayment": "De registratie van de betaalmethode was niet succesvol. Als u ondersteuning nodig heeft, neem dan contact op met de klantenservice",
+      "gotoAssistant": "Terug naar de assistentenpagina"
+    },
+    "failedpaymentproduct": {
+      "failedPayment": "De betaling was niet succesvol, neem contact op met de klantenservice",
+      "gotoAssistant": "Terug naar de assistentenpagina"
+    },
+    "onboardingprepayment": {
+      "title1": "Geweldig!",
+      "title2": "We zijn er bijna",
+      "subtitle": "Start de gratis proefperiode",
+      "textTrialPeriod": "Na het toevoegen van de betaalmethode heeft uw assistent alle functies actief! En vergeet niet: u kunt het abonnement op elk moment opzeggen zonder kosten.",
+      "voipMessageText": "U kunt direct een afspraak maken met een van onze experts om uw VoIP-telefooncentrale met MrCall te verbinden.",
+      "numberForwardingMessages": "U ontvangt instructies om doorschakeling naar uw MrCall-assistent in te stellen.",
+      "okMoveOnButtonText": "Doorgaan"
+    },
+    "payment": {
+      "redirectToPaymentMethod": "U wordt doorgestuurd naar de registratie van de betaalmethode"
+    },
+    "privacypolicy": {
+      "privacyOfTheService": "Privacybeleid van de MrCall-dienst"
+    },
+    "successpayment": {
+      "successPayment": "De registratie van de betaalmethode was succesvol",
+      "callForwardingPage": "Zoals bij alle digitale assistentiediensten of secretariaten op afstand, moet u doorschakeling instellen.",
+      "callForwardingPageBusinessPlus": "Als u geen VoIP-telefooncentrale heeft, moet u doorschakeling instellen.",
+      "gotoCallForwardingInstructionsButtonLabel": "Doorschakeling instellen",
+      "furtherInfoAboutPersonalArea": "In het gedeelte \"Assistent\" vindt u alle informatie over de dienst, de status van uw abonnement en de functies die u heeft geactiveerd bij het starten van het abonnement, zoals het verbinden met Google Agenda, het versturen van sms naar uw klanten of het activeren van telefonische reserveringen.",
+      "announcementApp": "Heeft u de MrCall-app al gedownload? Deze is gratis en stelt u in staat om uw assistent te beheren, gesprekstranscripties te ontvangen, uw contacten te synchroniseren en nog veel meer.",
+      "androidButtonLabel": "Google Play",
+      "appleButtonLabel": "Apple Store",
+      "bookAnAppointment": "Maak een afspraak voor de verbinding van uw VoIP-telefooncentrale, en wij begeleiden u stap voor stap.",
+      "alreadyAssignedNumber": "Uw assistent heeft al een toegewezen nummer. Ga naar de pagina van uw assistent om de instellingen te wijzigen of te controleren.",
+      "alreadyAssignedNumberButtonLabel": "Naar uw assistent",
+      "appointmentButtonText": "Afspraak maken",
+      "contactSupport": "Er is een probleem opgetreden bij het toewijzen van uw nummer. Neem contact op met de ondersteuning.",
+      "yourAssistantIsActive": "Uw assistent is actief!",
+      "yourNumber": "Het telefoonnummer van uw assistent",
+      "setupForwarding": "Doorschakeling instellen",
+      "goToDashboard": "Naar het dashboard"
+    },
+    "activation": {
+      "titleText": "Activeer uw assistent",
+      "subtitleText": "Ontvang een eigen telefoonnummer met een week gratis proberen",
+      "multilingualQuestion": "Spreekt uw assistent één taal of meerdere?",
+      "oneLanguage": "Eén taal",
+      "multipleLanguages": "Meerdere talen",
+      "phoneNationalityTitle": "Land van het telefoonnummer",
+      "phoneNationalitySubtitle": "Kies het land voor het telefoonnummer van uw assistent",
+      "continueButton": "Verder naar de abonnementskeuze"
+    },
+    "successpaymentproduct": {
+      "failedPayment": "De betaling was succesvol en het product is gekocht. Als u vragen heeft, neem dan contact op met de ondersteuning.",
+      "gotoAssistant": "Terug naar de assistentenpagina"
+    },
+    "termsandconditions": {
+      "pageTitle": "Algemene voorwaarden van de MrCall-dienst"
+    },
+    "partnerprogram": {
+      "mainTitle": "Neem een vriend mee",
+      "bringAFriend": "Voor elke vriend die u bij MrCall brengt",
+      "aFreeMonthForYou": "Een gratis maand voor u",
+      "aFreeMonthForYourContact": "Een gratis maand voor uw contact",
+      "yourPersonalCode": "Hier is uw persoonlijke code om te delen:",
+      "yourContactMustUseTheCode": "Uw contact moet deze invoeren bij de registratie van de betaalmethode.",
+      "freeMonthAfterPayment": "Vanaf de eerste betaling van uw contact voegen wij ook een gratis maand toe voor u."
+    },
+    "configureAI": {
+      "title": "Configureren met AI",
+      "subtitle": "Gebruik natuurlijke taal om uw telefoonassistent te configureren",
+      "quickActions": "Snelle Acties",
+      "backToSettings": "Terug naar Instellingen",
+      "trainButton": "Assistent trainen",
+      "trainingInProgress": "Training...",
+      "trainingMessage": "De assistent wordt getraind op uw bedrijfsgegevens...",
+      "thinkingMessages": [
+        "Even kijken hoe uw assistent de telefoon opneemt...",
+        "Aan het graven in het configuratie-doolhof...",
+        "De handleiding lezen... achterstevoren, voor de lol.",
+        "Uw assistent de kunst van de koetjes en kalfjes bijbrengen...",
+        "Uw boekingsconfiguratie analyseren met extreme precisie...",
+        "De assistent ervan overtuigen dat maandagen ook leuk zijn...",
+        "Elk gesprekspad in kaart brengen... het zijn er nogal wat.",
+        "Uw kennisbank bestuderen alsof het de avond voor het examen is...",
+        "Configuraties doornemen met een kopje virtuele koffie...",
+        "Ervoor zorgen dat het welkomstbericht niet als een robot klinkt...",
+        "De assistent leren beleefd te zijn, zelfs voor de ochtendkoffie...",
+        "Geduld aan het downloaden... geschatte tijd: zo meteen.",
+        "Uw instellingen doorlopen met een fijne kam...",
+        "De assistent leren om bellers niet te onderbreken... moeilijker dan het klinkt.",
+        "Meldingsvoorkeuren verwerken, want niemand houdt van spam...",
+        "Leren hoe u wilt dat uw opvolgberichten klinken...",
+        "De perfecte begroeting oefenen, nog één keertje...",
+        "Bijna klaar... even de kleine lettertjes dubbelchecken.",
+        "Synchroniseren met het MrCall-moederschip...",
+        "De gespreksstroomdetector kalibreren...",
+        "De bellerervaring optimaliseren, variabele voor variabele...",
+        "De assistent leren om ongemakkelijke stiltes elegant op te vangen...",
+        "Uw doorschakelregels uit het hoofd leren... piep boep.",
+        "Laatste kwaliteitscontroles op alle functies uitvoeren...",
+        "De configuratie oppoetsen tot hij blinkt..."
+      ],
+      "classicConfigurator": "Klassieke configurator",
+      "loadingMessage": "Verbinding maken met uw assistent...",
+      "quickAction1Label": "Wat is het welkomstbericht?",
+      "quickAction1Command": "Hoe neemt de assistent de telefoon op?",
+      "quickAction2Label": "Welkomstbericht wijzigen",
+      "quickAction2Command": "Als de beller al eerder heeft gebeld en we alle gegevens hebben, vertel dan dat we hem zullen terugbellen",
+      "quickAction3Label": "Gespreksverloop controleren",
+      "quickAction3Command": "Hoe beheert de assistent het gesprek?",
+      "quickAction4Label": "Gespreksverloop wijzigen",
+      "quickAction4Command": "Voer het gesprek zo dat de naam van de beller (indien onbekend), het adres en de reden van het telefoontje worden gevraagd.",
+      "quickAction5Label": "De kennis van de assistent",
+      "quickAction5Command": "Over welke onderwerpen kan de assistent informatie geven?",
+      "quickAction6Label": "Kennis toevoegen",
+      "quickAction6Command": "Als de beller teruggebeld wil worden maar niet heeft gezegd waarom, moet de assistent altijd naar de reden vragen en vervolgens zeggen dat het verzoek wordt doorgestuurd naar een medewerker"
+    },
+    "aladminConfigurator": {
+      "title": "AladMin Configurator",
+      "subtitle": "Chat met AladMin om het gedrag van uw spraakassistent te configureren",
+      "backToSettings": "Terug naar Instellingen",
+      "suggestionsLabel": "Suggesties",
+      "suggestion1": "Schakel de gespreksprompt in voor het beheren van reserveringen",
+      "suggestion2": "Vraag bellers om hun naam en e-mailadres",
+      "suggestion3": "Hoe begroet de assistent bellers?",
+      "suggestion4": "Welke functies zijn nu ingeschakeld?",
+      "messagePlaceholder": "Beschrijf wat u wilt wijzigen of stel een vraag...",
+      "emptyChat": "Begin een gesprek met AladMin om uw assistent te configureren",
+      "newConversation": "Nieuw gesprek",
+      "errorApplying": "Fout",
+      "noBusinessSelected": "Geen bedrijf geselecteerd. Ga terug naar de configuratiepagina van het bedrijf.",
+      "previewLabel": "Voorbeeld van de wijzigingen",
+      "applyChanges": "Wijzigingen toepassen",
+      "cancelChanges": "Annuleren",
+      "confirmApply": "Bevestigen, wijzigingen toepassen",
+      "cancelApply": "Annuleren, wijzigingen niet toepassen"
+    },
+    "mcpConnectors": {
+      "title": "MCP-connectoren",
+      "subtitle": "Genereer inloggegevens om uw MrCall-account te koppelen aan Claude (of een andere MCP-compatibele AI-client).",
+      "back": "Terug",
+      "info": {
+        "title": "Zo maakt u verbinding",
+        "intro": "Genereer hieronder een connector en voeg deze als custom MCP-connector toe in uw AI-client (Claude, Cursor, enz.) met de MCP-URL plus de client ID en het client secret die u daarbij ontvangt.",
+        "mcpUrl": "MCP-URL",
+        "advanced": "Geavanceerd (technische details)",
+        "allowedScopes": "Toegestane scopes",
+        "protectedResource": "Metadata protected resource",
+        "authServer": "Metadata authorization server"
+      },
+      "create": {
+        "title": "Nieuwe connector genereren",
+        "help": "Elke connector is een aparte set inloggegevens. Gebruik er één per AI-client, zodat u ze afzonderlijk kunt intrekken.",
+        "nameLabel": "Naam",
+        "namePlaceholder": "bijv. Mijn Claude.ai-connector",
+        "descriptionLabel": "Beschrijving (optioneel)",
+        "descriptionPlaceholder": "Korte notitie over waar u deze connector gebruikt",
+        "submit": "Connector aanmaken"
+      },
+      "list": {
+        "title": "Uw connectoren",
+        "empty": "Nog geen connectoren. Genereer er hierboven één om te beginnen.",
+        "createdAt": "Aangemaakt",
+        "permissions": "Machtigingen",
+        "rotate": "Secret roteren",
+        "rotateConfirm": "Het client secret roteren? Het huidige secret werkt onmiddellijk niet meer en u ziet het nieuwe secret maar één keer."
+      },
+      "scopes": {
+        "title": "Machtigingen",
+        "help": "Kies wat deze connector namens u mag doen. U kunt de toegang later intrekken door het secret te roteren of de connector te verwijderen.",
+        "selectAll": "Alles selecteren",
+        "clearAll": "Deselecteren",
+        "sensitive": "Gevoelig",
+        "groups": {
+          "business": "Bedrijfsprofiel",
+          "contacts": "Contacten (CRM)",
+          "sessions": "Gesprekken",
+          "templates": "Assistenten"
+        }
+      },
+      "reveal": {
+        "title": "Sla uw inloggegevens nu op",
+        "warningTitle": "Deze waarden worden niet opnieuw getoond.",
+        "warningBody": "Kopieer de URL, de client ID en het client secret naar uw AI-client voordat u deze kaart sluit. Het secret wordt server-side gehasht; als u het kwijtraakt, moet u het roteren.",
+        "mcpUrl": "MCP-URL",
+        "clientId": "Client ID",
+        "clientSecret": "Client secret",
+        "copy": "Kopiëren",
+        "copied": "Gekopieerd!",
+        "howTo": "In Claude → Instellingen → Custom Connectors → Aangepaste connector toevoegen. Plak de bovenstaande waarden. Claude opent een toestemmingspagina in de browser om de autorisatie af te ronden.",
+        "acknowledge": "Ik heb deze waarden opgeslagen"
+      },
+      "errors": {
+        "serviceDisabled": "MCP-connectoren zijn niet ingeschakeld in deze omgeving. Vraag uw beheerder om MCP_ENABLED=true in te stellen.",
+        "loadFailed": "Kan de gegevens van de MCP-connectoren niet laden.",
+        "createFailed": "Kan geen nieuwe connector aanmaken.",
+        "rotateFailed": "Kan het secret niet roteren.",
+        "clipboardFailed": "Kopiëren naar het klembord is mislukt. Selecteer de waarde handmatig."
+      }
+    },
+    "wizard": {
+      "pageTitle": "Configuratie van de assistent",
+      "stepOf": "Stap {current} van {total}",
+      "loading": "Verbinding maken met uw assistent...",
+      "nextStep": "Volgende",
+      "skipStep": "Niets wijzigen, door naar de volgende stap",
+      "goToDashboard": "Naar het dashboard",
+      "changeSomething": "Wilt u iets wijzigen?",
+      "changeSomethingHint": "Onthoud dat u dit ook later nog kunt doen!",
+      "inputPlaceholder": "Beschrijf wat u wilt wijzigen...",
+      "sendInstructions": "Instructies versturen",
+      "orSeparator": "of",
+      "saveChanges": "Wijzigingen opslaan",
+      "saving": "Opslaan...",
+      "accept": "Accepteren",
+      "pendingChangesTitle": "Nog op te slaan wijzigingen",
+      "notSavedWarning": "⚠️ De wijzigingen zijn nog NIET opgeslagen. De assistent wordt pas gewijzigd als u op \"Wijzigingen opslaan\" klikt.",
+      "saveSuccess": "Wijzigingen opgeslagen!",
+      "saveError": "Fout bij het opslaan. Probeer het opnieuw.",
+      "analyzeError": "Fout bij de analyse. Probeer het opnieuw.",
+      "steps": {
+        "welcome": {
+          "title": "Welkomstbericht",
+          "loading": "Ik analyseer hoe uw assistent de telefoon opneemt...",
+          "analyzePrompt": "Beschrijf in 2-3 korte zinnen hoe deze assistent inkomende gesprekken beantwoordt en wat hij aan de beller vraagt. Wees specifiek over wat de beller hoort. Stel geen wijzigingen voor."
+        },
+        "knowledge": {
+          "title": "Kennisbank",
+          "loading": "Ik analyseer de kennis van uw assistent...",
+          "analyzePrompt": "Beschrijf in 2 beknopte zinnen over welke onderwerpen deze assistent kan antwoorden, uitsluitend op basis van de huidige kennisbank. Noem GEEN zoekopdrachten op het web: de assistent zoekt tijdens gesprekken NIET op het web (te traag). Voeg één zin toe: als de gebruiker de kennis wil uitbreiden, kan hij mij vragen op het web te zoeken en de informatie aan de kennisbank toe te voegen. Stel niet uit jezelf wijzigingen voor."
+        },
+        "booking": {
+          "title": "Reserveringen",
+          "loading": "Ik analyseer de configuratie van de reserveringen...",
+          "analyzePrompt": "Beschrijf in 2-3 korte zinnen hoe de reserveringen zijn geconfigureerd. Zijn ze actief? Zo ja, hoe werken ze (tijden, duur van de tijdslots)? Leg uit dat voor reserveringen toegang tot Google Agenda nodig is. Stel geen wijzigingen voor."
+        },
+        "transfer": {
+          "title": "Gesprek doorverbinden",
+          "loading": "Ik analyseer het doorverbinden van gesprekken...",
+          "analyzePrompt": "Leg in 3-4 zinnen uit hoe het doorverbinden van gesprekken werkt: de assistent kan het gesprek doorverbinden naar een telefoonnummer op basis van instelbare regels (bijv. tijdstip, verzoek van de beller). Vermeld dat deze functie beschikbaar is vanaf het Starter-abonnement en actief wordt na de eerste betaling. Tijdens de gratis proefperiode is de functie niet beschikbaar."
+        },
+        "notifications_biz": {
+          "title": "Meldingen voor de eigenaar",
+          "loading": "Ik analyseer de e-mailmeldingen...",
+          "analyzePrompt": "Beschrijf in 2-3 korte zinnen hoe de eigenaar via e-mail over de gesprekken wordt geïnformeerd. Naar welk adres komen ze? Wat bevatten ze (samenvatting, transcriptie, opname)? Stel geen wijzigingen voor."
+        },
+        "notifications_caller": {
+          "title": "Meldingen voor de beller",
+          "loading": "Ik analyseer de meldingen voor de beller...",
+          "analyzePrompt": "Beschrijf in 2-3 korte zinnen wat de beller na het gesprek ontvangt. Is WhatsApp of sms actief? Als WhatsApp actief is, welke dienst wordt er gebruikt (gratis/officieel)? Stel geen wijzigingen voor."
+        },
+        "integrations": {
+          "title": "Integraties",
+          "loading": "Ik analyseer de integraties...",
+          "analyzePrompt": "Vraag de gebruiker of hij een managementsysteem, een CRM of andere software gebruikt die hij aan zijn MrCall-assistent zou willen koppelen. Zo ja, vraag naar de naam van de software en het webadres."
+        },
+        "summary": {
+          "title": "Samenvatting",
+          "loading": "Ik bereid de samenvatting voor...",
+          "analyzePrompt": "EINDsamenvatting van de configuratie, zeer beknopt. ÉÉN zin per categorie (max. 7 zinnen in totaal): welkomstbericht, kennisbank, reserveringen, doorverbinden, meldingen voor de eigenaar, meldingen voor de beller, integraties. Sluit af met ÉÉN zin die de gebruiker uitnodigt de assistent te proberen en elke instelling op elk moment via het dashboard aan te passen. Vraag NIET of hij iets wil wijzigen. Gebruik GEEN opsommingstekens. Stel geen wijzigingen voor."
+        }
+      }
+    }
+  },
+  "common": {
+    "cancel": "Annuleren",
+    "confirm": "Bevestigen",
+    "retry": "Opnieuw proberen"
+  },
+  "mrcallCredits": {
+    "title": "Credits remaining",
+    "tooltip": "A phone call burns ~{factor} credits per minute. Configurator chat and MrCall Desktop burn in proportion to tokens consumed."
+  }
+}

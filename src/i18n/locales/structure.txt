@@ -1,0 +1,20 @@
+src/i18n/
+├── locales/
+    ├── en/
+    │   ├── components/
+    │   │   ├── navbar.json
+    │   │   ├── business.json
+    │   │   └── templates/
+    │   │       └── sign.json
+    │   ├── views/
+    │   │   ├── onboarding.json
+    │   │   └── settings.json
+    │   └── common.json
+    ├── it/
+    │   └── [same structure as en]
+    ├── es/
+    │   └── [same structure as en]
+    ├── de/
+    │   └── [same structure as en]
+    └── fr/
+        └── [same structure as en] 

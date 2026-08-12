@@ -1,0 +1,134 @@
+.modal_dialog_content {
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto 0 auto;
+
+  @media screen and (max-width: 640px) {
+    width: 100%;
+  }
+
+  @media screen and (min-width: 640px) {
+    width: 450px;
+  }
+
+  .modal_dialog_icon {
+  }
+
+  .warning-icon {
+    background: url(../../../images/mrcall/icons/warning_modal_dialog.svg) no-repeat;
+    width: 5em;
+    height: 5em;
+    margin: 0 auto 0 auto;
+  }
+
+  .error-icon {
+    background: url(../../../images/mrcall/icons/error_modal_dialog.svg) no-repeat;
+    width: 5em;
+    height: 5em;
+    margin: 0 auto 0 auto;
+  }
+
+  .success-icon {
+    background: url(../../../images/mrcall/icons/success_modal_dialog.svg) no-repeat;
+    width: 5em;
+    height: 5em;
+    margin: 0 auto 0 auto;
+  }
+
+  .modal_dialog_title{
+    margin: 0 auto 0 auto;
+    text-align: center;
+    /* body/semibold-600/line-height-auto */
+    font-family: 'Inter', serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 2em;
+    line-height: 1em;
+    /* identical to box height */
+    /* Lara/Global/textColor */
+
+    color: @mrcall_grey_text;
+  }
+
+  .modal_dialog_subtitle{
+    margin: 0 auto 0 auto;
+    text-align: center;
+    /* body/semibold-600/line-height-auto */
+    font-family: 'Inter', serif;
+    font-style: normal;
+    font-weight: 600;
+    padding-top: 1em;
+    font-size: 1.0em;
+    line-height: 1em;
+    /* identical to box height */
+    /* Lara/Global/textColor */
+
+    color: @mrcall_grey_text;
+  }
+
+  .modal_dialog_message {
+    padding: 3em 1em 1em 1em;
+    margin: 0 auto 0 auto;
+
+    /* body/semibold-600/line-height-auto */
+    font-family: 'Inter', serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 1em;
+    line-height: 1em;
+    /* identical to box height */
+    /* Lara/Global/textColor */
+
+    color: @mrcall_grey_text;
+  }
+}
+
+.modal-dialog-footer {
+  display: flex;
+
+  @media screen and (max-width: 640px) {
+    flex-direction: column;
+  }
+
+  @media screen and (min-width: 640px) {
+    flex-direction: row;
+  }
+
+  .p-button {
+    font-family: 'Inter', serif;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 1em;
+    line-height: 1em;
+  }
+
+  .button-left {
+    @media screen and (max-width: 640px) {
+    }
+
+    @media screen and (min-width: 640px) {
+      margin-right: auto;
+      padding-right: 1em;
+    }
+
+    .p-button-left.p-button {
+      font-family: 'Inter',serif;
+      font-style: normal;
+      font-weight: 700;
+      font-size: 1em;
+      line-height: 1em;
+
+      color: @mrcall_grey_text2;
+      background: transparent;
+      border: 1px solid @mrcall_grey_text2;
+      padding: 0.5rem 1em;
+      margin: 0.2em 0.2em 0.2em auto;
+      border-radius: 33px;
+    }
+
+    .p-button-left.p-button:hover {
+      background: @mrcall_grey_text2;
+      color: @mrcall_white;
+    }
+  }
+}

@@ -1,0 +1,130 @@
+.signin-signup-form {
+  //max-width: 600px;
+  width: 100%;
+  margin-bottom: auto;
+  margin-left: auto;
+  margin-right: auto;
+
+  .title {
+    font-size: 1.5rem !important;
+  }
+
+  .p-button {
+    width: 100%;
+  }
+
+  .p-field {
+    margin: 1rem 0 1rem 0;
+  }
+
+  .inputboxtitle {
+    /* body/semibold-600/line-height-auto */
+    font-family: 'Inter', serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 17px;
+
+    flex-grow: 1;
+    /* identical to box height */
+    /* Lara/Global/textColor */
+
+    padding: 1em 0px;
+    color: #495057;
+  }
+
+  .card {
+    background: var(--surface-card);
+    padding: 2rem;
+    border-radius: 10px;
+    width: 450px;
+    box-shadow: 0 2px 1px -1px rgba(0,0,0,.2), 0 1px 1px 0 rgba(0,0,0,.14), 0 1px 3px 0 rgba(0,0,0,.12);
+    margin: 2rem;
+  }
+
+  .form-container {
+    max-width: 400px;
+    margin: 0 auto;
+  }
+}
+
+.p-tag {
+  background: @mrcall_dark_grey;
+}
+
+#signup-part {
+  .p-button {
+    background: @mrcall_black;
+    border: 1px solid @mrcall_black;
+    font-weight: bold;
+    color: @mrcall_orange;
+  }
+
+  .p-button:hover {
+    background: @mrcall_orange;
+    color: @mrcall_black;
+  }
+}
+
+.account-section {
+  max-width: 600px;
+  margin-bottom: auto;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 2rem;
+}
+
+.logo-container {
+  text-align: center;
+  margin-bottom: 2rem;
+  
+  .logo {
+    width: 200px;
+    height: auto;
+  }
+}
+
+.sign-title {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: var(--text-color);
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.divider {
+  text-align: center;
+  margin: 1rem 0;
+  position: relative;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 45%;
+    height: 1px;
+    background-color: var(--surface-border);
+  }
+
+  &::before {
+    left: 0;
+  }
+
+  &::after {
+    right: 0;
+  }
+
+  span {
+    background-color: var(--surface-card);
+    padding: 0 10px;
+    color: var(--text-color-secondary);
+    font-size: 0.9rem;
+  }
+}
+
+.form-wrapper {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}

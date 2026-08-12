@@ -1,0 +1,300 @@
+@import '../colors';
+
+// Conversation List Container
+.conversations-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px 16px;
+
+  @media screen and (max-width: 640px) {
+    padding: 16px 12px;
+  }
+}
+
+// Filter Section
+.conversations-filters {
+  background: @mrcall_white;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+  @media screen and (max-width: 640px) {
+    padding: 12px;
+    border-radius: 10px;
+  }
+}
+
+.filters-row {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+  flex-wrap: wrap;
+
+  @media screen and (max-width: 640px) {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+.search-input-wrapper {
+  flex: 1;
+  min-width: 200px;
+  position: relative;
+
+  .p-inputtext {
+    width: 100%;
+    padding-left: 40px;
+    height: 44px;
+    border-radius: 8px;
+    border: 1px solid @mrcall_borders;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+    &:focus {
+      border-color: @mrcall_blue;
+      box-shadow: 0 0 0 2px rgba(0, 104, 255, 0.1);
+    }
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: @mrcall_grey_text2;
+    pointer-events: none;
+  }
+
+  @media screen and (max-width: 640px) {
+    min-width: 100%;
+  }
+}
+
+.date-picker-wrapper {
+  min-width: 280px;
+
+  .p-calendar {
+    width: 100%;
+
+    .p-inputtext {
+      height: 44px;
+      border-radius: 8px;
+    }
+  }
+
+  @media screen and (max-width: 640px) {
+    min-width: 100%;
+  }
+}
+
+.filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+
+  .p-chip {
+    background: @mrcall_bluette;
+    color: @mrcall_blue;
+    font-size: 13px;
+    padding: 4px 10px;
+    border-radius: 16px;
+
+    .p-chip-remove-icon {
+      margin-left: 6px;
+      font-size: 12px;
+      color: @mrcall_blue;
+      cursor: pointer;
+
+      &:hover {
+        color: darken(@mrcall_blue, 20%);
+      }
+    }
+  }
+}
+
+.export-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+
+  .p-button {
+    height: 40px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+
+    &.p-button-outlined {
+      border-color: @mrcall_borders;
+      color: @mrcall_grey_text;
+
+      &:hover {
+        background: @mrcall_light_grey_2;
+        border-color: @mrcall_light_grey_1;
+      }
+    }
+  }
+
+  @media screen and (max-width: 640px) {
+    flex-direction: column;
+
+    .p-button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}
+
+// Pagination
+.conversations-pagination {
+  margin-bottom: 20px;
+
+  .p-paginator {
+    background: transparent;
+    border: none;
+    padding: 0;
+    justify-content: center;
+
+    .p-paginator-current {
+      color: @mrcall_grey_text;
+      font-size: 14px;
+    }
+  }
+}
+
+// Conversation Cards List
+.conversations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  @media screen and (max-width: 640px) {
+    gap: 12px;
+  }
+}
+
+// Empty State
+.conversations-empty {
+  text-align: center;
+  padding: 60px 20px;
+  background: @mrcall_white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+  .empty-icon {
+    font-size: 48px;
+    color: @mrcall_light_grey_1;
+    margin-bottom: 16px;
+  }
+
+  .empty-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: @mrcall_dark_grey_text;
+    margin-bottom: 8px;
+  }
+
+  .empty-description {
+    font-size: 14px;
+    color: @mrcall_grey_text;
+    max-width: 300px;
+    margin: 0 auto;
+    line-height: 1.5;
+  }
+
+  @media screen and (max-width: 640px) {
+    padding: 40px 16px;
+
+    .empty-icon {
+      font-size: 40px;
+    }
+
+    .empty-title {
+      font-size: 16px;
+    }
+  }
+}
+
+// Loading State
+.conversations-loading {
+  padding: 20px 0;
+}
+
+// Line clamp utilities
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+// Legacy support (can be removed after full migration)
+.conversation {
+  .title {
+    &.line-clamp {
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      -webkit-line-clamp: 3;
+
+      @media screen and (max-width: 640px) {
+        -webkit-line-clamp: 2;
+      }
+    }
+  }
+}
+
+.conversation-table-container {
+  margin: auto;
+  max-width: 800px;
+
+  @media screen and (max-width: 640px) {
+    max-width: 100%;
+  }
+
+  table {
+    border-collapse: collapse;
+  }
+}
+
+.conversation-content {
+  max-width: 800px;
+  margin: 6em auto auto auto;
+
+  @media screen and (max-width: 640px) {
+    margin: 2em auto auto auto;
+    padding: 1em;
+  }
+}
+
+// Responsive card adjustments for different breakpoints
+@media screen and (min-width: 641px) and (max-width: 960px) {
+  .conversations-container {
+    padding: 20px;
+  }
+
+  .conversations-filters {
+    padding: 14px;
+  }
+
+  .filters-row {
+    gap: 10px;
+  }
+}
+
+@media screen and (min-width: 961px) {
+  .conversations-container {
+    padding: 32px 24px;
+  }
+
+  .conversations-list {
+    gap: 20px;
+  }
+}
