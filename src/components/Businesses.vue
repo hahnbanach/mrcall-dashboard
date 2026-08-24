@@ -286,6 +286,7 @@ import {onAuthStateChanged} from "firebase/auth";
 import {auth} from "@/firebase/config";
 import WebcallButton from "@/components/webcall/WebcallButton.vue";
 import DirectVoiceButton from "@/components/webcall/DirectVoiceButton.vue";
+import { preferredVoiceEncoding } from '@/utils/VoiceEncoding'
 import TextChatWidget from "@/components/webcall/TextChatWidget.vue";
 import OwnerSelector from "@/components/reseller/OwnerSelector.vue";
 //import Plans from '@/components/Plans'
@@ -335,7 +336,9 @@ export default {
 
     const customerRecord = ref({})
     const isMobile = ref(window.innerWidth < 768)
-    const voiceEncoding = computed(() => isMobile.value ? 'opus' : 'pcm16')
+    // Not screen width: a narrow desktop window is not a phone, and a phone
+    // with an older browser has no WebCodecs. See @/utils/VoiceEncoding.
+    const voiceEncoding = preferredVoiceEncoding()
     const isWebView = computed(() => store.state.isWebview)
     const osName = computed(() => store.state.webviewOsName)
     const isAdmin = computed(() => store.state.role === 'admin')

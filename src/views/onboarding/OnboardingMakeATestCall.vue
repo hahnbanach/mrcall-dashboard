@@ -142,17 +142,14 @@
           />
         </div>
         <div class="webcallbutton full" style="margin-top: 0.5em">
-          <DirectVoiceButton
-            v-if="user && businessId && isAdmin"
-            :business-id="businessId"
-            encoding="opus"
-            class="md:w-auto py-3 full"
-            labelHangup="Hangup direct voice"
-          />
+          <!-- ONE button, and the encoding is a capability question — see
+               @/utils/VoiceEncoding. There used to be two: Opus behind isAdmin
+               and uncompressed pcm16 for everyone else, which put customers on
+               ~16x the bandwidth of the path the product was being judged on. -->
           <DirectVoiceButton
             v-if="user && businessId"
             :business-id="businessId"
-            encoding="pcm16"
+            :encoding="voiceEncoding"
             class="md:w-auto py-3 full"
             labelHangup="Hangup direct voice"
           />
@@ -191,6 +188,7 @@ import conversationUtils from "@/utils/Conversation";
 import { useI18n } from "vue-i18n";
 import WebcallButton from "@/components/webcall/WebcallButton.vue";
 import DirectVoiceButton from "@/components/webcall/DirectVoiceButton.vue";
+import { preferredVoiceEncoding } from "@/utils/VoiceEncoding";
 
 export default {
   components: {
@@ -209,8 +207,10 @@ export default {
     const isWebView = computed(() => store.state.isWebview);
     const osName = computed(() => store.state.webviewOsName);
     const isAdmin = computed(() => store.state.role === "admin");
+    const voiceEncoding = preferredVoiceEncoding();
 
     return {
+      voiceEncoding,
       t,
       tm,
       store,

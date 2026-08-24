@@ -6,7 +6,7 @@
     <div v-if="businessId" class="action-panel-voice">
       <DirectVoiceButton
           :business-id="businessId"
-          encoding="pcm16"
+          :encoding="voiceEncoding"
           class="w-full"
       />
     </div>
@@ -50,12 +50,16 @@ import { useI18n } from 'vue-i18n';
 import Button from 'primevue/button';
 import Carousel from 'primevue/carousel';
 import DirectVoiceButton from '@/components/webcall/DirectVoiceButton.vue';
+import { preferredVoiceEncoding } from '@/utils/VoiceEncoding';
 import { bookingUrl } from '@/utils/BookingUrl';
 
 const props = defineProps({
   businessId: { type: String, default: '' },
   business: { type: Object, default: () => ({}) },
 });
+
+// A capability question, not a hardcoded choice — see @/utils/VoiceEncoding.
+const voiceEncoding = preferredVoiceEncoding();
 
 const router = useRouter();
 const { t } = useI18n();
