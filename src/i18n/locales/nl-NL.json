@@ -130,7 +130,13 @@
       "talkToAssistant": "Praat met de assistent",
       "connecting": "Verbinden...",
       "hangup": "Ophangen",
-      "ending": "Beëindigen..."
+      "ending": "Beëindigen...",
+      "connected": "Verbonden",
+      "ended": "Gesprek beëindigd",
+      "error": "Er is iets misgegaan",
+      "errorStarting": "Het gesprek kon niet worden gestart",
+      "micDenied": "MrCall heeft je microfoon nodig. Klik op het slotje in de adresbalk, geef toestemming voor de microfoon en probeer het opnieuw.",
+      "micNotFound": "Geen microfoon gevonden. Sluit er een aan of probeer het op een ander apparaat."
     },
     "navbar": {
       "login": "Inloggen",

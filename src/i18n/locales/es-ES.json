@@ -130,7 +130,13 @@
       "talkToAssistant": "Habla con el asistente",
       "connecting": "Conectando...",
       "hangup": "Colgar",
-      "ending": "Finalizando..."
+      "ending": "Finalizando...",
+      "connected": "Conectado",
+      "ended": "Llamada finalizada",
+      "error": "Algo ha salido mal",
+      "errorStarting": "No se ha podido iniciar la llamada",
+      "micDenied": "MrCall necesita tu micrófono. Haz clic en el candado de la barra de direcciones, permite el micrófono y vuelve a intentarlo.",
+      "micNotFound": "No se ha detectado ningún micrófono. Conecta uno o prueba desde otro dispositivo."
     },
     "navbar": {
       "login": "Iniciar sesión",

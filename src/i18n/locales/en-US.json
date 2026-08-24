@@ -130,7 +130,13 @@
       "talkToAssistant": "Talk to the assistant",
       "connecting": "Connecting...",
       "hangup": "Hang up",
-      "ending": "Ending..."
+      "ending": "Ending...",
+      "connected": "Connected",
+      "ended": "Call ended",
+      "error": "Something went wrong",
+      "errorStarting": "Could not start the call",
+      "micDenied": "MrCall needs your microphone. Click the padlock in the address bar, allow the microphone, then try again.",
+      "micNotFound": "No microphone was found. Connect one, or try from another device."
     },
     "navbar": {
       "login": "Sign in",

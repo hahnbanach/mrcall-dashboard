@@ -130,7 +130,13 @@
       "talkToAssistant": "Snakk med assistenten",
       "connecting": "Kobler til...",
       "hangup": "Legg på",
-      "ending": "Avslutter..."
+      "ending": "Avslutter...",
+      "connected": "Tilkoblet",
+      "ended": "Samtalen er avsluttet",
+      "error": "Noe gikk galt",
+      "errorStarting": "Kunne ikke starte samtalen",
+      "micDenied": "MrCall trenger mikrofonen din. Klikk på hengelåsen i adressefeltet, tillat mikrofonen, og prøv igjen.",
+      "micNotFound": "Fant ingen mikrofon. Koble til en, eller prøv fra en annen enhet."
     },
     "navbar": {
       "login": "Logg inn",

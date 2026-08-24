@@ -182,23 +182,18 @@ function createVoice() {
   };
 
   client.onCallStarted = (sessionId) => {
-    notify(
-      "success",
-      "Direct voice connected",
-      `Session: ${sessionId}`,
-      3500
-    );
+    notify("success", t("components.directVoice.connected"), "", 3500);
     emit("call-started", sessionId);
   };
 
   client.onCallEnded = (reason) => {
-    notify("info", "Direct voice ended", reason || "", 4000);
+    notify("info", t("components.directVoice.ended"), "", 4000);
     emit("call-ended", reason);
   };
 
   client.onError = (message) => {
     track("webcall_failed", { stage: "in_call", error_message: message });
-    notify("error", "Direct voice error", message, 6000);
+    notify("error", t("components.directVoice.error"), message, 6000);
     emit("error", message);
   };
 
@@ -244,7 +239,24 @@ async function startCall() {
     // They need different copy, and the raw message alone cannot tell them apart
     // across browsers and locales.
     track("webcall_failed", { stage: "start", error_name: e?.name, error_message: msg });
-    notify("error", "Error starting direct voice", msg, 6000);
+    // The microphone failures get their OWN message, because they are the ones
+    // the user can actually fix and until now we told them nothing: no
+    // instruction to click the padlock, and the raw DOMException in English on
+    // a dashboard localised into twelve languages. NotAllowedError is a denied
+    // or dismissed prompt — 11 of the 20 errors on the one instrumented surface
+    // were a prompt the user simply closed. Everything else keeps the raw
+    // message as detail, which is what support needs to see.
+    const key =
+      e?.name === "NotAllowedError" || e?.name === "SecurityError"
+        ? "micDenied"
+        : e?.name === "NotFoundError" || e?.name === "OverconstrainedError"
+        ? "micNotFound"
+        : null;
+    if (key) {
+      notify("error", t(`components.directVoice.${key}`), "", 10000);
+    } else {
+      notify("error", t("components.directVoice.errorStarting"), msg, 6000);
+    }
     emit("error", msg);
   }
 }

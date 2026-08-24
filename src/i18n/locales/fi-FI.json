@@ -130,7 +130,13 @@
       "talkToAssistant": "Puhu assistentin kanssa",
       "connecting": "Yhdistetään...",
       "hangup": "Sulje puhelu",
-      "ending": "Lopetetaan..."
+      "ending": "Lopetetaan...",
+      "connected": "Yhdistetty",
+      "ended": "Puhelu päättyi",
+      "error": "Jokin meni pieleen",
+      "errorStarting": "Puhelua ei voitu aloittaa",
+      "micDenied": "MrCall tarvitsee mikrofonisi. Napsauta osoiterivin lukkokuvaketta, salli mikrofoni ja yritä uudelleen.",
+      "micNotFound": "Mikrofonia ei löytynyt. Liitä mikrofoni tai kokeile toisella laitteella."
     },
     "navbar": {
       "login": "Kirjaudu sisään",
