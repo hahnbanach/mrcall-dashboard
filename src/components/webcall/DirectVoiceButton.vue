@@ -22,7 +22,7 @@
 // Everything below is presentation and Vue lifecycle. The auth model stays ours:
 // the dashboard talks to the Firebase JWT endpoint, so we build the URL and hand
 // it to startStream(), which takes an absolute URL as given.
-import { ref, computed, onBeforeUnmount, onMounted } from "vue";
+import { ref, computed, onBeforeUnmount, onMounted, getCurrentInstance } from "vue";
 import Button from "primevue/button";
 import { useToast } from "primevue/usetoast";
 import { useI18n } from "vue-i18n";
@@ -30,6 +30,40 @@ import { auth } from "@/firebase/config";
 import MrCallDirectVoice from "@mrcall/directvoice";
 
 const { t } = useI18n();
+
+/** Report an attempt and a failure to GA.
+ *
+ * This button is the entire free trial: the test phone number was retired, and a
+ * real number is only issued after a Stripe checkout, so it is the only way a
+ * new signup can hear the product before paying. Yet a microphone prompt that is
+ * denied — or merely dismissed — leaves NO trace anywhere: getUserMedia runs
+ * before the WebSocket opens, and the StarChat session row is created inside the
+ * WS route. Measured on production 2026-08-23, 111 of 215 recent signups sat in
+ * TEST having never made a call, and nothing could say how many of them clicked
+ * and failed.
+ *
+ * `webcall_attempt` is the load-bearing half. Every other signal we have — the
+ * session row, the WS access log — begins only AFTER the microphone is granted,
+ * so without an attempt event there is no denominator and no failure rate.
+ *
+ * Never throws: instrumentation that can break the call is worse than none. */
+// Captured HERE, during setup. getCurrentInstance() returns null anywhere else —
+// including inside startCall(), which is async and runs from a click handler —
+// so resolving it lazily would silently report nothing from the one path that
+// matters most.
+const $gtag = getCurrentInstance()?.appContext?.config?.globalProperties?.$gtag;
+
+function track(event, params) {
+  try {
+    $gtag?.event(event, {
+      business_id: props.businessId,
+      encoding: props.encoding,
+      ...params,
+    });
+  } catch (e) {
+    console.debug("webcall telemetry unavailable:", e);
+  }
+}
 
 const props = defineProps({
   businessId: { type: String, required: true },
@@ -163,6 +197,7 @@ function createVoice() {
   };
 
   client.onError = (message) => {
+    track("webcall_failed", { stage: "in_call", error_message: message });
     notify("error", "Direct voice error", message, 6000);
     emit("error", message);
   };
@@ -182,6 +217,7 @@ async function startCall() {
   if (processing.value || unmounting.value || pageUnloading.value) return;
   processing.value = true;
   callStatus.value = "connecting";
+  track("webcall_attempt");
 
   try {
     const firebaseUser = auth.currentUser;
@@ -203,6 +239,11 @@ async function startCall() {
     processing.value = false;
     destroyVoice();
     const msg = e?.message || String(e);
+    // `error_name` is what separates the failure modes: NotAllowedError is a
+    // denied or dismissed prompt, NotFoundError is a machine with no microphone.
+    // They need different copy, and the raw message alone cannot tell them apart
+    // across browsers and locales.
+    track("webcall_failed", { stage: "start", error_name: e?.name, error_message: msg });
     notify("error", "Error starting direct voice", msg, 6000);
     emit("error", msg);
   }
