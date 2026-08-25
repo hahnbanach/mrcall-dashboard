@@ -1,8 +1,8 @@
 /** Which audio encoding this browser should use for the direct-voice call.
  *
  * There is one right answer and it is a capability question, not a question
- * about who the user is or how wide their window is. Before 2026-08-24 the
- * dashboard asked it three different ways, all wrong:
+ * about who the user is or how wide their window is. The dashboard used to ask
+ * it three different ways, in three different files, all wrong:
  *
  *   - OnboardingMakeATestCall.vue rendered `encoding="opus"` behind `isAdmin`
  *     and `encoding="pcm16"` for everyone else. So customers ran uncompressed

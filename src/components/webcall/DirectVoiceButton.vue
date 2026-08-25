@@ -38,9 +38,8 @@ const { t } = useI18n();
  * new signup can hear the product before paying. Yet a microphone prompt that is
  * denied — or merely dismissed — leaves NO trace anywhere: getUserMedia runs
  * before the WebSocket opens, and the StarChat session row is created inside the
- * WS route. Measured on production 2026-08-23, 111 of 215 recent signups sat in
- * TEST having never made a call, and nothing could say how many of them clicked
- * and failed.
+ * WS route. Measured on production, 111 of 215 recent signups sat in TEST having
+ * never made a call, and nothing could say how many of them clicked and failed.
  *
  * `webcall_attempt` is the load-bearing half. Every other signal we have — the
  * session row, the WS access log — begins only AFTER the microphone is granted,
