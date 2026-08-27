@@ -1,5 +1,13 @@
 # CLAUDE.md
 
+**Stack**: Vue 3, PrimeVue 4, Firebase
+**Entry point**: `src/main.js`
+**Build**: `npm run build`
+**Test**: `npm run test:e2e`
+**Do not break**: This repo is public — never commit a credential or enough detail to locate an unrotated one; all authenticated API calls must go through the Axios instance (401 interceptor)
+
+<!-- orientation ends -->
+
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
 MrCall Dashboard — Vue 3 SPA for managing AI voice call assistants, business configuration, and subscriptions.
@@ -107,15 +115,15 @@ The same commit carries the release tag and one tag per environment it reaches, 
 promoting from test to beta to production is three tags on one commit and never a
 merge.
 
-There are no `test-env` / `beta-env` / `production-env` branches; an earlier
-version of this table listed them and they do not exist.
+There are no `test-env` / `beta-env` / `production-env` branches.
 
 All three environments build with `NODE_ENV=production`, set on the Build step of
 `deploy.yml`. `--mode` selects only which `.env` file is loaded, so test and beta
-produce the same minified, hashed, split, compressed output as production. Before
-that they did not: Vue CLI derives `NODE_ENV` from the mode name and recognises
-only `production` and `test`, so `--mode beta` resolved to `development`, and test
-and beta each served one unminified multi-megabyte bundle.
+produce the same minified, hashed, split, compressed output as production. The
+explicit `NODE_ENV` is load-bearing: Vue CLI derives it from the mode name and
+recognises only `production` and `test`, so any other mode (`beta`, a future
+`staging`) resolves to `development` — an unminified bundle — unless `NODE_ENV`
+is set on the build.
 
 **This repository is public.** Nothing committed here may contain a credential,
 or enough detail about an unrotated one to help locate it.
