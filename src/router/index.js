@@ -162,7 +162,8 @@ const routes = [
     name: 'WizardConfiguration',
     component: WizardConfiguration,
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      bare: true
     }
   },
   {

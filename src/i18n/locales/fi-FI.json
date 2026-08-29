@@ -1307,7 +1307,8 @@
           "bestMatchBadge": "Ihanteellinen paketti sinulle",
           "noMatchTitle": "Ei vastaavaa pakettia",
           "noMatchMessage": "Mikään paketti ei täytä kaikkia kriteerejäsi. Kokeile poistaa joitakin ominaisuuksia tai muuttaa puhelumäärää."
-        }
+        },
+        "recommendedPlanTitle": "The recommended plan for you"
       },
       "forwardingonthisdevice": {
         "titleText": "Soitonsiirron määritys matkapuhelimesta",
@@ -1673,67 +1674,20 @@
       }
     },
     "wizard": {
-      "pageTitle": "Avustajan määritys",
-      "stepOf": "Vaihe {current} / {total}",
-      "loading": "Yhdistetään avustajaasi...",
-      "nextStep": "Seuraava",
-      "skipStep": "Älä muuta mitään, siirry seuraavaan",
-      "goToDashboard": "Siirry hallintapaneeliin",
-      "changeSomething": "Haluatko muuttaa jotain?",
-      "changeSomethingHint": "Muista, että voit tehdä sen myös myöhemmin!",
-      "inputPlaceholder": "Kirjoita, mitä haluaisit muuttaa...",
-      "sendInstructions": "Lähetä ohjeet",
-      "orSeparator": "tai",
-      "saveChanges": "Tallenna muutokset",
-      "saving": "Tallennetaan...",
-      "accept": "Hyväksy",
-      "pendingChangesTitle": "Tallentamattomat muutokset",
-      "notSavedWarning": "⚠️ Muutoksia EI ole vielä tallennettu. Avustaja EI muutu ennen kuin napsautat ”Tallenna muutokset”.",
-      "saveSuccess": "Muutokset tallennettu!",
-      "saveError": "Tallennus epäonnistui. Yritä uudelleen.",
-      "analyzeError": "Analyysi epäonnistui. Yritä uudelleen.",
-      "steps": {
-        "welcome": {
-          "title": "Tervetuloviesti",
-          "loading": "Analysoidaan, miten avustajasi vastaa puhelimeen...",
-          "analyzePrompt": "Kuvaile 2-3 lyhyellä lauseella, miten tämä avustaja vastaa saapuviin puheluihin ja mitä se kysyy soittajalta. Kerro tarkasti, mitä soittaja kuulee. Älä ehdota muutoksia."
-        },
-        "knowledge": {
-          "title": "Tietopohja",
-          "loading": "Analysoidaan avustajasi tietämystä...",
-          "analyzePrompt": "Kuvaile kahdella tiiviillä lauseella, mistä aiheista tämä avustaja osaa vastata, pelkästään nykyisen tietopohjan perusteella. ÄLÄ mainitse verkkohakua: avustaja EI hae verkosta puhelun aikana (se olisi liian hidasta). Lisää yksi lause: jos haluat laajentaa tietämystä, voit pyytää minua etsimään tietoa verkosta ja lisäämään sen tietopohjaan. Älä ehdota muutoksia oma-aloitteisesti."
-        },
-        "booking": {
-          "title": "Varaukset",
-          "loading": "Analysoidaan varausten määrityksiä...",
-          "analyzePrompt": "Kuvaile 2-3 lyhyellä lauseella, miten varaukset on määritetty. Ovatko ne käytössä? Jos ovat, miten ne toimivat (kellonajat, varausvälin kesto)? Selitä, että varausten käyttöönotto edellyttää Google-kalenterin käyttöoikeuden myöntämistä. Älä ehdota muutoksia."
-        },
-        "transfer": {
-          "title": "Puhelunsiirto",
-          "loading": "Analysoidaan puhelunsiirtoa...",
-          "analyzePrompt": "Selitä 3-4 lauseella, miten puhelunsiirto toimii: avustaja voi siirtää puhelun puhelinnumeroon määritettävien sääntöjen perusteella (esim. kellonaika, soittajan pyyntö). Täsmennä, että tämä ominaisuus on käytettävissä Starter-paketista alkaen ja aktivoituu ensimmäisen maksun jälkeen. Ilmaisen kokeilun aikana se ei ole käytettävissä."
-        },
-        "notifications_biz": {
-          "title": "Ilmoitukset omistajalle",
-          "loading": "Analysoidaan sähköposti-ilmoituksia...",
-          "analyzePrompt": "Kuvaile 2-3 lyhyellä lauseella, miten yrityksen omistaja saa tiedon puheluista sähköpostitse. Mihin osoitteeseen viestit tulevat? Mitä ne sisältävät (yhteenveto, litterointi, tallenne)? Älä ehdota muutoksia."
-        },
-        "notifications_caller": {
-          "title": "Ilmoitukset soittajalle",
-          "loading": "Analysoidaan soittajalle lähetettäviä ilmoituksia...",
-          "analyzePrompt": "Kuvaile 2-3 lyhyellä lauseella, mitä soittaja saa puhelun jälkeen. Onko WhatsApp vai tekstiviesti käytössä? Jos WhatsApp on käytössä, mitä palvelua se käyttää (ilmainen/virallinen)? Älä ehdota muutoksia."
-        },
-        "integrations": {
-          "title": "Integraatiot",
-          "loading": "Analysoidaan integraatioita...",
-          "analyzePrompt": "Kysy käyttäjältä, käyttääkö hän toiminnanohjausjärjestelmää, CRM:ää tai jotain muuta ohjelmistoa, jonka hän haluaisi yhdistää MrCall-avustajaansa. Jos kyllä, kysy ohjelmiston nimi ja verkko-osoite."
-        },
-        "summary": {
-          "title": "Yhteenveto",
-          "loading": "Valmistellaan yhteenvetoa...",
-          "analyzePrompt": "LOPULLINEN erittäin tiivis yhteenveto määrityksistä. YKSI lause kutakin osa-aluetta kohden (enintään 7 lausetta yhteensä): tervetuloviesti, tietopohja, varaukset, puhelunsiirto, ilmoitukset omistajalle, ilmoitukset soittajalle, integraatiot. Päätä YHTEEN lauseeseen, joka kehottaa käyttäjää kokeilemaan avustajaa ja muuttamaan mitä tahansa asetusta hallintapaneelista milloin tahansa. ÄLÄ kysy, haluaako hän muuttaa jotain. ÄLÄ käytä luettelomerkkejä. Älä ehdota muutoksia."
-        }
-      }
+      "statusApplying": "Applying changes...",
+      "statusOpening": "Opening session...",
+      "hangupButtonLabel": "Hangup",
+      "doneTitle": "Done.",
+      "configFailed": "Configuration failed. Try again.",
+      "statusConfiguring": "Configuring...",
+      "autoConfigTitle": "Automatic Configuration",
+      "startButton": "Start",
+      "applyFailed": "Failed to apply changes",
+      "retryButton": "Retry",
+      "continueWithoutCall": "Continue without calling",
+      "callButtonLabel": "Call",
+      "question": "Do you want me to do an initial auto-configuration? I will do web research, figure out how to answer the phone and how to continue the conversation. You can always change my behaviour later.",
+      "agentPrompt": "Do web research for this business. Configure how the assistant answers the phone and continues the conversation. Apply the configuration. At the end of your reply, include EXACTLY one block: <plan-recommendation plan=\"essential|starter|professional\">reason in the user's language</plan-recommendation>. Available plans: {plans}"
     }
   },
   "common": {

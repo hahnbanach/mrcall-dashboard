@@ -1307,7 +1307,8 @@
           "bestMatchBadge": "Den ideala planen för dig",
           "noMatchTitle": "Ingen matchande plan",
           "noMatchMessage": "Ingen plan uppfyller alla dina kriterier. Försök ta bort några funktioner eller ändra samtalsvolymen."
-        }
+        },
+        "recommendedPlanTitle": "The recommended plan for you"
       },
       "forwardingonthisdevice": {
         "titleText": "Konfiguration av vidarekoppling från mobil",
@@ -1673,67 +1674,20 @@
       }
     },
     "wizard": {
-      "pageTitle": "Assistentkonfiguration",
-      "stepOf": "Steg {current} av {total}",
-      "loading": "Ansluter till din assistent...",
-      "nextStep": "Nästa",
-      "skipStep": "Ändra inget och gå vidare till nästa steg",
-      "goToDashboard": "Gå till kontrollpanelen",
-      "changeSomething": "Vill du ändra något?",
-      "changeSomethingHint": "Kom ihåg att du alltid kan göra det senare!",
-      "inputPlaceholder": "Skriv vad du vill ändra...",
-      "sendInstructions": "Skicka instruktionerna",
-      "orSeparator": "eller",
-      "saveChanges": "Spara ändringar",
-      "saving": "Sparar...",
-      "accept": "Acceptera",
-      "pendingChangesTitle": "Ändringar att spara",
-      "notSavedWarning": "⚠️ Ändringarna är INTE sparade ännu. Assistenten ändras INTE förrän du klickar på \"Spara ändringar\".",
-      "saveSuccess": "Ändringarna sparades!",
-      "saveError": "Fel vid sparandet. Försök igen.",
-      "analyzeError": "Fel vid analysen. Försök igen.",
-      "steps": {
-        "welcome": {
-          "title": "Välkomstmeddelande",
-          "loading": "Analyserar hur din assistent svarar i telefon...",
-          "analyzePrompt": "Beskriv i 2–3 korta meningar hur den här assistenten svarar på inkommande samtal och vad den frågar uppringaren om. Var konkret om vad den som ringer hör. Föreslå inga ändringar."
-        },
-        "knowledge": {
-          "title": "Kunskapsbas",
-          "loading": "Analyserar din assistents kunskaper...",
-          "analyzePrompt": "Beskriv i 2 koncisa meningar vilka ämnen den här assistenten kan svara på, enbart utifrån den nuvarande kunskapsbasen. Nämn INTE webbsökning: assistenten söker INTE på webben under samtal (det vore för långsamt). Lägg till en mening: om användaren vill utöka kunskapen kan hen be mig söka information på webben och lägga till den i kunskapsbasen. Föreslå inga ändringar på eget initiativ."
-        },
-        "booking": {
-          "title": "Bokningar",
-          "loading": "Analyserar bokningskonfigurationen...",
-          "analyzePrompt": "Beskriv i 2–3 korta meningar hur bokningarna är konfigurerade. Är de aktiva? Om ja, hur fungerar de (tider, längd på tidsluckor)? Förklara att bokningar kräver att åtkomsten till Google Kalender godkänns. Föreslå inga ändringar."
-        },
-        "transfer": {
-          "title": "Samtalsöverföring",
-          "loading": "Analyserar samtalsöverföringen...",
-          "analyzePrompt": "Förklara i 3–4 meningar hur samtalsöverföring fungerar: assistenten kan koppla samtalet till ett telefonnummer utifrån konfigurerbara regler (t.ex. tid på dygnet, uppringarens begäran). Påpeka att funktionen finns från och med planen Starter och aktiveras efter den första betalningen. Under den kostnadsfria provperioden är den inte tillgänglig."
-        },
-        "notifications_biz": {
-          "title": "Aviseringar till ägaren",
-          "loading": "Analyserar e-postaviseringarna...",
-          "analyzePrompt": "Beskriv i 2–3 korta meningar hur företagets ägare aviseras om samtal via e-post. Till vilken adress kommer de? Vad innehåller de (sammanfattning, transkribering, inspelning)? Föreslå inga ändringar."
-        },
-        "notifications_caller": {
-          "title": "Aviseringar till uppringaren",
-          "loading": "Analyserar aviseringarna till uppringaren...",
-          "analyzePrompt": "Beskriv i 2–3 korta meningar vad uppringaren får efter samtalet. Är WhatsApp eller SMS aktivt? Om WhatsApp är aktivt, vilken tjänst används (gratis/officiell)? Föreslå inga ändringar."
-        },
-        "integrations": {
-          "title": "Integrationer",
-          "loading": "Analyserar integrationerna...",
-          "analyzePrompt": "Fråga användaren om hen använder ett affärssystem, ett CRM eller någon annan programvara som hen vill koppla till sin MrCall-assistent. Om ja, fråga efter programvarans namn och webbadress."
-        },
-        "summary": {
-          "title": "Sammanfattning",
-          "loading": "Förbereder sammanfattningen...",
-          "analyzePrompt": "SLUTLIG mycket kortfattad sammanfattning. EN mening per kategori (max 7 meningar totalt): välkomstmeddelande, kunskapsbas, bokningar, samtalsöverföring, aviseringar till ägaren, aviseringar till uppringaren, integrationer. Avsluta med EN mening som uppmanar användaren att prova assistenten och när som helst ändra inställningar från kontrollpanelen. FRÅGA INTE om hen vill ändra något. ANVÄND INTE punktlistor. Föreslå inga ändringar."
-        }
-      }
+      "statusApplying": "Applying changes...",
+      "statusOpening": "Opening session...",
+      "hangupButtonLabel": "Hangup",
+      "doneTitle": "Done.",
+      "configFailed": "Configuration failed. Try again.",
+      "statusConfiguring": "Configuring...",
+      "autoConfigTitle": "Automatic Configuration",
+      "startButton": "Start",
+      "applyFailed": "Failed to apply changes",
+      "retryButton": "Retry",
+      "continueWithoutCall": "Continue without calling",
+      "callButtonLabel": "Call",
+      "question": "Do you want me to do an initial auto-configuration? I will do web research, figure out how to answer the phone and how to continue the conversation. You can always change my behaviour later.",
+      "agentPrompt": "Do web research for this business. Configure how the assistant answers the phone and continues the conversation. Apply the configuration. At the end of your reply, include EXACTLY one block: <plan-recommendation plan=\"essential|starter|professional\">reason in the user's language</plan-recommendation>. Available plans: {plans}"
     }
   },
   "common": {

@@ -1307,7 +1307,8 @@
           "bestMatchBadge": "Ideaalne pakett teile",
           "noMatchTitle": "Sobivat paketti ei leitud",
           "noMatchMessage": "Ükski pakett ei vasta kõigile teie kriteeriumidele. Proovige eemaldada mõned funktsioonid või muuta kõnede mahtu."
-        }
+        },
+        "recommendedPlanTitle": "The recommended plan for you"
       },
       "forwardingonthisdevice": {
         "titleText": "Kõne suunamise seadistamine mobiiltelefonilt",
@@ -1673,67 +1674,20 @@
       }
     },
     "wizard": {
-      "pageTitle": "Assistendi seadistamine",
-      "stepOf": "Samm {current}/{total}",
-      "loading": "Ühendan teie assistendiga...",
-      "nextStep": "Edasi",
-      "skipStep": "Jäta vahele ja mine edasi",
-      "goToDashboard": "Mine juhtpaneelile",
-      "changeSomething": "Kas soovite midagi muuta?",
-      "changeSomethingHint": "Pidage meeles, et saate seda alati ka hiljem teha!",
-      "inputPlaceholder": "Kirjutage, mida sooviksite muuta...",
-      "sendInstructions": "Saada juhised",
-      "orSeparator": "või",
-      "saveChanges": "Salvesta muudatused",
-      "saving": "Salvestan...",
-      "accept": "Kinnita",
-      "pendingChangesTitle": "Salvestamata muudatused",
-      "notSavedWarning": "⚠️ Muudatused EI OLE veel salvestatud. Assistenti EI muudeta enne, kui klõpsate \"Salvesta muudatused\".",
-      "saveSuccess": "Muudatused salvestatud!",
-      "saveError": "Salvestamisel tekkis viga. Proovige uuesti.",
-      "analyzeError": "Analüüsimisel tekkis viga. Proovige uuesti.",
-      "steps": {
-        "welcome": {
-          "title": "Tervitussõnum",
-          "loading": "Analüüsin, kuidas teie assistent telefonile vastab...",
-          "analyzePrompt": "Kirjelda 2-3 lühikese lausega, kuidas see assistent sissetulevatele kõnedele vastab ja mida ta helistajalt küsib. Ole täpne selles, mida helistaja kuuleb. Ära paku muudatusi."
-        },
-        "knowledge": {
-          "title": "Teadmusbaas",
-          "loading": "Analüüsin teie assistendi teadmisi...",
-          "analyzePrompt": "Kirjelda 2 lühikese lausega, millistel teemadel see assistent vastata oskab, tuginedes ainult praegusele teadmusbaasile. ÄRA maini veebiotsingut: assistent EI otsi kõne ajal veebist (see oleks liiga aeglane). Lisa üks lause: kui kasutaja soovib teadmisi täiendada, võib ta paluda mul veebist infot otsida ja teadmusbaasi lisada. Ära paku omal algatusel muudatusi."
-        },
-        "booking": {
-          "title": "Broneeringud",
-          "loading": "Analüüsin broneeringute seadistust...",
-          "analyzePrompt": "Kirjelda 2-3 lühikese lausega, kuidas broneeringud on seadistatud. Kas need on aktiivsed? Kui jah, kuidas need töötavad (kellaajad, ajavahemiku pikkus)? Selgita, et broneeringute kasutamiseks tuleb anda ligipääs Google'i kalendrile. Ära paku muudatusi."
-        },
-        "transfer": {
-          "title": "Kõne edastamine",
-          "loading": "Analüüsin kõne edastamist...",
-          "analyzePrompt": "Selgita 3-4 lausega, kuidas kõne edastamine töötab: assistent saab kõne edastada telefoninumbrile seadistatavate reeglite alusel (nt kellaaeg, helistaja soov). Märgi, et see funktsioon on saadaval alates Starteri paketist ja aktiveerub pärast esimest makset. Tasuta prooviperioodi ajal see saadaval ei ole."
-        },
-        "notifications_biz": {
-          "title": "Teavitused omanikule",
-          "loading": "Analüüsin e-posti teavitusi...",
-          "analyzePrompt": "Kirjelda 2-3 lühikese lausega, kuidas ettevõtte omanikku kõnedest e-postiga teavitatakse. Millisele aadressile kirjad tulevad? Mida need sisaldavad (kokkuvõte, transkriptsioon, salvestus)? Ära paku muudatusi."
-        },
-        "notifications_caller": {
-          "title": "Teavitused helistajale",
-          "loading": "Analüüsin helistajale saadetavaid teavitusi...",
-          "analyzePrompt": "Kirjelda 2-3 lühikese lausega, mida helistaja pärast kõnet saab. Kas WhatsApp või SMS on aktiivne? Kui WhatsApp on aktiivne, millist teenust see kasutab (tasuta/ametlik)? Ära paku muudatusi."
-        },
-        "integrations": {
-          "title": "Integratsioonid",
-          "loading": "Analüüsin integratsioone...",
-          "analyzePrompt": "Küsi kasutajalt, kas ta kasutab mõnda haldustarkvara, CRM-i või muud tarkvara, mida ta sooviks oma MrCalli assistendiga ühendada. Kui jah, küsi tarkvara nime ja veebiaadressi."
-        },
-        "summary": {
-          "title": "Kokkuvõte",
-          "loading": "Koostan kokkuvõtet...",
-          "analyzePrompt": "LÕPLIK väga lühike seadistuse kokkuvõte. ÜKS lause kategooria kohta (kokku maksimaalselt 7 lauset): tervitussõnum, teadmusbaas, broneeringud, kõne edastamine, teavitused omanikule, teavitused helistajale, integratsioonid. Lõpeta ÜHE lausega, mis kutsub kasutajat assistenti proovima ja iga seadet igal ajal juhtpaneelilt muutma. ÄRA küsi, kas ta soovib midagi muuta. ÄRA kasuta täpploendit. Ära paku muudatusi."
-        }
-      }
+      "statusApplying": "Applying changes...",
+      "statusOpening": "Opening session...",
+      "hangupButtonLabel": "Hangup",
+      "doneTitle": "Done.",
+      "configFailed": "Configuration failed. Try again.",
+      "statusConfiguring": "Configuring...",
+      "autoConfigTitle": "Automatic Configuration",
+      "startButton": "Start",
+      "applyFailed": "Failed to apply changes",
+      "retryButton": "Retry",
+      "continueWithoutCall": "Continue without calling",
+      "callButtonLabel": "Call",
+      "question": "Do you want me to do an initial auto-configuration? I will do web research, figure out how to answer the phone and how to continue the conversation. You can always change my behaviour later.",
+      "agentPrompt": "Do web research for this business. Configure how the assistant answers the phone and continues the conversation. Apply the configuration. At the end of your reply, include EXACTLY one block: <plan-recommendation plan=\"essential|starter|professional\">reason in the user's language</plan-recommendation>. Available plans: {plans}"
     }
   },
   "common": {

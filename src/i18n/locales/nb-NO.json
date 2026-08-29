@@ -1307,7 +1307,8 @@
           "bestMatchBadge": "Det ideelle planen for deg",
           "noMatchTitle": "Ingen matchende plan",
           "noMatchMessage": "Ingen plan oppfyller alle kriteriene dine. Prøv å fjerne noen funksjoner eller endre samtalevolumet."
-        }
+        },
+        "recommendedPlanTitle": "The recommended plan for you"
       },
       "forwardingonthisdevice": {
         "titleText": "Konfigurering av viderekobling fra mobil",
@@ -1673,67 +1674,20 @@
       }
     },
     "wizard": {
-      "pageTitle": "Konfigurasjon av assistenten",
-      "stepOf": "Steg {current} av {total}",
-      "loading": "Kobler til assistenten din...",
-      "nextStep": "Neste",
-      "skipStep": "Ikke endre noe, gå videre til neste",
-      "goToDashboard": "Gå til dashbordet",
-      "changeSomething": "Vil du endre noe?",
-      "changeSomethingHint": "Husk at du alltid kan gjøre det senere!",
-      "inputPlaceholder": "Skriv hva du vil endre...",
-      "sendInstructions": "Send instruksjonene",
-      "orSeparator": "eller",
-      "saveChanges": "Lagre endringer",
-      "saving": "Lagrer...",
-      "accept": "Godta",
-      "pendingChangesTitle": "Endringer som ikke er lagret",
-      "notSavedWarning": "⚠️ Endringene er IKKE lagret ennå. Assistenten blir IKKE endret før du klikker «Lagre endringer».",
-      "saveSuccess": "Endringene er lagret!",
-      "saveError": "Feil under lagring. Prøv igjen.",
-      "analyzeError": "Feil under analysen. Prøv igjen.",
-      "steps": {
-        "welcome": {
-          "title": "Velkomstmelding",
-          "loading": "Analyserer hvordan assistenten din svarer telefonen...",
-          "analyzePrompt": "Beskriv i 2-3 korte setninger hvordan denne assistenten svarer på innkommende samtaler og hva den spør innringeren om. Vær konkret om hva den som ringer hører. Ikke foreslå endringer."
-        },
-        "knowledge": {
-          "title": "Kunnskapsbase",
-          "loading": "Analyserer kunnskapen til assistenten din...",
-          "analyzePrompt": "Beskriv i 2 konsise setninger hvilke temaer denne assistenten kan svare på, basert kun på den nåværende kunnskapsbasen. IKKE nevn nettsøk: assistenten søker IKKE på nettet under samtaler (det ville vært for tregt). Legg til én setning: hvis du vil utvide kunnskapen, kan du be meg om å søke på nettet og legge informasjonen inn i kunnskapsbasen. Ikke foreslå endringer på eget initiativ."
-        },
-        "booking": {
-          "title": "Bestillinger",
-          "loading": "Analyserer oppsettet for bestillinger...",
-          "analyzePrompt": "Beskriv i 2-3 korte setninger hvordan bestillingene er satt opp. Er de aktive? I så fall, hvordan fungerer de (åpningstider, lengde på tidsluker)? Forklar at bestillinger krever at du gir tilgang til Google Kalender. Ikke foreslå endringer."
-        },
-        "transfer": {
-          "title": "Samtaleoverføring",
-          "loading": "Analyserer samtaleoverføringen...",
-          "analyzePrompt": "Forklar i 3-4 setninger hvordan samtaleoverføring fungerer: assistenten kan sette samtalen over til et telefonnummer ut fra regler du kan konfigurere (f.eks. klokkeslett eller ønske fra den som ringer). Presiser at denne funksjonen er tilgjengelig fra Starter-abonnementet og oppover, og at den aktiveres etter første betaling. Den er ikke tilgjengelig i den gratis prøveperioden."
-        },
-        "notifications_biz": {
-          "title": "Varsler til eieren",
-          "loading": "Analyserer e-postvarslene...",
-          "analyzePrompt": "Beskriv i 2-3 korte setninger hvordan bedriftseieren varsles om samtaler via e-post. Til hvilken adresse kommer de? Hva inneholder de (sammendrag, transkripsjon, opptak)? Ikke foreslå endringer."
-        },
-        "notifications_caller": {
-          "title": "Varsler til innringeren",
-          "loading": "Analyserer varslene til innringeren...",
-          "analyzePrompt": "Beskriv i 2-3 korte setninger hva den som ringer mottar etter samtalen. Er WhatsApp eller SMS aktivert? Hvis WhatsApp er aktivert, hvilken tjeneste brukes (gratis/offisiell)? Ikke foreslå endringer."
-        },
-        "integrations": {
-          "title": "Integrasjoner",
-          "loading": "Analyserer integrasjonene...",
-          "analyzePrompt": "Spør brukeren om vedkommende bruker et forretningssystem, et CRM eller annen programvare som skal kobles til MrCall-assistenten. Hvis ja, spør om navnet på programvaren og nettadressen."
-        },
-        "summary": {
-          "title": "Oppsummering",
-          "loading": "Forbereder oppsummeringen...",
-          "analyzePrompt": "AVSLUTTENDE, svært kort oppsummering av konfigurasjonen. ÉN setning per kategori (maks 7 setninger totalt): velkomstmelding, kunnskapsbase, bestillinger, samtaleoverføring, varsler til eieren, varsler til innringeren, integrasjoner. Avslutt med ÉN setning som inviterer brukeren til å prøve assistenten og til å endre enhver innstilling fra dashbordet når som helst. IKKE spør om brukeren vil endre noe. IKKE bruk punktlister. Ikke foreslå endringer."
-        }
-      }
+      "statusApplying": "Applying changes...",
+      "statusOpening": "Opening session...",
+      "hangupButtonLabel": "Hangup",
+      "doneTitle": "Done.",
+      "configFailed": "Configuration failed. Try again.",
+      "statusConfiguring": "Configuring...",
+      "autoConfigTitle": "Automatic Configuration",
+      "startButton": "Start",
+      "applyFailed": "Failed to apply changes",
+      "retryButton": "Retry",
+      "continueWithoutCall": "Continue without calling",
+      "callButtonLabel": "Call",
+      "question": "Do you want me to do an initial auto-configuration? I will do web research, figure out how to answer the phone and how to continue the conversation. You can always change my behaviour later.",
+      "agentPrompt": "Do web research for this business. Configure how the assistant answers the phone and continues the conversation. Apply the configuration. At the end of your reply, include EXACTLY one block: <plan-recommendation plan=\"essential|starter|professional\">reason in the user's language</plan-recommendation>. Available plans: {plans}"
     }
   },
   "common": {

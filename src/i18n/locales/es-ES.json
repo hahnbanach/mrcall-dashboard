@@ -1306,7 +1306,8 @@
           "bestMatchBadge": "El plan ideal para ti",
           "noMatchTitle": "Ningún plan coincide",
           "noMatchMessage": "Ningún plan cumple todos tus criterios. Prueba a quitar algunas funcionalidades o a cambiar el volumen de llamadas."
-        }
+        },
+        "recommendedPlanTitle": "El plan recomendado para ti"
       },
       "forwardingonthisdevice": {
         "titleText": "Configuración de Desvío de Llamadas desde el Móvil",
@@ -1684,67 +1685,20 @@
       }
     },
     "wizard": {
-      "pageTitle": "Configuración del asistente",
-      "stepOf": "Paso {current} de {total}",
-      "loading": "Conectando con tu asistente...",
-      "nextStep": "Siguiente",
-      "skipStep": "No cambiar nada e ir al siguiente",
-      "goToDashboard": "Ir al panel",
-      "changeSomething": "¿Quieres cambiar algo?",
-      "changeSomethingHint": "¡Recuerda que también puedes hacerlo más tarde!",
-      "inputPlaceholder": "Escribe lo que quieres cambiar...",
-      "sendInstructions": "Enviar las instrucciones",
-      "orSeparator": "o",
-      "saveChanges": "Guardar cambios",
-      "saving": "Guardando...",
-      "accept": "Aceptar",
-      "pendingChangesTitle": "Cambios pendientes de guardar",
-      "notSavedWarning": "⚠️ Los cambios NO están guardados todavía. El asistente NO se modifica hasta que hagas clic en «Guardar cambios».",
-      "saveSuccess": "¡Cambios guardados!",
-      "saveError": "Error al guardar. Inténtalo de nuevo.",
-      "analyzeError": "Error en el análisis. Inténtalo de nuevo.",
-      "steps": {
-        "welcome": {
-          "title": "Mensaje de bienvenida",
-          "loading": "Estoy analizando cómo responde al teléfono tu asistente...",
-          "analyzePrompt": "Describe en 2-3 frases breves cómo responde este asistente a las llamadas entrantes y qué le pregunta a quien llama. Sé específico sobre lo que oye la persona que llama. No sugieras cambios."
-        },
-        "knowledge": {
-          "title": "Base de conocimiento",
-          "loading": "Estoy analizando los conocimientos de tu asistente...",
-          "analyzePrompt": "En 2 frases concisas, describe sobre qué temas sabe responder este asistente, basándote solo en la base de conocimiento actual. NO menciones búsquedas en la web: el asistente NO busca en la web durante las llamadas (sería demasiado lento). Añade una frase: si quieres ampliar los conocimientos, puedes pedirme que busque información en la web y la añada a la base de conocimiento. No sugieras cambios por tu cuenta."
-        },
-        "booking": {
-          "title": "Reservas",
-          "loading": "Estoy analizando la configuración de las reservas...",
-          "analyzePrompt": "Describe en 2-3 frases breves cómo están configuradas las reservas. ¿Están activas? Si es así, ¿cómo funcionan (horarios, duración de las franjas)? Explica que para activar las reservas hay que autorizar el acceso al calendario de Google. No sugieras cambios."
-        },
-        "transfer": {
-          "title": "Transferencia de llamadas",
-          "loading": "Estoy analizando la transferencia de llamadas...",
-          "analyzePrompt": "Explica en 3-4 frases cómo funciona la transferencia de llamadas: el asistente puede pasar la llamada a un número de teléfono según reglas configurables (p. ej. el horario o la petición de quien llama). Aclara que esta funcionalidad está disponible a partir del plan Starter y se activa después del primer pago. Durante la prueba gratuita no está disponible."
-        },
-        "notifications_biz": {
-          "title": "Notificaciones al titular",
-          "loading": "Estoy analizando las notificaciones por correo...",
-          "analyzePrompt": "Describe en 2-3 frases breves cómo se avisa al titular de las llamadas por correo electrónico. ¿A qué dirección llegan? ¿Qué contienen (resumen, transcripción, grabación)? No sugieras cambios."
-        },
-        "notifications_caller": {
-          "title": "Notificaciones a quien llama",
-          "loading": "Estoy analizando las notificaciones a quien llama...",
-          "analyzePrompt": "Describe en 2-3 frases breves qué recibe quien llama después de la llamada. ¿Está activo WhatsApp o SMS? Si WhatsApp está activo, ¿qué servicio usa (gratuito/oficial)? No sugieras cambios."
-        },
-        "integrations": {
-          "title": "Integraciones",
-          "loading": "Estoy analizando las integraciones...",
-          "analyzePrompt": "Pregunta al usuario si usa un software de gestión, un CRM o algún software que quiera conectar con su asistente MrCall. Si es así, pídele el nombre del software y su dirección web."
-        },
-        "summary": {
-          "title": "Resumen",
-          "loading": "Estoy preparando el resumen...",
-          "analyzePrompt": "Resumen FINAL muy conciso de la configuración. UNA frase por categoría (máx. 7 frases en total): mensaje de bienvenida, base de conocimiento, reservas, transferencia de llamadas, notificaciones al titular, notificaciones a quien llama, integraciones. Termina con UNA frase que invite al usuario a probar el asistente y a modificar cualquier ajuste desde el panel en cualquier momento. NO preguntes si quiere cambiar algo. NO uses viñetas. No sugieras cambios."
-        }
-      }
+      "statusApplying": "Applying changes...",
+      "statusOpening": "Opening session...",
+      "hangupButtonLabel": "Hangup",
+      "doneTitle": "Done.",
+      "configFailed": "Configuration failed. Try again.",
+      "statusConfiguring": "Configuring...",
+      "autoConfigTitle": "Automatic Configuration",
+      "startButton": "Start",
+      "applyFailed": "Failed to apply changes",
+      "retryButton": "Retry",
+      "continueWithoutCall": "Continue without calling",
+      "callButtonLabel": "Call",
+      "question": "Do you want me to do an initial auto-configuration? I will do web research, figure out how to answer the phone and how to continue the conversation. You can always change my behaviour later.",
+      "agentPrompt": "Do web research for this business. Configure how the assistant answers the phone and continues the conversation. Apply the configuration. At the end of your reply, include EXACTLY one block: <plan-recommendation plan=\"essential|starter|professional\">reason in the user's language</plan-recommendation>. Available plans: {plans}"
     }
   },
   "common": {

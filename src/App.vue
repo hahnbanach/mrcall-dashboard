@@ -2,10 +2,10 @@
   <metainfo>
   </metainfo>
   <div id="app-container" class="h-screen">
-    <div id="navbar">
+    <div v-if="!$route.meta.bare" id="navbar">
       <Navbar/>
     </div>
-    <div v-if="managedBy" class="managed-by-banner">
+    <div v-if="managedBy && !$route.meta.bare" class="managed-by-banner">
       <i class="pi pi-briefcase"></i>
       {{ $t('components.reseller.managedBy.label', { name: managedBy.displayName, email: managedBy.email }) }}
     </div>

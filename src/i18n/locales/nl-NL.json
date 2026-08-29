@@ -1307,7 +1307,8 @@
           "bestMatchBadge": "Het ideale plan voor u",
           "noMatchTitle": "Geen passend plan",
           "noMatchMessage": "Geen plan voldoet aan al uw criteria. Probeer enkele functies te verwijderen of het gespreksvolume te wijzigen."
-        }
+        },
+        "recommendedPlanTitle": "The recommended plan for you"
       },
       "forwardingonthisdevice": {
         "titleText": "Doorschakelingsconfiguratie vanaf mobiel",
@@ -1673,67 +1674,20 @@
       }
     },
     "wizard": {
-      "pageTitle": "Configuratie van de assistent",
-      "stepOf": "Stap {current} van {total}",
-      "loading": "Verbinding maken met uw assistent...",
-      "nextStep": "Volgende",
-      "skipStep": "Niets wijzigen, door naar de volgende stap",
-      "goToDashboard": "Naar het dashboard",
-      "changeSomething": "Wilt u iets wijzigen?",
-      "changeSomethingHint": "Onthoud dat u dit ook later nog kunt doen!",
-      "inputPlaceholder": "Beschrijf wat u wilt wijzigen...",
-      "sendInstructions": "Instructies versturen",
-      "orSeparator": "of",
-      "saveChanges": "Wijzigingen opslaan",
-      "saving": "Opslaan...",
-      "accept": "Accepteren",
-      "pendingChangesTitle": "Nog op te slaan wijzigingen",
-      "notSavedWarning": "⚠️ De wijzigingen zijn nog NIET opgeslagen. De assistent wordt pas gewijzigd als u op \"Wijzigingen opslaan\" klikt.",
-      "saveSuccess": "Wijzigingen opgeslagen!",
-      "saveError": "Fout bij het opslaan. Probeer het opnieuw.",
-      "analyzeError": "Fout bij de analyse. Probeer het opnieuw.",
-      "steps": {
-        "welcome": {
-          "title": "Welkomstbericht",
-          "loading": "Ik analyseer hoe uw assistent de telefoon opneemt...",
-          "analyzePrompt": "Beschrijf in 2-3 korte zinnen hoe deze assistent inkomende gesprekken beantwoordt en wat hij aan de beller vraagt. Wees specifiek over wat de beller hoort. Stel geen wijzigingen voor."
-        },
-        "knowledge": {
-          "title": "Kennisbank",
-          "loading": "Ik analyseer de kennis van uw assistent...",
-          "analyzePrompt": "Beschrijf in 2 beknopte zinnen over welke onderwerpen deze assistent kan antwoorden, uitsluitend op basis van de huidige kennisbank. Noem GEEN zoekopdrachten op het web: de assistent zoekt tijdens gesprekken NIET op het web (te traag). Voeg één zin toe: als de gebruiker de kennis wil uitbreiden, kan hij mij vragen op het web te zoeken en de informatie aan de kennisbank toe te voegen. Stel niet uit jezelf wijzigingen voor."
-        },
-        "booking": {
-          "title": "Reserveringen",
-          "loading": "Ik analyseer de configuratie van de reserveringen...",
-          "analyzePrompt": "Beschrijf in 2-3 korte zinnen hoe de reserveringen zijn geconfigureerd. Zijn ze actief? Zo ja, hoe werken ze (tijden, duur van de tijdslots)? Leg uit dat voor reserveringen toegang tot Google Agenda nodig is. Stel geen wijzigingen voor."
-        },
-        "transfer": {
-          "title": "Gesprek doorverbinden",
-          "loading": "Ik analyseer het doorverbinden van gesprekken...",
-          "analyzePrompt": "Leg in 3-4 zinnen uit hoe het doorverbinden van gesprekken werkt: de assistent kan het gesprek doorverbinden naar een telefoonnummer op basis van instelbare regels (bijv. tijdstip, verzoek van de beller). Vermeld dat deze functie beschikbaar is vanaf het Starter-abonnement en actief wordt na de eerste betaling. Tijdens de gratis proefperiode is de functie niet beschikbaar."
-        },
-        "notifications_biz": {
-          "title": "Meldingen voor de eigenaar",
-          "loading": "Ik analyseer de e-mailmeldingen...",
-          "analyzePrompt": "Beschrijf in 2-3 korte zinnen hoe de eigenaar via e-mail over de gesprekken wordt geïnformeerd. Naar welk adres komen ze? Wat bevatten ze (samenvatting, transcriptie, opname)? Stel geen wijzigingen voor."
-        },
-        "notifications_caller": {
-          "title": "Meldingen voor de beller",
-          "loading": "Ik analyseer de meldingen voor de beller...",
-          "analyzePrompt": "Beschrijf in 2-3 korte zinnen wat de beller na het gesprek ontvangt. Is WhatsApp of sms actief? Als WhatsApp actief is, welke dienst wordt er gebruikt (gratis/officieel)? Stel geen wijzigingen voor."
-        },
-        "integrations": {
-          "title": "Integraties",
-          "loading": "Ik analyseer de integraties...",
-          "analyzePrompt": "Vraag de gebruiker of hij een managementsysteem, een CRM of andere software gebruikt die hij aan zijn MrCall-assistent zou willen koppelen. Zo ja, vraag naar de naam van de software en het webadres."
-        },
-        "summary": {
-          "title": "Samenvatting",
-          "loading": "Ik bereid de samenvatting voor...",
-          "analyzePrompt": "EINDsamenvatting van de configuratie, zeer beknopt. ÉÉN zin per categorie (max. 7 zinnen in totaal): welkomstbericht, kennisbank, reserveringen, doorverbinden, meldingen voor de eigenaar, meldingen voor de beller, integraties. Sluit af met ÉÉN zin die de gebruiker uitnodigt de assistent te proberen en elke instelling op elk moment via het dashboard aan te passen. Vraag NIET of hij iets wil wijzigen. Gebruik GEEN opsommingstekens. Stel geen wijzigingen voor."
-        }
-      }
+      "statusApplying": "Applying changes...",
+      "statusOpening": "Opening session...",
+      "hangupButtonLabel": "Hangup",
+      "doneTitle": "Done.",
+      "configFailed": "Configuration failed. Try again.",
+      "statusConfiguring": "Configuring...",
+      "autoConfigTitle": "Automatic Configuration",
+      "startButton": "Start",
+      "applyFailed": "Failed to apply changes",
+      "retryButton": "Retry",
+      "continueWithoutCall": "Continue without calling",
+      "callButtonLabel": "Call",
+      "question": "Do you want me to do an initial auto-configuration? I will do web research, figure out how to answer the phone and how to continue the conversation. You can always change my behaviour later.",
+      "agentPrompt": "Do web research for this business. Configure how the assistant answers the phone and continues the conversation. Apply the configuration. At the end of your reply, include EXACTLY one block: <plan-recommendation plan=\"essential|starter|professional\">reason in the user's language</plan-recommendation>. Available plans: {plans}"
     }
   },
   "common": {

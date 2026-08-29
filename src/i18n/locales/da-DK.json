@@ -1307,7 +1307,8 @@
           "bestMatchBadge": "Det ideelle plan for dig",
           "noMatchTitle": "Intet matchende plan",
           "noMatchMessage": "Intet plan opfylder alle dine kriterier. Prøv at fjerne nogle funktioner eller ændre opkaldsvolumen."
-        }
+        },
+        "recommendedPlanTitle": "The recommended plan for you"
       },
       "forwardingonthisdevice": {
         "titleText": "Konfigurering af viderestilling fra mobil",
@@ -1673,67 +1674,20 @@
       }
     },
     "wizard": {
-      "pageTitle": "Konfiguration af assistent",
-      "stepOf": "Trin {current} af {total}",
-      "loading": "Forbinder til din assistent...",
-      "nextStep": "Næste",
-      "skipStep": "Spring over, og gå til næste trin",
-      "goToDashboard": "Gå til dashboardet",
-      "changeSomething": "Vil du ændre noget?",
-      "changeSomethingHint": "Husk, du kan altid gøre det senere!",
-      "inputPlaceholder": "Skriv hvad du gerne vil ændre...",
-      "sendInstructions": "Send instruktionerne",
-      "orSeparator": "eller",
-      "saveChanges": "Gem ændringer",
-      "saving": "Gemmer...",
-      "accept": "Accepter",
-      "pendingChangesTitle": "Ændringer der skal gemmes",
-      "notSavedWarning": "⚠️ Ændringerne er IKKE gemt endnu. Assistenten bliver IKKE ændret, før du klikker på \"Gem ændringer\".",
-      "saveSuccess": "Ændringer gemt!",
-      "saveError": "Fejl ved gemning. Prøv igen.",
-      "analyzeError": "Fejl under analysen. Prøv igen.",
-      "steps": {
-        "welcome": {
-          "title": "Velkomstbesked",
-          "loading": "Analyserer hvordan din assistent besvarer telefonen...",
-          "analyzePrompt": "Beskriv i 2-3 korte sætninger, hvordan denne assistent besvarer indgående opkald, og hvad den spørger opkalderen om. Vær konkret omkring, hvad opkalderen hører. Foreslå ikke ændringer."
-        },
-        "knowledge": {
-          "title": "Vidensbase",
-          "loading": "Analyserer din assistents viden...",
-          "analyzePrompt": "Beskriv i 2 korte sætninger, hvilke emner denne assistent kan svare på, udelukkende ud fra den nuværende vidensbase. Nævn IKKE websøgning: assistenten søger IKKE på nettet under opkald (det er for langsomt). Tilføj én sætning: hvis brugeren vil udvide assistentens viden, kan de bede mig om at søge på nettet og tilføje oplysningerne til vidensbasen. Foreslå ikke ændringer af dig selv."
-        },
-        "booking": {
-          "title": "Bookinger",
-          "loading": "Analyserer bookingopsætningen...",
-          "analyzePrompt": "Beskriv i 2-3 korte sætninger, hvordan bookinger er konfigureret. Er de aktive? Hvis ja, hvordan fungerer de (tidsrum, varighed pr. tid)? Forklar, at bookinger kræver adgang til Google Kalender. Foreslå ikke ændringer."
-        },
-        "transfer": {
-          "title": "Omstilling af opkald",
-          "loading": "Analyserer omstilling af opkald...",
-          "analyzePrompt": "Forklar i 3-4 sætninger, hvordan omstilling af opkald fungerer: assistenten kan stille opkaldet om til et telefonnummer ud fra regler, du selv sætter op (f.eks. tidspunkt eller opkalderens ønske). Nævn, at funktionen er tilgængelig fra Starter-abonnementet og aktiveres efter første betaling. Den er ikke tilgængelig i den gratis prøveperiode."
-        },
-        "notifications_biz": {
-          "title": "Notifikationer til ejeren",
-          "loading": "Analyserer e-mailnotifikationer...",
-          "analyzePrompt": "Beskriv i 2-3 korte sætninger, hvordan ejeren får besked om opkald via e-mail. Til hvilken adresse? Hvad indeholder de (resumé, transskription, optagelse)? Foreslå ikke ændringer."
-        },
-        "notifications_caller": {
-          "title": "Notifikationer til opkalderen",
-          "loading": "Analyserer notifikationer til opkalderen...",
-          "analyzePrompt": "Beskriv i 2-3 korte sætninger, hvad opkalderen modtager efter samtalen. Er WhatsApp eller SMS aktiveret? Hvis WhatsApp er aktiveret, hvilken tjeneste bruges der (gratis/officiel)? Foreslå ikke ændringer."
-        },
-        "integrations": {
-          "title": "Integrationer",
-          "loading": "Analyserer integrationerne...",
-          "analyzePrompt": "Spørg brugeren, om de bruger et administrationssystem, et CRM eller anden software, som de gerne vil koble sammen med deres MrCall-assistent. Hvis ja, spørg om softwarens navn og webadresse."
-        },
-        "summary": {
-          "title": "Opsummering",
-          "loading": "Forbereder opsummeringen...",
-          "analyzePrompt": "AFSLUTTENDE meget kortfattet opsummering af konfigurationen. ÉN sætning pr. kategori (maks. 7 sætninger i alt): velkomstbesked, vidensbase, bookinger, omstilling af opkald, notifikationer til ejeren, notifikationer til opkalderen, integrationer. Slut af med ÉN sætning, der inviterer brugeren til at prøve assistenten og til når som helst at ændre indstillinger fra dashboardet. SPØRG IKKE, om de vil ændre noget. BRUG IKKE punktopstilling. Foreslå ikke ændringer."
-        }
-      }
+      "statusApplying": "Applying changes...",
+      "statusOpening": "Opening session...",
+      "hangupButtonLabel": "Hangup",
+      "doneTitle": "Done.",
+      "configFailed": "Configuration failed. Try again.",
+      "statusConfiguring": "Configuring...",
+      "autoConfigTitle": "Automatic Configuration",
+      "startButton": "Start",
+      "applyFailed": "Failed to apply changes",
+      "retryButton": "Retry",
+      "continueWithoutCall": "Continue without calling",
+      "callButtonLabel": "Call",
+      "question": "Do you want me to do an initial auto-configuration? I will do web research, figure out how to answer the phone and how to continue the conversation. You can always change my behaviour later.",
+      "agentPrompt": "Do web research for this business. Configure how the assistant answers the phone and continues the conversation. Apply the configuration. At the end of your reply, include EXACTLY one block: <plan-recommendation plan=\"essential|starter|professional\">reason in the user's language</plan-recommendation>. Available plans: {plans}"
     }
   },
   "common": {

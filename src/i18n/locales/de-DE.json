@@ -1306,7 +1306,8 @@
           "bestMatchBadge": "Der ideale Plan für Sie",
           "noMatchTitle": "Kein passender Plan",
           "noMatchMessage": "Kein Plan erfüllt alle Ihre Kriterien. Versuchen Sie, einige Funktionen zu entfernen oder das Anrufvolumen zu ändern."
-        }
+        },
+        "recommendedPlanTitle": "Der empfohlene Plan für Sie"
       },
       "forwardingonthisdevice": {
         "titleText": "Weiterleitung vom Handy konfigurieren",
@@ -1672,67 +1673,20 @@
       }
     },
     "wizard": {
-      "pageTitle": "Assistenten-Konfiguration",
-      "stepOf": "Schritt {current} von {total}",
-      "loading": "Verbindung zum Assistenten wird hergestellt...",
-      "nextStep": "Weiter",
-      "skipStep": "Nichts ändern, weiter zum nächsten Schritt",
-      "goToDashboard": "Zum Dashboard",
-      "changeSomething": "Möchtest du etwas ändern?",
-      "changeSomethingHint": "Denk daran: Du kannst das auch später noch tun!",
-      "inputPlaceholder": "Beschreibe, was du ändern möchtest...",
-      "sendInstructions": "Anweisungen senden",
-      "orSeparator": "oder",
-      "saveChanges": "Änderungen speichern",
-      "saving": "Speichern...",
-      "accept": "Übernehmen",
-      "pendingChangesTitle": "Ausstehende Änderungen",
-      "notSavedWarning": "⚠️ Die Änderungen sind noch NICHT gespeichert. Der Assistent wird erst geändert, wenn du auf \"Änderungen speichern\" klickst.",
-      "saveSuccess": "Änderungen gespeichert!",
-      "saveError": "Fehler beim Speichern. Versuche es erneut.",
-      "analyzeError": "Fehler bei der Analyse. Versuche es erneut.",
-      "steps": {
-        "welcome": {
-          "title": "Begrüßungsnachricht",
-          "loading": "Ich analysiere, wie dein Assistent ans Telefon geht...",
-          "analyzePrompt": "Beschreibe in 2-3 kurzen Sätzen, wie dieser Assistent eingehende Anrufe entgegennimmt und was er den Anrufer fragt. Sei konkret dabei, was der Anrufer hört. Schlage keine Änderungen vor."
-        },
-        "knowledge": {
-          "title": "Wissensdatenbank",
-          "loading": "Ich analysiere das Wissen deines Assistenten...",
-          "analyzePrompt": "Beschreibe in 2 knappen Sätzen, zu welchen Themen dieser Assistent antworten kann, ausschließlich auf Basis der aktuellen Wissensdatenbank. Erwähne KEINE Websuche: Der Assistent sucht während der Anrufe NICHT im Web (das wäre zu langsam). Füge einen Satz hinzu: Wer das Wissen erweitern möchte, kann mich bitten, im Web zu suchen und die Informationen der Wissensdatenbank hinzuzufügen. Schlage nicht von dir aus Änderungen vor."
-        },
-        "booking": {
-          "title": "Terminbuchungen",
-          "loading": "Ich analysiere die Konfiguration der Terminbuchungen...",
-          "analyzePrompt": "Beschreibe in 2-3 kurzen Sätzen, wie die Terminbuchungen konfiguriert sind. Sind sie aktiv? Wenn ja, wie funktionieren sie (Zeiten, Dauer der Zeitfenster)? Erkläre, dass für Terminbuchungen der Zugriff auf den Google Kalender autorisiert werden muss. Schlage keine Änderungen vor."
-        },
-        "transfer": {
-          "title": "Anrufweiterleitung",
-          "loading": "Ich analysiere die Anrufweiterleitung...",
-          "analyzePrompt": "Erkläre in 3-4 Sätzen, wie die Anrufweiterleitung funktioniert: Der Assistent kann den Anruf nach konfigurierbaren Regeln an eine Telefonnummer übergeben (z. B. Uhrzeit, Wunsch des Anrufers). Weise darauf hin, dass diese Funktion ab dem Starter-Plan verfügbar ist und nach der ersten Zahlung aktiviert wird. Während der kostenlosen Testphase steht sie nicht zur Verfügung."
-        },
-        "notifications_biz": {
-          "title": "Benachrichtigungen an den Inhaber",
-          "loading": "Ich analysiere die E-Mail-Benachrichtigungen...",
-          "analyzePrompt": "Beschreibe in 2-3 kurzen Sätzen, wie der Inhaber per E-Mail über Anrufe benachrichtigt wird. An welche Adresse? Was enthalten die E-Mails (Zusammenfassung, Transkript, Aufzeichnung)? Schlage keine Änderungen vor."
-        },
-        "notifications_caller": {
-          "title": "Benachrichtigungen an den Anrufer",
-          "loading": "Ich analysiere die Benachrichtigungen an den Anrufer...",
-          "analyzePrompt": "Beschreibe in 2-3 kurzen Sätzen, was der Anrufer nach dem Telefonat erhält. Ist WhatsApp oder SMS aktiv? Wenn WhatsApp aktiv ist, welcher Dienst wird verwendet (kostenlos/offiziell)? Schlage keine Änderungen vor."
-        },
-        "integrations": {
-          "title": "Integrationen",
-          "loading": "Ich analysiere die Integrationen...",
-          "analyzePrompt": "Frage den Nutzer, ob er ein Verwaltungssystem, ein CRM oder eine andere Software verwendet, die er mit seinem MrCall-Assistenten verbinden möchte. Falls ja, frage nach dem Namen der Software und der Webadresse."
-        },
-        "summary": {
-          "title": "Zusammenfassung",
-          "loading": "Ich bereite die Zusammenfassung vor...",
-          "analyzePrompt": "ABSCHLIESSENDE, sehr knappe Zusammenfassung der Konfiguration. EIN Satz pro Kategorie (max. 7 Sätze insgesamt): Begrüßungsnachricht, Wissensdatenbank, Terminbuchungen, Anrufweiterleitung, Benachrichtigungen an den Inhaber, Benachrichtigungen an den Anrufer, Integrationen. Schließe mit EINEM Satz, der den Nutzer einlädt, den Assistenten auszuprobieren und jede Einstellung jederzeit über das Dashboard zu ändern. Frage NICHT, ob er etwas ändern möchte. Verwende KEINE Aufzählungspunkte. Schlage keine Änderungen vor."
-        }
-      }
+      "statusApplying": "Applying changes...",
+      "statusOpening": "Opening session...",
+      "hangupButtonLabel": "Hangup",
+      "doneTitle": "Done.",
+      "configFailed": "Configuration failed. Try again.",
+      "statusConfiguring": "Configuring...",
+      "autoConfigTitle": "Automatic Configuration",
+      "startButton": "Start",
+      "applyFailed": "Failed to apply changes",
+      "retryButton": "Retry",
+      "continueWithoutCall": "Continue without calling",
+      "callButtonLabel": "Call",
+      "question": "Do you want me to do an initial auto-configuration? I will do web research, figure out how to answer the phone and how to continue the conversation. You can always change my behaviour later.",
+      "agentPrompt": "Do web research for this business. Configure how the assistant answers the phone and continues the conversation. Apply the configuration. At the end of your reply, include EXACTLY one block: <plan-recommendation plan=\"essential|starter|professional\">reason in the user's language</plan-recommendation>. Available plans: {plans}"
     }
   },
   "common": {

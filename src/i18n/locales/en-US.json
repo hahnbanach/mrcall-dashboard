@@ -1307,7 +1307,8 @@
           "bestMatchBadge": "Best match for you",
           "noMatchTitle": "No matching plan",
           "noMatchMessage": "No plan matches all your criteria. Try removing some features or changing the call volume."
-        }
+        },
+        "recommendedPlanTitle": "The recommended plan for you"
       },
       "forwardingonthisdevice": {
         "titleText": "Call Forwarding Configuration from Mobile",
@@ -1625,67 +1626,20 @@
       }
     },
     "wizard": {
-      "pageTitle": "Assistant Configuration",
-      "stepOf": "Step {current} of {total}",
-      "loading": "Connecting to your assistant...",
-      "nextStep": "Next",
-      "skipStep": "Skip and go to the next step",
-      "goToDashboard": "Go to dashboard",
-      "changeSomething": "Would you like to change something?",
-      "changeSomethingHint": "Remember, you can always do it later!",
-      "inputPlaceholder": "Describe what you'd like to change...",
-      "sendInstructions": "Send instructions",
-      "orSeparator": "or",
-      "saveChanges": "Save changes",
-      "saving": "Saving...",
-      "accept": "Accept",
-      "pendingChangesTitle": "Pending changes",
-      "notSavedWarning": "⚠️ Changes are NOT saved yet. The assistant is NOT modified until you click \"Save changes\".",
-      "saveSuccess": "Changes saved!",
-      "saveError": "Error saving. Try again.",
-      "analyzeError": "Analysis error. Try again.",
-      "steps": {
-        "welcome": {
-          "title": "Welcome Message",
-          "loading": "Analyzing how your assistant answers the phone...",
-          "analyzePrompt": "Describe in 2-3 short sentences how this assistant answers incoming calls and what it asks the caller. Be specific about what the caller hears. Do not suggest changes."
-        },
-        "knowledge": {
-          "title": "Knowledge Base",
-          "loading": "Analyzing your assistant's knowledge...",
-          "analyzePrompt": "In 2 concise sentences, describe what topics this assistant can answer about, based only on the current knowledge base. Do NOT mention web search: the assistant does NOT search the web during calls (too slow). Add one sentence: if the user wants to expand the knowledge, they can ask me to search the web and add the info to the knowledge base. Do not suggest changes on your own."
-        },
-        "booking": {
-          "title": "Bookings",
-          "loading": "Analyzing booking configuration...",
-          "analyzePrompt": "Describe in 2-3 short sentences how bookings are configured. Are they active? If so, how do they work (hours, slot duration)? Explain that bookings require Google Calendar authorization. Do not suggest changes."
-        },
-        "transfer": {
-          "title": "Call Transfer",
-          "loading": "Analyzing call transfer...",
-          "analyzePrompt": "Explain in 3-4 sentences how call transfer works: the assistant can transfer the call to a phone number based on configurable rules (e.g., time, caller request). Note that this feature is available from the Starter plan and activates after the first payment. It is not available during the free trial."
-        },
-        "notifications_biz": {
-          "title": "Business Notifications",
-          "loading": "Analyzing email notifications...",
-          "analyzePrompt": "Describe in 2-3 short sentences how the business owner is notified about calls via email. To which address? What do they contain (summary, transcription, recording)? Do not suggest changes."
-        },
-        "notifications_caller": {
-          "title": "Caller Notifications",
-          "loading": "Analyzing caller notifications...",
-          "analyzePrompt": "Describe in 2-3 short sentences what the caller receives after the call. Is WhatsApp or SMS active? If WhatsApp is active, which service does it use (free/official)? Do not suggest changes."
-        },
-        "integrations": {
-          "title": "Integrations",
-          "loading": "Analyzing integrations...",
-          "analyzePrompt": "Ask the user if they use a management system, CRM, or any software they'd like to connect to their MrCall assistant. If yes, ask for the software name and web address."
-        },
-        "summary": {
-          "title": "Summary",
-          "loading": "Preparing the summary...",
-          "analyzePrompt": "FINAL very concise summary. ONE sentence per category (max 7 sentences total): welcome message, knowledge base, bookings, call transfer, business notifications, caller notifications, integrations. Close with ONE sentence inviting the user to try the assistant and adjust any setting from the dashboard at any time. DO NOT ask if they want to change anything. DO NOT use bullets. Do not suggest changes."
-        }
-      }
+      "statusApplying": "Applying changes...",
+      "statusOpening": "Opening session...",
+      "hangupButtonLabel": "Hangup",
+      "doneTitle": "Done.",
+      "configFailed": "Configuration failed. Try again.",
+      "statusConfiguring": "Configuring...",
+      "autoConfigTitle": "Automatic Configuration",
+      "startButton": "Start",
+      "applyFailed": "Failed to apply changes",
+      "retryButton": "Retry",
+      "continueWithoutCall": "Continue without calling",
+      "callButtonLabel": "Call",
+      "question": "Do you want me to do an initial auto-configuration? I will do web research, figure out how to answer the phone and how to continue the conversation. You can always change my behaviour later.",
+      "agentPrompt": "Do web research for this business. Configure how the assistant answers the phone and continues the conversation. Apply the configuration. At the end of your reply, include EXACTLY one block: <plan-recommendation plan=\"essential|starter|professional\">reason in the user's language</plan-recommendation>. Available plans: {plans}"
     }
   },
   "common": {

@@ -94,19 +94,31 @@
           </div>
         </div>
 
+        <div v-if="planRecommendation" class="plan-recommendation-banner">
+          <i class="pi pi-info-circle"></i>
+          <div class="banner-content">
+            <span class="banner-title">{{ t('views.onboarding.chooseplan.recommendedPlanTitle') }}</span>
+            <span class="banner-why">{{ planRecommendation.why }}</span>
+          </div>
+        </div>
+
         <div class="plans-body">
           <div v-for="item in tm('views.onboarding.chooseplan.plans')" :key="item.id"
                class="plan-card-wrapper"
                :class="{ 'plan-hidden': advisorIsFiltering && !qualifyingPlanIds.has(item.id) }">
             <div class="plan-card"
                  :class="{
-                   recommended: item.id === 'starter' && !advisorIsFiltering,
-                   'best-match': bestMatchPlanId === item.id
+                   recommended: item.id === 'starter' && !advisorIsFiltering && !planRecommendation,
+                   'best-match': bestMatchPlanId === item.id,
+                   'recommended-by-agent': planRecommendation && planRecommendation.plan === item.id
                  }">
-              <div v-if="bestMatchPlanId === item.id" class="best-match-badge">
+              <div v-if="planRecommendation && planRecommendation.plan === item.id" class="recommended-by-agent-badge">
+                {{ t('views.onboarding.chooseplan.recommendedLabel') }}
+              </div>
+              <div v-else-if="bestMatchPlanId === item.id" class="best-match-badge">
                 {{ t('views.onboarding.chooseplan.advisor.bestMatchBadge') }}
               </div>
-              <div v-else-if="item.id === 'starter' && !advisorIsFiltering" class="recommended-badge">
+              <div v-else-if="item.id === 'starter' && !advisorIsFiltering && !planRecommendation" class="recommended-badge">
                 {{ t('views.onboarding.chooseplan.recommendedLabel') }}
               </div>
               <div class="plan-title">{{ item.title }}</div>
@@ -285,6 +297,11 @@ export default {
     },
     noPlansMatch() {
       return this.advisorIsFiltering && this.qualifyingPlanIds.size === 0
+    },
+    planRecommendation() {
+      const businessId = this.$route.query?.id
+      if (!businessId) return null
+      return this.onboardingData?.planRecommendation?.[businessId] || null
     }
   },
   methods: {
@@ -330,7 +347,7 @@ export default {
       self.blocked = true ;
 
       const convertedBusiness = businessVariablesUtils.businessVariablesToSerializable(business)
-      await businessUtils.chooseBusinessTemplate(this.user, convertedBusiness).then((updBusiness) => {
+      await businessUtils.chooseBusinessTemplate(this.user, convertedBusiness).then(() => {
         self.showSpinner = false ;
         if(isWebview && apple) {
           self.blocked = true ;
@@ -576,6 +593,41 @@ export default {
   }
 }
 
+.plan-recommendation-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8em;
+  width: 100%;
+  padding: 1em 1.2em;
+  margin-bottom: 1.5em;
+  background: #E3F2FD;
+  border: 1px solid #90CAF9;
+  border-radius: 6px;
+  font-size: 0.9em;
+  color: #1565C0;
+
+  i {
+    color: #1976D2;
+    font-size: 1.2em;
+    margin-top: 0.1em;
+    flex-shrink: 0;
+  }
+
+  .banner-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3em;
+
+    .banner-title {
+      font-weight: 700;
+    }
+
+    .banner-why {
+      line-height: 1.5;
+    }
+  }
+}
+
 .plans-body {
   display: flex;
   gap: 1em;
@@ -613,6 +665,10 @@ export default {
       border-top: 3px solid #43A047;
     }
 
+    &.recommended-by-agent {
+      border-top: 3px solid #7B1FA2;
+    }
+
     .recommended-badge {
       position: absolute;
       top: -0.7em;
@@ -634,6 +690,21 @@ export default {
       left: 50%;
       transform: translateX(-50%);
       background: #43A047;
+      color: @mrcall_white;
+      font-size: 0.7em;
+      font-weight: 700;
+      padding: 0.3em 0.8em;
+      border-radius: 3px;
+      white-space: nowrap;
+      text-transform: uppercase;
+    }
+
+    .recommended-by-agent-badge {
+      position: absolute;
+      top: -0.7em;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #7B1FA2;
       color: @mrcall_white;
       font-size: 0.7em;
       font-weight: 700;

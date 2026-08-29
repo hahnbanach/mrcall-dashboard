@@ -1305,7 +1305,8 @@
           "bestMatchBadge": "Il piano ideale per te",
           "noMatchTitle": "Nessun piano corrispondente",
           "noMatchMessage": "Nessun piano corrisponde a tutti i tuoi criteri. Prova a rimuovere qualche funzionalità o a cambiare il volume di chiamate."
-        }
+        },
+        "recommendedPlanTitle": "Il piano consigliato per te"
       },
       "forwardingonthisdevice": {
         "titleText": "Configurazione dell'inoltro da cellulare",
@@ -1623,67 +1624,20 @@
       }
     },
     "wizard": {
-      "pageTitle": "Configurazione Assistente",
-      "stepOf": "Passo {current} di {total}",
-      "loading": "Connessione all'assistente...",
-      "nextStep": "Avanti",
-      "skipStep": "Non cambiare nulla e andiamo al prossimo",
-      "goToDashboard": "Vai alla dashboard",
-      "changeSomething": "Vuoi cambiare qualcosa?",
-      "changeSomethingHint": "Ricorda che puoi farlo anche dopo!",
-      "inputPlaceholder": "Scrivi cosa vorresti cambiare...",
-      "sendInstructions": "Invia le istruzioni",
-      "orSeparator": "oppure",
-      "saveChanges": "Salva modifiche",
-      "saving": "Salvataggio...",
-      "accept": "Accetta",
-      "pendingChangesTitle": "Modifiche da salvare",
-      "notSavedWarning": "⚠️ Modifiche NON ancora salvate. L'assistente NON è stato modificato finché non clicchi «Salva modifiche».",
-      "saveSuccess": "Modifiche salvate!",
-      "saveError": "Errore nel salvataggio. Riprova.",
-      "analyzeError": "Errore nell'analisi. Riprova.",
-      "steps": {
-        "welcome": {
-          "title": "Messaggio di benvenuto",
-          "loading": "Sto analizzando come il tuo assistente risponde al telefono...",
-          "analyzePrompt": "Descrivi in 2-3 frasi brevi come questo assistente risponde alle chiamate in entrata e cosa chiede al chiamante. Sii specifico su cosa sente chi chiama. Non suggerire modifiche."
-        },
-        "knowledge": {
-          "title": "Base di conoscenza",
-          "loading": "Sto analizzando le conoscenze del tuo assistente...",
-          "analyzePrompt": "In 2 frasi concise, descrivi su quali argomenti questo assistente sa rispondere, basandoti solo sulla knowledge base attuale. Non menzionare ricerche sul web: l'assistente NON cerca sul web durante le chiamate (sarebbe troppo lento). Aggiungi una frase: se vuoi ampliare le conoscenze, puoi chiedermi di cercare informazioni sul web e aggiungerle alla knowledge base. Non suggerire modifiche spontanee."
-        },
-        "booking": {
-          "title": "Prenotazioni",
-          "loading": "Sto analizzando la configurazione delle prenotazioni...",
-          "analyzePrompt": "Descrivi in 2-3 frasi brevi come sono configurate le prenotazioni. Sono attive? Se sì, come funzionano (orari, durata slot)? Spiega che per attivare le prenotazioni serve autorizzare l'accesso al calendario Google. Non suggerire modifiche."
-        },
-        "transfer": {
-          "title": "Trasferimento di chiamata",
-          "loading": "Sto analizzando il trasferimento di chiamata...",
-          "analyzePrompt": "Spiega in 3-4 frasi come funziona il trasferimento di chiamata: l'assistente può passare la chiamata a un numero di telefono in base a regole configurabili (es. orario, richiesta del chiamante). Precisa che questa funzionalità è disponibile dal piano Starter in su e si attiva dopo il primo pagamento. Durante la prova gratuita non è disponibile."
-        },
-        "notifications_biz": {
-          "title": "Notifiche al titolare",
-          "loading": "Sto analizzando le notifiche email...",
-          "analyzePrompt": "Descrivi in 2-3 frasi brevi come il titolare viene notificato delle chiamate via email. A quale indirizzo arrivano? Cosa contengono (estratto, trascrizione, registrazione)? Non suggerire modifiche."
-        },
-        "notifications_caller": {
-          "title": "Notifiche al chiamante",
-          "loading": "Sto analizzando le notifiche al chiamante...",
-          "analyzePrompt": "Descrivi in 2-3 frasi brevi cosa riceve il chiamante dopo la telefonata. È attivo WhatsApp o SMS? Se WhatsApp è attivo, quale servizio usa (gratuito/ufficiale)? Non suggerire modifiche."
-        },
-        "integrations": {
-          "title": "Integrazioni",
-          "loading": "Sto analizzando le integrazioni...",
-          "analyzePrompt": "Chiedi all'utente se usa un gestionale, un CRM o qualche software che vorrebbe collegare al suo assistente MrCall. Se sì, chiedi nome del software e indirizzo web."
-        },
-        "summary": {
-          "title": "Riepilogo",
-          "loading": "Sto preparando il riepilogo...",
-          "analyzePrompt": "Riepilogo FINALE molto conciso della configurazione. UNA frase per categoria (max 7 frasi totali): messaggio di benvenuto, knowledge base, prenotazioni, trasferimento, notifiche al titolare, notifiche al chiamante, integrazioni. Chiudi con UNA frase che inviti l'utente a provare l'assistente e a modificare ogni impostazione dalla dashboard in qualsiasi momento. NON chiedere se vuole cambiare qualcosa. NON elencare bullet. Non suggerire modifiche."
-        }
-      }
+      "statusApplying": "Applicazione modifiche...",
+      "statusOpening": "Apertura sessione...",
+      "hangupButtonLabel": "Riaggancia",
+      "doneTitle": "Fatto.",
+      "configFailed": "Configurazione fallita. Riprova.",
+      "statusConfiguring": "Configurazione in corso...",
+      "autoConfigTitle": "Configurazione Automatica",
+      "startButton": "Parti",
+      "applyFailed": "Applicazione modifiche fallita",
+      "retryButton": "Riprova",
+      "continueWithoutCall": "Continua senza chiamare",
+      "callButtonLabel": "Chiama",
+      "question": "Vuoi che faccia una prima autoconfigurazione? Farò una ricerca sul web, cercherò di capire come rispondere al telefono e come continuare la conversazione. Potrai sempre cambiare il mio comportamento dopo.",
+      "agentPrompt": "Fai una ricerca sul web per questa azienda. Configura come l'assistente risponde al telefono e come continua la conversazione. Applica la configurazione. Alla fine della tua risposta, includi ESATTAMENTE un blocco: <plan-recommendation plan=\"essential|starter|professional\">motivazione nella lingua dell'utente</plan-recommendation>. Piani disponibili: {plans}"
     }
   },
   "common": {
