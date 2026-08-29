@@ -136,7 +136,9 @@
       "error": "Något gick fel",
       "errorStarting": "Det gick inte att starta samtalet",
       "micDenied": "MrCall behöver din mikrofon. Klicka på hänglåset i adressfältet, tillåt mikrofonen och försök igen.",
-      "micNotFound": "Ingen mikrofon hittades. Anslut en, eller försök från en annan enhet."
+      "micNotFound": "Ingen mikrofon hittades. Anslut en, eller försök från en annan enhet.",
+      "micDialogTitle": "Microphone unavailable",
+      "micDialogOk": "Got it"
     },
     "navbar": {
       "login": "Logga in",

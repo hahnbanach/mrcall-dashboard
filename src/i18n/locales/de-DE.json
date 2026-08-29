@@ -137,7 +137,9 @@
       "error": "Etwas ist schiefgelaufen",
       "errorStarting": "Der Anruf konnte nicht gestartet werden",
       "micDenied": "MrCall benötigt Ihr Mikrofon. Klicken Sie auf das Schloss in der Adressleiste, erlauben Sie das Mikrofon und versuchen Sie es erneut.",
-      "micNotFound": "Es wurde kein Mikrofon gefunden. Schließen Sie eines an oder versuchen Sie es auf einem anderen Gerät."
+      "micNotFound": "Es wurde kein Mikrofon gefunden. Schließen Sie eines an oder versuchen Sie es auf einem anderen Gerät.",
+      "micDialogTitle": "Microphone unavailable",
+      "micDialogOk": "Got it"
     },
     "navbar": {
       "login": "Anmelden",

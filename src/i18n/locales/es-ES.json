@@ -136,7 +136,9 @@
       "error": "Algo ha salido mal",
       "errorStarting": "No se ha podido iniciar la llamada",
       "micDenied": "MrCall necesita tu micrófono. Haz clic en el candado de la barra de direcciones, permite el micrófono y vuelve a intentarlo.",
-      "micNotFound": "No se ha detectado ningún micrófono. Conecta uno o prueba desde otro dispositivo."
+      "micNotFound": "No se ha detectado ningún micrófono. Conecta uno o prueba desde otro dispositivo.",
+      "micDialogTitle": "Microphone unavailable",
+      "micDialogOk": "Got it"
     },
     "navbar": {
       "login": "Iniciar sesión",

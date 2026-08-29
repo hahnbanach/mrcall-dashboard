@@ -136,7 +136,9 @@
       "error": "Jokin meni pieleen",
       "errorStarting": "Puhelua ei voitu aloittaa",
       "micDenied": "MrCall tarvitsee mikrofonisi. Napsauta osoiterivin lukkokuvaketta, salli mikrofoni ja yritä uudelleen.",
-      "micNotFound": "Mikrofonia ei löytynyt. Liitä mikrofoni tai kokeile toisella laitteella."
+      "micNotFound": "Mikrofonia ei löytynyt. Liitä mikrofoni tai kokeile toisella laitteella.",
+      "micDialogTitle": "Microphone unavailable",
+      "micDialogOk": "Got it"
     },
     "navbar": {
       "login": "Kirjaudu sisään",

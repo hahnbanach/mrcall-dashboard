@@ -136,7 +136,9 @@
       "error": "Midagi läks valesti",
       "errorStarting": "Kõnet ei õnnestunud alustada",
       "micDenied": "MrCall vajab teie mikrofoni. Klõpsake aadressiribal tabalukul, lubage mikrofon ja proovige uuesti.",
-      "micNotFound": "Mikrofoni ei leitud. Ühendage mikrofon või proovige teisest seadmest."
+      "micNotFound": "Mikrofoni ei leitud. Ühendage mikrofon või proovige teisest seadmest.",
+      "micDialogTitle": "Microphone unavailable",
+      "micDialogOk": "Got it"
     },
     "navbar": {
       "login": "Logi sisse",

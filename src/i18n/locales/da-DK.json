@@ -136,7 +136,9 @@
       "error": "Noget gik galt",
       "errorStarting": "Opkaldet kunne ikke startes",
       "micDenied": "MrCall har brug for din mikrofon. Klik på hængelåsen i adresselinjen, tillad mikrofonen, og prøv igen.",
-      "micNotFound": "Der blev ikke fundet nogen mikrofon. Tilslut en, eller prøv fra en anden enhed."
+      "micNotFound": "Der blev ikke fundet nogen mikrofon. Tilslut en, eller prøv fra en anden enhed.",
+      "micDialogTitle": "Microphone unavailable",
+      "micDialogOk": "Got it"
     },
     "navbar": {
       "login": "Log ind",

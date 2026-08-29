@@ -136,7 +136,9 @@
       "error": "Er is iets misgegaan",
       "errorStarting": "Het gesprek kon niet worden gestart",
       "micDenied": "MrCall heeft je microfoon nodig. Klik op het slotje in de adresbalk, geef toestemming voor de microfoon en probeer het opnieuw.",
-      "micNotFound": "Geen microfoon gevonden. Sluit er een aan of probeer het op een ander apparaat."
+      "micNotFound": "Geen microfoon gevonden. Sluit er een aan of probeer het op een ander apparaat.",
+      "micDialogTitle": "Microphone unavailable",
+      "micDialogOk": "Got it"
     },
     "navbar": {
       "login": "Inloggen",

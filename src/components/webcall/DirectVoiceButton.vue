@@ -10,6 +10,7 @@
     :class="{ 'in-call-active': inCall && !processing }"
     @click="handleClick"
   />
+  <MicPermissionDialog v-model:visible="micDialogVisible" :kind="micDialogKind" />
 </template>
 
 <script setup>
@@ -28,6 +29,8 @@ import { useToast } from "primevue/usetoast";
 import { useI18n } from "vue-i18n";
 import { auth } from "@/firebase/config";
 import MrCallDirectVoice from "@mrcall/directvoice";
+import MicPermissionDialog from "./MicPermissionDialog.vue";
+import { classifyVoiceError } from "@/utils/voiceErrors";
 
 const { t } = useI18n();
 
@@ -80,6 +83,11 @@ const callStatus = ref("idle"); // idle | connecting | active | ending
 const processing = ref(false);
 const unmounting = ref(false);
 const pageUnloading = ref(false);
+
+// Mic failures open a modal popup instead of a 10s toast. `kind` drives which
+// localized body the dialog shows (micDenied vs micNotFound).
+const micDialogVisible = ref(false);
+const micDialogKind = ref("micDenied");
 
 const inCall = computed(
   () => callStatus.value === "connecting" || callStatus.value === "active"
@@ -135,6 +143,15 @@ const buttonSeverity = computed(() => {
 const SAMPLE_RATE = 24000;
 
 let voice = null;
+
+// The SDK fires `onError` inside startStream's catch and then rethrows, so one
+// start failure reaches BOTH `client.onError` and the `startCall` catch. The
+// catch owns surfacing start failures (it can open the mic dialog); `onError`
+// must not stack a second toast for the same failure. `startInFlight` marks a
+// start in progress and covers the real ordering (onError runs before the
+// catch); `lastStartError` is a < 2 s message-match backstop for any race.
+let startInFlight = false;
+let lastStartError = null;
 
 /** Toasts are suppressed while the component or the page is going away: a hangup
  * fired from a teardown handler is expected, not something to report. */
@@ -192,7 +209,19 @@ function createVoice() {
 
   client.onError = (message) => {
     track("webcall_failed", { stage: "in_call", error_message: message });
-    notify("error", t("components.directVoice.error"), message, 6000);
+    // Skip the toast only when this duplicates a start failure the catch is
+    // surfacing (or about to surface): without this guard one mic denial stacks
+    // two toasts — "Direct voice error" from here and "Error starting direct
+    // voice" from the catch. Mid-call server errors (no start in flight, no
+    // recent match) keep their toast.
+    const duplicateStart =
+      startInFlight ||
+      (lastStartError &&
+        lastStartError.message === message &&
+        Date.now() - lastStartError.at < 2000);
+    if (!duplicateStart) {
+      notify("error", t("components.directVoice.error"), message, 6000);
+    }
     emit("error", message);
   };
 
@@ -227,8 +256,11 @@ async function startCall() {
 
     destroyVoice();
     voice = createVoice();
+    startInFlight = true;
     await voice.startStream(buildWsUrl(token, voice.encoding));
+    startInFlight = false;
   } catch (e) {
+    startInFlight = false;
     callStatus.value = "idle";
     processing.value = false;
     destroyVoice();
@@ -243,19 +275,19 @@ async function startCall() {
     // instruction to click the padlock, and the raw DOMException in English on
     // a dashboard localised into twelve languages. NotAllowedError is a denied
     // or dismissed prompt — 11 of the 20 errors on the one instrumented surface
-    // were a prompt the user simply closed. Everything else keeps the raw
-    // message as detail, which is what support needs to see.
-    const key =
-      e?.name === "NotAllowedError" || e?.name === "SecurityError"
-        ? "micDenied"
-        : e?.name === "NotFoundError" || e?.name === "OverconstrainedError"
-        ? "micNotFound"
-        : null;
-    if (key) {
-      notify("error", t(`components.directVoice.${key}`), "", 10000);
+    // were a prompt the user simply closed. The classifier matches on name AND
+    // message, because the DOMException name is not contractual across
+    // browsers/SDK permutations (a dismissed prompt surfaced as a name the old
+    // switch did not list). Everything else keeps the raw message as detail,
+    // which is what support needs to see.
+    const kind = classifyVoiceError(e);
+    if (kind) {
+      micDialogKind.value = kind;
+      micDialogVisible.value = true;
     } else {
       notify("error", t("components.directVoice.errorStarting"), msg, 6000);
     }
+    lastStartError = { message: msg, at: Date.now() };
     emit("error", msg);
   }
 }

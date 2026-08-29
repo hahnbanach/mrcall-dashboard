@@ -136,7 +136,9 @@
       "error": "Something went wrong",
       "errorStarting": "Could not start the call",
       "micDenied": "MrCall needs your microphone. Click the padlock in the address bar, allow the microphone, then try again.",
-      "micNotFound": "No microphone was found. Connect one, or try from another device."
+      "micNotFound": "No microphone was found. Connect one, or try from another device.",
+      "micDialogTitle": "Microphone unavailable",
+      "micDialogOk": "Got it"
     },
     "navbar": {
       "login": "Sign in",

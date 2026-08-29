@@ -10,6 +10,7 @@
     :class="{ 'in-call-active': inCall && !processing }"
     @click="handleClick"
   />
+  <MicPermissionDialog v-model:visible="micDialogVisible" :kind="micDialogKind" />
 </template>
 
 <script setup>
@@ -17,6 +18,8 @@ import { ref, computed, shallowRef, markRaw, onMounted, onBeforeUnmount, onUnmou
 import Button from 'primevue/button'
 import { useToast } from 'primevue/usetoast'
 import MrCallWebCall from '/public/MrCallWebCall.bundle.js'
+import MicPermissionDialog from './MicPermissionDialog.vue'
+import { classifyVoiceError } from '@/utils/voiceErrors'
 
 /* ---------------- props / emits ---------------------------------------- */
 const props = defineProps({
@@ -52,6 +55,19 @@ const dialing     = ref(false)     // becomes true as soon as we start dialling
 const processing  = ref(false)     // true while awaiting async op
 const unmounting  = ref(false)     // becomes true during component teardown
 const pageUnloading = ref(false)   // becomes true when the tab/page is leaving
+
+// Mic failures open a modal popup instead of a raw toast. `kind` selects which
+// localized body the dialog shows (micDenied vs micNotFound).
+const micDialogVisible = ref(false)
+const micDialogKind   = ref('micDenied')
+
+/* A start failure can surface both in `onSessionError` and in the `startCall`
+ * catch (same double-fire shape as DirectVoiceButton). The catch owns surfacing
+ * start failures — it can open the mic dialog — so `onSessionError` skips its
+ * toast when this duplicates a start failure. `startInFlight` covers the real
+ * ordering; `lastStartError` is a < 2 s message-match backstop. */
+let startInFlight = false
+let lastStartError = null
 
 /* the button is considered “in a call” while dialling or after callId is set */
 const inCall = computed(() => dialing.value || !!callId.value)
@@ -107,8 +123,23 @@ function buildClientIfNeeded () {
   client.value.onSessionError = reason => {
     dialing.value = false
     const msg = String(reason)
-    if (!unmounting.value && !pageUnloading.value) {
-      toast.add({ severity:'error', summary:'Session error', detail:msg, life:6000 })
+    // Skip surfacing when this duplicates a start failure the catch is handling
+    // (or about to handle): the catch owns start-failure surfacing and can open
+    // the mic dialog, so a second toast here would just stack. Mid-call session
+    // errors (no start in flight, no recent match) keep their toast.
+    const duplicateStart =
+      startInFlight ||
+      (lastStartError &&
+        lastStartError.message === msg &&
+        Date.now() - lastStartError.at < 2000)
+    if (!duplicateStart && !unmounting.value && !pageUnloading.value) {
+      const kind = classifyVoiceError(reason)
+      if (kind) {
+        micDialogKind.value = kind
+        micDialogVisible.value = true
+      } else {
+        toast.add({ severity:'error', summary:'Session error', detail:msg, life:6000 })
+      }
     }
     emit('error', msg)
   }
@@ -148,24 +179,36 @@ async function startCall () {
   if (processing.value || unmounting.value || pageUnloading.value) return
   processing.value = true
   dialing.value    = true       // turn the button red immediately
+  startInFlight    = true       // mark the start so onSessionError can dedupe
 
   try {
     buildClientIfNeeded()
     await client.value.initialize()
     const id = await client.value.makeCall()
     callId.value = id
+    startInFlight = false
 
     if (!unmounting.value && !pageUnloading.value) {
       toast.add({ severity:'success', summary:'Call requested', detail:`id: ${id}`, life:4000 })
     }
     emit('call-started', id)
   } catch (e) {
+    startInFlight = false
     dialing.value = false
     callId.value  = null
     const msg = e?.message || String(e)
     if (!unmounting.value && !pageUnloading.value) {
-      toast.add({ severity:'error', summary:'Error starting call', detail:msg, life:6000 })
+      // Mic failures get the localized popup with re-grant instructions; every
+      // other start failure keeps the raw message as detail for support.
+      const kind = classifyVoiceError(e)
+      if (kind) {
+        micDialogKind.value = kind
+        micDialogVisible.value = true
+      } else {
+        toast.add({ severity:'error', summary:'Error starting call', detail:msg, life:6000 })
+      }
     }
+    lastStartError = { message: msg, at: Date.now() }
     emit('error', msg)
   } finally {
     processing.value = false

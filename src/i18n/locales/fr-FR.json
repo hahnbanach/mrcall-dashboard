@@ -137,7 +137,9 @@
       "error": "Une erreur s'est produite",
       "errorStarting": "Impossible de démarrer l'appel",
       "micDenied": "MrCall a besoin de votre microphone. Cliquez sur le cadenas dans la barre d'adresse, autorisez le microphone, puis réessayez.",
-      "micNotFound": "Aucun microphone détecté. Branchez-en un, ou essayez depuis un autre appareil."
+      "micNotFound": "Aucun microphone détecté. Branchez-en un, ou essayez depuis un autre appareil.",
+      "micDialogTitle": "Microphone unavailable",
+      "micDialogOk": "Got it"
     },
     "navbar": {
       "login": "Connexion",
