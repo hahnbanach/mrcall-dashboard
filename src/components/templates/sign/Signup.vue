@@ -1,4 +1,4 @@
-<template xmlns="http://www.w3.org/1999/html">
+<template>
   <div class="signin-signup-form">
     <form @submit.prevent="handleSubmit(!v$.$invalid)">
       <div class="p-fluid">

@@ -195,9 +195,8 @@ export default {
         "auth": this.user.accessToken
       };
       console.debug("BUSINESS TO SAVE:", this.business)
-      let operation = undefined
       console.debug("Create operation")
-      operation = axios.put(process.env.VUE_APP_STARCHAT_URL + "/mrcall/v1/mrcall0/crm/business",
+      const operation = axios.put(process.env.VUE_APP_STARCHAT_URL + "/mrcall/v1/mrcall0/crm/business",
           {
             businessId: this.business.businessId,
             businessPhoneNumber: this.business.businessPhoneNumber,
@@ -228,7 +227,7 @@ export default {
         this.setMessage("error", this.t('components.businessphonenumberverification.errorSavingSettings') + "(" + error.message + ")")
         console.error(error)
         if(error.response.status === 401) {
-          store.dispatch('logout')
+          this.store.dispatch('logout')
           router.replace('/signin')
         }
       })

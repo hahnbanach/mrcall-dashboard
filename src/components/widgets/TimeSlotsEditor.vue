@@ -1,17 +1,17 @@
 <script setup>
 /* ------------------------------------------------------------- * Imports
  * ------------------------------------------------------------- */
-import { reactive, computed, watch } from 'vue'
+import { reactive, computed, watch, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Calendar    from 'primevue/calendar'
 import Button      from 'primevue/button'
 import Fieldset    from 'primevue/fieldset'
-import { useToast } from 'primevue/usetoast'
 import businessVariablesUtils from '@/utils/BusinessVariables'
 
 /* ------------------------------------------------------------- * Props & localisation helper
  * ------------------------------------------------------------- */
 const { t } = useI18n()
+const model = defineModel()
 const props  = defineProps({
   business: Object,
   variable: Object,
@@ -20,13 +20,14 @@ const props  = defineProps({
     default: 30 // fallback to 30 if not provided
   }
 })
-const toast  = useToast()
 
-/* ------------------------------------------------------------- * Initialise the variable if it is missing
+/* ------------------------------------------------------------- * Initialise the model if it is missing
  * ------------------------------------------------------------- */
-if (props.business.variables[props.variable.name] === undefined) {
-  props.business.variables[props.variable.name] = {}
-}
+onMounted(() => {
+  if (model.value === undefined) {
+    model.value = {}
+  }
+})
 
 /* ------------------------------------------------------------- * Reactive data
  *   Data shape: { monday:[{start:'10:00',end:'10:30'}, …], … }
@@ -36,7 +37,7 @@ const slots    = reactive({})
 
 // Copy back-end value → reactive local object
 weekDays.forEach(day => {
-  const src = props.business.variables[props.variable.name][day] ?? []
+  const src = (model.value && model.value[day]) ? model.value[day] : []
   slots[day] = src.map(r => ({ ...splitRange(r) }))      // [{start:'10:00',end:'10:30'}]
 })
 
@@ -69,7 +70,7 @@ watch(
         dst[day] = slots[day].map(s => joinRange(s))
       }
     })
-    props.business.variables[props.variable.name] = dst
+    model.value = dst
   },
   { deep: true, immediate: true }
 )
@@ -161,15 +162,6 @@ function validateDay(day) {
     if (sorted[i - 1].end > sorted[i].start) return false
   }
   return true
-}
-
-function showError () {
-  toast.add({
-    severity: 'error',
-    summary : t('error'),
-    detail  : t('timeSlots.invalid'),
-    life    : 3000
-  })
 }
 </script>
 

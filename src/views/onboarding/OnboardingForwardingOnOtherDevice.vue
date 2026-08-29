@@ -46,27 +46,29 @@
               </div>
             </div>
           </div>
-          <div v-if="block.beforeClosing" v-for="(row, rowidx) in block.beforeClosing.rows" :key="rowidx">
-            <div class="before-closing-element">
-              <div style="padding: 1em ;">
-                <div v-for="(textElement, textidx) in row" :key="textidx" style="display: inline;">
-                  <p v-if="textElement.phoneNumberHref && enabledPhoneLinks" :style="textElement.style">
-                    <a :href="'tel:' + textElement.phoneNumberHref" target='_self'>{{textElement.phoneNumberHref}}</a>
-                  </p>
-                  <p v-else-if="textElement.phoneNumberHref" :style="textElement.style">
-                    {{textElement.phoneNumberHref}}
-                  </p>
-                  <p v-else-if="textElement.href && textElement.text" :style="textElement.style">
-                    <a :href="textElement.href" target='_blank'>{{textElement.text}}</a>
-                  </p>
-                  <p v-else-if="textElement.href" :style="textElement.style">
-                    <a :href="textElement.href" target='_blank'>{{textElement.href}}</a>
-                  </p>
-                  <p v-else :style="textElement.style">{{textElement.text}}</p>
+          <template v-if="block.beforeClosing">
+            <div v-for="(row, rowidx) in block.beforeClosing.rows" :key="rowidx">
+              <div class="before-closing-element">
+                <div style="padding: 1em ;">
+                  <div v-for="(textElement, textidx) in row" :key="textidx" style="display: inline;">
+                    <p v-if="textElement.phoneNumberHref && enabledPhoneLinks" :style="textElement.style">
+                      <a :href="'tel:' + textElement.phoneNumberHref" target='_self'>{{textElement.phoneNumberHref}}</a>
+                    </p>
+                    <p v-else-if="textElement.phoneNumberHref" :style="textElement.style">
+                      {{textElement.phoneNumberHref}}
+                    </p>
+                    <p v-else-if="textElement.href && textElement.text" :style="textElement.style">
+                      <a :href="textElement.href" target='_blank'>{{textElement.text}}</a>
+                    </p>
+                    <p v-else-if="textElement.href" :style="textElement.style">
+                      <a :href="textElement.href" target='_blank'>{{textElement.href}}</a>
+                    </p>
+                    <p v-else :style="textElement.style">{{textElement.text}}</p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          </template>
           <div v-for="(row, rowidx) in block.closing.rows" :key="rowidx">
             <div class="closing-element">
               <div style="flex-flow: initial; display: flex; padding: 1em;">

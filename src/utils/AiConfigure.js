@@ -66,7 +66,7 @@ export default {
                     let msg;
                     try {
                         msg = JSON.parse(event.data);
-                    } catch (e) {
+                    } catch {
                         console.warn("AgentRunWs: non-JSON message", event.data);
                         return;
                     }

@@ -1,7 +1,6 @@
 import { onAuthStateChanged } from 'firebase/auth'
 import { auth } from './config'
 import store from '../store'
-import router from '@/router'
 
 let tokenRefreshInterval = null
 

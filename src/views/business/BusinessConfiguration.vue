@@ -221,7 +221,7 @@
                 </div>
                 <div v-if="variable.upgradeInformation" class="inputboxsubtitle" v-html="variable.upgradeInformation">
                 </div>
-                <MultiselectVariable :business="business" :variable="variable"></MultiselectVariable>
+                <MultiselectVariable v-model="business.variables[variable.name]" :variable="variable"></MultiselectVariable>
               </div>
             </template>
             <template v-else-if="variable.type === 'templated' && businessVariablesUtils.isVariableVisible(variable, isAdmin, advancedMode)">
@@ -242,7 +242,7 @@
                 </div>
                 <div v-if="variable.upgradeInformation" class="inputboxsubtitle" v-html="variable.upgradeInformation">
                 </div>
-                <TemplatedVariable :business="business" :variable="variable"></TemplatedVariable>
+                <TemplatedVariable v-model="business.variables[variable.name]" :business="business" :variable="variable"></TemplatedVariable>
               </div>
             </template>
             <template v-else-if="variable.type === 'boolean' && businessVariablesUtils.isVariableVisible(variable, isAdmin, advancedMode)">
@@ -365,10 +365,10 @@
             </template>
             <!-- BOOKING_HOURS, TALK_AND_HANGUP_HOURS widgect selected directly-->
             <template v-else-if="variable.name === 'BOOKING_HOURS' && businessVariablesUtils.isVariableVisible(variable, isAdmin, advancedMode)">
-              <TimeSlotsEditor :business="business" :variable="variable" :slotDuration="Number(business.variables['BOOKING_EVENTS_MINUTES']) || 45"></TimeSlotsEditor>
+              <TimeSlotsEditor v-model="business.variables[variable.name]" :business="business" :variable="variable" :slotDuration="Number(business.variables['BOOKING_EVENTS_MINUTES']) || 45"></TimeSlotsEditor>
             </template>
             <template v-else-if="variable.name === 'TALK_AND_HANGUP_HOURS' && businessVariablesUtils.isVariableVisible(variable, isAdmin, advancedMode)">
-              <TimeSlotsEditor :business="business" :variable="variable" :slotDuration="60"></TimeSlotsEditor>
+              <TimeSlotsEditor v-model="business.variables[variable.name]" :business="business" :variable="variable" :slotDuration="60"></TimeSlotsEditor>
             </template>
             <!-- Agent Skills configurator (type: agent_skills) -->
             <template v-else-if="variable.type === 'agent_skills' && businessVariablesUtils.isVariableVisible(variable, isAdmin, advancedMode)">
@@ -470,10 +470,9 @@ import AgentSkillsConfigurator from "@/components/widgets/AgentSkillsConfigurato
 import ConnectCalendar from "@/components/ConnectCalendar.vue";
 import ActionPanel from "@/components/ActionPanel.vue";
 import ConfigureAIPanel from "@/components/ConfigureAIPanel.vue";
-import SupportSection from "@/components/templates/support/SupportSection.vue";
 
 export default {
-  components: { TimeSlotsEditor, AgentSkillsConfigurator, TupleVariable, TemplatedVariable, MultiselectVariable, BusinessFrame, ConnectCalendar, SupportSection, ActionPanel, ConfigureAIPanel},
+  components: { TimeSlotsEditor, AgentSkillsConfigurator, TupleVariable, TemplatedVariable, MultiselectVariable, BusinessFrame, ConnectCalendar, ActionPanel, ConfigureAIPanel},
   name: "OnboardingChooseDevice",
   setup: function () {
     const store = useStore();
@@ -689,7 +688,7 @@ export default {
       };
       const convertedBusiness = businessVariablesUtils.businessVariablesToSerializable(this.business)
       console.debug("BUSINESS TO SAVE:", convertedBusiness)
-      let operation = undefined
+      let operation
       if(this.business.businessId) {
         console.debug("Update operation: ", this.business.businessId)
         operation = axios.put(process.env.VUE_APP_STARCHAT_URL + "/mrcall/v1/mrcall0/crm/business", //FIXME: this is for CORS, use different configuration in production

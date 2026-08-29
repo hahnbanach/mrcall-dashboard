@@ -222,7 +222,7 @@ async function startCall() {
       token = await firebaseUser.getIdToken(true);
     } catch (err) {
       console.error("Failed to get fresh Firebase token:", err);
-      throw new Error("Authentication failed — please reload the page");
+      throw new Error("Authentication failed — please reload the page", { cause: err });
     }
 
     destroyVoice();

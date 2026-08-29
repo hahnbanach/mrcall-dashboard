@@ -68,7 +68,7 @@
 
 <script>
 import OnboardingBase from "@/components/templates/onboarding/Base";
-import {computed, ref} from "vue";
+import {computed} from "vue";
 import {useStore} from "vuex";
 import router from "@/router";
 import businessUtils from "@/utils/Business";

@@ -1,7 +1,6 @@
 import {createStore} from 'vuex'
 import VuexPersistence from 'vuex-persist'
 import SecureLS from "secure-ls";
-import {ref} from "vue";
 
 // firebase imports
 import {auth} from '@/firebase/config'
@@ -202,7 +201,7 @@ const store = createStore({
         throw new Error('could not complete the custom token signin')
       }
     },
-    async signup(context, { email, password, actionCodeSettings }) {
+    async signup(context, { email, password }) {
       console.log('signup action')
       const res = await createUserWithEmailAndPassword(auth, email, password)
       if (res) {

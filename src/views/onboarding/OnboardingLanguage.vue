@@ -66,7 +66,7 @@
 
 <script>
 import OnboardingBase from "@/components/templates/onboarding/Base";
-import {computed, ref} from "vue";
+import {computed} from "vue";
 import router from "@/router";
 import {useStore} from "vuex";
 import businessUtils from "@/utils/Business";
@@ -78,7 +78,7 @@ export default {
   name: "OnboardingLanguage",
   setup: function () {
     const store = useStore();
-    const { t, tm } = useI18n()
+    const { t } = useI18n()
 
     const isoAlpha2Selection = computed(() => [
           {name: t('isoAlpha2Country.IT'), value: 'IT'},

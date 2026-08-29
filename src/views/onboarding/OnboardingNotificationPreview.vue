@@ -44,12 +44,10 @@ import OnboardingBase from "@/components/templates/onboarding/Base";
 import {computed, ref} from "vue";
 import {useStore} from "vuex";
 import router from "@/router";
-import Autocomplete from 'primevue/autocomplete';
 import {useConfirm} from "primevue/useconfirm";
-import businessUtils from "@/utils/Business";
 
 export default {
-  components: {OnboardingBase, Autocomplete},
+  components: {OnboardingBase},
   name: "OnboardingNotificationPreview",
   setup: function () {
     const store = useStore();

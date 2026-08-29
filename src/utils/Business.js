@@ -63,15 +63,13 @@ export default {
                         if (business[parameterSpecification.name] === undefined ||
                             (parameterSpecification.mandatory && business[parameterSpecification.name] === ""))
                             business[parameterSpecification.name] = parameterSpecification.defaultValue
-                        else
-                            business[parameterSpecification.name] = business[parameterSpecification.name]
                     } else if(parameterSpecification.type === "agent_skills") {
                         if (business[parameterSpecification.name] === undefined ||
                             (parameterSpecification.mandatory && business[parameterSpecification.name] === ""))
                             business[parameterSpecification.name] = {}
                         else {
                             try { business[parameterSpecification.name] = JSON.parse(business[parameterSpecification.name]) }
-                            catch(e) { business[parameterSpecification.name] = {} }
+                            catch { business[parameterSpecification.name] = {} }
                         }
                     } else {
                         throw new Error("Invalid variable specification:", parameterSpecification.class, parameterSpecification.name, parameterSpecification.type)
@@ -142,14 +140,13 @@ export default {
                         if (business.variables[parameterSpecification.name] === undefined ||
                             (parameterSpecification.mandatory && business.variables[parameterSpecification.name] === "")) {
                             business.variables[parameterSpecification.name] = parameterSpecification.defaultValue
-                        } else
-                            business.variables[parameterSpecification.name] = business.variables[parameterSpecification.name]
+                        }
                     } else if(parameterSpecification.type === "agent_skills") {
                         if (business.variables[parameterSpecification.name] === undefined ||
                             (parameterSpecification.mandatory && business.variables[parameterSpecification.name] === "")) {
                             try {
                                 business.variables[parameterSpecification.name] = JSON.parse(parameterSpecification.defaultValue)
-                            } catch (error) {
+                            } catch {
                                 business.variables[parameterSpecification.name] = {}
                             }
                         } else {

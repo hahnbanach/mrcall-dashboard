@@ -669,7 +669,7 @@ export default {
       let contacts
       try {
         contacts = JSON.parse(this.bulkJsonText)
-      } catch (e) {
+      } catch {
         this.toast.add({
           severity: 'error',
           summary: this.$t('components.contacts.toast.validationError'),

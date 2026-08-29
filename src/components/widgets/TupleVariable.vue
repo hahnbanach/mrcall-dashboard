@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watch, toRef, computed } from 'vue';
+import { ref, watch, computed } from 'vue';
 import { useI18n } from "vue-i18n";
 
 const { t } = useI18n();
@@ -24,14 +24,6 @@ watch(() => props.recipient, (newVal) => {
 watch(() => localRecipient.value, (newVal) => {
   emit('update:recipient', JSON.parse(JSON.stringify(newVal)));
 }, { deep: true });
-
-// Create a new item with proper structure
-function createNestedValue(item) {
-  if (item.type === 'tuples' && item.tuple) {
-    return []; // Initialize nested tuple with empty array
-  }
-  return ""; // Default empty string for other types
-}
 
 function createNewItem() {
   // If we have a template, use that as the base

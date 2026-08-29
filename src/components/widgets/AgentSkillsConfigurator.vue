@@ -2,7 +2,6 @@
 import { ref, watch, onMounted, computed } from 'vue';
 import { useI18n } from "vue-i18n";
 import { useStore } from "vuex";
-import { getAuth } from 'firebase/auth';
 import agentSkillsUtils from "@/utils/AgentSkills";
 import { GoogleAuthFlow, assertScopesAllowed } from '@/utils/OAuth';
 import { useToast } from "primevue/usetoast";
@@ -11,7 +10,6 @@ import TupleVariable from "./TupleVariable.vue";
 const { t, locale } = useI18n();
 const toast = useToast();
 const store = useStore();
-const auth = getAuth();
 
 const props = defineProps({
   modelValue: { type: [String, Object], default: '{}' },
@@ -273,7 +271,7 @@ function getOauthFields(entry) {
 // OAuth connection status (checked per provider)
 const oauthStatus = ref({});
 
-async function checkOAuthStatus(provider) {
+async function checkOAuthStatus() {
   // Check if user has an active OAuth connection for this provider
   const user = store.state.user;
   if (!user) return;

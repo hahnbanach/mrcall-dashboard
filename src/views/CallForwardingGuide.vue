@@ -106,7 +106,6 @@
 
 <script>
 import router from "@/router";
-import axios from "axios";
 import {useStore} from "vuex";
 import {computed} from 'vue';
 //import {onAuthStateChanged} from "firebase/auth";
@@ -910,7 +909,7 @@ export default {
 
     const isWebView = computed(() => store.state.isWebview)
     const osName = computed(() => store.state.webviewOsName)
-    const enabledPhoneLinks = computed(() => ! isWebView || (isWebView && osName === "ios"))
+    const enabledPhoneLinks = computed(() => ! isWebView.value || (isWebView.value && osName.value === "ios"))
 
     return {
       store,

@@ -49,14 +49,15 @@
             {{ modalDialogSubTitle }}
           </div>
           <div class="modal_dialog_message">
-            <div
-              v-if="modalDialogBodyMessage"
-              v-for="item in modalDialogBodyMessage"
-              :key="item"
-              style="line-height: 1.5em"
-            >
-              {{ item }}
-            </div>
+            <template v-if="modalDialogBodyMessage">
+              <div
+                v-for="item in modalDialogBodyMessage"
+                :key="item"
+                style="line-height: 1.5em"
+              >
+                {{ item }}
+              </div>
+            </template>
             <div v-else-if="modalDialogNoTestCallMessage">
               <div class="modal_dialog_no_testcall_title">
                 {{
@@ -181,7 +182,6 @@ import OnboardingBase from "@/components/templates/onboarding/Base";
 import { computed, ref } from "vue";
 import { useStore } from "vuex";
 import router from "@/router";
-import Autocomplete from "primevue/autocomplete";
 import { useConfirm } from "primevue/useconfirm";
 import businessUtils from "@/utils/Business";
 import conversationUtils from "@/utils/Conversation";
@@ -193,7 +193,6 @@ import { preferredVoiceEncoding } from "@/utils/VoiceEncoding";
 export default {
   components: {
     OnboardingBase,
-    Autocomplete,
     WebcallButton,
     DirectVoiceButton,
   },

@@ -445,7 +445,7 @@ export default {
         this.showSpinner = false
         console.error(error);
         if(error.response?.status === 401) {
-          store.dispatch('logout')
+          self.store.dispatch('logout')
           router.replace('/login')
         }
       })

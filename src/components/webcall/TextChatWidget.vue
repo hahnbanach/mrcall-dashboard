@@ -300,7 +300,7 @@ async function openChat() {
       token = await firebaseUser.getIdToken(true)
     } catch (err) {
       console.error('Failed to get Firebase token:', err)
-      throw new Error('Authentication failed — please reload the page')
+      throw new Error('Authentication failed — please reload the page', { cause: err })
     }
 
     connectWs(token)

@@ -212,7 +212,7 @@ function sendMessage() {
 function closeWebSocket() {
   if (pingInterval) { clearInterval(pingInterval); pingInterval = null }
   if (ws) {
-    try { ws.close() } catch (e) { /* ignore */ }
+    try { ws.close() } catch { /* ignore */ }
     ws = null
   }
 }

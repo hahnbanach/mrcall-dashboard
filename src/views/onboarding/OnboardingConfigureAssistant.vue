@@ -75,7 +75,7 @@
         </div>
       </div>
 
-      <div class="item" v-for="subsectorItem in selectSubsector()">
+      <div class="item" v-for="(subsectorItem, subsectorIdx) in selectSubsector()" :key="subsectorIdx">
         <div v-if="subsectorItem">
           <div class="inputboxerror" v-if="sectorNotValid && submitted">
             {{t('views.onboarding.configureassistant.mandatoryParameter')}}
@@ -138,7 +138,6 @@ import OnboardingBase from "@/components/templates/onboarding/Base";
 import {computed, ref} from "vue";
 import {useStore} from "vuex";
 import router from "@/router";
-import Autocomplete from 'primevue/autocomplete';
 import businessUtils from "@/utils/Business";
 import businessVariablesUtils from "@/utils/BusinessVariables";
 import {useI18n} from "vue-i18n";
@@ -146,7 +145,7 @@ import Tr from "@/i18n/translation"
 import { applyUtmVariablesToBusiness } from "@/utils/UtmTracking"
 
 export default {
-  components: {OnboardingBase, Autocomplete},
+  components: {OnboardingBase},
   name: "OnboardingConfigureAssistant",
   setup: function () {
     const store = useStore();
@@ -277,7 +276,7 @@ export default {
         console.debug("All UTM Params: ", self.allParams);
         console.debug("Has Tracking: ", self.utmHasTracking);
         console.debug("Business with tracking: ", inBusiness);
-        let operation = undefined
+        let operation
         if (self.onboardingData.business.businessId) {
           operation = businessUtils.updateBusiness(self.user, inBusiness);
         } else {

@@ -1,5 +1,3 @@
-import axios from "axios";
-
 export default {
     isVariableVisible: function(variable, isAdmin, advancedMode) {
         if(variable.name === 'languageCountry') {

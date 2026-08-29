@@ -474,7 +474,7 @@ export default {
         await navigator.clipboard.writeText(value)
         this.copied[key] = true
         setTimeout(() => { this.copied[key] = false }, 2000)
-      } catch (e) {
+      } catch {
         this.setMessage("warn", this.t('views.mcpConnectors.errors.clipboardFailed'))
       }
     },

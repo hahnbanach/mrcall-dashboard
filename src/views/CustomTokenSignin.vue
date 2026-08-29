@@ -8,13 +8,11 @@
 <script>
 import router from "@/router";
 import {useStore} from "vuex";
-import {useI18n} from "vue-i18n";
 import Tr from "@/i18n/translation"
 
 export default {
   data: () => {
     const store = useStore()
-    const { t } = useI18n()
 
     return {
       store,

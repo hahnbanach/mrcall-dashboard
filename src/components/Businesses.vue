@@ -67,7 +67,7 @@
 
     <!-- Business Cards -->
     <div class="business-cards">
-      <div v-for="([key, business], index) in filteredBusinesses" :key="key" class="business-card">
+      <div v-for="[key, business] in filteredBusinesses" :key="key" class="business-card">
 
         <!-- Overlay (kept but currently disabled) -->
         <div v-if="showBusinessOverlay(business)" class="business-card-overlay">
@@ -473,7 +473,7 @@ export default {
       const status = this.subscriptionInfo[business.businessId]?.status
       return status === 'ONBOARDING' || status === 'TEST'
     },
-    showBusinessOverlay(business) {
+    showBusinessOverlay() {
       return false ; //DISABLED OVERLAY #!this.isAdmin && business.subscriptionStatus === 'TEST'
     },
     onUpdateMatchFieldMapQueryValue() {
@@ -490,7 +490,7 @@ export default {
       this.sortFields = event.value.map(v => v.code)
       this.fetchBusinessList(this.getBusinessSubscriptionInfo, this.fetchBusinessResources)
     },
-    onSortOrderChange(event) {
+    onSortOrderChange() {
       this.fetchBusinessList(this.getBusinessSubscriptionInfo, this.fetchBusinessResources)
     },
     onPage(event) {
@@ -503,7 +503,7 @@ export default {
       //console.debug(business.tested)
       return business.tested && !(business.tested === "1970-01-01T00:00:00")
     },
-    isTemporaryTestServiceNumber(business) {
+    isTemporaryTestServiceNumber() {
       return false
     },
     getCleanServiceNumber(prefix, serviceNumber) {
@@ -679,7 +679,7 @@ export default {
         console.error(error)
       })
     },
-    async fetchBusinessList(subscriptionFunction, fetchBusinessResourcesFunction) {
+    async fetchBusinessList() {
       const self = this ;
       self.showProgressBar = true;
       const headers = {

@@ -102,17 +102,15 @@ import OnboardingBase from "@/components/templates/onboarding/Base";
 import {computed, ref} from "vue";
 import {useStore} from "vuex";
 import router from "@/router";
-import Autocomplete from 'primevue/autocomplete';
 import axios from "axios";
 import {useConfirm} from "primevue/useconfirm";
 import {useToast} from "primevue/usetoast";
 import {useI18n} from "vue-i18n";
 import businessUtils from "@/utils/Business";
 import businessVariablesUtils from "@/utils/BusinessVariables";
-import Tr from "@/i18n/translation"
 
 export default {
-  components: {OnboardingBase, Autocomplete},
+  components: {OnboardingBase},
   name: "OnboardingSearchBusinessInfo",
   setup: function () {
     const store = useStore();
@@ -309,7 +307,7 @@ export default {
         this.showSpinner = false
         console.error(error);
         if(error.response?.status === 401) {
-          store.dispatch('logout')
+          self.store.dispatch('logout')
           router.replace('/login')
         } else {
           self.toast.add({

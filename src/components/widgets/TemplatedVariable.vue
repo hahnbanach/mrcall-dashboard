@@ -1,27 +1,30 @@
 <script setup>
-import {useI18n} from "vue-i18n";
+import { onMounted } from "vue";
 import businessVariablesUtils from "@/utils/BusinessVariables";
 
-const { t } = useI18n()
-const data = defineProps(['business', 'variable'])
-if(data.business.variables[data.variable.name] === undefined) {
-  data.business.variables[data.variable.name] = []
-}
+const model = defineModel()
+const props = defineProps(['business', 'variable'])
+
+onMounted(() => {
+  if (model.value === undefined) {
+    model.value = []
+  }
+})
 
 function extractDropdownValuesAndDescriptions(json) {
   const transformedList = [];
   const descriptionsDict = {};
 
   for (const key in json) {
-    if (json.hasOwnProperty(key)) {
+    if (Object.prototype.hasOwnProperty.call(json, key)) {
       const item = json[key] ;
       const label = item.label || key ;
 
-      const languageCountry = data.business.languageCountry ;
+      const languageCountry = props.business.languageCountry ;
       const lang = languageCountry.substring(0, 2)
 
       const deps = item.dependsOn ? item.dependsOn : [] ;
-      const isDisabled = businessVariablesUtils.checkIfDisabledByParents(data.business, data.variable, deps);
+      const isDisabled = businessVariablesUtils.checkIfDisabledByParents(props.business, props.variable, deps);
 
       let pushOnList = true
       if(isDisabled) {
@@ -54,7 +57,7 @@ function extractDropdownValuesAndDescriptions(json) {
   };
 }
 
-const dropdownData = extractDropdownValuesAndDescriptions(data.variable.templatedVariable.values)
+const dropdownData = extractDropdownValuesAndDescriptions(props.variable.templatedVariable.values)
 
 function getDescription(key) {
   return dropdownData.descriptions[key]
@@ -65,15 +68,15 @@ function getDescription(key) {
 <template>
   <Dropdown
     :disabled="!variable.modifiable"
-    v-model="business.variables[variable.name]" :options="dropdownData.dropdownValues"
+    v-model="model" :options="dropdownData.dropdownValues"
     optionLabel="label"
     optionValue="value"
     :filter="true"
-    v-model:placeholder="variable.humanName" :showClear="true"
+    :placeholder="variable.humanName" :showClear="true"
     class="w-full"
   >
   </Dropdown>
-  <div class="inputboxsubtitle">{{getDescription(business.variables[variable.name])}}</div>
+  <div class="inputboxsubtitle">{{getDescription(model)}}</div>
 </template>
 
 <style scoped lang="less">

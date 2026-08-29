@@ -64,9 +64,9 @@ export default {
       const now = Date.now() ;
       const sessionReference = `${businessId}:${now}` ;
       const successUrl = process.env.VUE_APP_SERVICE_BASE_URL + process.env.VUE_APP_PUBLIC_PATH +
-      `/success_payment?id=${businessId}&template=${templateName}&webview=${isWebview}&session_reference=${sessionReference}` ;
+      `/success_payment?id=${businessId}&template=${template}&webview=${isWebview}&session_reference=${sessionReference}` ;
       const cancelUrl = process.env.VUE_APP_SERVICE_BASE_URL + process.env.VUE_APP_PUBLIC_PATH +
-      `/failed_payment?id=${businessId}&template=${templateName}&webview=${isWebview}&session_reference=${sessionReference}` ;
+      `/failed_payment?id=${businessId}&template=${template}&webview=${isWebview}&session_reference=${sessionReference}` ;
 
       await writeUtmParamsToBusiness(this.store, this.user, this.business)
 

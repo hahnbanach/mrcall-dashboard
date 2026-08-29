@@ -567,8 +567,6 @@ export default {
       const now = Date.now();
       const diff = now - timestamp;
       const minutes = Math.floor(diff / 60000);
-      const hours = Math.floor(diff / 3600000);
-      const days = Math.floor(diff / 86400000);
 
       if (minutes < 1) {
         return this.$t("components.conversations.justNow");
@@ -875,7 +873,7 @@ export default {
         }, 300);
       });
     },
-    async archiveConversation(key, conversation) {
+    async archiveConversation(key) {
       if (this.actionInProgress.has(key)) return;
       this.actionInProgress.add(key);
       this.actionInProgress = new Set(this.actionInProgress);
@@ -903,7 +901,7 @@ export default {
         this.actionInProgress = new Set(this.actionInProgress);
       }
     },
-    async unarchiveConversation(key, conversation) {
+    async unarchiveConversation(key) {
       if (this.actionInProgress.has(key)) return;
       this.actionInProgress.add(key);
       this.actionInProgress = new Set(this.actionInProgress);
@@ -928,7 +926,7 @@ export default {
         this.actionInProgress = new Set(this.actionInProgress);
       }
     },
-    async deleteConversation(key, conversation) {
+    async deleteConversation(key) {
       if (this.actionInProgress.has(key)) return;
       this.actionInProgress.add(key);
       this.actionInProgress = new Set(this.actionInProgress);
@@ -956,7 +954,7 @@ export default {
         this.actionInProgress = new Set(this.actionInProgress);
       }
     },
-    async restoreConversation(key, conversation) {
+    async restoreConversation(key) {
       if (this.actionInProgress.has(key)) return;
       this.actionInProgress.add(key);
       this.actionInProgress = new Set(this.actionInProgress);

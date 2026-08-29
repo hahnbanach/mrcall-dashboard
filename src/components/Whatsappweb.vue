@@ -145,7 +145,7 @@ export default {
       this.websocket = new WebSocket(wsUrl)
 
       const self = this ;
-      this.periodicEvent = interval(5000).subscribe(x => {
+      this.periodicEvent = interval(5000).subscribe(() => {
         if(self.websocket)
           self.sendPing();
       });

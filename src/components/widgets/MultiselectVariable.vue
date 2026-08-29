@@ -1,23 +1,25 @@
 <script setup>
-import {useI18n} from "vue-i18n";
-import {ref} from 'vue'
-const { t } = useI18n()
-const data = defineProps(['business', 'variable'])
-if(data.business.variables[data.variable.name] === undefined) {
-  data.business.variables[data.variable.name] = []
-}
+import { onMounted } from "vue";
+const model = defineModel()
+const props = defineProps(['variable'])
 
-const multiselectOptions = data.variable.valuesSelection
+onMounted(() => {
+  if (model.value === undefined) {
+    model.value = []
+  }
+})
+
+const multiselectOptions = props.variable.valuesSelection
 </script>
 
 <template>
   <MultiSelect
       :disabled="!variable.modifiable"
-      v-model="business.variables[variable.name]"
+      v-model="model"
       :options="multiselectOptions"
       optionLabel="name"
       optionValue="value"
-      v-model:placeholder="variable.humanName"
+      :placeholder="variable.humanName"
       class="w-full" />
 </template>
 

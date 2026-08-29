@@ -1,17 +1,14 @@
 <template>
+  <div></div>
 </template>
 
 <script>
-import Subscription from "@/components/Subscription";
-import Products from "@/components/Products";
-import PreFooterRequireAssistance from "@/components/PreFooterRequireAssistance";
 import axios from "axios";
 import {useStore} from "vuex";
 import {computed} from "vue";
 import router from "@/router";
 
 export default {
-  components: {Subscription, Products, PreFooterRequireAssistance},
   setup() {
     const store = useStore();
     const user = computed(() => store.state.user);
