@@ -108,3 +108,27 @@ export function isWebKit() {
   if (typeof navigator === "undefined") return false;
   return /applewebkit/i.test(navigator.userAgent) && !/chrome|chromium|android|windows|edg|opr\//i.test(navigator.userAgent);
 }
+
+/** Watch the mic permission for a state flip (e.g. the user clicked the padlock
+ * and allowed access while the recovery dialog is open). Returns an unsubscribe
+ * function. Used so a blocked mic is not a dead end: when the state flips away
+ * from 'denied', the caller can start the call without the user re-clicking
+ * anything. Without this, "Try again" on a blocked state just re-checks, finds
+ * 'denied' again, and reopens the same dialog — a dishonest loop. */
+export function watchMicPermission(onChange) {
+  if (!navigator?.permissions?.query) return () => {};
+  let status = null;
+  let active = true;
+  navigator.permissions
+    .query({ name: "microphone" })
+    .then((s) => {
+      if (!active) return;
+      status = s;
+      status.onchange = () => onChange(status.state);
+    })
+    .catch(() => {});
+  return () => {
+    active = false;
+    if (status) status.onchange = null;
+  };
+}

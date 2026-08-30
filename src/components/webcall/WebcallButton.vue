@@ -10,7 +10,12 @@
     :class="{ 'in-call-active': inCall && !processing }"
     @click="handleClick"
   />
-  <MicPermissionDialog v-model:visible="micDialogVisible" :kind="micDialogKind" @retry="startCall" />
+  <MicPermissionDialog
+    :visible="micDialogVisible"
+    :kind="micDialogKind"
+    @update:visible="onMicDialogVisibility"
+    @retry="startCall"
+  />
 </template>
 
 <script setup>
@@ -19,7 +24,7 @@ import Button from 'primevue/button'
 import { useToast } from 'primevue/usetoast'
 import MrCallWebCall from '/public/MrCallWebCall.bundle.js'
 import MicPermissionDialog from './MicPermissionDialog.vue'
-import { classifyVoiceError, getMicPermissionState } from '@/utils/voiceErrors'
+import { classifyVoiceError, getMicPermissionState, watchMicPermission } from '@/utils/voiceErrors'
 
 /* ---------------- props / emits ---------------------------------------- */
 const props = defineProps({
@@ -60,6 +65,30 @@ const pageUnloading = ref(false)   // becomes true when the tab/page is leaving
 // localized body the dialog shows (micDenied vs micNotFound).
 const micDialogVisible = ref(false)
 const micDialogKind   = ref('micDenied')
+
+// On a BLOCKED mic the dialog gets a live permission watch: when the user flips
+// the padlock to Allow, the call starts itself. Without this "Try again" just
+// re-checks, finds 'denied', and reopens the same dialog — a dead loop.
+let micWatchUnsub = null
+const stopMicWatch = () => { micWatchUnsub?.(); micWatchUnsub = null }
+const showMicDialog = (kind) => {
+  micDialogKind.value = kind
+  micDialogVisible.value = true
+  stopMicWatch()
+  if (kind === 'micDenied') {
+    micWatchUnsub = watchMicPermission((state) => {
+      if (state !== 'denied') {
+        micDialogVisible.value = false
+        stopMicWatch()
+        startCall()
+      }
+    })
+  }
+}
+const onMicDialogVisibility = (visible) => {
+  micDialogVisible.value = visible
+  if (!visible) stopMicWatch()
+}
 
 /* A start failure can surface both in `onSessionError` and in the `startCall`
  * catch (same double-fire shape as DirectVoiceButton). The catch owns surfacing
@@ -136,8 +165,7 @@ function buildClientIfNeeded () {
       let kind = classifyVoiceError(reason)
       if (kind === 'micDenied' && await getMicPermissionState() !== 'denied') kind = 'micDeniedDismissed'
       if (kind) {
-        micDialogKind.value = kind
-        micDialogVisible.value = true
+        showMicDialog(kind)
       } else {
         toast.add({ severity:'error', summary:'Session error', detail:msg, life:6000 })
       }
@@ -189,8 +217,7 @@ async function startCall () {
     startInFlight    = false
     dialing.value    = false
     processing.value = false
-    micDialogKind.value   = 'micDenied'
-    micDialogVisible.value = true
+    showMicDialog('micDenied')
     return
   }
 
@@ -218,8 +245,7 @@ async function startCall () {
       // deliberate Block. Only the Permissions API tells them apart.
       if (kind === 'micDenied' && await getMicPermissionState() !== 'denied') kind = 'micDeniedDismissed'
       if (kind) {
-        micDialogKind.value = kind
-        micDialogVisible.value = true
+        showMicDialog(kind)
       } else {
         toast.add({ severity:'error', summary:'Error starting call', detail:msg, life:6000 })
       }
@@ -268,6 +294,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   unmounting.value = true
+  stopMicWatch()
   // Best-effort hangup if component is destroyed mid-call
   try {
     client.value?.hangup()

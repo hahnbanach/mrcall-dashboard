@@ -104,4 +104,44 @@ test.describe('Mic permission failure popup', () => {
     await expect(dialog).toContainText(/padlock|AA menu|Safari menu/)
     expect(await authenticatedPage.evaluate(() => window.__gumCalls)).toBe(0)
   })
+
+  // The deadlock Mario hit: mic blocked → dialog → Retry → still blocked →
+  // nothing. The dialog must instead WATCH the permission, so flipping the
+  // browser's padlock setting while the dialog is open starts the call itself.
+  test('blocked mic: flipping the browser setting while the dialog is open starts the call', async ({ authenticatedPage }) => {
+    await authenticatedPage.addInitScript(() => {
+      window.__gumCalls = 0
+      window.__micStatus = { state: 'denied', onchange: null }
+      const real = navigator.mediaDevices
+      const fake = Object.create(real)
+      fake.getUserMedia = () => {
+        window.__gumCalls++
+        return Promise.reject({ name: 'NotAllowedError', message: 'Permission denied' })
+      }
+      Object.defineProperty(navigator, 'mediaDevices', { configurable: true, get: () => fake })
+      Object.defineProperty(navigator, 'permissions', {
+        configurable: true,
+        get: () => ({ query: () => Promise.resolve(window.__micStatus) }),
+      })
+    })
+
+    await authenticatedPage.goto('/businesses')
+    const callBtn = authenticatedPage.getByRole('button', { name: 'Talk to the assistant' })
+    await expect(callBtn).toBeVisible({ timeout: 20000 })
+    await callBtn.click()
+
+    const dialog = authenticatedPage.locator('.p-dialog').first()
+    await expect(dialog).toBeVisible({ timeout: 10000 })
+    expect(await authenticatedPage.evaluate(() => window.__gumCalls)).toBe(0)
+
+    // User opens the site settings and allows the microphone.
+    await authenticatedPage.evaluate(() => {
+      window.__micStatus.state = 'granted'
+      window.__micStatus.onchange?.()
+    })
+
+    // The dialog closes and the call is attempted (the stub still rejects, but
+    // the point is getUserMedia is invoked — the watch unblocked the flow).
+    await expect.poll(() => authenticatedPage.evaluate(() => window.__gumCalls)).toBe(1)
+  })
 })

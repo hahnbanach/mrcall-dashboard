@@ -10,7 +10,12 @@
     :class="{ 'in-call-active': inCall && !processing }"
     @click="handleClick"
   />
-  <MicPermissionDialog v-model:visible="micDialogVisible" :kind="micDialogKind" @retry="startCall" />
+  <MicPermissionDialog
+    :visible="micDialogVisible"
+    :kind="micDialogKind"
+    @update:visible="onMicDialogVisibility"
+    @retry="startCall"
+  />
 </template>
 
 <script setup>
@@ -30,7 +35,7 @@ import { useI18n } from "vue-i18n";
 import { auth } from "@/firebase/config";
 import MrCallDirectVoice from "@mrcall/directvoice";
 import MicPermissionDialog from "./MicPermissionDialog.vue";
-import { classifyVoiceError, getMicPermissionState } from "@/utils/voiceErrors";
+import { classifyVoiceError, getMicPermissionState, watchMicPermission } from "@/utils/voiceErrors";
 
 const { t } = useI18n();
 
@@ -88,6 +93,35 @@ const pageUnloading = ref(false);
 // localized body the dialog shows (micDenied vs micNotFound).
 const micDialogVisible = ref(false);
 const micDialogKind = ref("micDenied");
+
+/* On a BLOCKED mic neither the prompt nor Retry can do anything, so while the
+ * padlock-instructions dialog is open we watch for the state to flip (user
+ * clicks the padlock → Allow) and start the call ourselves. Without this the
+ * dialog is a dead loop: every Retry re-checks, finds 'denied', reopens. The
+ * watch is dropped if the user dismisses the dialog, and on unmount. */
+let micWatchUnsub = null;
+const stopMicWatch = () => {
+  micWatchUnsub?.();
+  micWatchUnsub = null;
+};
+const showMicDialog = (kind) => {
+  micDialogKind.value = kind;
+  micDialogVisible.value = true;
+  stopMicWatch();
+  if (kind === "micDenied") {
+    micWatchUnsub = watchMicPermission((state) => {
+      if (state !== "denied") {
+        micDialogVisible.value = false;
+        stopMicWatch();
+        startCall();
+      }
+    });
+  }
+};
+const onMicDialogVisibility = (visible) => {
+  micDialogVisible.value = visible;
+  if (!visible) stopMicWatch();
+};
 
 const inCall = computed(
   () => callStatus.value === "connecting" || callStatus.value === "active"
@@ -250,8 +284,7 @@ async function startCall() {
     callStatus.value = "idle";
     processing.value = false;
     track("webcall_failed", { stage: "start", error_name: "PrecheckDenied", error_message: "mic permission already denied" });
-    micDialogKind.value = "micDenied";
-    micDialogVisible.value = true;
+    showMicDialog("micDenied");
     return;
   }
 
@@ -302,8 +335,7 @@ async function startCall() {
       kind = "micDeniedDismissed";
     }
     if (kind) {
-      micDialogKind.value = kind;
-      micDialogVisible.value = true;
+      showMicDialog(kind);
     } else {
       notify("error", t("components.directVoice.errorStarting"), msg, 6000);
     }
@@ -339,6 +371,7 @@ onMounted(() => {
 
 onBeforeUnmount(() => {
   unmounting.value = true;
+  stopMicWatch();
   destroyVoice();
   window.removeEventListener("beforeunload", onPageExit);
   window.removeEventListener("pagehide", onPageExit, { capture: true });
