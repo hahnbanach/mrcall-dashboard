@@ -136,9 +136,11 @@
       "error": "Something went wrong",
       "errorStarting": "Could not start the call",
       "micDenied": "MrCall needs your microphone. Click the padlock in the address bar, allow the microphone, then try again.",
+      "micDeniedDismissed": "MrCall needs your microphone. The browser's permission request was closed before you could answer: click Try again and choose Allow when it reappears.",
       "micNotFound": "No microphone was found. Connect one, or try from another device.",
       "micDialogTitle": "Microphone unavailable",
-      "micDialogOk": "Got it"
+      "micDialogOk": "Got it",
+      "micDialogRetry": "Try again"
     },
     "navbar": {
       "login": "Sign in",

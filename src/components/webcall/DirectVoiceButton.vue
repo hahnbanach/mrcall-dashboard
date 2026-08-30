@@ -10,7 +10,7 @@
     :class="{ 'in-call-active': inCall && !processing }"
     @click="handleClick"
   />
-  <MicPermissionDialog v-model:visible="micDialogVisible" :kind="micDialogKind" />
+  <MicPermissionDialog v-model:visible="micDialogVisible" :kind="micDialogKind" @retry="startCall" />
 </template>
 
 <script setup>
@@ -30,7 +30,7 @@ import { useI18n } from "vue-i18n";
 import { auth } from "@/firebase/config";
 import MrCallDirectVoice from "@mrcall/directvoice";
 import MicPermissionDialog from "./MicPermissionDialog.vue";
-import { classifyVoiceError } from "@/utils/voiceErrors";
+import { classifyVoiceError, getMicPermissionState } from "@/utils/voiceErrors";
 
 const { t } = useI18n();
 
@@ -242,6 +242,19 @@ async function startCall() {
   callStatus.value = "connecting";
   track("webcall_attempt");
 
+  // The Permissions API reports a blocked mic WITHOUT prompting. In that state
+  // getUserMedia rejects instantly with no bubble at all, and the rejection is
+  // indistinguishable from a dismissal — so skip the doomed call and open the
+  // recovery dialog directly.
+  if ((await getMicPermissionState()) === "denied") {
+    callStatus.value = "idle";
+    processing.value = false;
+    track("webcall_failed", { stage: "start", error_name: "PrecheckDenied", error_message: "mic permission already denied" });
+    micDialogKind.value = "micDenied";
+    micDialogVisible.value = true;
+    return;
+  }
+
   try {
     const firebaseUser = auth.currentUser;
     if (!firebaseUser) throw new Error("Not authenticated");
@@ -280,7 +293,14 @@ async function startCall() {
     // browsers/SDK permutations (a dismissed prompt surfaced as a name the old
     // switch did not list). Everything else keeps the raw message as detail,
     // which is what support needs to see.
-    const kind = classifyVoiceError(e);
+    let kind = classifyVoiceError(e);
+    // Chromium throws the same NotAllowedError for a dismissed bubble and for a
+    // deliberate Block; the Permissions API is the only way to tell them apart.
+    // Still 'prompt' after the error → the user merely closed the prompt and a
+    // retry re-arms it; 'denied' → a real block, the padlock instructions apply.
+    if (kind === "micDenied" && (await getMicPermissionState()) !== "denied") {
+      kind = "micDeniedDismissed";
+    }
     if (kind) {
       micDialogKind.value = kind;
       micDialogVisible.value = true;

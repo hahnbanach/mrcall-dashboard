@@ -14,7 +14,10 @@ const { defineConfig, devices } = require('@playwright/test')
 //
 // Loading .env.test here and serving with the same mode gives both sides one
 // source of config truth, and makes the suite runnable on a fresh checkout.
-require('dotenv').config({ path: '.env.test' })
+// .env.test wins when present (CI/release flow); otherwise fall back to the
+// developer's own .env, which is what `npm run serve` also reads — without this
+// fallback the suite silently lands on /signin on any machine that only has .env.
+require('dotenv').config({ path: require('fs').existsSync('.env.test') ? '.env.test' : '.env' })
 
 module.exports = defineConfig({
   testDir: './tests/e2e',

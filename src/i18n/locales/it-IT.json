@@ -136,9 +136,11 @@
       "error": "Qualcosa è andato storto",
       "errorStarting": "Non è stato possibile avviare la chiamata",
       "micDenied": "MrCall ha bisogno del tuo microfono. Clicca sul lucchetto nella barra degli indirizzi, consenti il microfono e riprova.",
+      "micDeniedDismissed": "Per parlare con l'assistente serve il microfono. La richiesta del browser è stata chiusa prima che potessi rispondere: clicca Riprova e poi su Consenti quando ricompare.",
       "micNotFound": "Nessun microfono rilevato. Collegane uno, oppure prova da un altro dispositivo.",
       "micDialogTitle": "Microfono non disponibile",
-      "micDialogOk": "Ho capito"
+      "micDialogOk": "Ho capito",
+      "micDialogRetry": "Riprova"
     },
     "navbar": {
       "login": "Accedi",

@@ -10,7 +10,7 @@
     :class="{ 'in-call-active': inCall && !processing }"
     @click="handleClick"
   />
-  <MicPermissionDialog v-model:visible="micDialogVisible" :kind="micDialogKind" />
+  <MicPermissionDialog v-model:visible="micDialogVisible" :kind="micDialogKind" @retry="startCall" />
 </template>
 
 <script setup>
@@ -19,7 +19,7 @@ import Button from 'primevue/button'
 import { useToast } from 'primevue/usetoast'
 import MrCallWebCall from '/public/MrCallWebCall.bundle.js'
 import MicPermissionDialog from './MicPermissionDialog.vue'
-import { classifyVoiceError } from '@/utils/voiceErrors'
+import { classifyVoiceError, getMicPermissionState } from '@/utils/voiceErrors'
 
 /* ---------------- props / emits ---------------------------------------- */
 const props = defineProps({
@@ -120,7 +120,7 @@ function buildClientIfNeeded () {
     emit('call-ended', cid, reason, callQuality)
   }
 
-  client.value.onSessionError = reason => {
+  client.value.onSessionError = async reason => {
     dialing.value = false
     const msg = String(reason)
     // Skip surfacing when this duplicates a start failure the catch is handling
@@ -133,7 +133,8 @@ function buildClientIfNeeded () {
         lastStartError.message === msg &&
         Date.now() - lastStartError.at < 2000)
     if (!duplicateStart && !unmounting.value && !pageUnloading.value) {
-      const kind = classifyVoiceError(reason)
+      let kind = classifyVoiceError(reason)
+      if (kind === 'micDenied' && await getMicPermissionState() !== 'denied') kind = 'micDeniedDismissed'
       if (kind) {
         micDialogKind.value = kind
         micDialogVisible.value = true
@@ -181,6 +182,18 @@ async function startCall () {
   dialing.value    = true       // turn the button red immediately
   startInFlight    = true       // mark the start so onSessionError can dedupe
 
+  // A blocked mic makes getUserMedia reject instantly, with no bubble — nothing
+  // for the user to act on. The Permissions API reports that state without
+  // prompting, so open the recovery dialog directly instead of failing the call.
+  if (await getMicPermissionState() === 'denied') {
+    startInFlight    = false
+    dialing.value    = false
+    processing.value = false
+    micDialogKind.value   = 'micDenied'
+    micDialogVisible.value = true
+    return
+  }
+
   try {
     buildClientIfNeeded()
     await client.value.initialize()
@@ -200,7 +213,10 @@ async function startCall () {
     if (!unmounting.value && !pageUnloading.value) {
       // Mic failures get the localized popup with re-grant instructions; every
       // other start failure keeps the raw message as detail for support.
-      const kind = classifyVoiceError(e)
+      let kind = classifyVoiceError(e)
+      // Same NotAllowedError ambiguity as DirectVoiceButton: dismissed prompt vs
+      // deliberate Block. Only the Permissions API tells them apart.
+      if (kind === 'micDenied' && await getMicPermissionState() !== 'denied') kind = 'micDeniedDismissed'
       if (kind) {
         micDialogKind.value = kind
         micDialogVisible.value = true

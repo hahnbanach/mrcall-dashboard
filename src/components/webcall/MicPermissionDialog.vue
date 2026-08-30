@@ -13,9 +13,14 @@
     <template #footer>
       <Button
         :label="$t('components.directVoice.micDialogOk')"
-        icon="pi pi-check"
-        autofocus
+        class="p-button-text"
         @click="visibleModel = false"
+      />
+      <Button
+        :label="$t('components.directVoice.micDialogRetry')"
+        icon="pi pi-refresh"
+        autofocus
+        @click="onRetry"
       />
     </template>
   </Dialog>
@@ -37,11 +42,11 @@ const props = defineProps({
   kind: {
     type: String,
     default: "micDenied",
-    validator: (v) => v === "micDenied" || v === "micNotFound" || v === null,
+    validator: (v) => ["micDenied", "micDeniedDismissed", "micNotFound"].includes(v),
   },
 });
 
-const emit = defineEmits(["update:visible"]);
+const emit = defineEmits(["update:visible", "retry"]);
 
 const { t } = useI18n();
 
@@ -50,8 +55,19 @@ const visibleModel = computed({
   set: (v) => emit("update:visible", v),
 });
 
+/* Chrome discards the permission bubble when the user clicks anywhere in the
+ * page, so by the time this dialog shows the original request is already dead:
+ * closing the dialog alone leaves the user with no prompt at all. Retry is the
+ * primary action because it is the only way to get a fresh bubble. */
+const onRetry = () => {
+  visibleModel.value = false;
+  emit("retry");
+};
+
 const body = computed(() => {
-  const key = props.kind === "micNotFound" ? "micNotFound" : "micDenied";
+  const key = ["micDenied", "micDeniedDismissed", "micNotFound"].includes(props.kind)
+    ? props.kind
+    : "micDenied";
   return t(`components.directVoice.${key}`);
 });
 </script>

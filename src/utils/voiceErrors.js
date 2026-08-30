@@ -78,3 +78,23 @@ export function classifyVoiceError(err) {
 
   return null;
 }
+
+/** The microphone's persistent permission state, without triggering any prompt.
+ *
+ * Chromium throws the same NotAllowedError for a dismissed prompt and for a
+ * deliberate Block, so the error alone cannot tell them apart — this query can:
+ * after a dismissal the state is still 'prompt' (a retry re-shows the bubble),
+ * after a block it is 'denied' (only the padlock/settings unlock it). Querying
+ * BEFORE a call also lets callers skip a getUserMedia that is guaranteed to
+ * reject instantly with no prompt at all. 'unknown' when the Permissions API
+ * or the 'microphone' name is unsupported (older Firefox): callers must treat
+ * it as "ask normally". Never throws. */
+export async function getMicPermissionState() {
+  try {
+    if (!navigator?.permissions?.query) return "unknown";
+    const status = await navigator.permissions.query({ name: "microphone" });
+    return status?.state || "unknown";
+  } catch {
+    return "unknown";
+  }
+}
