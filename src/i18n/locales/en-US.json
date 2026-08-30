@@ -136,6 +136,7 @@
       "error": "Something went wrong",
       "errorStarting": "Could not start the call",
       "micDenied": "MrCall needs your microphone. Click the padlock in the address bar, allow the microphone, then try again.",
+      "micDeniedSafari": "MrCall needs your microphone, and it looks blocked. On iOS tap the AA menu in the address bar, then Website Settings, and set Microphone to Allow. On macOS open the Safari menu, Settings for This Website, and set Microphone to Allow. Then try again.",
       "micDeniedDismissed": "MrCall needs your microphone. The browser's permission request was closed before you could answer: click Try again and choose Allow when it reappears.",
       "micNotFound": "No microphone was found. Connect one, or try from another device.",
       "micDialogTitle": "Microphone unavailable",

@@ -36,6 +36,7 @@
 import { computed } from "vue";
 import Button from "primevue/button";
 import { useI18n } from "vue-i18n";
+import { isWebKit } from "@/utils/voiceErrors";
 
 const props = defineProps({
   visible: { type: Boolean, default: false },
@@ -65,9 +66,12 @@ const onRetry = () => {
 };
 
 const body = computed(() => {
-  const key = ["micDenied", "micDeniedDismissed", "micNotFound"].includes(props.kind)
+  let key = ["micDenied", "micDeniedDismissed", "micNotFound"].includes(props.kind)
     ? props.kind
     : "micDenied";
+  // On WebKit the padlock instructions are wrong: per-site mic settings live in
+  // the AA menu (iOS) or Safari → Settings for This Website (macOS).
+  if (key === "micDenied" && isWebKit()) key = "micDeniedSafari";
   return t(`components.directVoice.${key}`);
 });
 </script>

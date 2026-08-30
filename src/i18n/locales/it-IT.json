@@ -136,6 +136,7 @@
       "error": "Qualcosa è andato storto",
       "errorStarting": "Non è stato possibile avviare la chiamata",
       "micDenied": "MrCall ha bisogno del tuo microfono. Clicca sul lucchetto nella barra degli indirizzi, consenti il microfono e riprova.",
+      "micDeniedSafari": "Per parlare con l'assistente serve il microfono, e risulta bloccato. Su iOS tocca il menu AA nella barra degli indirizzi, poi Impostazioni sito web, e imposta Microfono su Consenti. Su macOS apri il menu Safari, Impostazioni per questo sito web, e imposta Microfono su Consenti. Poi riprova.",
       "micDeniedDismissed": "Per parlare con l'assistente serve il microfono. La richiesta del browser è stata chiusa prima che potessi rispondere: clicca Riprova e poi su Consenti quando ricompare.",
       "micNotFound": "Nessun microfono rilevato. Collegane uno, oppure prova da un altro dispositivo.",
       "micDialogTitle": "Microfono non disponibile",

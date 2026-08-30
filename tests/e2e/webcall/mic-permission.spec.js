@@ -99,7 +99,9 @@ test.describe('Mic permission failure popup', () => {
 
     const dialog = authenticatedPage.locator('.p-dialog').first()
     await expect(dialog).toBeVisible({ timeout: 10000 })
-    await expect(dialog).toContainText('padlock')
+    // Engine-dependent recovery copy: Chromium gets the padlock instructions,
+    // WebKit (Playwright tablet/mobile projects) gets the AA-menu/Safari ones.
+    await expect(dialog).toContainText(/padlock|AA menu|Safari menu/)
     expect(await authenticatedPage.evaluate(() => window.__gumCalls)).toBe(0)
   })
 })

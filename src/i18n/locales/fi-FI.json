@@ -136,6 +136,7 @@
       "error": "Jokin meni pieleen",
       "errorStarting": "Puhelua ei voitu aloittaa",
       "micDenied": "MrCall tarvitsee mikrofonisi. Napsauta osoiterivin lukkokuvaketta, salli mikrofoni ja yritä uudelleen.",
+      "micDeniedSafari": "MrCall tarvitsee mikrofonisi, ja se näyttää olevan estetty. iOS:ssä napauta AA-valikkoa osoiterivillä, valitse Verkkosivuston asetukset ja aseta Mikrofoni-asetukseksi Salli. macOS:ssä avaa Safari-valikko, Tämän sivuston asetukset, ja salli mikrofoni. Yritä sitten uudelleen.",
       "micDeniedDismissed": "MrCall tarvitsee mikrofonisi. Selaimen käyttöoikeuspyyntö suljettiin ennen kuin ehdit vastata: napsauta Yritä uudelleen ja valitse Salli, kun se tulee uudelleen näkyviin.",
       "micNotFound": "Mikrofonia ei löytynyt. Liitä mikrofoni tai kokeile toisella laitteella.",
       "micDialogTitle": "Microphone unavailable",

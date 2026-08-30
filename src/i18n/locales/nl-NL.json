@@ -136,6 +136,7 @@
       "error": "Er is iets misgegaan",
       "errorStarting": "Het gesprek kon niet worden gestart",
       "micDenied": "MrCall heeft je microfoon nodig. Klik op het slotje in de adresbalk, geef toestemming voor de microfoon en probeer het opnieuw.",
+      "micDeniedSafari": "MrCall heeft je microfoon nodig, en die lijkt geblokkeerd. Op iOS tik je op het AA-menu in de adresbalk, dan Website-instellingen, en zet Microfoon op Sta toe. Op macOS open je het Safari-menu, Instellingen voor deze website, en sta je de microfoon toe. Probeer het daarna opnieuw.",
       "micDeniedDismissed": "MrCall heeft je microfoon nodig. Het toestemmingsverzoek van de browser werd gesloten voordat je kon antwoorden: klik op Opnieuw proberen en kies Toestaan zodra het opnieuw verschijnt.",
       "micNotFound": "Geen microfoon gevonden. Sluit er een aan of probeer het op een ander apparaat.",
       "micDialogTitle": "Microphone unavailable",

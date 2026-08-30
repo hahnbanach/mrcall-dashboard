@@ -98,3 +98,13 @@ export async function getMicPermissionState() {
     return "unknown";
   }
 }
+
+/** True on WebKit browsers (Safari desktop/iOS, and every iOS browser — they are
+ * all WebKit underneath). Recovery instructions differ there: no padlock, the
+ * per-site mic setting lives in the AA menu (iOS) or Safari → Settings for This
+ * Website (macOS). Chrome on iOS reports CriOS, Firefox iOS FxiOS, Edge EdgiOS —
+ * all still WebKit, and all expose Safari's per-site settings UI. */
+export function isWebKit() {
+  if (typeof navigator === "undefined") return false;
+  return /applewebkit/i.test(navigator.userAgent) && !/chrome|chromium|android|windows|edg|opr\//i.test(navigator.userAgent);
+}

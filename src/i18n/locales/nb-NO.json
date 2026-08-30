@@ -136,6 +136,7 @@
       "error": "Noe gikk galt",
       "errorStarting": "Kunne ikke starte samtalen",
       "micDenied": "MrCall trenger mikrofonen din. Klikk på hengelåsen i adressefeltet, tillat mikrofonen, og prøv igjen.",
+      "micDeniedSafari": "MrCall trenger mikrofonen din, og den ser ut til å være blokkert. På iOS trykker du på AA-menyen i adressefeltet, deretter Nettstedsinnstillinger, og setter Mikrofon til Tillat. På macOS åpner du Safari-menyen, Innstillinger for dette nettstedet, og tillater mikrofonen. Prøv deretter igjen.",
       "micDeniedDismissed": "MrCall trenger mikrofonen din. Nettleserens tillatelsesforespørsel ble lukket før du kunne svare: klikk Prøv igjen og velg Tillat når den vises igjen.",
       "micNotFound": "Fant ingen mikrofon. Koble til en, eller prøv fra en annen enhet.",
       "micDialogTitle": "Microphone unavailable",

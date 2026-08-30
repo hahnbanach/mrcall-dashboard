@@ -137,6 +137,7 @@
       "error": "Etwas ist schiefgelaufen",
       "errorStarting": "Der Anruf konnte nicht gestartet werden",
       "micDenied": "MrCall benötigt Ihr Mikrofon. Klicken Sie auf das Schloss in der Adressleiste, erlauben Sie das Mikrofon und versuchen Sie es erneut.",
+      "micDeniedSafari": "MrCall benötigt Ihr Mikrofon, und es ist offenbar blockiert. Auf iOS tippen Sie in der Adressleiste auf AA, dann Website-Einstellungen, und stellen Sie Mikrofon auf Erlauben. Auf macOS öffnen Sie das Safari-Menü, Einstellungen für diese Website, und erlauben Sie das Mikrofon. Versuchen Sie es dann erneut.",
       "micDeniedDismissed": "MrCall benötigt Ihr Mikrofon. Die Berechtigungsanfrage des Browsers wurde geschlossen, bevor Sie antworten konnten: klicken Sie auf Erneut versuchen und dann auf Zulassen, wenn sie wieder erscheint.",
       "micNotFound": "Es wurde kein Mikrofon gefunden. Schließen Sie eines an oder versuchen Sie es auf einem anderen Gerät.",
       "micDialogTitle": "Microphone unavailable",

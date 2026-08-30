@@ -137,6 +137,7 @@
       "error": "Une erreur s'est produite",
       "errorStarting": "Impossible de démarrer l'appel",
       "micDenied": "MrCall a besoin de votre microphone. Cliquez sur le cadenas dans la barre d'adresse, autorisez le microphone, puis réessayez.",
+      "micDeniedSafari": "MrCall a besoin de votre microphone, et il semble bloqué. Sur iOS, touchez le menu AA dans la barre d'adresse, puis Réglages du site web, et réglez Microphone sur Autoriser. Sur macOS, ouvrez le menu Safari, Réglages pour ce site web, et autorisez le microphone. Puis réessayez.",
       "micDeniedDismissed": "MrCall a besoin de votre microphone. La demande d'autorisation du navigateur a été fermée avant que vous puissiez répondre : cliquez sur Réessayer puis sur Autoriser quand elle réapparaît.",
       "micNotFound": "Aucun microphone détecté. Branchez-en un, ou essayez depuis un autre appareil.",
       "micDialogTitle": "Microphone unavailable",

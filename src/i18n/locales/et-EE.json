@@ -136,6 +136,7 @@
       "error": "Midagi läks valesti",
       "errorStarting": "Kõnet ei õnnestunud alustada",
       "micDenied": "MrCall vajab teie mikrofoni. Klõpsake aadressiribal tabalukul, lubage mikrofon ja proovige uuesti.",
+      "micDeniedSafari": "MrCall vajab teie mikrofoni ja see näib olevat blokeeritud. iOS-is puudutage aadressiribal AA-menüüd, seejärel Veebisaidi seaded, ja seadke Mikrofon olekusse Luba. macOS-is avage Safari menüü, Selle saidi seaded, ja lubage mikrofon. Seejärel proovige uuesti.",
       "micDeniedDismissed": "MrCall vajab teie mikrofoni. Brauseri loapäring suleti enne, kui jõudsite vastata: klõpsake Proovi uuesti ja valige Luba, kui see uuesti ilmub.",
       "micNotFound": "Mikrofoni ei leitud. Ühendage mikrofon või proovige teisest seadmest.",
       "micDialogTitle": "Microphone unavailable",
