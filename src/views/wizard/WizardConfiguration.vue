@@ -3,43 +3,44 @@
     <div class="wizard-container">
       <!-- ASK phase: single question + [Parti] button -->
       <div v-if="phase === 'ask'" class="wizard-ask">
+        <div class="wizard-icon-badge"><i class="pi pi-cog"></i></div>
         <h2 class="wizard-title">{{ $t('views.wizard.autoConfigTitle') }}</h2>
         <p class="wizard-question">{{ $t('views.wizard.question') }}</p>
         <Button
           :label="$t('views.wizard.startButton')"
           icon="pi pi-play"
+          iconPos="right"
+          severity="primary"
+          size="large"
           class="wizard-start-btn"
           @click="startAutoConfig"
           :loading="isStarting"
         />
       </div>
 
-      <!-- WORKING phase: spinner + status line from onProgress -->
+      <!-- WORKING phase: spinning cog + indeterminate bar + status from onProgress -->
       <div v-else-if="phase === 'working'" class="wizard-working">
-        <ProgressSpinner
-          style="width: 64px; height: 64px"
-          strokeWidth="4"
-          :pt="{
-            spinner: { style: { animationDuration: '2s' } },
-            circle: { style: { stroke: '#0068FF', strokeWidth: 3 } }
-          }"
-          fill="transparent"
-          animationDuration="2.5s"
-          aria-label="ProgressSpinner"
-        />
-        <p class="working-status">{{ progressStatus }}</p>
+        <div class="working-icon"><i class="pi pi-spin pi-cog"></i></div>
+        <ProgressBar mode="indeterminate" :showValue="false" class="working-bar" />
+        <p class="working-status">{{ progressStatus || $t('views.wizard.statusOpening') }}</p>
       </div>
 
-      <!-- DONE phase: "Fatto." + WebcallButton ONLY -->
+      <!-- DONE phase: "Fatto." + research summary + prominent WebcallButton -->
       <div v-else-if="phase === 'done'" class="wizard-done">
+        <i class="pi pi-check-circle done-icon"></i>
         <h2 class="done-title">{{ $t('views.wizard.doneTitle') }}</h2>
+        <Message v-if="researchSummary" severity="success" :closable="false" class="research-summary">
+          {{ researchSummary }}
+        </Message>
         <WebcallButton
           :businessId="businessId"
           :labelCall="$t('views.wizard.callButtonLabel')"
           :labelHangup="$t('views.wizard.hangupButtonLabel')"
+          prominent
           @call-ended="onCallEnded"
           @error="onCallError"
         />
+        <p class="call-helper">{{ $t('views.wizard.callHelperText') }}</p>
         <div v-if="callErrorOccurred" class="call-error-recovery">
           <a href="#" class="continue-link" @click.prevent="onCallEnded">{{ $t('views.wizard.continueWithoutCall') }}</a>
         </div>
@@ -66,14 +67,15 @@ import { useStore } from 'vuex';
 import { useRouter, useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import Button from 'primevue/button';
-import ProgressSpinner from 'primevue/progressspinner';
+import ProgressBar from 'primevue/progressbar';
+import Message from 'primevue/message';
 import WebcallButton from '@/components/webcall/WebcallButton.vue';
 import businessUtils from '@/utils/Business';
 import ZylchAPI from '@/utils/Zylch.js';
 
 export default {
   name: 'WizardConfiguration',
-  components: { Button, ProgressSpinner, WebcallButton },
+  components: { Button, ProgressBar, Message, WebcallButton },
   setup() {
     const store = useStore();
     const router = useRouter();
@@ -92,6 +94,9 @@ export default {
     const callErrorOccurred = ref(false);
     const pendingChanges = ref([]);
     const finalResponseText = ref('');
+    const researchSummary = computed(() =>
+      store.state.onboardingData?.researchSummary?.[businessId.value] || ''
+    );
 
     const buildPlanCatalogText = () => {
       const plans = tm('views.onboarding.chooseplan.plans');
@@ -109,6 +114,11 @@ export default {
         return { plan: match[1].toLowerCase(), why: match[2].trim() };
       }
       return null;
+    };
+
+    const extractResearchSummary = (text) => {
+      const match = text.match(/<research-summary>([\s\S]*?)<\/research-summary>/i);
+      return match ? match[1].trim() : null;
     };
 
     const startAutoConfig = async () => {
@@ -217,6 +227,15 @@ export default {
           });
         }
 
+        const summary = extractResearchSummary(finalResponseText.value);
+        if (summary) {
+          const currentSummaries = store.state.onboardingData?.researchSummary || {};
+          store.commit('setOnboardingData', {
+            ...store.state.onboardingData,
+            researchSummary: { ...currentSummaries, [businessId.value]: summary },
+          });
+        }
+
         const completedMap = store.state.onboardingData?.wizardCompletedFor || {};
         store.commit('setOnboardingData', {
           ...store.state.onboardingData,
@@ -254,6 +273,7 @@ export default {
       progressStatus,
       errorMessage,
       callErrorOccurred,
+      researchSummary,
       startAutoConfig,
       onCallEnded,
       onCallError,
@@ -305,12 +325,29 @@ export default {
   white-space: pre-line;
 }
 
+.wizard-icon-badge {
+  align-self: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: @mrcall_bluette;
+  margin-bottom: 0.5rem;
+
+  i {
+    font-size: 2rem;
+    color: @mrcall_blue;
+  }
+}
+
 .wizard-start-btn {
   align-self: center;
-  min-width: 160px;
+  min-width: 200px;
   font-weight: 600;
-  font-size: 1rem;
-  padding: 0.75rem 1.5rem;
+  font-size: 1.05rem;
+  padding: 0.85rem 2rem;
 }
 
 .wizard-working {
@@ -326,6 +363,37 @@ export default {
   color: @mrcall_grey_text;
   margin: 0;
   min-height: 1.5em;
+}
+
+.working-icon {
+  i {
+    font-size: 3rem;
+    color: @mrcall_blue;
+  }
+}
+
+.working-bar {
+  width: 100%;
+  height: 6px;
+}
+
+.done-icon {
+  font-size: 3rem;
+  color: @mrcall_status_success;
+}
+
+.research-summary {
+  width: 100%;
+  text-align: left;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.call-helper {
+  font-size: 0.9rem;
+  color: @mrcall_grey_text2;
+  margin: 0;
+  text-align: center;
 }
 
 .wizard-done {

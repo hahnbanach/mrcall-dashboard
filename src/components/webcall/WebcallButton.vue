@@ -3,11 +3,11 @@
     :label="inCall ? labelHangup : labelCall"
     :icon="inCall ? 'pi pi-times-circle' : 'pi pi-phone'"
     iconPos="right"
-    :severity="inCall ? 'danger' : 'primary'"
-    :outlined="!inCall"
+    :severity="prominent && !inCall ? 'success' : (inCall ? 'danger' : 'primary')"
+    :outlined="!inCall && !prominent"
     :loading="processing"
     :disabled="disabled || (processing && !inCall)"
-    :class="{ 'in-call-active': inCall && !processing }"
+    :class="{ 'in-call-active': inCall && !processing, 'webcall-btn-prominent': prominent && !inCall }"
     @click="handleClick"
   />
   <MicPermissionDialog
@@ -42,7 +42,10 @@ const props = defineProps({
   /* button labels & state */
   labelCall:   { type: String, default: 'Call'   },
   labelHangup: { type: String, default: 'Hangup' },
-  disabled:    { type: Boolean, default: false   }
+  disabled:    { type: Boolean, default: false   },
+  /* visual: when true the idle button renders filled/prominent (e.g. the wizard
+     CTA). default false keeps the existing outlined look everywhere else. */
+  prominent:   { type: Boolean, default: false  }
 })
 
 const emit = defineEmits([
@@ -315,6 +318,13 @@ onUnmounted(() => {
 
 .in-call-active {
   animation: call-pulse 2s ease-in-out infinite;
+}
+
+.webcall-btn-prominent {
+  min-width: 180px;
+  padding: 0.9rem 2rem;
+  font-size: 1.05rem;
+  font-weight: 600;
 }
 
 @keyframes call-pulse {
