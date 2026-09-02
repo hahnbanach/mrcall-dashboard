@@ -63,11 +63,21 @@ fi
 # tag left over from a half-failed run cannot poison the numbering.
 git fetch --tags --prune --prune-tags origin
 
-# Enumerate tags newest-first, pipe-free. LATEST_ANY is the newest tag of any
-# kind; LATEST_BASE is the newest bare release tag (vX.Y.Z, no env suffix).
+# Tags are numbered per release branch: on branch vMAJOR.MINOR the script
+# only looks at (and creates) vMAJOR.MINOR.* tags, so v2.0 keeps its own
+# series while v2.1 starts at v2.1.0.
+BRANCH="$(git branch --show-current)"
+[[ -n "$BRANCH" ]] || die "detached HEAD, cannot determine the release branch"
+[[ "$BRANCH" =~ ^v[0-9]+\.[0-9]+$ ]] || die "branch '$BRANCH' is not a vMAJOR.MINOR release branch"
+PREFIX="$BRANCH"
+
+# Enumerate this branch's tags newest-first, pipe-free. LATEST_ANY is the
+# newest tag of any kind; LATEST_BASE is the newest bare release tag
+# (vX.Y.Z, no env suffix).
 LATEST_ANY=""
 LATEST_BASE=""
 while IFS= read -r t; do
+  [[ "$t" == "$PREFIX".* ]] || continue
   if [[ -z "$LATEST_ANY" ]]; then
     LATEST_ANY="$t"
   fi
@@ -76,17 +86,15 @@ while IFS= read -r t; do
   fi
 done < <(git for-each-ref refs/tags --sort=-v:refname --format='%(refname:short)')
 
-[[ -n "$LATEST_ANY" ]] || die "no tags found in this repository"
-
-# Strip an env suffix from the newest tag to get its base (v2.0.23-beta -> v2.0.23)
-BASE_TAG="$LATEST_ANY"
-case "$LATEST_ANY" in
-  *-test)       BASE_TAG="${LATEST_ANY%-test}" ;;
-  *-beta)       BASE_TAG="${LATEST_ANY%-beta}" ;;
-  *-production) BASE_TAG="${LATEST_ANY%-production}" ;;
-esac
-
 if [[ "$MODE" == "publish" ]]; then
+  [[ -n "$LATEST_ANY" ]] || die "no $PREFIX.* tags found in this repository"
+  # Strip an env suffix from the newest tag to get its base (v2.1.3-beta -> v2.1.3)
+  BASE_TAG="$LATEST_ANY"
+  case "$LATEST_ANY" in
+    *-test)       BASE_TAG="${LATEST_ANY%-test}" ;;
+    *-beta)       BASE_TAG="${LATEST_ANY%-beta}" ;;
+    *-production) BASE_TAG="${LATEST_ANY%-production}" ;;
+  esac
   echo "Latest tag: $BASE_TAG"
   for ENV in test beta production; do
     ENV_TAG="$BASE_TAG-$ENV"
@@ -104,16 +112,17 @@ if [[ "$MODE" == "publish" ]]; then
     fi
   done
 else
-  [[ -n "$LATEST_BASE" ]] || die "no vX.Y.Z release tag found"
-  [[ "$LATEST_BASE" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]
-  NEW_TAG="v${BASH_REMATCH[1]}.${BASH_REMATCH[2]}.$((BASH_REMATCH[3] + 1))"
+  if [[ -n "$LATEST_BASE" ]]; then
+    [[ "$LATEST_BASE" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]
+    NEW_TAG="v${BASH_REMATCH[1]}.${BASH_REMATCH[2]}.$((BASH_REMATCH[3] + 1))"
+  else
+    NEW_TAG="$PREFIX.0"
+  fi
   if git rev-parse -q --verify "refs/tags/$NEW_TAG" >/dev/null; then
     die "tag $NEW_TAG already exists"
   fi
   git tag -a "$NEW_TAG" -m "$MESSAGE"
   echo "Created tag $NEW_TAG"
-  BRANCH="$(git branch --show-current)"
-  [[ -n "$BRANCH" ]] || die "detached HEAD, cannot determine branch to push"
   git push origin "$BRANCH"
   git push origin "$NEW_TAG"
   echo "Pushed branch '$BRANCH' and tag '$NEW_TAG'"
