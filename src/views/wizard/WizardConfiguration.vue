@@ -18,6 +18,24 @@
         />
       </div>
 
+      <!-- NO-LINK phase: no Google listing, so nothing to research — call anyway -->
+      <div v-else-if="phase === 'no-link'" class="wizard-no-link">
+        <i class="pi pi-exclamation-triangle no-link-icon"></i>
+        <h2 class="wizard-title">{{ $t('views.wizard.noLinkTitle') }}</h2>
+        <p class="wizard-question">{{ $t('views.wizard.noLinkBody') }}</p>
+        <DirectVoiceButton
+          :business-id="businessId"
+          :label-call="$t('views.wizard.callButtonLabel')"
+          :label-hangup="$t('views.wizard.hangupButtonLabel')"
+          @call-ended="onCallEnded"
+          @error="onCallError"
+        />
+        <p class="no-link-ps">{{ $t('views.wizard.noLinkPs') }}</p>
+        <div v-if="callErrorOccurred" class="call-error-recovery">
+          <a href="#" class="continue-link" @click.prevent="onCallEnded">{{ $t('views.wizard.continueWithoutCall') }}</a>
+        </div>
+      </div>
+
       <!-- WORKING phase: spinning cog + indeterminate bar + status from onProgress -->
       <div v-else-if="phase === 'working'" class="wizard-working">
         <div class="working-icon"><i class="pi pi-spin pi-cog"></i></div>
@@ -83,6 +101,7 @@ export default {
     const user = computed(() => store.state.user);
 
     const phase = ref('ask');
+    const business = ref(null);
     const businessId = ref(route.query.id || '');
     const wizardSessionId = computed(() =>
       businessId.value ? `mrcall_wizard_${businessId.value}` : null
@@ -134,10 +153,12 @@ export default {
       finalResponseText.value = '';
 
       try {
-        const b = await businessUtils.getBusiness(store, user.value, businessId.value);
+        const b = business.value
+          || await businessUtils.getBusiness(store, user.value, businessId.value);
         if (!b) {
           throw new Error('Business not found');
         }
+        business.value = b;
 
         await new Promise((resolve, reject) => {
           let settled = false;
@@ -259,9 +280,32 @@ export default {
       callErrorOccurred.value = true;
     };
 
-    onMounted(() => {
+    // The research is seeded by the business name alone, and that name comes
+    // from the Google listing the user picked (or did not pick) during
+    // onboarding. Without a link there is nothing to research, so that case
+    // gets its own screen instead of a spinner that can only disappoint.
+    const hasGoogleLink = (b) => {
+      const v = b?.variables || {};
+      const sync = v.SYNC_GOOGLE_BUSINESS;
+      const placeId = v.GOOGLE_PLACE_ID;
+      return sync === true || sync === 'true' || (typeof placeId === 'string' && placeId.trim() !== '');
+    };
+
+    onMounted(async () => {
       if (!businessId.value) {
         router.push({ name: 'Businesses' });
+        return;
+      }
+      try {
+        const b = await businessUtils.getBusiness(store, user.value, businessId.value);
+        business.value = b;
+        if (b && !hasGoogleLink(b)) {
+          phase.value = 'no-link';
+        }
+      } catch (err) {
+        // A fetch failure is not a reason to block the wizard: startAutoConfig
+        // fetches again and surfaces the error there.
+        console.error('[Wizard] Business fetch failed:', err);
       }
     });
 
@@ -422,6 +466,25 @@ export default {
   &:hover {
     color: @mrcall_blue_highlight;
   }
+}
+
+.wizard-no-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.no-link-icon {
+  font-size: 3rem;
+  color: var(--orange-500);
+}
+
+.no-link-ps {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: @mrcall_grey_text;
+  margin: 0;
 }
 
 .wizard-error {

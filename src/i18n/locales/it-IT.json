@@ -1641,9 +1641,12 @@
       "retryButton": "Riprova",
       "continueWithoutCall": "Continua senza chiamare",
       "callButtonLabel": "Chiama",
-      "question": "Vuoi che faccia una prima autoconfigurazione? Ora farò una ricerca sul web, cercherò di capire come rispondere al telefono e come continuare la conversazione. Potrai sempre cambiare il mio comportamento dopo.",
+      "question": "Ora farò una ricerca sul web, cercherò di capire come rispondere al telefono e come continuare la conversazione. Potrai sempre cambiare il mio comportamento dopo.",
       "agentPrompt": "Fai una ricerca sul web per questa azienda. Configura come l'assistente risponde al telefono e come continua la conversazione. Applica la configurazione. Alla fine della tua risposta, includi ESATTAMENTE un blocco: <plan-recommendation plan=\"essential|starter|professional\">motivazione nella lingua dell'utente</plan-recommendation>. Piani disponibili: {plans} Includi anche ESATTAMENTE un blocco: <research-summary>due righe riassuntive di quello che hai trovato sul web su questa azienda (es. numero di recensioni Google e voto medio, o i servizi principali)</research-summary>.",
-      "callHelperText": "Chiama per sentire il tuo assistente, poi scegli il piano"
+      "callHelperText": "Chiama per sentire il tuo assistente, poi scegli il piano",
+      "noLinkTitle": "Non sappiamo ancora chi sei",
+      "noLinkBody": "Attenzione: non hai connesso l'assistente con Google My Business, quindi non sappiamo chi sei — e non possiamo pre-configurarlo. Fai comunque una chiamata di prova.",
+      "noLinkPs": "PS Ricorda che potrai sempre chiedere al configuratore di fare una ricerca web per configurare l'assistente."
     }
   },
   "common": {
