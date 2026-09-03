@@ -1702,7 +1702,7 @@
       "retryButton": "Retry",
       "continueWithoutCall": "Continue without calling",
       "callButtonLabel": "Call",
-      "question": "Do you want me to do an initial auto-configuration? I will do web research, figure out how to answer the phone and how to continue the conversation. You can always change my behaviour later.",
+      "question": "Do you want me to do an initial auto-configuration? Now I will do web research, figure out how to answer the phone and how to continue the conversation. You can always change my behaviour later.",
       "agentPrompt": "Do web research for this business. Configure how the assistant answers the phone and continues the conversation. Apply the configuration. At the end of your reply, include EXACTLY one block: <plan-recommendation plan=\"essential|starter|professional\">reason in the user's language</plan-recommendation>. Available plans: {plans} Also include EXACTLY one block: <research-summary>two summary lines of what you found about this business on the web (e.g. number of Google reviews and average rating, or the main services)</research-summary>.",
       "callHelperText": "Call to hear your assistant, then pick a plan"
     }

@@ -54,3 +54,6 @@ serviceAccountKey.json
 # with binary diffs nobody reads. Visual regression baselines are the separate,
 # genuinely tracked ones under tests/e2e/visual/*-snapshots/.
 /tests/screenshots/
+
+# per-session memory, same rule as the agent repo
+docs/sessions/

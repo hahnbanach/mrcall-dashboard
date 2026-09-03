@@ -25,18 +25,17 @@
         <p class="working-status">{{ progressStatus || $t('views.wizard.statusOpening') }}</p>
       </div>
 
-      <!-- DONE phase: "Fatto." + research summary + prominent WebcallButton -->
+      <!-- DONE phase: "Fatto." + research summary + DirectVoiceButton -->
       <div v-else-if="phase === 'done'" class="wizard-done">
         <i class="pi pi-check-circle done-icon"></i>
         <h2 class="done-title">{{ $t('views.wizard.doneTitle') }}</h2>
         <Message v-if="researchSummary" severity="success" :closable="false" class="research-summary">
           {{ researchSummary }}
         </Message>
-        <WebcallButton
-          :businessId="businessId"
-          :labelCall="$t('views.wizard.callButtonLabel')"
-          :labelHangup="$t('views.wizard.hangupButtonLabel')"
-          prominent
+        <DirectVoiceButton
+          :business-id="businessId"
+          :label-call="$t('views.wizard.callButtonLabel')"
+          :label-hangup="$t('views.wizard.hangupButtonLabel')"
           @call-ended="onCallEnded"
           @error="onCallError"
         />
@@ -69,13 +68,13 @@ import { useI18n } from 'vue-i18n';
 import Button from 'primevue/button';
 import ProgressBar from 'primevue/progressbar';
 import Message from 'primevue/message';
-import WebcallButton from '@/components/webcall/WebcallButton.vue';
+import DirectVoiceButton from '@/components/webcall/DirectVoiceButton.vue';
 import businessUtils from '@/utils/Business';
 import ZylchAPI from '@/utils/Zylch.js';
 
 export default {
   name: 'WizardConfiguration',
-  components: { Button, ProgressBar, Message, WebcallButton },
+  components: { Button, ProgressBar, Message, DirectVoiceButton },
   setup() {
     const store = useStore();
     const router = useRouter();
