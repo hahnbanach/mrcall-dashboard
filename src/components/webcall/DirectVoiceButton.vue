@@ -226,9 +226,27 @@ function createVoice() {
     encoding: props.encoding,
   });
 
+  // The SDK calls onCallEnded only when the SERVER sends `callEnded`. A local
+  // hangup() just sends the frame and drops to idle after 500ms, so the caller
+  // hanging up would otherwise emit nothing at all. The active→idle transition
+  // is the signal that covers both, and endCall() keeps it to one emit.
+  let callWasActive = false;
+
+  const endCall = (reason) => {
+    if (!callWasActive) return;
+    callWasActive = false;
+    notify("info", t("components.directVoice.ended"), "", 4000);
+    emit("call-ended", reason);
+  };
+
   client.onStatusChange = (status) => {
     callStatus.value = status;
     if (status === "active" || status === "idle") processing.value = false;
+    if (status === "active") callWasActive = true;
+    // Deferred by one tick: on a server-side end the SDK sets idle and then
+    // calls onCallEnded synchronously, so the real reason gets there first and
+    // this becomes a no-op. On a local hangup nothing follows, and this fires.
+    if (status === "idle") setTimeout(() => endCall("hangup"), 0);
   };
 
   client.onCallStarted = (sessionId) => {
@@ -237,8 +255,7 @@ function createVoice() {
   };
 
   client.onCallEnded = (reason) => {
-    notify("info", t("components.directVoice.ended"), "", 4000);
-    emit("call-ended", reason);
+    endCall(reason);
   };
 
   client.onError = (message) => {
