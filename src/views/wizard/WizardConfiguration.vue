@@ -43,13 +43,14 @@
         <p class="working-status">{{ progressStatus || $t('views.wizard.statusOpening') }}</p>
       </div>
 
-      <!-- DONE phase: "Fatto." + research summary + DirectVoiceButton -->
+      <!-- DONE phase: "Fatto." + research summary + the call, loudly -->
       <div v-else-if="phase === 'done'" class="wizard-done">
         <i class="pi pi-check-circle done-icon"></i>
         <h2 class="done-title">{{ $t('views.wizard.doneTitle') }}</h2>
         <Message v-if="researchSummary" severity="success" :closable="false" class="research-summary">
           {{ researchSummary }}
         </Message>
+        <p class="call-headline">{{ $t('views.wizard.callHeadline') }}</p>
         <DirectVoiceButton
           :business-id="businessId"
           :label-call="$t('views.wizard.callButtonLabel')"
@@ -61,6 +62,48 @@
         <div v-if="callErrorOccurred" class="call-error-recovery">
           <a href="#" class="continue-link" @click.prevent="onCallEnded">{{ $t('views.wizard.continueWithoutCall') }}</a>
         </div>
+      </div>
+
+      <!-- AFTER-CALL phase: the fork — account, or start the free week -->
+      <div v-else-if="phase === 'after-call'" class="wizard-after-call">
+        <i class="pi pi-check-circle done-icon"></i>
+        <h2 class="done-title">{{ $t('views.wizard.afterCallTitle') }}</h2>
+        <p class="wizard-question">{{ $t('views.wizard.afterCallBody') }}</p>
+        <Button
+          :label="$t('views.wizard.afterCallTrialButton')"
+          icon="pi pi-star"
+          iconPos="right"
+          severity="primary"
+          size="large"
+          class="wizard-start-btn"
+          @click="goToPlans"
+        />
+        <Button
+          :label="$t('views.wizard.afterCallBackButton')"
+          class="p-button-text back-btn"
+          @click="phase = 'leaving'"
+        />
+      </div>
+
+      <!-- LEAVING phase: what walking away costs, and how to undo the trial -->
+      <div v-else-if="phase === 'leaving'" class="wizard-leaving">
+        <i class="pi pi-exclamation-triangle no-link-icon"></i>
+        <p class="leaving-warning">{{ $t('views.wizard.leavingWarning') }}</p>
+        <Button
+          :label="$t('views.wizard.leavingStayButton')"
+          icon="pi pi-star"
+          iconPos="right"
+          severity="primary"
+          size="large"
+          class="wizard-start-btn"
+          @click="goToPlans"
+        />
+        <Button
+          :label="$t('views.wizard.leavingLeaveButton')"
+          class="p-button-text back-btn"
+          @click="goToAccount"
+        />
+        <p class="leaving-note">{{ $t('views.wizard.leavingCancelNote') }}</p>
       </div>
 
       <!-- ERROR phase: short message + "Riprova" button -->
@@ -272,8 +315,18 @@ export default {
       }
     };
 
+    // The call is over: this is the moment the trial is worth the most, so the
+    // choice is put here rather than dropping the user straight on the plans.
     const onCallEnded = () => {
+      phase.value = 'after-call';
+    };
+
+    const goToPlans = () => {
       router.push({ name: 'OnboardingChoosePlan', query: { id: businessId.value } });
+    };
+
+    const goToAccount = () => {
+      router.push({ name: 'Businesses' });
     };
 
     const onCallError = () => {
@@ -320,6 +373,8 @@ export default {
       startAutoConfig,
       onCallEnded,
       onCallError,
+      goToPlans,
+      goToAccount,
     };
   },
 };
@@ -468,11 +523,41 @@ export default {
   }
 }
 
-.wizard-no-link {
+.wizard-no-link,
+.wizard-after-call,
+.wizard-leaving {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1.5rem;
+}
+
+.call-headline {
+  font-size: 1.35rem;
+  font-weight: 800;
+  line-height: 1.3;
+  text-transform: uppercase;
+  color: @mrcall_dark_grey_text;
+  margin: 0;
+}
+
+.leaving-warning {
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.5;
+  color: @mrcall_dark_grey_text;
+  margin: 0;
+}
+
+.leaving-note {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: @mrcall_grey_text;
+  margin: 0;
+}
+
+.back-btn {
+  font-size: 0.95rem;
 }
 
 .no-link-icon {

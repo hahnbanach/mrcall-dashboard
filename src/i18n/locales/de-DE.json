@@ -1695,7 +1695,16 @@
       "callHelperText": "Call to hear your assistant, then pick a plan",
       "noLinkTitle": "We don't know you yet",
       "noLinkBody": "Heads up: your assistant is not connected to Google My Business, so we don't know who you are — and we can't pre-configure it for you. Make a test call anyway.",
-      "noLinkPs": "PS You can always ask the configurator to run a web search and configure your assistant."
+      "noLinkPs": "PS You can always ask the configurator to run a web search and configure your assistant.",
+      "callHeadline": "Call the assistant for your business!",
+      "afterCallTitle": "That was your assistant.",
+      "afterCallBody": "Put it to work on your real calls: a full week free, no commitment.",
+      "afterCallTrialButton": "Try MrCall free for a week",
+      "afterCallBackButton": "Back to my account",
+      "leavingWarning": "Careful: if you leave now you give up your free week.",
+      "leavingStayButton": "I changed my mind, I want to try it",
+      "leavingLeaveButton": "Never mind, take me to my account",
+      "leavingCancelNote": "You can stop the free trial whenever you like, with no charge at all. In your account, open “Subscriptions” and click “Cancel”."
     }
   },
   "common": {

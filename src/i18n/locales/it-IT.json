@@ -1646,7 +1646,16 @@
       "callHelperText": "Chiama per sentire il tuo assistente, poi scegli il piano",
       "noLinkTitle": "Non sappiamo ancora chi sei",
       "noLinkBody": "Attenzione: non hai connesso l'assistente con Google My Business, quindi non sappiamo chi sei — e non possiamo pre-configurarlo. Fai comunque una chiamata di prova.",
-      "noLinkPs": "PS Ricorda che potrai sempre chiedere al configuratore di fare una ricerca web per configurare l'assistente."
+      "noLinkPs": "PS Ricorda che potrai sempre chiedere al configuratore di fare una ricerca web per configurare l'assistente.",
+      "callHeadline": "Chiama l'assistente della tua attività!",
+      "afterCallTitle": "Questo era il tuo assistente.",
+      "afterCallBody": "Mettilo al lavoro sulle tue chiamate vere: una settimana intera gratis, senza nessun impegno.",
+      "afterCallTrialButton": "Voglio provare MrCall per una settimana, gratis",
+      "afterCallBackButton": "Voglio tornare all'area clienti",
+      "leavingWarning": "Attenzione: abbandonando il processo perdi la possibilità di avere una settimana gratuita!",
+      "leavingStayButton": "Ci ho ripensato, voglio provare!",
+      "leavingLeaveButton": "Pazienza, area clienti",
+      "leavingCancelNote": "Puoi interrompere la prova gratuita quando vuoi, senza nessun addebito. Basta cliccare nell'area clienti su “Abbonamenti” e poi “Cancella”."
     }
   },
   "common": {
