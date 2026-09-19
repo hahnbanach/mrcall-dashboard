@@ -121,25 +121,17 @@ function getFields(entry) {
 }
 
 function getFieldValue(entry, fieldKey) {
-  return (entry.params && entry.params[fieldKey] !== undefined) ? entry.params[fieldKey] : '';
+  // Params first, then the entry itself, which is the order the runtime reads these in
+  // (`AGENT_SKILL:prefetch.sc`). `inject` lived on the entry before it was a declared field, so an
+  // instance configured then would otherwise show the default while running on its stored value.
+  if (entry.params && entry.params[fieldKey] !== undefined) return entry.params[fieldKey];
+  if (entry[fieldKey] !== undefined) return entry[fieldKey];
+  return '';
 }
 
 function setFieldValue(phase, index, fieldKey, value) {
   if (props.disabled) return;
   config.value = agentSkillsUtils.updateEntryParam(config.value, phase, index, fieldKey, value);
-}
-
-// `inject` governs one thing and only in the pre-call phase: whether this skill's result is added
-// to the assistant's prompt automatically. Off, the result is still produced and still reachable,
-// but only where a template names it. Absent means on, so entries written before the flag existed
-// keep the behaviour they had.
-function getInject(entry) {
-  return entry.inject !== false;
-}
-
-function setInject(phase, index, value) {
-  if (props.disabled) return;
-  config.value = agentSkillsUtils.updateEntryFlag(config.value, phase, index, 'inject', value, true);
 }
 
 function getFieldLabel(field) {
@@ -186,7 +178,31 @@ function skillDescription(entry) {
 }
 
 function getNonOauthFields(entry, phase) {
-  return getFields(entry).filter(f => f.type !== 'oauth' && isFieldVisibleInPhase(f, phase));
+  return getFields(entry).filter(f =>
+    f.type !== 'oauth' && isFieldVisibleInPhase(f, phase) && isFieldVisibleHere(entry, f));
+}
+
+/**
+ * Whether this field means anything in the state this instance is in.
+ *
+ * `visibleWhen` names sibling fields and the values they must hold, and the schema is where that
+ * condition is written, not this file: `firstInteraction` asks whether a fragment also goes into
+ * the welcome message, which cannot happen for a fragment that `inject` keeps out of the prompt
+ * altogether, so the contract declares `{"inject": true}` and the runtime applies the same rule.
+ *
+ * Compared as strings, because that is how a business variable stores a boolean, and against the
+ * sibling's default when nothing has been written: `inject` is on unless it was turned off.
+ */
+function isFieldVisibleHere(entry, field) {
+  if (!field.visibleWhen) return true;
+  return Object.keys(field.visibleWhen).every(siblingKey => {
+    const sibling = getFields(entry).find(f => f.key === siblingKey);
+    const raw = getFieldValue(entry, siblingKey);
+    const value = raw === '' || raw === undefined
+      ? (sibling && sibling.default !== undefined ? sibling.default : '')
+      : raw;
+    return String(value) === String(field.visibleWhen[siblingKey]);
+  });
 }
 
 /**
@@ -451,18 +467,6 @@ onMounted(async () => {
                 <Button icon="pi pi-times" severity="danger" text rounded size="small"
                         :disabled="disabled" @click="removeEntry(phase, idx)"
                         :title="t('widgets.agentSkills.removeSkill')" />
-              </div>
-
-              <!-- Only the pre-call phase builds a prompt, so the flag exists only there: in the
-                   other phases there is nothing to add the result to and the switch would do
-                   nothing. -->
-              <div v-if="phase === 'prefetch' && !isOrphanedEntry(entry)" class="entry-inject">
-                <ToggleSwitch :modelValue="getInject(entry)" :disabled="disabled"
-                              @update:modelValue="v => setInject(phase, idx, v)" />
-                <div class="entry-inject-text">
-                  <span class="entry-inject-label">{{ t('widgets.agentSkills.inject') }}</span>
-                  <span class="entry-inject-hint">{{ t('widgets.agentSkills.injectHint') }}</span>
-                </div>
               </div>
 
               <!-- OAuth fields -->
@@ -770,28 +774,6 @@ onMounted(async () => {
   line-height: 1.3;
 }
 
-.entry-inject {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  padding: 0 12px 10px 12px;
-}
-
-.entry-inject-text {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.entry-inject-label {
-  font-size: 0.8125rem;
-}
-
-.entry-inject-hint {
-  font-size: 0.75rem;
-  color: var(--p-text-muted-color);
-  line-height: 1.3;
-}
 
 .entry-fields {
   border-top: 1px solid @mrcall_borders;
