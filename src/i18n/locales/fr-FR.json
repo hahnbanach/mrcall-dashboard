@@ -101,7 +101,9 @@
       "oauthDisconnect": "Déconnecter",
       "addPair": "Ajouter un en-tête",
       "skillUnavailable": "Cette skill n'est plus disponible sur le serveur. Supprimez-la ou contactez le support.",
-      "oauthScopeUnavailable": "Cette intégration nécessite une permission Google que MrCall n'est pas autorisée à demander. Contactez le support."
+      "oauthScopeUnavailable": "Cette intégration nécessite une permission Google que MrCall n'est pas autorisée à demander. Contactez le support.",
+      "inject": "Ajouter au prompt",
+      "injectHint": "Activé, le résultat est ajouté aux instructions de l'assistant. Désactivé, il reste disponible mais uniquement là où un modèle le nomme."
     }
   },
   "components": {

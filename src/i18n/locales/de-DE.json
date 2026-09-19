@@ -101,7 +101,9 @@
       "oauthDisconnect": "Trennen",
       "addPair": "Header hinzufügen",
       "skillUnavailable": "Dieser Skill ist auf dem Server nicht mehr verfügbar. Entferne ihn oder wende dich an den Support.",
-      "oauthScopeUnavailable": "Diese Integration benötigt eine Google-Berechtigung, die MrCall nicht anfordern darf. Wende dich an den Support."
+      "oauthScopeUnavailable": "Diese Integration benötigt eine Google-Berechtigung, die MrCall nicht anfordern darf. Wende dich an den Support.",
+      "inject": "Zum Prompt hinzufügen",
+      "injectHint": "Ein: Das Ergebnis wird den Anweisungen des Assistenten hinzugefügt. Aus: Es bleibt verfügbar, aber nur dort, wo eine Vorlage es nennt."
     }
   },
   "components": {

@@ -100,7 +100,9 @@
       "oauthDisconnect": "Koppla från",
       "addPair": "Lägg till header",
       "skillUnavailable": "Den här skillen finns inte längre på servern. Ta bort den eller kontakta supporten.",
-      "oauthScopeUnavailable": "Den här integrationen kräver en Google-behörighet som MrCall inte får begära. Kontakta supporten."
+      "oauthScopeUnavailable": "Den här integrationen kräver en Google-behörighet som MrCall inte får begära. Kontakta supporten.",
+      "inject": "Lägg till i prompt",
+      "injectHint": "På: resultatet läggs till i assistentens instruktioner. Av: det är fortfarande tillgängligt, men bara där en mall nämner det."
     }
   },
   "components": {

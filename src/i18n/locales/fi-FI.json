@@ -100,7 +100,9 @@
       "oauthDisconnect": "Katkaise yhteys",
       "addPair": "Lisää otsake",
       "skillUnavailable": "Tämä taito ei ole enää saatavilla palvelimella. Poista se tai ota yhteyttä tukeen.",
-      "oauthScopeUnavailable": "Tämä integraatio vaatii Google-oikeuden, jota MrCall ei ole valtuutettu pyytämään. Ota yhteyttä tukeen."
+      "oauthScopeUnavailable": "Tämä integraatio vaatii Google-oikeuden, jota MrCall ei ole valtuutettu pyytämään. Ota yhteyttä tukeen.",
+      "inject": "Lisää kehotteeseen",
+      "injectHint": "Päällä: tulos lisätään avustajan ohjeisiin. Pois: se on yhä käytettävissä, mutta vain siellä missä malli nimeää sen."
     }
   },
   "components": {

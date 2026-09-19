@@ -100,7 +100,11 @@
       "oauthDisconnect": "Disconnetti",
       "addPair": "Aggiungi header",
       "skillUnavailable": "Questa skill non è più disponibile sul server. Rimuovila o contatta il supporto.",
-      "oauthScopeUnavailable": "Questa integrazione richiede un permesso Google che MrCall non è autorizzata a chiedere. Contatta il supporto."
+      "oauthScopeUnavailable": "Questa integrazione richiede un permesso Google che MrCall non è autorizzata a chiedere. Contatta il supporto.",
+      "inject": "Aggiungi al prompt",
+      "injectHint": "Attivo, il risultato entra nelle istruzioni dell'assistente. Spento, resta disponibile ma solo dove un template lo nomina.",
+      "templateSyntaxTitle": "Come si scrive un prompt: le variabili",
+      "templateSyntaxHelp": "Cosa puoi scrivere in questi campi: `%%FUNCTION_RESPONSE_BODY%%` per quello che la skill ha restituito; `%%nome%%` per qualsiasi variabile del business o della conversazione, per esempio `%%crm.contact.variables.FIRST_NAME%%`; `%%nome:=ripiego%%` per dare un valore quando la variabile e' vuota; `%%public:PREFETCH:json:<istanza>.campo.sottocampo%%` per entrare dentro un json pubblicato da un'altra istanza; e in fase during gli argomenti passati dal modello, col loro nome. I nomi che iniziano per private, secret, local o internal non vengono mai sostituiti."
     }
   },
   "components": {

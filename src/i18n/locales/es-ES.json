@@ -100,7 +100,9 @@
       "oauthDisconnect": "Desconectar",
       "addPair": "Añadir cabecera",
       "skillUnavailable": "Esta skill ya no está disponible en el servidor. Elimínala o contacta con soporte.",
-      "oauthScopeUnavailable": "Esta integración necesita un permiso de Google que MrCall no está autorizada a solicitar. Contacta con soporte."
+      "oauthScopeUnavailable": "Esta integración necesita un permiso de Google que MrCall no está autorizada a solicitar. Contacta con soporte.",
+      "inject": "Añadir al prompt",
+      "injectHint": "Activado, el resultado se añade a las instrucciones del asistente. Desactivado, sigue disponible pero solo donde una plantilla lo nombre."
     }
   },
   "components": {

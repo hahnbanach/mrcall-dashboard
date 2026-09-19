@@ -100,7 +100,9 @@
       "oauthDisconnect": "Verbinding verbreken",
       "addPair": "Header toevoegen",
       "skillUnavailable": "Deze skill is niet meer beschikbaar op de server. Verwijder hem of neem contact op met de ondersteuning.",
-      "oauthScopeUnavailable": "Deze integratie vereist een Google-machtiging die MrCall niet mag opvragen. Neem contact op met de ondersteuning."
+      "oauthScopeUnavailable": "Deze integratie vereist een Google-machtiging die MrCall niet mag opvragen. Neem contact op met de ondersteuning.",
+      "inject": "Aan prompt toevoegen",
+      "injectHint": "Aan: het resultaat wordt aan de instructies van de assistent toegevoegd. Uit: het blijft beschikbaar, maar alleen waar een sjabloon het noemt."
     }
   },
   "components": {

@@ -100,7 +100,9 @@
       "oauthDisconnect": "Koble fra",
       "addPair": "Legg til header",
       "skillUnavailable": "Denne skillen er ikke lenger tilgjengelig på serveren. Fjern den eller kontakt kundestøtte.",
-      "oauthScopeUnavailable": "Denne integrasjonen krever en Google-tillatelse som MrCall ikke har lov til å be om. Kontakt kundestøtte."
+      "oauthScopeUnavailable": "Denne integrasjonen krever en Google-tillatelse som MrCall ikke har lov til å be om. Kontakt kundestøtte.",
+      "inject": "Legg til i prompt",
+      "injectHint": "På: resultatet legges til assistentens instruksjoner. Av: det er fortsatt tilgjengelig, men bare der en mal nevner det."
     }
   },
   "components": {

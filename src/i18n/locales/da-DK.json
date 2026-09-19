@@ -100,7 +100,9 @@
       "oauthDisconnect": "Afbryd",
       "addPair": "Tilføj header",
       "skillUnavailable": "Denne skill er ikke længere tilgængelig på serveren. Fjern den, eller kontakt support.",
-      "oauthScopeUnavailable": "Denne integration kræver en Google-tilladelse, som MrCall ikke må anmode om. Kontakt support."
+      "oauthScopeUnavailable": "Denne integration kræver en Google-tilladelse, som MrCall ikke må anmode om. Kontakt support.",
+      "inject": "Tilføj til prompt",
+      "injectHint": "Til: resultatet tilføjes assistentens instruktioner. Fra: det er stadig tilgængeligt, men kun hvor en skabelon nævner det."
     }
   },
   "components": {

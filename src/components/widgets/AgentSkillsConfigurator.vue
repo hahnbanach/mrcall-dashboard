@@ -129,9 +129,23 @@ function setFieldValue(phase, index, fieldKey, value) {
   config.value = agentSkillsUtils.updateEntryParam(config.value, phase, index, fieldKey, value);
 }
 
+// `inject` governs one thing and only in the pre-call phase: whether this skill's result is added
+// to the assistant's prompt automatically. Off, the result is still produced and still reachable,
+// but only where a template names it. Absent means on, so entries written before the flag existed
+// keep the behaviour they had.
+function getInject(entry) {
+  return entry.inject !== false;
+}
+
+function setInject(phase, index, value) {
+  if (props.disabled) return;
+  config.value = agentSkillsUtils.updateEntryFlag(config.value, phase, index, 'inject', value, true);
+}
+
 function getFieldLabel(field) {
   if (field.labels) {
-    const labels = field.labels[currentLang.value] || field.labels['en'] || {};
+    // `*` is the default across the localized maps of this system, and it sits above `en`.
+    const labels = field.labels[currentLang.value] || field.labels['*'] || field.labels['en'] || {};
     return labels.label || field.key;
   }
   return field.key;
@@ -139,10 +153,27 @@ function getFieldLabel(field) {
 
 function getFieldHint(field) {
   if (field.labels) {
-    const labels = field.labels[currentLang.value] || field.labels['en'] || {};
+    // `*` is the default across the localized maps of this system, and it sits above `en`.
+    const labels = field.labels[currentLang.value] || field.labels['*'] || field.labels['en'] || {};
     return labels.hint || '';
   }
   return '';
+}
+
+/**
+ * What goes INSIDE an empty box, which is not the hint.
+ *
+ * The hint is already rendered under the control, and these hints are long: every prompt field
+ * carries the whole %%var%% syntax in its own, some 660 characters of it, so the same paragraph
+ * appeared twice on one screen. Greyed out inside the textbox it reads as an example the user is
+ * meant to follow rather than as help they have already read, and it is neither.
+ *
+ * A placeholder is an example of a VALUE. The only example this schema carries is the field's own
+ * default, and a field without one shows an empty box, which is the honest thing for a box nobody
+ * has filled in.
+ */
+function getFieldPlaceholder(field) {
+  return field.default === undefined || field.default === null ? '' : String(field.default);
 }
 
 function skillDescription(entry) {
@@ -156,6 +187,18 @@ function skillDescription(entry) {
 
 function getNonOauthFields(entry, phase) {
   return getFields(entry).filter(f => f.type !== 'oauth' && isFieldVisibleInPhase(f, phase));
+}
+
+/**
+ * Whether this entry, in this phase, shows a box a %%var%% template can be written in.
+ *
+ * The syntax of those templates is one paragraph, and it used to live inside the hint of every
+ * prompt field: 36 copies of the same 550 characters across six skills and three language slots,
+ * so a screen with two prompt boxes said it twice. It is now said once, here, and the hints say
+ * only what is true of their own field.
+ */
+function hasTemplateFields(entry, phase) {
+  return getNonOauthFields(entry, phase).some(f => f.type === 'textarea' || String(f.key).startsWith('prompt'));
 }
 
 function isFieldVisibleInPhase(field, phase) {
@@ -410,6 +453,18 @@ onMounted(async () => {
                         :title="t('widgets.agentSkills.removeSkill')" />
               </div>
 
+              <!-- Only the pre-call phase builds a prompt, so the flag exists only there: in the
+                   other phases there is nothing to add the result to and the switch would do
+                   nothing. -->
+              <div v-if="phase === 'prefetch' && !isOrphanedEntry(entry)" class="entry-inject">
+                <ToggleSwitch :modelValue="getInject(entry)" :disabled="disabled"
+                              @update:modelValue="v => setInject(phase, idx, v)" />
+                <div class="entry-inject-text">
+                  <span class="entry-inject-label">{{ t('widgets.agentSkills.inject') }}</span>
+                  <span class="entry-inject-hint">{{ t('widgets.agentSkills.injectHint') }}</span>
+                </div>
+              </div>
+
               <!-- OAuth fields -->
               <div v-if="getOauthFields(entry).length > 0" class="entry-oauth">
                 <div v-for="field in getOauthFields(entry)" :key="field.key" class="oauth-field">
@@ -471,7 +526,7 @@ onMounted(async () => {
                             optionLabel="label"
                             optionValue="value"
                             :disabled="disabled"
-                            :placeholder="getFieldHint(field) || (field.default ? String(field.default) : '')"
+                            :placeholder="getFieldPlaceholder(field)"
                             class="w-full"
                             size="small" />
 
@@ -512,7 +567,7 @@ onMounted(async () => {
                             :modelValue="getFieldValue(entry, field.key)"
                             @update:modelValue="setFieldValue(phase, idx, field.key, $event)"
                             :disabled="disabled"
-                            :placeholder="getFieldHint(field) || ''"
+                            :placeholder="getFieldPlaceholder(field)"
                             class="w-full"
                             rows="4"
                             autoResize />
@@ -530,7 +585,7 @@ onMounted(async () => {
                              @update:modelValue="setFieldValue(phase, idx, field.key, $event)"
                              :disabled="disabled"
                              type="password"
-                             :placeholder="getFieldHint(field)"
+                             :placeholder="getFieldPlaceholder(field)"
                              class="w-full"
                              size="small" />
 
@@ -540,12 +595,18 @@ onMounted(async () => {
                              @update:modelValue="setFieldValue(phase, idx, field.key, $event)"
                              :disabled="disabled"
                              :type="field.type === 'url' ? 'url' : 'text'"
-                             :placeholder="getFieldHint(field) || (field.default ? String(field.default) : '')"
+                             :placeholder="getFieldPlaceholder(field)"
                              class="w-full"
                              size="small" />
 
                   <small v-if="getFieldHint(field)" class="config-hint">{{ getFieldHint(field) }}</small>
                 </div>
+
+                <!-- Said once for the whole entry, not once per prompt field. -->
+                <details v-if="hasTemplateFields(entry, phase)" class="template-help">
+                  <summary>{{ t('widgets.agentSkills.templateSyntaxTitle') }}</summary>
+                  <p>{{ t('widgets.agentSkills.templateSyntaxHelp') }}</p>
+                </details>
               </div>
             </div>
           </div>
@@ -709,6 +770,29 @@ onMounted(async () => {
   line-height: 1.3;
 }
 
+.entry-inject {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 0 12px 10px 12px;
+}
+
+.entry-inject-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.entry-inject-label {
+  font-size: 0.8125rem;
+}
+
+.entry-inject-hint {
+  font-size: 0.75rem;
+  color: var(--p-text-muted-color);
+  line-height: 1.3;
+}
+
 .entry-fields {
   border-top: 1px solid @mrcall_borders;
   padding: 10px 12px;
@@ -730,6 +814,21 @@ onMounted(async () => {
 
 .required-mark {
   color: #ef4444;
+}
+
+.template-help {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--p-text-muted-color, #6b7280);
+}
+
+.template-help summary {
+  cursor: pointer;
+}
+
+.template-help p {
+  margin: 0.35rem 0 0;
+  line-height: 1.45;
 }
 
 .config-hint {

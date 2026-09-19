@@ -100,7 +100,9 @@
       "oauthDisconnect": "Katkesta ühendus",
       "addPair": "Lisa päis",
       "skillUnavailable": "Seda oskust pole serveris enam saadaval. Eemaldage see või pöörduge klienditoe poole.",
-      "oauthScopeUnavailable": "See integratsioon vajab Google'i luba, mida MrCallil pole õigust küsida. Pöörduge klienditoe poole."
+      "oauthScopeUnavailable": "See integratsioon vajab Google'i luba, mida MrCallil pole õigust küsida. Pöörduge klienditoe poole.",
+      "inject": "Lisa viipasse",
+      "injectHint": "Sees: tulemus lisatakse assistendi juhistesse. Väljas: see on endiselt saadaval, kuid ainult seal, kus mall seda nimetab."
     }
   },
   "components": {

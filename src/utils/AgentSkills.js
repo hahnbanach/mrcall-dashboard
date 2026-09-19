@@ -223,6 +223,27 @@ export default {
         return newConfig;
     },
 
+    /**
+     * Set a TOP-LEVEL flag on an entry, beside `skill` and `params`, not inside them: `params` is
+     * the argument map handed to the tool, and a flag the framework reads does not belong there.
+     * Setting it back to its default removes it, so a stored entry only carries what differs.
+     */
+    updateEntryFlag: function(config, phase, index, key, value, defaultValue) {
+        const newConfig = {
+            prefetch: [...(config.prefetch || [])],
+            during: [...(config.during || [])],
+            final: [...(config.final || [])]
+        };
+        const entry = { ...newConfig[phase][index] };
+        if (value === defaultValue || value === undefined || value === null) {
+            delete entry[key];
+        } else {
+            entry[key] = value;
+        }
+        newConfig[phase][index] = entry;
+        return newConfig;
+    },
+
     updateEntryParam: function(config, phase, index, key, value) {
         const newConfig = {
             prefetch: [...(config.prefetch || [])],
