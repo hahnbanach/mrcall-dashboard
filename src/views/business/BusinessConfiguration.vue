@@ -43,7 +43,25 @@
       <template v-for="(page, index) in selectedMenupage?.variables" :key="index">
         <div v-if="hasVisibleVariables(page)" :class="page.length > 1 ? 'pageblock' : 'pageblock-noborder'">
           <template v-for="(variable, index) in page" :key="index">
-            <template v-if="variable.name === 'serviceNumber'">
+            <!-- The skills are one widget over three variables, so it is drawn once, on the
+                 first of them, and the other two draw nothing. The single variable the three
+                 replace is still written, and it is not drawn either: one screen, one answer. -->
+            <template v-if="variable.name === agentSkillsUtils.phaseVariables.prefetch
+                            && businessVariablesUtils.isVariableVisible(variable, isAdmin, advancedMode)">
+              <div v-show="businessVariablesUtils.shouldShowInput(business, variable)" class="mb-4 col-12">
+                <label class="inputboxtitle" :for="variable.name" v-text="mandatoryParameterHumanName(variable)"></label>
+                <AgentSkillsConfigurator
+                    v-model="skillsConfig"
+                    :businessId="business.businessId || ''"
+                    :disabled="businessVariablesUtils.checkIfDisabledByParentsDecorator(business, variable, isAdmin)"
+                />
+                <span class="font-normal font-italic title text-sm" v-html="variable.description"></span>
+              </div>
+            </template>
+            <template v-else-if="agentSkillsUtils.isPhaseVariable(variable.name)
+                                 || variable.name === agentSkillsUtils.legacyVariable">
+            </template>
+            <template v-else-if="variable.name === 'serviceNumber'">
             </template>
             <template v-else-if="variable.name === 'emailAddress'">
             </template>
@@ -370,24 +388,6 @@
             <template v-else-if="variable.name === 'TALK_AND_HANGUP_HOURS' && businessVariablesUtils.isVariableVisible(variable, isAdmin, advancedMode)">
               <TimeSlotsEditor v-model="business.variables[variable.name]" :business="business" :variable="variable" :slotDuration="60"></TimeSlotsEditor>
             </template>
-            <!-- Agent Skills configurator (type: agent_skills) -->
-            <template v-else-if="variable.type === 'agent_skills' && businessVariablesUtils.isVariableVisible(variable, isAdmin, advancedMode)">
-              <div
-                  v-show="businessVariablesUtils.shouldShowInput(business, variable)"
-                  class="mb-4 col-12"
-              >
-                <label class="inputboxtitle"
-                       :for="variable.name"
-                       v-text="mandatoryParameterHumanName(variable)"
-                ></label>
-                <AgentSkillsConfigurator
-                    v-model="business.variables[variable.name]"
-                    :businessId="business.businessId || ''"
-                    :disabled="businessVariablesUtils.checkIfDisabledByParentsDecorator(business, variable, isAdmin)"
-                />
-                <span class="font-normal font-italic title text-sm" v-html="variable.description"></span>
-              </div>
-            </template>
             <template v-else-if="variable.type === 'json' && businessVariablesUtils.isVariableVisible(variable, isAdmin, advancedMode)">
               <div
                   v-show="businessVariablesUtils.shouldShowInput(business, variable)"
@@ -458,6 +458,7 @@ import {auth} from "@/firebase/config";
 import {useI18n} from "vue-i18n";
 import businessUtils from "@/utils/Business";
 import businessVariablesUtils from "@/utils/BusinessVariables";
+import agentSkillsUtils from "@/utils/AgentSkills";
 import Tr from "@/i18n/translation"
 import parsePhoneNumber from "libphonenumber-js";
 import phoneOperators from "@/utils/PhoneOperators";
@@ -505,10 +506,30 @@ export default {
       store,
       isMobile,
       isWebView,
-      businessVariablesUtils
+      businessVariablesUtils,
+      agentSkillsUtils
     }
   },
   computed: {
+    /**
+     * The skills of the three phases, as one value for one widget.
+     *
+     * They are stored one variable per phase, the way the generation before them stored
+     * DATA_MANAGEMENT_{PREFETCH,RUNNINGLOOP,FINAL}_PROGRAMMATIC, and the widget that edits them
+     * spans all three. Reading and writing go through the utils, which hold the same rule the
+     * runtime holds: prefer a phase's own variable, fall back to the single blob, write both while
+     * both exist.
+     */
+    skillsConfig: {
+      get() {
+        return this.agentSkillsUtils.serializeConfig(
+          this.agentSkillsUtils.readPhaseConfig(this.business ? this.business.variables : {}))
+      },
+      set(value) {
+        if (!this.business || !this.business.variables) return
+        this.agentSkillsUtils.writePhaseConfig(this.business.variables, value)
+      }
+    },
     pageSelection: {
       set(value) {
         this.selectedMenupage = value ;
@@ -593,6 +614,9 @@ export default {
       if (!page || !this.business) return false
       return page.some(v =>
         !v.type.startsWith('meta:') &&
+        !(this.agentSkillsUtils.isPhaseVariable(v.name) &&
+          v.name !== this.agentSkillsUtils.phaseVariables.prefetch) &&
+        v.name !== this.agentSkillsUtils.legacyVariable &&
         this.businessVariablesUtils.isVariableVisible(v, this.isAdmin, this.advancedMode) &&
         this.businessVariablesUtils.shouldShowInput(this.business, v)
       )

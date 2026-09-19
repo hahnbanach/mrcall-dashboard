@@ -92,6 +92,88 @@ export default {
         return JSON.stringify(config);
     },
 
+    /**
+     * Where each phase keeps its configuration. The same three names the runtime reads in
+     * `services/agent/skills/SkillPhaseConfiguration.scala`; the phase this file calls `during` is
+     * RUNNINGLOOP there, and they are the same phase.
+     */
+    phaseVariables: {
+        prefetch: "SKILL_PREFETCH_CONFIGURATION",
+        during: "SKILL_RUNNINGLOOP_CONFIGURATION",
+        final: "SKILL_FINAL_CONFIGURATION"
+    },
+
+    /** The single variable the three replace, still written and still read while it exists. */
+    legacyVariable: "AGENT_SKILL_INTEGRATIONS",
+
+    isPhaseVariable: function(name) {
+        return Object.keys(this.phaseVariables).some(phase => this.phaseVariables[phase] === name);
+    },
+
+    /**
+     * One phase's entries, whichever spelling the value carries: the array the dashboard writes, or
+     * an object keyed by instance, which is how a configuration written by hand reads. An entry
+     * keyed that way takes its key as its instanceId, exactly as the runtime does.
+     */
+    asEntries: function(value) {
+        if (value === undefined || value === null || value === "") return [];
+        let parsed = value;
+        if (typeof value === "string") {
+            try { parsed = JSON.parse(value); } catch { return []; }
+        }
+        if (Array.isArray(parsed)) return parsed;
+        if (typeof parsed === "object") {
+            return Object.keys(parsed).map(instanceId =>
+                parsed[instanceId] && parsed[instanceId].instanceId
+                    ? parsed[instanceId]
+                    : { ...parsed[instanceId], instanceId });
+        }
+        return [];
+    },
+
+    /**
+     * The three phases, read the way the runtime reads them: the phase's own variable when it holds
+     * something, the single blob when it does not. A phase variable holding `[]` is the catalogue
+     * default, written into every business the first time anything is saved there, so it is not an
+     * answer and does not hide the blob.
+     */
+    readPhaseConfig: function(variables) {
+        const source = variables || {};
+        const legacy = this.parseConfig(source[this.legacyVariable]);
+        const config = {};
+        Object.keys(this.phaseVariables).forEach(phase => {
+            const own = this.asEntries(source[this.phaseVariables[phase]]);
+            config[phase] = own.length > 0 ? own : this.asEntries(legacy[phase]);
+        });
+        return config;
+    },
+
+    /**
+     * Write it into the three variables AND into the blob, the same content in both, for as long as
+     * both exist. The runtime prefers a phase variable that holds something and reads the blob when
+     * it does not, so a save that filled only one of the two would let them answer differently: a
+     * phase emptied here would come back from the blob, and a business that had opted in with no
+     * skills at all would change engine. When the blob is dropped from the catalogue, the line that
+     * writes it goes with it and nothing else here changes.
+     */
+    writePhaseConfig: function(variables, configValue) {
+        const config = this.parseConfig(configValue);
+        let total = 0;
+        Object.keys(this.phaseVariables).forEach(phase => {
+            const entries = config[phase] || [];
+            variables[this.phaseVariables[phase]] = entries;
+            total += entries.length;
+        });
+        // A business with no skills says so, rather than saying "I use skills, and have none".
+        // The decision table reads this variable to choose between the skill engine and the one
+        // before it, and this widget emits its value on every load, so writing the empty triple
+        // here would move a business onto the skill engine the first time somebody opened its
+        // configuration page and saved it, with nothing to run. `{}` is what the catalogue means
+        // by empty, and it is what that business held before anyone opened the page.
+        variables[this.legacyVariable] = total > 0 ? config : {};
+        return variables;
+    },
+
     // --- Skill metadata accessors ---
 
     getSkillPhases: function(skill) {
@@ -220,27 +302,6 @@ export default {
             final: [...(config.final || [])]
         };
         newConfig[phase].splice(index, 1);
-        return newConfig;
-    },
-
-    /**
-     * Set a TOP-LEVEL flag on an entry, beside `skill` and `params`, not inside them: `params` is
-     * the argument map handed to the tool, and a flag the framework reads does not belong there.
-     * Setting it back to its default removes it, so a stored entry only carries what differs.
-     */
-    updateEntryFlag: function(config, phase, index, key, value, defaultValue) {
-        const newConfig = {
-            prefetch: [...(config.prefetch || [])],
-            during: [...(config.during || [])],
-            final: [...(config.final || [])]
-        };
-        const entry = { ...newConfig[phase][index] };
-        if (value === defaultValue || value === undefined || value === null) {
-            delete entry[key];
-        } else {
-            entry[key] = value;
-        }
-        newConfig[phase][index] = entry;
         return newConfig;
     },
 
