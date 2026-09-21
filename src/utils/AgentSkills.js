@@ -270,7 +270,7 @@ export default {
     /**
      * Add a skill instance to a phase.
      */
-    addSkillToPhase: function(config, skillObj, phase) {
+    addSkillToPhase: function(config, skillObj, phase, reservedIds) {
         const newConfig = {
             prefetch: [...(config.prefetch || [])],
             during: [...(config.during || [])],
@@ -288,10 +288,53 @@ export default {
         }
 
         if (this.isMultiInstance(skillObj)) {
-            entry.instanceId = this._nextInstanceId(config, skillObj);
+            entry.instanceId = this._nextInstanceId(config, skillObj, reservedIds);
         }
 
-        newConfig[phase].push(entry);
+        // FIRST, not last. The control that adds one sits at the top of the phase, so a new entry
+        // appended to the end appears below everything already configured, out of sight, and the
+        // person who just created it has to go looking for it.
+        //
+        // The order is not only presentation: in `prefetch` it is the order the fragments are
+        // injected in, so the newest now goes in first. Nobody has ever been able to reorder these
+        // from the screen, so the order was already an accident of the sequence somebody added
+        // them in; this makes a different accident, a visible one.
+        newConfig[phase].unshift(entry);
+        return newConfig;
+    },
+
+    /**
+     * Copies an entry beside itself, switched off.
+     *
+     * The copy is the same configuration with a new identity: a fresh instanceId, because that id
+     * is what tells two instances apart everywhere else, and `enabled` forced to "false", because
+     * a copy made to be edited is not a copy meant to answer calls in the meantime.
+     *
+     * The OAuth field is copied AS IT IS, which is deliberate. Its value names the authorisation
+     * the instance acts with, so a copy that keeps it acts with the same Google account as the
+     * original and asks nobody to authorise anything again. Blanking it would not have been
+     * neutral either: an empty value falls back to whatever the business authorised, which is a
+     * different account chosen by accident rather than on purpose.
+     */
+    duplicateInPhase: function(config, skillObj, phase, index, reservedIds) {
+        const newConfig = {
+            prefetch: [...(config.prefetch || [])],
+            during: [...(config.during || [])],
+            final: [...(config.final || [])]
+        };
+        const original = newConfig[phase][index];
+        if (!original) return config;
+
+        const copy = {
+            ...original,
+            params: { ...(original.params || {}), enabled: "false" }
+        };
+        if (skillObj && this.isMultiInstance(skillObj)) {
+            copy.instanceId = this._nextInstanceId(newConfig, skillObj, reservedIds);
+        } else {
+            delete copy.instanceId;
+        }
+        newConfig[phase].splice(index + 1, 0, copy);
         return newConfig;
     },
 
@@ -330,13 +373,55 @@ export default {
         return (skillName || "").replace(/^skill[._]/, "");
     },
 
-    instanceDisplayLabel: function(skillObj, entry, allEntriesInPhase) {
-        const base = this.skillDisplayName(entry.skill);
+    /**
+     * What a skill is called on screen.
+     *
+     * The manifest carries a written, translated title — "Calendario: cancella appuntamenti" — and
+     * until now nothing read it: every label in the configuration screen was `skillDisplayName`,
+     * which strips the `skill_` prefix and hands back the identifier. So a person choosing between
+     * authorisations was reading `calendar_event_delete`, which is the name of a row in a file and
+     * not the name of anything they configured.
+     */
+    skillTitle: function(skillObj, lang) {
+        const title = skillObj && skillObj.manifest && skillObj.manifest.title;
+        if (title) {
+            const written = title[lang] || title["*"] || title["en"]
+                || Object.values(title).find(v => typeof v === "string" && v);
+            if (written) return written;
+        }
+        return this.skillDisplayName((skillObj && skillObj.name) || "");
+    },
+
+    /**
+     * What to call one instance on screen: the skill's name, and a number when there is more than
+     * one of that skill anywhere in the configuration.
+     *
+     * THE NUMBER IS THE ONE IN THE INSTANCE ID, not the instance's position. Position was wrong in
+     * two ways that both reached the screen. It repeated: it counted within a phase, so the same
+     * skillconfigured once in `during` and once in `final` produced two cards both called "#1", and an
+     * authorisation labelled that way named two different things. And it moved: a new instance is
+     * added at the head of its phase, so creating one renumbered every card below it, which is a
+     * poor property for a card and a disqualifying one for the label of a stored authorisation.
+     *
+     * `_nextInstanceId` takes the maximum suffix across all three phases and adds one, so the
+     * suffix is unique per skill in the whole configuration and is assigned once, at creation.
+     */
+    instanceDisplayLabel: function(skillObj, entry, allEntries, lang) {
+        const base = this.skillTitle(skillObj, lang) || this.skillDisplayName(entry.skill);
         if (!skillObj || !this.isMultiInstance(skillObj)) return base;
-        const sameSkill = allEntriesInPhase.filter(e => e.skill === entry.skill);
-        if (sameSkill.length <= 1) return base;
-        const idx = sameSkill.indexOf(entry) + 1;
-        return `${base} #${idx}`;
+        const assigned = (entry.instanceId || "").match(/_(\d+)$/);
+        if (!assigned) {
+            // No id to show. Position is all there is, and it is only used for entries written
+            // before instance ids existed, which are single ones in practice.
+            const sameSkill = (allEntries || []).filter(e => e.skill === entry.skill);
+            return sameSkill.length <= 1 ? base : `${base} #${sameSkill.indexOf(entry) + 1}`;
+        }
+        // ALWAYS, not only when there are several. The number used to appear once a second
+        // instance existed and vanish again when it was deleted, so the name of a thing changed
+        // because of something that happened to a different thing — and an authorisation stored
+        // under that name suddenly pointed at a label nobody could find. A name that identifies
+        // must not depend on what else exists.
+        return `${base} #${assigned[1]}`;
     },
 
     phaseEntryCount: function(config, phase) {
@@ -364,8 +449,23 @@ export default {
 
     // --- Internal ---
 
-    _nextInstanceId: function(config, skillObj) {
+    /**
+     * The id for a new instance: `<outputPrefix>_<n>`, with n one past the highest in use.
+     *
+     * AND PAST ANY THAT AN AUTHORISATION STILL NAMES, which is the whole reason this takes a
+     * second argument. An authorisation is stored under the instance id, and deleting a card does
+     * not revoke it: the grant outlives the instance. With the highest number taken only from the
+     * instances PRESENT, deleting the last one freed its number, the next instance created took it
+     * back, and that instance was connected — silently, with no button pressed — to the Google
+     * account of the card that had been deleted. Measured 2026-09-21: with x_1, x_2, x_3 and x_3
+     * removed, this returned x_3.
+     *
+     * An id is therefore never reused while anything still refers to it. The sequence can leave
+     * gaps, and gaps are fine: a number here identifies, it does not count.
+     */
+    _nextInstanceId: function(config, skillObj, reservedIds) {
         const prefix = this.getOutputPrefix(skillObj);
+        const taken = new Set(reservedIds || []);
         let maxIdx = 0;
         for (const phase of ["prefetch", "during", "final"]) {
             for (const entry of config[phase] || []) {
@@ -374,6 +474,11 @@ export default {
                     if (match) maxIdx = Math.max(maxIdx, parseInt(match[1]));
                 }
             }
+        }
+        for (const id of taken) {
+            const match = typeof id === "string" && id.startsWith(`${prefix}_`)
+                ? id.match(/_(\d+)$/) : null;
+            if (match) maxIdx = Math.max(maxIdx, parseInt(match[1]));
         }
         return `${prefix}_${maxIdx + 1}`;
     }

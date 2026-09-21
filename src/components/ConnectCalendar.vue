@@ -48,7 +48,7 @@ import { useStore } from 'vuex'
 import { getAuth } from 'firebase/auth'
 import Button from 'primevue/button'
 import ProgressSpinner from 'primevue/progressspinner'
-import { GoogleAuthFlow, assertScopesAllowed } from '@/utils/OAuth'
+import { GoogleAuthFlow } from '@/utils/OAuth'
 
 const CALENDAR_SCOPES = ['https://www.googleapis.com/auth/calendar']
 
@@ -86,7 +86,7 @@ export default {
         authUrl.searchParams.set('client_id', process.env.VUE_APP_GOOGLE_CLIENT_ID)
         authUrl.searchParams.set('redirect_uri', process.env.VUE_APP_GOOGLE_REDIRECT_URI)
         authUrl.searchParams.set('response_type', 'code')
-        authUrl.searchParams.set('scope', assertScopesAllowed(CALENDAR_SCOPES, 'calendar-connect'))
+        authUrl.searchParams.set('scope', CALENDAR_SCOPES.join(' '))
         // access_type=offline and prompt=consent both stay: StarChat renews this
         // grant server-side with the refresh token, and Google hands out a refresh
         // token only on a first grant unless consent is re-requested, so a

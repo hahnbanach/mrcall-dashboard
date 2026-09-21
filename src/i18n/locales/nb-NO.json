@@ -80,6 +80,10 @@
       "removeitem": "Fjern element",
       "additem": "Nytt element"
     },
+    "timeSlots": {
+      "legend": "Apningstider",
+      "copyToOthers": "Kopier denne dagen til de andre"
+    },
     "agentSkills": {
       "loading": "Laster tilgjengelige skills...",
       "noSkills": "Ingen skills tilgjengelig. Last opp Agent Skills-beslutningstabellen først.",
@@ -102,7 +106,23 @@
       "skillUnavailable": "Denne skillen er ikke lenger tilgjengelig på serveren. Fjern den eller kontakt kundestøtte.",
       "oauthScopeUnavailable": "Denne integrasjonen krever en Google-tillatelse som MrCall ikke har lov til å be om. Kontakt kundestøtte.",
       "inject": "Legg til i prompt",
-      "injectHint": "På: resultatet legges til assistentens instruksjoner. Av: det er fortsatt tilgjengelig, men bare der en mal nevner det."
+      "injectHint": "På: resultatet legges til assistentens instruksjoner. Av: det er fortsatt tilgjengelig, men bare der en mal nevner det.",
+      "oauthReuse": "Gjenbruk en autorisasjon",
+      "oauthReusePlaceholder": "Velg en allerede autorisert konto",
+      "oauthSaveFirst": "Autorisasjonen startet ikke: siden kunne ikke lagres. Arsaken star over.",
+      "duplicateSkill": "Dupliser, slatt av",
+      "entryEnabledHint": "Om denne instansen kjores.",
+      "calendarChosen": "Valgt da denne instansen ble autorisert.",
+      "calendarNotChosen": "Autoriser denne instansen for a velge en kalender.",
+      "calendarUnavailable": "Listen kunne ikke leses; er serveren oppdatert?",
+      "calendarPrimary": "hovedkalender",
+      "oauthRevokeFailed": "Autorisasjonen til den slettede instansen kunne ikke trekkes tilbake; den er fortsatt aktiv hos Google.",
+      "oauthOrphanGrant": "Foreldrelos autorisasjon",
+      "oauthStopUsing": "Slutt a bruke den",
+      "oauthSharedRefuse": "Deles med andre instanser; losne dem forst",
+      "labelClash": "En annen instans har allerede dette navnet; begge vises med nummeret sitt.",
+      "entryOn": "Pa",
+      "entryOff": "Av"
     }
   },
   "components": {
@@ -736,6 +756,8 @@
       "description": "Koble til Google Kalender for a administrere avtaler automatisk. MrCall leser opptatte tider og oppretter avtaler. Dataene dine forblir i kalenderen din.",
       "connectButton": "Koble til kalender",
       "disconnectButton": "Koble fra kalender",
+      "selectCalendarHint": "Avtaler denne assistenten booker skrives her.",
+      "primaryCalendar": "Hovedkalender",
       "selectCalendarTitle": "Velg en kalender",
       "confirmButton": "Bekreft",
       "connectedTo": "Koblet til:",

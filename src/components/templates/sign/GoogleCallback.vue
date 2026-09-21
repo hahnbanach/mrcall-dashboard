@@ -40,6 +40,11 @@ export default {
 
     // Detect if this callback is from a skill OAuth flow (AgentSkillsConfigurator)
     const oauthProvider = localStorage.getItem('oauthProvider')
+    // Which business asked for this authorisation, and which skill instance it belongs to. Absent
+    // means the authorisation the owner gave before these were scoped, which every skill of every
+    // business of that owner falls back to.
+    const oauthBusinessId = localStorage.getItem('oauthBusinessId') || ''
+    const oauthGrantName = localStorage.getItem('oauthGrantName') || ''
     const isSkillFlow = ref(!!oauthProvider)
     const skillStatus = ref('')
 
@@ -63,7 +68,7 @@ export default {
         // meant shipping that secret in the bundle, where anyone could read it.
         const tokenResponse = await GoogleAuthFlow.exchangeCode(code, codeVerifier)
 
-        const { access_token, refresh_token, expires_in, scope } = tokenResponse
+        const { access_token, refresh_token, expires_in, scope, id_token } = tokenResponse
         const scopes = scope.split(' ')
 
         // Check if this is a skill OAuth flow (Sheets, Docs, Drive, etc.)
@@ -96,16 +101,27 @@ export default {
             accessToken: access_token,
             refreshToken: refresh_token,
             expiresAt: Date.now() + (expires_in * 1000),
-            scopes: scopes
+            scopes: scopes,
+            businessId: oauthBusinessId,
+            grantName: oauthGrantName,
+            // WHICH ACCOUNT this grant is on. Stored as `provider_account_id`, and it is not only a
+            // label: when an instance names no calendar, StarChat resolves the account's own
+            // primary calendar from it, and a grant without it falls through to whatever calendar
+            // the BUSINESS books on — which may belong to a different Google account than the one
+            // just authorised. Every skill grant written before this line has it null.
+            providerAccountId: accountEmailFrom(id_token)
           }, { headers })
 
-          // Clean up localStorage
-          localStorage.removeItem('oauthProvider')
-
-          // Redirect back to business configuration
-          const returnUrl = localStorage.getItem('oauthReturnUrl')
-          localStorage.removeItem('oauthReturnUrl')
-          router.replace(returnUrl || '/businesses')
+          // NO CALENDAR PICKER HERE, deliberately, and the reason is one line above: the connect
+          // now carries `providerAccountId`. An instance that names no calendar resolves the
+          // authorised account's own, because the account's address IS its primary calendar's id
+          // (GCCalendarAtomService, `fromOAuthTokens(tokens, provider.providerAccountId)`). Asking
+          // again here would be a second place to answer a question that already has one — the
+          // calendar field on the card being returned to, which is where the answer lives
+          // afterwards anyway — and carrying that answer back across a redirect is what made
+          // authorising one card write onto another. The account-level calendar connect still
+          // shows the picker: there the calendar IS the connection.
+          returnToConfiguration()
           return
         }
 
@@ -187,16 +203,41 @@ export default {
       } catch (error) {
         console.error('Error processing callback:', error)
         if (isSkillFlow.value) {
-          localStorage.removeItem('oauthProvider')
-          const returnUrl = localStorage.getItem('oauthReturnUrl')
-          localStorage.removeItem('oauthReturnUrl')
-          router.replace(returnUrl || '/businesses')
+          returnToConfiguration()
         } else {
           router.replace(isCalendarFlow.value ? '/account' : '/signin')
         }
       }
     }
 
+    /** Back to the page that started this, with the localStorage it used cleared. */
+    const returnToConfiguration = () => {
+      localStorage.removeItem('oauthProvider')
+      localStorage.removeItem('oauthBusinessId')
+      localStorage.removeItem('oauthGrantName')
+      const returnUrl = localStorage.getItem('oauthReturnUrl')
+      localStorage.removeItem('oauthReturnUrl')
+      router.replace(returnUrl || '/businesses')
+    }
+
+    /** The email on the id token, used as the account's identity.
+     *
+     * Read without verifying the signature, which is safe for this use and for no other: the token
+     * came from our own backend, which had just received it from Google over TLS in exchange for a
+     * code bound to this session's PKCE verifier. It decides nothing — no access is granted or
+     * refused on it — it names the account a grant belongs to.
+     */
+    const accountEmailFrom = (idToken) => {
+      try {
+        const payload = idToken.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')
+        return JSON.parse(decodeURIComponent(escape(atob(payload)))).email || undefined
+      } catch (e) {
+        console.debug('id_token carried no readable email:', e)
+        return undefined
+      }
+    }
+
+    // Only the account-level calendar connect reaches this: the skill flow does not show a picker.
     const handleCalendarSelected = async ({ id, summary }) => {
       try {
         const creds = pendingCredentials.value

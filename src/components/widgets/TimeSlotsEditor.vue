@@ -94,6 +94,20 @@ const isDisabled = computed(() => {
 function resetDay(day) {
   slots[day].splice(0)
 }
+
+/** This day's hours onto every other day of the week, replacing what was there.
+ *
+ * Replacing and not merging: a merge would leave whatever was wrong on the other days sitting
+ * beside what is right, and the reason somebody presses this is that the others should be like
+ * this one. Copies are made per row, so editing Tuesday afterwards does not silently edit Monday.
+ */
+function copyDayToOthers(day) {
+  const source = slots[day].map(row => ({ ...row }))
+  weekDays.forEach(other => {
+    if (other === day) return
+    slots[other].splice(0, slots[other].length, ...source.map(row => ({ ...row })))
+  })
+}
 function addSlot(day) {
   const daySlots = slots[day]
   let start, end
@@ -168,7 +182,7 @@ function validateDay(day) {
 <template>
   <!-- whole widget deactivated if variable isn’t modifiable -->
   <Fieldset
-    :legend="variable.humanName"
+    :legend="variable.humanName || t('widgets.timeSlots.legend')"
     class="w-full"
     :toggleable="false"
     :pt="{
@@ -192,6 +206,18 @@ function validateDay(day) {
             class="p-button-sm ml-auto"
             @click="addSlot(day)"
             :disabled="isDisabled"
+          />
+          <!-- Copy to the other days. A week of opening hours is usually one day repeated, and
+               filling five identical days by hand is five chances to make them almost identical:
+               a grid with Wednesday ending ten minutes early because somebody mistyped it is a
+               grid nobody notices is wrong until a caller is offered a time that is refused. -->
+          <Button
+            v-if="slots[day].length"
+            icon="pi pi-copy"
+            class="p-button-sm ml-2 p-button-secondary"
+            @click="copyDayToOthers(day)"
+            :disabled="isDisabled"
+            :title="t('widgets.timeSlots.copyToOthers')"
           />
           <!-- Eraser button: only if there are slots -->
           <Button

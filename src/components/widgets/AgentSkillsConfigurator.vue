@@ -3,9 +3,10 @@ import { ref, watch, onMounted, computed } from 'vue';
 import { useI18n } from "vue-i18n";
 import { useStore } from "vuex";
 import agentSkillsUtils from "@/utils/AgentSkills";
-import { GoogleAuthFlow, assertScopesAllowed } from '@/utils/OAuth';
+import { GoogleAuthFlow } from '@/utils/OAuth';
 import { useToast } from "primevue/usetoast";
 import TupleVariable from "./TupleVariable.vue";
+import TimeSlotsEditor from "./TimeSlotsEditor.vue";
 
 const { t, locale } = useI18n();
 const toast = useToast();
@@ -16,14 +17,29 @@ const props = defineProps({
   businessId: { type: String, default: '' },
   disabled: { type: Boolean, default: false }
 });
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits(['update:modelValue', 'request-save']);
 
 const PHASES = ['prefetch', 'during', 'final'];
+
+// The calendar an instance books on. Written by the picker that runs at the end of the
+// authorisation, read here to label an authorisation with something a person recognises.
+const CALENDAR_FIELD_KEY = 'calendarId';
+
+// The name whoever configured this instance gave it. Declared by both phase contracts, so every
+// skill has one, and it is the only label on this screen that a person chose rather than a
+// generator produced: when it is set it wins over the skill's title everywhere an instance is
+// named, including the list of authorisations.
+const LABEL_FIELD_KEY = 'label';
+
 
 const availableSkills = ref([]);
 const config = ref({ prefetch: [], during: [], final: [] });
 const loading = ref(false);
-const expandedPhases = ref({ prefetch: false, during: false, final: false });
+// One phase open, and one open from the start. All three shut is a widget that looks like it
+// holds nothing, and three open is three lists of cards to scroll past to reach the third. The
+// first phase is the one that opens because it is the first: a rule about which phase is most
+// used would be a guess, and this one is at least predictable.
+const openPhase = ref(PHASES[0]);
 const addSkillSelection = ref({ prefetch: null, during: null, final: null });
 
 // Parse initial value
@@ -34,9 +50,27 @@ watch(() => props.modelValue, (newVal) => {
   }
 }, { immediate: true });
 
+/** Hand the current configuration to the parent, now rather than on the next tick.
+ *
+ * The watcher below does this for every ordinary edit and is enough for all of them, because the
+ * parent only has to hold the value by the time somebody presses Save. It is NOT enough on the one
+ * path that edits and then immediately asks the parent to save and navigate away: a Vue watcher
+ * flushes after the current tick, so `emit('request-save')` fired in the same tick sends the
+ * parent's PREVIOUS copy.
+ *
+ * Measured on business 2d81b01d, 2026-09-21 15:09: authorising a calendar instance wrote the grant
+ * name into the entry and saved, and what reached the database had no `SKILL_CALENDAR_AUTH` at all
+ * and the `enabled` the entry had before it was touched. Both edits were real and both were
+ * discarded by the save they triggered, which reads from the outside as an authorisation that did
+ * nothing and a switch that moved on its own.
+ */
+function emitConfig() {
+  emit('update:modelValue', agentSkillsUtils.serializeConfig(config.value));
+}
+
 // Emit on config change
-watch(() => config.value, (newVal) => {
-  emit('update:modelValue', agentSkillsUtils.serializeConfig(newVal));
+watch(() => config.value, () => {
+  emitConfig();
 }, { deep: true });
 
 onMounted(async () => {
@@ -58,8 +92,14 @@ const currentLang = computed(() => {
   return (locale.value || 'en-US').split('-')[0];
 });
 
+function isPhaseOpen(phase) {
+  return openPhase.value === phase;
+}
+
+// Same rule as the cards inside them: opening one shuts the others, and clicking the open one
+// shuts it, so all three closed stays reachable.
 function togglePhase(phase) {
-  expandedPhases.value[phase] = !expandedPhases.value[phase];
+  openPhase.value = openPhase.value === phase ? null : phase;
 }
 
 function phaseEntryCount(phase) {
@@ -86,19 +126,63 @@ function addableSkillOptions(phase) {
   });
 }
 
+// Which entry is open, per phase, and at most one. A phase with six skills in it is a page nobody
+// can read, and the thing somebody is editing is almost always one: opening a second closes the
+// first rather than pushing it further down.
+//
+// Keyed by the entry's own identity and not by its position: duplicating inserts and removing
+// shifts, and an index kept across either opens whichever card moved into that slot.
+const openEntry = ref({ prefetch: null, during: null, final: null });
+
+function entryKeyOf(entry, idx) {
+  return (entry && entry.instanceId) || `idx:${idx}`;
+}
+
+function isEntryOpen(phase, entry, idx) {
+  return openEntry.value[phase] === entryKeyOf(entry, idx);
+}
+
+function toggleEntry(phase, entry, idx) {
+  // Opening a card is when its calendars are worth fetching: before that nobody is looking, and
+  // fetching for every instance on the page would be one Google round trip per card.
+  const oauthField = getFields(entry).find(f => f.type === 'oauth');
+  if (oauthField) loadCalendars(oauthField, entry);
+  const key = entryKeyOf(entry, idx);
+  openEntry.value[phase] = openEntry.value[phase] === key ? null : key;
+}
+
+function isEntryEnabled(entry) {
+  return String((entry && entry.params && entry.params.enabled) || '').trim().toLowerCase() === 'true';
+}
+
+// The ids that authorisations still name, including those of cards that no longer exist. An id is
+// never handed out again while a grant refers to it: see `_nextInstanceId`.
+function reservedInstanceIds() {
+  return oauthGrants.value.map(g => g.grantName).filter(Boolean);
+}
+
 function onAddSkill(phase) {
   const skillName = addSkillSelection.value[phase];
   if (!skillName) return;
   const skillObj = agentSkillsUtils.findSkill(availableSkills.value, skillName);
   if (!skillObj) return;
-  config.value = agentSkillsUtils.addSkillToPhase(config.value, skillObj, phase);
+  config.value = agentSkillsUtils.addSkillToPhase(config.value, skillObj, phase, reservedInstanceIds());
+  // Open what was just created: it is empty, and a card that arrives closed reads as nothing
+  // having happened. Everything else stays closed, which is how the page opens.
+  openEntry.value[phase] = entryKeyOf(getPhaseEntries(phase)[0], 0);
   addSkillSelection.value[phase] = null;
 }
 
-function removeEntry(phase, index) {
-  if (props.disabled) return;
-  config.value = agentSkillsUtils.removeFromPhase(config.value, phase, index);
+function duplicateEntry(phase, idx) {
+  const entry = getPhaseEntries(phase)[idx];
+  if (!entry) return;
+  const skillObj = getSkillObj(entry.skill);
+  config.value = agentSkillsUtils.duplicateInPhase(config.value, skillObj, phase, idx, reservedInstanceIds());
+  const copy = getPhaseEntries(phase)[idx + 1];
+  openEntry.value[phase] = entryKeyOf(copy, idx + 1);
 }
+
+
 
 function getSkillObj(skillName) {
   return agentSkillsUtils.findSkill(availableSkills.value, skillName);
@@ -108,11 +192,39 @@ function isOrphanedEntry(entry) {
   return !getSkillObj(entry.skill);
 }
 
-function instanceLabel(entry, phase) {
+// Every instance of every phase, not this phase's: two instances of one skill in two different
+// phases are two things a reader has to tell apart, and until now they carried the same label.
+function allEntries() {
+  return PHASES.flatMap(p => getPhaseEntries(p));
+}
+
+function instanceLabel(entry) {
+  const written = ((entry.params || {})[LABEL_FIELD_KEY] || '').trim();
+  if (written) {
+    // A written name is chosen by a person and nothing stops two instances carrying the same one.
+    // Left alone that would reopen exactly the problem this field was added to close: an
+    // authorisation named "Sala 2" pointing at either of two cards. When the name is shared it is
+    // qualified with the number the platform assigned, which is unique and never moves.
+    const sharing = allEntries().filter(e =>
+      ((e.params || {})[LABEL_FIELD_KEY] || '').trim().toLowerCase() === written.toLowerCase());
+    if (sharing.length <= 1) return written;
+    const n = (entry.instanceId || '').match(/_(\d+)$/);
+    return n ? `${written} #${n[1]}` : written;
+  }
   const skillObj = getSkillObj(entry.skill);
   if (!skillObj) return agentSkillsUtils.skillDisplayName(entry.skill) + ' (unavailable)';
-  const phaseEntries = getPhaseEntries(phase);
-  return agentSkillsUtils.instanceDisplayLabel(skillObj, entry, phaseEntries);
+  return agentSkillsUtils.instanceDisplayLabel(skillObj, entry, allEntries(), currentLang.value);
+}
+
+// With a name of its own, the card's own title is worth keeping in sight: it is what says which
+// skill this is, and the name says which one of them.
+function instanceSubtitle(entry) {
+  const written = ((entry.params || {})[LABEL_FIELD_KEY] || '').trim();
+  if (!written) return '';
+  const skillObj = getSkillObj(entry.skill);
+  return skillObj
+    ? agentSkillsUtils.instanceDisplayLabel(skillObj, entry, allEntries(), currentLang.value)
+    : agentSkillsUtils.skillDisplayName(entry.skill);
 }
 
 function getFields(entry) {
@@ -177,9 +289,101 @@ function skillDescription(entry) {
   return localized.replace(/\[Skill:.*?\]\s*/, '');
 }
 
+// `enabled` is deliberately not among them: it is drawn in the header instead, where it is
+// reachable with the card shut. It is the one setting whose answer has to be visible and
+// changeable without opening anything, because it is the setting that decides whether the rest of
+// them run at all.
+// Drawn by hand and not by the loop over the schema: `enabled` in the header strip, `label` at the
+// very top of the card. Both are about the instance rather than about what the skill does, and the
+// schema cannot place them — the phase contract's fields are appended AFTER a skill's own, so left
+// to the loop the name of the card would appear below every setting it names.
+const HEADER_FIELD_KEYS = ['enabled', LABEL_FIELD_KEY];
+
+/** Whether another instance already carries this name.
+ *
+ * Compared case-insensitively and on the trimmed text, because "Sala 2", "sala 2" and "Sala 2 "
+ * are one name to the person reading the card and three to a string comparison. Reported on the
+ * field rather than refused on save: the name is not a key, nothing breaks if two are alike, and
+ * refusing a save would strand somebody mid-edit on a page with twenty other settings. What it
+ * must not do is pass unnoticed, because the list of authorisations names instances BY this.
+ */
+function labelClashes(entry) {
+  const written = ((entry.params || {})[LABEL_FIELD_KEY] || '').trim().toLowerCase();
+  if (!written) return false;
+  return allEntries().filter(e =>
+    ((e.params || {})[LABEL_FIELD_KEY] || '').trim().toLowerCase() === written).length > 1;
+}
+
+// Written trimmed, so that a trailing space never makes two identical names different in storage.
+function setLabelValue(phase, idx, value) {
+  setFieldValue(phase, idx, LABEL_FIELD_KEY, (value || '').replace(/\s+/g, ' ').trim());
+}
+
+/** The weekly grid as the editor wants it, and back as the configuration keeps it.
+ *
+ * The editor works on an OBJECT — it does `model.value[day]` and assigns `{}` when there is none —
+ * while a skill parameter is a string, because every business variable is. Bound directly the two
+ * never meet: reading gives the editor a string to index into, which yields nothing and shows an
+ * empty week, and writing puts an object where the platform expects text. Parsed on the way in and
+ * serialised on the way out, in one place, so no caller has to remember which side it is on.
+ */
+function weeklyHoursOf(entry, key) {
+  const raw = getFieldValue(entry, key);
+  if (!raw) return {};
+  if (typeof raw === 'object') return raw;
+  try {
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === 'object' ? parsed : {};
+  } catch (e) {
+    console.debug('The weekly hours of this instance are not readable:', e);
+    return {};
+  }
+}
+
+function setWeeklyHours(phase, idx, key, value) {
+  setFieldValue(phase, idx, key, JSON.stringify(value || {}));
+}
+
+/** What the backend says is wrong with this skill, as it is installed HERE.
+ *
+ * Sent per skill by `/agent/skills/available` — the schema's own verdict plus the one thing only
+ * the deployment knows, whether its OAuth client can obtain the scopes the skill asks for. The
+ * channel has existed all along and this screen discarded it, so a skill that could not possibly
+ * be authorised looked exactly like one that could until somebody pressed the button.
+ */
+function skillDiagnostics(entry) {
+  const skillObj = getSkillObj(entry.skill);
+  const all = (skillObj && skillObj.diagnostics) || [];
+  return all.filter(d => (d.severity || 'error') === 'error');
+}
+
+function labelField(entry) {
+  return getFields(entry).find(f => f.key === LABEL_FIELD_KEY) || null;
+}
+
+/** A field kept for the configurations that already carry it, and asked of nobody new.
+ *
+ * `variables` is the one: version 1 declared a skill's arguments inside its configuration, version
+ * 2 declares them in the manifest, and every skill shipped today marks the old field deprecated.
+ * It stayed on the screen because the deprecation was written in the manifest and never travelled
+ * down to the renderer — so a person configuring a calendar skill was shown a list to fill whose
+ * contents the skill would ignore.
+ *
+ * Hidden when it is EMPTY, not always. A configuration that carries a value has to be able to show
+ * it and clear it; hiding a filled field would hide the only evidence that it is there.
+ */
+function isRetiredAndEmpty(entry, field) {
+  if (!field.deprecated) return false;
+  const value = getFieldValue(entry, field.key);
+  return value === undefined || value === null || String(value).trim() === ''
+    || String(value).trim() === '[]' || String(value).trim() === '{}';
+}
+
 function getNonOauthFields(entry, phase) {
   return getFields(entry).filter(f =>
-    f.type !== 'oauth' && isFieldVisibleInPhase(f, phase) && isFieldVisibleHere(entry, f));
+    f.type !== 'oauth' && !HEADER_FIELD_KEYS.includes(f.key)
+    && !isRetiredAndEmpty(entry, f)
+    && isFieldVisibleInPhase(f, phase) && isFieldVisibleHere(entry, f));
 }
 
 /**
@@ -327,57 +531,342 @@ function getOauthFields(entry) {
   return getFields(entry).filter(f => f.type === 'oauth');
 }
 
-// OAuth connection status (checked per provider)
-const oauthStatus = ref({});
+// The authorisations this user holds, as the backend lists them. Kept as the list rather than a
+// map keyed by provider: one business can now hold several grants for one provider, one per skill
+// instance, so a map keyed that way would say "connected" for an instance that is not.
+const oauthGrants = ref([]);
 
 async function checkOAuthStatus() {
-  // Check if user has an active OAuth connection for this provider
   const user = store.state.user;
   if (!user) return;
   try {
     const headers = { "Content-type": "application/json; charset=UTF-8", "auth": user.accessToken };
     const url = process.env.VUE_APP_STARCHAT_URL + "/mrcall/v1/mrcall0/oauth/providers";
     const response = await (await import('axios')).default.get(url, { headers });
-    const providers = response.data || [];
-    for (const p of providers) {
-      oauthStatus.value[p.provider] = { connected: true, accountId: p.providerAccountId };
-    }
+    oauthGrants.value = response.data || [];
   } catch (e) {
     console.debug("OAuth status check failed:", e);
   }
 }
 
-function isOAuthConnected(field) {
-  const status = oauthStatus.value[field.provider];
-  return status && status.connected;
+// Which authorisation an instance acts with. The instance id the platform already assigns,
+// `{outputPrefix}_{N}`, is that name: assigned once, stored with the entry, never shown and never
+// typed. An entry that has been pointed at another instance's authorisation carries that name in
+// the field instead, which is how one authorisation is reused by two instances.
+function grantNameFor(entry, field) {
+  const stored = entry && entry.params ? entry.params[field.key] : '';
+  return (stored && String(stored).trim()) || (entry && entry.instanceId) || '';
 }
 
-async function handleOAuthDisconnect(field) {
+// Empty business or empty name mean ANY on the backend, which is the authorisation given before
+// these were scoped. An instance is covered by its own, or by one given for the whole business.
+function grantFor(field, entry) {
+  const wanted = grantNameFor(entry, field);
+  const mine = oauthGrants.value.filter(g =>
+    g.provider === field.provider && (g.businessId || '') === (props.businessId || ''));
+  return mine.find(g => (g.grantName || '') === wanted)
+    || mine.find(g => (g.grantName || '') === '')
+    || null;
+}
+
+function isOAuthConnected(field, entry) {
+  return !!grantFor(field, entry);
+}
+
+// What this instance could act with instead of asking for a new authorisation: the ones this
+// business already holds for the same provider, minus the one it is using. Shown by account, since
+// the name is an internal identifier and means nothing to a reader.
+// Every authorisation this business holds for this provider, the one in use included.
+//
+// It used to list only the OTHERS, as a "reuse one" control beside the connect button, and that is
+// why choosing one looked like it did nothing: the moment the choice was made the chosen grant
+// became the current one, dropped out of its own list, and the whole control disappeared. Nothing
+// confirmed the choice and nothing showed what was now in use. One dropdown, with the current
+// value selected, says both.
+function grantOptions(field) {
+  return oauthGrants.value.filter(g =>
+    g.provider === field.provider
+    && (g.businessId || '') === (props.businessId || '')
+    && (g.grantName || ''));
+}
+
+/** What to call an authorisation on screen.
+ *
+ * The account's email, when the grant carries one. Grants given before the connect started sending
+ * `providerAccountId` do not, and on this estate that is every one of them, which is why this list
+ * read "Google Calendar" three times over and told a reader nothing. So, in order: the account,
+ * then the calendar the instance that gave it books on, then the instance's own name. The last is
+ * an internal identifier and a poor label, but it is a DISTINGUISHING one, and between a bad name
+ * and three identical good ones the bad name is the one you can act on.
+ */
+/** What to call an authorisation on screen, in a list where several may look alike.
+ *
+ * It names the CARD the authorisation was given for, always with that card's number, and adds the
+ * account when the grant carries one. The number is not optional here as it is on a card header: a
+ * header sits above the thing it names, while this list is the only place two authorisations of
+ * two instances of one skill can be told apart, and without it they read identically.
+ */
+function grantAccountLabel(grant) {
+  if (!grant) return '';
+  const owner = allEntries().find(e => e.instanceId === grant.grantName);
+  const parts = [];
+  if (owner) {
+    // The same function the card header uses, so that what this list names can be found on the
+    // screen by reading. Two label rules for one thing is how they came to disagree.
+    parts.push(instanceLabel(owner));
+    const calendar = calendarNameOf(owner);
+    if (calendar) parts.push(calendar);
+  } else if (grant.grantName) {
+    // No card OWNS it. That is not the same as nobody using it: the instance that asked for it may
+    // have been deleted while another card still acts with it, and that grant is inherited rather
+    // than orphaned. Named by whoever uses it, and called orphaned only when nobody does.
+    const users = instancesUsing(grant.grantName);
+    parts.push(users.length > 0
+      ? instanceLabel(users[0])
+      : t('widgets.agentSkills.oauthOrphanGrant'));
+  }
+  if (grant.providerAccountId) parts.push(grant.providerAccountId);
+  return parts.length ? parts.join(' — ') : grant.grantName;
+}
+
+// The calendars of each authorisation, by grant name. Fetched from the backend because the
+// identifier stored in the configuration is not a name and the browser cannot ask Google: after
+// the authorisation round trip the token belongs to the server.
+const calendarsByGrant = ref({});
+const calendarsLoading = ref({});
+
+async function loadCalendars(field, entry) {
+  if (field.provider !== 'google_calendar') return;
+  const grant = grantFor(field, entry);
+  if (!grant || !grant.grantName) return;
+  if (calendarsByGrant.value[grant.grantName] || calendarsLoading.value[grant.grantName]) return;
+  const user = store.state.user;
+  if (!user) return;
+  calendarsLoading.value = { ...calendarsLoading.value, [grant.grantName]: true };
+  try {
+    const headers = { "Content-type": "application/json; charset=UTF-8", "auth": user.accessToken };
+    const params = new URLSearchParams();
+    if (grant.businessId) params.set('businessId', grant.businessId);
+    if (grant.grantName) params.set('grantName', grant.grantName);
+    const url = process.env.VUE_APP_STARCHAT_URL
+      + `/mrcall/v1/mrcall0/oauth/providers/${field.provider}/calendars?${params.toString()}`;
+    const response = await (await import('axios')).default.get(url, { headers });
+    calendarsByGrant.value = { ...calendarsByGrant.value, [grant.grantName]: response.data || [] };
+  } catch (error) {
+    console.debug('Could not list the calendars of this authorisation:', error);
+    calendarsByGrant.value = { ...calendarsByGrant.value, [grant.grantName]: [] };
+  } finally {
+    const pending = { ...calendarsLoading.value };
+    delete pending[grant.grantName];
+    calendarsLoading.value = pending;
+  }
+}
+
+/** The calendars offered for this instance, with the account's own first. */
+function calendarOptions(entry) {
+  const oauthField = getFields(entry).find(f => f.type === 'oauth');
+  const grant = oauthField ? grantFor(oauthField, entry) : null;
+  const list = (grant && calendarsByGrant.value[grant.grantName]) || [];
+  return list.map(c => ({
+    value: c.id,
+    primary: !!c.primary,
+    label: c.primary ? `${c.summary} (${t('widgets.agentSkills.calendarPrimary')})` : c.summary
+  }));
+}
+
+/** The calendar an instance books on, by name when the name is known. */
+function calendarNameOf(entry) {
+  const current = (entry.params || {})[CALENDAR_FIELD_KEY];
+  const known = calendarOptions(entry).find(o => o.value === current);
+  if (known) return known.label;
+  if (current) return current;
+  const primary = calendarOptions(entry).find(o => o.primary);
+  return primary ? primary.label : '';
+}
+
+/** What to say where the calendar goes when there is nothing to choose from yet, which is never a
+ *  blank: either this instance has no authorisation, or the list has not arrived. */
+function calendarSummary(entry) {
+  const named = calendarNameOf(entry);
+  if (named) return named;
+  const oauthField = getFields(entry).find(f => f.type === 'oauth');
+  if (!oauthField || !isOAuthConnected(oauthField, entry)) {
+    return t('widgets.agentSkills.calendarNotChosen');
+  }
+  return t('widgets.agentSkills.calendarUnavailable');
+}
+
+/** Whose authorisation this is.
+ *
+ * An authorisation is named after the instance that asked for it, so an instance owns the one
+ * whose name is its own id and borrows any other. The distinction is not cosmetic: revoking is an
+ * act on the Google account and takes the authorisation away from every instance using it, while
+ * an instance that merely borrowed one has nothing to revoke and everything to lose by trying.
+ */
+function ownsGrant(entry, grant) {
+  return !!grant && !!entry.instanceId && grant.grantName === entry.instanceId;
+}
+
+/** Which instances, anywhere in the configuration, act with this authorisation. */
+function instancesUsing(grantName) {
+  if (!grantName) return [];
+  return allEntries().filter(e => {
+    const oauthField = getFields(e).find(f => f.type === 'oauth');
+    return oauthField && grantNameFor(e, oauthField) === grantName;
+  });
+}
+
+function useExistingGrant(phase, entryIdx, field, grantName) {
+  if (!grantName) return;
+  setFieldValue(phase, entryIdx, field.key, grantName);
+}
+
+/** Take an authorisation back from Google. The one act here that cannot be undone from this page:
+ *  the tokens are gone and the only way back is the consent screen. */
+async function revokeGrant(field, grant) {
+  const user = store.state.user;
+  if (!user || !grant) return;
+  const headers = { "Content-type": "application/json; charset=UTF-8", "auth": user.accessToken };
+  // Named exactly as it was looked up. Revoking on the provider alone would take every business's
+  // authorisation for it, including ones this screen is not showing.
+  const params = new URLSearchParams();
+  if (grant.businessId) params.set('businessId', grant.businessId);
+  if (grant.grantName) params.set('grantName', grant.grantName);
+  const query = params.toString() ? `?${params.toString()}` : '';
+  const url = process.env.VUE_APP_STARCHAT_URL
+    + `/mrcall/v1/mrcall0/oauth/providers/${field.provider}${query}`;
+  await (await import('axios')).default.delete(url, { headers });
+  oauthGrants.value = oauthGrants.value.filter(g => g !== grant);
+}
+
+/** Deleting an instance, and what becomes of the authorisation it asked for.
+ *
+ * An authorisation is stored under the instance id, so deleting the card that asked for it used to
+ * leave a row at Google that nothing on the screen named: an orphan. Two outcomes and no third:
+ *
+ *  - ANOTHER INSTANCE STILL USES IT. It is inherited, which needs no act at all — the borrower's
+ *    field already names it and keeps working. What had to change is what this screen CALLS such a
+ *    grant: it was labelled orphaned because no card OWNED it, when the question is whether any
+ *    card USES it.
+ *  - NOBODY USES IT. It is revoked here and now, with the card that was its only reason for
+ *    existing. Leaving it is what produced a Google account still authorised for a business whose
+ *    screen shows nothing about it, and the id it was stored under is never handed out again, so
+ *    it could not even be reclaimed by accident.
+ */
+async function removeEntry(phase, index) {
+  if (props.disabled) return;
+  const entry = getPhaseEntries(phase)[index];
+  const oauthField = entry ? getFields(entry).find(f => f.type === 'oauth') : null;
+  const owned = oauthField ? grantFor(oauthField, entry) : null;
+  const wasOwner = owned && ownsGrant(entry, owned);
+
+  config.value = agentSkillsUtils.removeFromPhase(config.value, phase, index);
+
+  if (!wasOwner) return;
+  if (instancesUsing(owned.grantName).length > 0) return; // inherited by whoever still names it
+  try {
+    await revokeGrant(oauthField, owned);
+  } catch (error) {
+    // The configuration is already saved without the card; a grant that could not be revoked is
+    // reported rather than swallowed, because the alternative is a live authorisation nobody knows
+    // about.
+    console.error('Could not revoke the authorisation of a deleted instance:', error);
+    toast.add({
+      severity: 'warn',
+      summary: t('widgets.agentSkills.oauthRevokeFailed'),
+      life: 10000
+    });
+  }
+}
+
+async function handleOAuthDisconnect(field, phase, entryIdx, entry) {
   try {
     const user = store.state.user;
     if (!user) return;
-    const headers = { "Content-type": "application/json; charset=UTF-8", "auth": user.accessToken };
-    const url = process.env.VUE_APP_STARCHAT_URL + `/mrcall/v1/mrcall0/oauth/providers/${field.provider}`;
-    await (await import('axios')).default.delete(url, { headers });
-    delete oauthStatus.value[field.provider];
+    const grant = grantFor(field, entry);
+    if (!grant) return;
+
+    // BORROWED: this instance did not ask for this authorisation and must not be able to take it
+    // from the instances that did. Stopping using it is a deselection, and it is local to this
+    // card. Revoking here used to be the same button, which meant that detaching one card silently
+    // logged out every other card sharing the account.
+    if (!ownsGrant(entry, grant)) {
+      setFieldValue(phase, entryIdx, field.key, '');
+      return;
+    }
+
+    // OWN, BUT SHARED: revoking would take it from the others too. The owner is not asked to
+    // choose between breaking them and keeping it — it is refused, and the others are named, so
+    // that whoever wants it gone knows what has to be detached first.
+    const others = instancesUsing(grant.grantName).filter(e => e !== entry);
+    if (others.length > 0) {
+      toast.add({
+        severity: 'warn',
+        summary: t('widgets.agentSkills.oauthSharedRefuse'),
+        detail: others.map(e => instanceLabel(e)).join(', '),
+        life: 10000
+      });
+      return;
+    }
+    await revokeGrant(field, grant);
   } catch (error) {
     console.error('OAuth disconnect error:', error);
   }
 }
 
-async function handleOAuthConnect(field) {
+async function handleOAuthConnect(field, phase, entryIdx, entry) {
   try {
+    // THIS INSTANCE'S OWN ID, never the name currently in the field.
+    //
+    // It used to read the field, which holds a BORROWED name whenever this instance was set to act
+    // with another card's authorisation. Pressing Authorise there did not create an authorisation
+    // for this instance: it overwrote the other card's, at Google, and the calendar chosen in the
+    // picker was then applied to that other card — which is what "I authorise one skill and keep
+    // seeing the other one's calendar" was. An authorisation belongs to whoever asked for it.
+    //
+    // A skill that cannot be instantiated twice has no id, and for it the empty name means the
+    // business-level authorisation, which is what it has always meant.
+    const grantName = entry.instanceId || '';
+    setFieldValue(phase, entryIdx, field.key, grantName);
+
+    // SAVED AUTOMATICALLY, and the redirect does not happen if the save did not. Authorising
+    // navigates away from this page, and an instance that exists only in this component's memory is
+    // gone when the callback comes back: the entry disappears and the authorisation, if it were
+    // granted, would be stored under the name of an instance nobody can find. The grant and the
+    // instance it belongs to are one thing, so they are persisted together or not at all.
+    //
+    // Nobody is asked to save first, and until 2026-09-21 one skill effectively was: the server
+    // refused to store an instance missing a required field, so `google_sheets_read` — which needs
+    // a spreadsheet id — could not be saved and therefore could not be authorised, while the
+    // calendar skills, which require nothing, went through. Completeness is now asked only of an
+    // instance that is switched on, and a new one is created off, so this save succeeds for every
+    // skill alike.
+    // Synchronously, before asking for the save: see `emitConfig`. The watcher would deliver this
+  // after the save had already read the old copy.
+  emitConfig();
+  const saved = await new Promise(resolve => emit('request-save', resolve));
+    if (!saved) {
+      toast.add({
+        severity: 'warn',
+        summary: t('widgets.agentSkills.oauthSaveFirst'),
+        life: 8000
+      });
+      return;
+    }
+
     localStorage.setItem('oauthProvider', field.provider);
+    localStorage.setItem('oauthBusinessId', props.businessId || '');
+    localStorage.setItem('oauthGrantName', grantName);
     // Save current page URL so callback can redirect back here
     localStorage.setItem('oauthReturnUrl', window.location.pathname + window.location.search);
     const { state, codeChallenge } = await GoogleAuthFlow.begin()
 
-    // The scope list arrives from the backend skill catalog, so this is the one
-    // authorization in the app whose scopes are not written here. Checking it
-    // against the client's registered set keeps a catalog edit from putting an
-    // unregistered scope in front of a customer, where it surfaces as Google's
-    // unverified-app screen and leaves no trace on our side.
-    const scopes = assertScopesAllowed(field.scopes || [], `skill:${field.provider}`);
+    // The scopes come from the backend catalogue, and so does the verdict on them. StarChat holds
+    // the OAuth client and the manifests, compares the two per client, and sends the result as a
+    // diagnostic with the skill; this screen used to hold a copy of that comparison and refused a
+    // scope Google had been granting for months. The button is not offered at all when a skill
+    // carries diagnostics, so reaching here means there was nothing to say.
+    const scopes = (field.scopes || []).join(' ');
 
     const authUrl = new URL('https://accounts.google.com/o/oauth2/v2/auth');
     authUrl.searchParams.set('client_id', process.env.VUE_APP_GOOGLE_CLIENT_ID);
@@ -397,6 +886,8 @@ async function handleOAuthConnect(field) {
     // Without this the button just does nothing, which reads as a broken page
     // rather than a misconfigured integration.
     localStorage.removeItem('oauthProvider');
+    localStorage.removeItem('oauthBusinessId');
+    localStorage.removeItem('oauthGrantName');
     localStorage.removeItem('oauthReturnUrl');
     toast.add({
       severity: 'error',
@@ -410,6 +901,21 @@ async function handleOAuthConnect(field) {
 onMounted(async () => {
   checkOAuthStatus();
 });
+
+// Whichever card is open, in whichever phase, asks for its calendars. The toggle does it too, but
+// a card can be open without having been toggled — the one just created, and the one returned to
+// after the authorisation round trip — and those are exactly the cards whose calendar matters.
+watch([openEntry, availableSkills], () => {
+  if (!availableSkills.value || availableSkills.value.length === 0) return;
+  for (const phase of PHASES) {
+    getPhaseEntries(phase).forEach((entry, idx) => {
+      if (!isEntryOpen(phase, entry, idx)) return;
+      const oauthField = getFields(entry).find(f => f.type === 'oauth');
+      if (oauthField) loadCalendars(oauthField, entry);
+    });
+  }
+}, { deep: true });
+
 </script>
 
 <template>
@@ -434,7 +940,7 @@ onMounted(async () => {
         <div class="phase-header" @click="togglePhase(phase)"
              :style="{ borderLeftColor: phaseInfo[phase].color }">
           <div class="phase-header-left">
-            <i :class="expandedPhases[phase] ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+            <i :class="isPhaseOpen(phase) ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
                class="expand-icon"></i>
             <i :class="phaseInfo[phase].icon" class="phase-icon"
                :style="{ color: phaseInfo[phase].color }"></i>
@@ -449,57 +955,147 @@ onMounted(async () => {
         </div>
 
         <!-- Phase content (expanded) -->
-        <div v-if="expandedPhases[phase]" class="phase-body">
+        <div v-if="isPhaseOpen(phase)" class="phase-body">
 
-          <!-- Configured skill instances -->
+          <!-- Adding one, at the top: this is where the eye already is when the phase opens, and
+               a new instance is put at the head of the list so it appears right here rather than
+               below everything already configured. -->
+          <div v-if="addableSkillOptions(phase).length > 0 && !disabled" class="add-skill-row">
+            <Dropdown v-model="addSkillSelection[phase]"
+                      :options="addableSkillOptions(phase)"
+                      optionLabel="label"
+                      optionValue="value"
+                      :placeholder="t('widgets.agentSkills.addSkill')"
+                      class="add-skill-dropdown"
+                      size="small"
+                      @update:modelValue="onAddSkill(phase)" />
+          </div>
           <div v-if="getPhaseEntries(phase).length > 0" class="entries-list">
             <div v-for="(entry, idx) in getPhaseEntries(phase)" :key="idx"
                  :class="['entry-card', { 'entry-orphaned': isOrphanedEntry(entry) }]">
-              <!-- Entry header -->
-              <div class="entry-header">
+              <!-- Entry header. The whole strip is the toggle, so the target is the card and not a
+                   12-pixel chevron; the buttons beside it stop the click from reaching it. -->
+              <div class="entry-header entry-header-toggle"
+                   @click="toggleEntry(phase, entry, idx)">
+                <!-- First on the strip, and there whether the card is open or shut: this is the
+                     switch that decides whether the instance runs, and it used to be one field
+                     among twenty inside the card. `.stop` so that flicking it does not also open
+                     or close what it sits on. -->
+                <ToggleSwitch :modelValue="isEntryEnabled(entry)"
+                              @update:modelValue="setFieldValue(phase, idx, 'enabled', $event ? 'true' : 'false')"
+                              @click.stop
+                              :disabled="disabled"
+                              class="entry-switch"
+                              :title="t('widgets.agentSkills.entryEnabledHint')" />
+                <i :class="isEntryOpen(phase, entry, idx) ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+                   class="entry-chevron"></i>
                 <div class="entry-info">
-                  <span class="entry-name">{{ instanceLabel(entry, phase) }}</span>
+                  <span class="entry-name">{{ instanceLabel(entry) }}</span>
+                  <span v-if="instanceSubtitle(entry)" class="entry-subtitle">{{ instanceSubtitle(entry) }}</span>
                   <span v-if="isOrphanedEntry(entry)" class="entry-orphaned-hint">
                     {{ t('widgets.agentSkills.skillUnavailable') }}
                   </span>
-                  <span v-else-if="skillDescription(entry)" class="entry-description">{{ skillDescription(entry) }}</span>
+                  <span v-else-if="isEntryOpen(phase, entry, idx) && skillDescription(entry)"
+                        class="entry-description">{{ skillDescription(entry) }}</span>
                 </div>
+                <!-- On or off, always one of the two, and never nothing. An instance is created
+                     switched off, and a closed card that says nothing about it is how one stays
+                     off unnoticed; but a badge that appears only when something is wrong is also a
+                     badge whose absence has to be interpreted. Stating both means the strip can be
+                     read rather than inferred from. -->
+                <Tag :value="isEntryEnabled(entry)
+                               ? t('widgets.agentSkills.entryOn')
+                               : t('widgets.agentSkills.entryOff')"
+                     :severity="isEntryEnabled(entry) ? 'success' : 'warn'"
+                     class="entry-state-badge" />
+                <Button icon="pi pi-copy" severity="secondary" text rounded size="small"
+                        :disabled="disabled" @click.stop="duplicateEntry(phase, idx)"
+                        :title="t('widgets.agentSkills.duplicateSkill')" />
                 <Button icon="pi pi-times" severity="danger" text rounded size="small"
-                        :disabled="disabled" @click="removeEntry(phase, idx)"
+                        :disabled="disabled" @click.stop="removeEntry(phase, idx)"
                         :title="t('widgets.agentSkills.removeSkill')" />
               </div>
 
               <!-- OAuth fields -->
-              <div v-if="getOauthFields(entry).length > 0" class="entry-oauth">
+              <!-- The name, first, because it names everything below it and because a card opened
+                   to be configured is a card whose name is about to matter. -->
+              <div v-if="isEntryOpen(phase, entry, idx) && labelField(entry)" class="entry-name-field">
+                <label class="config-label" :for="'label-' + (entry.instanceId || idx)">
+                  {{ getFieldLabel(labelField(entry)) }}
+                </label>
+                <InputText :id="'label-' + (entry.instanceId || idx)"
+                           :modelValue="getFieldValue(entry, LABEL_FIELD_KEY)"
+                           @update:modelValue="setLabelValue(phase, idx, $event)"
+                           :invalid="labelClashes(entry)"
+                           :disabled="disabled"
+                           :placeholder="instanceSubtitle(entry) || instanceLabel(entry)"
+                           class="w-full"
+                           size="small" />
+                <small v-if="labelClashes(entry)" class="config-hint label-clash">
+                  {{ t('widgets.agentSkills.labelClash') }}
+                </small>
+                <small v-else-if="getFieldHint(labelField(entry))" class="config-hint">
+                  {{ getFieldHint(labelField(entry)) }}
+                </small>
+              </div>
+
+              <div v-if="isEntryOpen(phase, entry, idx) && getOauthFields(entry).length > 0" class="entry-oauth">
                 <div v-for="field in getOauthFields(entry)" :key="field.key" class="oauth-field">
                   <div class="oauth-status">
-                    <i :class="isOAuthConnected(field) ? 'pi pi-check-circle' : 'pi pi-exclamation-circle'"
-                       :style="{ color: isOAuthConnected(field) ? '#22c55e' : '#f59e0b' }"></i>
+                    <i :class="isOAuthConnected(field, entry) ? 'pi pi-check-circle' : 'pi pi-exclamation-circle'"
+                       :style="{ color: isOAuthConnected(field, entry) ? '#22c55e' : '#f59e0b' }"></i>
                     <span class="oauth-label">{{ getFieldLabel(field) }}</span>
-                    <Tag v-if="isOAuthConnected(field)"
-                         :value="t('widgets.agentSkills.oauthConnected')"
+                    <Tag v-if="isOAuthConnected(field, entry)"
+                         :value="grantAccountLabel(grantFor(field, entry))"
                          severity="success" class="oauth-badge" />
                   </div>
-                  <div class="oauth-actions">
-                    <Button v-if="!isOAuthConnected(field)"
+                  <!-- A skill the platform cannot authorise does not offer a button that cannot
+                       work: what is wrong is said here, in the words of the side that knows. -->
+                  <div v-if="skillDiagnostics(entry).length > 0" class="oauth-unavailable">
+                    <i class="pi pi-exclamation-triangle"></i>
+                    <span>{{ skillDiagnostics(entry).map(d => d.detail).join(' · ') }}</span>
+                  </div>
+                  <div v-else class="oauth-actions">
+                    <Button v-if="!isOAuthConnected(field, entry)"
                             :label="t('widgets.agentSkills.oauthConnect')"
                             icon="pi pi-external-link"
                             severity="warning" outlined size="small"
-                            @click="handleOAuthConnect(field)"
+                            @click="handleOAuthConnect(field, phase, idx, entry)"
                             :disabled="disabled" />
                     <Button v-else
-                            :label="t('widgets.agentSkills.oauthDisconnect')"
+                            :label="ownsGrant(entry, grantFor(field, entry))
+                                      ? t('widgets.agentSkills.oauthDisconnect')
+                                      : t('widgets.agentSkills.oauthStopUsing')"
                             icon="pi pi-times"
                             severity="danger" text size="small"
-                            @click="handleOAuthDisconnect(field)"
+                            @click="handleOAuthDisconnect(field, phase, idx, entry)"
                             :disabled="disabled" />
                   </div>
-                  <small v-if="getFieldHint(field)" class="config-hint">{{ getFieldHint(field) }}</small>
+                  <!-- Which authorisation this instance acts with, the one in use shown as the
+                       selected value. Sharing one between two instances is picking the same entry
+                       twice; a new account is the button above. -->
+                  <div v-if="grantOptions(field).length > 0" class="oauth-reuse">
+                    <label class="oauth-reuse-label">{{ t('widgets.agentSkills.oauthReuse') }}</label>
+                    <Dropdown :options="grantOptions(field)"
+                              :model-value="grantNameFor(entry, field)"
+                              :option-label="grantAccountLabel"
+                              option-value="grantName"
+                              :placeholder="t('widgets.agentSkills.oauthReusePlaceholder')"
+                              :disabled="disabled"
+                              class="oauth-reuse-select"
+                              @change="useExistingGrant(phase, idx, field, $event.value)" />
+                  </div>
+                  <small v-if="field.key === CALENDAR_FIELD_KEY" class="config-hint">
+                    {{ getFieldValue(entry, field.key)
+                         ? t('widgets.agentSkills.calendarChosen')
+                         : t('widgets.agentSkills.calendarNotChosen') }}
+                  </small>
+                  <small v-else-if="getFieldHint(field)" class="config-hint">{{ getFieldHint(field) }}</small>
                 </div>
               </div>
 
               <!-- Config fields (non-OAuth) -->
-              <div v-if="getNonOauthFields(entry, phase).length > 0" class="entry-fields">
+              <div v-if="isEntryOpen(phase, entry, idx) && getNonOauthFields(entry, phase).length > 0" class="entry-fields">
                 <div v-for="field in getNonOauthFields(entry, phase)" :key="field.key" class="config-field">
                   <label class="config-label">
                     {{ getFieldLabel(field) }}
@@ -594,6 +1190,37 @@ onMounted(async () => {
                              size="small" />
 
                   <!-- Default: string, url -->
+                  <!-- The weekly grid, with the editor the business's own booking hours already
+                       use. Same value, same shape, same way of editing it: a skill that asked for
+                       opening times as a JSON object would be asking the same person to do the
+                       same job twice, once with help and once without. -->
+                  <TimeSlotsEditor v-else-if="field.type === 'weekly_hours'"
+                                   :modelValue="weeklyHoursOf(entry, field.key)"
+                                   @update:modelValue="setWeeklyHours(phase, idx, field.key, $event)"
+                                   :business="{ variables: {} }"
+                                   :variable="{ modifiable: !disabled, dependsOn: [] }"
+                                   :slotDuration="Number(getFieldValue(entry, 'durationMinutes')) || 15" />
+
+                  <!-- The calendar is chosen, not typed, and it is chosen BY NAME. Its stored
+                       value is a Google identifier nobody knows by heart; the names come from the
+                       authorisation itself, which is why this list is empty until there is one. -->
+                  <div v-else-if="field.key === CALENDAR_FIELD_KEY && calendarOptions(entry).length === 0"
+                       class="calendar-unavailable">
+                    <i class="pi pi-info-circle"></i>
+                    <span>{{ calendarSummary(entry) }}</span>
+                  </div>
+
+                  <Dropdown v-else-if="field.key === CALENDAR_FIELD_KEY"
+                            :modelValue="getFieldValue(entry, field.key)"
+                            @update:modelValue="setFieldValue(phase, idx, field.key, $event)"
+                            :options="calendarOptions(entry)"
+                            option-label="label"
+                            option-value="value"
+                            :disabled="disabled"
+                            :placeholder="calendarSummary(entry)"
+                            class="w-full"
+                            size="small" />
+
                   <InputText v-else
                              :modelValue="getFieldValue(entry, field.key)"
                              @update:modelValue="setFieldValue(phase, idx, field.key, $event)"
@@ -620,17 +1247,6 @@ onMounted(async () => {
             <span>{{ t('widgets.agentSkills.noSkillsInPhase') }}</span>
           </div>
 
-          <!-- Add skill dropdown -->
-          <div v-if="addableSkillOptions(phase).length > 0 && !disabled" class="add-skill-row">
-            <Dropdown v-model="addSkillSelection[phase]"
-                      :options="addableSkillOptions(phase)"
-                      optionLabel="label"
-                      optionValue="value"
-                      :placeholder="t('widgets.agentSkills.addSkill')"
-                      class="add-skill-dropdown"
-                      size="small"
-                      @update:modelValue="onAddSkill(phase)" />
-          </div>
         </div>
       </div>
     </div>
@@ -854,6 +1470,74 @@ onMounted(async () => {
   gap: 6px;
 }
 
+.entry-header-toggle {
+  cursor: pointer;
+  user-select: none;
+}
+
+.entry-chevron {
+  font-size: 0.75rem;
+  color: var(--text-color-secondary);
+  margin-right: 6px;
+}
+
+.oauth-unavailable {
+  display: flex;
+  align-items: flex-start;
+  gap: .45rem;
+  font-size: .85rem;
+  color: var(--red-500, #ef4444);
+  padding: .35rem 0;
+}
+
+.calendar-unavailable {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  font-size: .85rem;
+  color: var(--text-color-secondary, #6b7280);
+  padding: .35rem 0;
+}
+
+.label-clash {
+  color: var(--red-500, #ef4444);
+}
+
+.entry-name-field {
+  padding: .75rem 1rem 0;
+}
+
+.entry-subtitle {
+  font-size: .78rem;
+  color: var(--text-color-secondary, #6b7280);
+}
+
+.entry-switch {
+  flex: 0 0 auto;
+  margin-right: 0.25rem;
+}
+
+.entry-state-badge {
+  margin-right: 6px;
+  flex-shrink: 0;
+}
+
+.oauth-reuse {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.oauth-reuse-label {
+  font-size: 0.8rem;
+  color: var(--text-color-secondary);
+}
+
+.oauth-reuse-select {
+  min-width: 220px;
+}
+
 .kv-editor {
   display: flex;
   flex-direction: column;
@@ -875,7 +1559,8 @@ onMounted(async () => {
 }
 
 .add-skill-row {
-  padding-top: 2px;
+  // it sits above the list now, not under it
+  padding-bottom: 8px;
 }
 
 .add-skill-dropdown {

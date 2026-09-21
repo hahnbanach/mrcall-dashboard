@@ -80,6 +80,10 @@
       "removeitem": "Eemalda element",
       "additem": "Uus element"
     },
+    "timeSlots": {
+      "legend": "Lahtiolekuajad",
+      "copyToOthers": "Kopeeri see paev teistele"
+    },
     "agentSkills": {
       "loading": "Laadin saadaolevaid oskusi...",
       "noSkills": "Agendi oskusi pole saadaval. Laadige esmalt üles Agent Skillsi otsustustabel.",
@@ -102,7 +106,23 @@
       "skillUnavailable": "Seda oskust pole serveris enam saadaval. Eemaldage see või pöörduge klienditoe poole.",
       "oauthScopeUnavailable": "See integratsioon vajab Google'i luba, mida MrCallil pole õigust küsida. Pöörduge klienditoe poole.",
       "inject": "Lisa viipasse",
-      "injectHint": "Sees: tulemus lisatakse assistendi juhistesse. Väljas: see on endiselt saadaval, kuid ainult seal, kus mall seda nimetab."
+      "injectHint": "Sees: tulemus lisatakse assistendi juhistesse. Väljas: see on endiselt saadaval, kuid ainult seal, kus mall seda nimetab.",
+      "oauthReuse": "Kasuta olemasolevat volitust",
+      "oauthReusePlaceholder": "Vali juba volitatud konto",
+      "oauthSaveFirst": "Volitamine ei alanud: lehte ei saanud salvestada. Pohjus on ules toodud.",
+      "duplicateSkill": "Dubleeri, valja lulitatud",
+      "entryEnabledHint": "Kas see instants tootab.",
+      "calendarChosen": "Valitud selle instantsi volitamisel.",
+      "calendarNotChosen": "Volita see instants kalendri valimiseks.",
+      "calendarUnavailable": "Nimekirja ei saanud lugeda; kas server on ajakohane?",
+      "calendarPrimary": "peakalender",
+      "oauthRevokeFailed": "Kustutatud instantsi volitust ei saanud tuhistada; see on Google'is endiselt aktiivne.",
+      "oauthOrphanGrant": "Orvuks jaanud volitus",
+      "oauthStopUsing": "Lopeta selle kasutamine",
+      "oauthSharedRefuse": "Jagatud teiste instantsidega; vabasta need enne",
+      "labelClash": "Teisel instantsil on juba see nimi; molemad kuvatakse numbriga.",
+      "entryOn": "Sees",
+      "entryOff": "Valjas"
     }
   },
   "components": {
@@ -736,6 +756,8 @@
       "description": "Ühendage Google Calendar, et automaatselt kohtumisi hallata. MrCall loeb teie hõivatud aegu ja loob kohtumisi. Teie andmed jäävad teie kalendrisse.",
       "connectButton": "Ühenda kalender",
       "disconnectButton": "Katkesta kalendri ühendus",
+      "selectCalendarHint": "Selle assistendi broneeritud kohtumised kirjutatakse siia.",
+      "primaryCalendar": "Peakalender",
       "selectCalendarTitle": "Vali kalender",
       "confirmButton": "Kinnita",
       "connectedTo": "Ühendatud:",

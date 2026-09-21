@@ -80,6 +80,10 @@
       "removeitem": "Ta bort objekt",
       "additem": "Nytt objekt"
     },
+    "timeSlots": {
+      "legend": "Oppettider",
+      "copyToOthers": "Kopiera denna dag till de andra"
+    },
     "agentSkills": {
       "loading": "Laddar tillgängliga skills...",
       "noSkills": "Inga skills tillgängliga. Ladda upp beslutstabellen Agent Skills först.",
@@ -102,7 +106,23 @@
       "skillUnavailable": "Den här skillen finns inte längre på servern. Ta bort den eller kontakta supporten.",
       "oauthScopeUnavailable": "Den här integrationen kräver en Google-behörighet som MrCall inte får begära. Kontakta supporten.",
       "inject": "Lägg till i prompt",
-      "injectHint": "På: resultatet läggs till i assistentens instruktioner. Av: det är fortfarande tillgängligt, men bara där en mall nämner det."
+      "injectHint": "På: resultatet läggs till i assistentens instruktioner. Av: det är fortfarande tillgängligt, men bara där en mall nämner det.",
+      "oauthReuse": "Ateranvand en behorighet",
+      "oauthReusePlaceholder": "Valj ett redan godkant konto",
+      "oauthSaveFirst": "Behorigheten startade inte: sidan kunde inte sparas. Orsaken visas ovan.",
+      "duplicateSkill": "Duplicera, avstangd",
+      "entryEnabledHint": "Om denna instans kors.",
+      "calendarChosen": "Vald nar denna instans godkandes.",
+      "calendarNotChosen": "Godkann denna instans for att valja en kalender.",
+      "calendarUnavailable": "Listan kunde inte lasas; ar servern uppdaterad?",
+      "calendarPrimary": "huvudkalender",
+      "oauthRevokeFailed": "Behorigheten for den borttagna instansen kunde inte aterkallas; den ar fortfarande aktiv hos Google.",
+      "oauthOrphanGrant": "Foraldralos behorighet",
+      "oauthStopUsing": "Sluta anvanda den",
+      "oauthSharedRefuse": "Delas med andra instanser; losgor dem forst",
+      "labelClash": "En annan instans har redan detta namn; bada visas med sitt nummer.",
+      "entryOn": "Pa",
+      "entryOff": "Av"
     }
   },
   "components": {
@@ -736,6 +756,8 @@
       "description": "Koppla Google Kalender för att automatiskt hantera bokningar. MrCall läser dina upptagna tider och skapar bokningar. Dina uppgifter stannar i din kalender.",
       "connectButton": "Koppla kalender",
       "disconnectButton": "Koppla från kalender",
+      "selectCalendarHint": "Bokningar fran denna assistent skrivs har.",
+      "primaryCalendar": "Huvudkalender",
       "selectCalendarTitle": "Välj en kalender",
       "confirmButton": "Bekräfta",
       "connectedTo": "Ansluten till:",

@@ -80,6 +80,10 @@
       "removeitem": "Remove item",
       "additem": "New item"
     },
+    "timeSlots": {
+      "legend": "Opening hours",
+      "copyToOthers": "Copy this day to the other days"
+    },
     "agentSkills": {
       "loading": "Loading available skills...",
       "noSkills": "No agent skills available. Upload the Agent Skills decision table first.",
@@ -104,7 +108,23 @@
       "inject": "Add to prompt",
       "injectHint": "On, the result is added to the assistant's instructions. Off, it is still available, but only where a template names it.",
       "templateSyntaxTitle": "How to write a prompt: variables",
-      "templateSyntaxHelp": "What you can write in these boxes: `%%FUNCTION_RESPONSE_BODY%%` for what the skill returned; `%%name%%` for any business or conversation variable, for example `%%crm.contact.variables.FIRST_NAME%%`; `%%name:=fallback%%` to supply a value when the variable is empty; `%%public:PREFETCH:json:<instance>.field.subfield%%` to reach inside a json another instance published; and in the during phase the arguments the model passed, by their own name. Names starting with private, secret, local or internal are never substituted."
+      "templateSyntaxHelp": "What you can write in these boxes: `%%FUNCTION_RESPONSE_BODY%%` for what the skill returned; `%%name%%` for any business or conversation variable, for example `%%crm.contact.variables.FIRST_NAME%%`; `%%name:=fallback%%` to supply a value when the variable is empty; `%%public:PREFETCH:json:<instance>.field.subfield%%` to reach inside a json another instance published; and in the during phase the arguments the model passed, by their own name. Names starting with private, secret, local or internal are never substituted.",
+      "oauthReuse": "Reuse an authorisation",
+      "oauthReusePlaceholder": "Choose an account already authorised",
+      "oauthSaveFirst": "The authorisation did not start: the page could not be saved. The reason is shown above.",
+      "duplicateSkill": "Duplicate, switched off",
+      "entryEnabledHint": "Whether this instance runs.",
+      "calendarChosen": "Chosen when this instance was authorised.",
+      "calendarNotChosen": "Authorise this instance to choose a calendar.",
+      "calendarUnavailable": "The list could not be read; is the server up to date?",
+      "calendarPrimary": "main calendar",
+      "oauthRevokeFailed": "The authorisation of the deleted instance could not be revoked; it is still live at Google.",
+      "oauthOrphanGrant": "Orphan authorisation",
+      "oauthStopUsing": "Stop using it",
+      "oauthSharedRefuse": "Shared with other instances; detach them first",
+      "labelClash": "Another instance already has this name; both will be shown with their number.",
+      "entryOn": "On",
+      "entryOff": "Off"
     }
   },
   "components": {
@@ -738,6 +758,8 @@
       "description": "Connect Google Calendar to automatically manage appointments MrCall will read your busy times and create appointments. Your data stays in your calendar.",
       "connectButton": "Connect Calendar",
       "disconnectButton": "Disconnect Calendar",
+      "selectCalendarHint": "Appointments this assistant books will be written here.",
+      "primaryCalendar": "Main calendar",
       "selectCalendarTitle": "Select a calendar",
       "confirmButton": "Confirm",
       "connectedTo": "Connected to:",

@@ -80,6 +80,10 @@
       "removeitem": "Item verwijderen",
       "additem": "Nieuw item"
     },
+    "timeSlots": {
+      "legend": "Openingstijden",
+      "copyToOthers": "Deze dag naar de andere dagen kopieren"
+    },
     "agentSkills": {
       "loading": "Beschikbare skills laden...",
       "noSkills": "Geen skills beschikbaar. Upload eerst de Agent Skills-beslistabel.",
@@ -102,7 +106,23 @@
       "skillUnavailable": "Deze skill is niet meer beschikbaar op de server. Verwijder hem of neem contact op met de ondersteuning.",
       "oauthScopeUnavailable": "Deze integratie vereist een Google-machtiging die MrCall niet mag opvragen. Neem contact op met de ondersteuning.",
       "inject": "Aan prompt toevoegen",
-      "injectHint": "Aan: het resultaat wordt aan de instructies van de assistent toegevoegd. Uit: het blijft beschikbaar, maar alleen waar een sjabloon het noemt."
+      "injectHint": "Aan: het resultaat wordt aan de instructies van de assistent toegevoegd. Uit: het blijft beschikbaar, maar alleen waar een sjabloon het noemt.",
+      "oauthReuse": "Een autorisatie hergebruiken",
+      "oauthReusePlaceholder": "Kies een reeds geautoriseerd account",
+      "oauthSaveFirst": "De autorisatie is niet gestart: de pagina kon niet worden opgeslagen. De reden staat hierboven.",
+      "duplicateSkill": "Dupliceren, uitgeschakeld",
+      "entryEnabledHint": "Of deze instantie wordt uitgevoerd.",
+      "calendarChosen": "Gekozen bij het autoriseren van deze instantie.",
+      "calendarNotChosen": "Autoriseer deze instantie om een agenda te kiezen.",
+      "calendarUnavailable": "De lijst kon niet worden gelezen; is de server up-to-date?",
+      "calendarPrimary": "hoofdagenda",
+      "oauthRevokeFailed": "De autorisatie van de verwijderde instantie kon niet worden ingetrokken; die is nog actief bij Google.",
+      "oauthOrphanGrant": "Verweesde autorisatie",
+      "oauthStopUsing": "Niet meer gebruiken",
+      "oauthSharedRefuse": "Gedeeld met andere instanties; maak die eerst los",
+      "labelClash": "Een andere instantie heeft deze naam al; beide worden met hun nummer getoond.",
+      "entryOn": "Aan",
+      "entryOff": "Uit"
     }
   },
   "components": {
@@ -736,6 +756,8 @@
       "description": "Verbind Google Agenda om automatisch afspraken te beheren. MrCall leest uw bezette tijden en maakt afspraken aan. Uw gegevens blijven in uw agenda.",
       "connectButton": "Agenda verbinden",
       "disconnectButton": "Agenda ontkoppelen",
+      "selectCalendarHint": "Afspraken van deze assistent worden hier geschreven.",
+      "primaryCalendar": "Hoofdagenda",
       "selectCalendarTitle": "Selecteer een agenda",
       "confirmButton": "Bevestigen",
       "connectedTo": "Verbonden met:",

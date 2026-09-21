@@ -80,6 +80,10 @@
       "removeitem": "Eliminar elemento",
       "additem": "Nuevo elemento"
     },
+    "timeSlots": {
+      "legend": "Horarios",
+      "copyToOthers": "Copiar este dia a los demas"
+    },
     "agentSkills": {
       "loading": "Cargando skills disponibles...",
       "noSkills": "No hay skills disponibles. Sube primero la decision table Agent Skills.",
@@ -102,7 +106,23 @@
       "skillUnavailable": "Esta skill ya no está disponible en el servidor. Elimínala o contacta con soporte.",
       "oauthScopeUnavailable": "Esta integración necesita un permiso de Google que MrCall no está autorizada a solicitar. Contacta con soporte.",
       "inject": "Añadir al prompt",
-      "injectHint": "Activado, el resultado se añade a las instrucciones del asistente. Desactivado, sigue disponible pero solo donde una plantilla lo nombre."
+      "injectHint": "Activado, el resultado se añade a las instrucciones del asistente. Desactivado, sigue disponible pero solo donde una plantilla lo nombre.",
+      "oauthReuse": "Reutilizar una autorizacion",
+      "oauthReusePlaceholder": "Elige una cuenta ya autorizada",
+      "oauthSaveFirst": "La autorizacion no se inicio: la pagina no se pudo guardar. El motivo aparece arriba.",
+      "duplicateSkill": "Duplicar, desactivada",
+      "entryEnabledHint": "Si esta instancia se ejecuta.",
+      "calendarChosen": "Elegido al autorizar esta instancia.",
+      "calendarNotChosen": "Autoriza esta instancia para elegir un calendario.",
+      "calendarUnavailable": "No se pudo leer la lista; el servidor esta actualizado?",
+      "calendarPrimary": "calendario principal",
+      "oauthRevokeFailed": "No se pudo revocar la autorizacion de la instancia eliminada; sigue activa en Google.",
+      "oauthOrphanGrant": "Autorizacion huerfana",
+      "oauthStopUsing": "Dejar de usarla",
+      "oauthSharedRefuse": "Compartida con otras instancias: sueltalas antes",
+      "labelClash": "Otra instancia ya tiene este nombre; ambas se mostraran con su numero.",
+      "entryOn": "Activa",
+      "entryOff": "Apagada"
     }
   },
   "components": {
@@ -750,6 +770,8 @@
       "description": "Conecta Google Calendar para gestionar citas automáticamente MrCall leerá tus horarios ocupados y creará citas. Tus datos permanecen en tu calendario.",
       "connectButton": "Conectar Calendar",
       "disconnectButton": "Desconectar Calendar",
+      "selectCalendarHint": "Las citas que reserve este asistente se escribiran aqui.",
+      "primaryCalendar": "Calendario principal",
       "selectCalendarTitle": "Seleccionar un calendario",
       "confirmButton": "Confirmar",
       "connectedTo": "Conectado a:",

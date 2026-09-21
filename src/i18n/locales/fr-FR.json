@@ -81,6 +81,10 @@
       "removeitem": "Supprimer l'élément",
       "additem": "Nouvel élément"
     },
+    "timeSlots": {
+      "legend": "Horaires",
+      "copyToOthers": "Copier ce jour sur les autres"
+    },
     "agentSkills": {
       "loading": "Chargement des skills disponibles...",
       "noSkills": "Aucune skill disponible. Chargez d'abord la decision table Agent Skills.",
@@ -103,7 +107,23 @@
       "skillUnavailable": "Cette skill n'est plus disponible sur le serveur. Supprimez-la ou contactez le support.",
       "oauthScopeUnavailable": "Cette intégration nécessite une permission Google que MrCall n'est pas autorisée à demander. Contactez le support.",
       "inject": "Ajouter au prompt",
-      "injectHint": "Activé, le résultat est ajouté aux instructions de l'assistant. Désactivé, il reste disponible mais uniquement là où un modèle le nomme."
+      "injectHint": "Activé, le résultat est ajouté aux instructions de l'assistant. Désactivé, il reste disponible mais uniquement là où un modèle le nomme.",
+      "oauthReuse": "Reutiliser une autorisation",
+      "oauthReusePlaceholder": "Choisissez un compte deja autorise",
+      "oauthSaveFirst": "L'autorisation n'a pas demarre : la page n'a pas pu etre enregistree. La raison est indiquee ci-dessus.",
+      "duplicateSkill": "Dupliquer, desactivee",
+      "entryEnabledHint": "Si cette instance est executee.",
+      "calendarChosen": "Choisi lors de l'autorisation de cette instance.",
+      "calendarNotChosen": "Autorisez cette instance pour choisir un agenda.",
+      "calendarUnavailable": "La liste n'a pas pu etre lue; le serveur est-il a jour?",
+      "calendarPrimary": "agenda principal",
+      "oauthRevokeFailed": "L'autorisation de l'instance supprimee n'a pas pu etre revoquee; elle est encore active chez Google.",
+      "oauthOrphanGrant": "Autorisation orpheline",
+      "oauthStopUsing": "Ne plus l'utiliser",
+      "oauthSharedRefuse": "Partagee avec d'autres instances: detachez-les d'abord",
+      "labelClash": "Une autre instance porte deja ce nom; les deux seront affichees avec leur numero.",
+      "entryOn": "Activee",
+      "entryOff": "Desactivee"
     }
   },
   "components": {
@@ -738,6 +758,8 @@
       "description": "Connectez Google Calendar pour gérer automatiquement les rendez-vous MrCall lira vos horaires occupés et créera des rendez-vous. Vos données restent dans votre calendrier.",
       "connectButton": "Connecter Calendar",
       "disconnectButton": "Déconnecter Calendar",
+      "selectCalendarHint": "Les rendez-vous pris par cet assistant seront ecrits ici.",
+      "primaryCalendar": "Agenda principal",
       "selectCalendarTitle": "Choisir un calendrier",
       "confirmButton": "Confirmer",
       "connectedTo": "Connecté à :",

@@ -27,41 +27,24 @@ export const SIGN_IN_SCOPES = ['openid', 'email', 'profile']
  * the Google console. Doing only this half breaks every Google flow at once.
  * See docs/integration/google-oauth.md.
  */
-export const ALLOWED_SCOPES = [
-  ...SIGN_IN_SCOPES,
-  'https://www.googleapis.com/auth/calendar'
-]
-
-/**
- * Reject an authorization before it leaves the browser if it asks for anything
- * outside ALLOWED_SCOPES.
+/* ALLOWED_SCOPES and assertScopesAllowed lived here until 2026-09-21.
  *
- * The skills configurator builds its scope list from whatever the backend
- * catalog declares, so without this check a backend change alone can put an
- * unregistered scope in front of a customer. The failure that produces is a
- * scary Google interstitial with no trace in our logs, which is close to
- * undiagnosable from a support ticket. Failing loudly here turns it into an
- * error we see in test.
+ * They were a copy, in this repository, of a fact about the Google project: which scopes the OAuth
+ * client is registered to request. The skills ask for their scopes through the backend catalogue,
+ * so a skill added in StarChat could introduce one and nothing connected the two lists until a
+ * customer pressed Authorise — and when they drifted the other way the list refused a scope Google
+ * had been granting since April, which is how this came down.
+ *
+ * The comparison now happens where both halves are known: StarChat holds the client and serves the
+ * manifests, `SkillManifest.diagnoseScopes` compares them per OAuth CLIENT — Calendly and Microsoft
+ * have their own — and the result travels in the `diagnostics` this screen already receives per
+ * skill and used to discard. A developer-time test makes the same comparison, so a bad scope fails
+ * in CI rather than in front of somebody.
+ *
+ * The two other callers needed nothing: the sign-in checked SIGN_IN_SCOPES against a list built
+ * from SIGN_IN_SCOPES, which cannot fail, and the calendar connect checked one local constant
+ * against another.
  */
-export function assertScopesAllowed(scopes, context) {
-  const requested = Array.isArray(scopes) ? scopes : String(scopes || '').split(' ')
-  const cleaned = requested.map(s => s.trim()).filter(Boolean)
-
-  if (!cleaned.length) {
-    throw new Error(`${context}: refusing to start an authorization with no scopes`)
-  }
-
-  const rejected = cleaned.filter(s => !ALLOWED_SCOPES.includes(s))
-  if (rejected.length) {
-    throw new Error(
-      `${context}: scope not registered for this OAuth client: ${rejected.join(', ')}. ` +
-      'Register it on the Google Auth Platform "Data access" page and add it to ' +
-      'ALLOWED_SCOPES in src/utils/OAuth.js, in that order.'
-    )
-  }
-
-  return cleaned.join(' ')
-}
 
 
 const VERIFIER_KEY = 'codeVerifier'

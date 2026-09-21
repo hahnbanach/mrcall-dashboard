@@ -80,6 +80,10 @@
       "removeitem": "Rimuovi elemento",
       "additem": "Nuovo elemento"
     },
+    "timeSlots": {
+      "legend": "Orari",
+      "copyToOthers": "Copia questo giorno sugli altri"
+    },
     "agentSkills": {
       "loading": "Caricamento skill disponibili...",
       "noSkills": "Nessuna skill disponibile. Caricare prima la decision table Agent Skills.",
@@ -104,7 +108,23 @@
       "inject": "Aggiungi al prompt",
       "injectHint": "Attivo, il risultato entra nelle istruzioni dell'assistente. Spento, resta disponibile ma solo dove un template lo nomina.",
       "templateSyntaxTitle": "Come si scrive un prompt: le variabili",
-      "templateSyntaxHelp": "Cosa puoi scrivere in questi campi: `%%FUNCTION_RESPONSE_BODY%%` per quello che la skill ha restituito; `%%nome%%` per qualsiasi variabile del business o della conversazione, per esempio `%%crm.contact.variables.FIRST_NAME%%`; `%%nome:=ripiego%%` per dare un valore quando la variabile e' vuota; `%%public:PREFETCH:json:<istanza>.campo.sottocampo%%` per entrare dentro un json pubblicato da un'altra istanza; e in fase during gli argomenti passati dal modello, col loro nome. I nomi che iniziano per private, secret, local o internal non vengono mai sostituiti."
+      "templateSyntaxHelp": "Cosa puoi scrivere in questi campi: `%%FUNCTION_RESPONSE_BODY%%` per quello che la skill ha restituito; `%%nome%%` per qualsiasi variabile del business o della conversazione, per esempio `%%crm.contact.variables.FIRST_NAME%%`; `%%nome:=ripiego%%` per dare un valore quando la variabile e' vuota; `%%public:PREFETCH:json:<istanza>.campo.sottocampo%%` per entrare dentro un json pubblicato da un'altra istanza; e in fase during gli argomenti passati dal modello, col loro nome. I nomi che iniziano per private, secret, local o internal non vengono mai sostituiti.",
+      "oauthReuse": "Riusa un'autorizzazione",
+      "oauthReusePlaceholder": "Scegli un account gia' autorizzato",
+      "oauthSaveFirst": "L'autorizzazione non è partita: la pagina non si è potuta salvare. Il motivo è indicato sopra.",
+      "duplicateSkill": "Duplica, disattivata",
+      "entryEnabledHint": "Se questa istanza viene eseguita.",
+      "calendarChosen": "Scelto quando questa istanza e' stata autorizzata.",
+      "calendarNotChosen": "Autorizza questa istanza per scegliere un calendario.",
+      "calendarUnavailable": "Non è stato possibile leggere l'elenco: il server è aggiornato?",
+      "calendarPrimary": "calendario principale",
+      "oauthRevokeFailed": "Non è stato possibile revocare l'autorizzazione dell'istanza cancellata: è ancora attiva su Google.",
+      "oauthOrphanGrant": "Autorizzazione orfana",
+      "oauthStopUsing": "Smetti di usarla",
+      "oauthSharedRefuse": "Condivisa con altre istanze: staccale prima",
+      "labelClash": "Un'altra istanza ha già questo nome: verranno mostrate entrambe col loro numero.",
+      "entryOn": "Attiva",
+      "entryOff": "Spenta"
     }
   },
   "components": {
@@ -739,6 +759,8 @@
       "description": "Collega Google Calendar per gestire automaticamente gli appuntamenti MrCall leggerà gli orari occupati e creerà appuntamenti. I dati rimangono nel tuo calendario.",
       "connectButton": "Connetti Calendar",
       "disconnectButton": "Disconnetti Calendar",
+      "selectCalendarHint": "Gli appuntamenti presi da questo assistente verranno scritti qui.",
+      "primaryCalendar": "Calendario principale",
       "selectCalendarTitle": "Seleziona un calendario",
       "confirmButton": "Conferma",
       "connectedTo": "Connesso a:",

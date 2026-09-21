@@ -81,6 +81,10 @@
       "removeitem": "Element entfernen",
       "additem": "Neues Element"
     },
+    "timeSlots": {
+      "legend": "Offnungszeiten",
+      "copyToOthers": "Diesen Tag auf die anderen kopieren"
+    },
     "agentSkills": {
       "loading": "Verfügbare Skills werden geladen...",
       "noSkills": "Keine Agent-Skills verfügbar. Lade zuerst die Agent-Skills-Decision-Table hoch.",
@@ -103,7 +107,23 @@
       "skillUnavailable": "Dieser Skill ist auf dem Server nicht mehr verfügbar. Entferne ihn oder wende dich an den Support.",
       "oauthScopeUnavailable": "Diese Integration benötigt eine Google-Berechtigung, die MrCall nicht anfordern darf. Wende dich an den Support.",
       "inject": "Zum Prompt hinzufügen",
-      "injectHint": "Ein: Das Ergebnis wird den Anweisungen des Assistenten hinzugefügt. Aus: Es bleibt verfügbar, aber nur dort, wo eine Vorlage es nennt."
+      "injectHint": "Ein: Das Ergebnis wird den Anweisungen des Assistenten hinzugefügt. Aus: Es bleibt verfügbar, aber nur dort, wo eine Vorlage es nennt.",
+      "oauthReuse": "Eine Autorisierung wiederverwenden",
+      "oauthReusePlaceholder": "Ein bereits autorisiertes Konto wahlen",
+      "oauthSaveFirst": "Die Autorisierung wurde nicht gestartet: die Seite konnte nicht gespeichert werden. Der Grund steht oben.",
+      "duplicateSkill": "Duplizieren, ausgeschaltet",
+      "entryEnabledHint": "Ob diese Instanz ausgefuhrt wird.",
+      "calendarChosen": "Bei der Autorisierung dieser Instanz gewahlt.",
+      "calendarNotChosen": "Autorisieren Sie diese Instanz, um einen Kalender zu wahlen.",
+      "calendarUnavailable": "Die Liste konnte nicht gelesen werden; ist der Server aktuell?",
+      "calendarPrimary": "Hauptkalender",
+      "oauthRevokeFailed": "Die Autorisierung der geloschten Instanz konnte nicht widerrufen werden; sie ist bei Google noch aktiv.",
+      "oauthOrphanGrant": "Verwaiste Autorisierung",
+      "oauthStopUsing": "Nicht mehr verwenden",
+      "oauthSharedRefuse": "Von anderen Instanzen genutzt; zuerst losen",
+      "labelClash": "Eine andere Instanz hat diesen Namen bereits; beide werden mit ihrer Nummer angezeigt.",
+      "entryOn": "Ein",
+      "entryOff": "Aus"
     }
   },
   "components": {
@@ -738,6 +758,8 @@
       "description": "Verbinden Sie Google Calendar, um Termine automatisch zu verwalten. MrCall liest Ihre gebuchten Zeiten und erstellt Termine. Ihre Daten bleiben in Ihrem Kalender.",
       "connectButton": "Kalender verbinden",
       "disconnectButton": "Kalender trennen",
+      "selectCalendarHint": "Hier werden die von diesem Assistenten gebuchten Termine eingetragen.",
+      "primaryCalendar": "Hauptkalender",
       "selectCalendarTitle": "Kalender auswählen",
       "confirmButton": "Bestätigen",
       "connectedTo": "Verbunden mit:",

@@ -80,6 +80,10 @@
       "removeitem": "Poista kohde",
       "additem": "Uusi kohde"
     },
+    "timeSlots": {
+      "legend": "Aukioloajat",
+      "copyToOthers": "Kopioi tama paiva muille paiville"
+    },
     "agentSkills": {
       "loading": "Ladataan saatavilla olevia taitoja...",
       "noSkills": "Ei taitoja saatavilla. Lataa ensin Agent Skills -päätöstaulukko.",
@@ -102,7 +106,23 @@
       "skillUnavailable": "Tämä taito ei ole enää saatavilla palvelimella. Poista se tai ota yhteyttä tukeen.",
       "oauthScopeUnavailable": "Tämä integraatio vaatii Google-oikeuden, jota MrCall ei ole valtuutettu pyytämään. Ota yhteyttä tukeen.",
       "inject": "Lisää kehotteeseen",
-      "injectHint": "Päällä: tulos lisätään avustajan ohjeisiin. Pois: se on yhä käytettävissä, mutta vain siellä missä malli nimeää sen."
+      "injectHint": "Päällä: tulos lisätään avustajan ohjeisiin. Pois: se on yhä käytettävissä, mutta vain siellä missä malli nimeää sen.",
+      "oauthReuse": "Kayta olemassa olevaa valtuutusta",
+      "oauthReusePlaceholder": "Valitse jo valtuutettu tili",
+      "oauthSaveFirst": "Valtuutus ei alkanut: sivua ei voitu tallentaa. Syy nakyy ylla.",
+      "duplicateSkill": "Monista, pois kaytosta",
+      "entryEnabledHint": "Suoritetaanko tama instanssi.",
+      "calendarChosen": "Valittu kun tama instanssi valtuutettiin.",
+      "calendarNotChosen": "Valtuuta tama instanssi valitaksesi kalenterin.",
+      "calendarUnavailable": "Listaa ei voitu lukea; onko palvelin ajan tasalla?",
+      "calendarPrimary": "paakalenteri",
+      "oauthRevokeFailed": "Poistetun instanssin valtuutusta ei voitu peruuttaa; se on yha voimassa Googlessa.",
+      "oauthOrphanGrant": "Orpo valtuutus",
+      "oauthStopUsing": "Lopeta sen kaytto",
+      "oauthSharedRefuse": "Jaettu muiden instanssien kanssa; irrota ne ensin",
+      "labelClash": "Toisella instanssilla on jo tama nimi; molemmat naytetaan numeroineen.",
+      "entryOn": "Kaytossa",
+      "entryOff": "Pois"
     }
   },
   "components": {
@@ -736,6 +756,8 @@
       "description": "Yhdistä Google-kalenteri hallitaksesi tapaamisia automaattisesti. MrCall lukee varatut aikasi ja luo tapaamisia. Tietosi pysyvät kalenterissasi.",
       "connectButton": "Yhdistä kalenteri",
       "disconnectButton": "Katkaise kalenterin yhteys",
+      "selectCalendarHint": "Taman avustajan varaamat tapaamiset kirjataan tanne.",
+      "primaryCalendar": "Paakalenteri",
       "selectCalendarTitle": "Valitse kalenteri",
       "confirmButton": "Vahvista",
       "connectedTo": "Yhdistetty:",

@@ -10,7 +10,7 @@
 
 <script>
 import Button from 'primevue/button'
-import { GoogleAuthFlow, SIGN_IN_SCOPES, assertScopesAllowed } from '@/utils/OAuth'
+import { GoogleAuthFlow, SIGN_IN_SCOPES } from '@/utils/OAuth'
 
 export default {
   name: 'GoogleSignIn',
@@ -36,7 +36,7 @@ export default {
         // exemption from the unverified-app screen: the moment anything sensitive
         // joins the request, every user logging in meets that interstitial,
         // whether or not they ever wanted the calendar feature.
-        authUrl.searchParams.set('scope', assertScopesAllowed(SIGN_IN_SCOPES, 'sign-in'))
+        authUrl.searchParams.set('scope', SIGN_IN_SCOPES.join(' '))
         // Two parameters this request used to carry are deliberately gone.
         //
         // include_granted_scopes=true folded scopes the user had already granted

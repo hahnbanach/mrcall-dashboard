@@ -80,6 +80,10 @@
       "removeitem": "Fjern element",
       "additem": "Nyt element"
     },
+    "timeSlots": {
+      "legend": "Abningstider",
+      "copyToOthers": "Kopier denne dag til de andre"
+    },
     "agentSkills": {
       "loading": "Indlæser tilgængelige skills...",
       "noSkills": "Ingen skills tilgængelige. Upload først Agent Skills-beslutningstabellen.",
@@ -102,7 +106,23 @@
       "skillUnavailable": "Denne skill er ikke længere tilgængelig på serveren. Fjern den, eller kontakt support.",
       "oauthScopeUnavailable": "Denne integration kræver en Google-tilladelse, som MrCall ikke må anmode om. Kontakt support.",
       "inject": "Tilføj til prompt",
-      "injectHint": "Til: resultatet tilføjes assistentens instruktioner. Fra: det er stadig tilgængeligt, men kun hvor en skabelon nævner det."
+      "injectHint": "Til: resultatet tilføjes assistentens instruktioner. Fra: det er stadig tilgængeligt, men kun hvor en skabelon nævner det.",
+      "oauthReuse": "Genbrug en godkendelse",
+      "oauthReusePlaceholder": "Vaelg en allerede godkendt konto",
+      "oauthSaveFirst": "Godkendelsen startede ikke: siden kunne ikke gemmes. Arsagen star ovenfor.",
+      "duplicateSkill": "Dupliker, slaet fra",
+      "entryEnabledHint": "Om denne instans koeres.",
+      "calendarChosen": "Valgt da denne instans blev godkendt.",
+      "calendarNotChosen": "Godkend denne instans for at vaelge en kalender.",
+      "calendarUnavailable": "Listen kunne ikke laeses; er serveren opdateret?",
+      "calendarPrimary": "hovedkalender",
+      "oauthRevokeFailed": "Godkendelsen for den slettede instans kunne ikke tilbagekaldes; den er stadig aktiv hos Google.",
+      "oauthOrphanGrant": "Foraeldrelos godkendelse",
+      "oauthStopUsing": "Hold op med at bruge den",
+      "oauthSharedRefuse": "Deles med andre instanser; frigor dem forst",
+      "labelClash": "En anden instans har allerede dette navn; begge vises med deres nummer.",
+      "entryOn": "Til",
+      "entryOff": "Fra"
     }
   },
   "components": {
@@ -736,6 +756,8 @@
       "description": "Forbind Google Kalender for automatisk at administrere aftaler. MrCall læser dine optagne tidspunkter og opretter aftaler. Dine data forbliver i din kalender.",
       "connectButton": "Forbind kalender",
       "disconnectButton": "Afbryd kalender",
+      "selectCalendarHint": "Aftaler booket af denne assistent skrives her.",
+      "primaryCalendar": "Hovedkalender",
       "selectCalendarTitle": "Vælg en kalender",
       "confirmButton": "Bekræft",
       "connectedTo": "Forbundet til:",
