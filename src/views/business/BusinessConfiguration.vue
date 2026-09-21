@@ -54,6 +54,7 @@
                     v-model="skillsConfig"
                     :businessId="business.businessId || ''"
                     :disabled="businessVariablesUtils.checkIfDisabledByParentsDecorator(business, variable, isAdmin)"
+                    @request-save="done => saveBusiness().then(done)"
                 />
                 <span class="font-normal font-italic title text-sm" v-html="variable.description"></span>
               </div>
@@ -675,6 +676,13 @@ export default {
         query: { id: this.businessId }
       });
     },
+    /** Saves, and RESOLVES TO WHETHER IT SAVED.
+     *
+     * It used to return nothing and swallow its own outcome, which was fine while the only caller
+     * was a button. It is not fine for a caller that is about to navigate away: the OAuth flow
+     * leaves the page, and leaving with the configuration unsaved loses the instance the
+     * authorisation is about to be attached to. Awaiting `undefined` would have read as success.
+     */
     saveBusiness() {
       this.showProgressBar = true
       if(!this.businessPhoneNumberValid) {
@@ -684,7 +692,7 @@ export default {
         this.setMessage("error", this.t("components.business.unableToSave"))
         console.error("Impossible to save the plan")
         this.showProgressBar = false
-        return
+        return Promise.resolve(false)
       }
 
       const varErrors = this.verifyVariables(this.business)
@@ -703,7 +711,7 @@ export default {
         )
         console.error("Impossible to save the plan because of missing mandatory variables:", varErrors)
         this.showProgressBar = false
-        return
+        return Promise.resolve(false)
       }
 
       let headers = {
@@ -730,7 +738,7 @@ export default {
             }
         )
       }
-      operation.then((response) => {
+      return operation.then((response) => {
         console.debug("Saved Response:", response)
         this.showProgressBar = false
         if(response.headers["x-mrcall-role"] === "admin") {
@@ -741,7 +749,9 @@ export default {
         if(response.status === 201 || response.status === 200) {
           this.business.businessId = response.data.result.businessId
           this.setMessage("success", this.t('components.business.settingsSuccessfullySaved'), false, 5000)
+          return true
         }
+        return false
         //this.selectVariables()
       }).catch((error) => {
         this.showProgressBar = false
@@ -751,12 +761,36 @@ export default {
           this.store.dispatch('logout')
           router.replace('/login')
         }
+        return false
       })
     },
     ///
-    async switchToMenupage(id = undefined) {
+    /** Show a section of the configuration menu, and say so in the URL.
+     *
+     * The section used to be component state alone, which meant the address bar described the
+     * business and nothing else: a reload, the back button and a pasted link all landed on the
+     * default page, and so did the return from the Google authorisation round trip, which is how
+     * this came up. The section is now a query parameter, so the page is addressable and the
+     * return mechanism carries it for free — it saves `pathname + search`.
+     *
+     * `pushUrl` is false for the navigations that are not a person clicking the menu: the first
+     * render, and the back/forward buttons, which have already moved the history themselves.
+     *
+     * A section this business does not have is not an error and does not get a blank page. The
+     * menu is built from the variable annotations of the business TEMPLATE, so a link taken on
+     * one business can name a section another does not have, and a stale bookmark can name one
+     * that no longer exists anywhere. Those fall back to the default, and the URL is rewritten to
+     * match, so that what is shown and what is addressed never disagree.
+     */
+    async switchToMenupage(id = undefined, { pushUrl = true } = {}) {
       const CONFIGURE_AI_ID = '__CONFIGURE_AI__'
-      const resolvedId = id ?? CONFIGURE_AI_ID
+      const requested = id || CONFIGURE_AI_ID
+      const known = Array.isArray(this.variablesAnnotations)
+        && this.variablesAnnotations.some((obj) => obj.collection.id === requested)
+      const resolvedId = (requested === CONFIGURE_AI_ID || known) ? requested : CONFIGURE_AI_ID
+      if (resolvedId !== requested) {
+        console.warn("Unknown configuration section, falling back to the default:", requested)
+      }
       if (resolvedId === CONFIGURE_AI_ID) {
         console.log("Switch to Configure AI Menupage")
         this.pageSelection = {
@@ -776,6 +810,32 @@ export default {
       if (this.itemsMenu) {
         await this.updateMenu()
       }
+      this.writeSectionToUrl(resolvedId, pushUrl && resolvedId === requested)
+    },
+    /** Put the section in the address bar, or correct what is already there.
+     *
+     * The default section is left implicit: a URL without `section` resolves to it, so writing it
+     * would only make every link longer and every first load a history entry.
+     */
+    writeSectionToUrl(resolvedId, push) {
+      const CONFIGURE_AI_ID = '__CONFIGURE_AI__'
+      const current = this.$route?.query?.section
+      const wanted = resolvedId === CONFIGURE_AI_ID ? undefined : resolvedId
+      if (current === wanted || (!current && !wanted)) {
+        return
+      }
+      const query = { ...this.$route.query }
+      if (wanted) {
+        query.section = wanted
+      } else {
+        delete query.section
+      }
+      // `replace` when this is a correction rather than a navigation: an address that named a
+      // section that does not exist should not also be a place the back button returns to.
+      const navigate = push ? this.$router.push : this.$router.replace
+      navigate.call(this.$router, { query }).catch((error) => {
+        console.debug("Section navigation was not performed:", error)
+      })
     },
     async updateMenu() {
       const menuGroups = {
@@ -870,7 +930,9 @@ export default {
             this.variablesAnnotations
         )
         await this.updateMenu() //set menu values
-        await this.switchToMenupage()
+        // The URL decides which section opens. Not a push: this is the first render of the page
+        // the person is already on.
+        await this.switchToMenupage(this.$route.query?.section, { pushUrl: false })
         console.debug("VariablesAnnotations: ", this.variablesAnnotations)
       }).catch((error) => {
         this.showProgressBar = false
@@ -880,6 +942,7 @@ export default {
           this.store.dispatch('logout')
           //router.push('/login')
         }
+        return false
       })
     },
     async setMessage(severity, content, sticky = true, life = 0) {
@@ -892,6 +955,21 @@ export default {
         sticky: sticky,
         life: life
       }
+    },
+  },
+  watch: {
+    // The back and forward buttons, and any other navigation that changes the address without
+    // rebuilding this component. Guarded on the section actually differing, because
+    // `switchToMenupage` writes the URL and an unguarded watcher would answer its own write.
+    '$route.query.section': function (section) {
+      if (!Array.isArray(this.variablesAnnotations)) {
+        return // the menu does not exist yet; initializePage reads the URL itself
+      }
+      const CONFIGURE_AI_ID = '__CONFIGURE_AI__'
+      if ((section || CONFIGURE_AI_ID) === this.selectedMenupage?.collection?.id) {
+        return
+      }
+      this.switchToMenupage(section, { pushUrl: false })
     },
   },
   mounted() {
