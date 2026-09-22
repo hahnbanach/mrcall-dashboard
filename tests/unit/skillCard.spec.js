@@ -3,7 +3,9 @@ import { mount } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
 import PrimeVue from 'primevue/config'
 import Button from 'primevue/button'
-import Dropdown from 'primevue/select'
+// The same module the components import: `primevue/select` is a different instance of the
+// same component and `findComponent` would not match it.
+import Dropdown from 'primevue/dropdown'
 import InputText from 'primevue/inputtext'
 import Tag from 'primevue/tag'
 import ToggleSwitch from 'primevue/toggleswitch'
@@ -191,6 +193,50 @@ describe('an authorisation', () => {
     const open = card({ skill: oauthSkill, grants })
     expect(open.text()).toContain('Stop using')
     expect(open.text()).toContain('somebody@example.com')
+  })
+})
+
+/** The calendar an instance books on: a choice, never something to type.
+  *
+  * The authorisation is given for an ACCOUNT, so the calendars it can see are known and have names;
+  * what is stored is a Google identifier nobody knows by heart. This is also where the card's own
+  * rule shows: which component draws a field is the widget the manifest declares, so a manifest
+  * saying `text` for this field puts a box on the screen and no test would notice.
+  */
+describe('the calendar field', () => {
+  const calendarSkill = {
+    ...skill,
+    configSchema: {
+      fields: [
+        ...skill.configSchema.fields,
+        { key: 'calendarId', type: 'string', widget: 'calendar', labels: { en: { label: 'Calendar' } } }
+      ]
+    }
+  }
+
+  it('offers the calendars of the authorisation by name, rather than a box', async () => {
+    const grants = noGrants({
+      calendarOptions: () => ([
+        { label: 'Sala 1', value: 'sala1@group.calendar.google.com' },
+        { label: 'Sala 2', value: 'sala2@group.calendar.google.com' }
+      ]),
+      calendarSummary: () => 'Choose a calendar'
+    })
+    const open = card({
+      skill: calendarSkill,
+      entry: { ...entry, params: { ...entry.params, calendarId: 'sala2@group.calendar.google.com' } },
+      grants
+    })
+    const picker = open.findComponent(Dropdown)
+    expect(picker.props('options')).toHaveLength(2)
+    expect(picker.props('modelValue')).toBe('sala2@group.calendar.google.com')
+  })
+
+  it('says which authorisation it is waiting for when there is nothing to choose from', () => {
+    const grants = noGrants({ calendarSummary: () => 'Authorise a calendar first' })
+    const open = card({ skill: calendarSkill, grants })
+    expect(open.text()).toContain('Authorise a calendar first')
+    expect(open.findComponent(Dropdown).exists()).toBe(false)
   })
 })
 
