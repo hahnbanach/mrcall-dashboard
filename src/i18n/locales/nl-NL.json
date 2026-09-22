@@ -82,7 +82,15 @@
     },
     "timeSlots": {
       "legend": "Openingstijden",
-      "copyToOthers": "Deze dag naar de andere dagen kopieren"
+      "copyToOthers": "Deze dag naar de andere dagen kopieren",
+      "wizard": "Tijdvakken genereren",
+      "wizardFrom": "Van",
+      "wizardTo": "Tot",
+      "wizardDuration": "Duur (minuten)",
+      "wizardPreview": "{count} tijdvakken van {minutes} minuten, {first} tot {last}",
+      "wizardEmpty": "Er past geen enkel tijdvak in dit bereik",
+      "wizardOverwrite": "Vervangt de {count} tijdvakken van deze dag",
+      "wizardGenerate": "Genereren"
     },
     "agentSkills": {
       "loading": "Beschikbare skills laden...",

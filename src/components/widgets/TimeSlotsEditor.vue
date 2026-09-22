@@ -1,11 +1,13 @@
 <script setup>
 /* ------------------------------------------------------------- * Imports
  * ------------------------------------------------------------- */
-import { reactive, computed, watch, onMounted } from 'vue'
+import { reactive, ref, computed, watch, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Calendar    from 'primevue/calendar'
 import Button      from 'primevue/button'
 import Fieldset    from 'primevue/fieldset'
+import InputNumber from 'primevue/inputnumber'
+import Popover     from 'primevue/popover'
 import businessVariablesUtils from '@/utils/BusinessVariables'
 
 /* ------------------------------------------------------------- * Props & localisation helper
@@ -136,6 +138,72 @@ function addSlot(day) {
 
 function removeSlot (day, idx)   { slots[day].splice(idx, 1) }
 
+/* ------------------------------------------------------------- * The wizard: a stretch, cut into slots
+ *
+ * Filling a morning by hand is the plus button pressed twenty times, and twenty chances to leave a
+ * minute between two slots or to overlap them by five. Here the day is said once, from and to, and
+ * the slots come out of the length: the same arithmetic the server does with `ranges`, so what the
+ * grid says and what the caller is offered cannot drift apart.
+ *
+ * A SLOT THAT WOULD PASS THE END IS NOT MADE. 08:00 to 13:00 at fifteen minutes ends at 13:00
+ * exactly; at fifty it stops at 12:30 and leaves the last twenty minutes alone, because half a slot
+ * is not a slot anybody can book.
+ * ------------------------------------------------------------- */
+const wizard = ref(null)
+const wizardDay = ref(null)
+const wizardForm = reactive({ from: '08:00', to: '13:00', duration: 15 })
+
+function minutesOf (hhmm) {
+  if (typeof hhmm !== 'string' || hhmm.length < 4) return NaN
+  const [h, m] = hhmm.split(':').map(Number)
+  return Number.isFinite(h) && Number.isFinite(m) ? h * 60 + m : NaN
+}
+function timeOf (minutes) {
+  return `${padTime(Math.floor(minutes / 60))}:${padTime(minutes % 60)}`
+}
+
+/** The slots a stretch would produce. Computed rather than generated on the button, so the count is
+ *  on the screen before anything is replaced. */
+const wizardSlots = computed(() => {
+  const from = minutesOf(wizardForm.from)
+  const to = minutesOf(wizardForm.to)
+  const step = Number(wizardForm.duration)
+  if (!Number.isFinite(from) || !Number.isFinite(to) || !Number.isFinite(step) || step <= 0) return []
+  const rows = []
+  // The end never passes midnight: a slot belongs to the day it starts on, and a night that runs
+  // past twelve is two rows on two days. The time pickers stop at 23:59, so this only guards the
+  // arithmetic.
+  const last = Math.min(to, 24 * 60)
+  for (let at = from; at + step <= last; at += step) {
+    rows.push({ start: timeOf(at), end: timeOf(at + step) })
+  }
+  return rows
+})
+
+function openWizard (event, day) {
+  wizardDay.value = day
+  wizardForm.duration = Number(props.slotDuration) > 0 ? Number(props.slotDuration) : 15
+  // A day already filled opens on its own hours, so the wizard is also the way to re-cut a grid
+  // whose appointment length has changed.
+  const rows = slots[day]
+  if (rows.length) {
+    wizardForm.from = rows[0].start || wizardForm.from
+    wizardForm.to = rows[rows.length - 1].end || wizardForm.to
+  }
+  wizard.value.show(event)
+}
+
+/** Replaces the day rather than adding to it, for the reason `copyDayToOthers` replaces: what is
+ *  already there is what the wizard is being used to correct, and merging would leave it beside the
+ *  new grid where nobody would notice it. The count is shown before the button is pressed. */
+function applyWizard () {
+  const day = wizardDay.value
+  if (!day) return
+  const rows = wizardSlots.value.map(row => ({ ...row }))
+  slots[day].splice(0, slots[day].length, ...rows)
+  wizard.value.hide()
+}
+
 function padTime(num) {
   return num.toString().padStart(2, '0')
 }
@@ -206,6 +274,14 @@ function validateDay(day) {
             class="p-button-sm ml-auto"
             @click="addSlot(day)"
             :disabled="isDisabled"
+          />
+          <!-- The wizard: say the stretch once and let the length cut it. -->
+          <Button
+            icon="pi pi-sparkles"
+            class="p-button-sm ml-2 p-button-secondary"
+            @click="openWizard($event, day)"
+            :disabled="isDisabled"
+            :title="t('widgets.timeSlots.wizard')"
           />
           <!-- Copy to the other days. A week of opening hours is usually one day repeated, and
                filling five identical days by hand is five chances to make them almost identical:
@@ -293,9 +369,109 @@ function validateDay(day) {
         <hr v-if="dayIdx < weekDays.length - 1" class="my-4" />
       </div>
     </div>
+
+    <!-- One wizard for the seven days, opened against the button that was pressed. -->
+    <Popover ref="wizard">
+      <div class="slot-wizard">
+        <div class="slot-wizard-title">
+          {{ t('widgets.timeSlots.wizard') }}
+          <span v-if="wizardDay" class="slot-wizard-day">{{ t('days.' + wizardDay) }}</span>
+        </div>
+
+        <div class="slot-wizard-row">
+          <label>{{ t('widgets.timeSlots.wizardFrom') }}</label>
+          <Calendar
+            :modelValue="timeStringToDate(wizardForm.from)"
+            @update:modelValue="val => wizardForm.from = dateToTimeString(val)"
+            :timeOnly="true"
+            hour-format="24"
+            hide-on-date-time-select
+            input-class="w-6rem"
+          />
+        </div>
+
+        <div class="slot-wizard-row">
+          <label>{{ t('widgets.timeSlots.wizardTo') }}</label>
+          <Calendar
+            :modelValue="timeStringToDate(wizardForm.to)"
+            @update:modelValue="val => wizardForm.to = dateToTimeString(val)"
+            :timeOnly="true"
+            hour-format="24"
+            hide-on-date-time-select
+            input-class="w-6rem"
+          />
+        </div>
+
+        <div class="slot-wizard-row">
+          <label>{{ t('widgets.timeSlots.wizardDuration') }}</label>
+          <InputNumber
+            v-model="wizardForm.duration"
+            :min="5"
+            :max="1440"
+            :step="5"
+            showButtons
+            size="small"
+            input-class="w-4rem"
+          />
+        </div>
+
+        <!-- What pressing the button will do, before it is pressed. -->
+        <small v-if="wizardSlots.length" class="slot-wizard-preview">
+          {{ t('widgets.timeSlots.wizardPreview', {
+            count: wizardSlots.length,
+            minutes: wizardForm.duration,
+            first: wizardSlots[0].start,
+            last: wizardSlots[wizardSlots.length - 1].end
+          }) }}
+        </small>
+        <small v-else class="slot-wizard-preview text-danger-600">
+          {{ t('widgets.timeSlots.wizardEmpty') }}
+        </small>
+        <small v-if="wizardDay && slots[wizardDay].length" class="slot-wizard-preview">
+          {{ t('widgets.timeSlots.wizardOverwrite', { count: slots[wizardDay].length }) }}
+        </small>
+
+        <Button
+          :label="t('widgets.timeSlots.wizardGenerate')"
+          icon="pi pi-check"
+          class="p-button-sm mt-2"
+          :disabled="!wizardSlots.length"
+          @click="applyWizard"
+        />
+      </div>
+    </Popover>
   </Fieldset>
 </template>
 
 <style scoped lang="less">
 /* nothing fancy – inherit from global theme */
+
+.slot-wizard {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  min-width: 15rem;
+
+  .slot-wizard-title {
+    font-weight: 600;
+  }
+
+  .slot-wizard-day {
+    font-weight: 400;
+    opacity: .7;
+    margin-left: .35rem;
+    text-transform: capitalize;
+  }
+
+  .slot-wizard-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
+  }
+
+  .slot-wizard-preview {
+    opacity: .8;
+  }
+}
 </style>

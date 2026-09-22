@@ -82,7 +82,15 @@
     },
     "timeSlots": {
       "legend": "Oppettider",
-      "copyToOthers": "Kopiera denna dag till de andra"
+      "copyToOthers": "Kopiera denna dag till de andra",
+      "wizard": "Generera tider",
+      "wizardFrom": "Fran",
+      "wizardTo": "Till",
+      "wizardDuration": "Langd (minuter)",
+      "wizardPreview": "{count} tider a {minutes} minuter, {first} till {last}",
+      "wizardEmpty": "Det far inte plats en enda tid i detta intervall",
+      "wizardOverwrite": "Ersatter de {count} tiderna denna dag",
+      "wizardGenerate": "Generera"
     },
     "agentSkills": {
       "loading": "Laddar tillgängliga skills...",

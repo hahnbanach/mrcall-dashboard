@@ -82,7 +82,15 @@
     },
     "timeSlots": {
       "legend": "Opening hours",
-      "copyToOthers": "Copy this day to the other days"
+      "copyToOthers": "Copy this day to the other days",
+      "wizard": "Generate the slots",
+      "wizardFrom": "From",
+      "wizardTo": "To",
+      "wizardDuration": "Length (minutes)",
+      "wizardPreview": "{count} slots of {minutes} minutes, {first} to {last}",
+      "wizardEmpty": "Not one slot fits in this stretch",
+      "wizardOverwrite": "Replaces the {count} slots already on this day",
+      "wizardGenerate": "Generate"
     },
     "agentSkills": {
       "loading": "Loading available skills...",

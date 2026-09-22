@@ -82,7 +82,15 @@
     },
     "timeSlots": {
       "legend": "Ωράριο",
-      "copyToOthers": "Αντιγραφή αυτής της ημέρας στις άλλες"
+      "copyToOthers": "Αντιγραφή αυτής της ημέρας στις άλλες",
+      "wizard": "Δημιουργία χρονοθυρίδων",
+      "wizardFrom": "Από",
+      "wizardTo": "Έως",
+      "wizardDuration": "Διάρκεια (λεπτά)",
+      "wizardPreview": "{count} χρονοθυρίδες των {minutes} λεπτών, {first} έως {last}",
+      "wizardEmpty": "Δεν χωράει καμία χρονοθυρίδα σε αυτό το διάστημα",
+      "wizardOverwrite": "Αντικαθιστά τις {count} χρονοθυρίδες αυτής της ημέρας",
+      "wizardGenerate": "Δημιουργία"
     },
     "agentSkills": {
       "loading": "Φόρτωση διαθέσιμων δεξιοτήτων...",

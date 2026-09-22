@@ -82,7 +82,15 @@
     },
     "timeSlots": {
       "legend": "Lahtiolekuajad",
-      "copyToOthers": "Kopeeri see paev teistele"
+      "copyToOthers": "Kopeeri see paev teistele",
+      "wizard": "Loo ajad",
+      "wizardFrom": "Alates",
+      "wizardTo": "Kuni",
+      "wizardDuration": "Kestus (minutit)",
+      "wizardPreview": "{count} aega, igauks {minutes} minutit, {first}-{last}",
+      "wizardEmpty": "Sellesse vahemikku ei mahu uhtegi aega",
+      "wizardOverwrite": "Asendab selle paeva {count} aega",
+      "wizardGenerate": "Loo"
     },
     "agentSkills": {
       "loading": "Laadin saadaolevaid oskusi...",

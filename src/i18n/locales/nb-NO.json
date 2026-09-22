@@ -82,7 +82,15 @@
     },
     "timeSlots": {
       "legend": "Apningstider",
-      "copyToOthers": "Kopier denne dagen til de andre"
+      "copyToOthers": "Kopier denne dagen til de andre",
+      "wizard": "Generer tidsrom",
+      "wizardFrom": "Fra",
+      "wizardTo": "Til",
+      "wizardDuration": "Varighet (minutter)",
+      "wizardPreview": "{count} tidsrom a {minutes} minutter, {first} til {last}",
+      "wizardEmpty": "Det er ikke plass til et eneste tidsrom",
+      "wizardOverwrite": "Erstatter de {count} tidsrommene denne dagen",
+      "wizardGenerate": "Generer"
     },
     "agentSkills": {
       "loading": "Laster tilgjengelige skills...",

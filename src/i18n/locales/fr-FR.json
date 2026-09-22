@@ -83,7 +83,15 @@
     },
     "timeSlots": {
       "legend": "Horaires",
-      "copyToOthers": "Copier ce jour sur les autres"
+      "copyToOthers": "Copier ce jour sur les autres",
+      "wizard": "Generer les creneaux",
+      "wizardFrom": "De",
+      "wizardTo": "A",
+      "wizardDuration": "Duree (minutes)",
+      "wizardPreview": "{count} creneaux de {minutes} minutes, de {first} a {last}",
+      "wizardEmpty": "Aucun creneau ne tient dans cette plage",
+      "wizardOverwrite": "Remplace les {count} creneaux de ce jour",
+      "wizardGenerate": "Generer"
     },
     "agentSkills": {
       "loading": "Chargement des skills disponibles...",

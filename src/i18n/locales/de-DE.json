@@ -83,7 +83,15 @@
     },
     "timeSlots": {
       "legend": "Offnungszeiten",
-      "copyToOthers": "Diesen Tag auf die anderen kopieren"
+      "copyToOthers": "Diesen Tag auf die anderen kopieren",
+      "wizard": "Zeitfenster erzeugen",
+      "wizardFrom": "Von",
+      "wizardTo": "Bis",
+      "wizardDuration": "Dauer (Minuten)",
+      "wizardPreview": "{count} Fenster zu je {minutes} Minuten, {first} bis {last}",
+      "wizardEmpty": "In diesen Zeitraum passt kein einziges Fenster",
+      "wizardOverwrite": "Ersetzt die {count} Fenster dieses Tages",
+      "wizardGenerate": "Erzeugen"
     },
     "agentSkills": {
       "loading": "Verfügbare Skills werden geladen...",

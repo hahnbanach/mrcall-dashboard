@@ -82,7 +82,15 @@
     },
     "timeSlots": {
       "legend": "Aukioloajat",
-      "copyToOthers": "Kopioi tama paiva muille paiville"
+      "copyToOthers": "Kopioi tama paiva muille paiville",
+      "wizard": "Luo ajat",
+      "wizardFrom": "Alkaen",
+      "wizardTo": "Asti",
+      "wizardDuration": "Kesto (minuuttia)",
+      "wizardPreview": "{count} aikaa, {minutes} minuuttia kukin, {first}-{last}",
+      "wizardEmpty": "Tahan valiin ei mahdu yhtaan aikaa",
+      "wizardOverwrite": "Korvaa taman paivan {count} aikaa",
+      "wizardGenerate": "Luo"
     },
     "agentSkills": {
       "loading": "Ladataan saatavilla olevia taitoja...",

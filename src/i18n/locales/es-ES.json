@@ -82,7 +82,15 @@
     },
     "timeSlots": {
       "legend": "Horarios",
-      "copyToOthers": "Copiar este dia a los demas"
+      "copyToOthers": "Copiar este dia a los demas",
+      "wizard": "Generar las franjas",
+      "wizardFrom": "Desde",
+      "wizardTo": "Hasta",
+      "wizardDuration": "Duracion (minutos)",
+      "wizardPreview": "{count} franjas de {minutes} minutos, de {first} a {last}",
+      "wizardEmpty": "No cabe ninguna franja en este intervalo",
+      "wizardOverwrite": "Sustituye las {count} franjas de este dia",
+      "wizardGenerate": "Generar"
     },
     "agentSkills": {
       "loading": "Cargando skills disponibles...",

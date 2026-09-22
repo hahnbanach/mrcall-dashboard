@@ -82,7 +82,15 @@
     },
     "timeSlots": {
       "legend": "Orari",
-      "copyToOthers": "Copia questo giorno sugli altri"
+      "copyToOthers": "Copia questo giorno sugli altri",
+      "wizard": "Genera gli slot",
+      "wizardFrom": "Dalle",
+      "wizardTo": "Alle",
+      "wizardDuration": "Durata (minuti)",
+      "wizardPreview": "{count} slot da {minutes} minuti, dalle {first} alle {last}",
+      "wizardEmpty": "In questo intervallo non ci sta nessuno slot",
+      "wizardOverwrite": "Sostituisce i {count} slot di questo giorno",
+      "wizardGenerate": "Genera"
     },
     "agentSkills": {
       "loading": "Caricamento skill disponibili...",
