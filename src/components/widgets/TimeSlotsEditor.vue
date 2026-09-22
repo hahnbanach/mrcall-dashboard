@@ -58,7 +58,22 @@ function splitRange (rangeStr) {
   return { start: start || '', end: end || '' }
 }
 function joinRange (obj) {
-  return `${obj.start}-${obj.end}`
+  return `${obj.start}-${endOfDay(obj.end)}`
+}
+
+/** MIDNIGHT AT THE END OF A DAY IS WRITTEN `24:00`, and the picker cannot say it: its clock runs
+ * 00:00 to 23:59, so a business open until midnight had to write `23:59` and leave a minute nobody
+ * can book. On the END of an interval, `00:00` means the end of that day, which is exactly what the
+ * server accepts and refuses to read any other way: `22:00-00:00` ends before it starts, and
+ * `22:00-24:00` is the same night said properly. */
+function endOfDay (time) {
+  return time === '00:00' ? '24:00' : time
+}
+
+/** The other direction, for the picker: `24:00` has no place on a 24-hour clock, and midnight is
+ * where it belongs. */
+function pickerTime (time) {
+  return time === '24:00' ? '00:00' : time
 }
 
 /* ------------------------------------------------------------- * Sync with business.variables whenever “slots” changes
@@ -166,7 +181,9 @@ function timeOf (minutes) {
  *  on the screen before anything is replaced. */
 const wizardSlots = computed(() => {
   const from = minutesOf(wizardForm.from)
-  const to = minutesOf(wizardForm.to)
+  // `00:00` as the END of the stretch is the end of the day, the same convention the rows use, so
+  // "from eight in the evening to midnight" is sayable with a picker that stops at 23:59.
+  const to = wizardForm.to === '00:00' ? 24 * 60 : minutesOf(wizardForm.to)
   const step = Number(wizardForm.duration)
   if (!Number.isFinite(from) || !Number.isFinite(to) || !Number.isFinite(step) || step <= 0) return []
   const rows = []
@@ -232,7 +249,8 @@ function dateToTimeString(date) {
 function validateDay(day) {
   const rows = slots[day]
 
-  // basic checks
+  // basic checks. `24:00` compares correctly as a string against any other HH:MM, which is why the
+  // end of day is written that way and not as `00:00`.
   for (const r of rows) {
     if (!r.start || !r.end) return false
     if (r.start >= r.end)   return false
@@ -325,8 +343,8 @@ function validateDay(day) {
             <span class="px-1">-</span>
             <!-- end -->
             <Calendar
-              :modelValue="timeStringToDate(row.end)"
-              @update:modelValue="val => row.end = dateToTimeString(val)"
+              :modelValue="timeStringToDate(pickerTime(row.end))"
+              @update:modelValue="val => row.end = endOfDay(dateToTimeString(val))"
               selection-mode="single"
               :timeOnly="true"
               hour-format="24"
