@@ -5,7 +5,8 @@ import { useStore } from "vuex";
 import agentSkillsUtils from "@/utils/AgentSkills";
 import { GoogleAuthFlow } from '@/utils/OAuth';
 import { useToast } from "primevue/usetoast";
-import { componentFor } from '@/components/widgets/skills/fields';
+import SkillCard from '@/components/widgets/skills/SkillCard.vue';
+import { LABEL_FIELD_KEY, fieldsOf } from '@/components/widgets/skills/manifestFields';
 import { useSkillGrants } from '@/components/widgets/skills/useSkillGrants';
 
 const { t, locale } = useI18n();
@@ -20,16 +21,6 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue', 'request-save']);
 
 const PHASES = ['prefetch', 'during', 'final'];
-
-// The calendar an instance books on. Written by the picker that runs at the end of the
-// authorisation, read here to label an authorisation with something a person recognises.
-const CALENDAR_FIELD_KEY = 'calendarId';
-
-// The name whoever configured this instance gave it. Declared by both phase contracts, so every
-// skill has one, and it is the only label on this screen that a person chose rather than a
-// generator produced: when it is set it wins over the skill's title everywhere an instance is
-// named, including the list of authorisations.
-const LABEL_FIELD_KEY = 'label';
 
 
 const availableSkills = ref([]);
@@ -151,10 +142,6 @@ function toggleEntry(phase, entry, idx) {
   openEntry.value[phase] = openEntry.value[phase] === key ? null : key;
 }
 
-function isEntryEnabled(entry) {
-  return String((entry && entry.params && entry.params.enabled) || '').trim().toLowerCase() === 'true';
-}
-
 // The ids that authorisations still name, including those of cards that no longer exist. An id is
 // never handed out again while a grant refers to it: see `_nextInstanceId`.
 function reservedInstanceIds() {
@@ -186,10 +173,6 @@ function duplicateEntry(phase, idx) {
 
 function getSkillObj(skillName) {
   return agentSkillsUtils.findSkill(availableSkills.value, skillName);
-}
-
-function isOrphanedEntry(entry) {
-  return !getSkillObj(entry.skill);
 }
 
 // Every instance of every phase, not this phase's: two instances of one skill in two different
@@ -228,39 +211,7 @@ function instanceSubtitle(entry) {
 }
 
 function getFields(entry) {
-  const skillObj = getSkillObj(entry.skill);
-  return skillObj ? agentSkillsUtils.getSkillFields(skillObj) : [];
-}
-
-/** What a widget needs beyond the contract every field shares.
- *
- * Three widgets want something the card knows and they do not: how long an appointment lasts, which
- * language the labels are read in, and which calendars an authorisation offers. Everything else is
- * drawn from `field`, the value and `disabled`, which is why adding a widget usually adds nothing
- * here at all.
- */
-function fieldProps(field, entry) {
-  const widget = field.widget || field.type;
-  if (widget === 'weekly_hours') {
-    return { slotDuration: Number(getFieldValue(entry, 'durationMinutes')) || 15 };
-  }
-  if (widget === 'list' || widget === 'tuples') {
-    return { locale: currentLang.value };
-  }
-  // Still by name, and only here: see `CalendarField` for why the source is not declared yet.
-  if (widget === 'calendar' || field.key === CALENDAR_FIELD_KEY) {
-    return { options: calendarOptions(entry), summary: calendarSummary(entry) };
-  }
-  return {};
-}
-
-function getFieldValue(entry, fieldKey) {
-  // Params first, then the entry itself, which is the order the runtime reads these in
-  // (`AGENT_SKILL:prefetch.sc`). `inject` lived on the entry before it was a declared field, so an
-  // instance configured then would otherwise show the default while running on its stored value.
-  if (entry.params && entry.params[fieldKey] !== undefined) return entry.params[fieldKey];
-  if (entry[fieldKey] !== undefined) return entry[fieldKey];
-  return '';
+  return fieldsOf(getSkillObj(entry.skill));
 }
 
 function setFieldValue(phase, index, fieldKey, value) {
@@ -268,58 +219,6 @@ function setFieldValue(phase, index, fieldKey, value) {
   config.value = agentSkillsUtils.updateEntryParam(config.value, phase, index, fieldKey, value);
 }
 
-function getFieldLabel(field) {
-  if (field.labels) {
-    // `*` is the default across the localized maps of this system, and it sits above `en`.
-    const labels = field.labels[currentLang.value] || field.labels['*'] || field.labels['en'] || {};
-    return labels.label || field.key;
-  }
-  return field.key;
-}
-
-function getFieldHint(field) {
-  if (field.labels) {
-    // `*` is the default across the localized maps of this system, and it sits above `en`.
-    const labels = field.labels[currentLang.value] || field.labels['*'] || field.labels['en'] || {};
-    return labels.hint || '';
-  }
-  return '';
-}
-
-/**
- * What goes INSIDE an empty box, which is not the hint.
- *
- * The hint is already rendered under the control, and these hints are long: every prompt field
- * carries the whole %%var%% syntax in its own, some 660 characters of it, so the same paragraph
- * appeared twice on one screen. Greyed out inside the textbox it reads as an example the user is
- * meant to follow rather than as help they have already read, and it is neither.
- *
- * A placeholder is an example of a VALUE. The only example this schema carries is the field's own
- * default, and a field without one shows an empty box, which is the honest thing for a box nobody
- * has filled in.
- */
-function getFieldPlaceholder(field) {
-  return field.default === undefined || field.default === null ? '' : String(field.default);
-}
-
-function skillDescription(entry) {
-  const skillObj = getSkillObj(entry.skill);
-  if (!skillObj) return '';
-  const lang = currentLang.value;
-  const i18n = skillObj.descriptionI18n || {};
-  const localized = i18n[lang] || i18n['en'] || skillObj.description || '';
-  return localized.replace(/\[Skill:.*?\]\s*/, '');
-}
-
-// `enabled` is deliberately not among them: it is drawn in the header instead, where it is
-// reachable with the card shut. It is the one setting whose answer has to be visible and
-// changeable without opening anything, because it is the setting that decides whether the rest of
-// them run at all.
-// Drawn by hand and not by the loop over the schema: `enabled` in the header strip, `label` at the
-// very top of the card. Both are about the instance rather than about what the skill does, and the
-// schema cannot place them — the phase contract's fields are appended AFTER a skill's own, so left
-// to the loop the name of the card would appear below every setting it names.
-const HEADER_FIELD_KEYS = ['enabled', LABEL_FIELD_KEY];
 
 /** Whether another instance already carries this name.
  *
@@ -336,106 +235,14 @@ function labelClashes(entry) {
     ((e.params || {})[LABEL_FIELD_KEY] || '').trim().toLowerCase() === written).length > 1;
 }
 
-// Written trimmed, so that a trailing space never makes two identical names different in storage.
-function setLabelValue(phase, idx, value) {
-  setFieldValue(phase, idx, LABEL_FIELD_KEY, (value || '').replace(/\s+/g, ' ').trim());
-}
-
-/** What the backend says is wrong with this skill, as it is installed HERE.
+/** The authorisations, from the composable that owns them.
  *
- * Sent per skill by `/agent/skills/available` — the schema's own verdict plus the one thing only
- * the deployment knows, whether its OAuth client can obtain the scopes the skill asks for. The
- * channel has existed all along and this screen discarded it, so a skill that could not possibly
- * be authorised looked exactly like one that could until somebody pressed the button.
+ * Held as ONE object and handed to every card as a prop, rather than destructured into eight
+ * bindings and drilled through eight attributes. A card asks it what it needs to draw an
+ * authorisation; what stays here is what needs this component rather than a card: the connect flow,
+ * which navigates away from the page and has to save first, and the revoke on delete.
  */
-function skillDiagnostics(entry) {
-  const skillObj = getSkillObj(entry.skill);
-  const all = (skillObj && skillObj.diagnostics) || [];
-  return all.filter(d => (d.severity || 'error') === 'error');
-}
-
-function labelField(entry) {
-  return getFields(entry).find(f => f.key === LABEL_FIELD_KEY) || null;
-}
-
-/** A field kept for the configurations that already carry it, and asked of nobody new.
- *
- * `variables` is the one: version 1 declared a skill's arguments inside its configuration, version
- * 2 declares them in the manifest, and every skill shipped today marks the old field deprecated.
- * It stayed on the screen because the deprecation was written in the manifest and never travelled
- * down to the renderer — so a person configuring a calendar skill was shown a list to fill whose
- * contents the skill would ignore.
- *
- * Hidden when it is EMPTY, not always. A configuration that carries a value has to be able to show
- * it and clear it; hiding a filled field would hide the only evidence that it is there.
- */
-function isRetiredAndEmpty(entry, field) {
-  if (!field.deprecated) return false;
-  const value = getFieldValue(entry, field.key);
-  return value === undefined || value === null || String(value).trim() === ''
-    || String(value).trim() === '[]' || String(value).trim() === '{}';
-}
-
-function getNonOauthFields(entry, phase) {
-  return getFields(entry).filter(f =>
-    f.type !== 'oauth' && !HEADER_FIELD_KEYS.includes(f.key)
-    && !isRetiredAndEmpty(entry, f)
-    && isFieldVisibleInPhase(f, phase) && isFieldVisibleHere(entry, f));
-}
-
-/**
- * Whether this field means anything in the state this instance is in.
- *
- * `visibleWhen` names sibling fields and the values they must hold, and the schema is where that
- * condition is written, not this file: `firstInteraction` asks whether a fragment also goes into
- * the welcome message, which cannot happen for a fragment that `inject` keeps out of the prompt
- * altogether, so the contract declares `{"inject": true}` and the runtime applies the same rule.
- *
- * Compared as strings, because that is how a business variable stores a boolean, and against the
- * sibling's default when nothing has been written: `inject` is on unless it was turned off.
- */
-function isFieldVisibleHere(entry, field) {
-  if (!field.visibleWhen) return true;
-  return Object.keys(field.visibleWhen).every(siblingKey => {
-    const sibling = getFields(entry).find(f => f.key === siblingKey);
-    const raw = getFieldValue(entry, siblingKey);
-    const value = raw === '' || raw === undefined
-      ? (sibling && sibling.default !== undefined ? sibling.default : '')
-      : raw;
-    return String(value) === String(field.visibleWhen[siblingKey]);
-  });
-}
-
-/**
- * Whether this entry, in this phase, shows a box a %%var%% template can be written in.
- *
- * The syntax of those templates is one paragraph, and it used to live inside the hint of every
- * prompt field: 36 copies of the same 550 characters across six skills and three language slots,
- * so a screen with two prompt boxes said it twice. It is now said once, here, and the hints say
- * only what is true of their own field.
- */
-function hasTemplateFields(entry, phase) {
-  return getNonOauthFields(entry, phase).some(f => f.type === 'textarea' || String(f.key).startsWith('prompt'));
-}
-
-function isFieldVisibleInPhase(field, phase) {
-  if (!field.phases || field.phases.length === 0) return true;
-  return field.phases.includes(phase);
-}
-
-// --- Key/Value pair helpers ---
-// Separate reactive state to allow empty-key rows during editing
-
-// --- Tuple helpers (reuses TupleVariable widget from BusinessConfiguration) ---
-
-/** The authorisations, from the composable that owns them. What stays here is the card's own
- *  business: which fields are OAuth fields, and the connect flow, which needs this component's
- *  `request-save` and the page it returns to. */
-const {
-  oauthGrants, checkOAuthStatus, grantNameFor, grantFor, isOAuthConnected, grantOptions,
-  grantAccountLabel, loadCalendars, calendarOptions, calendarNameOf, calendarSummary,
-  ownsGrant, instancesUsing, useExistingGrant, revokeGrant
-} = useSkillGrants({
+const grants = useSkillGrants({
   store,
   businessId: () => props.businessId,
   fieldsOf: getFields,
@@ -444,17 +251,10 @@ const {
   t
 });
 
-function getOauthFields(entry) {
-  return getFields(entry).filter(f => f.type === 'oauth');
-}
-
-// The authorisations this user holds, as the backend lists them. Kept as the list rather than a
-// map keyed by provider: one business can now hold several grants for one provider, one per skill
-// instance, so a map keyed that way would say "connected" for an instance that is not.
-
-// The calendars of each authorisation, by grant name. Fetched from the backend because the
-// identifier stored in the configuration is not a name and the browser cannot ask Google: after
-// the authorisation round trip the token belongs to the server.
+const {
+  oauthGrants, checkOAuthStatus, grantFor, loadCalendars,
+  ownsGrant, instancesUsing, useExistingGrant, revokeGrant
+} = grants;
 
 /** Deleting an instance, and what becomes of the authorisation it asked for.
  *
@@ -688,167 +488,24 @@ watch([openEntry, availableSkills], () => {
                       @update:modelValue="onAddSkill(phase)" />
           </div>
           <div v-if="getPhaseEntries(phase).length > 0" class="entries-list">
-            <div v-for="(entry, idx) in getPhaseEntries(phase)" :key="idx"
-                 :class="['entry-card', { 'entry-orphaned': isOrphanedEntry(entry) }]">
-              <!-- Entry header. The whole strip is the toggle, so the target is the card and not a
-                   12-pixel chevron; the buttons beside it stop the click from reaching it. -->
-              <div class="entry-header entry-header-toggle"
-                   @click="toggleEntry(phase, entry, idx)">
-                <!-- First on the strip, and there whether the card is open or shut: this is the
-                     switch that decides whether the instance runs, and it used to be one field
-                     among twenty inside the card. `.stop` so that flicking it does not also open
-                     or close what it sits on. -->
-                <ToggleSwitch :modelValue="isEntryEnabled(entry)"
-                              @update:modelValue="setFieldValue(phase, idx, 'enabled', $event ? 'true' : 'false')"
-                              @click.stop
-                              :disabled="disabled"
-                              class="entry-switch"
-                              :title="t('widgets.agentSkills.entryEnabledHint')" />
-                <i :class="isEntryOpen(phase, entry, idx) ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
-                   class="entry-chevron"></i>
-                <div class="entry-info">
-                  <span class="entry-name">{{ instanceLabel(entry) }}</span>
-                  <span v-if="instanceSubtitle(entry)" class="entry-subtitle">{{ instanceSubtitle(entry) }}</span>
-                  <span v-if="isOrphanedEntry(entry)" class="entry-orphaned-hint">
-                    {{ t('widgets.agentSkills.skillUnavailable') }}
-                  </span>
-                  <span v-else-if="isEntryOpen(phase, entry, idx) && skillDescription(entry)"
-                        class="entry-description">{{ skillDescription(entry) }}</span>
-                </div>
-                <!-- On or off, always one of the two, and never nothing. An instance is created
-                     switched off, and a closed card that says nothing about it is how one stays
-                     off unnoticed; but a badge that appears only when something is wrong is also a
-                     badge whose absence has to be interpreted. Stating both means the strip can be
-                     read rather than inferred from. -->
-                <Tag :value="isEntryEnabled(entry)
-                               ? t('widgets.agentSkills.entryOn')
-                               : t('widgets.agentSkills.entryOff')"
-                     :severity="isEntryEnabled(entry) ? 'success' : 'warn'"
-                     class="entry-state-badge" />
-                <Button icon="pi pi-copy" severity="secondary" text rounded size="small"
-                        :disabled="disabled" @click.stop="duplicateEntry(phase, idx)"
-                        :title="t('widgets.agentSkills.duplicateSkill')" />
-                <Button icon="pi pi-times" severity="danger" text rounded size="small"
-                        :disabled="disabled" @click.stop="removeEntry(phase, idx)"
-                        :title="t('widgets.agentSkills.removeSkill')" />
-              </div>
-
-              <!-- OAuth fields -->
-              <!-- The name, first, because it names everything below it and because a card opened
-                   to be configured is a card whose name is about to matter. -->
-              <div v-if="isEntryOpen(phase, entry, idx) && labelField(entry)" class="entry-name-field">
-                <label class="config-label" :for="'label-' + (entry.instanceId || idx)">
-                  {{ getFieldLabel(labelField(entry)) }}
-                </label>
-                <InputText :id="'label-' + (entry.instanceId || idx)"
-                           :modelValue="getFieldValue(entry, LABEL_FIELD_KEY)"
-                           @update:modelValue="setLabelValue(phase, idx, $event)"
-                           :invalid="labelClashes(entry)"
-                           :disabled="disabled"
-                           :placeholder="instanceSubtitle(entry) || instanceLabel(entry)"
-                           class="w-full"
-                           size="small" />
-                <small v-if="labelClashes(entry)" class="config-hint label-clash">
-                  {{ t('widgets.agentSkills.labelClash') }}
-                </small>
-                <small v-else-if="getFieldHint(labelField(entry))" class="config-hint">
-                  {{ getFieldHint(labelField(entry)) }}
-                </small>
-              </div>
-
-              <div v-if="isEntryOpen(phase, entry, idx) && getOauthFields(entry).length > 0" class="entry-oauth">
-                <div v-for="field in getOauthFields(entry)" :key="field.key" class="oauth-field">
-                  <div class="oauth-status">
-                    <i :class="isOAuthConnected(field, entry) ? 'pi pi-check-circle' : 'pi pi-exclamation-circle'"
-                       :style="{ color: isOAuthConnected(field, entry) ? '#22c55e' : '#f59e0b' }"></i>
-                    <span class="oauth-label">{{ getFieldLabel(field) }}</span>
-                    <Tag v-if="isOAuthConnected(field, entry)"
-                         :value="grantAccountLabel(grantFor(field, entry))"
-                         severity="success" class="oauth-badge" />
-                  </div>
-                  <!-- A skill the platform cannot authorise does not offer a button that cannot
-                       work: what is wrong is said here, in the words of the side that knows. -->
-                  <div v-if="skillDiagnostics(entry).length > 0" class="oauth-unavailable">
-                    <i class="pi pi-exclamation-triangle"></i>
-                    <span>{{ skillDiagnostics(entry).map(d => d.detail).join(' · ') }}</span>
-                  </div>
-                  <div v-else class="oauth-actions">
-                    <Button v-if="!isOAuthConnected(field, entry)"
-                            :label="t('widgets.agentSkills.oauthConnect')"
-                            icon="pi pi-external-link"
-                            severity="warning" outlined size="small"
-                            @click="handleOAuthConnect(field, phase, idx, entry)"
-                            :disabled="disabled" />
-                    <Button v-else
-                            :label="ownsGrant(entry, grantFor(field, entry))
-                                      ? t('widgets.agentSkills.oauthDisconnect')
-                                      : t('widgets.agentSkills.oauthStopUsing')"
-                            icon="pi pi-times"
-                            severity="danger" text size="small"
-                            @click="handleOAuthDisconnect(field, phase, idx, entry)"
-                            :disabled="disabled" />
-                  </div>
-                  <!-- Which authorisation this instance acts with, the one in use shown as the
-                       selected value. Sharing one between two instances is picking the same entry
-                       twice; a new account is the button above. -->
-                  <div v-if="grantOptions(field).length > 0" class="oauth-reuse">
-                    <label class="oauth-reuse-label">{{ t('widgets.agentSkills.oauthReuse') }}</label>
-                    <Dropdown :options="grantOptions(field)"
-                              :model-value="grantNameFor(entry, field)"
-                              :option-label="grantAccountLabel"
-                              option-value="grantName"
-                              :placeholder="t('widgets.agentSkills.oauthReusePlaceholder')"
-                              :disabled="disabled"
-                              class="oauth-reuse-select"
-                              @change="useExistingGrant(phase, idx, field, $event.value)" />
-                  </div>
-                  <small v-if="field.key === CALENDAR_FIELD_KEY" class="config-hint">
-                    {{ getFieldValue(entry, field.key)
-                         ? t('widgets.agentSkills.calendarChosen')
-                         : t('widgets.agentSkills.calendarNotChosen') }}
-                  </small>
-                  <small v-else-if="getFieldHint(field)" class="config-hint">{{ getFieldHint(field) }}</small>
-                </div>
-              </div>
-
-              <!-- Config fields (non-OAuth) -->
-              <div v-if="isEntryOpen(phase, entry, idx) && getNonOauthFields(entry, phase).length > 0" class="entry-fields">
-                <div v-for="field in getNonOauthFields(entry, phase)" :key="field.key" class="config-field">
-                  <label class="config-label">
-                    {{ getFieldLabel(field) }}
-                    <span v-if="field.required" class="required-mark">*</span>
-                  </label>
-
-                  <!-- WHICH COMPONENT DRAWS THIS FIELD IS A LOOKUP, not a chain of branches.
-                       Eleven of them lived here, two keyed on the NAME of a field rather than on
-                       what it is, so a skill that brought a new kind of field made somebody edit
-                       this file and re-read the ten that already worked. -->
-                  <component v-if="componentFor(field)"
-                             :is="componentFor(field)"
-                             :field="field"
-                             :modelValue="getFieldValue(entry, field.key)"
-                             @update:modelValue="setFieldValue(phase, idx, field.key, $event)"
-                             :disabled="disabled"
-                             :placeholder="getFieldPlaceholder(field)"
-                             v-bind="fieldProps(field, entry)" />
-
-                  <!-- Nothing rather than a text box: a field drawn by the wrong widget looks like
-                       it works, and writes a value that is wrong in a way nobody sees until a call
-                       goes badly. -->
-                  <small v-else class="config-hint">
-                    {{ t('widgets.agentSkills.unknownWidget', { widget: field.widget || field.type }) }}
-                  </small>
-
-                  <small v-if="getFieldHint(field)" class="config-hint">{{ getFieldHint(field) }}</small>
-                </div>
-
-                <!-- Said once for the whole entry, not once per prompt field. -->
-                <details v-if="hasTemplateFields(entry, phase)" class="template-help">
-                  <summary>{{ t('widgets.agentSkills.templateSyntaxTitle') }}</summary>
-                  <p>{{ t('widgets.agentSkills.templateSyntaxHelp') }}</p>
-                </details>
-              </div>
-            </div>
+            <SkillCard v-for="(entry, idx) in getPhaseEntries(phase)"
+                       :key="entryKeyOf(entry, idx)"
+                       :entry="entry"
+                       :skill="getSkillObj(entry.skill)"
+                       :phase="phase"
+                       :open="isEntryOpen(phase, entry, idx)"
+                       :disabled="disabled"
+                       :title="instanceLabel(entry)"
+                       :subtitle="instanceSubtitle(entry)"
+                       :label-clash="labelClashes(entry)"
+                       :grants="grants"
+                       @toggle="toggleEntry(phase, entry, idx)"
+                       @update:field="setFieldValue(phase, idx, $event.key, $event.value)"
+                       @duplicate="duplicateEntry(phase, idx)"
+                       @remove="removeEntry(phase, idx)"
+                       @oauth-connect="handleOAuthConnect($event, phase, idx, entry)"
+                       @oauth-disconnect="handleOAuthDisconnect($event, phase, idx, entry)"
+                       @use-grant="useExistingGrant(phase, idx, $event.field, $event.grantName)" />
           </div>
 
           <!-- Empty state for phase -->
@@ -965,208 +622,6 @@ watch([openEntry, availableSkills], () => {
   gap: 8px;
 }
 
-.entry-card {
-  background: white;
-  border: 1px solid @mrcall_borders;
-  border-radius: 6px;
-  overflow: hidden;
-}
-
-.entry-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  padding: 10px 12px;
-  gap: 8px;
-}
-
-.entry-info {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
-  flex: 1;
-}
-
-.entry-name {
-  font-weight: 600;
-  font-size: 0.85rem;
-}
-
-.entry-description {
-  font-size: 0.75rem;
-  color: var(--p-text-muted-color);
-  line-height: 1.3;
-}
-
-
-.entry-fields {
-  border-top: 1px solid @mrcall_borders;
-  padding: 10px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.config-field {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.config-label {
-  font-size: 0.8rem;
-  font-weight: 500;
-}
-
-.required-mark {
-  color: #ef4444;
-}
-
-.template-help {
-  margin-top: 0.5rem;
-  font-size: 0.75rem;
-  color: var(--p-text-muted-color, #6b7280);
-}
-
-.template-help summary {
-  cursor: pointer;
-}
-
-.template-help p {
-  margin: 0.35rem 0 0;
-  line-height: 1.45;
-}
-
-.config-hint {
-  font-size: 0.72rem;
-  color: var(--p-text-muted-color);
-}
-
-.entry-oauth {
-  border-top: 1px solid @mrcall_borders;
-  padding: 10px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.oauth-field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.oauth-status {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.oauth-label {
-  font-size: 0.8rem;
-  font-weight: 500;
-  flex: 1;
-}
-
-.oauth-badge {
-  font-size: 0.6rem !important;
-  padding: 1px 6px !important;
-}
-
-.oauth-actions {
-  display: flex;
-  gap: 6px;
-}
-
-.entry-header-toggle {
-  cursor: pointer;
-  user-select: none;
-}
-
-.entry-chevron {
-  font-size: 0.75rem;
-  color: var(--text-color-secondary);
-  margin-right: 6px;
-}
-
-.oauth-unavailable {
-  display: flex;
-  align-items: flex-start;
-  gap: .45rem;
-  font-size: .85rem;
-  color: var(--red-500, #ef4444);
-  padding: .35rem 0;
-}
-
-.calendar-unavailable {
-  display: flex;
-  align-items: center;
-  gap: .4rem;
-  font-size: .85rem;
-  color: var(--text-color-secondary, #6b7280);
-  padding: .35rem 0;
-}
-
-.label-clash {
-  color: var(--red-500, #ef4444);
-}
-
-.entry-name-field {
-  padding: .75rem 1rem 0;
-}
-
-.entry-subtitle {
-  font-size: .78rem;
-  color: var(--text-color-secondary, #6b7280);
-}
-
-.entry-switch {
-  flex: 0 0 auto;
-  margin-right: 0.25rem;
-}
-
-.entry-state-badge {
-  margin-right: 6px;
-  flex-shrink: 0;
-}
-
-.oauth-reuse {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 6px;
-}
-
-.oauth-reuse-label {
-  font-size: 0.8rem;
-  color: var(--text-color-secondary);
-}
-
-.oauth-reuse-select {
-  min-width: 220px;
-}
-
-.kv-editor {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.kv-row {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.kv-key {
-  flex: 2;
-}
-
-.kv-value {
-  flex: 3;
-}
-
 .add-skill-row {
   // it sits above the list now, not under it
   padding-bottom: 8px;
@@ -1176,18 +631,4 @@ watch([openEntry, availableSkills], () => {
   width: 100%;
 }
 
-.json-editor-field {
-  min-height: 120px;
-}
-
-.entry-orphaned {
-  border-color: #f59e0b;
-  background: #fffbeb;
-}
-
-.entry-orphaned-hint {
-  font-size: 0.72rem;
-  color: #d97706;
-  font-style: italic;
-}
 </style>

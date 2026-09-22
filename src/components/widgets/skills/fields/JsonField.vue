@@ -17,3 +17,12 @@ defineEmits(['update:modelValue'])
                  mode="text"
                  class="w-full json-editor-field" />
 </template>
+
+<style scoped lang="less">
+/* The editor collapses to one line without it, and the rule used to live in the configurator's
+   scoped stylesheet: it reached this component's root while the field was drawn there, and stopped
+   reaching it the moment the card became a component of its own. A widget carries its own size. */
+.json-editor-field {
+  min-height: 120px;
+}
+</style>
