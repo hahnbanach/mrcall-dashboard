@@ -6,6 +6,11 @@ export default {
     toBoolean: function(value) {
         return (value === "true" || value === "True" || value === true)
     },
+    /* A variable whose type begins `apidomain_` belongs to an API of its own — the skills are
+     * `apidomain_agent_skills`, served from `/apidomain/agent/skills` — and the type is what tells
+     * this file which API saves it. Here it only has to be READ like the JSON blob it is: an
+     * unknown type throws, and when the four skill variables were given their new type this page
+     * stopped loading until it knew them. */
     setBusinessDefaultValues: function(business, templateName, emailAddress, templateVariables) {
         console.debug("Populating Business with variables:", templateVariables)
         templateVariables.map((collection) => {
@@ -63,7 +68,8 @@ export default {
                         if (business[parameterSpecification.name] === undefined ||
                             (parameterSpecification.mandatory && business[parameterSpecification.name] === ""))
                             business[parameterSpecification.name] = parameterSpecification.defaultValue
-                    } else if(parameterSpecification.type === "agent_skills") {
+                    } else if(parameterSpecification.type === "agent_skills"
+                               || parameterSpecification.type.startsWith("apidomain_")) {
                         if (business[parameterSpecification.name] === undefined ||
                             (parameterSpecification.mandatory && business[parameterSpecification.name] === ""))
                             business[parameterSpecification.name] = {}
@@ -141,7 +147,8 @@ export default {
                             (parameterSpecification.mandatory && business.variables[parameterSpecification.name] === "")) {
                             business.variables[parameterSpecification.name] = parameterSpecification.defaultValue
                         }
-                    } else if(parameterSpecification.type === "agent_skills") {
+                    } else if(parameterSpecification.type === "agent_skills"
+                               || parameterSpecification.type.startsWith("apidomain_")) {
                         if (business.variables[parameterSpecification.name] === undefined ||
                             (parameterSpecification.mandatory && business.variables[parameterSpecification.name] === "")) {
                             try {
