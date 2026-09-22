@@ -1,4 +1,5 @@
 import { ref } from 'vue'
+import { CALENDAR_FIELD_KEY } from '@/components/widgets/skills/manifestFields'
 
 /**
  * The authorisations a business holds, and what each of them can offer.
@@ -12,10 +13,12 @@ import { ref } from 'vue'
  * WHAT IT IS GIVEN, and why each: the store for the user's token, the business the card is
  * configuring, a way to read the fields of an entry and to list every entry — because an
  * authorisation is shared between instances and the question "who else uses this" cannot be
- * answered from one of them — a way to write a field, and the translator, because what it returns
- * includes sentences a person reads.
+ * answered from one of them — a way to write a field, the way an instance is NAMED, because the
+ * list of authorisations names them and two label rules for one thing is how they come to
+ * disagree, and the translator, because what it returns includes sentences a person reads.
  */
-export function useSkillGrants({ store, businessId, fieldsOf, entriesOf, setFieldValue, t }) {
+export function useSkillGrants({ store, businessId, fieldsOf, entriesOf, setFieldValue,
+                                 instanceLabel, t }) {
   // The authorisations this user holds, as the backend lists them. Kept as the list rather than a
   // map keyed by provider: one business can hold several grants for one provider, one per skill
   // instance, so a map keyed that way would say "connected" for an instance that is not.

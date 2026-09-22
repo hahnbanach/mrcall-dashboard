@@ -17,6 +17,10 @@ function grants (entries, { businessId = 'b-1' } = {}) {
     fieldsOf: () => [oauthField],
     entriesOf: () => entries,
     setFieldValue: vi.fn(),
+    // How an instance is named. It is given rather than computed here for the same reason the
+    // entries are: the name of a card is decided over the whole configuration, and this list is
+    // where two authorisations of two instances of one skill are told apart.
+    instanceLabel: (e) => `Card ${e.instanceId}`,
     t: (key) => key
   })
   return api
@@ -85,5 +89,56 @@ describe('whose authorisation it is', () => {
     const owned = { grantName: 'calendar_availability_1' }
     expect(api.ownsGrant(entry('calendar_availability_1'), owned)).toBe(true)
     expect(api.ownsGrant(entry('calendar_availability_2'), owned)).toBe(false)
+  })
+})
+
+
+/** Naming an authorisation, which is the only place two of them can be told apart.
+  *
+  * Every one of these renders on screen the moment a business holds a grant, and none of them ran
+  * until now: the label function called `instanceLabel`, which the composable was never given when
+  * it was moved out of the card, and a page that held one authorisation died on
+  * `instanceLabel is not defined` before drawing anything.
+  */
+describe('what an authorisation is called', () => {
+  const grant = (grantName, providerAccountId) => ({
+    provider: 'google_calendar', businessId: 'b-1', grantName, providerAccountId
+  })
+
+  it('names the card it was given for, and the account beside it', () => {
+    const api = grants([entry('calendar_availability_1')])
+    api.oauthGrants.value = [grant('calendar_availability_1', 'somebody@example.com')]
+    expect(api.grantAccountLabel(grant('calendar_availability_1', 'somebody@example.com')))
+      .toBe('Card calendar_availability_1 — somebody@example.com')
+  })
+
+  /* Deleted owner, borrower still there: inherited, not orphaned, and named by whoever uses it. */
+  it('names the instance that still uses one whose owner is gone', () => {
+    const api = grants([entry('calendar_availability_2', 'calendar_availability_1')])
+    expect(api.grantAccountLabel(grant('calendar_availability_1')))
+      .toBe('Card calendar_availability_2')
+  })
+
+  it('calls it orphaned when no card owns it and none uses it', () => {
+    const api = grants([entry('calendar_availability_2')])
+    expect(api.grantAccountLabel(grant('calendar_availability_1')))
+      .toBe('widgets.agentSkills.oauthOrphanGrant')
+  })
+
+  it('says nothing about no authorisation at all', () => {
+    expect(grants([]).grantAccountLabel(null)).toBe('')
+  })
+})
+
+/** The calendar an instance books on, read from the field the picker writes. */
+describe('which calendar an instance is set to', () => {
+  it('falls back to the stored identifier while the names have not arrived', () => {
+    const api = grants([])
+    expect(api.calendarNameOf({ params: { calendarId: 'primary@group.calendar.google.com' } }))
+      .toBe('primary@group.calendar.google.com')
+  })
+
+  it('is nothing when the instance names none and no list is known', () => {
+    expect(grants([]).calendarNameOf({ params: {} })).toBe('')
   })
 })

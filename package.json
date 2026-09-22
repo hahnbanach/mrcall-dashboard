@@ -20,8 +20,9 @@
     "test:e2e": "npx playwright test",
     "test:e2e:ui": "npx playwright test --ui",
     "test:e2e:update-snapshots": "npx playwright test --update-snapshots",
-    "test:unit": "vitest run",
-    "test:unit:watch": "vitest"
+    "test:unit": "npm run lint:check && vitest run",
+    "test:unit:watch": "vitest",
+    "lint:check": "eslint \"src/**/*.{js,vue}\""
   },
   "dependencies": {
     "@mrcall/directvoice": "^1.0.5",

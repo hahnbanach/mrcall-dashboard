@@ -248,6 +248,7 @@ const grants = useSkillGrants({
   fieldsOf: getFields,
   entriesOf: allEntries,
   setFieldValue,
+  instanceLabel,
   t
 });
 

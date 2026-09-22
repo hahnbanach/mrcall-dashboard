@@ -160,6 +160,28 @@ describe('an authorisation', () => {
     expect(open.findAllComponents(Button).find(b => b.text() === 'Authorise')).toBeUndefined()
   })
 
+  /* The render path that died on a real screen: the list of authorisations draws one label per
+   * option, and the label function reached for something the composable had never been given. A
+   * card with no grants never touches it, which is why every test here passed while the page
+   * threw before drawing anything. */
+  it('draws one label per authorisation offered, which is where the names are read', () => {
+    const grants = noGrants({
+      isOAuthConnected: () => true,
+      grantFor: () => ({ grantName: 'calendar_availability_1', email: 'sala1@example.com' }),
+      ownsGrant: () => true,
+      grantOptions: () => ([
+        { grantName: 'calendar_availability_1', email: 'sala1@example.com' },
+        { grantName: 'calendar_availability_2', email: 'sala2@example.com' }
+      ]),
+      grantNameFor: () => 'calendar_availability_1'
+    })
+    const open = card({ skill: oauthSkill, grants })
+    const reuse = open.findComponent(Dropdown)
+    expect(reuse.props('options')).toHaveLength(2)
+    expect(reuse.props('modelValue')).toBe('calendar_availability_1')
+    expect(open.text()).toContain('sala1@example.com')
+  })
+
   it('offers to stop using one this instance borrowed, which is not the same act as revoking it', () => {
     const grants = noGrants({
       isOAuthConnected: () => true,
