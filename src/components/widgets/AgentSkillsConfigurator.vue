@@ -5,8 +5,7 @@ import { useStore } from "vuex";
 import agentSkillsUtils from "@/utils/AgentSkills";
 import { GoogleAuthFlow } from '@/utils/OAuth';
 import { useToast } from "primevue/usetoast";
-import TupleVariable from "./TupleVariable.vue";
-import TimeSlotsEditor from "./TimeSlotsEditor.vue";
+import { componentFor } from '@/components/widgets/skills/fields';
 
 const { t, locale } = useI18n();
 const toast = useToast();
@@ -232,6 +231,28 @@ function getFields(entry) {
   return skillObj ? agentSkillsUtils.getSkillFields(skillObj) : [];
 }
 
+/** What a widget needs beyond the contract every field shares.
+ *
+ * Three widgets want something the card knows and they do not: how long an appointment lasts, which
+ * language the labels are read in, and which calendars an authorisation offers. Everything else is
+ * drawn from `field`, the value and `disabled`, which is why adding a widget usually adds nothing
+ * here at all.
+ */
+function fieldProps(field, entry) {
+  const widget = field.widget || field.type;
+  if (widget === 'weekly_hours') {
+    return { slotDuration: Number(getFieldValue(entry, 'durationMinutes')) || 15 };
+  }
+  if (widget === 'list' || widget === 'tuples') {
+    return { locale: currentLang.value };
+  }
+  // Still by name, and only here: see `CalendarField` for why the source is not declared yet.
+  if (widget === 'calendar' || field.key === CALENDAR_FIELD_KEY) {
+    return { options: calendarOptions(entry), summary: calendarSummary(entry) };
+  }
+  return {};
+}
+
 function getFieldValue(entry, fieldKey) {
   // Params first, then the entry itself, which is the order the runtime reads these in
   // (`AGENT_SKILL:prefetch.sc`). `inject` lived on the entry before it was a declared field, so an
@@ -319,31 +340,6 @@ function setLabelValue(phase, idx, value) {
   setFieldValue(phase, idx, LABEL_FIELD_KEY, (value || '').replace(/\s+/g, ' ').trim());
 }
 
-/** The weekly grid as the editor wants it, and back as the configuration keeps it.
- *
- * The editor works on an OBJECT — it does `model.value[day]` and assigns `{}` when there is none —
- * while a skill parameter is a string, because every business variable is. Bound directly the two
- * never meet: reading gives the editor a string to index into, which yields nothing and shows an
- * empty week, and writing puts an object where the platform expects text. Parsed on the way in and
- * serialised on the way out, in one place, so no caller has to remember which side it is on.
- */
-function weeklyHoursOf(entry, key) {
-  const raw = getFieldValue(entry, key);
-  if (!raw) return {};
-  if (typeof raw === 'object') return raw;
-  try {
-    const parsed = JSON.parse(raw);
-    return parsed && typeof parsed === 'object' ? parsed : {};
-  } catch (e) {
-    console.debug('The weekly hours of this instance are not readable:', e);
-    return {};
-  }
-}
-
-function setWeeklyHours(phase, idx, key, value) {
-  setFieldValue(phase, idx, key, JSON.stringify(value || {}));
-}
-
 /** What the backend says is wrong with this skill, as it is installed HERE.
  *
  * Sent per skill by `/agent/skills/available` — the schema's own verdict plus the one thing only
@@ -428,104 +424,8 @@ function isFieldVisibleInPhase(field, phase) {
 
 // --- Key/Value pair helpers ---
 // Separate reactive state to allow empty-key rows during editing
-const kvState = ref({});
-
-function kvStateKey(phase, entryIdx, fieldKey) {
-  return `${phase}_${entryIdx}_${fieldKey}`;
-}
-
-function parseKeyValue(jsonStr) {
-  try {
-    const obj = typeof jsonStr === 'string' ? JSON.parse(jsonStr || '{}') : (jsonStr || {});
-    return Object.entries(obj).map(([key, value]) => ({ key, value: String(value) }));
-  } catch {
-    return [];
-  }
-}
-
-function serializeKeyValue(pairs) {
-  const obj = {};
-  for (const pair of pairs) {
-    if (pair.key && pair.key.trim()) {
-      obj[pair.key.trim()] = pair.value || '';
-    }
-  }
-  return JSON.stringify(obj);
-}
-
-function getKeyValuePairs(phase, entryIdx, fieldKey) {
-  const sk = kvStateKey(phase, entryIdx, fieldKey);
-  if (!kvState.value[sk]) {
-    const entry = getPhaseEntries(phase)[entryIdx];
-    kvState.value[sk] = parseKeyValue(getFieldValue(entry, fieldKey));
-  }
-  return kvState.value[sk];
-}
-
-function syncKvToParam(phase, entryIdx, fieldKey) {
-  const sk = kvStateKey(phase, entryIdx, fieldKey);
-  const pairs = kvState.value[sk] || [];
-  setFieldValue(phase, entryIdx, fieldKey, serializeKeyValue(pairs));
-}
-
-function updateKeyValuePair(phase, entryIdx, fieldKey, pairIdx, prop, value) {
-  const pairs = getKeyValuePairs(phase, entryIdx, fieldKey);
-  if (pairs[pairIdx]) {
-    pairs[pairIdx][prop] = value;
-  }
-  syncKvToParam(phase, entryIdx, fieldKey);
-}
-
-function addKeyValuePair(phase, entryIdx, fieldKey) {
-  const pairs = getKeyValuePairs(phase, entryIdx, fieldKey);
-  pairs.push({ key: '', value: '' });
-}
-
-function removeKeyValuePair(phase, entryIdx, fieldKey, pairIdx) {
-  const pairs = getKeyValuePairs(phase, entryIdx, fieldKey);
-  pairs.splice(pairIdx, 1);
-  syncKvToParam(phase, entryIdx, fieldKey);
-}
 
 // --- Tuple helpers (reuses TupleVariable widget from BusinessConfiguration) ---
-const tupleState = ref({});
-
-function tupleStateKey(phase, entryIdx, fieldKey) {
-  return `${phase}_${entryIdx}_${fieldKey}`;
-}
-
-function parseTupleValue(value) {
-  if (Array.isArray(value)) return value;
-  try {
-    const parsed = typeof value === 'string' ? JSON.parse(value || '[]') : (value || []);
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
-    return [];
-  }
-}
-
-function getTupleValue(phase, entryIdx, fieldKey) {
-  const sk = tupleStateKey(phase, entryIdx, fieldKey);
-  if (!tupleState.value[sk]) {
-    const entry = getPhaseEntries(phase)[entryIdx];
-    tupleState.value[sk] = parseTupleValue(getFieldValue(entry, fieldKey));
-  }
-  return tupleState.value[sk];
-}
-
-function setTupleValue(phase, entryIdx, fieldKey, value) {
-  const sk = tupleStateKey(phase, entryIdx, fieldKey);
-  tupleState.value[sk] = value;
-  // Store as native array — serializeConfig handles JSON.stringify on the whole config
-  setFieldValue(phase, entryIdx, fieldKey, value);
-}
-
-function getTupleSelection(field) {
-  if (field.valuesSelection) {
-    return field.valuesSelection[currentLang.value] || field.valuesSelection['en'] || [];
-  }
-  return [];
-}
 
 function getOauthFields(entry) {
   return getFields(entry).filter(f => f.type === 'oauth');
@@ -1102,133 +1002,25 @@ watch([openEntry, availableSkills], () => {
                     <span v-if="field.required" class="required-mark">*</span>
                   </label>
 
-                  <!-- Boolean toggle -->
-                  <ToggleSwitch v-if="field.type === 'boolean'"
-                                :modelValue="getFieldValue(entry, field.key) === 'true' || getFieldValue(entry, field.key) === true"
-                                @update:modelValue="setFieldValue(phase, idx, field.key, $event ? 'true' : 'false')"
-                                :disabled="disabled" />
-
-                  <!-- Number input -->
-                  <InputNumber v-else-if="field.type === 'number'"
-                               :modelValue="Number(getFieldValue(entry, field.key)) || field.default || 0"
-                               @update:modelValue="setFieldValue(phase, idx, field.key, String($event))"
-                               :disabled="disabled"
-                               :min="field.min"
-                               :max="field.max"
-                               class="w-full"
-                               size="small" />
-
-                  <!-- Enum dropdown -->
-                  <Dropdown v-else-if="field.type === 'enum'"
-                            :modelValue="getFieldValue(entry, field.key) || field.default || ''"
-                            @update:modelValue="setFieldValue(phase, idx, field.key, $event)"
-                            :options="field.options || []"
-                            optionLabel="label"
-                            optionValue="value"
-                            :disabled="disabled"
-                            :placeholder="getFieldPlaceholder(field)"
-                            class="w-full"
-                            size="small" />
-
-                  <!-- Key/Value pairs -->
-                  <div v-else-if="field.type === 'keyvalue'" class="kv-editor">
-                    <div v-for="(pair, pairIdx) in getKeyValuePairs(phase, idx, field.key)" :key="pairIdx"
-                         class="kv-row">
-                      <InputText :modelValue="pair.key"
-                                 @update:modelValue="updateKeyValuePair(phase, idx, field.key, pairIdx, 'key', $event)"
-                                 :disabled="disabled"
-                                 placeholder="Key"
-                                 class="kv-key"
-                                 size="small" />
-                      <InputText :modelValue="pair.value"
-                                 @update:modelValue="updateKeyValuePair(phase, idx, field.key, pairIdx, 'value', $event)"
-                                 :disabled="disabled"
-                                 placeholder="Value"
-                                 class="kv-value"
-                                 size="small" />
-                      <Button icon="pi pi-trash" severity="danger" text rounded size="small"
-                              :disabled="disabled"
-                              @click="removeKeyValuePair(phase, idx, field.key, pairIdx)" />
-                    </div>
-                    <Button icon="pi pi-plus" :label="t('widgets.agentSkills.addPair')"
-                            severity="secondary" text size="small"
-                            :disabled="disabled"
-                            @click="addKeyValuePair(phase, idx, field.key)" />
-                  </div>
-
-                  <!-- Tuples (variable extraction) — same widget as REST API variables -->
-                  <TupleVariable v-else-if="field.type === 'tuples'"
-                                 :recipient="getTupleValue(phase, idx, field.key)"
-                                 @update:recipient="setTupleValue(phase, idx, field.key, $event)"
-                                 :vselection="getTupleSelection(field)" />
-
-                  <!-- Textarea (multiline text) -->
-                  <Textarea v-else-if="field.type === 'textarea'"
-                            :modelValue="getFieldValue(entry, field.key)"
-                            @update:modelValue="setFieldValue(phase, idx, field.key, $event)"
-                            :disabled="disabled"
-                            :placeholder="getFieldPlaceholder(field)"
-                            class="w-full"
-                            rows="4"
-                            autoResize />
-
-                  <!-- JSON editor -->
-                  <JsonEditorVue v-else-if="field.type === 'json'"
-                                 :modelValue="getFieldValue(entry, field.key)"
-                                 @update:modelValue="setFieldValue(phase, idx, field.key, $event)"
-                                 mode="text"
-                                 class="w-full json-editor-field" />
-
-                  <!-- Password -->
-                  <InputText v-else-if="field.type === 'password'"
+                  <!-- WHICH COMPONENT DRAWS THIS FIELD IS A LOOKUP, not a chain of branches.
+                       Eleven of them lived here, two keyed on the NAME of a field rather than on
+                       what it is, so a skill that brought a new kind of field made somebody edit
+                       this file and re-read the ten that already worked. -->
+                  <component v-if="componentFor(field)"
+                             :is="componentFor(field)"
+                             :field="field"
                              :modelValue="getFieldValue(entry, field.key)"
                              @update:modelValue="setFieldValue(phase, idx, field.key, $event)"
                              :disabled="disabled"
-                             type="password"
                              :placeholder="getFieldPlaceholder(field)"
-                             class="w-full"
-                             size="small" />
+                             v-bind="fieldProps(field, entry)" />
 
-                  <!-- Default: string, url -->
-                  <!-- The weekly grid, with the editor the business's own booking hours already
-                       use. Same value, same shape, same way of editing it: a skill that asked for
-                       opening times as a JSON object would be asking the same person to do the
-                       same job twice, once with help and once without. -->
-                  <TimeSlotsEditor v-else-if="field.type === 'weekly_hours'"
-                                   :modelValue="weeklyHoursOf(entry, field.key)"
-                                   @update:modelValue="setWeeklyHours(phase, idx, field.key, $event)"
-                                   :business="{ variables: {} }"
-                                   :variable="{ modifiable: !disabled, dependsOn: [] }"
-                                   :slotDuration="Number(getFieldValue(entry, 'durationMinutes')) || 15" />
-
-                  <!-- The calendar is chosen, not typed, and it is chosen BY NAME. Its stored
-                       value is a Google identifier nobody knows by heart; the names come from the
-                       authorisation itself, which is why this list is empty until there is one. -->
-                  <div v-else-if="field.key === CALENDAR_FIELD_KEY && calendarOptions(entry).length === 0"
-                       class="calendar-unavailable">
-                    <i class="pi pi-info-circle"></i>
-                    <span>{{ calendarSummary(entry) }}</span>
-                  </div>
-
-                  <Dropdown v-else-if="field.key === CALENDAR_FIELD_KEY"
-                            :modelValue="getFieldValue(entry, field.key)"
-                            @update:modelValue="setFieldValue(phase, idx, field.key, $event)"
-                            :options="calendarOptions(entry)"
-                            option-label="label"
-                            option-value="value"
-                            :disabled="disabled"
-                            :placeholder="calendarSummary(entry)"
-                            class="w-full"
-                            size="small" />
-
-                  <InputText v-else
-                             :modelValue="getFieldValue(entry, field.key)"
-                             @update:modelValue="setFieldValue(phase, idx, field.key, $event)"
-                             :disabled="disabled"
-                             :type="field.type === 'url' ? 'url' : 'text'"
-                             :placeholder="getFieldPlaceholder(field)"
-                             class="w-full"
-                             size="small" />
+                  <!-- Nothing rather than a text box: a field drawn by the wrong widget looks like
+                       it works, and writes a value that is wrong in a way nobody sees until a call
+                       goes badly. -->
+                  <small v-else class="config-hint">
+                    {{ t('widgets.agentSkills.unknownWidget', { widget: field.widget || field.type }) }}
+                  </small>
 
                   <small v-if="getFieldHint(field)" class="config-hint">{{ getFieldHint(field) }}</small>
                 </div>

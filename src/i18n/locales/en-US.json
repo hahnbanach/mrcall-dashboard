@@ -132,7 +132,8 @@
       "oauthSharedRefuse": "Shared with other instances; detach them first",
       "labelClash": "Another instance already has this name; both will be shown with their number.",
       "entryOn": "On",
-      "entryOff": "Off"
+      "entryOff": "Off",
+      "unknownWidget": "This version of the dashboard does not know how to draw a {widget} field"
     }
   },
   "components": {

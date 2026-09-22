@@ -130,7 +130,8 @@
       "oauthSharedRefuse": "Jagatud teiste instantsidega; vabasta need enne",
       "labelClash": "Teisel instantsil on juba see nimi; molemad kuvatakse numbriga.",
       "entryOn": "Sees",
-      "entryOff": "Valjas"
+      "entryOff": "Valjas",
+      "unknownWidget": "See paneeli versioon ei oska joonistada {widget} valja"
     }
   },
   "components": {

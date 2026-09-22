@@ -131,7 +131,8 @@
       "oauthSharedRefuse": "Von anderen Instanzen genutzt; zuerst losen",
       "labelClash": "Eine andere Instanz hat diesen Namen bereits; beide werden mit ihrer Nummer angezeigt.",
       "entryOn": "Ein",
-      "entryOff": "Aus"
+      "entryOff": "Aus",
+      "unknownWidget": "Diese Version der Oberflache kann ein {widget}-Feld nicht darstellen"
     }
   },
   "components": {

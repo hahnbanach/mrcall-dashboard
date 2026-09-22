@@ -132,7 +132,8 @@
       "oauthSharedRefuse": "Condivisa con altre istanze: staccale prima",
       "labelClash": "Un'altra istanza ha già questo nome: verranno mostrate entrambe col loro numero.",
       "entryOn": "Attiva",
-      "entryOff": "Spenta"
+      "entryOff": "Spenta",
+      "unknownWidget": "Questa versione del pannello non sa disegnare un campo di tipo {widget}"
     }
   },
   "components": {

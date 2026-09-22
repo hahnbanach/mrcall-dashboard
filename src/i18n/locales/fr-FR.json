@@ -131,7 +131,8 @@
       "oauthSharedRefuse": "Partagee avec d'autres instances: detachez-les d'abord",
       "labelClash": "Une autre instance porte deja ce nom; les deux seront affichees avec leur numero.",
       "entryOn": "Activee",
-      "entryOff": "Desactivee"
+      "entryOff": "Desactivee",
+      "unknownWidget": "Cette version du tableau de bord ne sait pas dessiner un champ {widget}"
     }
   },
   "components": {

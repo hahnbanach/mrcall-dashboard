@@ -130,7 +130,8 @@
       "oauthSharedRefuse": "Gedeeld met andere instanties; maak die eerst los",
       "labelClash": "Een andere instantie heeft deze naam al; beide worden met hun nummer getoond.",
       "entryOn": "Aan",
-      "entryOff": "Uit"
+      "entryOff": "Uit",
+      "unknownWidget": "Deze versie van het dashboard kan een {widget}-veld niet tekenen"
     }
   },
   "components": {

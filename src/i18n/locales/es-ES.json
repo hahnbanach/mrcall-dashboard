@@ -130,7 +130,8 @@
       "oauthSharedRefuse": "Compartida con otras instancias: sueltalas antes",
       "labelClash": "Otra instancia ya tiene este nombre; ambas se mostraran con su numero.",
       "entryOn": "Activa",
-      "entryOff": "Apagada"
+      "entryOff": "Apagada",
+      "unknownWidget": "Esta version del panel no sabe dibujar un campo {widget}"
     }
   },
   "components": {

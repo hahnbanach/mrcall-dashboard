@@ -130,7 +130,8 @@
       "oauthSharedRefuse": "Jaettu muiden instanssien kanssa; irrota ne ensin",
       "labelClash": "Toisella instanssilla on jo tama nimi; molemmat naytetaan numeroineen.",
       "entryOn": "Kaytossa",
-      "entryOff": "Pois"
+      "entryOff": "Pois",
+      "unknownWidget": "Tama version paneelista ei osaa piirtaa {widget}-kenttaa"
     }
   },
   "components": {

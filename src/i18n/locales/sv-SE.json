@@ -130,7 +130,8 @@
       "oauthSharedRefuse": "Delas med andra instanser; losgor dem forst",
       "labelClash": "En annan instans har redan detta namn; bada visas med sitt nummer.",
       "entryOn": "Pa",
-      "entryOff": "Av"
+      "entryOff": "Av",
+      "unknownWidget": "Den har versionen av panelen kan inte rita ett {widget}-falt"
     }
   },
   "components": {

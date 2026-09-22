@@ -130,7 +130,8 @@
       "oauthSharedRefuse": "Deles med andre instanser; frigor dem forst",
       "labelClash": "En anden instans har allerede dette navn; begge vises med deres nummer.",
       "entryOn": "Til",
-      "entryOff": "Fra"
+      "entryOff": "Fra",
+      "unknownWidget": "Denne version af panelet kan ikke tegne et {widget}-felt"
     }
   },
   "components": {
