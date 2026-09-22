@@ -99,7 +99,7 @@ if (!EMAIL || !PASSWORD) {
   // 2. Available skills
   console.log('\n=== 2. AVAILABLE SKILLS ===');
   try {
-    const resp = await req.get(`${BACKEND}/mrcall/v1/mrcall0/agent/skills/available?businessId=${CONFIG_BIZ}`, { headers });
+    const resp = await req.get(`${BACKEND}/mrcall/v1/mrcall0/apidomain/agent/skills?businessId=${CONFIG_BIZ}`, { headers });
     console.log('Status:', resp.status());
     const skills = await resp.json();
     for (const s of skills) {

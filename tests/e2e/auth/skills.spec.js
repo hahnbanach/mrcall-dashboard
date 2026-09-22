@@ -98,7 +98,8 @@ async function mockSkillsScreen (page, { saveStatus = 200, saveBody = null } = {
     })
   })
 
-  await page.route('**/agent/skills/available*', route => route.fulfill({
+  // `*` does not cross a slash, so this is the catalogue and never the configuration below it.
+  await page.route('**/apidomain/agent/skills*', route => route.fulfill({
     status: 200, contentType: 'application/json', body: JSON.stringify(catalogue)
   }))
 

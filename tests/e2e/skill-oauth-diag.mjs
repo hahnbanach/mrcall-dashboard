@@ -99,17 +99,17 @@ async function ss(page, label) {
   }, { url: BACKEND, token: authToken.fullToken });
   console.log('GET /oauth/providers:', JSON.stringify(providersResult, null, 2));
 
-  // 3b. GET /agent/skills/available - check if skills are loaded
+  // 3b. The catalogue: are the skills loaded at all
   const skillsResult = await page.evaluate(async (args) => {
     try {
-      const resp = await fetch(args.url + '/mrcall/v1/mrcall0/agent/skills/available?businessId=' + args.bizId, {
+      const resp = await fetch(args.url + '/mrcall/v1/mrcall0/apidomain/agent/skills?businessId=' + args.bizId, {
         headers: { 'Content-type': 'application/json', 'auth': args.token }
       });
       const text = await resp.text();
       return { status: resp.status, body: text.substring(0, 1000) };
     } catch (e) { return { error: e.message }; }
   }, { url: BACKEND, token: authToken.fullToken, bizId: CONFIG_BIZ });
-  console.log('GET /agent/skills/available:', JSON.stringify(skillsResult, null, 2));
+  console.log('GET /apidomain/agent/skills:', JSON.stringify(skillsResult, null, 2));
 
   // === 4. CHECK BUSINESS VARIABLES ===
   console.log('\n=== 4. CHECKING BUSINESS CONFIG ===');

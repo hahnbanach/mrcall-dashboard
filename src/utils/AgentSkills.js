@@ -59,8 +59,11 @@ export default {
             "Content-type": "application/json; charset=UTF-8",
             "auth": user.accessToken
         };
+        // The catalogue of the skills API domain, which is the same domain that saves what this
+        // screen configures. It used to be `/agent/skills/available`, a second surface describing
+        // the same skills in a second shape, and a screen had to know which of the two it was on.
         const url = process.env.VUE_APP_STARCHAT_URL +
-            "/mrcall/v1/mrcall0/agent/skills/available" +
+            "/mrcall/v1/mrcall0/apidomain/agent/skills" +
             (businessId ? "?businessId=" + encodeURIComponent(businessId) : "");
         try {
             const response = await axios.get(url, { headers });
