@@ -71,6 +71,90 @@ export default {
         }
     },
 
+    /**
+     * The skill configuration goes down its own door, and only that door will take it.
+     *
+     * A skill configuration lives in the business variables, but the ordinary business save DROPS
+     * the variables whose declared type begins `apidomain_`: the server keeps them only for a write
+     * that names the type as its own, which no REST payload can do and this endpoint does. So a
+     * change made in the skills card is persisted here or nowhere, and pressing Save on the page no
+     * longer decides it.
+     *
+     * What comes back is a verdict and not only a status: the same diagnostics the card can put
+     * beside the fields they name — the manifest's, and the skill's own.
+     */
+    saveConfiguration: async function(user, businessId, variables) {
+        const headers = {
+            "Content-type": "application/json; charset=UTF-8",
+            "auth": user.accessToken
+        };
+        const url = process.env.VUE_APP_STARCHAT_URL +
+            "/mrcall/v1/mrcall0/apidomain/agent/skills/configuration/" + encodeURIComponent(businessId);
+        try {
+            const response = await axios.put(url, variables, { headers });
+            return { saved: true, diagnostics: (response.data && response.data.diagnostics) || [] };
+        } catch (e) {
+            // 422 is the one answer that is not a failure of the call: the configuration was read,
+            // judged and refused, and what it says is what a person has to act on.
+            const refused = e.response && e.response.status === 422;
+            return {
+                saved: false,
+                diagnostics: refused ? (e.response.data.diagnostics || []) : [],
+                error: refused ? null : e.message
+            };
+        }
+    },
+
+    /**
+     * Persist whatever skill configuration a business is carrying, and nothing else of it.
+     *
+     * The caller hands over the variables it has and learns what became of them. Which of those
+     * variables belong to this domain is decided HERE, and the server decides it again when it
+     * writes: a page that had to know the three names would have to be edited the day a fourth
+     * appears, and it is not the page's business to know there are three.
+     *
+     * Nothing to persist is not a failure: a business with no skill card configured has no
+     * configuration, and a save that reported an error for that would be wrong twice.
+     */
+    persistConfiguration: async function(user, businessId, variables) {
+        if (!businessId || !variables) return null;
+        const mine = {};
+        Object.values(this.phaseVariables).forEach(name => {
+            const value = variables[name];
+            if (value !== undefined && value !== null) {
+                mine[name] = typeof value === "string" ? value : JSON.stringify(value);
+            }
+        });
+        if (Object.keys(mine).length === 0) return null;
+        return this.saveConfiguration(user, businessId, mine);
+    },
+
+    /** The same verdict without writing, for a card that wants to say it before Save is pressed. */
+    validateConfiguration: async function(user, businessId, variables) {
+        const headers = {
+            "Content-type": "application/json; charset=UTF-8",
+            "auth": user.accessToken
+        };
+        const url = process.env.VUE_APP_STARCHAT_URL +
+            "/mrcall/v1/mrcall0/apidomain/agent/skills/configuration/" +
+            encodeURIComponent(businessId) + "/validate";
+        try {
+            const response = await axios.post(url, variables, { headers });
+            return response.data || { valid: true, diagnostics: [] };
+        } catch (e) {
+            console.error("Failed to validate the skill configuration:", e);
+            return { valid: true, diagnostics: [] };
+        }
+    },
+
+    /** One sentence per diagnostic, in the order a person reads them. */
+    describeDiagnostics: function(diagnostics) {
+        return (diagnostics || [])
+            .filter(d => d.severity === "error")
+            .map(d => `${d.path}: ${d.detail}`)
+            .join("; ");
+    },
+
     parseConfig: function(configValue) {
         if (!configValue || configValue === "{}" || configValue === "") {
             return { prefetch: [], during: [], final: [] };

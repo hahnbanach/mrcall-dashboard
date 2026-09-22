@@ -738,9 +738,22 @@ export default {
             }
         )
       }
-      return operation.then((response) => {
+      return operation.then(async (response) => {
         console.debug("Saved Response:", response)
+        // The skill configuration travels down its own door: the business write above drops the
+        // variables whose type is `apidomain_agent_skills`, so this is what persists the cards. It
+        // runs after the business is stored because a business that did not exist a moment ago has
+        // no id to configure skills for.
+        const skillsOutcome = await agentSkillsUtils.persistConfiguration(
+            this.user,
+            response.data && response.data.result ? response.data.result.businessId : this.business.businessId,
+            this.business.variables)
         this.showProgressBar = false
+        if (skillsOutcome && !skillsOutcome.saved) {
+          this.setMessage("error", this.t('components.business.errorSavingSettings') +
+              " (" + (skillsOutcome.error || agentSkillsUtils.describeDiagnostics(skillsOutcome.diagnostics)) + ")")
+          return false
+        }
         if(response.headers["x-mrcall-role"] === "admin") {
           this.store.commit('setRole', 'admin')
         } else {
