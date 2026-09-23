@@ -233,6 +233,7 @@ function fieldProps(field) {
 
     <SkillArguments v-if="open"
                     :parameters="declaredArguments"
+                    :phase="phase"
                     :extras-field="extrasField"
                     :extras-value="value(EXTRAS_FIELD_KEY) || '[]'"
                     :disabled="disabled"

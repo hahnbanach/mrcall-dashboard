@@ -137,7 +137,7 @@
       "argumentsTitle": "Cosa l'assistente raccoglie durante la chiamata",
       "argumentRequired": "obbligatorio",
       "argumentOptional": "facoltativo",
-      "argumentsTemplateHint": "Ogni nome qui sopra si puo' usare come %%nome%% nei campi di testo di questa scheda."
+      "argumentsTemplateHint": "Ogni nome qui sopra si può usare come %%nome%% nei campi di testo di questa scheda e nei prompt di successo e di errore."
     }
   },
   "components": {

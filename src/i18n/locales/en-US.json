@@ -137,7 +137,7 @@
       "argumentsTitle": "What the assistant collects during the call",
       "argumentRequired": "required",
       "argumentOptional": "optional",
-      "argumentsTemplateHint": "Every name above can be used as %%name%% in the text fields of this card."
+      "argumentsTemplateHint": "Every name above can be used as %%name%% in the text fields of this card and in its success and failure prompts."
     }
   },
   "components": {

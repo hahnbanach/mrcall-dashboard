@@ -22,6 +22,8 @@ const { t, locale } = useI18n();
 const props = defineProps({
   /** The skill's own arguments, as the catalogue publishes them. */
   parameters: { type: Array, default: () => [] },
+  /** Which phase this instance runs in. Only `during` has a model to fill anything in. */
+  phase: { type: String, default: 'during' },
   /** The `variables` field of this instance, when the schema has one, and its stored value. */
   extrasField: { type: Object, default: null },
   extrasValue: { type: [String, Array], default: '[]' },
@@ -31,7 +33,15 @@ const props = defineProps({
 const emit = defineEmits(['update:extras']);
 
 const lang = computed(() => (locale.value || 'en-US').split('-')[0]);
-const declared = computed(() => props.parameters || []);
+
+/** NOTHING IS COLLECTED OUTSIDE THE CALL. A `prefetch` instance runs before anybody speaks and a
+  * `final` one after everybody has hung up: there is no model in either, so the skill's arguments
+  * are never asked for and listing them is how somebody comes to wonder why a date they never see
+  * is being requested. The extras list is kept off those phases by the schema itself, which
+  * declares it `x-phases: ["during"]`; this is the same rule for the half the schema does not
+  * carry. */
+const asksTheModel = computed(() => props.phase === 'during');
+const declared = computed(() => (asksTheModel.value ? props.parameters || [] : []));
 const shows = computed(() => declared.value.length > 0 || props.extrasField !== null);
 </script>
 

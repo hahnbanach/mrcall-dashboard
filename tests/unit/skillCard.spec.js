@@ -293,6 +293,16 @@ describe('the function this instance publishes', () => {
   it('shows nothing of the sort for a skill that publishes no parameters and adds none', () => {
     expect(card().find('.skill-arguments').exists()).toBe(false)
   })
+
+  /* A prefetch instance runs before anybody speaks and a final one after everybody has hung up:
+   * no model, nothing collected. Listing the arguments there is how somebody comes to ask why a
+   * date they never see is being requested. */
+  it('names none of them in a phase where no model runs', () => {
+    const prefetch = card({ skill: withArguments, phase: 'prefetch' })
+    expect(prefetch.text()).not.toContain('The day as YYYY-MM-DD')
+    const final = card({ skill: withArguments, phase: 'final' })
+    expect(final.text()).not.toContain('The day as YYYY-MM-DD')
+  })
 })
 
 describe('an instance whose skill is gone', () => {

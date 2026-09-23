@@ -136,7 +136,7 @@
       "argumentsTitle": "Ce que l'assistant recueille pendant l'appel",
       "argumentRequired": "obligatoire",
       "argumentOptional": "facultatif",
-      "argumentsTemplateHint": "Chaque nom ci-dessus peut etre utilise comme %%nom%% dans les champs de texte de cette carte."
+      "argumentsTemplateHint": "Chaque nom ci-dessus peut être utilisé comme %%nom%% dans les champs de texte de cette carte et dans ses messages de succès et d'erreur."
     }
   },
   "components": {
