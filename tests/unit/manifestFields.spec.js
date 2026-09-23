@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import {
   LABEL_FIELD_KEY, valueOf, labelOf, hintOf, placeholderOf, isEnabled, oauthFields,
   labelFieldOf, visibleInPhase, visibleHere, retiredAndEmpty, configurableFields,
-  hasTemplateFields, descriptionOf, errorDiagnostics
+  hasTemplateFields, descriptionOf, errorDiagnostics, argumentsOf, requiredArguments
 } from '@/components/widgets/skills/manifestFields'
 
 /** The rules a manifest states about its own fields, read without mounting anything.
@@ -136,5 +136,65 @@ describe('a skill the catalogue no longer lists', () => {
     expect(configurableFields(null, entry, 'during')).toEqual([])
     expect(oauthFields(null)).toEqual([])
     expect(hasTemplateFields(null, entry, 'during')).toBe(false)
+  })
+})
+
+
+/** What THIS instance must be given, which is not what the skill declares in the abstract.
+  *
+  * The catalogue materialises the arguments against no configuration at all — it answers for the
+  * skill — so an argument that is mandatory only in one mode arrives `required: false`. Printed as
+  * it comes, a card tells somebody the identifier of the appointment to cancel is optional for a
+  * call the platform refuses without it.
+  */
+describe('what an instance really requires', () => {
+  const deleteSkill = {
+    name: 'skill_calendar_event_delete',
+    parameters: [
+      { name: 'eventId', type: 'string', required: false, description: 'the appointment' },
+      { name: 'confirmation', type: 'string', required: false, description: 'what the caller said' }
+    ],
+    manifest: {
+      arguments: {
+        required: [],
+        properties: {
+          eventId: { 'x-required-when': { target: 'event' } },
+          confirmation: { 'x-required-when': { requireConfirmation: 'true' } }
+        }
+      }
+    }
+  }
+
+  it('asks for the identifier where the instance cancels one named appointment', () => {
+    const entry = { params: { target: 'event', requireConfirmation: 'false' } }
+    expect(requiredArguments(deleteSkill, entry)).toEqual(['eventId'])
+    expect(argumentsOf(deleteSkill, entry).find(a => a.name === 'eventId').required).toBe(true)
+  })
+
+  it('does not, where it cancels everything the caller has', () => {
+    const entry = { params: { target: 'all_of_caller', requireConfirmation: 'true' } }
+    expect(requiredArguments(deleteSkill, entry)).toEqual(['confirmation'])
+  })
+
+  it('keeps what the manifest requires outright, whatever the instance says', () => {
+    const create = {
+      parameters: [{ name: 'date', required: true, description: 'the day' }],
+      manifest: { arguments: { required: ['date'], properties: { date: {} } } }
+    }
+    expect(requiredArguments(create, { params: {} })).toEqual(['date'])
+  })
+
+  it('reads the string form as "that property is set"', () => {
+    const skill = {
+      parameters: [{ name: 'key', required: false, description: 'the key' }],
+      manifest: { arguments: { properties: { key: { 'x-required-when': 'filename' } } } }
+    }
+    expect(requiredArguments(skill, { params: { filename: 'listings.json' } })).toEqual(['key'])
+    expect(requiredArguments(skill, { params: {} })).toEqual([])
+  })
+
+  it('answers nothing for a skill the catalogue no longer lists', () => {
+    expect(argumentsOf(null, { params: {} })).toEqual([])
+    expect(requiredArguments(null, { params: {} })).toEqual([])
   })
 })

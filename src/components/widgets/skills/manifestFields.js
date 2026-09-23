@@ -169,3 +169,39 @@ export function descriptionOf(skill, lang) {
 export function errorDiagnostics(skill) {
   return ((skill && skill.diagnostics) || []).filter(d => (d.severity || 'error') === 'error');
 }
+
+/**
+ * Which arguments this instance really requires, which is not always what the skill declares.
+ *
+ * `x-required-when` makes an argument mandatory only in the state the instance is configured into:
+ * the identifier of the appointment to cancel is needed when the instance cancels ONE named
+ * appointment and not when it cancels everything the caller has, and the confirmation is needed when
+ * the instance asks for one. The catalogue publishes the arguments materialised against NO
+ * configuration — it answers for the skill, not for an instance — so a card that printed that
+ * answer would tell somebody an identifier is optional for a call the platform refuses without it.
+ *
+ * The same two forms the platform reads: a string names a property and means "set", an object names
+ * a property and a value and means "holds that value".
+ */
+export function requiredArguments(skill, entry) {
+  const manifest = (skill && skill.manifest) || {};
+  const args = manifest.arguments || {};
+  const declared = new Set(args.required || []);
+  const properties = args.properties || {};
+  return Object.keys(properties).filter(name => {
+    if (declared.has(name)) return true;
+    const when = properties[name]['x-required-when'];
+    if (typeof when === 'string') return String(valueOf(entry, when) || '').trim() !== '';
+    if (when && typeof when === 'object') {
+      return Object.keys(when).every(key => String(valueOf(entry, key) || '') === String(when[key]));
+    }
+    return false;
+  });
+}
+
+/** The skill's arguments as this instance publishes them: the catalogue's rows, with the mandatory
+  * flag answered for this configuration rather than for no configuration at all. */
+export function argumentsOf(skill, entry) {
+  const required = new Set(requiredArguments(skill, entry));
+  return ((skill && skill.parameters) || []).map(p => ({ ...p, required: required.has(p.name) }));
+}

@@ -255,6 +255,9 @@ describe('the function this instance publishes', () => {
       { name: 'date', type: 'string', required: true, description: 'The day as YYYY-MM-DD' },
       { name: 'reason', type: 'string', required: false, description: 'What it is for, if said' }
     ],
+    // The catalogue row carries both, and the card answers "mandatory?" from the manifest against
+    // this instance rather than from the row, which was materialised against no instance at all.
+    manifest: { arguments: { required: ['date'], properties: { date: {}, reason: {} } } },
     configSchema: {
       fields: [
         ...skill.configSchema.fields,

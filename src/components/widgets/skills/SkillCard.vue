@@ -22,7 +22,7 @@ import SkillArguments from '@/components/widgets/skills/SkillArguments.vue';
 import {
   CALENDAR_FIELD_KEY, LABEL_FIELD_KEY,
   valueOf, labelOf, hintOf, placeholderOf, isEnabled, oauthFields, labelFieldOf,
-  configurableFields, hasTemplateFields, descriptionOf, errorDiagnostics
+  configurableFields, hasTemplateFields, descriptionOf, errorDiagnostics, argumentsOf
 } from '@/components/widgets/skills/manifestFields';
 
 const { t, locale } = useI18n();
@@ -66,7 +66,7 @@ const bodyFields = computed(() =>
   configurableFields(props.skill, props.entry, props.phase).filter(f => f.key !== EXTRAS_FIELD_KEY));
 const extrasField = computed(() =>
   configurableFields(props.skill, props.entry, props.phase).find(f => f.key === EXTRAS_FIELD_KEY) || null);
-const declaredArguments = computed(() => (props.skill && props.skill.parameters) || []);
+const declaredArguments = computed(() => argumentsOf(props.skill, props.entry));
 const showsTemplates = computed(() => hasTemplateFields(props.skill, props.entry, props.phase));
 
 function value(key) {
