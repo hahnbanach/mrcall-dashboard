@@ -131,7 +131,11 @@
       "labelClash": "En anden instans har allerede dette navn; begge vises med deres nummer.",
       "entryOn": "Til",
       "entryOff": "Fra",
-      "unknownWidget": "Denne version af panelet kan ikke tegne et {widget}-felt"
+      "unknownWidget": "Denne version af panelet kan ikke tegne et {widget}-felt",
+      "argumentsTitle": "Hvad assistenten indsamler under opkaldet",
+      "argumentRequired": "pakraevet",
+      "argumentOptional": "valgfri",
+      "argumentsTemplateHint": "Hvert navn ovenfor kan bruges som %%navn%% i tekstfelterne pa dette kort."
     }
   },
   "components": {

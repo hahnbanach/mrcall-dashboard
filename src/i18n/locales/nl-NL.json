@@ -131,7 +131,11 @@
       "labelClash": "Een andere instantie heeft deze naam al; beide worden met hun nummer getoond.",
       "entryOn": "Aan",
       "entryOff": "Uit",
-      "unknownWidget": "Deze versie van het dashboard kan een {widget}-veld niet tekenen"
+      "unknownWidget": "Deze versie van het dashboard kan een {widget}-veld niet tekenen",
+      "argumentsTitle": "Wat de assistent tijdens het gesprek verzamelt",
+      "argumentRequired": "verplicht",
+      "argumentOptional": "optioneel",
+      "argumentsTemplateHint": "Elke naam hierboven kan als %%naam%% in de tekstvelden van deze kaart worden gebruikt."
     }
   },
   "components": {

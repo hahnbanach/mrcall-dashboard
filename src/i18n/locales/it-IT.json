@@ -133,7 +133,11 @@
       "labelClash": "Un'altra istanza ha già questo nome: verranno mostrate entrambe col loro numero.",
       "entryOn": "Attiva",
       "entryOff": "Spenta",
-      "unknownWidget": "Questa versione del pannello non sa disegnare un campo di tipo {widget}"
+      "unknownWidget": "Questa versione del pannello non sa disegnare un campo di tipo {widget}",
+      "argumentsTitle": "Cosa l'assistente raccoglie durante la chiamata",
+      "argumentRequired": "obbligatorio",
+      "argumentOptional": "facoltativo",
+      "argumentsTemplateHint": "Ogni nome qui sopra si puo' usare come %%nome%% nei campi di testo di questa scheda."
     }
   },
   "components": {

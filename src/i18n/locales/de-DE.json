@@ -132,7 +132,11 @@
       "labelClash": "Eine andere Instanz hat diesen Namen bereits; beide werden mit ihrer Nummer angezeigt.",
       "entryOn": "Ein",
       "entryOff": "Aus",
-      "unknownWidget": "Diese Version der Oberflache kann ein {widget}-Feld nicht darstellen"
+      "unknownWidget": "Diese Version der Oberflache kann ein {widget}-Feld nicht darstellen",
+      "argumentsTitle": "Was der Assistent wahrend des Anrufs erfasst",
+      "argumentRequired": "erforderlich",
+      "argumentOptional": "optional",
+      "argumentsTemplateHint": "Jeder Name oben kann als %%name%% in den Textfeldern dieser Karte verwendet werden."
     }
   },
   "components": {

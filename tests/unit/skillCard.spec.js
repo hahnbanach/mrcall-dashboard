@@ -30,7 +30,10 @@ const messages = {
         templateSyntaxTitle: 'Templates', templateSyntaxHelp: 'Use %%var%%',
         oauthConnect: 'Authorise', oauthDisconnect: 'Disconnect', oauthStopUsing: 'Stop using',
         oauthReuse: 'Use', oauthReusePlaceholder: 'Choose an account',
-        calendarChosen: 'A calendar is chosen', calendarNotChosen: 'No calendar yet'
+        calendarChosen: 'A calendar is chosen', calendarNotChosen: 'No calendar yet',
+        argumentsTitle: 'What the assistant collects during the call',
+        argumentRequired: 'required', argumentOptional: 'optional',
+        argumentsTemplateHint: 'Every name above can be used as %%name%% in the text fields of this card.'
       }
     }
   }
@@ -237,6 +240,58 @@ describe('the calendar field', () => {
     const open = card({ skill: calendarSkill, grants })
     expect(open.text()).toContain('Authorise a calendar first')
     expect(open.findComponent(Dropdown).exists()).toBe(false)
+  })
+})
+
+/** The parameters of the function, which the card used to say nothing about.
+  *
+  * "How does it know which appointment" and "where does the time come from" had no answer on the
+  * screen: the answer is that the model passes them, and nothing said the arguments existed.
+  */
+describe('the function this instance publishes', () => {
+  const withArguments = {
+    ...skill,
+    parameters: [
+      { name: 'date', type: 'string', required: true, description: 'The day as YYYY-MM-DD' },
+      { name: 'reason', type: 'string', required: false, description: 'What it is for, if said' }
+    ],
+    configSchema: {
+      fields: [
+        ...skill.configSchema.fields,
+        { key: 'variables', type: 'tuples', widget: 'list', labels: { en: { label: 'Arguments this instance adds', hint: 'Collected during the call' } } }
+      ]
+    }
+  }
+
+  it('names each argument, says whether it is required, and says what it is for', () => {
+    const open = card({ skill: withArguments })
+    const text = open.text()
+    expect(text).toContain('date')
+    expect(text).toContain('required')
+    expect(text).toContain('optional')
+    expect(text).toContain('The day as YYYY-MM-DD')
+  })
+
+  it('says the names can be used in the text fields of this card', () => {
+    expect(card({ skill: withArguments }).text()).toContain('%%name%%')
+  })
+
+  /* One declaration, read in one place: the extras are the other half of the arguments, and drawing
+   * them among the settings is what made them read as one setting more. */
+  it('draws the extras beside them and not among the settings', () => {
+    const open = card({ skill: withArguments })
+    expect(open.find('.skill-arguments').text()).toContain('Arguments this instance adds')
+    expect(open.find('.entry-fields').text()).not.toContain('Arguments this instance adds')
+  })
+
+  it('reports a changed extras list as a write of that field', async () => {
+    const open = card({ skill: withArguments })
+    await open.findComponent({ name: 'SkillArguments' }).vm.$emit('update:extras', '[["AGE","età",true]]')
+    expect(open.emitted('update:field')[0][0]).toEqual({ key: 'variables', value: '[["AGE","età",true]]' })
+  })
+
+  it('shows nothing of the sort for a skill that publishes no parameters and adds none', () => {
+    expect(card().find('.skill-arguments').exists()).toBe(false)
   })
 })
 

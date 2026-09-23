@@ -18,6 +18,7 @@
 import { computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { componentFor } from '@/components/widgets/skills/fields';
+import SkillArguments from '@/components/widgets/skills/SkillArguments.vue';
 import {
   CALENDAR_FIELD_KEY, LABEL_FIELD_KEY,
   valueOf, labelOf, hintOf, placeholderOf, isEnabled, oauthFields, labelFieldOf,
@@ -57,7 +58,15 @@ const description = computed(() => descriptionOf(props.skill, lang.value));
 const diagnostics = computed(() => errorDiagnostics(props.skill));
 const nameField = computed(() => labelFieldOf(props.skill));
 const authFields = computed(() => oauthFields(props.skill));
-const bodyFields = computed(() => configurableFields(props.skill, props.entry, props.phase));
+/** The arguments this instance adds live in the block that shows the function's parameters, beside
+  * the ones the skill declares: they are one declaration and reading them apart is what made a
+  * person wonder where the model's values come from. */
+const EXTRAS_FIELD_KEY = 'variables';
+const bodyFields = computed(() =>
+  configurableFields(props.skill, props.entry, props.phase).filter(f => f.key !== EXTRAS_FIELD_KEY));
+const extrasField = computed(() =>
+  configurableFields(props.skill, props.entry, props.phase).find(f => f.key === EXTRAS_FIELD_KEY) || null);
+const declaredArguments = computed(() => (props.skill && props.skill.parameters) || []);
 const showsTemplates = computed(() => hasTemplateFields(props.skill, props.entry, props.phase));
 
 function value(key) {
@@ -221,6 +230,13 @@ function fieldProps(field) {
         <small v-else-if="hint(field)" class="config-hint">{{ hint(field) }}</small>
       </div>
     </div>
+
+    <SkillArguments v-if="open"
+                    :parameters="declaredArguments"
+                    :extras-field="extrasField"
+                    :extras-value="value(EXTRAS_FIELD_KEY) || '[]'"
+                    :disabled="disabled"
+                    @update:extras="write(EXTRAS_FIELD_KEY, $event)" />
 
     <div v-if="open && bodyFields.length > 0" class="entry-fields">
       <div v-for="field in bodyFields" :key="field.key" class="config-field">

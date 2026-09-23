@@ -131,7 +131,11 @@
       "labelClash": "Άλλη παρουσία έχει ήδη αυτό το όνομα· θα εμφανιστούν και οι δύο με τον αριθμό τους.",
       "entryOn": "Ενεργή",
       "entryOff": "Ανενεργή",
-      "unknownWidget": "Αυτή η έκδοση του πίνακα δεν ξέρει να σχεδιάσει ένα πεδίο {widget}"
+      "unknownWidget": "Αυτή η έκδοση του πίνακα δεν ξέρει να σχεδιάσει ένα πεδίο {widget}",
+      "argumentsTitle": "Ti syllegei o voithos kata ti diarkeia tis klisis",
+      "argumentRequired": "ypochreotiko",
+      "argumentOptional": "proairetiko",
+      "argumentsTemplateHint": "Kathe onoma parapano mporei na chrisimopoiithei os %%onoma%% sta pedia keimenou aftis tis kartas."
     }
   },
   "components": {

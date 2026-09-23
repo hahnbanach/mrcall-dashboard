@@ -131,7 +131,11 @@
       "labelClash": "En annan instans har redan detta namn; bada visas med sitt nummer.",
       "entryOn": "Pa",
       "entryOff": "Av",
-      "unknownWidget": "Den har versionen av panelen kan inte rita ett {widget}-falt"
+      "unknownWidget": "Den har versionen av panelen kan inte rita ett {widget}-falt",
+      "argumentsTitle": "Vad assistenten samlar in under samtalet",
+      "argumentRequired": "obligatorisk",
+      "argumentOptional": "valfri",
+      "argumentsTemplateHint": "Varje namn ovan kan anvandas som %%namn%% i textfalten pa det har kortet."
     }
   },
   "components": {

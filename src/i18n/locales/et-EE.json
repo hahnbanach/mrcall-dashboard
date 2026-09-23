@@ -131,7 +131,11 @@
       "labelClash": "Teisel instantsil on juba see nimi; molemad kuvatakse numbriga.",
       "entryOn": "Sees",
       "entryOff": "Valjas",
-      "unknownWidget": "See paneeli versioon ei oska joonistada {widget} valja"
+      "unknownWidget": "See paneeli versioon ei oska joonistada {widget} valja",
+      "argumentsTitle": "Mida assistent kone ajal kogub",
+      "argumentRequired": "kohustuslik",
+      "argumentOptional": "valikuline",
+      "argumentsTemplateHint": "Iga ulaltoodud nime saab kasutada kujul %%nimi%% selle kaardi tekstivaljadel."
     }
   },
   "components": {

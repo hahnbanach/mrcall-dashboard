@@ -131,7 +131,11 @@
       "labelClash": "Otra instancia ya tiene este nombre; ambas se mostraran con su numero.",
       "entryOn": "Activa",
       "entryOff": "Apagada",
-      "unknownWidget": "Esta version del panel no sabe dibujar un campo {widget}"
+      "unknownWidget": "Esta version del panel no sabe dibujar un campo {widget}",
+      "argumentsTitle": "Lo que el asistente recoge durante la llamada",
+      "argumentRequired": "obligatorio",
+      "argumentOptional": "opcional",
+      "argumentsTemplateHint": "Cada nombre de arriba se puede usar como %%nombre%% en los campos de texto de esta tarjeta."
     }
   },
   "components": {

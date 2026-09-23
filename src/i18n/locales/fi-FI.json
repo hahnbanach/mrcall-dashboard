@@ -131,7 +131,11 @@
       "labelClash": "Toisella instanssilla on jo tama nimi; molemmat naytetaan numeroineen.",
       "entryOn": "Kaytossa",
       "entryOff": "Pois",
-      "unknownWidget": "Tama version paneelista ei osaa piirtaa {widget}-kenttaa"
+      "unknownWidget": "Tama version paneelista ei osaa piirtaa {widget}-kenttaa",
+      "argumentsTitle": "Mita avustaja kerää puhelun aikana",
+      "argumentRequired": "pakollinen",
+      "argumentOptional": "valinnainen",
+      "argumentsTemplateHint": "Jokaista yllä olevaa nimea voi kayttaa muodossa %%nimi%% taman kortin tekstikentissa."
     }
   },
   "components": {

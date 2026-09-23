@@ -132,7 +132,11 @@
       "labelClash": "Une autre instance porte deja ce nom; les deux seront affichees avec leur numero.",
       "entryOn": "Activee",
       "entryOff": "Desactivee",
-      "unknownWidget": "Cette version du tableau de bord ne sait pas dessiner un champ {widget}"
+      "unknownWidget": "Cette version du tableau de bord ne sait pas dessiner un champ {widget}",
+      "argumentsTitle": "Ce que l'assistant recueille pendant l'appel",
+      "argumentRequired": "obligatoire",
+      "argumentOptional": "facultatif",
+      "argumentsTemplateHint": "Chaque nom ci-dessus peut etre utilise comme %%nom%% dans les champs de texte de cette carte."
     }
   },
   "components": {

@@ -131,7 +131,11 @@
       "labelClash": "En annen instans har allerede dette navnet; begge vises med nummeret sitt.",
       "entryOn": "Pa",
       "entryOff": "Av",
-      "unknownWidget": "Denne versjonen av panelet kan ikke tegne et {widget}-felt"
+      "unknownWidget": "Denne versjonen av panelet kan ikke tegne et {widget}-felt",
+      "argumentsTitle": "Hva assistenten samler inn under samtalen",
+      "argumentRequired": "pakrevd",
+      "argumentOptional": "valgfritt",
+      "argumentsTemplateHint": "Hvert navn ovenfor kan brukes som %%navn%% i tekstfeltene pa dette kortet."
     }
   },
   "components": {

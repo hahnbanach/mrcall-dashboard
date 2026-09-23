@@ -133,7 +133,11 @@
       "labelClash": "Another instance already has this name; both will be shown with their number.",
       "entryOn": "On",
       "entryOff": "Off",
-      "unknownWidget": "This version of the dashboard does not know how to draw a {widget} field"
+      "unknownWidget": "This version of the dashboard does not know how to draw a {widget} field",
+      "argumentsTitle": "What the assistant collects during the call",
+      "argumentRequired": "required",
+      "argumentOptional": "optional",
+      "argumentsTemplateHint": "Every name above can be used as %%name%% in the text fields of this card."
     }
   },
   "components": {
