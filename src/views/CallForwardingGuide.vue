@@ -939,7 +939,7 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import '../assets/style/default';
+@import '../assets/style/colors';
 
 .cap-element {
   padding: 0.5em;
@@ -987,9 +987,5 @@ export default {
 
 .center-restrict {
   max-width: 800px;
-  margin-bottom: auto;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 6em
 }
 </style>

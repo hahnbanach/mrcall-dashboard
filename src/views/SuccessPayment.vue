@@ -224,7 +224,6 @@ export default {
 
 <style lang="less" scoped>
 @import '../assets/style/colors';
-@import '../assets/style/default';
 
 .success-page-content {
   display: flex;
@@ -293,12 +292,10 @@ export default {
 }
 
 .success-cta {
-  font-family: 'Inter', serif;
   font-weight: 700;
 }
 
 .success-secondary {
-  font-family: 'Inter', serif;
   font-weight: 600;
 }
 
