@@ -1,7 +1,6 @@
 .business-page {
-  //FIXME: the >>> and /deep/ combinators have been deprecated. Use :deep() instead.
   // Fixed length for the Fieldset label box
-  .p-fieldset /deep/ .p-fieldset-legend {
+  .p-fieldset :deep(.p-fieldset-legend) {
     //width: 40% !important;
     width: 100%;
     a {
