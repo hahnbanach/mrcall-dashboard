@@ -97,6 +97,41 @@ export default {
         }
         return blockedByParent ;
     },
+    /**
+     * The values of a templated variable this business may choose: those whose own dependsOn holds
+     * for the business as it is now, and whose language is the business's.
+     *
+     * Each value carries its own condition because a value can be right under one setting and
+     * wrong under another: a GPT-Live voice is a voice the Realtime engine refuses, and a Realtime
+     * call with it hears nothing (test, 2026-09-29). Read again whenever the business changes, so
+     * switching the engine changes the voices offered at once.
+     */
+    templatedOptions(business, variable) {
+        const values = (variable.templatedVariable && variable.templatedVariable.values) || {}
+        const languageCountry = business.languageCountry || ""
+        const lang = languageCountry.substring(0, 2)
+        return Object.entries(values)
+            .filter(([, item]) => !this.checkIfDisabledByParents(business, variable, item.dependsOn || []))
+            .filter(([, item]) => {
+                if (!item.language || item.language === "*") return true
+                return item.language.length > 2 ? item.language === languageCountry : item.language === lang
+            })
+            .map(([key, item]) => ({ label: item.label || key, value: key, description: item.description, language: item.language }))
+    },
+    /**
+     * The value a templated variable holds when the business may no longer choose it, as when the
+     * engine was changed after the voice: undefined when the value is empty or still offered.
+     * It is kept rather than cleared, since an empty value would reach the server as "null", and
+     * saving is refused until another one is chosen.
+     */
+    unavailableTemplatedValue(business, variable) {
+        const value = business.variables[variable.name]
+        if (value === undefined || value === null || value === "" || Array.isArray(value)) return undefined
+        const offered = this.templatedOptions(business, variable).some(o => o.value === value)
+        if (offered) return undefined
+        const item = ((variable.templatedVariable && variable.templatedVariable.values) || {})[value]
+        return { value: value, label: (item && item.label) || value }
+    },
     businessVariablesToSerializable(inBusiness) {
         let business = {}
         for (const item of Object.entries(inBusiness)) {

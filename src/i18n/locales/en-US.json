@@ -138,6 +138,9 @@
       "argumentRequired": "required",
       "argumentOptional": "optional",
       "argumentsTemplateHint": "Every name above can be used as %%name%% in the text fields of this card and in its success and failure prompts."
+    },
+    "templatedVariable": {
+      "unavailable": "{option} is not available with the current settings: choose another one."
     }
   },
   "components": {

@@ -1,9 +1,11 @@
 <script setup>
-import { onMounted } from "vue";
+import { computed, onMounted } from "vue";
+import { useI18n } from "vue-i18n";
 import businessVariablesUtils from "@/utils/BusinessVariables";
 
 const model = defineModel()
 const props = defineProps(['business', 'variable'])
+const { t } = useI18n()
 
 onMounted(() => {
   if (model.value === undefined) {
@@ -11,56 +13,15 @@ onMounted(() => {
   }
 })
 
-function extractDropdownValuesAndDescriptions(json) {
-  const transformedList = [];
-  const descriptionsDict = {};
+// Computed, not read once: the values offered depend on other variables of the business, the
+// engine above all, and have to follow them while the page is open.
+const dropdownValues = computed(() => businessVariablesUtils.templatedOptions(props.business, props.variable))
 
-  for (const key in json) {
-    if (Object.prototype.hasOwnProperty.call(json, key)) {
-      const item = json[key] ;
-      const label = item.label || key ;
-
-      const languageCountry = props.business.languageCountry ;
-      const lang = languageCountry.substring(0, 2)
-
-      const deps = item.dependsOn ? item.dependsOn : [] ;
-      const isDisabled = businessVariablesUtils.checkIfDisabledByParents(props.business, props.variable, deps);
-
-      let pushOnList = true
-      if(isDisabled) {
-        pushOnList = false
-      } else if(item.language) {
-        if(item.language === "*") {
-          pushOnList = true
-        } else if(item.language.length > 2) {
-          pushOnList = item.language === languageCountry
-        } else {
-          pushOnList = item.language === lang
-        }
-      }
-
-      if(pushOnList) {
-        transformedList.push({
-          label: label,
-          value: key,
-          description: item.description,
-          language: item.language
-        });
-        descriptionsDict[key] = item.description;
-      }
-    }
-  }
-
-  return {
-    dropdownValues: transformedList,
-    descriptions: descriptionsDict
-  };
-}
-
-const dropdownData = extractDropdownValuesAndDescriptions(props.variable.templatedVariable.values)
+const unavailable = computed(() => businessVariablesUtils.unavailableTemplatedValue(props.business, props.variable))
 
 function getDescription(key) {
-  return dropdownData.descriptions[key]
+  const item = ((props.variable.templatedVariable && props.variable.templatedVariable.values) || {})[key]
+  return item ? item.description : undefined
 }
 
 </script>
@@ -68,7 +29,8 @@ function getDescription(key) {
 <template>
   <Dropdown
     :disabled="!variable.modifiable"
-    v-model="model" :options="dropdownData.dropdownValues"
+    v-model="model" :options="dropdownValues"
+    :invalid="!!unavailable"
     optionLabel="label"
     optionValue="value"
     :filter="true"
@@ -76,7 +38,8 @@ function getDescription(key) {
     class="w-full"
   >
   </Dropdown>
-  <div class="inputboxsubtitle">{{getDescription(model)}}</div>
+  <div v-if="unavailable" class="p-error">{{ t('widgets.templatedVariable.unavailable', { option: unavailable.label }) }}</div>
+  <div v-else class="inputboxsubtitle">{{getDescription(model)}}</div>
 </template>
 
 <style scoped lang="less">

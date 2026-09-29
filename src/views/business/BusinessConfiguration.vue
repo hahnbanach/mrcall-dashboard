@@ -665,6 +665,13 @@ export default {
                   businessValue === null
               )) {
             errors.push({ variable: variable })
+          } else if(variable.type === 'templated' && variable.class !== 'base') {
+            // A value chosen under settings that have changed since, such as a voice the engine
+            // now selected cannot speak with: the server refuses it too.
+            const unavailable = businessVariablesUtils.unavailableTemplatedValue(business, variable)
+            if(unavailable) {
+              errors.push({ variable: variable, unavailable: unavailable })
+            }
           }
         })
       })
@@ -706,8 +713,9 @@ export default {
           this.activeIndexTabPanel = 1
           this.activeIndexAccordionTab = 1
         }
-        this.setMessage("error",
-            this.t("components.business.mandatoryParameterMissing", {param: head.variable.humanName})
+        this.setMessage("error", head.unavailable
+            ? this.t("widgets.templatedVariable.unavailable", {option: head.unavailable.label})
+            : this.t("components.business.mandatoryParameterMissing", {param: head.variable.humanName})
         )
         console.error("Impossible to save the plan because of missing mandatory variables:", varErrors)
         this.showProgressBar = false

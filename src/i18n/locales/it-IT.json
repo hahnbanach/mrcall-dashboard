@@ -138,6 +138,9 @@
       "argumentRequired": "obbligatorio",
       "argumentOptional": "facoltativo",
       "argumentsTemplateHint": "Ogni nome qui sopra si può usare come %%nome%% nei campi di testo di questa scheda e nei prompt di successo e di errore."
+    },
+    "templatedVariable": {
+      "unavailable": "{option} non è disponibile con le impostazioni attuali: scegline un'altra."
     }
   },
   "components": {
