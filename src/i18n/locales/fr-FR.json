@@ -418,7 +418,7 @@
       "howToCard3Title": "Puis-je changer la voix ?",
       "howToCard3Text": "Oui ! Dans « Paramètres de la voix », choisissez entre une voix masculine et une voix féminine. MrCall parle dans la langue choisie lors de la configuration.",
       "howToCard4Title": "MrCall peut-il prendre des réservations ?",
-      "howToCard4Text": "Bien sûr. Dans « Réservations », vous définissez les créneaux disponibles et connectez votre calendrier. MrCall gérera les rendez-vous pour vous.",
+      "howToCard4Text": "Bien sûr. Dans les paramètres avancés, activez les skills du calendrier et connectez votre Google Agenda : MrCall proposera les créneaux libres et prendra, déplacera et annulera les rendez-vous pour vous.",
       "howToCard5Title": "Comment recevoir les notifications ?",
       "howToCard5Text": "Chaque appel génère une notification par email avec un résumé. Dans « Vos notifications », vous choisissez quoi recevoir et comment.",
       "howToCard6Title": "Puis-je ajouter des questions/réponses ?",

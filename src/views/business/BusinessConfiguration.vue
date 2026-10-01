@@ -382,10 +382,7 @@
                 </div>
               </div>
             </template>
-            <!-- BOOKING_HOURS, TALK_AND_HANGUP_HOURS widgect selected directly-->
-            <template v-else-if="variable.name === 'BOOKING_HOURS' && businessVariablesUtils.isVariableVisible(variable, isAdmin, advancedMode)">
-              <TimeSlotsEditor v-model="business.variables[variable.name]" :business="business" :variable="variable" :slotDuration="Number(business.variables['BOOKING_EVENTS_MINUTES']) || 45"></TimeSlotsEditor>
-            </template>
+            <!-- TALK_AND_HANGUP_HOURS widget selected directly -->
             <template v-else-if="variable.name === 'TALK_AND_HANGUP_HOURS' && businessVariablesUtils.isVariableVisible(variable, isAdmin, advancedMode)">
               <TimeSlotsEditor v-model="business.variables[variable.name]" :business="business" :variable="variable" :slotDuration="60"></TimeSlotsEditor>
             </template>

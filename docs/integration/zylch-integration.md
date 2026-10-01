@@ -260,7 +260,7 @@ Content-Type: application/json
   "business_id": "738535bd-...",
   "changes": [
     {"variable_name": "INBOUND_WELCOME_MESSAGE_PROMPT", "new_value": "..."},
-    {"variable_name": "START_BOOKING_PROCESS", "new_value": "true"}
+    {"variable_name": "NO_BOOKING_INSTRUCTIONS", "new_value": "..."}
   ]
 }
 ```

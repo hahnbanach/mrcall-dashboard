@@ -219,6 +219,17 @@ export default {
     },
 
     /**
+     * Whether the business takes bookings: a booking instance switched on in the running loop, the
+     * same test the runtime applies before publishing it. Booking is the calendar skills; the
+     * business variable that switched the legacy booking on no longer exists.
+     */
+    takesBookings: function(variables) {
+        return this.readPhaseConfig(variables).during.some(entry =>
+            entry && entry.skill === "skill_calendar_event_create" &&
+            String((entry.params || {}).enabled ?? "").trim().toLowerCase() === "true");
+    },
+
+    /**
      * The three phases, read the way the runtime reads them: the phase's own variable when it holds
      * something, the single blob when it does not. A phase variable holding `[]` is the catalogue
      * default, written into every business the first time anything is saved there, so it is not an

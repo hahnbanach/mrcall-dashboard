@@ -422,7 +422,7 @@
       "howToCard3Title": "Can I change the voice?",
       "howToCard3Text": "Yes! In 'Voice settings' choose between male and female voice. MrCall speaks in the language you selected during setup.",
       "howToCard4Title": "Can MrCall take bookings?",
-      "howToCard4Text": "Absolutely. In 'Bookings' you can define available slots and connect your calendar. MrCall will handle appointments for you.",
+      "howToCard4Text": "Absolutely. In the advanced settings, switch on the calendar skills and connect your Google Calendar: MrCall will offer the free slots and book, move and cancel appointments for you.",
       "howToCard5Title": "How do I get notifications?",
       "howToCard5Text": "Every call generates an email notification with a summary. In 'Your notifications' you can choose what to receive and how.",
       "howToCard6Title": "Can I add Q&A?",

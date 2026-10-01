@@ -52,6 +52,7 @@ import Carousel from 'primevue/carousel';
 import DirectVoiceButton from '@/components/webcall/DirectVoiceButton.vue';
 import { preferredVoiceEncoding } from '@/utils/VoiceEncoding';
 import { bookingUrl } from '@/utils/BookingUrl';
+import agentSkillsUtils from '@/utils/AgentSkills';
 
 const props = defineProps({
   businessId: { type: String, default: '' },
@@ -87,7 +88,7 @@ const goToChoosePlan = () => {
   if (props.business?.variables?.MULTILINGUAL_ENABLED === true || props.business?.variables?.MULTILINGUAL_ENABLED === 'true') {
     query.multilingual = 'true';
   }
-  if (props.business?.variables?.START_BOOKING_PROCESS === true || props.business?.variables?.START_BOOKING_PROCESS === 'true') {
+  if (agentSkillsUtils.takesBookings(props.business?.variables)) {
     query.booking = 'true';
   }
   router.push({ name: 'OnboardingChoosePlan', query });
