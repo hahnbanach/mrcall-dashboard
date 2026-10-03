@@ -841,6 +841,13 @@
         "uniqueCallers": "Unikaalsed helistajad",
         "callPercentage": "Kõne-%",
         "totalBusinesses": "Aktiivsed ettevõtted"
+      },
+      "filters": {
+        "businessId": "Ettevõtte ID",
+        "ownerId": "Omaniku ID",
+        "apply": "Rakenda",
+        "clear": "Tühjenda",
+        "breakdownHint": "Vali rida, et näha ainult seda ettevõtet."
       }
     },
     "reseller": {

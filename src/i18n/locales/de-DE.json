@@ -843,6 +843,13 @@
         "uniqueCallers": "Eindeutige Anrufer",
         "callPercentage": "Anruf-%",
         "totalBusinesses": "Aktive Unternehmen"
+      },
+      "filters": {
+        "businessId": "Unternehmens-ID",
+        "ownerId": "Inhaber-ID",
+        "apply": "Anwenden",
+        "clear": "Zurücksetzen",
+        "breakdownHint": "Wählen Sie eine Zeile, um nur dieses Unternehmen anzuzeigen."
       }
     },
     "reseller": {

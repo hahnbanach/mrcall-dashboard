@@ -841,6 +841,13 @@
         "uniqueCallers": "Unieke Bellers",
         "callPercentage": "Oproep-%",
         "totalBusinesses": "Actieve Bedrijven"
+      },
+      "filters": {
+        "businessId": "Bedrijfs-ID",
+        "ownerId": "Eigenaar-ID",
+        "apply": "Toepassen",
+        "clear": "Wissen",
+        "breakdownHint": "Selecteer een rij om alleen dat bedrijf te tonen."
       }
     },
     "reseller": {

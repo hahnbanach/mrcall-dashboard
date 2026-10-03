@@ -846,6 +846,13 @@
         "uniqueCallers": "Unique Callers",
         "callPercentage": "Call %",
         "totalBusinesses": "Active Businesses"
+      },
+      "filters": {
+        "businessId": "Business ID",
+        "ownerId": "Owner ID",
+        "apply": "Apply",
+        "clear": "Clear",
+        "breakdownHint": "Select a row to show only that business."
       }
     },
     "reseller": {

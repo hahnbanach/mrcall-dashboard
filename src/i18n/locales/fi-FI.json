@@ -841,6 +841,13 @@
         "uniqueCallers": "Yksilölliset soittajat",
         "callPercentage": "Puhelu-%",
         "totalBusinesses": "Aktiiviset yritykset"
+      },
+      "filters": {
+        "businessId": "Yrityksen tunnus",
+        "ownerId": "Omistajan tunnus",
+        "apply": "Käytä",
+        "clear": "Tyhjennä",
+        "breakdownHint": "Valitse rivi nähdäksesi vain kyseisen yrityksen."
       }
     },
     "reseller": {

@@ -847,6 +847,13 @@
         "uniqueCallers": "Chiamanti Unici",
         "callPercentage": "% Chiamate",
         "totalBusinesses": "Attività Attive"
+      },
+      "filters": {
+        "businessId": "ID business",
+        "ownerId": "ID titolare",
+        "apply": "Applica",
+        "clear": "Azzera",
+        "breakdownHint": "Seleziona una riga per vedere solo quel business."
       }
     },
     "reseller": {

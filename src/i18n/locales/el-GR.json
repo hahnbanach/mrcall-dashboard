@@ -841,6 +841,13 @@
         "uniqueCallers": "Μοναδικοί Καλούντες",
         "callPercentage": "% Κλήσεων",
         "totalBusinesses": "Ενεργές Επιχειρήσεις"
+      },
+      "filters": {
+        "businessId": "ID επιχείρησης",
+        "ownerId": "ID κατόχου",
+        "apply": "Εφαρμογή",
+        "clear": "Καθαρισμός",
+        "breakdownHint": "Επιλέξτε μια γραμμή για να εμφανιστεί μόνο αυτή η επιχείρηση."
       }
     },
     "reseller": {

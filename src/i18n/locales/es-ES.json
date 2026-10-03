@@ -855,6 +855,13 @@
         "uniqueCallers": "Llamantes Únicos",
         "callPercentage": "% Llamadas",
         "totalBusinesses": "Negocios Activos"
+      },
+      "filters": {
+        "businessId": "ID del negocio",
+        "ownerId": "ID del titular",
+        "apply": "Aplicar",
+        "clear": "Borrar",
+        "breakdownHint": "Selecciona una fila para ver solo ese negocio."
       }
     },
     "reseller": {

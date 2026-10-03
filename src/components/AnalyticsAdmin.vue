@@ -36,6 +36,27 @@
             :placeholder="$t('components.analytics.dateRangePlaceholder')"
           />
         </div>
+        <form class="filter-controls" @submit.prevent="applyFilters">
+          <InputText
+            v-model="businessIdInput"
+            :aria-label="$t('components.analytics.filters.businessId')"
+            :placeholder="$t('components.analytics.filters.businessId')"
+          />
+          <InputText
+            v-model="ownerIdInput"
+            :aria-label="$t('components.analytics.filters.ownerId')"
+            :placeholder="$t('components.analytics.filters.ownerId')"
+          />
+          <Button type="submit" icon="pi pi-filter" :label="$t('components.analytics.filters.apply')" />
+          <Button
+            type="button"
+            icon="pi pi-times"
+            severity="secondary"
+            :label="$t('components.analytics.filters.clear')"
+            :disabled="!businessId && !ownerId && !businessIdInput && !ownerIdInput"
+            @click="clearFilters"
+          />
+        </form>
       </div>
 
       <!-- KPI Cards -->
@@ -193,8 +214,9 @@
           <Chart type="bar" :data="breakdownChartData" :options="breakdownChartOptions" />
         </div>
         <div v-if="breakdownData.businesses && breakdownData.businesses.length > 0" class="table-container" style="margin-top: 16px;">
+          <p class="breakdown-hint">{{ $t('components.analytics.filters.breakdownHint') }}</p>
           <DataTable :value="breakdownData.businesses" :rows="10" :paginator="breakdownData.businesses.length > 10" stripedRows
-            sortField="totalCalls" :sortOrder="-1">
+            sortField="totalCalls" :sortOrder="-1" selectionMode="single" @row-select="onBreakdownRowSelect">
             <Column field="businessId" :header="$t('components.analytics.breakdown.businessId')" sortable />
             <Column field="totalCalls" :header="$t('components.analytics.breakdown.totalCalls')" sortable />
             <Column field="avgCallDurationMs" :header="$t('components.analytics.breakdown.avgDuration')" sortable>
@@ -258,6 +280,10 @@ export default {
       timestampGte: null,
       timestampLte: null,
       selectedPreset: '30d',
+      // The filters applied to every request live in the route query, so a filtered view
+      // survives a reload and can be linked; the inputs hold what is typed until it is applied.
+      businessIdInput: '',
+      ownerIdInput: '',
 
       // Data containers
       dashboardData: null,
@@ -277,6 +303,12 @@ export default {
     };
   },
   computed: {
+    businessId() {
+      return this.queryValue('businessId');
+    },
+    ownerId() {
+      return this.queryValue('ownerId');
+    },
     anyLoading() {
       return this.loadingDashboard || this.loadingTimeseries || this.loadingDuration ||
         this.loadingHeatmap || this.loadingCallers || this.loadingBreakdown;
@@ -434,6 +466,13 @@ export default {
     },
   },
   watch: {
+    '$route.query'() {
+      // Leaving the page also changes the query; only a change on this route is a new filter.
+      if (this.$route.name !== 'AnalyticsAdmin') return;
+      this.businessIdInput = this.businessId;
+      this.ownerIdInput = this.ownerId;
+      this.fetchAllData();
+    },
     rangeValue(val) {
       if (val && val[0] && val[1]) {
         this.selectedPreset = null;
@@ -447,6 +486,8 @@ export default {
     if (!this.store || !this.store.state) {
       return;
     }
+    this.businessIdInput = this.businessId;
+    this.ownerIdInput = this.ownerId;
     this.setPresetRange('30d');
     if (!this.store.state.user) {
       onAuthStateChanged(auth, (user) => {
@@ -487,11 +528,37 @@ export default {
       if (diffDays <= 90) return 'weekly';
       return 'monthly';
     },
+    queryValue(key) {
+      const value = this.$route.query[key];
+      return typeof value === 'string' ? value.trim() : '';
+    },
+    applyFilters() {
+      const query = { ...this.$route.query };
+      const businessId = this.businessIdInput.trim();
+      const ownerId = this.ownerIdInput.trim();
+      if (businessId) query.businessId = businessId; else delete query.businessId;
+      if (ownerId) query.ownerId = ownerId; else delete query.ownerId;
+      if (businessId === this.businessId && ownerId === this.ownerId) return;
+      // The '$route.query' watcher refetches.
+      router.replace({ query });
+    },
+    clearFilters() {
+      this.businessIdInput = '';
+      this.ownerIdInput = '';
+      this.applyFilters();
+    },
+    onBreakdownRowSelect(event) {
+      this.businessIdInput = event.data.businessId;
+      this.applyFilters();
+    },
     buildRequestBody() {
-      return {
+      const body = {
         timestampGte: this.timestampGte,
         timestampLte: this.timestampLte,
       };
+      if (this.businessId) body.businessId = this.businessId;
+      if (this.ownerId) body.ownerId = this.ownerId;
+      return body;
     },
     handleApiError(error, section) {
       if (error.response && error.response.status === 401) {
@@ -521,7 +588,13 @@ export default {
       this.fetchDurationDistribution(user, request);
       this.fetchHourlyHeatmap(user, request, timezone);
       this.fetchCallers(user, request);
-      this.fetchBusinessBreakdown(user, request);
+      // The breakdown endpoint groups by business and ignores businessId, so under a
+      // business filter it would list businesses the rest of the page is not showing.
+      if (this.businessId) {
+        this.breakdownData = null;
+      } else {
+        this.fetchBusinessBreakdown(user, request);
+      }
     },
     fetchDashboard(user, request) {
       this.loadingDashboard = true;
@@ -723,6 +796,19 @@ export default {
   padding-top: 16px;
 }
 
+.filter-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-top: 16px;
+}
+
+.breakdown-hint {
+  margin: 0 0 8px;
+  color: @mrcall_grey_text;
+}
+
 // KPI Cards
 .kpi-grid {
   display: grid;
@@ -903,7 +989,8 @@ export default {
     padding: 12px;
   }
 
-  .date-controls {
+  .date-controls,
+  .filter-controls {
     flex-direction: column;
     align-items: stretch;
   }

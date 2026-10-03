@@ -841,6 +841,13 @@
         "uniqueCallers": "Unika Uppringare",
         "callPercentage": "Samtal-%",
         "totalBusinesses": "Aktiva Företag"
+      },
+      "filters": {
+        "businessId": "Företags-ID",
+        "ownerId": "Ägar-ID",
+        "apply": "Tillämpa",
+        "clear": "Rensa",
+        "breakdownHint": "Välj en rad för att bara visa det företaget."
       }
     },
     "reseller": {

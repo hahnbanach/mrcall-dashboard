@@ -841,6 +841,13 @@
         "uniqueCallers": "Unikke Opkaldere",
         "callPercentage": "Opkald-%",
         "totalBusinesses": "Aktive Virksomheder"
+      },
+      "filters": {
+        "businessId": "Virksomheds-ID",
+        "ownerId": "Ejer-ID",
+        "apply": "Anvend",
+        "clear": "Ryd",
+        "breakdownHint": "Vælg en række for kun at vise den virksomhed."
       }
     },
     "reseller": {
