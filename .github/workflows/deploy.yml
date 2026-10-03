@@ -136,3 +136,18 @@ jobs:
           aws s3 sync dist/ "s3://${{ steps.meta.outputs.bucket }}" \
             --delete \
             --endpoint-url https://s3.fr-par.scw.cloud
+
+          # Deep links. The bucket answers a key it does not hold with index.html under
+          # status 404, so every route but "/" rendered and reported Not Found; neither the
+          # bucket nor Edge Services can rewrite. index.html is therefore also written under
+          # the key of each route that has no parameter (scripts/static-routes.js says which
+          # and why). After the sync, because --delete removes every key that is not a file
+          # in dist/: for the seconds in between, a deep link falls back to the 404 it had
+          # before, and still renders. The keys have no extension, so the content type is
+          # set here; the cache headers are left as index.html's own, which sets none.
+          set -o pipefail
+          node scripts/static-routes.js | sed 's#^/##' | xargs -P 8 -I{} \
+            aws s3 cp dist/index.html "s3://${{ steps.meta.outputs.bucket }}/{}" \
+              --content-type "text/html" \
+              --only-show-errors \
+              --endpoint-url https://s3.fr-par.scw.cloud
