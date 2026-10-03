@@ -144,10 +144,18 @@ jobs:
           # and why). After the sync, because --delete removes every key that is not a file
           # in dist/: for the seconds in between, a deep link falls back to the 404 it had
           # before, and still renders. The keys have no extension, so the content type is
-          # set here; the cache headers are left as index.html's own, which sets none.
+          # set here.
+          #
+          # Every copy of index.html, the original included, goes up with no-cache. Without
+          # a Cache-Control header the edge keeps a response for its fallback TTL (120s on
+          # all three pipelines, read 2026-10-03), and the sync above has just deleted the
+          # hashed bundles the previous index.html names: for up to two minutes after each
+          # deploy a cached page would load scripts that no longer exist. The bundles keep
+          # the edge default; their names change with their content.
           set -o pipefail
-          node scripts/static-routes.js | sed 's#^/##' | xargs -P 8 -I{} \
+          ( echo index.html; node scripts/static-routes.js | sed 's#^/##' ) | xargs -P 8 -I{} \
             aws s3 cp dist/index.html "s3://${{ steps.meta.outputs.bucket }}/{}" \
               --content-type "text/html" \
+              --cache-control "no-cache" \
               --only-show-errors \
               --endpoint-url https://s3.fr-par.scw.cloud
