@@ -38,6 +38,20 @@ export default {
             }
         })
     },
+    /**
+     * One call, read by id with its recording and its transcript, whether it is in the inbox, the
+     * archive or the trash: a search by id is not narrowed by those views. Resolves to the call, or
+     * to null when the owner has no call with that id.
+     */
+    get: function(user, businessId, id) {
+        return axios.post(BASE_URL + "/search?enableDataMap=true",
+            { businessId: businessId, id: id, size: 1 },
+            { headers: getHeaders(user) }
+        ).then((response) => {
+            const hits = response.data && response.data.hits ? response.data.hits : [];
+            return hits.length > 0 ? hits[0].document : null;
+        });
+    },
     archive: function(user, id) {
         return axios.post(BASE_URL + "/archive?value=true",
             { id: id },

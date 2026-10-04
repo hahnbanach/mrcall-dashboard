@@ -475,8 +475,6 @@
       "hideReadLabel": "Læste beskeder",
       "hideReadOn": "Skjulte",
       "hideReadOff": "Synlige",
-      "showMore": "Vis mere",
-      "showLess": "Vis mindre",
       "duration": "{minutes}m {seconds}s",
       "unknownContact": "Ukendt opkalder",
       "justNow": "Lige nu",
@@ -540,7 +538,25 @@
         "trashEmpty": "Papirkurven er tom",
         "trashEmptyDescription": "Slettede samtaler vises her."
       },
-      "unreadCount": "{count} ulæste"
+      "unreadCount": "{count} ulæste",
+      "details": {
+        "callBack": "Ring tilbage",
+        "whatsapp": "WhatsApp",
+        "addToCalendar": "Tilføj til Google Kalender",
+        "booking": "Booking",
+        "day": "Dag",
+        "time": "Tidspunkt",
+        "people": "Personer",
+        "summary": "Opsummering af opkaldet",
+        "nameAsHeard": "Navn som det blev forstået",
+        "previousCalls": "Tidligere opkald ({count})",
+        "transcript": "Samtale ({count} beskeder)",
+        "listen": "Lyt til optagelsen",
+        "recordingMissing": "Optagelsen af dette opkald er ikke tilgængelig.",
+        "openedFromLink": "Opkald åbnet fra linket",
+        "openedMissing": "Dette opkald blev ikke fundet blandt dine samtaler.",
+        "closeOpened": "Luk"
+      }
     },
     "deleteaccount": {
       "deleteAccountTitle": "Slet din konto",

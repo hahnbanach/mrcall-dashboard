@@ -480,8 +480,6 @@
       "hideReadLabel": "Read messages",
       "hideReadOn": "Hidden",
       "hideReadOff": "Visible",
-      "showMore": "Show more",
-      "showLess": "Show less",
       "duration": "{minutes}m {seconds}s",
       "unknownContact": "Unknown caller",
       "justNow": "Just now",
@@ -545,7 +543,25 @@
         "trashEmpty": "Trash is empty",
         "trashEmptyDescription": "Deleted conversations will appear here."
       },
-      "unreadCount": "{count} unread"
+      "unreadCount": "{count} unread",
+      "details": {
+        "callBack": "Call back",
+        "whatsapp": "WhatsApp",
+        "addToCalendar": "Add to Google Calendar",
+        "booking": "Booking",
+        "day": "Day",
+        "time": "Time",
+        "people": "People",
+        "summary": "Call summary",
+        "nameAsHeard": "Name as understood",
+        "previousCalls": "Previous calls ({count})",
+        "transcript": "Conversation ({count} messages)",
+        "listen": "Listen to the recording",
+        "recordingMissing": "The recording of this call is not available.",
+        "openedFromLink": "Call opened from the link",
+        "openedMissing": "This call was not found among your conversations.",
+        "closeOpened": "Close"
+      }
     },
     "deleteaccount": {
       "deleteAccountTitle": "Delete your account",

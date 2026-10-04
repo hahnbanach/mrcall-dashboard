@@ -475,8 +475,6 @@
       "hideReadLabel": "Αναγνωσμένα μηνύματα",
       "hideReadOn": "Κρυφά",
       "hideReadOff": "Ορατά",
-      "showMore": "Εμφάνιση περισσότερων",
-      "showLess": "Εμφάνιση λιγότερων",
       "duration": "{minutes}λ {seconds}δ",
       "unknownContact": "Άγνωστος καλών",
       "justNow": "Μόλις τώρα",
@@ -540,7 +538,25 @@
         "trashEmpty": "Ο κάδος είναι κενός",
         "trashEmptyDescription": "Οι διαγραμμένες συνομιλίες θα εμφανιστούν εδώ."
       },
-      "unreadCount": "{count} μη αναγνωσμένα"
+      "unreadCount": "{count} μη αναγνωσμένα",
+      "details": {
+        "callBack": "Επανάκληση",
+        "whatsapp": "WhatsApp",
+        "addToCalendar": "Προσθήκη στο Google Calendar",
+        "booking": "Κράτηση",
+        "day": "Ημέρα",
+        "time": "Ώρα",
+        "people": "Άτομα",
+        "summary": "Σύνοψη κλήσης",
+        "nameAsHeard": "Όνομα όπως έγινε κατανοητό",
+        "previousCalls": "Προηγούμενες κλήσεις ({count})",
+        "transcript": "Συνομιλία ({count} μηνύματα)",
+        "listen": "Ακρόαση της ηχογράφησης",
+        "recordingMissing": "Η ηχογράφηση αυτής της κλήσης δεν είναι διαθέσιμη.",
+        "openedFromLink": "Κλήση που άνοιξε από τον σύνδεσμο",
+        "openedMissing": "Αυτή η κλήση δεν βρέθηκε στις συνομιλίες σας.",
+        "closeOpened": "Κλείσιμο"
+      }
     },
     "deleteaccount": {
       "deleteAccountTitle": "Διαγραφή του λογαριασμού σας",

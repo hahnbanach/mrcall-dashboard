@@ -475,8 +475,6 @@
       "hideReadLabel": "Loetud sõnumid",
       "hideReadOn": "Peidetud",
       "hideReadOff": "Nähtav",
-      "showMore": "Näita rohkem",
-      "showLess": "Näita vähem",
       "duration": "{minutes}m {seconds}s",
       "unknownContact": "Tundmatu helistaja",
       "justNow": "Just praegu",
@@ -540,7 +538,25 @@
         "trashEmpty": "Prügikast on tühi",
         "trashEmptyDescription": "Kustutatud vestlused ilmuvad siia."
       },
-      "unreadCount": "{count} lugemata"
+      "unreadCount": "{count} lugemata",
+      "details": {
+        "callBack": "Helista tagasi",
+        "whatsapp": "WhatsApp",
+        "addToCalendar": "Lisa Google'i kalendrisse",
+        "booking": "Broneering",
+        "day": "Päev",
+        "time": "Kellaaeg",
+        "people": "Inimesed",
+        "summary": "Kõne kokkuvõte",
+        "nameAsHeard": "Nimi nii, nagu see aru saadi",
+        "previousCalls": "Varasemad kõned ({count})",
+        "transcript": "Vestlus ({count} sõnumit)",
+        "listen": "Kuula salvestist",
+        "recordingMissing": "Selle kõne salvestis pole saadaval.",
+        "openedFromLink": "Lingi kaudu avatud kõne",
+        "openedMissing": "Seda kõnet ei leitud teie vestluste hulgast.",
+        "closeOpened": "Sulge"
+      }
     },
     "deleteaccount": {
       "deleteAccountTitle": "Kustutage oma konto",

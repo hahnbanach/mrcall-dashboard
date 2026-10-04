@@ -475,8 +475,6 @@
       "hideReadLabel": "Luetut viestit",
       "hideReadOn": "Piilotettu",
       "hideReadOff": "Näkyvissä",
-      "showMore": "Näytä lisää",
-      "showLess": "Näytä vähemmän",
       "duration": "{minutes}m {seconds}s",
       "unknownContact": "Tuntematon soittaja",
       "justNow": "Juuri nyt",
@@ -540,7 +538,25 @@
         "trashEmpty": "Roskakori on tyhjä",
         "trashEmptyDescription": "Poistetut keskustelut näkyvät täällä."
       },
-      "unreadCount": "{count} lukematonta"
+      "unreadCount": "{count} lukematonta",
+      "details": {
+        "callBack": "Soita takaisin",
+        "whatsapp": "WhatsApp",
+        "addToCalendar": "Lisää Google-kalenteriin",
+        "booking": "Varaus",
+        "day": "Päivä",
+        "time": "Aika",
+        "people": "Henkilöt",
+        "summary": "Puhelun yhteenveto",
+        "nameAsHeard": "Nimi sellaisena kuin se ymmärrettiin",
+        "previousCalls": "Aiemmat puhelut ({count})",
+        "transcript": "Keskustelu ({count} viestiä)",
+        "listen": "Kuuntele tallenne",
+        "recordingMissing": "Tämän puhelun tallenne ei ole saatavilla.",
+        "openedFromLink": "Linkistä avattu puhelu",
+        "openedMissing": "Tätä puhelua ei löytynyt keskusteluistasi.",
+        "closeOpened": "Sulje"
+      }
     },
     "deleteaccount": {
       "deleteAccountTitle": "Poista tilisi",

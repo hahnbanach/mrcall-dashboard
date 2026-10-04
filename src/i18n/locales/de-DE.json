@@ -476,8 +476,6 @@
       "hideReadLabel": "Gelesene Nachrichten",
       "hideReadOn": "Ausgeblendet",
       "hideReadOff": "Sichtbar",
-      "showMore": "Mehr anzeigen",
-      "showLess": "Weniger anzeigen",
       "duration": "{minutes}m {seconds}s",
       "unknownContact": "Unbekannter Anrufer",
       "justNow": "Gerade eben",
@@ -541,7 +539,25 @@
         "trashEmpty": "Papierkorb ist leer",
         "trashEmptyDescription": "Gelöschte Gespräche erscheinen hier."
       },
-      "unreadCount": "{count} ungelesen"
+      "unreadCount": "{count} ungelesen",
+      "details": {
+        "callBack": "Zurückrufen",
+        "whatsapp": "WhatsApp",
+        "addToCalendar": "Zum Google Kalender hinzufügen",
+        "booking": "Buchung",
+        "day": "Tag",
+        "time": "Uhrzeit",
+        "people": "Personen",
+        "summary": "Zusammenfassung des Anrufs",
+        "nameAsHeard": "Name, wie er verstanden wurde",
+        "previousCalls": "Frühere Anrufe ({count})",
+        "transcript": "Gespräch ({count} Nachrichten)",
+        "listen": "Aufnahme anhören",
+        "recordingMissing": "Die Aufnahme dieses Anrufs ist nicht verfügbar.",
+        "openedFromLink": "Über den Link geöffneter Anruf",
+        "openedMissing": "Dieser Anruf wurde in deinen Gesprächen nicht gefunden.",
+        "closeOpened": "Schließen"
+      }
     },
     "deleteaccount": {
       "deleteAccountTitle": "Dein Konto löschen",

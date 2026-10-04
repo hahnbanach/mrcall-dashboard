@@ -480,8 +480,6 @@
       "hideReadLabel": "Messaggi letti",
       "hideReadOn": "Nascosti",
       "hideReadOff": "Visibili",
-      "showMore": "Mostra di più",
-      "showLess": "Mostra di meno",
       "duration": "{minutes}m {seconds}s",
       "unknownContact": "Chiamante sconosciuto",
       "justNow": "Adesso",
@@ -545,7 +543,25 @@
         "trashEmpty": "Cestino vuoto",
         "trashEmptyDescription": "Le conversazioni eliminate appariranno qui."
       },
-      "unreadCount": "{count} non letti"
+      "unreadCount": "{count} non letti",
+      "details": {
+        "callBack": "Richiama",
+        "whatsapp": "WhatsApp",
+        "addToCalendar": "Aggiungi a Google Calendar",
+        "booking": "Prenotazione",
+        "day": "Giorno",
+        "time": "Ora",
+        "people": "Persone",
+        "summary": "Riepilogo della chiamata",
+        "nameAsHeard": "Nome come è stato capito",
+        "previousCalls": "Chiamate precedenti ({count})",
+        "transcript": "Conversazione ({count} messaggi)",
+        "listen": "Ascolta la registrazione",
+        "recordingMissing": "La registrazione di questa chiamata non è disponibile.",
+        "openedFromLink": "Chiamata aperta dal link",
+        "openedMissing": "Questa chiamata non è stata trovata tra le tue conversazioni.",
+        "closeOpened": "Chiudi"
+      }
     },
     "deleteaccount": {
       "deleteAccountTitle": "Cancella il tuo account",

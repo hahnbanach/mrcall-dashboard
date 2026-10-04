@@ -475,8 +475,6 @@
       "hideReadLabel": "Gelezen berichten",
       "hideReadOn": "Verborgen",
       "hideReadOff": "Zichtbaar",
-      "showMore": "Meer tonen",
-      "showLess": "Minder tonen",
       "duration": "{minutes}m {seconds}s",
       "unknownContact": "Onbekende beller",
       "justNow": "Zojuist",
@@ -540,7 +538,25 @@
         "trashEmpty": "Prullenbak is leeg",
         "trashEmptyDescription": "Verwijderde gesprekken verschijnen hier."
       },
-      "unreadCount": "{count} ongelezen"
+      "unreadCount": "{count} ongelezen",
+      "details": {
+        "callBack": "Terugbellen",
+        "whatsapp": "WhatsApp",
+        "addToCalendar": "Toevoegen aan Google Agenda",
+        "booking": "Boeking",
+        "day": "Dag",
+        "time": "Tijd",
+        "people": "Personen",
+        "summary": "Samenvatting van het gesprek",
+        "nameAsHeard": "Naam zoals begrepen",
+        "previousCalls": "Eerdere gesprekken ({count})",
+        "transcript": "Gesprek ({count} berichten)",
+        "listen": "Opname beluisteren",
+        "recordingMissing": "De opname van dit gesprek is niet beschikbaar.",
+        "openedFromLink": "Gesprek geopend via de link",
+        "openedMissing": "Dit gesprek is niet gevonden tussen je gesprekken.",
+        "closeOpened": "Sluiten"
+      }
     },
     "deleteaccount": {
       "deleteAccountTitle": "Uw account verwijderen",

@@ -475,8 +475,6 @@
       "hideReadLabel": "Lästa meddelanden",
       "hideReadOn": "Dolda",
       "hideReadOff": "Synliga",
-      "showMore": "Visa mer",
-      "showLess": "Visa mindre",
       "duration": "{minutes}m {seconds}s",
       "unknownContact": "Okänd uppringare",
       "justNow": "Just nu",
@@ -540,7 +538,25 @@
         "trashEmpty": "Papperskorgen är tom",
         "trashEmptyDescription": "Borttagna konversationer visas här."
       },
-      "unreadCount": "{count} olästa"
+      "unreadCount": "{count} olästa",
+      "details": {
+        "callBack": "Ring tillbaka",
+        "whatsapp": "WhatsApp",
+        "addToCalendar": "Lägg till i Google Kalender",
+        "booking": "Bokning",
+        "day": "Dag",
+        "time": "Tid",
+        "people": "Personer",
+        "summary": "Sammanfattning av samtalet",
+        "nameAsHeard": "Namn som det uppfattades",
+        "previousCalls": "Tidigare samtal ({count})",
+        "transcript": "Samtal ({count} meddelanden)",
+        "listen": "Lyssna på inspelningen",
+        "recordingMissing": "Inspelningen av det här samtalet är inte tillgänglig.",
+        "openedFromLink": "Samtal öppnat från länken",
+        "openedMissing": "Det här samtalet hittades inte bland dina samtal.",
+        "closeOpened": "Stäng"
+      }
     },
     "deleteaccount": {
       "deleteAccountTitle": "Ta bort ditt konto",

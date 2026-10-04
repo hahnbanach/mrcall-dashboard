@@ -6,6 +6,44 @@
       :style="{ height: '0.3em', visibility: showProgressBar ? 'visible' : 'hidden' }"
     />
     <div v-if="user">
+      <!-- The call a link named (?conversation=<id>), from a call email: shown open at the top of
+           the page, above the views and the filters, which would push it below the fold on a phone,
+           and outside whatever view the list is in, since it may sit in the archive or the trash -->
+      <div v-if="openedId" class="conversation-table-container">
+        <div v-if="opened" class="conversation-card opened-card">
+          <div class="opened-label">{{ $t("components.conversations.details.openedFromLink") }}</div>
+          <div class="card-header">
+            <div class="contact-info">
+              <span class="contact-name">{{ callerName(opened) }}</span>
+              <span v-if="opened.contactNumber" class="contact-number">{{ opened.contactNumber }}</span>
+            </div>
+            <div class="timestamp-section">
+              <span class="timestamp">{{ timestampToDate(opened.startTimestamp) }}</span>
+            </div>
+            <button
+              type="button"
+              class="action-btn"
+              :title="$t('components.conversations.details.closeOpened')"
+              :aria-label="$t('components.conversations.details.closeOpened')"
+              @click="closeOpened"
+            >
+              <i class="pi pi-times"></i>
+            </button>
+          </div>
+          <CallDetailsPanel
+            :key="opened.id"
+            :conversation="opened"
+            :business-id="businessId"
+            :user="user"
+            :expanded="true"
+            @error="recordingFailed"
+          />
+        </div>
+        <div v-else-if="openedState === 'missing'" class="conversation-card opened-card">
+          <p class="opened-missing">{{ $t("components.conversations.details.openedMissing") }}</p>
+        </div>
+      </div>
+
       <!-- View Switcher -->
       <div v-if="queryConvResultReady" class="conversation-table-container">
         <div class="view-switcher">
@@ -221,10 +259,7 @@
                 <div class="contact-info">
                   <span class="contact-name">
                     <span v-if="!isRead(conversation)" class="unread-dot"></span>
-                    {{
-                      conversation.contactName ||
-                      $t("components.conversations.unknownContact")
-                    }}
+                    {{ callerName(conversation) }}
                   </span>
                   <span
                     v-if="conversation.contactNumber"
@@ -324,55 +359,13 @@
                 </div>
               </div>
 
-              <div
-                v-if="
-                  conversation.data &&
-                  conversation.data.conversation_transcription &&
-                  conversation.data.conversation_transcription.length > 0
-                "
-                class="card-body"
-              >
-                <div
-                  class="message-preview"
-                  :class="{ 'message-collapsed': !(expandedCards[key] !== undefined ? expandedCards[key] : messagesExpanded) }"
-                >
-                  <div
-                    v-for="(msg, idx) in conversation.data
-                      .conversation_transcription"
-                    :key="idx"
-                    class="transcript-message"
-                    :class="
-                      msg.speaker_type === 'agent'
-                        ? 'transcript-agent'
-                        : 'transcript-user'
-                    "
-                  >
-                    <span class="transcript-alias">{{ msg.alias }}</span>
-                    <span class="transcript-content">{{ msg.content }}</span>
-                  </div>
-                </div>
-                <button
-                  v-if="conversation.data.conversation_transcription.length > 2"
-                  type="button"
-                  class="expand-btn"
-                  @click="toggleCardExpanded(key)"
-                >
-                  {{
-                    (expandedCards[key] !== undefined ? expandedCards[key] : messagesExpanded)
-                      ? $t("components.conversations.showLess")
-                      : $t("components.conversations.showMore")
-                  }}
-                </button>
-              </div>
-
-              <div v-if="conversation.audio" class="card-audio">
-                <audio controls style="width: 100%">
-                  <source
-                    :src="'data:audio/mpeg;base64,' + conversation.audio"
-                  />
-                  {{ $t("components.conversations.table.audioNotSupported") }}
-                </audio>
-              </div>
+              <CallDetailsPanel
+                :conversation="conversation"
+                :business-id="businessId"
+                :user="user"
+                :expanded="messagesExpanded"
+                @error="recordingFailed"
+              />
             </div>
           </div>
         </div>
@@ -449,9 +442,10 @@ import { auth } from "@/firebase/config";
 import { interval } from "rxjs";
 import Tr from "@/i18n/translation";
 import ConversationApi from "@/utils/Conversation";
+import CallDetailsPanel from "@/components/conversations/CallDetailsPanel";
 
 export default {
-  components: {},
+  components: { CallDetailsPanel },
   setup() {
     const store = useStore();
     const toast = useToast();
@@ -483,8 +477,11 @@ export default {
       showProgressBar: false,
       isAdmin: router.currentRoute.value.query.admin,
       queryConvResultReady: false,
-      messagesExpanded: true,
-      expandedCards: {},
+      // the transcripts of the list, closed by default: the summary and the fields come first
+      messagesExpanded: false,
+      openedId: null,
+      opened: null,
+      openedState: null,
       activeView: "inbox",
       unreadCount: 0,
       animatingOut: new Set(),
@@ -599,14 +596,36 @@ export default {
       const seconds = totalSeconds % 60;
       return this.$t("components.conversations.duration", { minutes, seconds });
     },
-    isCardExpanded(key) {
-      if (this.expandedCards[key] !== undefined) {
-        return this.expandedCards[key];
-      }
-      return this.messagesExpanded;
+    callerName(conversation) {
+      const details = conversation.details || {};
+      return details.callerName || conversation.contactName ||
+        this.$t("components.conversations.unknownContact");
     },
-    toggleCardExpanded(key) {
-      this.expandedCards[key] = !this.isCardExpanded(key);
+    async openConversation(id) {
+      this.openedId = id;
+      this.openedState = "loading";
+      try {
+        this.opened = await ConversationApi.get(this.user, this.businessId, id);
+        this.openedState = this.opened ? "found" : "missing";
+      } catch (error) {
+        console.error("Conversation not opened:", id, error.response ? error.response.status : "");
+        this.openedState = "missing";
+      }
+    },
+    closeOpened() {
+      this.openedId = null;
+      this.opened = null;
+      this.openedState = null;
+      const query = { ...this.$route.query };
+      delete query.conversation;
+      this.router.replace({ path: this.$route.path, query });
+    },
+    recordingFailed() {
+      this.toast.add({
+        severity: "error",
+        summary: this.$t("components.conversations.toast.actionFailed"),
+        life: 5000,
+      });
     },
     clearDateFilter() {
       this.rangeValue = null;
@@ -721,7 +740,8 @@ export default {
       };
       const request = {
         businessId: self.businessId,
-        lightweight: false,
+        // the recordings stay out of the list: CallDetailsPanel reads one when it is played
+        lightweight: true,
         from: self.first,
         size: self.size,
         ...self.getViewFilters(),
@@ -796,7 +816,8 @@ export default {
       };
       const request = {
         businessId: self.businessId,
-        lightweight: false,
+        // the recordings stay out of the list: CallDetailsPanel reads one when it is played
+        lightweight: true,
         from: 0,
         size: self.size,
         timestampGte: self.newestTimestamp + 1,
@@ -1226,7 +1247,6 @@ export default {
       this.first = 0;
       this.items = new Map();
       this.totalHits = 0;
-      this.expandedCards = {};
       this.newestTimestamp = null;
       this.conversationList();
     },
@@ -1270,6 +1290,7 @@ export default {
       onAuthStateChanged(auth, (user) => {
         if (user && user.emailVerified && !user.isAnonymous) {
           console.debug("UserStateChanged:", user);
+          if (this.$route.query.conversation) this.openConversation(this.$route.query.conversation);
           this.conversationList();
           this.periodicEvent = interval(10000).subscribe(() => {
             this.pollForNewConversations();
@@ -1277,6 +1298,7 @@ export default {
         }
       });
     } else if (this.store.state.user.accessToken) {
+      if (this.$route.query.conversation) this.openConversation(this.$route.query.conversation);
       this.conversationList();
       this.periodicEvent = interval(10000).subscribe(() => {
         this.pollForNewConversations();
@@ -1661,79 +1683,24 @@ export default {
   }
 }
 
-.card-body {
-  margin-bottom: 12px;
+.opened-card {
+  margin: 16px 0;
+  border-left: 4px solid @mrcall_blue;
 }
 
-.message-preview {
-  font-size: 14px;
-  line-height: 1.6;
-  color: @mrcall_dark_grey_text;
-  word-break: break-word;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-
-  &.message-collapsed {
-    .transcript-message:nth-child(n + 3) {
-      display: none;
-    }
-  }
-}
-
-.transcript-message {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  padding: 8px 12px;
-  border-radius: 8px;
-}
-
-.transcript-agent {
-  background: @mrcall_light_grey_2;
-  align-self: flex-start;
-  max-width: 85%;
-}
-
-.transcript-user {
-  background: #e8f4fd;
-  align-self: flex-end;
-  max-width: 85%;
-}
-
-.transcript-alias {
+.opened-label {
   font-size: 12px;
-  font-weight: 600;
-  color: @mrcall_grey_text;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: @mrcall_blue;
+  margin-bottom: 8px;
 }
 
-.transcript-content {
+.opened-missing {
+  margin: 0;
   font-size: 14px;
-  color: @mrcall_dark_grey_text;
-}
-
-.expand-btn {
-  background: none;
-  border: none;
   color: @mrcall_grey_text;
-  font-size: 14px;
-  font-weight: 500;
-  padding: 4px 0;
-  cursor: pointer;
-  margin-top: 4px;
-
-  &:hover {
-    text-decoration: underline;
-  }
-}
-
-.card-audio {
-  margin-top: 12px;
-
-  audio {
-    width: 100%;
-    height: 40px;
-  }
 }
 
 // Empty State

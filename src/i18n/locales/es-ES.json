@@ -473,8 +473,6 @@
       "hideReadLabel": "Mensajes leídos",
       "hideReadOn": "Ocultos",
       "hideReadOff": "Visibles",
-      "showMore": "Mostrar más",
-      "showLess": "Mostrar menos",
       "duration": "{minutes}m {seconds}s",
       "unknownContact": "Llamante desconocido",
       "justNow": "Ahora mismo",
@@ -540,7 +538,25 @@
       },
       "unreadCount": "{count} no leídos",
       "pageFilterLabel": "Filtrar esta página",
-      "pageFilterPlaceholder": "Escribe para filtrar los resultados de esta página..."
+      "pageFilterPlaceholder": "Escribe para filtrar los resultados de esta página...",
+      "details": {
+        "callBack": "Devolver la llamada",
+        "whatsapp": "WhatsApp",
+        "addToCalendar": "Añadir a Google Calendar",
+        "booking": "Reserva",
+        "day": "Día",
+        "time": "Hora",
+        "people": "Personas",
+        "summary": "Resumen de la llamada",
+        "nameAsHeard": "Nombre tal como se entendió",
+        "previousCalls": "Llamadas anteriores ({count})",
+        "transcript": "Conversación ({count} mensajes)",
+        "listen": "Escuchar la grabación",
+        "recordingMissing": "La grabación de esta llamada no está disponible.",
+        "openedFromLink": "Llamada abierta desde el enlace",
+        "openedMissing": "Esta llamada no se encontró entre tus conversaciones.",
+        "closeOpened": "Cerrar"
+      }
     },
     "deleteaccount": {
       "deleteAccountTitle": "Eliminar tu cuenta",

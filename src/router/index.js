@@ -362,7 +362,10 @@ const routes = [
     path: '/conversations',
     name: 'Conversations',
     component: Conversations,
-    props: true
+    props: true,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/whatsappweb',
@@ -579,23 +582,30 @@ router.beforeEach(async (to, from, next) => {
   }
 
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  // Sign-in comes back to the page that asked for it, with its query: a call email links to
+  // /conversations?id=<business>&conversation=<call>, and an owner without a session must land on
+  // that call, not on the list of businesses. Signin reads `redirect` as {path, query}.
+  const toSignin = () => next({
+    path: '/signin',
+    query: { redirect: JSON.stringify({ path: to.path, query: to.query }) }
+  });
   if (requiresAuth) {
     try {
       const user = await getUser();
       // First check if we have a user
       if (!user) {
-        return next('login');
+        return toSignin();
       }
 
       // Then check if user is anonymous
       if (user.isAnonymous) {
-        return next('login');
+        return toSignin();
       }
 
       // For Google users, skip email verification check
       const isVerified = user.providerData[0]?.providerId === 'google.com' || user.emailVerified;
       if (!isVerified) {
-        return next('login');
+        return toSignin();
       }
 
       // Check role-based access
@@ -621,7 +631,7 @@ router.beforeEach(async (to, from, next) => {
       return next();
     } catch (error) {
       console.error('Auth check error:', error);
-      return next('login');
+      return toSignin();
     }
   }
   next();

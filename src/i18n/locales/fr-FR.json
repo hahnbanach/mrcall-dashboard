@@ -476,8 +476,6 @@
       "hideReadLabel": "Messages lus",
       "hideReadOn": "Masqués",
       "hideReadOff": "Visibles",
-      "showMore": "Afficher plus",
-      "showLess": "Afficher moins",
       "duration": "{minutes}m {seconds}s",
       "unknownContact": "Appelant inconnu",
       "justNow": "À l'instant",
@@ -541,7 +539,25 @@
         "trashEmpty": "Corbeille vide",
         "trashEmptyDescription": "Les conversations supprimées apparaîtront ici."
       },
-      "unreadCount": "{count} non lus"
+      "unreadCount": "{count} non lus",
+      "details": {
+        "callBack": "Rappeler",
+        "whatsapp": "WhatsApp",
+        "addToCalendar": "Ajouter à Google Agenda",
+        "booking": "Réservation",
+        "day": "Jour",
+        "time": "Heure",
+        "people": "Personnes",
+        "summary": "Résumé de l'appel",
+        "nameAsHeard": "Nom tel qu'il a été compris",
+        "previousCalls": "Appels précédents ({count})",
+        "transcript": "Conversation ({count} messages)",
+        "listen": "Écouter l'enregistrement",
+        "recordingMissing": "L'enregistrement de cet appel n'est pas disponible.",
+        "openedFromLink": "Appel ouvert depuis le lien",
+        "openedMissing": "Cet appel est introuvable parmi vos conversations.",
+        "closeOpened": "Fermer"
+      }
     },
     "deleteaccount": {
       "deleteAccountTitle": "Supprimer votre compte",
