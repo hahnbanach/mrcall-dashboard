@@ -1461,24 +1461,6 @@
         "noBusinessSelectedTitle": "Sünkroniseerimine puudub",
         "noBusinessSelectedMessage": "Kui te ei soovi sünkroniseerida, jätkake lihtsalt. Vastasel juhul minge tagasi"
       },
-      "searchbusinessinfo": {
-        "titleText": "Teave teie ettevõtte kohta",
-        "moveForward": "Edasi",
-        "moveBackward": "Tagasi",
-        "reload": "Uus otsing",
-        "loading": "Otsimine...",
-        "continueButtonLabel": "Edasi",
-        "removeSelection": "Kustuta",
-        "subtitleText": "Saate oma ettevõtte teavet muuta või muuta seda hiljem igal ajal.",
-        "subtitleTextSearch": "Otsime teie ettevõtte kohta avalikku teavet algse seadistuse jaoks.",
-        "businessInformation": "Teave teie ettevõtte kohta",
-        "searchYourCompanyPlaceholder": "Otsige Google Businessist",
-        "skipInfo": "Jätkake ilma seda teavet kasutamata",
-        "searchFailedTitle": "Otsing pole saadaval",
-        "searchFailedMessage": "Ettevõtte teavet ei õnnestunud automaatselt hankida. Saate selle käsitsi sisestada või selle sammu vahele jätta.",
-        "noSearchResults": "Otsingutulemusi ei leitud",
-        "notFoundSubtitle": "Proovige sisestada täielik nimi ja aadress."
-      },
       "switchboardconfiguration": {
         "titleText": "Broneerige kohtumine lüliti seadistamiseks",
         "moveBackward": "Tagasi",

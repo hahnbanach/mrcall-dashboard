@@ -1461,24 +1461,6 @@
         "noBusinessSelectedTitle": "Geen synchronisatie",
         "noBusinessSelectedMessage": "Als u niet wilt synchroniseren, ga dan gewoon verder. Ga anders terug"
       },
-      "searchbusinessinfo": {
-        "titleText": "Informatie over uw bedrijf",
-        "moveForward": "Volgende",
-        "moveBackward": "Terug",
-        "reload": "Nieuwe zoekopdracht",
-        "loading": "Zoeken...",
-        "continueButtonLabel": "Volgende",
-        "removeSelection": "Verwijderen",
-        "subtitleText": "U kunt uw bedrijfsinformatie bewerken of later op elk moment wijzigen.",
-        "subtitleTextSearch": "We zoeken naar openbare informatie over uw bedrijf voor een eerste configuratie.",
-        "businessInformation": "Informatie over uw bedrijf",
-        "searchYourCompanyPlaceholder": "Zoeken op Google Bedrijf",
-        "skipInfo": "Doorgaan zonder deze informatie te gebruiken",
-        "searchFailedTitle": "Zoeken niet beschikbaar",
-        "searchFailedMessage": "We konden de bedrijfsinformatie niet automatisch ophalen. U kunt deze handmatig invoeren of deze stap overslaan.",
-        "noSearchResults": "Geen zoekresultaten gevonden",
-        "notFoundSubtitle": "Probeer de volledige naam en het adres in te voeren."
-      },
       "switchboardconfiguration": {
         "titleText": "Maak een afspraak voor de configuratie van de telefooncentrale",
         "moveBackward": "Terug",

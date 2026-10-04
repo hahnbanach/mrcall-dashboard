@@ -1474,24 +1474,6 @@
         "subtitleText": "Angi om du setter opp denne enheten eller en annen enhet",
         "thisPhone": "Denne enheten",
         "otherPhone": "Annen enhet"
-      },
-      "searchbusinessinfo": {
-        "titleText": "Informasjon om bedriften din",
-        "moveForward": "Neste",
-        "moveBackward": "Tilbake",
-        "reload": "Nytt sok",
-        "loading": "Soker...",
-        "continueButtonLabel": "Neste",
-        "removeSelection": "Slett",
-        "subtitleText": "Du kan redigere bedriftsinformasjonen din eller endre den nar som helst.",
-        "subtitleTextSearch": "Vi soker etter offentlig informasjon om bedriften din for et forste oppsett.",
-        "businessInformation": "Informasjon om bedriften din",
-        "searchYourCompanyPlaceholder": "Sok pa Google Business",
-        "skipInfo": "Fortsett uten a bruke denne informasjonen",
-        "searchFailedTitle": "Søk ikke tilgjengelig",
-        "searchFailedMessage": "Vi kunne ikke hente bedriftsinformasjonen automatisk. Du kan legge den inn manuelt eller hoppe over dette trinnet.",
-        "noSearchResults": "Ingen sokresultater funnet",
-        "notFoundSubtitle": "Prov a skrive inn fullt navn og adresse."
       }
     },
     "sign": {

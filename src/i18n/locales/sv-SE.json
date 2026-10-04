@@ -1461,24 +1461,6 @@
         "noBusinessSelectedTitle": "Ingen synkronisering",
         "noBusinessSelectedMessage": "Om du inte vill synkronisera, fortsätt bara. Annars gå tillbaka"
       },
-      "searchbusinessinfo": {
-        "titleText": "Information om ditt företag",
-        "moveForward": "Nästa",
-        "moveBackward": "Tillbaka",
-        "reload": "Ny sökning",
-        "loading": "Söker...",
-        "continueButtonLabel": "Nästa",
-        "removeSelection": "Ta bort",
-        "subtitleText": "Du kan redigera din företagsinformation eller ändra den när som helst.",
-        "subtitleTextSearch": "Vi söker efter offentlig information om ditt företag för en första konfiguration.",
-        "businessInformation": "Information om ditt företag",
-        "searchYourCompanyPlaceholder": "Sök på Google Business",
-        "skipInfo": "Fortsätt utan att använda denna information",
-        "searchFailedTitle": "Sökning inte tillgänglig",
-        "searchFailedMessage": "Vi kunde inte hämta företagsinformationen automatiskt. Du kan ange den manuellt eller hoppa över detta steg.",
-        "noSearchResults": "Inga sökresultat hittades",
-        "notFoundSubtitle": "Försök ange det fullständiga namnet och adressen."
-      },
       "switchboardconfiguration": {
         "titleText": "Boka ett möte för växelkonfiguration",
         "moveBackward": "Tillbaka",

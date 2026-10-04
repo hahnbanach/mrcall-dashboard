@@ -1460,24 +1460,6 @@
         "noBusinessSelectedTitle": "Aucune synchronisation",
         "noBusinessSelectedMessage": "Si vous ne souhaitez connecter l'assistant à aucun profil, cliquez sur Suivant..."
       },
-      "searchbusinessinfo": {
-        "titleText": "Informations sur votre entreprise",
-        "moveForward": "Suivant",
-        "moveBackward": "Précédent",
-        "reload": "Nouvelle recherche",
-        "loading": "Recherche...",
-        "continueButtonLabel": "Suivant",
-        "removeSelection": "Supprimer",
-        "subtitleText": "Vous pouvez modifier les informations sur votre entreprise ou les changer ultérieurement à tout moment.",
-        "subtitleTextSearch": "Nous recherchons des informations publiques sur votre entreprise pour une première configuration",
-        "businessInformation": "Informations sur votre entreprise",
-        "searchYourCompanyPlaceholder": "Rechercher sur Google Business",
-        "skipInfo": "Continuer sans utiliser ces informations",
-        "searchFailedTitle": "Recherche indisponible",
-        "searchFailedMessage": "Nous n'avons pas pu récupérer automatiquement les informations de l'entreprise. Vous pouvez les saisir manuellement ou passer cette étape.",
-        "noSearchResults": "La recherche n'a donné aucun résultat",
-        "notFoundSubtitle": "Essayez de saisir le nom et l'adresse complète."
-      },
       "switchboardconfiguration": {
         "titleText": "Prendre rendez-vous pour la configuration du standard",
         "moveBackward": "Précédent",

@@ -1461,24 +1461,6 @@
         "noBusinessSelectedTitle": "Ei synkronointia",
         "noBusinessSelectedMessage": "Jos et halua synkronoida, jatka eteenpäin. Muussa tapauksessa palaa takaisin"
       },
-      "searchbusinessinfo": {
-        "titleText": "Tietoja yrityksestäsi",
-        "moveForward": "Seuraava",
-        "moveBackward": "Takaisin",
-        "reload": "Uusi haku",
-        "loading": "Haetaan...",
-        "continueButtonLabel": "Seuraava",
-        "removeSelection": "Poista",
-        "subtitleText": "Voit muokata yritystietojasi tai muuttaa niitä myöhemmin milloin tahansa.",
-        "subtitleTextSearch": "Etsimme julkisia tietoja yrityksestäsi alkuasetuksia varten.",
-        "businessInformation": "Tietoja yrityksestäsi",
-        "searchYourCompanyPlaceholder": "Hae Google Businessista",
-        "skipInfo": "Jatka käyttämättä näitä tietoja",
-        "searchFailedTitle": "Haku ei käytettävissä",
-        "searchFailedMessage": "Yritystietoja ei voitu hakea automaattisesti. Voit syöttää ne manuaalisesti tai ohittaa tämän vaiheen.",
-        "noSearchResults": "Hakutuloksia ei löytynyt",
-        "notFoundSubtitle": "Kokeile syöttää täydellinen nimi ja osoite."
-      },
       "switchboardconfiguration": {
         "titleText": "Varaa aika puhelinkeskuksen määritykseen",
         "moveBackward": "Takaisin",

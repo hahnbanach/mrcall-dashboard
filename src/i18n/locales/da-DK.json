@@ -1461,24 +1461,6 @@
         "noBusinessSelectedTitle": "Ingen synkronisering",
         "noBusinessSelectedMessage": "Hvis du ikke vil synkronisere, så fortsæt blot. Ellers gå tilbage"
       },
-      "searchbusinessinfo": {
-        "titleText": "Oplysninger om din virksomhed",
-        "moveForward": "Næste",
-        "moveBackward": "Tilbage",
-        "reload": "Ny søgning",
-        "loading": "Søger...",
-        "continueButtonLabel": "Næste",
-        "removeSelection": "Slet",
-        "subtitleText": "Du kan redigere dine virksomhedsoplysninger eller ændre dem senere til enhver tid.",
-        "subtitleTextSearch": "Vi søger efter offentlige oplysninger om din virksomhed til den indledende opsætning.",
-        "businessInformation": "Oplysninger om din virksomhed",
-        "searchYourCompanyPlaceholder": "Søg på Google Business",
-        "skipInfo": "Fortsæt uden at bruge disse oplysninger",
-        "searchFailedTitle": "Søgning ikke tilgængelig",
-        "searchFailedMessage": "Vi kunne ikke hente virksomhedsoplysningerne automatisk. Du kan indtaste dem manuelt eller springe dette trin over.",
-        "noSearchResults": "Ingen søgeresultater fundet",
-        "notFoundSubtitle": "Prøv at indtaste det fulde navn og adresse."
-      },
       "switchboardconfiguration": {
         "titleText": "Book en aftale til konfiguration af omstillingsbord",
         "moveBackward": "Tilbage",

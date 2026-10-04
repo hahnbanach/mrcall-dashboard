@@ -1460,24 +1460,6 @@
         "noBusinessSelectedTitle": "No se ha ingresado ningún negocio",
         "noBusinessSelectedMessage": "Si no desea sincronizar, Continuar. De lo contrario Atrás"
       },
-      "searchbusinessinfo": {
-        "titleText": "Información sobre tu negocio",
-        "moveForward": "Siguiente",
-        "moveBackward": "Atrás",
-        "reload": "Nueva búsqueda",
-        "loading": "Buscando...",
-        "continueButtonLabel": "Siguiente",
-        "removeSelection": "Eliminar",
-        "subtitleText": "Puedes editar la información de tu negocio o cambiarla más tarde en cualquier momento.",
-        "subtitleTextSearch": "Estamos buscando información pública sobre tu negocio para una configuración inicial.",
-        "businessInformation": "Información sobre tu negocio",
-        "searchYourCompanyPlaceholder": "Busca en Google Business",
-        "skipInfo": "Continúa sin usar esta información",
-        "searchFailedTitle": "Búsqueda no disponible",
-        "searchFailedMessage": "No pudimos obtener la información del negocio automáticamente. Puedes ingresarla manualmente u omitir este paso.",
-        "noSearchResults": "La búsqueda no arrojó resultados",
-        "notFoundSubtitle": "Intenta ingresar el nombre y la dirección completa."
-      },
       "switchboardconfiguration": {
         "titleText": "Reservar una cita para la configuración del conmutador",
         "moveBackward": "Atrás",

@@ -1460,24 +1460,6 @@
         "noBusinessSelectedTitle": "Keine Synchronisierung",
         "noBusinessSelectedMessage": "Wenn du den Assistenten mit keinem Profil verbinden möchtest, klicke auf Weiter..."
       },
-      "searchbusinessinfo": {
-        "titleText": "Informationen zu deinem Unternehmen",
-        "moveForward": "Weiter",
-        "moveBackward": "Zurück",
-        "reload": "Neue Suche",
-        "loading": "Suche...",
-        "continueButtonLabel": "Weiter",
-        "removeSelection": "Entfernen",
-        "subtitleText": "Du kannst die Informationen zu deinem Unternehmen bearbeiten oder sie später jederzeit ändern.",
-        "subtitleTextSearch": "Wir suchen öffentliche Informationen zu deinem Unternehmen für eine erste Konfiguration",
-        "businessInformation": "Informationen zu deinem Unternehmen",
-        "searchYourCompanyPlaceholder": "Suche bei Google Business",
-        "skipInfo": "Ohne diese Informationen fortfahren",
-        "searchFailedTitle": "Suche nicht verfügbar",
-        "searchFailedMessage": "Die Geschäftsinformationen konnten nicht automatisch abgerufen werden. Du kannst sie manuell eingeben oder diesen Schritt überspringen.",
-        "noSearchResults": "Die Suche ergab keine Ergebnisse",
-        "notFoundSubtitle": "Versuche, Name und vollständige Adresse einzugeben."
-      },
       "switchboardconfiguration": {
         "titleText": "Termin für die Konfiguration der Telefonanlage buchen",
         "moveBackward": "Zurück",
