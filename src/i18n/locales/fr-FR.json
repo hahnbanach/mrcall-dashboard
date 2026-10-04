@@ -849,7 +849,8 @@
         "ownerId": "ID du titulaire",
         "apply": "Appliquer",
         "clear": "Effacer",
-        "breakdownHint": "Sélectionnez une ligne pour n'afficher que cette entreprise."
+        "breakdownHint": "Sélectionnez une ligne pour n'afficher que cette entreprise.",
+        "plan": "Forfait"
       }
     },
     "reseller": {

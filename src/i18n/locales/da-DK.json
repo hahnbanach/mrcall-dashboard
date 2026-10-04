@@ -847,7 +847,8 @@
         "ownerId": "Ejer-ID",
         "apply": "Anvend",
         "clear": "Ryd",
-        "breakdownHint": "Vælg en række for kun at vise den virksomhed."
+        "breakdownHint": "Vælg en række for kun at vise den virksomhed.",
+        "plan": "Abonnement"
       }
     },
     "reseller": {

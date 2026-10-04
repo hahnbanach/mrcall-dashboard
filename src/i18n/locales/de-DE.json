@@ -849,7 +849,8 @@
         "ownerId": "Inhaber-ID",
         "apply": "Anwenden",
         "clear": "Zurücksetzen",
-        "breakdownHint": "Wählen Sie eine Zeile, um nur dieses Unternehmen anzuzeigen."
+        "breakdownHint": "Wählen Sie eine Zeile, um nur dieses Unternehmen anzuzeigen.",
+        "plan": "Tarif"
       }
     },
     "reseller": {

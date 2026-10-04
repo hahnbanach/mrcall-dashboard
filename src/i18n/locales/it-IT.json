@@ -853,7 +853,8 @@
         "ownerId": "ID titolare",
         "apply": "Applica",
         "clear": "Azzera",
-        "breakdownHint": "Seleziona una riga per vedere solo quel business."
+        "breakdownHint": "Seleziona una riga per vedere solo quel business.",
+        "plan": "Piano"
       }
     },
     "reseller": {

@@ -847,7 +847,8 @@
         "ownerId": "Eigenaar-ID",
         "apply": "Toepassen",
         "clear": "Wissen",
-        "breakdownHint": "Selecteer een rij om alleen dat bedrijf te tonen."
+        "breakdownHint": "Selecteer een rij om alleen dat bedrijf te tonen.",
+        "plan": "Abonnement"
       }
     },
     "reseller": {

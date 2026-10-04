@@ -16,8 +16,9 @@ export default {
             { headers: getHeaders(user) }
         );
     },
-    timeseries: function(user, request, granularity) {
-        return axios.post(BASE_URL + "/timeseries?granularity=" + encodeURIComponent(granularity),
+    timeseries: function(user, request, granularity, timezone) {
+        return axios.post(BASE_URL + "/timeseries?granularity=" + encodeURIComponent(granularity) +
+                "&timezone=" + encodeURIComponent(timezone),
             request,
             { headers: getHeaders(user) }
         );

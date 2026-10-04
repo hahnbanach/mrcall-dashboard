@@ -847,7 +847,8 @@
         "ownerId": "Ägar-ID",
         "apply": "Tillämpa",
         "clear": "Rensa",
-        "breakdownHint": "Välj en rad för att bara visa det företaget."
+        "breakdownHint": "Välj en rad för att bara visa det företaget.",
+        "plan": "Abonnemang"
       }
     },
     "reseller": {

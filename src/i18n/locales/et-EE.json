@@ -847,7 +847,8 @@
         "ownerId": "Omaniku ID",
         "apply": "Rakenda",
         "clear": "Tühjenda",
-        "breakdownHint": "Vali rida, et näha ainult seda ettevõtet."
+        "breakdownHint": "Vali rida, et näha ainult seda ettevõtet.",
+        "plan": "Pakett"
       }
     },
     "reseller": {

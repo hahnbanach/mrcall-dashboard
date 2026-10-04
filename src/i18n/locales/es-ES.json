@@ -861,7 +861,8 @@
         "ownerId": "ID del titular",
         "apply": "Aplicar",
         "clear": "Borrar",
-        "breakdownHint": "Selecciona una fila para ver solo ese negocio."
+        "breakdownHint": "Selecciona una fila para ver solo ese negocio.",
+        "plan": "Plan"
       }
     },
     "reseller": {

@@ -847,7 +847,8 @@
         "ownerId": "Eier-ID",
         "apply": "Bruk",
         "clear": "Tøm",
-        "breakdownHint": "Velg en rad for å vise bare den bedriften."
+        "breakdownHint": "Velg en rad for å vise bare den bedriften.",
+        "plan": "Abonnement"
       }
     },
     "reseller": {

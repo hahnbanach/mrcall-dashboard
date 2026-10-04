@@ -847,7 +847,8 @@
         "ownerId": "Omistajan tunnus",
         "apply": "Käytä",
         "clear": "Tyhjennä",
-        "breakdownHint": "Valitse rivi nähdäksesi vain kyseisen yrityksen."
+        "breakdownHint": "Valitse rivi nähdäksesi vain kyseisen yrityksen.",
+        "plan": "Paketti"
       }
     },
     "reseller": {

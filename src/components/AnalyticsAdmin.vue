@@ -47,13 +47,23 @@
             :aria-label="$t('components.analytics.filters.ownerId')"
             :placeholder="$t('components.analytics.filters.ownerId')"
           />
+          <Dropdown
+            v-model="planInput"
+            :options="planOptions"
+            optionLabel="label"
+            optionValue="value"
+            :showClear="true"
+            :filter="true"
+            :ariaLabel="$t('components.analytics.filters.plan')"
+            :placeholder="$t('components.analytics.filters.plan')"
+          />
           <Button type="submit" icon="pi pi-filter" :label="$t('components.analytics.filters.apply')" />
           <Button
             type="button"
             icon="pi pi-times"
             severity="secondary"
             :label="$t('components.analytics.filters.clear')"
-            :disabled="!businessId && !ownerId && !businessIdInput && !ownerIdInput"
+            :disabled="!businessId && !ownerId && !plan && !businessIdInput && !ownerIdInput && !planInput"
             @click="clearFilters"
           />
         </form>
@@ -260,6 +270,7 @@ import router from "@/router";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/firebase/config";
 import AnalyticsApi from "@/utils/Analytics";
+import TemplatesApi from "@/utils/Templates";
 
 export default {
   components: {},
@@ -284,6 +295,8 @@ export default {
       // survives a reload and can be linked; the inputs hold what is typed until it is applied.
       businessIdInput: '',
       ownerIdInput: '',
+      planInput: '',
+      templates: [],
 
       // Data containers
       dashboardData: null,
@@ -308,6 +321,15 @@ export default {
     },
     ownerId() {
       return this.queryValue('ownerId');
+    },
+    plan() {
+      return this.queryValue('plan');
+    },
+    planOptions() {
+      const options = this.templates.map(t => ({ label: t.humanName ? `${t.humanName} (${t.name})` : t.name, value: t.name }));
+      // A plan arriving in a link is offered even if the template list does not name it.
+      if (this.plan && !options.some(o => o.value === this.plan)) options.push({ label: this.plan, value: this.plan });
+      return options;
     },
     anyLoading() {
       return this.loadingDashboard || this.loadingTimeseries || this.loadingDuration ||
@@ -471,6 +493,7 @@ export default {
       if (this.$route.name !== 'AnalyticsAdmin') return;
       this.businessIdInput = this.businessId;
       this.ownerIdInput = this.ownerId;
+      this.planInput = this.plan;
       this.fetchAllData();
     },
     rangeValue(val) {
@@ -488,15 +511,18 @@ export default {
     }
     this.businessIdInput = this.businessId;
     this.ownerIdInput = this.ownerId;
+    this.planInput = this.plan;
     this.setPresetRange('30d');
     if (!this.store.state.user) {
       onAuthStateChanged(auth, (user) => {
         if (user && user.emailVerified && !user.isAnonymous) {
           this.fetchAllData();
+          this.fetchTemplates();
         }
       });
     } else if (this.store.state.user.accessToken) {
       this.fetchAllData();
+      this.fetchTemplates();
     }
   },
   methods: {
@@ -536,15 +562,18 @@ export default {
       const query = { ...this.$route.query };
       const businessId = this.businessIdInput.trim();
       const ownerId = this.ownerIdInput.trim();
+      const plan = this.planInput || '';
       if (businessId) query.businessId = businessId; else delete query.businessId;
       if (ownerId) query.ownerId = ownerId; else delete query.ownerId;
-      if (businessId === this.businessId && ownerId === this.ownerId) return;
+      if (plan) query.plan = plan; else delete query.plan;
+      if (businessId === this.businessId && ownerId === this.ownerId && plan === this.plan) return;
       // The '$route.query' watcher refetches.
       router.replace({ query });
     },
     clearFilters() {
       this.businessIdInput = '';
       this.ownerIdInput = '';
+      this.planInput = '';
       this.applyFilters();
     },
     onBreakdownRowSelect(event) {
@@ -558,6 +587,7 @@ export default {
       };
       if (this.businessId) body.businessId = this.businessId;
       if (this.ownerId) body.ownerId = this.ownerId;
+      if (this.plan) body.plan = this.plan;
       return body;
     },
     handleApiError(error, section) {
@@ -584,17 +614,18 @@ export default {
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
       this.fetchDashboard(user, request);
-      this.fetchTimeseries(user, request, granularity);
+      this.fetchTimeseries(user, request, granularity, timezone);
       this.fetchDurationDistribution(user, request);
       this.fetchHourlyHeatmap(user, request, timezone);
       this.fetchCallers(user, request);
-      // The breakdown endpoint groups by business and ignores businessId, so under a
-      // business filter it would list businesses the rest of the page is not showing.
-      if (this.businessId) {
-        this.breakdownData = null;
-      } else {
-        this.fetchBusinessBreakdown(user, request);
-      }
+      this.fetchBusinessBreakdown(user, request);
+    },
+    fetchTemplates() {
+      const user = this.store.state.user;
+      if (!user || !user.accessToken) return;
+      TemplatesApi.list(user, 'it-IT')
+        .then(response => { this.templates = response.data || []; })
+        .catch(error => { this.handleApiError(error, 'templates'); });
     },
     fetchDashboard(user, request) {
       this.loadingDashboard = true;
@@ -603,9 +634,11 @@ export default {
         .catch(error => { this.handleApiError(error, 'dashboard'); })
         .finally(() => { this.loadingDashboard = false; });
     },
-    fetchTimeseries(user, request, granularity) {
+    // StarChat cuts the series into calendar hours, days, ISO weeks and months of this zone;
+    // without it they are UTC days, which split an Italian evening across two buckets.
+    fetchTimeseries(user, request, granularity, timezone) {
       this.loadingTimeseries = true;
-      AnalyticsApi.timeseries(user, request, granularity)
+      AnalyticsApi.timeseries(user, request, granularity, timezone)
         .then(response => { this.timeseriesData = this.transformTimeseries(response.data); })
         .catch(error => { this.handleApiError(error, 'timeseries'); })
         .finally(() => { this.loadingTimeseries = false; });

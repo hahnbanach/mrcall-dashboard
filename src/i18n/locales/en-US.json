@@ -852,7 +852,8 @@
         "ownerId": "Owner ID",
         "apply": "Apply",
         "clear": "Clear",
-        "breakdownHint": "Select a row to show only that business."
+        "breakdownHint": "Select a row to show only that business.",
+        "plan": "Plan"
       }
     },
     "reseller": {
