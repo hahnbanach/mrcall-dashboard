@@ -555,7 +555,9 @@
         "recordingMissing": "La grabación de esta llamada no está disponible.",
         "openedFromLink": "Llamada abierta desde el enlace",
         "openedMissing": "Esta llamada no se encontró entre tus conversaciones.",
-        "closeOpened": "Cerrar"
+        "closeOpened": "Cerrar",
+        "inTrash": "En la papelera",
+        "inArchive": "Archivada"
       }
     },
     "deleteaccount": {

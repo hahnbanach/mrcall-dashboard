@@ -555,7 +555,9 @@
         "recordingMissing": "Inspelningen av det här samtalet är inte tillgänglig.",
         "openedFromLink": "Samtal öppnat från länken",
         "openedMissing": "Det här samtalet hittades inte bland dina samtal.",
-        "closeOpened": "Stäng"
+        "closeOpened": "Stäng",
+        "inTrash": "I papperskorgen",
+        "inArchive": "Arkiverad"
       }
     },
     "deleteaccount": {

@@ -115,6 +115,14 @@ test.describe('Conversations: the details of a call', () => {
     await page.screenshot({ path: testInfo.outputPath('conversation-opened.png'), fullPage: true })
   })
 
+  test('?conversation=<id> of a call in the trash opens it and says it is in the trash', async ({ authenticatedPage: page }) => {
+    await mockConversationSearch(page, { byId: { ...callWithDetails, deleted: true, archived: false } })
+    await page.goto('/conversations?id=test-biz-001&conversation=CON-e2e-1')
+    const opened = page.locator('.opened-card')
+    await expect(opened.getByText('In the trash')).toBeVisible({ timeout: 15000 })
+    await expect(opened.getByText('Archived')).toBeHidden()
+  })
+
   test('?conversation=<id> of a call the owner does not have says so', async ({ authenticatedPage: page }) => {
     await mockConversationSearch(page, { byId: null })
     await page.goto('/conversations?id=test-biz-001&conversation=CON-missing')

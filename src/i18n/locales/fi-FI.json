@@ -555,7 +555,9 @@
         "recordingMissing": "Tämän puhelun tallenne ei ole saatavilla.",
         "openedFromLink": "Linkistä avattu puhelu",
         "openedMissing": "Tätä puhelua ei löytynyt keskusteluistasi.",
-        "closeOpened": "Sulje"
+        "closeOpened": "Sulje",
+        "inTrash": "Roskakorissa",
+        "inArchive": "Arkistoitu"
       }
     },
     "deleteaccount": {

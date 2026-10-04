@@ -555,7 +555,9 @@
         "recordingMissing": "Selle kõne salvestis pole saadaval.",
         "openedFromLink": "Lingi kaudu avatud kõne",
         "openedMissing": "Seda kõnet ei leitud teie vestluste hulgast.",
-        "closeOpened": "Sulge"
+        "closeOpened": "Sulge",
+        "inTrash": "Prügikastis",
+        "inArchive": "Arhiveeritud"
       }
     },
     "deleteaccount": {

@@ -555,7 +555,9 @@
         "recordingMissing": "Η ηχογράφηση αυτής της κλήσης δεν είναι διαθέσιμη.",
         "openedFromLink": "Κλήση που άνοιξε από τον σύνδεσμο",
         "openedMissing": "Αυτή η κλήση δεν βρέθηκε στις συνομιλίες σας.",
-        "closeOpened": "Κλείσιμο"
+        "closeOpened": "Κλείσιμο",
+        "inTrash": "Στον κάδο",
+        "inArchive": "Αρχειοθετημένη"
       }
     },
     "deleteaccount": {

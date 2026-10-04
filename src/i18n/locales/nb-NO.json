@@ -555,7 +555,9 @@
         "recordingMissing": "Opptaket av denne samtalen er ikke tilgjengelig.",
         "openedFromLink": "Samtale åpnet fra lenken",
         "openedMissing": "Denne samtalen ble ikke funnet blant samtalene dine.",
-        "closeOpened": "Lukk"
+        "closeOpened": "Lukk",
+        "inTrash": "I papirkurven",
+        "inArchive": "Arkivert"
       }
     },
     "deleteaccount": {

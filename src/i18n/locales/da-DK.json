@@ -555,7 +555,9 @@
         "recordingMissing": "Optagelsen af dette opkald er ikke tilgængelig.",
         "openedFromLink": "Opkald åbnet fra linket",
         "openedMissing": "Dette opkald blev ikke fundet blandt dine samtaler.",
-        "closeOpened": "Luk"
+        "closeOpened": "Luk",
+        "inTrash": "I papirkurven",
+        "inArchive": "Arkiveret"
       }
     },
     "deleteaccount": {

@@ -556,7 +556,9 @@
         "recordingMissing": "Die Aufnahme dieses Anrufs ist nicht verfügbar.",
         "openedFromLink": "Über den Link geöffneter Anruf",
         "openedMissing": "Dieser Anruf wurde in deinen Gesprächen nicht gefunden.",
-        "closeOpened": "Schließen"
+        "closeOpened": "Schließen",
+        "inTrash": "Im Papierkorb",
+        "inArchive": "Archiviert"
       }
     },
     "deleteaccount": {

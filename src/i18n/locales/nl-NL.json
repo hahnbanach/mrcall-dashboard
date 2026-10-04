@@ -555,7 +555,9 @@
         "recordingMissing": "De opname van dit gesprek is niet beschikbaar.",
         "openedFromLink": "Gesprek geopend via de link",
         "openedMissing": "Dit gesprek is niet gevonden tussen je gesprekken.",
-        "closeOpened": "Sluiten"
+        "closeOpened": "Sluiten",
+        "inTrash": "In de prullenbak",
+        "inArchive": "Gearchiveerd"
       }
     },
     "deleteaccount": {

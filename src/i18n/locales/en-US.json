@@ -560,7 +560,9 @@
         "recordingMissing": "The recording of this call is not available.",
         "openedFromLink": "Call opened from the link",
         "openedMissing": "This call was not found among your conversations.",
-        "closeOpened": "Close"
+        "closeOpened": "Close",
+        "inTrash": "In the trash",
+        "inArchive": "Archived"
       }
     },
     "deleteaccount": {

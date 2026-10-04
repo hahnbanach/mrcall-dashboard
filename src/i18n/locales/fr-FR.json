@@ -556,7 +556,9 @@
         "recordingMissing": "L'enregistrement de cet appel n'est pas disponible.",
         "openedFromLink": "Appel ouvert depuis le lien",
         "openedMissing": "Cet appel est introuvable parmi vos conversations.",
-        "closeOpened": "Fermer"
+        "closeOpened": "Fermer",
+        "inTrash": "Dans la corbeille",
+        "inArchive": "Archivé"
       }
     },
     "deleteaccount": {

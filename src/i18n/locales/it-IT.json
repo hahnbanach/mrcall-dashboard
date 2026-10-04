@@ -560,7 +560,9 @@
         "recordingMissing": "La registrazione di questa chiamata non è disponibile.",
         "openedFromLink": "Chiamata aperta dal link",
         "openedMissing": "Questa chiamata non è stata trovata tra le tue conversazioni.",
-        "closeOpened": "Chiudi"
+        "closeOpened": "Chiudi",
+        "inTrash": "Nel cestino",
+        "inArchive": "Archiviata"
       }
     },
     "deleteaccount": {

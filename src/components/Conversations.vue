@@ -11,7 +11,11 @@
            and outside whatever view the list is in, since it may sit in the archive or the trash -->
       <div v-if="openedId" class="conversation-table-container">
         <div v-if="opened" class="conversation-card opened-card">
-          <div class="opened-label">{{ $t("components.conversations.details.openedFromLink") }}</div>
+          <div class="opened-label">
+            {{ $t("components.conversations.details.openedFromLink") }}
+            <span v-if="opened.deleted" class="opened-state">{{ $t("components.conversations.details.inTrash") }}</span>
+            <span v-else-if="opened.archived" class="opened-state">{{ $t("components.conversations.details.inArchive") }}</span>
+          </div>
           <div class="card-header">
             <div class="contact-info">
               <span class="contact-name">{{ callerName(opened) }}</span>
@@ -1695,6 +1699,17 @@ export default {
   text-transform: uppercase;
   color: @mrcall_blue;
   margin-bottom: 8px;
+}
+
+.opened-state {
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: @mrcall_light_grey_2;
+  color: @mrcall_dark_grey_text;
+  letter-spacing: normal;
+  text-transform: none;
+  font-weight: 600;
 }
 
 .opened-missing {
