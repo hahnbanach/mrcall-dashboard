@@ -41,6 +41,7 @@ import SuccessPaymentProduct from "@/views/SuccessPaymentProduct"
 import TermsAndConditions from "@/views/TermsAndConditions";
 import Whatsappweb from "@/views/Whatsappweb";
 import {auth} from '@/firebase/config';
+import { isAdmitted } from '@/firebase/admission';
 import {createRouter, createWebHistory} from 'vue-router'
 import Analytics from "@/views/Analytics.vue";
 import AnalyticsAdmin from "@/views/AnalyticsAdmin.vue";
@@ -592,19 +593,7 @@ router.beforeEach(async (to, from, next) => {
   if (requiresAuth) {
     try {
       const user = await getUser();
-      // First check if we have a user
-      if (!user) {
-        return toSignin();
-      }
-
-      // Then check if user is anonymous
-      if (user.isAnonymous) {
-        return toSignin();
-      }
-
-      // For Google users, skip email verification check
-      const isVerified = user.providerData[0]?.providerId === 'google.com' || user.emailVerified;
-      if (!isVerified) {
+      if (!isAdmitted(user)) {
         return toSignin();
       }
 

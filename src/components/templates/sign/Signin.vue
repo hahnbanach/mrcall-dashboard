@@ -115,6 +115,7 @@ import {useRouter} from 'vue-router'
 import {useStore} from 'vuex'
 import {onAuthStateChanged} from "firebase/auth";
 import {auth} from "@/firebase/config";
+import {isAdmitted} from "@/firebase/admission";
 import {useI18n} from "vue-i18n";
 import Tr from "@/i18n/translation";
 import GoogleSignIn from './GoogleSignIn.vue'
@@ -204,7 +205,7 @@ export default {
           })
           user.getIdToken(true).then((token) => {
             console.debug("NewToken: ", token)
-            if(redirect) {
+            if(redirect && isAdmitted(user)) {
               this.router.replace({path: redirect.path, query: redirect.query})
             } else if(this.store.state.user?.emailVerified) {
               this.redirectAfterAuth();
@@ -227,7 +228,7 @@ export default {
           'user_email': this.store.state.user?.email,
         })
       }
-      if(redirect) {
+      if(redirect && isAdmitted(this.store.state.user)) {
         this.router.replace({path: redirect.path, query: redirect.query})
       } else if(this.store.state.user?.emailVerified) {
         this.redirectAfterAuth(true);
@@ -249,7 +250,7 @@ export default {
           }
           user.getIdToken(true).then((token) => {
             console.debug("NewToken: ", token)
-            if(redirect) {
+            if(redirect && isAdmitted(user)) {
               this.router.replace({path: redirect.path, query: redirect.query})
             } else if(this.store.state.user?.emailVerified) {
               this.redirectAfterAuth();
