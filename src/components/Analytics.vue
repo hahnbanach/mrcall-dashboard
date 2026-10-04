@@ -451,7 +451,7 @@ export default {
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
       this.fetchDashboard(user, request);
-      this.fetchTimeseries(user, request, granularity);
+      this.fetchTimeseries(user, request, granularity, timezone);
       this.fetchDurationDistribution(user, request);
       this.fetchHourlyHeatmap(user, request, timezone);
       this.fetchCallers(user, request);
@@ -463,9 +463,9 @@ export default {
         .catch(error => { this.handleApiError(error, 'dashboard'); })
         .finally(() => { this.loadingDashboard = false; });
     },
-    fetchTimeseries(user, request, granularity) {
+    fetchTimeseries(user, request, granularity, timezone) {
       this.loadingTimeseries = true;
-      AnalyticsApi.timeseries(user, request, granularity)
+      AnalyticsApi.timeseries(user, request, granularity, timezone)
         .then(response => { this.timeseriesData = this.transformTimeseries(response.data); })
         .catch(error => { this.handleApiError(error, 'timeseries'); })
         .finally(() => { this.loadingTimeseries = false; });

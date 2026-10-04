@@ -16,7 +16,12 @@ export default {
             { headers: getHeaders(user) }
         );
     },
+    // StarChat cuts the series in this IANA zone and answers 400 to a zone it does not know, rather
+    // than charting UTC days under a local label. A caller that forgot it would otherwise send the
+    // literal "undefined" (2026-10-04, the business analytics page), so the call is refused here,
+    // before the request, and the page reports it like any failed section.
     timeseries: function(user, request, granularity, timezone) {
+        if (!timezone) return Promise.reject(new Error("Analytics.timeseries: timezone is required"));
         return axios.post(BASE_URL + "/timeseries?granularity=" + encodeURIComponent(granularity) +
                 "&timezone=" + encodeURIComponent(timezone),
             request,
@@ -30,6 +35,7 @@ export default {
         );
     },
     hourlyHeatmap: function(user, request, timezone) {
+        if (!timezone) return Promise.reject(new Error("Analytics.hourlyHeatmap: timezone is required"));
         return axios.post(BASE_URL + "/hourly-heatmap?timezone=" + encodeURIComponent(timezone),
             request,
             { headers: getHeaders(user) }
