@@ -1082,18 +1082,13 @@
       "menu": "Datenaufbewahrung",
       "intro": "Wie lange dieser Assistent seine Anrufe aufbewahrt. Eine Aufnahme wird immer zusammen mit ihrem Anruf gelöscht.",
       "loadError": "Die Aufbewahrungseinstellungen konnten nicht gelesen werden.",
-      "class": "Klasse",
-      "source": "Quelle",
       "days": "Tage",
-      "minimum": "Gesetzliches Minimum der Klasse {class}: {days} Tage (oder nie).",
       "inForce": "In Kraft",
       "never": "Nie",
       "afterDays": "Nach {days} Tagen",
-      "classDefault": "Standard ({value})",
       "custom": "Benutzerdefiniert",
       "save": "Speichern",
       "saved": "Einstellungen gespeichert.",
-      "belowMinimum": "{term}: das Minimum beträgt {days} Tage.",
       "changedMeanwhile": "Die Einstellungen wurden inzwischen geändert: Sie wurden neu geladen, prüfe sie und speichere erneut.",
       "saveError": "Die Einstellungen konnten nicht gespeichert werden.",
       "archiveAfterDays": {
@@ -1107,7 +1102,8 @@
       "trashDeleteAfterDays": {
         "title": "Papierkorb",
         "help": "Wie viele Tage ein Anruf im Papierkorb bleibt, bevor er endgültig gelöscht wird."
-      }
+      },
+      "default": "Standard ({value})"
     }
   },
   "views": {

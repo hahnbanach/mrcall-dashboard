@@ -1094,18 +1094,13 @@
       "menu": "Conservación de datos",
       "intro": "Cuánto tiempo conserva este asistente sus llamadas. Una grabación se elimina siempre junto con su llamada.",
       "loadError": "No se han podido leer los ajustes de conservación.",
-      "class": "Clase",
-      "source": "Fuente",
       "days": "días",
-      "minimum": "Mínimo legal de la clase {class}: {days} días (o nunca).",
       "inForce": "Vigente",
       "never": "Nunca",
       "afterDays": "Después de {days} días",
-      "classDefault": "Predeterminado ({value})",
       "custom": "Personalizado",
       "save": "Guardar",
       "saved": "Ajustes guardados.",
-      "belowMinimum": "{term}: el mínimo es {days} días.",
       "changedMeanwhile": "Los ajustes cambiaron mientras tanto: se han recargado, revísalos y guarda de nuevo.",
       "saveError": "No se han podido guardar los ajustes.",
       "archiveAfterDays": {
@@ -1119,7 +1114,8 @@
       "trashDeleteAfterDays": {
         "title": "Papelera",
         "help": "Cuántos días permanece una llamada en la papelera antes de eliminarse definitivamente."
-      }
+      },
+      "default": "Predeterminado ({value})"
     }
   },
   "views": {

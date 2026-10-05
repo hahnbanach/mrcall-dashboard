@@ -1080,18 +1080,13 @@
       "menu": "Datalagring",
       "intro": "Hur länge den här assistenten sparar sina samtal. En inspelning raderas alltid tillsammans med sitt samtal.",
       "loadError": "Lagringsinställningarna kunde inte läsas.",
-      "class": "Klass",
-      "source": "Källa",
       "days": "dagar",
-      "minimum": "Lagstadgat minimum för klassen {class}: {days} dagar (eller aldrig).",
       "inForce": "Gällande",
       "never": "Aldrig",
       "afterDays": "Efter {days} dagar",
-      "classDefault": "Standard ({value})",
       "custom": "Anpassat",
       "save": "Spara",
       "saved": "Inställningarna har sparats.",
-      "belowMinimum": "{term}: minimum är {days} dagar.",
       "changedMeanwhile": "Inställningarna ändrades under tiden: de har laddats om, kontrollera dem och spara igen.",
       "saveError": "Inställningarna kunde inte sparas.",
       "archiveAfterDays": {
@@ -1105,7 +1100,8 @@
       "trashDeleteAfterDays": {
         "title": "Papperskorg",
         "help": "Hur många dagar ett samtal ligger i papperskorgen innan det raderas permanent."
-      }
+      },
+      "default": "Standard ({value})"
     }
   },
   "views": {

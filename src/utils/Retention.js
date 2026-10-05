@@ -2,11 +2,11 @@ import axios from "axios";
 
 /**
  * How long a business keeps its calls, as StarChat serves it to the owner
- * (/apidomain/retention/{businessId}): the terms in force, what the business set, its class with
- * the legal minimums and their source, and the revision a write has to present.
+ * (/apidomain/retention/{businessId}): the terms in force, what the business set, the defaults a
+ * term left unset takes, and the revision a write has to present.
  *
- * Terms are days; -1 is never; null leaves a term to the class. The server decides: a term below
- * the class minimum answers 422 `retention.term_below_minimum`, a revision somebody else moved 409.
+ * Terms are days; -1 is never; null leaves a term to the default. The server decides: a term below
+ * -1 answers 422 `retention.invalid_term`, a revision somebody else moved 409.
  */
 function url(businessId) {
     return process.env.VUE_APP_STARCHAT_URL + "/mrcall/v1/mrcall0/apidomain/retention/" + encodeURIComponent(businessId);

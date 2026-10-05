@@ -5,14 +5,6 @@
     <Message v-if="loadError" severity="error" :closable="false">{{ $t("components.retention.loadError") }}</Message>
 
     <template v-if="info">
-      <div class="retention-class">
-        <div>
-          <span class="retention-class-label">{{ $t("components.retention.class") }}</span>
-          <strong>{{ info.retentionClass.name }}</strong>
-        </div>
-        <div class="retention-class-source">{{ $t("components.retention.source") }}: {{ info.retentionClass.source }}</div>
-      </div>
-
       <div v-for="term in terms" :key="term.key" class="retention-term">
         <label class="inputboxtitle" :for="'retention-' + term.key">{{ $t(`components.retention.${term.key}.title`) }}</label>
         <p class="retention-help">{{ $t(`components.retention.${term.key}.help`) }}</p>
@@ -28,20 +20,17 @@
           <InputNumber
             :inputId="'retention-' + term.key"
             v-model="days[term.key]"
-            :min="minimum(term)"
+            :min="0"
             :useGrouping="false"
             showButtons
           />
           <span>{{ $t("components.retention.days") }}</span>
         </div>
-        <small v-if="minimum(term) > 0" class="retention-minimum">
-          {{ $t("components.retention.minimum", { days: minimum(term), class: info.retentionClass.name }) }}
-        </small>
         <small class="retention-effective">{{ $t("components.retention.inForce") }}: {{ describe(info.effective[term.key]) }}</small>
       </div>
 
       <Message v-if="message" :severity="message.severity" :closable="false">{{ message.text }}</Message>
-      <Button :label="$t('components.retention.save')" icon="pi pi-check" :loading="saving" @click="save" />
+      <Button :label="$t('components.retention.save')" icon="pi pi-check" :loading="saving" :disabled="!complete" @click="save" />
     </template>
   </div>
 </template>
@@ -50,11 +39,11 @@
 import RetentionApi from "@/utils/Retention";
 
 /**
- * The owner's page for how long a business keeps its calls. Three terms, each the class's default,
- * never, or a number of days: archive (the call leaves the inbox), delete (the call and its
- * recording go) and trash (a trashed call goes, counted from when it was trashed). The class, its
- * legal minimums and their source come from StarChat, which also refuses a term below a minimum;
- * this page shows the minimum and keeps the field above it, and decides nothing.
+ * The owner's page for how long a business keeps its calls. Three terms, each the default, never,
+ * or a number of days: archive (the call leaves the inbox), delete (the call and its recording go)
+ * and trash (a trashed call goes, counted from when it was trashed). The defaults are the same for
+ * every business, never unless StarChat is configured otherwise, and come from StarChat with the
+ * terms; this page shows them and decides nothing.
  */
 export default {
   props: {
@@ -69,12 +58,14 @@ export default {
       days: {},
       saving: false,
       message: null,
-      terms: [
-        { key: "archiveAfterDays", minimumKey: null },
-        { key: "deleteAfterDays", minimumKey: "minDeleteAfterDays" },
-        { key: "trashDeleteAfterDays", minimumKey: "minTrashDeleteAfterDays" },
-      ],
+      terms: [{ key: "archiveAfterDays" }, { key: "deleteAfterDays" }, { key: "trashDeleteAfterDays" }],
     };
+  },
+  computed: {
+    /** Every custom term has its number: a custom term left empty is not saved as the default. */
+    complete() {
+      return this.terms.every((t) => this.modes[t.key] !== "days" || Number.isInteger(this.days[t.key]));
+    },
   },
   async mounted() {
     await this.load();
@@ -92,31 +83,26 @@ export default {
       this.info = info;
       for (const term of this.terms) {
         const set = info.set[term.key];
-        this.modes[term.key] = set === null || set === undefined ? "class" : set === -1 ? "never" : "days";
-        this.days[term.key] = set !== null && set !== undefined && set >= 0
-          ? set : Math.max(info.effective[term.key], this.minimum(term), 1);
+        this.modes[term.key] = set === null || set === undefined ? "default" : set === -1 ? "never" : "days";
+        // a custom term starts from the one in force; with never in force it starts empty, so that
+        // no number is saved that the owner did not type
+        const effective = info.effective[term.key];
+        this.days[term.key] = set !== null && set !== undefined && set >= 0 ? set : effective >= 0 ? effective : null;
       }
-    },
-    minimum(term) {
-      return term.minimumKey && this.info ? this.info.retentionClass[term.minimumKey] || 0 : 0;
-    },
-    classDefault(term) {
-      const name = "default" + term.key.charAt(0).toUpperCase() + term.key.slice(1);
-      return this.info.retentionClass[name];
     },
     describe(value) {
       return value === -1 ? this.$t("components.retention.never") : this.$t("components.retention.afterDays", { days: value });
     },
     modeOptions(term) {
       return [
-        { value: "class", label: this.$t("components.retention.classDefault", { value: this.describe(this.classDefault(term)) }) },
+        { value: "default", label: this.$t("components.retention.default", { value: this.describe(this.info.defaults[term.key]) }) },
         { value: "never", label: this.$t("components.retention.never") },
         { value: "days", label: this.$t("components.retention.custom") },
       ];
     },
     termValue(term) {
       const mode = this.modes[term.key];
-      return mode === "class" ? null : mode === "never" ? -1 : this.days[term.key];
+      return mode === "default" ? null : mode === "never" ? -1 : this.days[term.key];
     },
     async save() {
       this.saving = true;
@@ -127,10 +113,7 @@ export default {
         this.message = { severity: "success", text: this.$t("components.retention.saved") };
       } catch (e) {
         const body = e.retention || {};
-        if (body.code === "retention.term_below_minimum") {
-          this.message = { severity: "error", text: this.$t("components.retention.belowMinimum", {
-            term: this.$t(`components.retention.${body.constraint.field}.title`), days: body.constraint.minimum }) };
-        } else if (body.code === "retention.revision_mismatch") {
+        if (body.code === "retention.revision_mismatch") {
           await this.load();
           this.message = { severity: "warn", text: this.$t("components.retention.changedMeanwhile") };
         } else {
@@ -163,25 +146,6 @@ export default {
   line-height: 1.5;
 }
 
-.retention-class {
-  border: 1px solid @mrcall_borders;
-  border-radius: 10px;
-  padding: 12px 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.retention-class-label {
-  color: @mrcall_grey_text2;
-  margin-right: 8px;
-}
-
-.retention-class-source {
-  font-size: 13px;
-  color: @mrcall_grey_text2;
-}
-
 .retention-term {
   display: flex;
   flex-direction: column;
@@ -192,11 +156,6 @@ export default {
   display: flex;
   align-items: center;
   gap: 8px;
-}
-
-.retention-minimum {
-  color: @mrcall_dark_grey_text;
-  font-weight: 600;
 }
 
 .retention-effective {

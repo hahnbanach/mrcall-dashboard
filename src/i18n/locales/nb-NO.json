@@ -1080,18 +1080,13 @@
       "menu": "Lagring av data",
       "intro": "Hvor lenge denne assistenten lagrer samtalene sine. Et opptak slettes alltid sammen med samtalen sin.",
       "loadError": "Lagringsinnstillingene kunne ikke leses.",
-      "class": "Klasse",
-      "source": "Kilde",
       "days": "dager",
-      "minimum": "Lovpålagt minimum for klassen {class}: {days} dager (eller aldri).",
       "inForce": "Gjeldende",
       "never": "Aldri",
       "afterDays": "Etter {days} dager",
-      "classDefault": "Standard ({value})",
       "custom": "Tilpasset",
       "save": "Lagre",
       "saved": "Innstillingene er lagret.",
-      "belowMinimum": "{term}: minimum er {days} dager.",
       "changedMeanwhile": "Innstillingene ble endret i mellomtiden: de er lastet inn på nytt, sjekk dem og lagre igjen.",
       "saveError": "Innstillingene kunne ikke lagres.",
       "archiveAfterDays": {
@@ -1105,7 +1100,8 @@
       "trashDeleteAfterDays": {
         "title": "Papirkurv",
         "help": "Hvor mange dager en samtale blir i papirkurven før den slettes for godt."
-      }
+      },
+      "default": "Standard ({value})"
     }
   },
   "views": {

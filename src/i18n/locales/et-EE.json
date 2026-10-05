@@ -1080,18 +1080,13 @@
       "menu": "Andmete säilitamine",
       "intro": "Kui kaua see assistent oma kõnesid säilitab. Salvestis kustutatakse alati koos oma kõnega.",
       "loadError": "Säilitamise seadeid ei õnnestunud lugeda.",
-      "class": "Klass",
-      "source": "Allikas",
       "days": "päeva",
-      "minimum": "Klassi {class} seaduslik miinimum: {days} päeva (või mitte kunagi).",
       "inForce": "Kehtiv",
       "never": "Mitte kunagi",
       "afterDays": "{days} päeva pärast",
-      "classDefault": "Vaikimisi ({value})",
       "custom": "Kohandatud",
       "save": "Salvesta",
       "saved": "Seaded salvestatud.",
-      "belowMinimum": "{term}: miinimum on {days} päeva.",
       "changedMeanwhile": "Seaded muutusid vahepeal: need laaditi uuesti, kontrolli ja salvesta uuesti.",
       "saveError": "Seadeid ei õnnestunud salvestada.",
       "archiveAfterDays": {
@@ -1105,7 +1100,8 @@
       "trashDeleteAfterDays": {
         "title": "Prügikast",
         "help": "Mitu päeva jääb kõne prügikasti enne lõplikku kustutamist."
-      }
+      },
+      "default": "Vaikimisi ({value})"
     }
   },
   "views": {

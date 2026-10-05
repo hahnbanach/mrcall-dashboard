@@ -1080,18 +1080,13 @@
       "menu": "Opbevaring af data",
       "intro": "Hvor længe denne assistent gemmer sine opkald. En optagelse slettes altid sammen med sit opkald.",
       "loadError": "Opbevaringsindstillingerne kunne ikke læses.",
-      "class": "Klasse",
-      "source": "Kilde",
       "days": "dage",
-      "minimum": "Lovpligtigt minimum for klassen {class}: {days} dage (eller aldrig).",
       "inForce": "Gældende",
       "never": "Aldrig",
       "afterDays": "Efter {days} dage",
-      "classDefault": "Standard ({value})",
       "custom": "Tilpasset",
       "save": "Gem",
       "saved": "Indstillingerne er gemt.",
-      "belowMinimum": "{term}: minimum er {days} dage.",
       "changedMeanwhile": "Indstillingerne er ændret i mellemtiden: de er genindlæst, kontrollér dem og gem igen.",
       "saveError": "Indstillingerne kunne ikke gemmes.",
       "archiveAfterDays": {
@@ -1105,7 +1100,8 @@
       "trashDeleteAfterDays": {
         "title": "Papirkurv",
         "help": "Hvor mange dage et opkald bliver i papirkurven, før det slettes endeligt."
-      }
+      },
+      "default": "Standard ({value})"
     }
   },
   "views": {

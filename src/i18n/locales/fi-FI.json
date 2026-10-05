@@ -1080,18 +1080,13 @@
       "menu": "Tietojen säilytys",
       "intro": "Kuinka kauan tämä avustaja säilyttää puhelunsa. Tallenne poistetaan aina yhdessä puhelunsa kanssa.",
       "loadError": "Säilytysasetuksia ei voitu lukea.",
-      "class": "Luokka",
-      "source": "Lähde",
       "days": "päivää",
-      "minimum": "Luokan {class} lakisääteinen vähimmäisaika: {days} päivää (tai ei koskaan).",
       "inForce": "Voimassa",
       "never": "Ei koskaan",
       "afterDays": "{days} päivän kuluttua",
-      "classDefault": "Oletus ({value})",
       "custom": "Mukautettu",
       "save": "Tallenna",
       "saved": "Asetukset tallennettu.",
-      "belowMinimum": "{term}: vähimmäisaika on {days} päivää.",
       "changedMeanwhile": "Asetukset muuttuivat välillä: ne ladattiin uudelleen, tarkista ja tallenna uudelleen.",
       "saveError": "Asetuksia ei voitu tallentaa.",
       "archiveAfterDays": {
@@ -1105,7 +1100,8 @@
       "trashDeleteAfterDays": {
         "title": "Roskakori",
         "help": "Kuinka monta päivää puhelu pysyy roskakorissa ennen pysyvää poistamista."
-      }
+      },
+      "default": "Oletus ({value})"
     }
   },
   "views": {

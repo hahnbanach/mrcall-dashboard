@@ -4,8 +4,8 @@ const { test } = require('../fixtures/auth')
 const { mockBusiness } = require('../fixtures/mock-data')
 
 /**
- * The retention page, end to end: it is reached from the configuration menu, it shows the class and
- * its legal minimum, and a saved term leaves through /apidomain/retention with the revision it read.
+ * The retention page, end to end: it is reached from the configuration menu, it shows the defaults,
+ * and a saved term leaves through /apidomain/retention with the revision it read.
  */
 
 const annotations = [{
@@ -14,16 +14,14 @@ const annotations = [{
 }]
 
 function described (set, revision) {
-  const cls = { name: 'medical', minDeleteAfterDays: 1095, minTrashDeleteAfterDays: 0,
-    defaultArchiveAfterDays: 90, defaultDeleteAfterDays: 1095, defaultTrashDeleteAfterDays: 30,
-    source: 'Law X, art. 3', decidedBy: 'counsel' }
-  const pick = (k, d) => (set[k] === null || set[k] === undefined ? d : set[k])
+  const defaults = { archiveAfterDays: -1, deleteAfterDays: -1, trashDeleteAfterDays: -1 }
+  const pick = k => (set[k] === null || set[k] === undefined ? defaults[k] : set[k])
   return {
     businessId: mockBusiness.businessId,
-    effective: { archiveAfterDays: pick('archiveAfterDays', 90), deleteAfterDays: pick('deleteAfterDays', 1095),
-      trashDeleteAfterDays: pick('trashDeleteAfterDays', 30) },
+    effective: { archiveAfterDays: pick('archiveAfterDays'), deleteAfterDays: pick('deleteAfterDays'),
+      trashDeleteAfterDays: pick('trashDeleteAfterDays') },
     set: { archiveAfterDays: null, deleteAfterDays: null, trashDeleteAfterDays: null, ...set },
-    retentionClass: cls,
+    defaults,
     revision
   }
 }
@@ -49,15 +47,15 @@ async function mockPage (page, { putStatus = 200, putBody = null, role = 'owner'
 }
 
 test.describe('the retention page', () => {
-  test('opens from the menu, shows the minimum, and saves a term with the revision it read', async ({ authenticatedPage: page }, testInfo) => {
+  test('opens from the menu, shows the defaults, and saves a term with the revision it read', async ({ authenticatedPage: page }, testInfo) => {
     const writes = await mockPage(page)
     await page.goto(`/businessconfiguration?id=${mockBusiness.businessId}`)
     // on a narrow screen the menu is a popup, opened from the button that names the current section
     const narrowMenu = page.locator('.header_buttonbar button')
     if (await narrowMenu.isVisible()) await narrowMenu.click()
     await page.getByRole('menuitem', { name: 'Data retention' }).locator('visible=true').first().click()
-    await expect(page.getByText('Legal minimum of class medical: 1095 days (or never).')).toBeVisible({ timeout: 20000 })
-    await expect(page.getByText('Law X, art. 3')).toBeVisible()
+    await expect(page.getByText('Default (Never)').first()).toBeVisible({ timeout: 20000 })
+    await expect(page.locator('.retention').getByText(/minimum|class/i)).toHaveCount(0)
     await page.screenshot({ path: testInfo.outputPath('retention.png'), fullPage: true })
 
     const archive = page.locator('.retention-term').first()
@@ -73,13 +71,13 @@ test.describe('the retention page', () => {
     expect(writes).toEqual([{ archiveAfterDays: 30, deleteAfterDays: null, trashDeleteAfterDays: null, expectedRevision: 'r1' }])
   })
 
-  test('says which term the server refused, with its minimum', async ({ authenticatedPage: page }) => {
-    await mockPage(page, { putStatus: 422, putBody: { code: 'retention.term_below_minimum', detail: 'below',
-      constraint: { field: 'deleteAfterDays', value: 365, minimum: 1095, retentionClass: 'medical' } } })
+  test('says when the server refused the settings', async ({ authenticatedPage: page }) => {
+    await mockPage(page, { putStatus: 422, putBody: { code: 'retention.invalid_term', detail: 'below -1',
+      constraint: { field: 'deleteAfterDays', value: -5, minimum: -1 } } })
     await page.goto(`/businessconfiguration?id=${mockBusiness.businessId}&section=__DATA_RETENTION__`)
-    await expect(page.getByText('Law X, art. 3')).toBeVisible({ timeout: 20000 })
+    await expect(page.getByText('Default (Never)').first()).toBeVisible({ timeout: 20000 })
     await page.getByRole('button', { name: 'Save' }).click()
-    await expect(page.getByText('Deletion: the minimum is 1095 days.')).toBeVisible()
+    await expect(page.getByText('The settings could not be saved.')).toBeVisible()
   })
 
   // The footer's Save writes the business variables, not the retention: on this page it is not shown,
@@ -87,7 +85,7 @@ test.describe('the retention page', () => {
   test('has one Save, its own, and no footer for an owner', async ({ authenticatedPage: page }) => {
     await mockPage(page)
     await page.goto(`/businessconfiguration?id=${mockBusiness.businessId}&section=__DATA_RETENTION__`)
-    await expect(page.getByText('Law X, art. 3')).toBeVisible({ timeout: 20000 })
+    await expect(page.getByText('Default (Never)').first()).toBeVisible({ timeout: 20000 })
     await expect(page.getByRole('button', { name: 'Save' })).toHaveCount(1)
     await expect(page.locator('#footer')).toHaveCount(0)
   })
@@ -101,7 +99,7 @@ test.describe('the retention page', () => {
   test('keeps the admin\'s AladMin AI button in the footer, with still one Save', async ({ authenticatedPage: page }) => {
     await mockPage(page, { role: 'admin' })
     await page.goto(`/businessconfiguration?id=${mockBusiness.businessId}&section=__DATA_RETENTION__`)
-    await expect(page.getByText('Law X, art. 3')).toBeVisible({ timeout: 20000 })
+    await expect(page.getByText('Default (Never)').first()).toBeVisible({ timeout: 20000 })
     await expect(page.locator('#footer').getByRole('button', { name: 'AladMin AI' })).toBeVisible()
     await expect(page.getByRole('button', { name: 'Save' })).toHaveCount(1)
   })
