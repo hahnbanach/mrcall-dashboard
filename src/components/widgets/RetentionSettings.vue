@@ -158,13 +158,12 @@ export default {
   gap: 8px;
 }
 
-.retention-term :deep(.p-togglebutton-checked) {
-  color: @mrcall_white;
-}
-
-// the selected choice in the blue of the buttons, not the faint pill PrimeVue draws by default
-.retention-term :deep(.p-togglebutton-checked::before) {
+// The selected choice in the blue of the buttons under a white label. PrimeVue paints the checked
+// state on .p-togglebutton-content (white on light grey by default); a colour on the button's
+// ::before is not drawn from PrimeVue 4.5 on, which is what the deployed build installs.
+.retention-term :deep(.p-togglebutton-checked .p-togglebutton-content) {
   background: @mrcall_blue;
+  color: @mrcall_white;
 }
 
 .retention-effective {

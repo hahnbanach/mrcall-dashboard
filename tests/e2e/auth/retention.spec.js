@@ -58,9 +58,14 @@ test.describe('the retention page', () => {
     await expect(checked).toHaveCount(3, { timeout: 20000 })
     await expect(checked.first()).toHaveText('Never')
     await expect(page.locator('.retention-term').first().getByRole('button')).toHaveText(['Never', 'Custom'])
-    // the selected choice is drawn in the buttons' blue, not the faint default pill
-    const pill = await checked.first().evaluate(el => getComputedStyle(el, '::before').backgroundColor)
-    expect(pill).toBe('rgb(0, 104, 255)')
+    // The selected choice is readable: what PrimeVue paints for it, .p-togglebutton-content, is the
+    // buttons' blue under a white label. A colour put where PrimeVue draws nothing passed here once
+    // and showed white on white on test, so the check reads the painted element and its label.
+    const painted = await checked.first().evaluate(el => ({
+      background: getComputedStyle(el.querySelector('.p-togglebutton-content')).backgroundColor,
+      label: getComputedStyle(el.querySelector('.p-togglebutton-label')).color
+    }))
+    expect(painted).toEqual({ background: 'rgb(0, 104, 255)', label: 'rgb(255, 255, 255)' })
     await expect(page.locator('.retention').getByText(/minimum|class|default/i)).toHaveCount(0)
     await page.screenshot({ path: testInfo.outputPath('retention.png'), fullPage: true })
 
