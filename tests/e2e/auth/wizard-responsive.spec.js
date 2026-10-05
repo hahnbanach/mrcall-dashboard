@@ -1,21 +1,27 @@
 // @ts-check
-// Responsive checks for the new frozen-chat wizard UI (pending-changes diff, input area, action bar).
-// Uses chromium-only (WebKit deps not installed on this host) with tablet + mobile viewport overrides.
+// Responsive checks for the wizard: no horizontal overflow on tablet and mobile, on the first screen
+// and on the last, with the research summary and the call.
 const { expect } = require('@playwright/test')
 const { test } = require('../fixtures/auth')
 const { BasePage } = require('../pages/base.page')
+const { mockBusiness } = require('../fixtures/mock-data')
 
 const VIEWPORTS = [
   { name: 'tablet', width: 768, height: 1024 },
   { name: 'mobile', width: 375, height: 812 },
 ]
 
-// Mock SSE body: streams a summary then emits pending_changes metadata, then done.
-const sseWithPendingChanges = [
-  'data: {"type":"text_delta","text":"Ho aggiornato il messaggio di benvenuto usando il \\"lei\\"."}\n\n',
-  'data: {"type":"metadata","pending_changes":[{"variable_name":"CONVERSATION_PROMPT","new_value":"Buongiorno, sono l\'assistente. Come posso aiutarla?"},{"variable_name":"KNOWLEDGE_BASE_ANSWER_INSTRUCTIONS","new_value":"Rispondere sempre dando del lei, in modo cordiale e professionale."}]}\n\n',
-  'data: {"type":"done","session_id":"mrcall_wizard_test123"}\n\n',
-].join('')
+const linked = { ...mockBusiness, variables: { ...mockBusiness.variables, SYNC_GOOGLE_BUSINESS: 'true' } }
+
+/** The agent's two replies: the session opened, then the configuration with its research summary. */
+function agentReply (message) {
+  const events = message.startsWith('/agent') ? [
+    { type: 'metadata', pending_changes: [{ variable_name: 'CONVERSATION_PROMPT', new_value: 'Buongiorno, come posso aiutarla?' }] },
+    { type: 'text_delta', text: 'Configured. <research-summary>120 Google reviews, 4.6 on average; open every day for lunch and dinner, takeaway and delivery.</research-summary>' },
+    { type: 'done', session_id: 'mrcall_wizard_test123' }
+  ] : [{ type: 'done', session_id: 'mrcall_wizard_test123' }]
+  return events.map(e => `data: ${JSON.stringify(e)}\n\n`).join('')
+}
 
 test.describe('Wizard responsive layout', () => {
   for (const vp of VIEWPORTS) {
@@ -39,37 +45,20 @@ test.describe('Wizard responsive layout', () => {
       await basePage.expectNoHorizontalOverflow()
     })
 
-    test(`no horizontal overflow on ${vp.name} — with pending_changes diff visible`, async ({ authenticatedPage }) => {
-      await authenticatedPage.setViewportSize({ width: vp.width, height: vp.height })
-      const basePage = new BasePage(authenticatedPage)
-
-      await authenticatedPage.route('**/api/chat/message/stream', (route) => {
-        route.fulfill({ status: 200, contentType: 'text/event-stream', body: sseWithPendingChanges })
-      })
-      await authenticatedPage.route('**/api/chat/history*', (route) => {
-        route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ success: true, messages: [], session_id: null }) })
-      })
+    test(`no horizontal overflow on ${vp.name} — configured, with the research summary and the call`, async ({ authenticatedPage: page }) => {
+      await page.setViewportSize({ width: vp.width, height: vp.height })
+      const basePage = new BasePage(page)
+      await page.route('**/crm/business*', (route) => route.request().method() !== 'GET' ? route.fallback()
+        : route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify([linked]) }))
+      await page.route('**/api/chat/message/stream', (route) => route.fulfill({ status: 200,
+        contentType: 'text/event-stream', body: agentReply(route.request().postDataJSON().message || '') }))
+      await page.route('**/api/mrcall/apply-changes', (route) =>
+        route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ success: true }) }))
 
       await basePage.goto('/wizard?id=test123')
-      // Wait for initial analysis to complete
-      await authenticatedPage.waitForSelector('.wizard-summary-box', { timeout: 10000 })
-
-      // Type an instruction and send
-      const textarea = authenticatedPage.locator('.wizard-textarea')
-      await expect(textarea).toBeVisible()
-      await textarea.fill('Dai del lei invece che del tu')
-      await authenticatedPage.locator('.wizard-send-btn').click()
-
-      // Wait for Accept button (appears for all roles once pending_changes staged)
-      await authenticatedPage.waitForSelector('.wizard-action-bar', { timeout: 10000 })
-
-      // No horizontal overflow with the new UI active
+      await page.getByRole('button', { name: 'Start' }).click({ timeout: 20000 })
+      await expect(page.locator('.research-summary')).toBeVisible({ timeout: 20000 })
       await basePage.expectNoHorizontalOverflow()
-
-      await authenticatedPage.screenshot({
-        fullPage: true,
-        path: `tests/screenshots/baseline/wizard-responsive-${vp.name}-pending.png`,
-      })
     })
   }
 })
