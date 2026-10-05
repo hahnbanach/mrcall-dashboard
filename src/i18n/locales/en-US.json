@@ -1080,6 +1080,37 @@
         "transferError": "Failed to transfer owner",
         "revokedDetail": "Reseller removed: {owners} owners affected, {businesses} businesses canceled"
       }
+    },
+    "retention": {
+      "menu": "Data retention",
+      "intro": "How long this assistant keeps its calls. A recording is always deleted together with its call.",
+      "loadError": "The retention settings could not be read.",
+      "class": "Class",
+      "source": "Source",
+      "days": "days",
+      "minimum": "Legal minimum of class {class}: {days} days (or never).",
+      "inForce": "In force",
+      "never": "Never",
+      "afterDays": "After {days} days",
+      "classDefault": "Default ({value})",
+      "custom": "Custom",
+      "save": "Save",
+      "saved": "Settings saved.",
+      "belowMinimum": "{term}: the minimum is {days} days.",
+      "changedMeanwhile": "The settings changed in the meantime: they have been reloaded, check them and save again.",
+      "saveError": "The settings could not be saved.",
+      "archiveAfterDays": {
+        "title": "Archive",
+        "help": "How many days after the call it moves from the inbox to the archive. Nothing is deleted."
+      },
+      "deleteAfterDays": {
+        "title": "Deletion",
+        "help": "How many days after the call it is deleted for good, with its recording."
+      },
+      "trashDeleteAfterDays": {
+        "title": "Trash",
+        "help": "How many days a call stays in the trash before it is deleted for good."
+      }
     }
   },
   "views": {

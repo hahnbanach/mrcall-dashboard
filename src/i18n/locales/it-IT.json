@@ -1081,6 +1081,37 @@
         "transferError": "Impossibile trasferire il proprietario",
         "revokedDetail": "Reseller rimosso: {owners} proprietari interessati, {businesses} attività cancellate"
       }
+    },
+    "retention": {
+      "menu": "Conservazione dei dati",
+      "intro": "Per quanto tempo questo assistente conserva le chiamate. Una registrazione viene sempre cancellata insieme alla sua chiamata.",
+      "loadError": "Impossibile leggere le impostazioni di conservazione.",
+      "class": "Classe",
+      "source": "Fonte",
+      "days": "giorni",
+      "minimum": "Minimo per legge della classe {class}: {days} giorni (oppure mai).",
+      "inForce": "In vigore",
+      "never": "Mai",
+      "afterDays": "Dopo {days} giorni",
+      "classDefault": "Predefinito ({value})",
+      "custom": "Personalizzato",
+      "save": "Salva",
+      "saved": "Impostazioni salvate.",
+      "belowMinimum": "{term}: il minimo è {days} giorni.",
+      "changedMeanwhile": "Le impostazioni sono state cambiate nel frattempo: le ho ricaricate, controlla e salva di nuovo.",
+      "saveError": "Impossibile salvare le impostazioni.",
+      "archiveAfterDays": {
+        "title": "Archiviazione",
+        "help": "Dopo quanti giorni dalla chiamata la chiamata passa dalla Posta in arrivo all'Archivio. Non cancella nulla."
+      },
+      "deleteAfterDays": {
+        "title": "Cancellazione",
+        "help": "Dopo quanti giorni dalla chiamata la chiamata viene cancellata definitivamente, con la sua registrazione."
+      },
+      "trashDeleteAfterDays": {
+        "title": "Cestino",
+        "help": "Dopo quanti giorni nel cestino una chiamata cestinata viene cancellata definitivamente."
+      }
     }
   },
   "views": {

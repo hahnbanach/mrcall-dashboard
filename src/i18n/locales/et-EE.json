@@ -1075,6 +1075,37 @@
         "transferError": "Omaniku ülekandmine ebaõnnestus",
         "revokedDetail": "Edasimüüja eemaldatud: {owners} omanikku mõjutatud, {businesses} ettevõtet tühistatud"
       }
+    },
+    "retention": {
+      "menu": "Andmete säilitamine",
+      "intro": "Kui kaua see assistent oma kõnesid säilitab. Salvestis kustutatakse alati koos oma kõnega.",
+      "loadError": "Säilitamise seadeid ei õnnestunud lugeda.",
+      "class": "Klass",
+      "source": "Allikas",
+      "days": "päeva",
+      "minimum": "Klassi {class} seaduslik miinimum: {days} päeva (või mitte kunagi).",
+      "inForce": "Kehtiv",
+      "never": "Mitte kunagi",
+      "afterDays": "{days} päeva pärast",
+      "classDefault": "Vaikimisi ({value})",
+      "custom": "Kohandatud",
+      "save": "Salvesta",
+      "saved": "Seaded salvestatud.",
+      "belowMinimum": "{term}: miinimum on {days} päeva.",
+      "changedMeanwhile": "Seaded muutusid vahepeal: need laaditi uuesti, kontrolli ja salvesta uuesti.",
+      "saveError": "Seadeid ei õnnestunud salvestada.",
+      "archiveAfterDays": {
+        "title": "Arhiveerimine",
+        "help": "Mitu päeva pärast kõnet liigub see postkastist arhiivi. Midagi ei kustutata."
+      },
+      "deleteAfterDays": {
+        "title": "Kustutamine",
+        "help": "Mitu päeva pärast kõnet kustutatakse see lõplikult koos salvestisega."
+      },
+      "trashDeleteAfterDays": {
+        "title": "Prügikast",
+        "help": "Mitu päeva jääb kõne prügikasti enne lõplikku kustutamist."
+      }
     }
   },
   "views": {

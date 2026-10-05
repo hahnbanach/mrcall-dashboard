@@ -1077,6 +1077,37 @@
         "transferError": "Inhaber konnte nicht übertragen werden",
         "revokedDetail": "Reseller entfernt: {owners} Inhaber betroffen, {businesses} Geschäfte storniert"
       }
+    },
+    "retention": {
+      "menu": "Datenaufbewahrung",
+      "intro": "Wie lange dieser Assistent seine Anrufe aufbewahrt. Eine Aufnahme wird immer zusammen mit ihrem Anruf gelöscht.",
+      "loadError": "Die Aufbewahrungseinstellungen konnten nicht gelesen werden.",
+      "class": "Klasse",
+      "source": "Quelle",
+      "days": "Tage",
+      "minimum": "Gesetzliches Minimum der Klasse {class}: {days} Tage (oder nie).",
+      "inForce": "In Kraft",
+      "never": "Nie",
+      "afterDays": "Nach {days} Tagen",
+      "classDefault": "Standard ({value})",
+      "custom": "Benutzerdefiniert",
+      "save": "Speichern",
+      "saved": "Einstellungen gespeichert.",
+      "belowMinimum": "{term}: das Minimum beträgt {days} Tage.",
+      "changedMeanwhile": "Die Einstellungen wurden inzwischen geändert: Sie wurden neu geladen, prüfe sie und speichere erneut.",
+      "saveError": "Die Einstellungen konnten nicht gespeichert werden.",
+      "archiveAfterDays": {
+        "title": "Archivierung",
+        "help": "Wie viele Tage nach dem Anruf er vom Posteingang ins Archiv wechselt. Es wird nichts gelöscht."
+      },
+      "deleteAfterDays": {
+        "title": "Löschung",
+        "help": "Wie viele Tage nach dem Anruf er endgültig gelöscht wird, mit seiner Aufnahme."
+      },
+      "trashDeleteAfterDays": {
+        "title": "Papierkorb",
+        "help": "Wie viele Tage ein Anruf im Papierkorb bleibt, bevor er endgültig gelöscht wird."
+      }
     }
   },
   "views": {

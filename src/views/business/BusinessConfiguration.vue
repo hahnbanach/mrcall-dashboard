@@ -1,5 +1,6 @@
 <template>
-  <BusinessFrame :class="{ 'configure-ai-active': selectedMenupage?.collection?.id === '__CONFIGURE_AI__' }">
+  <BusinessFrame :class="{ 'configure-ai-active': selectedMenupage?.collection?.id === '__CONFIGURE_AI__',
+                           'retention-active': selectedMenupage?.collection?.id === '__DATA_RETENTION__' }">
     <template #spinner>
       <ProgressBar v-show="showProgressBar" mode="indeterminate" style="height: 0.3em ; border-radius: 0;"/>
     </template>
@@ -36,6 +37,11 @@
       <ConfigureAIPanel
           v-if="selectedMenupage?.collection.id === '__CONFIGURE_AI__' && businessId"
           :business-id="businessId"
+      />
+      <RetentionSettings
+          v-if="selectedMenupage?.collection.id === '__DATA_RETENTION__' && businessId && user"
+          :business-id="businessId"
+          :user="user"
       />
       <div v-if="selectedMenupage?.collection.id === '__SEND_DATA__'" class="mb-4">
         <ConnectCalendar />
@@ -466,12 +472,13 @@ import TemplatedVariable from "../../components/widgets/TemplatedVariable.vue";
 import MultiselectVariable from "../../components/widgets/MultiselectVariable.vue";
 import TimeSlotsEditor from "@/components/widgets/TimeSlotsEditor.vue";
 import AgentSkillsConfigurator from "@/components/widgets/AgentSkillsConfigurator.vue";
+import RetentionSettings from "@/components/widgets/RetentionSettings.vue";
 import ConnectCalendar from "@/components/ConnectCalendar.vue";
 import ActionPanel from "@/components/ActionPanel.vue";
 import ConfigureAIPanel from "@/components/ConfigureAIPanel.vue";
 
 export default {
-  components: { TimeSlotsEditor, AgentSkillsConfigurator, TupleVariable, TemplatedVariable, MultiselectVariable, BusinessFrame, ConnectCalendar, ActionPanel, ConfigureAIPanel},
+  components: { TimeSlotsEditor, AgentSkillsConfigurator, TupleVariable, TemplatedVariable, MultiselectVariable, BusinessFrame, ConnectCalendar, ActionPanel, ConfigureAIPanel, RetentionSettings},
   name: "OnboardingChooseDevice",
   setup: function () {
     const store = useStore();
@@ -802,10 +809,12 @@ export default {
      */
     async switchToMenupage(id = undefined, { pushUrl = true } = {}) {
       const CONFIGURE_AI_ID = '__CONFIGURE_AI__'
+      // a page of its own, not a template collection: how long the business keeps its calls
+      const RETENTION_ID = '__DATA_RETENTION__'
       const requested = id || CONFIGURE_AI_ID
       const known = Array.isArray(this.variablesAnnotations)
         && this.variablesAnnotations.some((obj) => obj.collection.id === requested)
-      const resolvedId = (requested === CONFIGURE_AI_ID || known) ? requested : CONFIGURE_AI_ID
+      const resolvedId = (requested === CONFIGURE_AI_ID || requested === RETENTION_ID || known) ? requested : CONFIGURE_AI_ID
       if (resolvedId !== requested) {
         console.warn("Unknown configuration section, falling back to the default:", requested)
       }
@@ -815,6 +824,15 @@ export default {
           collection: {
             id: CONFIGURE_AI_ID,
             humanName: this.t('components.business.configureViaChat'),
+            description: '',
+          },
+          variables: [],
+        }
+      } else if (resolvedId === RETENTION_ID) {
+        this.pageSelection = {
+          collection: {
+            id: RETENTION_ID,
+            humanName: this.t('components.retention.menu'),
             description: '',
           },
           variables: [],
@@ -917,6 +935,24 @@ export default {
         }
         result.push(item)
         lastGroup = group
+      }
+      // How long the business keeps its calls closes the business group, before the advanced one
+      const RETENTION_ID = '__DATA_RETENTION__'
+      const retentionItem = {
+        label: this.t('components.retention.menu'),
+        icon: 'pi pi-fw pi-history',
+        _collectionId: RETENTION_ID,
+        class: selectedId === RETENTION_ID ? 'active-menu-item' : undefined,
+        command: () => {
+          this.switchToMenupage(RETENTION_ID)
+        },
+        visible: () => true,
+      }
+      const lastBusiness = result.map((item) => menuGroups[item._collectionId]).lastIndexOf('business')
+      if (lastBusiness >= 0) {
+        result.splice(lastBusiness + 1, 0, retentionItem)
+      } else {
+        result.push({ separator: true }, retentionItem)
       }
       this.itemsMenu = result
     },
@@ -1073,6 +1109,14 @@ export default {
     padding: 0 !important;
     overflow: hidden !important;
   }
+  :deep(#footer) {
+    display: none !important;
+  }
+}
+
+// The retention page saves through its own API and its own button: the footer's Save writes the
+// business variables, and two Save buttons on one page would leave the owner guessing which one counts.
+.retention-active {
   :deep(#footer) {
     display: none !important;
   }

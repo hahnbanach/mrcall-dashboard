@@ -1077,6 +1077,37 @@
         "transferError": "Impossible de transférer le propriétaire",
         "revokedDetail": "Revendeur supprimé : {owners} propriétaires affectés, {businesses} entreprises annulées"
       }
+    },
+    "retention": {
+      "menu": "Conservation des données",
+      "intro": "Combien de temps cet assistant conserve ses appels. Un enregistrement est toujours supprimé avec son appel.",
+      "loadError": "Impossible de lire les paramètres de conservation.",
+      "class": "Classe",
+      "source": "Source",
+      "days": "jours",
+      "minimum": "Minimum légal de la classe {class} : {days} jours (ou jamais).",
+      "inForce": "En vigueur",
+      "never": "Jamais",
+      "afterDays": "Après {days} jours",
+      "classDefault": "Par défaut ({value})",
+      "custom": "Personnalisé",
+      "save": "Enregistrer",
+      "saved": "Paramètres enregistrés.",
+      "belowMinimum": "{term} : le minimum est de {days} jours.",
+      "changedMeanwhile": "Les paramètres ont changé entre-temps : ils ont été rechargés, vérifiez-les et enregistrez à nouveau.",
+      "saveError": "Impossible d'enregistrer les paramètres.",
+      "archiveAfterDays": {
+        "title": "Archivage",
+        "help": "Combien de jours après l'appel il passe de la boîte de réception aux archives. Rien n'est supprimé."
+      },
+      "deleteAfterDays": {
+        "title": "Suppression",
+        "help": "Combien de jours après l'appel il est supprimé définitivement, avec son enregistrement."
+      },
+      "trashDeleteAfterDays": {
+        "title": "Corbeille",
+        "help": "Combien de jours un appel reste dans la corbeille avant d'être supprimé définitivement."
+      }
     }
   },
   "views": {

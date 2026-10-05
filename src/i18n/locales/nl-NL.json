@@ -1075,6 +1075,37 @@
         "transferError": "Eigenaar kon niet worden overgedragen",
         "revokedDetail": "Reseller verwijderd: {owners} eigenaren getroffen, {businesses} bedrijven geannuleerd"
       }
+    },
+    "retention": {
+      "menu": "Gegevensbewaring",
+      "intro": "Hoe lang deze assistent zijn gesprekken bewaart. Een opname wordt altijd samen met het gesprek verwijderd.",
+      "loadError": "De bewaarinstellingen konden niet worden gelezen.",
+      "class": "Klasse",
+      "source": "Bron",
+      "days": "dagen",
+      "minimum": "Wettelijk minimum van klasse {class}: {days} dagen (of nooit).",
+      "inForce": "Van kracht",
+      "never": "Nooit",
+      "afterDays": "Na {days} dagen",
+      "classDefault": "Standaard ({value})",
+      "custom": "Aangepast",
+      "save": "Opslaan",
+      "saved": "Instellingen opgeslagen.",
+      "belowMinimum": "{term}: het minimum is {days} dagen.",
+      "changedMeanwhile": "De instellingen zijn intussen gewijzigd: ze zijn opnieuw geladen, controleer ze en sla opnieuw op.",
+      "saveError": "De instellingen konden niet worden opgeslagen.",
+      "archiveAfterDays": {
+        "title": "Archivering",
+        "help": "Hoeveel dagen na het gesprek het van de inbox naar het archief gaat. Er wordt niets verwijderd."
+      },
+      "deleteAfterDays": {
+        "title": "Verwijdering",
+        "help": "Hoeveel dagen na het gesprek het definitief wordt verwijderd, met de opname."
+      },
+      "trashDeleteAfterDays": {
+        "title": "Prullenbak",
+        "help": "Hoeveel dagen een gesprek in de prullenbak blijft voordat het definitief wordt verwijderd."
+      }
     }
   },
   "views": {

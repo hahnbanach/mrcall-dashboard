@@ -1075,6 +1075,37 @@
         "transferError": "Omistajan siirtäminen epäonnistui",
         "revokedDetail": "Jälleenmyyjä poistettu: {owners} omistajaa vaikutettu, {businesses} yritystä peruutettu"
       }
+    },
+    "retention": {
+      "menu": "Tietojen säilytys",
+      "intro": "Kuinka kauan tämä avustaja säilyttää puhelunsa. Tallenne poistetaan aina yhdessä puhelunsa kanssa.",
+      "loadError": "Säilytysasetuksia ei voitu lukea.",
+      "class": "Luokka",
+      "source": "Lähde",
+      "days": "päivää",
+      "minimum": "Luokan {class} lakisääteinen vähimmäisaika: {days} päivää (tai ei koskaan).",
+      "inForce": "Voimassa",
+      "never": "Ei koskaan",
+      "afterDays": "{days} päivän kuluttua",
+      "classDefault": "Oletus ({value})",
+      "custom": "Mukautettu",
+      "save": "Tallenna",
+      "saved": "Asetukset tallennettu.",
+      "belowMinimum": "{term}: vähimmäisaika on {days} päivää.",
+      "changedMeanwhile": "Asetukset muuttuivat välillä: ne ladattiin uudelleen, tarkista ja tallenna uudelleen.",
+      "saveError": "Asetuksia ei voitu tallentaa.",
+      "archiveAfterDays": {
+        "title": "Arkistointi",
+        "help": "Kuinka monta päivää puhelun jälkeen se siirtyy saapuneista arkistoon. Mitään ei poisteta."
+      },
+      "deleteAfterDays": {
+        "title": "Poistaminen",
+        "help": "Kuinka monta päivää puhelun jälkeen se poistetaan pysyvästi tallenteineen."
+      },
+      "trashDeleteAfterDays": {
+        "title": "Roskakori",
+        "help": "Kuinka monta päivää puhelu pysyy roskakorissa ennen pysyvää poistamista."
+      }
     }
   },
   "views": {
