@@ -33,8 +33,6 @@ tests/screenshots/diff/
 # Claude Code worktrees
 .claude/worktrees/
 
-# Mrcall
-package-lock.json
 # Credentials. Never track these: vue-cli inlines every VUE_APP_* value into the
 # public bundle. CI writes them from masked variables; locally, copy
 # .env.example. Keep .env.example tracked.

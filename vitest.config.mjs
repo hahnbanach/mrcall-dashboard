@@ -30,6 +30,8 @@ export default defineConfig({
     // Only the component tests: `tests/e2e` is Playwright's, and Playwright and Vitest both define
     // `test`, so a stray import of one into the other fails in a way nobody enjoys reading.
     include: ['tests/unit/**/*.spec.js'],
+    // the browser APIs jsdom does not have, and the components use
+    setupFiles: ['tests/unit/setup.js'],
     globals: true
   }
 })

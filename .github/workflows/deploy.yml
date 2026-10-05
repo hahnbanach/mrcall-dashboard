@@ -89,7 +89,12 @@ jobs:
           printf '%s\n' "$ENV_CONTENT" > ".env.${{ steps.meta.outputs.mode }}"
           echo "wrote .env.${{ steps.meta.outputs.mode }} ($(wc -l < .env.${{ steps.meta.outputs.mode }}) lines)"
 
-      - run: npm install
+      # npm ci installs exactly package-lock.json, devDependencies included (the build and
+      # scripts/static-routes.js need them), and fails if the lockfile does not match package.json.
+      # With `npm install` and no lockfile every deploy resolved the ranges afresh: on 2026-10-05
+      # it built against primevue 4.5.5 while the tests had run against 4.2.5, and a selected
+      # choice the e2e had passed showed white on white.
+      - run: npm ci
 
       - name: Build
         # --mode picks the .env file. NODE_ENV picks the optimisation level, and
