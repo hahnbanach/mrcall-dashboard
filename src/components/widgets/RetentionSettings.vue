@@ -10,7 +10,7 @@
         <p class="retention-help">{{ $t(`components.retention.${term.key}.help`) }}</p>
         <SelectButton
           v-model="modes[term.key]"
-          :options="modeOptions(term)"
+          :options="modeOptions"
           optionLabel="label"
           optionValue="value"
           :allowEmpty="false"
@@ -39,11 +39,13 @@
 import RetentionApi from "@/utils/Retention";
 
 /**
- * The owner's page for how long a business keeps its calls. Three terms, each the default, never,
- * or a number of days: archive (the call leaves the inbox), delete (the call and its recording go)
- * and trash (a trashed call goes, counted from when it was trashed). The defaults are the same for
- * every business, never unless StarChat is configured otherwise, and come from StarChat with the
- * terms; this page shows them and decides nothing.
+ * The owner's page for how long a business keeps its calls. Three terms, each never or a number of
+ * days: archive (the call leaves the inbox), delete (the call and its recording go) and trash (a
+ * trashed call goes, counted from when it was trashed). The page shows the term in force and offers
+ * the two choices only. What the owner chooses is saved as chosen: never as -1, a custom term as its
+ * days, never as null. A business keeps following StarChat's default only until its owner saves:
+ * if the default ever changed, from never to a number of days, calls the owner chose to keep would
+ * otherwise start being deleted, and a deletion cannot be undone. The page decides nothing else.
  */
 export default {
   props: {
@@ -62,6 +64,12 @@ export default {
     };
   },
   computed: {
+    modeOptions() {
+      return [
+        { value: "never", label: this.$t("components.retention.never") },
+        { value: "days", label: this.$t("components.retention.custom") },
+      ];
+    },
     /** Every custom term has its number: a custom term left empty is not saved as the default. */
     complete() {
       return this.terms.every((t) => this.modes[t.key] !== "days" || Number.isInteger(this.days[t.key]));
@@ -82,27 +90,19 @@ export default {
     apply(info) {
       this.info = info;
       for (const term of this.terms) {
-        const set = info.set[term.key];
-        this.modes[term.key] = set === null || set === undefined ? "default" : set === -1 ? "never" : "days";
-        // a custom term starts from the one in force; with never in force it starts empty, so that
-        // no number is saved that the owner did not type
         const effective = info.effective[term.key];
-        this.days[term.key] = set !== null && set !== undefined && set >= 0 ? set : effective >= 0 ? effective : null;
+        this.modes[term.key] = effective === -1 ? "never" : "days";
+        // with never in force a custom term starts empty, so that no number is saved that the owner
+        // did not type
+        this.days[term.key] = effective >= 0 ? effective : null;
       }
     },
     describe(value) {
       return value === -1 ? this.$t("components.retention.never") : this.$t("components.retention.afterDays", { days: value });
     },
-    modeOptions(term) {
-      return [
-        { value: "default", label: this.$t("components.retention.default", { value: this.describe(this.info.defaults[term.key]) }) },
-        { value: "never", label: this.$t("components.retention.never") },
-        { value: "days", label: this.$t("components.retention.custom") },
-      ];
-    },
     termValue(term) {
       const mode = this.modes[term.key];
-      return mode === "default" ? null : mode === "never" ? -1 : this.days[term.key];
+      return mode === "days" ? this.days[term.key] : -1;
     },
     async save() {
       this.saving = true;
@@ -156,6 +156,15 @@ export default {
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.retention-term :deep(.p-togglebutton-checked) {
+  color: @mrcall_white;
+}
+
+// the selected choice in the blue of the buttons, not the faint pill PrimeVue draws by default
+.retention-term :deep(.p-togglebutton-checked::before) {
+  background: @mrcall_blue;
 }
 
 .retention-effective {

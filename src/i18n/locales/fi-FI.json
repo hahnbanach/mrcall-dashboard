@@ -1100,8 +1100,7 @@
       "trashDeleteAfterDays": {
         "title": "Roskakori",
         "help": "Kuinka monta päivää puhelu pysyy roskakorissa ennen pysyvää poistamista."
-      },
-      "default": "Oletus ({value})"
+      }
     }
   },
   "views": {

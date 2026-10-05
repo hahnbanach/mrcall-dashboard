@@ -1100,8 +1100,7 @@
       "trashDeleteAfterDays": {
         "title": "Prullenbak",
         "help": "Hoeveel dagen een gesprek in de prullenbak blijft voordat het definitief wordt verwijderd."
-      },
-      "default": "Standaard ({value})"
+      }
     }
   },
   "views": {

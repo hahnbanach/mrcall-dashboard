@@ -1102,8 +1102,7 @@
       "trashDeleteAfterDays": {
         "title": "Corbeille",
         "help": "Combien de jours un appel reste dans la corbeille avant d'être supprimé définitivement."
-      },
-      "default": "Par défaut ({value})"
+      }
     }
   },
   "views": {

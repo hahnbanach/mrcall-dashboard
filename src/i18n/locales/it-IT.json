@@ -1106,8 +1106,7 @@
       "trashDeleteAfterDays": {
         "title": "Cestino",
         "help": "Dopo quanti giorni nel cestino una chiamata cestinata viene cancellata definitivamente."
-      },
-      "default": "Predefinito ({value})"
+      }
     }
   },
   "views": {

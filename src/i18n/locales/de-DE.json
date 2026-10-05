@@ -1102,8 +1102,7 @@
       "trashDeleteAfterDays": {
         "title": "Papierkorb",
         "help": "Wie viele Tage ein Anruf im Papierkorb bleibt, bevor er endgültig gelöscht wird."
-      },
-      "default": "Standard ({value})"
+      }
     }
   },
   "views": {

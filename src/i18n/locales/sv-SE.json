@@ -1100,8 +1100,7 @@
       "trashDeleteAfterDays": {
         "title": "Papperskorg",
         "help": "Hur många dagar ett samtal ligger i papperskorgen innan det raderas permanent."
-      },
-      "default": "Standard ({value})"
+      }
     }
   },
   "views": {

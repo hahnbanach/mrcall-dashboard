@@ -1105,8 +1105,7 @@
       "trashDeleteAfterDays": {
         "title": "Trash",
         "help": "How many days a call stays in the trash before it is deleted for good."
-      },
-      "default": "Default ({value})"
+      }
     }
   },
   "views": {

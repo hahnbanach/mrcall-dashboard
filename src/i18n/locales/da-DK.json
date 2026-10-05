@@ -1100,8 +1100,7 @@
       "trashDeleteAfterDays": {
         "title": "Papirkurv",
         "help": "Hvor mange dage et opkald bliver i papirkurven, før det slettes endeligt."
-      },
-      "default": "Standard ({value})"
+      }
     }
   },
   "views": {

@@ -41,15 +41,28 @@ function draw () {
 describe('RetentionSettings', () => {
   beforeEach(() => vi.restoreAllMocks())
 
-  it('shows the default of each term, never, and nothing about classes or minimums', async () => {
+  it('offers only Never and Custom, with never selected while never is in force', async () => {
     vi.spyOn(RetentionApi, 'get').mockResolvedValue(described())
     const page = draw()
     await flushPromises()
+    const terms = page.findAll('.retention-term')
+    expect(terms).toHaveLength(3)
+    for (const term of terms) {
+      expect(term.findAll('button').map(b => b.text())).toEqual(['Never', 'Custom'])
+      expect(term.find('[data-p-checked="true"]').text()).toBe('Never')
+    }
     const text = page.text()
-    expect(text).toContain('Default (Never)')
-    expect(text).toContain('In force: Never')
-    expect(text).not.toMatch(/class|minimum/i)
+    expect(text).not.toMatch(/default|class|minimum/i)
     expect(text).not.toContain('components.retention')
+  })
+
+  it('selects Custom with the days of a term the business set', async () => {
+    vi.spyOn(RetentionApi, 'get').mockResolvedValue(described({ trashDeleteAfterDays: 60 }))
+    const page = draw()
+    await flushPromises()
+    const trash = page.findAll('.retention-term')[2]
+    expect(trash.find('[data-p-checked="true"]').text()).toBe('Custom')
+    expect(trash.find('input').element.value).toBe('60')
   })
 
   it('does not save a custom term the owner left empty', async () => {
@@ -65,16 +78,29 @@ describe('RetentionSettings', () => {
     expect(put).not.toHaveBeenCalled()
   })
 
-  it('sends null for a term left to the default, -1 for never, and the days of a custom term', async () => {
-    vi.spyOn(RetentionApi, 'get').mockResolvedValue(described({ deleteAfterDays: -1, trashDeleteAfterDays: 60 }))
-    const put = vi.spyOn(RetentionApi, 'put').mockResolvedValue(described({ deleteAfterDays: -1, trashDeleteAfterDays: 60 }))
+  it('saves never as an explicit -1 while the default is never, and a custom term as its days', async () => {
+    vi.spyOn(RetentionApi, 'get').mockResolvedValue(described({ trashDeleteAfterDays: 60 }))
+    const put = vi.spyOn(RetentionApi, 'put').mockResolvedValue(described({ archiveAfterDays: -1,
+      deleteAfterDays: -1, trashDeleteAfterDays: 60 }))
     const page = draw()
     await flushPromises()
     await page.findAll('button').find(b => b.text().includes('Save')).trigger('click')
     await flushPromises()
     expect(put).toHaveBeenLastCalledWith({ accessToken: 't' }, 'b',
-      { archiveAfterDays: null, deleteAfterDays: -1, trashDeleteAfterDays: 60 }, 'r1')
+      { archiveAfterDays: -1, deleteAfterDays: -1, trashDeleteAfterDays: 60 }, 'r1')
     expect(page.text()).toContain('Settings saved.')
+  })
+
+  it('saves never as -1 when the owner switches a custom term to Never', async () => {
+    vi.spyOn(RetentionApi, 'get').mockResolvedValue(described({ deleteAfterDays: 365 }))
+    const put = vi.spyOn(RetentionApi, 'put').mockResolvedValue(described({ deleteAfterDays: -1 }))
+    const page = draw()
+    await flushPromises()
+    await page.findAll('.retention-term')[1].findAll('button').find(b => b.text() === 'Never').trigger('click')
+    await flushPromises()
+    await page.findAll('button').find(b => b.text().includes('Save')).trigger('click')
+    await flushPromises()
+    expect(put.mock.lastCall[2].deleteAfterDays).toBe(-1)
   })
 
   it('reloads the settings when somebody else changed them, and says so', async () => {

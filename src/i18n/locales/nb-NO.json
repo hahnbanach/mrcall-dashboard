@@ -1100,8 +1100,7 @@
       "trashDeleteAfterDays": {
         "title": "Papirkurv",
         "help": "Hvor mange dager en samtale blir i papirkurven før den slettes for godt."
-      },
-      "default": "Standard ({value})"
+      }
     }
   },
   "views": {

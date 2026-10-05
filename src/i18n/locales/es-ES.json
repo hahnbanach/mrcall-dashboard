@@ -1114,8 +1114,7 @@
       "trashDeleteAfterDays": {
         "title": "Papelera",
         "help": "Cuántos días permanece una llamada en la papelera antes de eliminarse definitivamente."
-      },
-      "default": "Predeterminado ({value})"
+      }
     }
   },
   "views": {

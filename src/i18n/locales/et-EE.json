@@ -1100,8 +1100,7 @@
       "trashDeleteAfterDays": {
         "title": "Prügikast",
         "help": "Mitu päeva jääb kõne prügikasti enne lõplikku kustutamist."
-      },
-      "default": "Vaikimisi ({value})"
+      }
     }
   },
   "views": {
