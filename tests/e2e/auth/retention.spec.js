@@ -28,13 +28,14 @@ function described (set, revision) {
   }
 }
 
-async function mockPage (page, { putStatus = 200, putBody = null } = {}) {
+async function mockPage (page, { putStatus = 200, putBody = null, role = 'owner' } = {}) {
   const writes = []
   await page.route('**/crm/variables*', route => route.fulfill({
     status: 200, contentType: 'application/json', body: JSON.stringify(annotations) }))
   await page.route('**/crm/business*', route => route.fulfill({
     status: 200, contentType: 'application/json', body: JSON.stringify([mockBusiness]),
-    headers: { 'x-mrcall-role': 'owner' } }))
+    // cross-origin: the page reads the role only if the response exposes the header
+    headers: { 'x-mrcall-role': role, 'access-control-expose-headers': 'x-mrcall-role' } }))
   await page.route('**/apidomain/retention/**', route => {
     if (route.request().method() === 'PUT') {
       const body = route.request().postDataJSON()
@@ -79,5 +80,29 @@ test.describe('the retention page', () => {
     await expect(page.getByText('Law X, art. 3')).toBeVisible({ timeout: 20000 })
     await page.getByRole('button', { name: 'Save' }).click()
     await expect(page.getByText('Deletion: the minimum is 1095 days.')).toBeVisible()
+  })
+
+  // The footer's Save writes the business variables, not the retention: on this page it is not shown,
+  // and the footer stays only for what else it carries, the admin's button.
+  test('has one Save, its own, and no footer for an owner', async ({ authenticatedPage: page }) => {
+    await mockPage(page)
+    await page.goto(`/businessconfiguration?id=${mockBusiness.businessId}&section=__DATA_RETENTION__`)
+    await expect(page.getByText('Law X, art. 3')).toBeVisible({ timeout: 20000 })
+    await expect(page.getByRole('button', { name: 'Save' })).toHaveCount(1)
+    await expect(page.locator('#footer')).toHaveCount(0)
+  })
+
+  test('leaves the footer\'s Save on the other configuration pages', async ({ authenticatedPage: page }) => {
+    await mockPage(page)
+    await page.goto(`/businessconfiguration?id=${mockBusiness.businessId}&section=__BUSINESS_DATA__`)
+    await expect(page.locator('#footer').getByRole('button', { name: 'Save' })).toBeVisible({ timeout: 20000 })
+  })
+
+  test('keeps the admin\'s AladMin AI button in the footer, with still one Save', async ({ authenticatedPage: page }) => {
+    await mockPage(page, { role: 'admin' })
+    await page.goto(`/businessconfiguration?id=${mockBusiness.businessId}&section=__DATA_RETENTION__`)
+    await expect(page.getByText('Law X, art. 3')).toBeVisible({ timeout: 20000 })
+    await expect(page.locator('#footer').getByRole('button', { name: 'AladMin AI' })).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Save' })).toHaveCount(1)
   })
 })

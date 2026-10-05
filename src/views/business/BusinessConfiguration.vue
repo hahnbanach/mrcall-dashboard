@@ -1,6 +1,5 @@
 <template>
-  <BusinessFrame :class="{ 'configure-ai-active': selectedMenupage?.collection?.id === '__CONFIGURE_AI__',
-                           'retention-active': selectedMenupage?.collection?.id === '__DATA_RETENTION__' }">
+  <BusinessFrame :class="{ 'configure-ai-active': selectedMenupage?.collection?.id === '__CONFIGURE_AI__' }">
     <template #spinner>
       <ProgressBar v-show="showProgressBar" mode="indeterminate" style="height: 0.3em ; border-radius: 0;"/>
     </template>
@@ -425,7 +424,10 @@
         </div>
       </template>
     </template>
-    <template #footer>
+    <!-- The retention page saves through its own API and its own button: the footer's Save writes the
+         business variables, and two Save buttons on one page would leave the owner guessing which one
+         counts. There the footer keeps only the admin's button, and a non-admin gets no footer at all. -->
+    <template #footer v-if="isAdmin || selectedMenupage?.collection?.id !== '__DATA_RETENTION__'">
       <div class="footer_buttonbar">
         <div class="footer-left-buttons">
           <Button
@@ -435,7 +437,7 @@
               class="p-button-outlined"
           />
         </div>
-        <div style="margin-left: auto">
+        <div v-if="selectedMenupage?.collection?.id !== '__DATA_RETENTION__'" style="margin-left: auto">
           <Button
               @click="saveBusiness()" icon="pi pi-save"
               :label="t('components.business.saveButtonText')"
@@ -1109,14 +1111,6 @@ export default {
     padding: 0 !important;
     overflow: hidden !important;
   }
-  :deep(#footer) {
-    display: none !important;
-  }
-}
-
-// The retention page saves through its own API and its own button: the footer's Save writes the
-// business variables, and two Save buttons on one page would leave the owner guessing which one counts.
-.retention-active {
   :deep(#footer) {
     display: none !important;
   }
