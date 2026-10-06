@@ -16,6 +16,7 @@
  * grants, the composable that tracks them belongs to the screen, and a card asks it questions.
  */
 import { computed } from 'vue';
+import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
 import { componentFor } from '@/components/widgets/skills/fields';
 import SkillArguments from '@/components/widgets/skills/SkillArguments.vue';
@@ -62,12 +63,15 @@ const authFields = computed(() => oauthFields(props.skill));
   * the ones the skill declares: they are one declaration and reading them apart is what made a
   * person wonder where the model's values come from. */
 const EXTRAS_FIELD_KEY = 'variables';
+const store = useStore();
+/** An admin sees the fields a manifest keeps for the platform's people; an owner does not. */
+const viewer = computed(() => ({ admin: store.state.role === 'admin' }));
 const bodyFields = computed(() =>
-  configurableFields(props.skill, props.entry, props.phase).filter(f => f.key !== EXTRAS_FIELD_KEY));
+  configurableFields(props.skill, props.entry, props.phase, viewer.value).filter(f => f.key !== EXTRAS_FIELD_KEY));
 const extrasField = computed(() =>
-  configurableFields(props.skill, props.entry, props.phase).find(f => f.key === EXTRAS_FIELD_KEY) || null);
+  configurableFields(props.skill, props.entry, props.phase, viewer.value).find(f => f.key === EXTRAS_FIELD_KEY) || null);
 const declaredArguments = computed(() => argumentsOf(props.skill, props.entry));
-const showsTemplates = computed(() => hasTemplateFields(props.skill, props.entry, props.phase));
+const showsTemplates = computed(() => hasTemplateFields(props.skill, props.entry, props.phase, viewer.value));
 
 function value(key) {
   return valueOf(props.entry, key);
