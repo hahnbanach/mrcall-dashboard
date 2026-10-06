@@ -37,6 +37,11 @@
           v-if="selectedMenupage?.collection.id === '__CONFIGURE_AI__' && businessId"
           :business-id="businessId"
       />
+      <RestaurantBook
+          v-if="selectedMenupage?.collection.id === '__RESTAURANT__' && businessId && user"
+          :business-id="businessId"
+          :user="user"
+      />
       <RetentionSettings
           v-if="selectedMenupage?.collection.id === '__DATA_RETENTION__' && businessId && user"
           :business-id="businessId"
@@ -424,10 +429,11 @@
         </div>
       </template>
     </template>
-    <!-- The retention page saves through its own API and its own button: the footer's Save writes the
-         business variables, and two Save buttons on one page would leave the owner guessing which one
-         counts. There the footer keeps only the admin's button, and a non-admin gets no footer at all. -->
-    <template #footer v-if="isAdmin || selectedMenupage?.collection?.id !== '__DATA_RETENTION__'">
+    <!-- The retention page and the restaurant page save through their own API and their own buttons: the
+         footer's Save writes the business variables, and two Save buttons on one page would leave the owner
+         guessing which one counts. There the footer keeps only the admin's button, and a non-admin gets no
+         footer at all. -->
+    <template #footer v-if="isAdmin || !ownSavePage">
       <div class="footer_buttonbar">
         <div class="footer-left-buttons">
           <Button
@@ -437,7 +443,7 @@
               class="p-button-outlined"
           />
         </div>
-        <div v-if="selectedMenupage?.collection?.id !== '__DATA_RETENTION__'" style="margin-left: auto">
+        <div v-if="!ownSavePage" style="margin-left: auto">
           <Button
               @click="saveBusiness()" icon="pi pi-save"
               :label="t('components.business.saveButtonText')"
@@ -475,12 +481,13 @@ import MultiselectVariable from "../../components/widgets/MultiselectVariable.vu
 import TimeSlotsEditor from "@/components/widgets/TimeSlotsEditor.vue";
 import AgentSkillsConfigurator from "@/components/widgets/AgentSkillsConfigurator.vue";
 import RetentionSettings from "@/components/widgets/RetentionSettings.vue";
+import RestaurantBook from "@/components/widgets/RestaurantBook.vue";
 import ConnectCalendar from "@/components/ConnectCalendar.vue";
 import ActionPanel from "@/components/ActionPanel.vue";
 import ConfigureAIPanel from "@/components/ConfigureAIPanel.vue";
 
 export default {
-  components: { TimeSlotsEditor, AgentSkillsConfigurator, TupleVariable, TemplatedVariable, MultiselectVariable, BusinessFrame, ConnectCalendar, ActionPanel, ConfigureAIPanel, RetentionSettings},
+  components: { TimeSlotsEditor, AgentSkillsConfigurator, TupleVariable, TemplatedVariable, MultiselectVariable, BusinessFrame, ConnectCalendar, ActionPanel, ConfigureAIPanel, RetentionSettings, RestaurantBook},
   name: "OnboardingChooseDevice",
   setup: function () {
     const store = useStore();
@@ -527,6 +534,16 @@ export default {
      * runtime holds: prefer a phase's own variable, fall back to the single blob, write both while
      * both exist.
      */
+    /** A synthetic page that saves through its own API and button, where the footer's Save has no place. */
+    ownSavePage() {
+      const id = this.selectedMenupage?.collection?.id
+      return id === '__DATA_RETENTION__' || id === '__RESTAURANT__'
+    },
+    /** The business runs the restaurant_booking skill: only then has it a book to show. */
+    hasRestaurant() {
+      const config = this.agentSkillsUtils.readPhaseConfig(this.business ? this.business.variables : {})
+      return Object.values(config).some(entries => (entries || []).some(e => e && e.skill === 'skill_restaurant_booking'))
+    },
     skillsConfig: {
       get() {
         return this.agentSkillsUtils.serializeConfig(
@@ -813,10 +830,12 @@ export default {
       const CONFIGURE_AI_ID = '__CONFIGURE_AI__'
       // a page of its own, not a template collection: how long the business keeps its calls
       const RETENTION_ID = '__DATA_RETENTION__'
+      const RESTAURANT_ID = '__RESTAURANT__'
       const requested = id || CONFIGURE_AI_ID
       const known = Array.isArray(this.variablesAnnotations)
         && this.variablesAnnotations.some((obj) => obj.collection.id === requested)
-      const resolvedId = (requested === CONFIGURE_AI_ID || requested === RETENTION_ID || known) ? requested : CONFIGURE_AI_ID
+      const resolvedId = (requested === CONFIGURE_AI_ID || requested === RETENTION_ID || requested === RESTAURANT_ID || known)
+        ? requested : CONFIGURE_AI_ID
       if (resolvedId !== requested) {
         console.warn("Unknown configuration section, falling back to the default:", requested)
       }
@@ -826,6 +845,15 @@ export default {
           collection: {
             id: CONFIGURE_AI_ID,
             humanName: this.t('components.business.configureViaChat'),
+            description: '',
+          },
+          variables: [],
+        }
+      } else if (resolvedId === RESTAURANT_ID) {
+        this.pageSelection = {
+          collection: {
+            id: RESTAURANT_ID,
+            humanName: this.t('components.restaurant.menu'),
             description: '',
           },
           variables: [],
@@ -950,11 +978,23 @@ export default {
         },
         visible: () => true,
       }
+      const RESTAURANT_ID = '__RESTAURANT__'
+      const restaurantItem = {
+        label: this.t('components.restaurant.menu'),
+        icon: 'pi pi-fw pi-calendar',
+        _collectionId: RESTAURANT_ID,
+        class: selectedId === RESTAURANT_ID ? 'active-menu-item' : undefined,
+        command: () => {
+          this.switchToMenupage(RESTAURANT_ID)
+        },
+        visible: () => true,
+      }
+      const extra = this.hasRestaurant ? [restaurantItem, retentionItem] : [retentionItem]
       const lastBusiness = result.map((item) => menuGroups[item._collectionId]).lastIndexOf('business')
       if (lastBusiness >= 0) {
-        result.splice(lastBusiness + 1, 0, retentionItem)
+        result.splice(lastBusiness + 1, 0, ...extra)
       } else {
-        result.push({ separator: true }, retentionItem)
+        result.push({ separator: true }, ...extra)
       }
       this.itemsMenu = result
     },
