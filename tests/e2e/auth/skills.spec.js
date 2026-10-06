@@ -185,15 +185,15 @@ test.describe('the skills screen', () => {
       await expect(page.getByText('two slots cover 23:55')).toBeVisible({ timeout: 15000 })
     })
 
-  /* Seen failing on 2026-10-06 before the card read `audience`: the owner was shown 'Hold seconds'. */
-  test('hides a field the manifest keeps for the platform from an owner, and shows it to an admin',
-    async ({ authenticatedPage: page }) => {
-      await mockSkillsScreen(page)
-      await openSkills(page)
-      await page.locator('.entry-header-toggle').click()
-      await expect(page.getByText('Appointment length')).toBeVisible()
-      await expect(page.getByText('Hold seconds')).toHaveCount(0)
-    })
+  /* Seen failing on 2026-10-06 twice: before the card read `audience` (the owner was shown 'Hold
+   * seconds'), and with the filter hiding the field from everybody (the admin was not). */
+  test('hides a field the manifest keeps for the platform from an owner', async ({ authenticatedPage: page }) => {
+    await mockSkillsScreen(page)
+    await openSkills(page)
+    await page.locator('.entry-header-toggle').click()
+    await expect(page.getByText('Appointment length')).toBeVisible()
+    await expect(page.getByText('Hold seconds')).toHaveCount(0)
+  })
 
   test('shows the platform field to an admin', async ({ authenticatedPage: page }) => {
     await mockSkillsScreen(page, { role: 'admin' })
