@@ -325,7 +325,8 @@
         "planActive": "Piano attivo",
         "noPlan": "Nessun piano attivo",
         "hasMinutes": "Minuti disponibili",
-        "noMinutes": "Nessun minuto rimasto"
+        "noMinutes": "Nessun minuto rimasto",
+        "inDebt": "Credito negativo"
       },
       "selectButtonTooltip": {
         "enabled": "Accedi alla personalizzazione del tuo business",
@@ -1807,6 +1808,7 @@
   },
   "mrcallCredits": {
     "title": "Crediti residui",
-    "tooltip": "Una telefonata brucia ~{factor} crediti al minuto. Il Configuratore chat e MrCall Desktop bruciano in proporzione ai token consumati."
+    "tooltip": "Una telefonata brucia ~{factor} crediti al minuto. Il Configuratore chat e MrCall Desktop bruciano in proporzione ai token consumati.",
+    "debtNotice": "Credito negativo: {amount}. Le chiamate sono sospese; la prossima ricarica lo ripaga per primo."
   }
 }

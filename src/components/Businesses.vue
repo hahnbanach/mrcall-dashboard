@@ -178,7 +178,10 @@
                 v-tooltip.bottom="$t('mrcallCredits.tooltip', { factor: creditTooltipFactor(business) })"
               ></i>
             </span>
-            <span class="info-value">{{ creditsToEuro(counterResources[business.businessId]['CALLCREDIT']) }}</span>
+            <span :class="['info-value', creditDebt[business.businessId] > 0 ? 'credit-negative' : '']">{{ creditsToEuro(counterResources[business.businessId]['CALLCREDIT']) }}</span>
+            <small v-if="creditDebt[business.businessId] > 0" class="credit-debt-notice">
+              {{ $t('mrcallCredits.debtNotice', { amount: creditsToEuro(counterResources[business.businessId]['CALLCREDIT']) }) }}
+            </small>
           </div>
           <div v-if="counterResources[business.businessId]" class="info-item">
             <span class="info-label"><i class="pi pi-comment"></i> {{ $t('components.businesses.form.resourcesSmsCount') }}</span>
@@ -192,9 +195,9 @@
             <i :class="['ACTIVE','TRIALING','FREE'].includes(subscriptionInfo[business.businessId]?.status) ? 'pi pi-check-circle' : 'pi pi-exclamation-circle'"></i>
             {{ ['ACTIVE','TRIALING','FREE'].includes(subscriptionInfo[business.businessId]?.status) ? $t('components.businesses.health.planActive') : $t('components.businesses.health.noPlan') }}
           </span>
-          <span v-if="counterResources[business.businessId]" :class="['health-pill', counterResources[business.businessId]['CALLCREDIT'] > 0 ? 'health-ok' : 'health-warn']">
-            <i :class="counterResources[business.businessId]['CALLCREDIT'] > 0 ? 'pi pi-check-circle' : 'pi pi-exclamation-circle'"></i>
-            {{ counterResources[business.businessId]['CALLCREDIT'] > 0 ? $t('components.businesses.health.hasMinutes') : $t('components.businesses.health.noMinutes') }}
+          <span v-if="counterResources[business.businessId]" :class="['health-pill', creditPill(business.businessId).cls]">
+            <i :class="creditPill(business.businessId).icon"></i>
+            {{ $t(creditPill(business.businessId).label) }}
           </span>
         </div>
 
@@ -287,6 +290,7 @@ import {auth} from "@/firebase/config";
 import WebcallButton from "@/components/webcall/WebcallButton.vue";
 import DirectVoiceButton from "@/components/webcall/DirectVoiceButton.vue";
 import { preferredVoiceEncoding } from '@/utils/VoiceEncoding'
+import { fetchCreditBalance, creditsToEuro, creditState } from '@/utils/CreditBalance'
 import TextChatWidget from "@/components/webcall/TextChatWidget.vue";
 import OwnerSelector from "@/components/reseller/OwnerSelector.vue";
 //import Plans from '@/components/Plans'
@@ -367,6 +371,8 @@ export default {
       size: 10,
       first: 1,
       counterResources: {},
+      // Credits the business owes, by business id: 0 or absent when it owes nothing.
+      creditDebt: {},
       subscriptionInfo: {},
       businesses: {},
       templates: {},
@@ -615,9 +621,21 @@ export default {
       return factors[business.template] ?? 25 ;
     },
     creditsToEuro(callcredits) {
-      // 1 credit = €0.01 (Stripe products call50/300/600_euros map 1:100).
-      const euro = (callcredits ?? 0) / 100 ;
-      return new Intl.NumberFormat(this.$i18n.locale, { style: 'currency', currency: 'EUR' }).format(euro) ;
+      // 1 credit = €0.01 (Stripe products call50/300/600_euros map 1:100); negative while in debt.
+      return creditsToEuro(callcredits, this.$i18n.locale) ;
+    },
+    creditPill(businessId) {
+      const state = creditState({
+        net: this.counterResources[businessId]?.['CALLCREDIT'] ?? 0,
+        debt: this.creditDebt[businessId] ?? 0
+      })
+      if (state === 'debt') {
+        return { cls: 'health-debt', icon: 'pi pi-ban', label: 'components.businesses.health.inDebt' }
+      }
+      if (state === 'ok') {
+        return { cls: 'health-ok', icon: 'pi pi-check-circle', label: 'components.businesses.health.hasMinutes' }
+      }
+      return { cls: 'health-warn', icon: 'pi pi-exclamation-circle', label: 'components.businesses.health.noMinutes' }
     },
     async fetchBusinessResources(businessId, subscriptionStatus, category) {
       console.log("Called fetchBusinessResources(" + businessId + ", " + category + ")")
@@ -634,13 +652,26 @@ export default {
       } else {
         subcategoryExclude.push("400-TEST")
       }
+      const body = {
+        businessId: businessId,
+        category: category,
+        subcategory: subcategory,
+        subcategoryExclude: subcategoryExclude
+      }
+      if(category === "CALLCREDIT") {
+        // The balance net of any debt, negative while in debt; the count when StarChat has no
+        // balance endpoint yet (see utils/CreditBalance.js).
+        fetchCreditBalance(axios, process.env.VUE_APP_STARCHAT_URL, headers, body).then((balance) => {
+          this.counterResources[businessId] = this.counterResources[businessId] || {}
+          this.counterResources[businessId][category] = balance ? balance.net : undefined
+          this.creditDebt[businessId] = balance ? balance.debt : 0
+        }).catch((error) => {
+          console.error(error)
+        })
+        return
+      }
       axios.post(url,
-          {
-            businessId: businessId,
-            category: category,
-            subcategory: subcategory,
-            subcategoryExclude: subcategoryExclude
-          },
+          body,
           {
             headers: headers
           }
@@ -1114,6 +1145,17 @@ a.service-number-value:hover {
   font-weight: 500;
   color: @mrcall_dark_grey_text;
   word-break: break-word;
+
+  &.credit-negative {
+    color: #c62828;
+  }
+}
+
+.credit-debt-notice {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.8rem;
+  color: #c62828;
 }
 
 /* Action buttons */
@@ -1141,6 +1183,11 @@ a.service-number-value:hover {
   &.health-warn {
     background: #fff3e0;
     color: #e65100;
+  }
+
+  &.health-debt {
+    background: #ffebee;
+    color: #c62828;
   }
 
   i {
