@@ -95,6 +95,11 @@ async function mockPage (page, { restaurant = true, putStatus = 200, bookStatus 
     }
     const body = request.postData() ? request.postDataJSON() : null
     calls.push({ method: request.method(), path: url.pathname, search: url.search, body })
+    // As the server answers: a large party is refused to staff unless they name the tables it takes.
+    if (url.pathname.endsWith('/accept') && !(body && (body.tableSize || body.overbook))) {
+      return route.fulfill({ status: 409, contentType: 'application/json',
+        body: JSON.stringify({ diagnostics: [{ path: '/', code: 'large_party', detail: 'name the tables or overbook' }] }) })
+    }
     if (url.pathname.endsWith('/reservations') && request.method() === 'POST' && !(body && body.overbook)) {
       return route.fulfill({ status: bookStatus, contentType: 'application/json',
         body: JSON.stringify(bookStatus === 201 ? { id: 'n1', version: 1 } :
@@ -149,13 +154,19 @@ test.describe('the restaurant page', () => {
     expect(posts[1].body).toMatchObject({ time: '20:00', covers: 2 })
   })
 
-  test('accepts a request at the version it read', async ({ authenticatedPage: page }) => {
+  // A large party is refused to staff unless they name its tables (design 18.9.2), so accepting one names
+  // them: the dialog offers the tables its covers need, which staff may change. Seen failing on
+  // 2026-10-06 with Accept sending only the version: the server's large_party, then only "book anyway".
+  test('accepts a large party on the tables it needs, at the version it read', async ({ authenticatedPage: page }) => {
     const calls = await mockPage(page)
     await openPage(page)
     await page.locator('.restaurant-request').getByRole('button', { name: 'Accept' }).click()
+    const dialog = page.locator('.restaurant-accept-dialog')
+    await expect(dialog.getByRole('spinbutton')).toHaveValue('3')
+    await dialog.getByRole('button', { name: 'Accept' }).click()
     await expect(page.getByText('Request accepted.')).toBeVisible()
-    const accept = calls.find(c => c.path.endsWith('/reservations/r2/accept'))
-    expect(accept && accept.body).toEqual({ expectedVersion: 3 })
+    const accepts = calls.filter(c => c.path.endsWith('/reservations/r2/accept'))
+    expect(accepts.map(c => c.body)).toEqual([{ expectedVersion: 3, tableSize: 4, tables: 3 }])
   })
 
   test('saves the room to the skill instance with the revision it read, tables as the skill stores them', async ({ authenticatedPage: page }) => {
@@ -213,16 +224,15 @@ test.describe('the restaurant page', () => {
   })
 
   // Seen failing on 2026-10-06 with the page recognising only skill_restaurant_booking: no menu item.
-  test('recognises a configuration written with the short skill name, and saves under that name', async ({ authenticatedPage: page }) => {
-    const calls = await mockPage(page, { skill: 'restaurant_booking' })
-    await page.goto(`/businessconfiguration?id=${mockBusiness.businessId}`)
-    const narrowMenu = page.locator('.header_buttonbar button')
-    if (await narrowMenu.isVisible()) await narrowMenu.click()
-    await page.getByRole('menuitem', { name: 'Bookings' }).locator('visible=true').first().click()
-    await expect(page.locator('.restaurant-settings .restaurant-table-type')).toHaveCount(2, { timeout: 20000 })
-    await page.locator('.restaurant-settings').getByRole('button', { name: 'Save' }).click()
-    await expect(page.getByText('Settings saved.')).toBeVisible()
-    expect(calls.find(c => c.method === 'PUT').body.skill).toBe('restaurant_booking')
+  // The platform runs a skill instance only under the name its skills index has, skill_restaurant_booking:
+  // an instance written as restaurant_booking is refused by the configuration route (skill_unknown) and
+  // takes no call, so the page offers no book for it rather than one it cannot save. Seen failing on
+  // 2026-10-06 with the short name recognised: the book opened and its Save would answer 422.
+  test('offers no book for an instance under a name the platform does not run', async ({ authenticatedPage: page }) => {
+    await mockPage(page, { skill: 'restaurant_booking' })
+    await page.goto(`/businessconfiguration?id=${mockBusiness.businessId}&section=__RESTAURANT__`)
+    await expect(page.getByText('This assistant does not take table bookings', { exact: false })).toBeVisible({ timeout: 20000 })
+    await expect(page.locator('.restaurant-settings')).toHaveCount(0)
   })
 
   // Seen failing on 2026-10-06 with the section opening the book for a business without the skill.
