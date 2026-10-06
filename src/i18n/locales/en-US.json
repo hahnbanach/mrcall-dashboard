@@ -312,7 +312,8 @@
         "planActive": "Plan active",
         "noPlan": "No active plan",
         "hasMinutes": "Minutes available",
-        "noMinutes": "No minutes left"
+        "noMinutes": "No minutes left",
+        "inDebt": "Negative credit"
       },
       "selectButtonTooltip": {
         "enabled": "Access to the assistant personalization",
@@ -1761,6 +1762,7 @@
   },
   "mrcallCredits": {
     "title": "Credits remaining",
-    "tooltip": "A phone call burns ~{factor} credits per minute. Configurator chat and MrCall Desktop burn in proportion to tokens consumed."
+    "tooltip": "A phone call burns ~{factor} credits per minute. Configurator chat and MrCall Desktop burn in proportion to tokens consumed.",
+    "debtNotice": "Negative credit: {amount}. Calls are suspended; the next top-up repays it first."
   }
 }

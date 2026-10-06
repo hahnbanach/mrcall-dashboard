@@ -311,7 +311,8 @@
         "planActive": "Ενεργό πλάνο",
         "noPlan": "Χωρίς ενεργό πλάνο",
         "hasMinutes": "Διαθέσιμα λεπτά",
-        "noMinutes": "Δεν απομένουν λεπτά"
+        "noMinutes": "Δεν απομένουν λεπτά",
+        "inDebt": "Αρνητική πίστωση"
       }
     },
     "contacts": {
@@ -1786,6 +1787,7 @@
   },
   "mrcallCredits": {
     "title": "Credits remaining",
-    "tooltip": "A phone call burns ~{factor} credits per minute. Configurator chat and MrCall Desktop burn in proportion to tokens consumed."
+    "tooltip": "A phone call burns ~{factor} credits per minute. Configurator chat and MrCall Desktop burn in proportion to tokens consumed.",
+    "debtNotice": "Αρνητική πίστωση: {amount}. Οι κλήσεις έχουν ανασταλεί· η επόμενη επαναφόρτιση την εξοφλεί πρώτη."
   }
 }

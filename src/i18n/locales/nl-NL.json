@@ -307,7 +307,8 @@
         "planActive": "Abonnement actief",
         "noPlan": "Geen actief abonnement",
         "hasMinutes": "Minuten beschikbaar",
-        "noMinutes": "Geen minuten meer"
+        "noMinutes": "Geen minuten meer",
+        "inDebt": "Negatief tegoed"
       },
       "selectButtonTooltip": {
         "enabled": "Toegang tot de personalisatie van de assistent",
@@ -1786,6 +1787,7 @@
   },
   "mrcallCredits": {
     "title": "Credits remaining",
-    "tooltip": "A phone call burns ~{factor} credits per minute. Configurator chat and MrCall Desktop burn in proportion to tokens consumed."
+    "tooltip": "A phone call burns ~{factor} credits per minute. Configurator chat and MrCall Desktop burn in proportion to tokens consumed.",
+    "debtNotice": "Negatief tegoed: {amount}. Gesprekken zijn opgeschort; de volgende opwaardering betaalt het eerst terug."
   }
 }

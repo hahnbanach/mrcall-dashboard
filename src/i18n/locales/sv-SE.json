@@ -307,7 +307,8 @@
         "planActive": "Plan aktiv",
         "noPlan": "Ingen aktiv plan",
         "hasMinutes": "Tillgängliga minuter",
-        "noMinutes": "Inga minuter kvar"
+        "noMinutes": "Inga minuter kvar",
+        "inDebt": "Negativ kredit"
       },
       "selectButtonTooltip": {
         "enabled": "Åtkomst till assistentens anpassning",
@@ -1786,6 +1787,7 @@
   },
   "mrcallCredits": {
     "title": "Credits remaining",
-    "tooltip": "A phone call burns ~{factor} credits per minute. Configurator chat and MrCall Desktop burn in proportion to tokens consumed."
+    "tooltip": "A phone call burns ~{factor} credits per minute. Configurator chat and MrCall Desktop burn in proportion to tokens consumed.",
+    "debtNotice": "Negativ kredit: {amount}. Samtal är avstängda; nästa påfyllning betalar tillbaka den först."
   }
 }

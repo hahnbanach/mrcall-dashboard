@@ -311,7 +311,8 @@
         "planActive": "Plan activo",
         "noPlan": "Sin plan activo",
         "hasMinutes": "Minutos disponibles",
-        "noMinutes": "Sin minutos restantes"
+        "noMinutes": "Sin minutos restantes",
+        "inDebt": "Crédito negativo"
       }
     },
     "contacts": {
@@ -1797,6 +1798,7 @@
   },
   "mrcallCredits": {
     "title": "Credits remaining",
-    "tooltip": "A phone call burns ~{factor} credits per minute. Configurator chat and MrCall Desktop burn in proportion to tokens consumed."
+    "tooltip": "A phone call burns ~{factor} credits per minute. Configurator chat and MrCall Desktop burn in proportion to tokens consumed.",
+    "debtNotice": "Crédito negativo: {amount}. Las llamadas están suspendidas; la próxima recarga lo salda primero."
   }
 }

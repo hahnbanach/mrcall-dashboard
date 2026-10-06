@@ -308,7 +308,8 @@
         "planActive": "Plan aktiv",
         "noPlan": "Kein aktiver Plan",
         "hasMinutes": "Minuten verfügbar",
-        "noMinutes": "Keine Minuten mehr"
+        "noMinutes": "Keine Minuten mehr",
+        "inDebt": "Negatives Guthaben"
       },
       "selectButtonTooltip": {
         "enabled": "Greife auf die Personalisierung deines Unternehmens zu",
@@ -1785,6 +1786,7 @@
   },
   "mrcallCredits": {
     "title": "Credits remaining",
-    "tooltip": "A phone call burns ~{factor} credits per minute. Configurator chat and MrCall Desktop burn in proportion to tokens consumed."
+    "tooltip": "A phone call burns ~{factor} credits per minute. Configurator chat and MrCall Desktop burn in proportion to tokens consumed.",
+    "debtNotice": "Negatives Guthaben: {amount}. Anrufe sind ausgesetzt; die nächste Aufladung gleicht es zuerst aus."
   }
 }
