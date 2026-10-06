@@ -49,7 +49,9 @@ function day (date) {
         status: 'confirmed', source: 'assistant', name: 'Bianchi', phone: '393331112233', overbooked: false,
         tableSize: 4, tables: 1 },
       { id: 'r2', version: 3, date, time: '20:30', minutes: 150, covers: 9, area: 'indoor', service: 'dinner',
-        status: 'requested', source: 'assistant', name: 'Galli', requestReason: 'large_party', overbooked: false }
+        status: 'requested', source: 'assistant', name: 'Galli', requestReason: 'large_party', overbooked: false },
+      { id: 'b1', version: 2, date, time: '19:00', minutes: 330, covers: 4, area: 'indoor', service: 'dinner',
+        status: 'confirmed', source: 'block', notes: 'stop dinner', overbooked: false, tableSize: 2, tables: 2 }
     ],
     occupancy: {
       dinner: [
@@ -177,6 +179,7 @@ test.describe('the restaurant page', () => {
     await expect(page.getByText('The settings changed in the meantime', { exact: false })).toBeVisible()
   })
 
+  // Seen failing on 2026-10-06 with the page's Remove not wired (no DELETE left the page).
   test('stops a service and removes a block with the version read', async ({ authenticatedPage: page }) => {
     const calls = await mockPage(page)
     await openPage(page)
@@ -185,6 +188,13 @@ test.describe('the restaurant page', () => {
     const stop = calls.find(c => c.path.endsWith('/stop-sell'))
     expect(stop.body).toMatchObject({ service: 'dinner' })
     expect(typeof stop.body.idempotencyKey).toBe('string')
+    const block = page.locator('.restaurant-block')
+    await expect(block).toContainText('2 × table of 2')
+    await block.getByRole('button', { name: 'Remove' }).click()
+    await expect(page.getByText('Cancelled.')).toBeVisible()
+    const removal = calls.find(c => c.method === 'DELETE')
+    expect(removal && removal.path).toMatch(/\/reservations\/b1$/)
+    expect(removal.search).toBe('?expectedVersion=2')
   })
 
   test('says the book is not available on a server without the restaurant routes', async ({ authenticatedPage: page }) => {
