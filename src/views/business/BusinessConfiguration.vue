@@ -482,7 +482,7 @@ import TimeSlotsEditor from "@/components/widgets/TimeSlotsEditor.vue";
 import AgentSkillsConfigurator from "@/components/widgets/AgentSkillsConfigurator.vue";
 import RetentionSettings from "@/components/widgets/RetentionSettings.vue";
 import RestaurantBook from "@/components/widgets/RestaurantBook.vue";
-import { SKILL_NAMES as RESTAURANT_SKILL_NAMES } from "@/utils/Restaurant";
+import { SKILL as RESTAURANT_SKILL } from "@/utils/Restaurant";
 import ConnectCalendar from "@/components/ConnectCalendar.vue";
 import ActionPanel from "@/components/ActionPanel.vue";
 import ConfigureAIPanel from "@/components/ConfigureAIPanel.vue";
@@ -543,7 +543,7 @@ export default {
     /** The business runs the restaurant_booking skill: only then has it a book to show. */
     hasRestaurant() {
       const config = this.agentSkillsUtils.readPhaseConfig(this.business ? this.business.variables : {})
-      return Object.values(config).some(entries => (entries || []).some(e => e && RESTAURANT_SKILL_NAMES.includes(e.skill)))
+      return Object.values(config).some(entries => (entries || []).some(e => e && e.skill === RESTAURANT_SKILL))
     },
     skillsConfig: {
       get() {

@@ -11,8 +11,9 @@ import axios from "axios";
  * (`code` is its first diagnostic's code: `full`, `stale`, `large_party`, `busy_retry`, ...), so the page
  * shows a translated sentence for the code and never the server's English.
  */
-/** The name the catalogue gives the skill, and the shorter one some configurations were written with. */
-export const SKILL_NAMES = ["skill_restaurant_booking", "restaurant_booking"];
+/** The one name the platform runs the skill under: its skills index has no other, so an instance written
+ * under another name takes no call and its configuration cannot be saved (skill_unknown). */
+export const SKILL = "skill_restaurant_booking";
 
 function base(businessId) {
     return process.env.VUE_APP_STARCHAT_URL + "/mrcall/v1/mrcall0/apidomain/restaurant/" + encodeURIComponent(businessId);
@@ -103,9 +104,8 @@ export default {
         const revisions = (configuration && configuration.revisions) || {};
         for (const phase of Object.keys(revisions)) {
             const entries = Array.isArray(configuration[phase]) ? configuration[phase] : [];
-            const entry = entries.find(e => e && SKILL_NAMES.includes(e.skill));
-            if (entry) return { phase: phase, skill: entry.skill, instanceId: entry.instanceId, params: entry.params || {},
-                revision: revisions[phase] };
+            const entry = entries.find(e => e && e.skill === SKILL);
+            if (entry) return { phase: phase, instanceId: entry.instanceId, params: entry.params || {}, revision: revisions[phase] };
         }
         return null;
     },
@@ -115,6 +115,6 @@ export default {
     saveInstance: function(user, businessId, instance, params) {
         return call(() => axios.put(skillsBase(businessId) + "/" + encodeURIComponent(instance.phase) + "/" +
             encodeURIComponent(instance.instanceId),
-            { skill: instance.skill, params: params, expectedRevision: instance.revision }, { headers: headers(user) }));
+            { skill: SKILL, params: params, expectedRevision: instance.revision }, { headers: headers(user) }));
     }
 };

@@ -63,7 +63,7 @@
             <span>{{ r.time }} · {{ $t("components.restaurant.people", { covers: r.covers }) }} · {{ r.name || "" }} {{ r.phone || "" }}</span>
             <span v-if="r.requestReason" class="restaurant-reason">{{ $t(`components.restaurant.reason.${r.requestReason}`) }}</span>
             <span v-if="r.notes" class="restaurant-notes">{{ r.notes }}</span>
-            <Button :label="$t('components.restaurant.accept')" icon="pi pi-check" size="small" :disabled="busy" @click="accept(r)" />
+            <Button :label="$t('components.restaurant.accept')" icon="pi pi-check" size="small" :disabled="busy" @click="openAccept(r)" />
             <Button :label="$t('components.restaurant.decline')" icon="pi pi-times" size="small" severity="secondary"
                     :disabled="busy" @click="cancel(r)" />
           </div>
@@ -197,6 +197,18 @@
         <Button :label="$t('components.restaurant.save')" icon="pi pi-check" :disabled="busy" @click="move(false)" />
       </template>
     </Dialog>
+    <Dialog v-model:visible="accepting.visible" modal :header="$t('components.restaurant.accept')" class="restaurant-accept-dialog">
+      <div class="restaurant-form">
+        <label>{{ $t("components.restaurant.tableSize") }}
+          <Dropdown v-model="accepting.tableSize" :options="acceptSizes" optionLabel="label" optionValue="value" showClear />
+        </label>
+        <label v-if="accepting.tableSize">{{ $t("components.restaurant.tables") }}<InputNumber v-model="accepting.tables" :min="1" :max="200" :useGrouping="false" /></label>
+      </div>
+      <template #footer>
+        <Button :label="$t('components.restaurant.close')" severity="secondary" text @click="accepting.visible = false" />
+        <Button :label="$t('components.restaurant.accept')" icon="pi pi-check" :disabled="busy" @click="acceptChosen()" />
+      </template>
+    </Dialog>
   </div>
 </template>
 
@@ -242,6 +254,7 @@ export default {
       form: { time: "", covers: 2, name: "", phone: "", area: null, tableSize: null, tables: 1, notes: "" },
       blockForm: { service: "dinner", area: "indoor", covers: null, tableSize: null, tables: 1, note: "" },
       moving: { visible: false, row: null, time: "", covers: 2, area: "indoor", tableSize: null, tables: 1 },
+      accepting: { visible: false, row: null, tableSize: null, tables: 1 },
       instance: null,
       settings: null,
       settingsMessage: null,
@@ -294,6 +307,12 @@ export default {
       const sizes = new Set();
       Object.values(tables).forEach(list => (list || []).forEach(t => sizes.add(t.size)));
       return [...sizes].sort((a, b) => a - b).map(s => ({ value: s, label: this.$t("components.restaurant.seatsAtTable", { size: s }) }));
+    },
+    /** The table sizes of the area the request is for. */
+    acceptSizes() {
+      const r = this.accepting.row;
+      const list = (r && ((this.info && this.info.tables) || {})[r.area]) || [];
+      return list.map(t => ({ value: t.size, label: this.$t("components.restaurant.seatsAtTable", { size: t.size }) }));
     },
     blockSizes() {
       const list = ((this.info && this.info.tables) || {})[this.blockForm.area] || [];
@@ -428,10 +447,30 @@ export default {
     noShow(r) {
       return this.run(() => RestaurantApi.noShow(this.user, this.businessId, r.id, r.version), "components.restaurant.noShowRecorded");
     },
-    accept(r, overbook) {
+    /** Accepting in an area with tables asks which tables. A large party is refused to staff unless they
+      * name the tables it takes (design 18.9.2), so for one the dialog starts on the tables its covers
+      * need, the book's own rule (18.9.1): the smallest size that holds it, else as many of the largest
+      * as it fills. Any other party starts with none, and the book picks the smallest free table. */
+    openAccept(r) {
+      const sizes = (((this.info && this.info.tables) || {})[r.area] || []).map(t => t.size).sort((a, b) => a - b);
+      if (!sizes.length) return this.accept(r);
+      let tableSize = null, tables = 1;
+      if (r.requestReason === "large_party") {
+        const fits = sizes.find(size => size >= r.covers);
+        tableSize = fits || sizes[sizes.length - 1];
+        tables = fits ? 1 : Math.ceil(r.covers / tableSize);
+      }
+      this.accepting = { visible: true, row: r, tableSize, tables };
+    },
+    acceptChosen() {
+      const a = this.accepting;
+      this.accepting = Object.assign({}, a, { visible: false });
+      return this.accept(a.row, false, a.tableSize ? { tableSize: a.tableSize, tables: a.tables || 1 } : {});
+    },
+    accept(r, overbook, choice) {
       return this.run(() => RestaurantApi.accept(this.user, this.businessId, r.id,
-        { expectedVersion: r.version, overbook: overbook || undefined }), "components.restaurant.accepted",
-        overbook ? null : () => this.accept(r, true));
+        Object.assign({ expectedVersion: r.version, overbook: overbook || undefined }, choice || {})), "components.restaurant.accepted",
+        overbook ? null : () => this.accept(r, true, choice));
     },
     stopSell(service) {
       return this.run(() => RestaurantApi.stopSell(this.user, this.businessId, this.date, service), "components.restaurant.stopped");
