@@ -1220,7 +1220,9 @@
         "not_found": "Cette réservation n'existe plus.",
         "not_configured": "La fonction de réservation de tables n'est pas encore configurée.",
         "error": "Une erreur s'est produite : réessayez."
-      }
+      },
+      "noSkill": "Cet assistant ne prend pas de réservations de tables : ajoutez la fonction de réservation de tables dans la configuration de l'IA pour avoir ici le carnet de réservations.",
+      "tableWithoutSize": "Chaque table doit avoir une taille : indiquez-la ou supprimez la ligne."
     }
   },
   "views": {

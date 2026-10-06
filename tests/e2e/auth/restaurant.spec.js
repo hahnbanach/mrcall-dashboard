@@ -30,10 +30,6 @@ const instance = {
   }
 }
 
-const withSkill = {
-  ...mockBusiness,
-  variables: { ...mockBusiness.variables, SKILL_RUNNINGLOOP_CONFIGURATION: JSON.stringify([instance]) }
-}
 
 function day (date) {
   return {
@@ -64,12 +60,16 @@ function day (date) {
   }
 }
 
-async function mockPage (page, { restaurant = true, putStatus = 200, bookStatus = 201, role = 'owner' } = {}) {
+async function mockPage (page, { restaurant = true, putStatus = 200, bookStatus = 201, role = 'owner', skill = instance.skill } = {}) {
   const calls = []
+  // `skill` null: a business that runs no restaurant skill; otherwise the name its configuration uses.
+  const entry = skill ? { ...instance, skill } : null
+  const business = { ...mockBusiness,
+    variables: { ...mockBusiness.variables, ...(entry ? { SKILL_RUNNINGLOOP_CONFIGURATION: JSON.stringify([entry]) } : {}) } }
   await page.route('**/crm/variables*', route => route.fulfill({
     status: 200, contentType: 'application/json', body: JSON.stringify(annotations) }))
   await page.route('**/crm/business*', route => route.fulfill({
-    status: 200, contentType: 'application/json', body: JSON.stringify([withSkill]),
+    status: 200, contentType: 'application/json', body: JSON.stringify([business]),
     headers: { 'x-mrcall-role': role, 'access-control-expose-headers': 'x-mrcall-role' } }))
   await page.route('**/apidomain/agent/skills/configuration/**', route => {
     const request = route.request()
@@ -79,7 +79,7 @@ async function mockPage (page, { restaurant = true, putStatus = 200, bookStatus 
         body: JSON.stringify({ saved: putStatus === 200, revision: 'rev-2', diagnostics: [] }) })
     }
     return route.fulfill({ status: 200, contentType: 'application/json',
-      body: JSON.stringify({ prefetch: [], during: [instance], final: [], revisions: { prefetch: 'p', during: 'rev-1', final: 'f' } }) })
+      body: JSON.stringify({ prefetch: [], during: entry ? [entry] : [], final: [], revisions: { prefetch: 'p', during: 'rev-1', final: 'f' } }) })
   })
   await page.route('**/apidomain/restaurant/**', route => {
     const request = route.request()
@@ -208,5 +208,41 @@ test.describe('the restaurant page', () => {
     await mockPage(page)
     await openPage(page)
     await expect(page.locator('#footer')).toHaveCount(0)
+  })
+
+  // Seen failing on 2026-10-06 with the page recognising only skill_restaurant_booking: no menu item.
+  test('recognises a configuration written with the short skill name, and saves under that name', async ({ authenticatedPage: page }) => {
+    const calls = await mockPage(page, { skill: 'restaurant_booking' })
+    await page.goto(`/businessconfiguration?id=${mockBusiness.businessId}`)
+    const narrowMenu = page.locator('.header_buttonbar button')
+    if (await narrowMenu.isVisible()) await narrowMenu.click()
+    await page.getByRole('menuitem', { name: 'Bookings' }).locator('visible=true').first().click()
+    await expect(page.locator('.restaurant-settings .restaurant-table-type')).toHaveCount(2, { timeout: 20000 })
+    await page.locator('.restaurant-settings').getByRole('button', { name: 'Save' }).click()
+    await expect(page.getByText('Settings saved.')).toBeVisible()
+    expect(calls.find(c => c.method === 'PUT').body.skill).toBe('restaurant_booking')
+  })
+
+  // Seen failing on 2026-10-06 with the section opening the book for a business without the skill.
+  test('says there is no book on the section URL of a business without the skill', async ({ authenticatedPage: page }) => {
+    await mockPage(page, { skill: null })
+    await page.goto(`/businessconfiguration?id=${mockBusiness.businessId}&section=__RESTAURANT__`)
+    await expect(page.getByText('This assistant does not take table bookings', { exact: false })).toBeVisible({ timeout: 20000 })
+    await expect(page.locator('.restaurant-new')).toHaveCount(0)
+    await expect(page.locator('.restaurant-settings')).toHaveCount(0)
+  })
+
+  // Seen failing on 2026-10-06 with a row whose size was cleared dropped from the save in silence.
+  test('refuses to save a table row whose size was cleared, and says why', async ({ authenticatedPage: page }) => {
+    const calls = await mockPage(page)
+    await openPage(page)
+    const size = page.locator('.restaurant-settings .restaurant-table-type').first().locator('input').first()
+    await size.click()
+    await size.press('ControlOrMeta+a')
+    await size.press('Backspace')
+    await size.press('Tab')
+    await page.locator('.restaurant-settings').getByRole('button', { name: 'Save' }).click()
+    await expect(page.getByText('Every table needs a size: fill it in or remove the row.')).toBeVisible()
+    expect(calls.filter(c => c.method === 'PUT')).toHaveLength(0)
   })
 })

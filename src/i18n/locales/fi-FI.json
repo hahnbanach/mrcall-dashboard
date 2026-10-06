@@ -1218,7 +1218,9 @@
         "not_found": "Tätä varausta ei ole enää olemassa.",
         "not_configured": "Pöytävaraustoimintoa ei ole vielä määritetty.",
         "error": "Tapahtui virhe: yritä uudelleen."
-      }
+      },
+      "noSkill": "Tämä avustaja ei ota pöytävarauksia: lisää pöytävaraustoiminto tekoälyn asetuksiin, niin varauskirja näkyy tässä.",
+      "tableWithoutSize": "Jokaisella pöydällä on oltava koko: täytä se tai poista rivi."
     }
   },
   "views": {

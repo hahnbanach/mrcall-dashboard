@@ -1224,7 +1224,9 @@
         "not_found": "Questa prenotazione non esiste più.",
         "not_configured": "La funzione di prenotazione tavoli non è ancora configurata.",
         "error": "Qualcosa è andato storto: riprova."
-      }
+      },
+      "noSkill": "Questo assistente non prende prenotazioni dei tavoli: aggiunga la funzione di prenotazione tavoli nella configurazione dell'IA per avere qui il registro.",
+      "tableWithoutSize": "Ogni tavolo deve avere una dimensione: la inserisca o elimini la riga."
     }
   },
   "views": {

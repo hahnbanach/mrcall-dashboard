@@ -1232,7 +1232,9 @@
         "not_found": "Esta reserva ya no existe.",
         "not_configured": "La función de reserva de mesas todavía no está configurada.",
         "error": "Algo ha ido mal: inténtelo de nuevo."
-      }
+      },
+      "noSkill": "Este asistente no gestiona reservas de mesas: añada la función de reserva de mesas en la configuración de la IA para tener aquí el libro de reservas.",
+      "tableWithoutSize": "Cada mesa necesita un tamaño: indíquelo o elimine la fila."
     }
   },
   "views": {
