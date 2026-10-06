@@ -60,7 +60,7 @@ function day (date) {
   }
 }
 
-async function mockPage (page, { restaurant = true, putStatus = 200, bookStatus = 201, role = 'owner', skill = instance.skill } = {}) {
+async function mockPage (page, { restaurant = true, putStatus = 200, bookStatus = 201, role = 'owner', skill = instance.skill, extra = [] } = {}) {
   const calls = []
   // `skill` null: a business that runs no restaurant skill; otherwise the name its configuration uses.
   const entry = skill ? { ...instance, skill } : null
@@ -89,7 +89,9 @@ async function mockPage (page, { restaurant = true, putStatus = 200, bookStatus 
       return route.fulfill({ status: 404, contentType: 'text/plain', body: 'The requested resource could not be found.' })
     }
     if (request.method() === 'GET') {
-      return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(day(url.searchParams.get('date'))) })
+      const answer = day(url.searchParams.get('date'))
+      answer.reservations = answer.reservations.concat(extra.map(r => ({ ...r, date: answer.date })))
+      return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(answer) })
     }
     const body = request.postData() ? request.postDataJSON() : null
     calls.push({ method: request.method(), path: url.pathname, search: url.search, body })
@@ -233,6 +235,31 @@ test.describe('the restaurant page', () => {
   })
 
   // Seen failing on 2026-10-06 with a row whose size was cleared dropped from the save in silence.
+  // A move decides the table again (design 18.9.3): the dialog names no size for a party at one table,
+  // so the book gives it the smallest free one at the new time; a party on several tables keeps them,
+  // because without them a group above the party limit is refused. Seen failing on 2026-10-06 with the
+  // dialog pre-filled from the row: the move to 21:00 sent tableSize 4.
+  test('lets the book choose the table when a party at one table is moved, and keeps a party on several', async ({ authenticatedPage: page }) => {
+    const group = { id: 'r3', version: 5, time: '21:00', minutes: 150, covers: 8, area: 'indoor', service: 'dinner',
+      status: 'confirmed', source: 'staff', name: 'Neri', overbooked: false, tableSize: 4, tables: 2 }
+    const calls = await mockPage(page, { extra: [group] })
+    await openPage(page)
+    const moveTo = async (name, time) => {
+      await page.locator('.restaurant-booking').filter({ hasText: name }).getByRole('button', { name: 'Change' }).click()
+      const dialog = page.locator('.restaurant-move-dialog')
+      await dialog.locator('input[type="time"]').fill(time)
+      await dialog.getByRole('button', { name: 'Save' }).click()
+      await expect(page.getByText('Booking changed.')).toBeVisible()
+    }
+    await moveTo('Bianchi', '21:00')
+    await moveTo('Neri', '21:30')
+    const patches = calls.filter(c => c.method === 'PATCH')
+    expect(patches.map(c => c.path.split('/').pop())).toEqual(['r1', 'r3'])
+    expect(patches[0].body).toMatchObject({ time: '21:00', covers: 4, expectedVersion: 1 })
+    expect(patches[0].body.tableSize).toBeUndefined()
+    expect(patches[1].body).toMatchObject({ time: '21:30', covers: 8, tableSize: 4, tables: 2, expectedVersion: 5 })
+  })
+
   test('refuses to save a table row whose size was cleared, and says why', async ({ authenticatedPage: page }) => {
     const calls = await mockPage(page)
     await openPage(page)

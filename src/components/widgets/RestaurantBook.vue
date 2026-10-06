@@ -406,7 +406,13 @@ export default {
       }, "components.restaurant.booked", overbook ? null : () => this.book(true));
     },
     openMove(r) {
-      this.moving = { visible: true, row: r, time: r.time, covers: r.covers, area: r.area, tableSize: r.tableSize || null, tables: r.tables || 1 };
+      // A move decides the table again: a party at one table is sent with no size, so the book gives it the
+      // smallest free one at the new time (pre-filling the row's size had a move refused as full where
+      // that size was taken and a smaller one was free). A party on several tables keeps them, since
+      // without a choice a group above the party limit is refused. Staff can still pick a size here.
+      const several = (r.tables || 1) > 1 && !!r.tableSize;
+      this.moving = { visible: true, row: r, time: r.time, covers: r.covers, area: r.area,
+        tableSize: several ? r.tableSize : null, tables: several ? r.tables : 1 };
     },
     move(overbook) {
       const r = this.moving.row;
