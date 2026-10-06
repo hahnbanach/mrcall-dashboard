@@ -130,13 +130,23 @@ export function retiredAndEmpty(entry, field) {
     || String(value).trim() === '[]' || String(value).trim() === '{}';
 }
 
+/**
+ * Whether the person looking is meant to see this field. A manifest marks a technical field
+ * `x-audience: platform` (carried down as `audience`): an admin sees it, an owner does not. It hides;
+ * it does not protect: the server refuses no field by role, and nothing an owner needs is marked so.
+ */
+export function visibleTo(field, viewer) {
+  return field.audience !== 'platform' || !!(viewer && viewer.admin);
+}
+
 /** Everything the card draws in its body: not the OAuth fields, not the two drawn by hand, not a
- *  retired one nobody filled, not one this phase or this state has no use for. */
-export function configurableFields(skill, entry, phase) {
+ *  retired one nobody filled, not one this phase or this state has no use for, not one meant for the
+ *  platform's people when an owner is looking. */
+export function configurableFields(skill, entry, phase, viewer = { admin: false }) {
   return fieldsOf(skill).filter(f =>
     f.type !== 'oauth' && !HEADER_FIELD_KEYS.includes(f.key)
     && !retiredAndEmpty(entry, f)
-    && visibleInPhase(f, phase) && visibleHere(skill, entry, f));
+    && visibleInPhase(f, phase) && visibleHere(skill, entry, f) && visibleTo(f, viewer));
 }
 
 /**
@@ -146,8 +156,8 @@ export function configurableFields(skill, entry, phase) {
  * prompt field: 36 copies of the same 550 characters across six skills and three language slots. It
  * is said once per card now, and the hints say only what is true of their own field.
  */
-export function hasTemplateFields(skill, entry, phase) {
-  return configurableFields(skill, entry, phase)
+export function hasTemplateFields(skill, entry, phase, viewer = { admin: false }) {
+  return configurableFields(skill, entry, phase, viewer)
     .some(f => f.type === 'textarea' || String(f.key).startsWith('prompt'));
 }
 

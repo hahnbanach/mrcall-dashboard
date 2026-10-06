@@ -60,7 +60,10 @@ const catalogue = [{
       { key: 'enabled', type: 'boolean', default: 'false' },
       { key: 'label', type: 'string', labels: { en: { label: 'Name of this instance' } } },
       { key: 'durationMinutes', type: 'number', widget: 'number', default: 30,
-        labels: { en: { label: 'Appointment length' } } }
+        labels: { en: { label: 'Appointment length' } } },
+      // `x-audience: platform` in the manifest: a technical field an admin sees and an owner does not
+      { key: 'holdSeconds', type: 'number', widget: 'number', default: 120, audience: 'platform',
+        labels: { en: { label: 'Hold seconds' } } }
     ]
   }
 }]
@@ -77,7 +80,7 @@ const business = {
 }
 
 /** Every call this screen makes, and a record of the two writes so a test can read them. */
-async function mockSkillsScreen (page, { saveStatus = 200, saveBody = null } = {}) {
+async function mockSkillsScreen (page, { saveStatus = 200, saveBody = null, role = 'owner' } = {}) {
   const writes = { business: [], skills: [] }
 
   await page.route('**/crm/variables*', route => route.fulfill({
@@ -88,7 +91,8 @@ async function mockSkillsScreen (page, { saveStatus = 200, saveBody = null } = {
     if (route.request().method() === 'GET') {
       return route.fulfill({
         status: 200, contentType: 'application/json',
-        body: JSON.stringify([business]), headers: { 'x-mrcall-role': 'owner' }
+        body: JSON.stringify([business]),
+        headers: { 'x-mrcall-role': role, 'access-control-expose-headers': 'x-mrcall-role' }
       })
     }
     writes.business.push(route.request().postDataJSON())
@@ -180,4 +184,21 @@ test.describe('the skills screen', () => {
 
       await expect(page.getByText('two slots cover 23:55')).toBeVisible({ timeout: 15000 })
     })
+
+  /* Seen failing on 2026-10-06 before the card read `audience`: the owner was shown 'Hold seconds'. */
+  test('hides a field the manifest keeps for the platform from an owner, and shows it to an admin',
+    async ({ authenticatedPage: page }) => {
+      await mockSkillsScreen(page)
+      await openSkills(page)
+      await page.locator('.entry-header-toggle').click()
+      await expect(page.getByText('Appointment length')).toBeVisible()
+      await expect(page.getByText('Hold seconds')).toHaveCount(0)
+    })
+
+  test('shows the platform field to an admin', async ({ authenticatedPage: page }) => {
+    await mockSkillsScreen(page, { role: 'admin' })
+    await openSkills(page)
+    await page.locator('.entry-header-toggle').click()
+    await expect(page.getByText('Hold seconds')).toBeVisible()
+  })
 })
