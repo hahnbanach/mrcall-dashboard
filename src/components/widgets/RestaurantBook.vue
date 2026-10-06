@@ -3,9 +3,12 @@
     <Message v-if="unavailable" severity="info" :closable="false" class="restaurant-unavailable">
       {{ $t("components.restaurant.unavailable") }}
     </Message>
+    <Message v-else-if="noSkill" severity="info" :closable="false" class="restaurant-unavailable">
+      {{ $t("components.restaurant.noSkill") }}
+    </Message>
     <Message v-else-if="loadError" severity="error" :closable="false">{{ $t("components.restaurant.loadError") }}</Message>
 
-    <template v-if="!unavailable">
+    <template v-if="!unavailable && !noSkill">
       <div class="restaurant-day-picker">
         <SelectButton v-model="dayChoice" :options="dayOptions" optionLabel="label" optionValue="value" :allowEmpty="false"
                       :aria-label="$t('components.restaurant.day')" />
@@ -232,6 +235,7 @@ export default {
       date: isoDay(0),
       info: null,
       unavailable: false,
+      noSkill: false,
       loadError: false,
       busy: false,
       message: null,
@@ -324,6 +328,8 @@ export default {
     async loadSettings() {
       try {
         this.instance = await RestaurantApi.instance(this.user, this.businessId);
+        // A business that runs no restaurant skill has no book: the page says so instead of offering one.
+        this.noSkill = !this.instance;
       } catch (e) {
         console.error("Restaurant settings not loaded:", e.restaurant ? e.restaurant.status : e);
         this.instance = null;
@@ -432,12 +438,18 @@ export default {
       return this.run(() => RestaurantApi.block(this.user, this.businessId, body), "components.restaurant.blocked");
     },
     async saveSettings() {
-      this.saving = true;
       this.settingsMessage = null;
       const s = this.settings;
+      // A row whose size was cleared is not dropped in silence: the owner fills it in or removes the row.
+      const sizeless = ["indoor", "outdoor"].some(area => s.tables[area].some(t => !(t.size > 0)));
+      if (sizeless) {
+        this.settingsMessage = { severity: "error", text: this.$t("components.restaurant.tableWithoutSize") };
+        return;
+      }
+      this.saving = true;
       const tables = {};
       ["indoor", "outdoor"].forEach(area => {
-        const list = s.tables[area].filter(t => t.size > 0).map(t => ({ size: t.size, count: t.count || 0, minParty: t.minParty }));
+        const list = s.tables[area].map(t => ({ size: t.size, count: t.count || 0, minParty: t.minParty }));
         if (list.length) tables[area] = list;
       });
       const params = Object.assign({}, this.instance.params, {

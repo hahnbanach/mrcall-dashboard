@@ -1236,7 +1236,9 @@
         "not_found": "This booking no longer exists.",
         "not_configured": "The table booking skill is not configured yet.",
         "error": "Something went wrong: try again."
-      }
+      },
+      "noSkill": "This assistant does not take table bookings: add the table booking skill in the AI configuration to have a book here.",
+      "tableWithoutSize": "Every table needs a size: fill it in or remove the row."
     }
   },
   "views": {

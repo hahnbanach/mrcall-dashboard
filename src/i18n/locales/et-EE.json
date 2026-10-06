@@ -1231,7 +1231,9 @@
         "not_found": "Seda broneeringut ei ole enam olemas.",
         "not_configured": "Laudade broneerimise funktsioon ei ole veel seadistatud.",
         "error": "Midagi läks valesti: proovi uuesti."
-      }
+      },
+      "noSkill": "See assistent ei võta lauabroneeringuid: lisage tehisintellekti seadetes lauabroneeringu funktsioon, et broneeringuraamat oleks siin.",
+      "tableWithoutSize": "Igal laual peab olema suurus: sisestage see või eemaldage rida."
     }
   },
   "views": {

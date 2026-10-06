@@ -1233,7 +1233,9 @@
         "not_found": "Diese Reservierung existiert nicht mehr.",
         "not_configured": "Die Tischreservierungsfunktion ist noch nicht eingerichtet.",
         "error": "Etwas ist schiefgegangen: Versuchen Sie es erneut."
-      }
+      },
+      "noSkill": "Dieser Assistent nimmt keine Tischreservierungen an: Fügen Sie in der KI-Konfiguration die Funktion für Tischreservierungen hinzu, um hier ein Reservierungsbuch zu haben.",
+      "tableWithoutSize": "Jeder Tisch braucht eine Größe: Tragen Sie sie ein oder entfernen Sie die Zeile."
     }
   },
   "views": {

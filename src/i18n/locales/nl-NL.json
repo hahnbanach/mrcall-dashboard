@@ -1231,7 +1231,9 @@
         "not_found": "Deze reservering bestaat niet meer.",
         "not_configured": "De tafelreservering is nog niet ingesteld.",
         "error": "Er is iets misgegaan: probeer het opnieuw."
-      }
+      },
+      "noSkill": "Deze assistent neemt geen tafelreserveringen aan: voeg de functie voor tafelreserveringen toe in de AI-configuratie om hier een reserveringsboek te hebben.",
+      "tableWithoutSize": "Elke tafel heeft een grootte nodig: vul die in of verwijder de rij."
     }
   },
   "views": {
