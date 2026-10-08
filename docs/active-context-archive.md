@@ -3,6 +3,40 @@
 Historical snapshots preserved verbatim, newest first. This cold storage is not
 startup context; it records prior state without making current capability claims.
 
+## 2026-10-08 — Approved local skill configuration before test release
+
+# Active Context
+
+
+## State now
+
+Configure via chat supports ordinary and installed-skill proposals with readable
+before/after preview, explicit Save, persisted discard and uncertain-write
+reconciliation. Saved instances can open the existing supported Google Calendar
+authorization editor with bound business/grant/owner/state and safe return.
+The manual skill editor remains a separate flow. See the
+[integration contract](integration/zylch-integration.md) and
+[workstream plan](execution-plans/2026-10-08-agent-skills-chat-configuration.md).
+
+Local desktop Chromium/mobile WebKit checks pass 20 pending and 50 OAuth cases;
+the production build passes. An actual local browser/backend connected to
+StarChat test passes disabled GenColor label Save/readback/restoration with
+siblings and grants unchanged. Model replies are scripted; OAuth exchanges in
+the focused browser cases are mocked. These changes remain local and unreleased.
+
+## Unresolved
+
+The existing AI chat SSE client uses native fetch and bypasses the required
+Axios 401 interceptor; see [harness-backlog](harness-backlog.md). Real model
+quality, actual Google consent/provider grants and deployed compatibility are
+not established by local acceptance.
+
+## Next
+
+Release and deployment require separate authorization. Preserve uncertain
+pending attempts on rollback. Resolve the SSE interceptor discrepancy in its
+separately scoped application task.
+
 ## 2026-10-08 — Documentation bootstrap snapshot
 
 ---

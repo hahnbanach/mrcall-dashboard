@@ -23,7 +23,11 @@ Local desktop Chromium/mobile WebKit checks pass 20 pending and 50 OAuth cases;
 the production build passes. An actual local browser/backend connected to
 StarChat test passes disabled GenColor label Save/readback/restoration with
 siblings and grants unchanged. Model replies are scripted; OAuth exchanges in
-the focused browser cases are mocked. These changes remain local and unreleased.
+the focused browser cases are mocked. The feature is integrated onto current `v2.2`, preserving the modular manual
+skill editor, retention changes and provider account identity. Lint and 97 unit
+tests pass; the optimized test-mode build passes. Desktop/mobile browser
+verification passes 72 cases. The authorized `v2.2.15-test` release awaits
+publication and deployed read-only checks.
 
 ## Unresolved
 
@@ -34,6 +38,6 @@ not established by local acceptance.
 
 ## Next
 
-Release and deployment require separate authorization. Preserve uncertain
+Finish the authorized test deployment and live read-only verification. Preserve uncertain
 pending attempts on rollback. Resolve the SSE interceptor discrepancy in its
 separately scoped application task.

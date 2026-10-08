@@ -40,9 +40,8 @@ which is a second local check on top of Google's own matching.
 ## Scopes
 
 The manual skill editor takes requested scopes and deployment diagnostics from
-StarChat's catalogue. StarChat compares manifests with the relevant provider's
-OAuth client; the editor refuses authorization when the skill carries an error
-diagnostic. It does not maintain a dashboard copy of every registered scope.
+StarChat's catalogue. The editor refuses authorization when the served skill
+carries an error diagnostic. It does not maintain a dashboard copy of every registered scope.
 
 | Scope | Sensitivity | Requested by |
 |---|---|---|
