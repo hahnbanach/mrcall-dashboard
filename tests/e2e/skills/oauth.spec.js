@@ -38,7 +38,7 @@ test('confirmed Save opens the dynamically located saved instance and scoped eff
 })
 
 test('shared empty reference remains empty and an empty check stays unknown', async ({ page }) => {
-  const model = await setupOAuthPage(page, { grant: '', calendars: [] })
+  const model = await setupOAuthPage(page, { grant: '', calendars: [], providers: [{ provider: 'google_calendar', businessId, grantName: instanceId, providerAccountId: 'other-account@example.invalid' }] })
   await openSaved(page, model)
   await expect(card(page)).toContainText('Shared authorization (empty reference)')
   await expect(card(page).locator('.oauth-availability')).toContainText('unknown')
@@ -240,4 +240,26 @@ test('absent saved legacy grant authorizes the exact shared empty reference with
   expect(model.configuration.during[0].params).not.toHaveProperty('SKILL_CALENDAR_AUTH')
   expect(model.configuration.during[0].params.enabled).toBe('false')
   expect(model.mutations).toEqual([])
+})
+
+
+test('legacy manual skill callback preserves business grant and provider account identity', async ({ page }) => {
+  const payload = Buffer.from(JSON.stringify({ email: 'calendar-owner@example.invalid' })).toString('base64url')
+  const model = await setupOAuthPage(page, { pending: false, idToken: `header.${payload}.signature` })
+  await page.evaluate(({ businessId }) => {
+    localStorage.setItem('codeVerifier', 'legacy-skill-verifier')
+    localStorage.setItem('oauthState', 'legacy-skill-state')
+    localStorage.setItem('oauthProvider', 'google_calendar')
+    localStorage.setItem('oauthBusinessId', businessId)
+    localStorage.setItem('oauthGrantName', 'manual-instance-8')
+    localStorage.setItem('oauthReturnUrl', `/businessconfiguration?id=${businessId}`)
+    localStorage.removeItem('oauthSkillContext')
+  }, { businessId })
+  await page.goto('/callback?code=fake-code&state=legacy-skill-state')
+  await expect(page).toHaveURL(new RegExp('businessconfiguration\\?id=' + businessId))
+  expect(model.exchanges).toHaveLength(1)
+  expect(model.connects).toHaveLength(1)
+  expect(model.connects[0]).toMatchObject({ businessId, grantName: 'manual-instance-8', providerAccountId: 'calendar-owner@example.invalid' })
+  expect(model.mutations).toEqual([])
+  expect(model.registryWrites).toEqual([])
 })

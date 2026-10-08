@@ -39,27 +39,28 @@ which is a second local check on top of Google's own matching.
 
 ## Scopes
 
-`ALLOWED_SCOPES` in `src/utils/OAuth.js` is the authoritative list on our side
-and must mirror the Google Auth Platform "Data access" page for the client. It
-is enforced: `assertScopesAllowed()` runs at every authorization site and throws
-rather than sending an unregistered scope. Google shows the unverified-app
-interstitial for a scope that is not registered even if it was verified before,
-so a mismatch is not a soft failure.
+The manual skill editor takes requested scopes and deployment diagnostics from
+StarChat's catalogue. StarChat compares manifests with the relevant provider's
+OAuth client; the editor refuses authorization when the skill carries an error
+diagnostic. It does not maintain a dashboard copy of every registered scope.
 
 | Scope | Sensitivity | Requested by |
 |---|---|---|
 | `openid`, `email`, `profile` | non-sensitive | `GoogleSignIn.vue` (sign-in) |
-| `https://www.googleapis.com/auth/calendar` | **sensitive** | `ConnectCalendar.vue` (`/account`, `/businessconfiguration`) |
+| `https://www.googleapis.com/auth/calendar` | **sensitive** | `ConnectCalendar.vue` and the supported chat skill handoff |
+| Manifest-declared provider scopes | Provider-dependent | Manual skill editor, subject to catalogue diagnostics |
 
-Adding a scope is two changes in this order: register it in the Google console
-first, add it to `ALLOWED_SCOPES` second. Doing only the second breaks every
-Google flow for every user at once.
+The chat handoff deliberately supports only Google Calendar. Its local
+`CHAT_SKILL_SCOPES` and `assertScopesAllowed` restrict that integration to identity
+and calendar scopes; they are not an inventory of all scopes registered for the
+Google client. Bound callback processing also rejects scopes outside that supported
+set or missing requested calendar permission. Manual editor authorization and its
+legacy callback retain the catalogue-driven behavior.
 
-`AgentSkillsConfigurator.vue` is the exception worth watching: its scope list
-comes from the StarChat skill catalog, not from this repo, so a backend catalog
-edit alone can try to request something unregistered. That is exactly what
-`assertScopesAllowed` catches, and the user gets
-`widgets.agentSkills.oauthScopeUnavailable` instead of a Google warning screen.
+Changing provider registrations requires the owning StarChat deployment and
+provider console to agree. The dashboard receives diagnostics rather than claiming
+to have verified console registration. Chat support for another provider or scope
+requires a separate implementation.
 
 ### Why the sign-in stays inside the non-sensitive set
 

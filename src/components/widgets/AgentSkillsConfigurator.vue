@@ -6,7 +6,7 @@ import agentSkillsUtils from "@/utils/AgentSkills";
 import { GoogleAuthFlow, assertScopesAllowed } from '@/utils/OAuth';
 import { useToast } from "primevue/usetoast";
 import SkillCard from '@/components/widgets/skills/SkillCard.vue';
-import { LABEL_FIELD_KEY, fieldsOf, oauthFields, valueOf } from '@/components/widgets/skills/manifestFields';
+import { LABEL_FIELD_KEY, fieldsOf, oauthFields, valueOf, visibleInPhase, visibleHere } from '@/components/widgets/skills/manifestFields';
 import { useSkillGrants } from '@/components/widgets/skills/useSkillGrants';
 
 const { t, locale } = useI18n();
@@ -140,7 +140,7 @@ function toggleEntry(phase, entry, idx) {
   // Opening a card is when its calendars are worth fetching: before that nobody is looking, and
   // fetching for every instance on the page would be one Google round trip per card.
   const oauthField = getFields(entry).find(f => f.type === 'oauth');
-  if (oauthField) loadCalendars(oauthField, entry);
+  if (oauthField && !isChatTarget(entry, phase)) loadCalendars(oauthField, entry);
   const key = entryKeyOf(entry, idx);
   openEntry.value[phase] = openEntry.value[phase] === key ? null : key;
 }
@@ -376,12 +376,12 @@ async function handleOAuthConnect(field, phase, entryIdx, entry) {
       return;
     }
 
+    const { state, codeChallenge } = await GoogleAuthFlow.begin()
     localStorage.setItem('oauthProvider', field.provider);
     localStorage.setItem('oauthBusinessId', props.businessId || '');
     localStorage.setItem('oauthGrantName', grantName);
     // Save current page URL so callback can redirect back here
     localStorage.setItem('oauthReturnUrl', window.location.pathname + window.location.search);
-    const { state, codeChallenge } = await GoogleAuthFlow.begin()
 
     // The scopes come from the backend catalogue, and so does the verdict on them. StarChat holds
     // the OAuth client and the manifests, compares the two per client, and sends the result as a
@@ -431,9 +431,9 @@ watch([openEntry, availableSkills], () => {
   if (!availableSkills.value || availableSkills.value.length === 0) return;
   for (const phase of PHASES) {
     getPhaseEntries(phase).forEach((entry, idx) => {
-      if (!isEntryOpen(phase, entry, idx)) return;
+      if (!isEntryOpen(phase, entry, idx) || isChatTarget(entry, phase)) return;
       const oauthField = getFields(entry).find(f => f.type === 'oauth');
-      if (oauthField) loadCalendars(oauthField, entry);
+      if (oauthField && !isChatTarget(entry, phase)) loadCalendars(oauthField, entry);
     });
   }
 }, { deep: true });
@@ -442,7 +442,7 @@ function isChatTarget(entry, phase) {
   return props.focusTarget?.phase === phase && props.focusTarget?.instanceId === entry.instanceId;
 }
 
-function getOauthFields(entry) { return oauthFields(getSkillObj(entry.skill)); }
+function getOauthFields(entry, phase) { return oauthFields(getSkillObj(entry.skill)).filter(field => visibleInPhase(field, phase) && visibleHere(getSkillObj(entry.skill), entry, field)); }
 
 const oauthStatus = ref({});
 const savedConfig = ref(null);

@@ -105,10 +105,8 @@ export const GoogleAuthFlow = {
     const nonce = PKCEUtils.generateRandomString(32)
     const state = binding ? `skill.${nonce}.${await contextDigest(binding)}` : nonce
     localStorage.removeItem(SKILL_CONTEXT_KEY)
-    if (binding) {
-      localStorage.removeItem('oauthProvider')
-      localStorage.removeItem('oauthReturnUrl')
-    }
+    localStorage.removeItem('oauthProvider')
+    localStorage.removeItem('oauthReturnUrl')
     if (binding) localStorage.setItem(SKILL_CONTEXT_KEY, JSON.stringify(binding))
     localStorage.setItem(VERIFIER_KEY, codeVerifier)
     localStorage.setItem(STATE_KEY, state)

@@ -124,7 +124,11 @@ returned state and digest, and rejects missing/changed context or unsafe return
 locations. The callback verifies the restored Firebase owner before exchange
 and connect, then sends the exact businessId/grantName to the existing provider
 connect endpoint. Tokens stay in the existing authorization transport and never
-enter chat or pending previews. Legacy sign-in/calendar flows remain separate.
+enter chat or pending previews. Legacy sign-in/calendar flows remain separate. The v2.2 manual editor retains its
+manifest-driven authorization and explicit automatic save before redirect. Chat
+handoff cards use the exact already-saved reference without that automatic write.
+Both skill callbacks preserve the provider account identity from the exchanged
+ID token when supplied; see [Google OAuth](google-oauth.md).
 
 Returning to the bound business/phase/instance refreshes saved configuration
 and supported calendar availability. A positive calendar list establishes

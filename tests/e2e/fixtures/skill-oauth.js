@@ -22,12 +22,13 @@ async function setupOAuthPage(page, options = {}) {
   const collections = [{ collection: { id: '__CUSTOM_SKILL_SECTION__', humanName: 'Custom integration section' }, variables: [[variable]] }]
   const business = { ...mockBusiness, variables: { ...mockBusiness.variables, SKILL_PREFETCH_CONFIGURATION: '[]', SKILL_RUNNINGLOOP_CONFIGURATION: JSON.stringify(configuration.during), SKILL_FINAL_CONFIGURATION: '[]' } }
   await setupApiMocks(page, { businessDetail: business, businesses: [business], templateVariables: collections })
-  await page.route('**/agent/skills/available*', route => json(route, [{ name: 'calendar_skill', configSchema: { phases: ['during'], fields: options.noOAuth ? [] : [{ key: 'SKILL_CALENDAR_AUTH', type: 'oauth', widget: 'oauth', provider: options.provider || 'google_calendar', scopes: options.scopes || [calendarScope], storage: 'oauth_provider', ...(options.oauthHidden ? { visibleWhen: { bookingMode: 'calendar' } } : {}), labels: { en: { label: 'Calendar authorization' } } }] } }]))
+  await page.route(/\/apidomain\/agent\/skills(?:\?|$)/, route => json(route, [{ name: 'calendar_skill', configSchema: { phases: ['during'], fields: options.noOAuth ? [] : [{ key: 'SKILL_CALENDAR_AUTH', type: 'oauth', widget: 'oauth', provider: options.provider || 'google_calendar', scopes: options.scopes || [calendarScope], storage: 'oauth_provider', ...(options.oauthHidden ? { visibleWhen: { bookingMode: 'calendar' } } : {}), labels: { en: { label: 'Calendar authorization' } } }] } }]))
   await page.route('**/apidomain/agent/skills/configuration/**', route => {
     if (route.request().method() !== 'GET') { model.mutations.push(route.request().method()); return route.fulfill({ status: 500, body: '{}' }) }
     model.configurationReads++
     return json(route, model.configuration)
   })
+  await page.route('**/oauth/providers', route => json(route, options.providers || []))
   await page.route('**/oauth/providers/google_calendar/calendars*', route => {
     model.calendarReads.push(Object.fromEntries(new URL(route.request().url()).searchParams))
     if (options.calendarError) return route.fulfill({ status: 500, body: '{}' })
@@ -35,7 +36,7 @@ async function setupOAuthPage(page, options = {}) {
   })
   await page.route('**/oauth/google/token', route => {
     model.exchanges.push(route.request().postDataJSON())
-    return json(route, { accessToken: 'fake-oauth-access', refreshToken: 'fake-oauth-refresh', expiresIn: 3600, scope: options.returnedScope || calendarScope, tokenType: 'Bearer' })
+    return json(route, { accessToken: 'fake-oauth-access', refreshToken: 'fake-oauth-refresh', expiresIn: 3600, scope: options.returnedScope || calendarScope, tokenType: 'Bearer', ...(options.idToken ? { idToken: options.idToken } : {}) })
   })
   await page.route('**/oauth/providers/*/connect', route => { model.connects.push(route.request().postDataJSON()); return json(route, {}) })
   await page.route('**/crm/business', route => { model.mutations.push(route.request().method()); return route.fulfill({ status: 500, body: '{}' }) })

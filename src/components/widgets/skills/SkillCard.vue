@@ -22,7 +22,7 @@ import SkillArguments from '@/components/widgets/skills/SkillArguments.vue';
 import {
   CALENDAR_FIELD_KEY, LABEL_FIELD_KEY,
   valueOf, labelOf, hintOf, placeholderOf, isEnabled, oauthFields, labelFieldOf,
-  configurableFields, hasTemplateFields, descriptionOf, errorDiagnostics, argumentsOf
+  visibleInPhase, visibleHere, configurableFields, hasTemplateFields, descriptionOf, errorDiagnostics, argumentsOf
 } from '@/components/widgets/skills/manifestFields';
 
 const { t, locale } = useI18n();
@@ -58,7 +58,7 @@ const enabled = computed(() => isEnabled(props.entry));
 const description = computed(() => descriptionOf(props.skill, lang.value));
 const diagnostics = computed(() => errorDiagnostics(props.skill));
 const nameField = computed(() => labelFieldOf(props.skill));
-const authFields = computed(() => oauthFields(props.skill));
+const authFields = computed(() => oauthFields(props.skill).filter(field => !props.chatAuthorization || (visibleInPhase(field, props.phase) && visibleHere(props.skill, props.entry, field))));
 /** The arguments this instance adds live in the block that shows the function's parameters, beside
   * the ones the skill declares: they are one declaration and reading them apart is what made a
   * person wonder where the model's values come from. */
