@@ -1,5 +1,5 @@
 ---
-doc_baseline_commit: 59a798bd92372ad593f989245588cc09790eb94f
+doc_baseline_commit: d52785ef965c256ebb192c7e9484602d350a5e15
 doc_baseline_date: 2026-10-08
 ---
 
@@ -19,25 +19,34 @@ The manual skill editor remains a separate flow. See the
 [integration contract](integration/zylch-integration.md) and
 [workstream plan](execution-plans/2026-10-08-agent-skills-chat-configuration.md).
 
-Local desktop Chromium/mobile WebKit checks pass 20 pending and 50 OAuth cases;
-the production build passes. An actual local browser/backend connected to
-StarChat test passes disabled GenColor label Save/readback/restoration with
-siblings and grants unchanged. Model replies are scripted; OAuth exchanges in
-the focused browser cases are mocked. The feature is integrated onto current `v2.2`, preserving the modular manual
-skill editor, retention changes and provider account identity. Lint and 97 unit
-tests pass; the optimized test-mode build passes. Desktop/mobile browser
-verification passes 72 cases. The authorized `v2.2.15-test` release awaits
-publication and deployed read-only checks.
+Test runs `v2.2.15-test`, source `d52785ef`, deployed by successful GitHub
+run `37785829478`. The integration preserves the v2.2 modular manual editor,
+retention behavior, provider account identity and existing translations. Lint,
+97 unit tests, 72 desktop/mobile browser checks and the optimized test-mode
+build pass. Chat authorization uses the exact saved grant and excludes manual
+inferred-grant calendar checks.
+
+Live dashboard HTML and referenced assets return 200; the served app includes
+ID-only Save/discard/reconcile and `https://zylch-test.mrcall.ai`. The backend
+runs `dev-9acb567d`: authenticated history/schema checks and deployed catalogue/
+configuration reads pass. Its six GenColor instances remain unchanged.
+The [release plan](../../mrcall-agent/docs/execution-plans/2026-10-08-agent-skills-test-release.md)
+records routing and rollback. Production tags remain unchanged.
+
+Prior actual local browser/backend GenColor Save/readback/restoration remains
+valid acceptance evidence. Model replies are scripted and focused OAuth
+exchanges mocked; the release smoke performs read-only configuration checks.
 
 ## Unresolved
 
 The existing AI chat SSE client uses native fetch and bypasses the required
 Axios 401 interceptor; see [harness-backlog](harness-backlog.md). Real model
-quality, actual Google consent/provider grants and deployed compatibility are
-not established by local acceptance.
+quality and actual Google consent/provider grants remain unverified. Live
+release smoke covers served assets and authenticated backend contracts; it does
+not establish a real-model browser Save or provider authorization.
 
 ## Next
 
-Finish the authorized test deployment and live read-only verification. Preserve uncertain
+Production promotion requires separate authorization. Preserve uncertain
 pending attempts on rollback. Resolve the SSE interceptor discrepancy in its
 separately scoped application task.
