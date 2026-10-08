@@ -135,7 +135,20 @@
       "argumentsTitle": "Mida assistent kone ajal kogub",
       "argumentRequired": "kohustuslik",
       "argumentOptional": "valikuline",
-      "argumentsTemplateHint": "Iga ulaltoodud nime saab kasutada kujul %%nimi%% selle kaardi tekstivaljadel."
+      "argumentsTemplateHint": "Iga ulaltoodud nime saab kasutada kujul %%nimi%% selle kaardi tekstivaljadel.",
+      "handoff": {
+        "manage": "Halda ühendust: {instance}",
+        "unavailable": "Salvestatud skilli ühendust ei saa siin avada.",
+        "saveFirst": "Salvesta eksemplar ja selle täpne volitusviide enne ühendamist.",
+        "refresh": "Värskenda ühenduse olekut",
+        "named": "Salvestatud volitusviide: {grant}",
+        "shared": "Jagatud volitus (tühi viide).",
+        "available": "Kalendrile on juurdepääs. Selle võib anda jagatud või varuvolitus.",
+        "unknown": "Kalendri juurdepääs on teadmata. Tühi või nurjunud kontroll ei tõesta ühenduse puudumist.",
+        "unsupported": "Selle teenusepakkuja või selle õiguste jaoks pole siin toetatud volitamisvoogu.",
+        "connecting": "Salvestatud teenuse ühendamine…",
+        "callbackFailed": "Volitamist ei saanud lõpetada. Naase seadistusse ja alusta uuesti."
+      }
     }
   },
   "components": {
@@ -1518,7 +1531,8 @@
         "subtitleText": "Määrake, kas seadistate seda seadet või teist seadet",
         "thisPhone": "See seade",
         "otherPhone": "Teine seade"
-      }
+      },
+      "searchbusinessinfo": {}
     },
     "sign": {
       "magiclink": {
@@ -1664,7 +1678,42 @@
       "quickAction5Label": "Assistendi teadmised",
       "quickAction5Command": "Mis teemadel oskab assistent vastata?",
       "quickAction6Label": "Lisa teadmisi",
-      "quickAction6Command": "Kui kasutaja soovib tagasihelistamist, kuid pole öelnud miks, peab assistent alati küsima põhjust ja seejärel ütlema, et edastab soovi operaatorile"
+      "quickAction6Command": "Kui kasutaja soovib tagasihelistamist, kuid pole öelnud miks, peab assistent alati küsima põhjust ja seejärel ütlema, et edastab soovi operaatorile",
+      "pending": {
+        "save": "Salvesta muudatused ({count})",
+        "discard": "Loobu",
+        "before": "Enne",
+        "after": "Pärast",
+        "draft": "Uue eksemplari mustand",
+        "create": "Lisa eksemplar",
+        "replace": "Muuda eksemplari",
+        "remove": "Eemalda eksemplar",
+        "prefetch": "Enne kõnet",
+        "during": "Kõne ajal",
+        "final": "Pärast kõnet",
+        "read": "Kontrolli tulemust",
+        "accept": "Kinnita eksemplar {instance}",
+        "close": "Sulge uuesti proovimata",
+        "refresh": "Värskenda ootel muudatusi",
+        "refreshed": "Ootel muudatused värskendatud.",
+        "completed": "Taotlus lõpetatud. Vaata tulemusi allpool.",
+        "incomplete": "Mõned muudatused on ootel. Vaata tulemusi allpool.",
+        "responseLost": "Vastus läks kaotsi. Muudatused laaditi võimalusel uuesti. Kontrolli tulemust enne uut katset.",
+        "recoveryFailed": "Muudatusi ei saanud laadida. Värskenda enne jätkamist.",
+        "connectionCheck": "Ühendust kontrollitakse aktiveerimise salvestamisel.",
+        "proposalRefused": "Ettepanek lükati tagasi. Muudatust ei lisatud.",
+        "proposalReady": "Muudatus pakutud. Vaata üle ja salvesta rakendamiseks.",
+        "wizardWarning": "Skilli ettepanekud jäävad sellesse viisardiseanssi ega ole salvestatud. Ava vestluses seadistamine uue ettepaneku jaoks; liikumine seda ei edasta.",
+        "saved": "Salvestatud",
+        "closed": "Suletud uue katsena proovimata",
+        "conflict": "Seadistuse konflikt",
+        "refused": "Tagasi lükatud",
+        "unconfirmed": "Tulemus teadmata",
+        "in_flight": "Salvestamine",
+        "reconciling": "Tulemuse kontrollimine",
+        "pending": "Ootel",
+        "loadingPending": "Ootel muudatuste laadimine…"
+      }
     },
     "aladminConfigurator": {
       "title": "AladMin Configurator",

@@ -135,7 +135,20 @@
       "argumentsTitle": "Hvad assistenten indsamler under opkaldet",
       "argumentRequired": "pakraevet",
       "argumentOptional": "valgfri",
-      "argumentsTemplateHint": "Hvert navn ovenfor kan bruges som %%navn%% i tekstfelterne pa dette kort."
+      "argumentsTemplateHint": "Hvert navn ovenfor kan bruges som %%navn%% i tekstfelterne pa dette kort.",
+      "handoff": {
+        "manage": "Administrer forbindelse: {instance}",
+        "unavailable": "Den gemte skills forbindelse kan ikke åbnes her.",
+        "saveFirst": "Gem denne instans og dens præcise autorisationsreference før tilslutning.",
+        "refresh": "Opdater forbindelsesstatus",
+        "named": "Gemt autorisationsreference: {grant}",
+        "shared": "Delt autorisation (tom reference).",
+        "available": "Kalenderadgang er tilgængelig. En delt eller alternativ autorisation kan levere den.",
+        "unknown": "Kalenderadgang er ukendt. En tom eller mislykket kontrol beviser ikke afbrydelse.",
+        "unsupported": "Denne udbyder eller dens tilladelser har ikke et understøttet autorisationsforløb her.",
+        "connecting": "Forbinder den gemte tjeneste…",
+        "callbackFailed": "Autorisationen kunne ikke fuldføres. Gå tilbage til konfigurationen og start igen."
+      }
     }
   },
   "components": {
@@ -1518,7 +1531,8 @@
         "subtitleText": "Angiv om du opsætter denne enhed eller en anden enhed",
         "thisPhone": "Denne enhed",
         "otherPhone": "Anden enhed"
-      }
+      },
+      "searchbusinessinfo": {}
     },
     "sign": {
       "magiclink": {
@@ -1664,7 +1678,42 @@
       "quickAction5Label": "Assistentens viden",
       "quickAction5Command": "Hvilke emner kan assistenten svare på?",
       "quickAction6Label": "Tilføj viden",
-      "quickAction6Command": "Hvis brugeren vil ringes op, men ikke har sagt hvorfor, skal assistenten altid spørge om årsagen, og derefter sige at anmodningen sendes videre til en medarbejder"
+      "quickAction6Command": "Hvis brugeren vil ringes op, men ikke har sagt hvorfor, skal assistenten altid spørge om årsagen, og derefter sige at anmodningen sendes videre til en medarbejder",
+      "pending": {
+        "save": "Gem ændringer ({count})",
+        "discard": "Kassér",
+        "before": "Før",
+        "after": "Efter",
+        "draft": "Kladde til ny instans",
+        "create": "Tilføj instans",
+        "replace": "Rediger instans",
+        "remove": "Fjern instans",
+        "prefetch": "Før opkaldet",
+        "during": "Under opkaldet",
+        "final": "Efter opkaldet",
+        "read": "Kontrollér resultat",
+        "accept": "Bekræft instans {instance}",
+        "close": "Luk uden nyt forsøg",
+        "refresh": "Opdater ventende ændringer",
+        "refreshed": "Ventende ændringer opdateret.",
+        "completed": "Anmodning fuldført. Gennemgå resultaterne nedenfor.",
+        "incomplete": "Nogle ændringer afventer. Gennemgå resultaterne nedenfor.",
+        "responseLost": "Svaret gik tabt. Ændringer er genindlæst, hvor det var muligt. Kontrollér resultatet før et nyt forsøg.",
+        "recoveryFailed": "Ændringer kunne ikke genindlæses. Opdater før du fortsætter.",
+        "connectionCheck": "Forbindelsen kontrolleres, når en aktivering gemmes.",
+        "proposalRefused": "Forslag afvist. Ingen ændring sat i kø.",
+        "proposalReady": "Ændring foreslået. Gennemgå og gem for at anvende.",
+        "wizardWarning": "Skillforslag bliver i denne guidesession og er ikke gemt. Åbn Konfigurer via chat for et nyt forslag; navigation overfører det ikke.",
+        "saved": "Gemt",
+        "closed": "Lukket uden nyt forsøg",
+        "conflict": "Konfigurationskonflikt",
+        "refused": "Afvist",
+        "unconfirmed": "Ukendt resultat",
+        "in_flight": "Gemmer",
+        "reconciling": "Kontrollerer resultat",
+        "pending": "Afventer",
+        "loadingPending": "Indlæser ventende ændringer…"
+      }
     },
     "aladminConfigurator": {
       "title": "AladMin-konfigurator",

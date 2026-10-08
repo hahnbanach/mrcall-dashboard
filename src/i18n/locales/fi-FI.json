@@ -135,7 +135,20 @@
       "argumentsTitle": "Mita avustaja kerää puhelun aikana",
       "argumentRequired": "pakollinen",
       "argumentOptional": "valinnainen",
-      "argumentsTemplateHint": "Jokaista yllä olevaa nimea voi kayttaa muodossa %%nimi%% taman kortin tekstikentissa."
+      "argumentsTemplateHint": "Jokaista yllä olevaa nimea voi kayttaa muodossa %%nimi%% taman kortin tekstikentissa.",
+      "handoff": {
+        "manage": "Hallitse yhteyttä: {instance}",
+        "unavailable": "Tallennetun skillin yhteyttä ei voi avata täällä.",
+        "saveFirst": "Tallenna instanssi ja sen tarkka valtuutusviite ennen yhdistämistä.",
+        "refresh": "Päivitä yhteyden tila",
+        "named": "Tallennettu valtuutusviite: {grant}",
+        "shared": "Jaettu valtuutus (tyhjä viite).",
+        "available": "Kalenteriyhteys on käytettävissä. Sen voi tarjota jaettu tai varavaltuutus.",
+        "unknown": "Kalenteriyhteyden tila on tuntematon. Tyhjä tai epäonnistunut tarkistus ei osoita yhteyden katkeamista.",
+        "unsupported": "Tällä palveluntarjoajalla tai sen oikeuksilla ei ole tuettua valtuutuskulkua täällä.",
+        "connecting": "Yhdistetään tallennettua palvelua…",
+        "callbackFailed": "Valtuutusta ei voitu suorittaa. Palaa määrityksiin ja aloita uudelleen."
+      }
     }
   },
   "components": {
@@ -1518,7 +1531,8 @@
         "subtitleText": "Määritä, onko kyseessä tämä laite vai toinen laite",
         "thisPhone": "Tämä laite",
         "otherPhone": "Toinen laite"
-      }
+      },
+      "searchbusinessinfo": {}
     },
     "sign": {
       "magiclink": {
@@ -1664,7 +1678,42 @@
       "quickAction5Label": "Avustajan tietämys",
       "quickAction5Command": "Mistä aiheista avustaja osaa vastata?",
       "quickAction6Label": "Lisää tietämystä",
-      "quickAction6Command": "Jos käyttäjä haluaa takaisinsoiton, mutta ei ole kertonut miksi, avustajan tulee aina kysyä syytä, ja sitten kertoa että pyyntö välitetään operaattorille"
+      "quickAction6Command": "Jos käyttäjä haluaa takaisinsoiton, mutta ei ole kertonut miksi, avustajan tulee aina kysyä syytä, ja sitten kertoa että pyyntö välitetään operaattorille",
+      "pending": {
+        "save": "Tallenna muutokset ({count})",
+        "discard": "Hylkää",
+        "before": "Ennen",
+        "after": "Jälkeen",
+        "draft": "Uuden instanssin luonnos",
+        "create": "Lisää instanssi",
+        "replace": "Muuta instanssia",
+        "remove": "Poista instanssi",
+        "prefetch": "Ennen puhelua",
+        "during": "Puhelun aikana",
+        "final": "Puhelun jälkeen",
+        "read": "Tarkista tulos",
+        "accept": "Vahvista instanssi {instance}",
+        "close": "Sulje yrittämättä uudelleen",
+        "refresh": "Päivitä odottavat muutokset",
+        "refreshed": "Odottavat muutokset päivitetty.",
+        "completed": "Pyyntö valmis. Tarkista tulokset alta.",
+        "incomplete": "Muutoksia on vielä odottamassa. Tarkista tulokset alta.",
+        "responseLost": "Vastaus katosi. Muutokset ladattiin uudelleen mahdollisuuksien mukaan. Tarkista tulos ennen uutta yritystä.",
+        "recoveryFailed": "Muutoksia ei voitu ladata. Päivitä ennen jatkamista.",
+        "connectionCheck": "Yhteys tarkistetaan aktivoinnin tallennuksen yhteydessä.",
+        "proposalRefused": "Ehdotus hylättiin. Muutosta ei lisätty jonoon.",
+        "proposalReady": "Muutos ehdotettu. Tarkista ja tallenna ottaaksesi sen käyttöön.",
+        "wizardWarning": "Skill-ehdotukset pysyvät tässä ohjatussa istunnossa eikä niitä ole tallennettu. Avaa chat-määritys uutta ehdotusta varten; siirtyminen ei siirrä ehdotusta.",
+        "saved": "Tallennettu",
+        "closed": "Suljettu ilman uutta yritystä",
+        "conflict": "Määritysristiriita",
+        "refused": "Hylätty",
+        "unconfirmed": "Tulos tuntematon",
+        "in_flight": "Tallennetaan",
+        "reconciling": "Tarkistetaan tulosta",
+        "pending": "Odottaa",
+        "loadingPending": "Ladataan odottavia muutoksia…"
+      }
     },
     "aladminConfigurator": {
       "title": "AladMin Configurator",

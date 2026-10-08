@@ -13,7 +13,7 @@
 | HTTP Client | Axios | 1.11.0 |
 | i18n | vue-i18n | 11.1.10 |
 | Build (prod) | Vue CLI / Webpack 5 | 5.0.8 / 5.97.1 |
-| Build (dev) | Vite | 6.3.4 |
+| Build (dev) | Vue CLI / Webpack | 5.0.8 / 5.97.1 |
 | CSS | Less | 4.2.1 |
 | Forms | Vuelidate | 2.0.3 |
 | Persistence | vuex-persist + secure-ls | 3.1.3 / 2.0.0 |
@@ -41,13 +41,13 @@
 ### State Management
 - Vuex root store handles auth, user, business, onboarding, role state
 - Feature modules under `store/modules/` for calendar and tracking
-- Encrypted persistence via secure-ls — only auth and onboarding data persist to localStorage
+- The secure-ls persistence reducer selects `onboardingData`, `role`, and `auth`; the current root state has no `auth` field. Firebase owns authentication persistence.
 - Access store via `this.$store` (Options API) or `import store from '@/store'` (external)
 
 ### API Communication
-- All API calls use Axios with Firebase ID token
+- Authenticated API requests must use the configured Axios instance with a Firebase ID token. The existing AI SSE client uses native fetch and bypasses this interceptor; see [the integration contract](integration/zylch-integration.md). Public OAuth code exchange does not carry a Firebase token.
 - Token passed as `Authorization: Bearer <token>` or custom `auth` header
-- StarChat endpoint pattern: `/mrcall/v1/talkmeapp0/crm/*`
+- StarChat endpoint pattern: `/mrcall/v1/mrcall0/crm/*`
 - Zylch endpoint pattern: `/api/chat/*` and `/api/mrcall/*`
 - 401 responses trigger automatic token refresh via Axios interceptor
 

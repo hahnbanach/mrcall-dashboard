@@ -47,6 +47,44 @@ export const SIGN_IN_SCOPES = ['openid', 'email', 'profile']
  */
 
 
+const CHAT_SKILL_SCOPES = [...SIGN_IN_SCOPES, 'https://www.googleapis.com/auth/calendar']
+
+export function assertScopesAllowed(scopes, context) {
+  const cleaned = (Array.isArray(scopes) ? scopes : String(scopes || '').split(' ')).map(s => s.trim()).filter(Boolean)
+  if (!cleaned.length || cleaned.some(s => !CHAT_SKILL_SCOPES.includes(s))) throw new Error(`${context}: unsupported chat skill scope`)
+  return cleaned.join(' ')
+}
+
+const SKILL_CONTEXT_KEY = 'oauthSkillContext'
+
+export function skillOAuthContext(value) {
+  if (!value || value.provider !== 'google_calendar' ||
+      !['prefetch', 'during', 'final'].includes(value.phase) ||
+      !['businessId', 'instanceId', 'ownerUid'].every(key => typeof value[key] === 'string' && value[key]) ||
+      typeof value.grantName !== 'string' || typeof value.returnUrl !== 'string') {
+    throw new Error('invalid_skill_oauth_context')
+  }
+  const destination = new URL(value.returnUrl, window.location.origin)
+  if (!value.returnUrl.startsWith('/') || value.returnUrl.startsWith('//') ||
+      destination.origin !== window.location.origin || destination.pathname !== '/businessconfiguration' ||
+      destination.username || destination.password || destination.hash ||
+      destination.searchParams.get('id') !== value.businessId ||
+      destination.searchParams.get('skillPhase') !== value.phase ||
+      destination.searchParams.get('skillInstance') !== value.instanceId) {
+    throw new Error('unsafe_skill_oauth_return')
+  }
+  const scopes = assertScopesAllowed(value.scopes, 'skill-oauth').split(' ').sort()
+  if (!scopes.includes('https://www.googleapis.com/auth/calendar')) throw new Error('unsupported_skill_oauth_scope')
+  return { provider: value.provider, businessId: value.businessId, grantName: value.grantName,
+    phase: value.phase, instanceId: value.instanceId, ownerUid: value.ownerUid,
+    returnUrl: destination.pathname + destination.search, scopes }
+}
+
+async function contextDigest(context) {
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(JSON.stringify(context)))
+  return [...new Uint8Array(digest)].map(byte => byte.toString(16).padStart(2, '0')).join('')
+}
+
 const VERIFIER_KEY = 'codeVerifier'
 const STATE_KEY = 'oauthState'
 
@@ -61,9 +99,17 @@ export const GoogleAuthFlow = {
    * different screens start this flow, so it lives here rather than being
    * repeated in each of them.
    */
-  async begin() {
+  async begin(context = null) {
     const codeVerifier = PKCEUtils.generateRandomString(128)
-    const state = PKCEUtils.generateRandomString(32)
+    const binding = context ? skillOAuthContext(context) : null
+    const nonce = PKCEUtils.generateRandomString(32)
+    const state = binding ? `skill.${nonce}.${await contextDigest(binding)}` : nonce
+    localStorage.removeItem(SKILL_CONTEXT_KEY)
+    if (binding) {
+      localStorage.removeItem('oauthProvider')
+      localStorage.removeItem('oauthReturnUrl')
+    }
+    if (binding) localStorage.setItem(SKILL_CONTEXT_KEY, JSON.stringify(binding))
     localStorage.setItem(VERIFIER_KEY, codeVerifier)
     localStorage.setItem(STATE_KEY, state)
     return { state, codeChallenge: await PKCEUtils.generateCodeChallenge(codeVerifier) }
@@ -82,11 +128,27 @@ export const GoogleAuthFlow = {
     const expectedState = localStorage.getItem(STATE_KEY)
     localStorage.removeItem(VERIFIER_KEY)
     localStorage.removeItem(STATE_KEY)
+    localStorage.removeItem(SKILL_CONTEXT_KEY)
 
     if (!codeVerifier) throw new Error('Missing code verifier: start the sign-in again')
     if (!expectedState) throw new Error('Missing authorization state: start the sign-in again')
     if (returnedState !== expectedState) throw new Error('Authorization state mismatch: the request did not come from this browser')
     return codeVerifier
+  },
+
+  async consumeWithContext(returnedState) {
+    const storedContext = localStorage.getItem(SKILL_CONTEXT_KEY)
+    const codeVerifier = this.consume(returnedState)
+    if (!String(returnedState || '').startsWith('skill.')) {
+      if (storedContext) throw new Error('unexpected_skill_oauth_context')
+      return { codeVerifier, context: null }
+    }
+    if (!storedContext) throw new Error('missing_skill_oauth_context')
+    const context = skillOAuthContext(JSON.parse(storedContext))
+    if (String(returnedState).split('.').pop() !== await contextDigest(context)) {
+      throw new Error('changed_skill_oauth_context')
+    }
+    return { codeVerifier, context }
   },
 
   /**

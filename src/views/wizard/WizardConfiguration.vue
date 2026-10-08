@@ -1,6 +1,10 @@
 <template>
   <div class="wizard-page">
     <div class="wizard-container">
+      <Message v-if="hasSkillProposals" severity="warn" :closable="false">
+        {{ $t('views.configureAI.pending.wizardWarning') }}
+        <router-link :to="{ name: 'BusinessConfiguration', query: { id: businessId } }">{{ $t('components.business.configureViaChat') }}</router-link>
+      </Message>
       <!-- ASK phase: single question + [Parti] button -->
       <div v-if="phase === 'ask'" class="wizard-ask">
         <div class="wizard-icon-badge"><i class="pi pi-cog"></i></div>
@@ -155,6 +159,7 @@ export default {
     const callErrorOccurred = ref(false);
     const pendingChanges = ref([]);
     const finalResponseText = ref('');
+    const hasSkillProposals = computed(() => pendingChanges.value.some(c => c.kind === 'skill_instance'));
     const researchSummary = computed(() =>
       store.state.onboardingData?.researchSummary?.[businessId.value] || ''
     );
@@ -248,16 +253,7 @@ export default {
                 finalResponseText.value = text;
               },
               onMetadata: (metadata) => {
-                if (metadata.pending_changes) {
-                  for (const change of metadata.pending_changes) {
-                    const idx = pendingChanges.value.findIndex(c => c.variable_name === change.variable_name);
-                    if (idx >= 0) {
-                      pendingChanges.value[idx] = change;
-                    } else {
-                      pendingChanges.value.push(change);
-                    }
-                  }
-                }
+                if (Array.isArray(metadata.pending_changes)) pendingChanges.value = metadata.pending_changes;
               },
               onError: settle((msg) => {
                 console.error('[Wizard] Config error:', msg);
@@ -269,12 +265,14 @@ export default {
           );
         });
 
-        if (pendingChanges.value.length > 0) {
+        const ordinaryChanges = pendingChanges.value.filter(c => c.kind !== 'skill_instance');
+        if (ordinaryChanges.length > 0) {
           progressStatus.value = t('views.wizard.statusApplying');
           const result = await ZylchAPI.applyChanges(
             user.value,
             businessId.value,
-            pendingChanges.value.map(c => ({ variable_name: c.variable_name, new_value: c.new_value }))
+            ordinaryChanges.map(c => ({ variable_name: c.variable_name, new_value: c.new_value })),
+            wizardSessionId.value
           );
           if (!result.success) {
             throw new Error(t('views.wizard.applyFailed'));
@@ -363,6 +361,7 @@ export default {
     });
 
     return {
+      hasSkillProposals,
       phase,
       businessId,
       isStarting,

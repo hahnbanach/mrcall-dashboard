@@ -137,7 +137,20 @@
       "argumentsTitle": "Cosa l'assistente raccoglie durante la chiamata",
       "argumentRequired": "obbligatorio",
       "argumentOptional": "facoltativo",
-      "argumentsTemplateHint": "Ogni nome qui sopra si può usare come %%nome%% nei campi di testo di questa scheda e nei prompt di successo e di errore."
+      "argumentsTemplateHint": "Ogni nome qui sopra si può usare come %%nome%% nei campi di testo di questa scheda e nei prompt di successo e di errore.",
+      "handoff": {
+        "manage": "Gestisci collegamento: {instance}",
+        "unavailable": "Il collegamento della skill salvata non può essere aperto qui.",
+        "saveFirst": "Salva questa istanza e il suo riferimento di autorizzazione esatto prima di collegarla.",
+        "refresh": "Aggiorna stato collegamento",
+        "named": "Riferimento di autorizzazione salvato: {grant}",
+        "shared": "Autorizzazione condivisa (riferimento vuoto).",
+        "available": "Accesso al calendario disponibile. Può essere fornito da un’autorizzazione condivisa o di fallback.",
+        "unknown": "Accesso al calendario sconosciuto. Una verifica vuota o fallita non dimostra che sia scollegato.",
+        "unsupported": "Questo provider o i suoi permessi non hanno un flusso di autorizzazione supportato qui.",
+        "connecting": "Collegamento del servizio salvato…",
+        "callbackFailed": "Autorizzazione non completata. Torna alla configurazione e riparti."
+      }
     },
     "templatedVariable": {
       "unavailable": "{option} non è disponibile con le impostazioni attuali: scegline un'altra."
@@ -1637,7 +1650,42 @@
       "quickAction5Label": "Le conoscenze dell'assistente",
       "quickAction5Command": "Su quali argomenti può rispondere l'assistente?",
       "quickAction6Label": "Aggiungi conoscenza",
-      "quickAction6Command": "Se l'utente vuole essere richiamato ma non ha detto il motivo, l'assistente deve sempre chiedere la ragione, e poi dire che inoltrerà la richiesta a un operatore"
+      "quickAction6Command": "Se l'utente vuole essere richiamato ma non ha detto il motivo, l'assistente deve sempre chiedere la ragione, e poi dire che inoltrerà la richiesta a un operatore",
+      "pending": {
+        "save": "Salva modifiche ({count})",
+        "discard": "Scarta",
+        "before": "Prima",
+        "after": "Dopo",
+        "draft": "Bozza di nuova istanza",
+        "create": "Aggiungi istanza",
+        "replace": "Modifica istanza",
+        "remove": "Rimuovi istanza",
+        "prefetch": "Prima della chiamata",
+        "during": "Durante la chiamata",
+        "final": "Dopo la chiamata",
+        "read": "Verifica esito",
+        "accept": "Conferma istanza {instance}",
+        "close": "Chiudi senza riprovare",
+        "refresh": "Aggiorna modifiche in sospeso",
+        "refreshed": "Modifiche in sospeso aggiornate.",
+        "completed": "Richiesta completata. Controlla gli esiti qui sotto.",
+        "incomplete": "Alcune modifiche sono in sospeso. Controlla gli esiti qui sotto.",
+        "responseLost": "La risposta è andata persa. Le modifiche sono state ricaricate ove possibile. Verifica l’esito prima di riprovare.",
+        "recoveryFailed": "Impossibile ricaricare le modifiche. Aggiorna prima di continuare.",
+        "connectionCheck": "La disponibilità del collegamento sarà verificata al salvataggio dell’attivazione.",
+        "proposalRefused": "Proposta rifiutata. Nessuna modifica accodata.",
+        "proposalReady": "Modifica proposta. Controlla e salva per applicarla.",
+        "wizardWarning": "Le proposte di skill restano nella sessione del wizard e non sono salvate. Apri Configura via chat per proporle nuovamente; la navigazione non le trasferisce.",
+        "saved": "Salvato",
+        "closed": "Chiuso senza riprovare",
+        "conflict": "Conflitto di configurazione",
+        "refused": "Rifiutato",
+        "unconfirmed": "Esito sconosciuto",
+        "in_flight": "Salvataggio in corso",
+        "reconciling": "Verifica esito in corso",
+        "pending": "In sospeso",
+        "loadingPending": "Caricamento delle modifiche in sospeso…"
+      }
     },
     "aladminConfigurator": {
       "title": "AladMin Configurator",

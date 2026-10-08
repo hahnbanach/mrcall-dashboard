@@ -11,10 +11,10 @@ Vue 3 SPA (App.vue)
   ├── Vue Router ─── Auth Guard (requiresAuth, role check, email verification)
   │                      │
   │                      ▼
-  │                 Views (56) / Components (49)
+  │                 Views / Components
   │                      │
   │                      ▼
-  │                 Vuex Store (encrypted persistence via secure-ls)
+  │                 Vuex Store (persistence via secure-ls)
   │                      │
   │         ┌────────────┼────────────────┐
   │         ▼            ▼                ▼
@@ -31,18 +31,18 @@ Vue 3 SPA (App.vue)
 
 ## Module Responsibilities
 
-### Views (`src/views/`) — 57 files
+### Views (`src/views/`)
 Route-level components organized by domain:
 - `sign/` — Authentication (Signin, Signup, MagicLink)
 - `business/` — Business configuration (BusinessConfiguration)
-- `onboarding/` — 3-step onboarding wizard (Language → NamePhone → SearchBusiness → AssistantCreated → MakeATestCall)
+- `onboarding/` — 3-step onboarding wizard (Language → NamePhone → SearchBusiness → AssistantCreated → WizardConfiguration)
 - `activation/` — Post-onboarding activation flow (ActivateAssistant)
 - `admin/` — Admin management (ProvisionReseller, ResellerDetail, ResellerManagement, UserRoleManagement)
 - `reseller/` — Reseller features (InvitationCodes, ResellerProfile)
 - `oauth/` — OAuth consent flow
-- Root views: Account, Analytics, Businesses, Contacts, Conversations, ConfigureAI, Home, Payment, Plan, etc.
+- Root views: Account, Analytics, Businesses, Contacts, Conversations, Zylch, Home, Payment, Plan, etc.
 
-### Components (`src/components/`) — 49 files
+### Components (`src/components/`)
 Reusable UI building blocks:
 - `admin/` — ProvisionReseller, ResellerDetail, ResellerList, UserRoleManagement
 - `reseller/` — InvitationCodes, OwnerSelector, ResellerDashboard, ResellerProfileView
@@ -51,7 +51,7 @@ Reusable UI building blocks:
 - `widgets/` — Variable editors (MultiselectVariable, TemplatedVariable, TupleVariable, TimeSlotsEditor, FetchWebData)
 - Root: Navbar, Businesses, Conversations, Contacts, Analytics, ZylchChat, Plans, Subscription, etc.
 
-### Utilities (`src/utils/`) — 14 modules
+### Utilities (`src/utils/`)
 API clients and business logic:
 - `Business.js` — Business CRUD, variable defaults, type handling
 - `BusinessVariables.js` — Variable visibility, dependency resolution, modifiability
@@ -61,12 +61,13 @@ API clients and business logic:
 - `Reseller.js` — Reseller API endpoints
 - `Contact.js` — Contact management API
 - `Conversation.js` — Conversation utilities
-- `OAuth.js` — Google Calendar OAuth helpers
+- `OAuth.js` — Google Calendar OAuth helpers and single-use skill authorization context
+- `AgentSkills.js` — skill catalogue, saved configuration and scoped effective availability
 - `PKCE.js` — PKCE flow for OAuth 2.0
 - `Stripe.js` — Stripe billing integration
 - `UtmTracking.js` — UTM parameter tracking
 - `PhoneOperators.js` — Phone operator data
-- `webcodecs-opus.js` — Audio codec for webcall
+- `VoiceEncoding.js` — Browser capability check and preferred direct-voice encoding
 
 ### State (`src/store/`)
 - `index.js` — Root store: user auth, selected business, onboarding data, role, reseller state
@@ -79,7 +80,7 @@ API clients and business logic:
 - `axiosConfig.js` — Axios 401 interceptor, request queue during token refresh
 
 ### Router (`src/router/`)
-- `index.js` — 76 route definitions with auth guards, role-based access control
+- `index.js` — Route definitions with auth guards, role-based access control
 
 ### i18n (`src/i18n/`)
 - `index.js` — i18n configuration
@@ -88,7 +89,11 @@ API clients and business logic:
 
 ## Data Flow
 
-### Authenticated API Request
+### Authenticated Axios request
+
+This flow covers Axios requests. AI chat SSE uses native fetch and does not
+receive the interceptor; see [the integration contract](integration/zylch-integration.md).
+
 ```
 User Action → Component → Axios Request
                              │
@@ -125,28 +130,28 @@ enum, multiselect, tuples, verbatim, templated
 
 ### Per-Business Credits Tile (`Businesses.vue`)
 
-Each business card shows a "⚡ Crediti residui ⓘ NNN" line in the
-info-grid. `NNN` is the raw `CALLCREDIT` resource count read directly
-from StarChat by the same `fetchBusinessResources(businessId, …, 'CALLCREDIT')`
-call that already populates the SMS pill — **no proxy middleman**, no
-mrcall-agent endpoint involved (the desktop's `/api/desktop/llm/balance`
-endpoint is unused by the dashboard). The tooltip on ⓘ explains
-consumption: a phone call burns ~N credits/minute (per-template
-`CALLCREDIT_FACTOR`); configurator chat and MrCall Desktop burn in
-proportion to LLM tokens consumed. Topup is the existing `Plan.vue`
-route at `/plan`. See `CLAUDE.md` "MrCall AI credits tile" for keys and
-helper details.
+Each business card displays the `CALLCREDIT` balance as euros using
+`creditsToEuro`: credits divided by 100, formatted as EUR for the current locale.
+`fetchBusinessResources` posts directly to StarChat's
+`/mrcall/v1/mrcall0/crm/business/resources/count`; it separately fetches
+`CALLCREDIT`, `CALL`, and `SMS`. The dashboard does not call the desktop balance
+endpoint. The tooltip uses `mrcallCredits.title` and `mrcallCredits.tooltip`;
+`creditTooltipFactor(business)` parses `CALLCREDIT_FACTOR` by template with a
+fallback of 25. All 12 locale files contain these keys. The `/plan` route renders
+`src/views/Plan.vue` for plan and payment selection.
 
-### Onboarding Flow (3-Step "Try Before You Buy")
+### Onboarding and plan selection
 ```
 OnboardingLanguage (1/3) → OnboardingNamePhone (1/3) → OnboardingSearchBusiness (2/3)
-→ OnboardingAssistantCreated (3/3) → OnboardingMakeATestCall (post-onboarding)
+→ OnboardingAssistantCreated (3/3) → WizardConfiguration
+  (or BusinessConfiguration when the wizard is already completed for this business)
 
-Activation (post-trial):
-BusinessConfiguration "Attiva MrCall" CTA → ActivateAssistant → OnboardingChoosePlan
-  (passes ?multilingual=true when STT_SELECTION indicates multilingual)
+Plan selection:
+BusinessConfiguration ActionPanel → OnboardingChoosePlan
+  (passes multilingual=true for MULTILINGUAL_ENABLED,
+   booking=true for START_BOOKING_PROCESS)
 
-Legacy steps still routed but not part of primary flow:
+Other routed steps include OnboardingMakeATestCall, ActivateAssistant,
 OnboardingChooseDevice, OnboardingThisOrOtherDevice, OnboardingForwarding*,
 OnboardingSwitchboardConfiguration, OnboardingNotificationPreview, OnboardingPreBookAppointment
 
@@ -162,21 +167,18 @@ BusinessId passed as query param (?id=) for resilience against Vuex loss.
 - **SPA routing**: Bucket website hosting with error document = `index.html`
 - **CI/CD**: GitHub Actions, one tag per environment (`vX.Y.Z-test`, `-beta`, `-production`)
 
-| Environment | Branch | Bucket | Domain |
-|-------------|--------|--------|--------|
-| Test | `test-env` | `mrcall-dashboard-test` | `dashboard-test.mrcall.ai` |
-| Beta | `beta-env` | `mrcall-dashboard-beta` | `dashboard-beta.mrcall.ai` |
-| Production | `production-env` | `mrcall-dashboard` | `dashboard.mrcall.ai` |
+Environment tags, buckets, domains, build settings and promotion rules are
+specified in [development.md](development.md#environment-routing).
 
 ### External Services
 - **StarChat** — Backend API for business logic, contacts, conversations, Stripe proxy
 - **Zylch** — AI backend for conversational assistant configuration and training
 - **Firebase** — Authentication. Project `talkmeapp-e696c` in **all three** environments,
-  test included: the `mrcall-test-3a669` block in `.env.test` is commented out and dormant.
-  (This line previously claimed test used `mrcall-test-3a669`, contradicting `docs/README.md`.)
-- **Stripe** — Payment processing (checkout via StarChat, customer portal direct)
+  as required by the shared authentication integration; actual local and deployed
+  environment configuration must be checked separately.
+- **Stripe** — Payment checkout through the StarChat Stripe proxy
 - **Google** — OAuth for Calendar integration, Google Sign-In.
-  Client, scopes, token storage and verification status: [integration/google-oauth.md](integration/google-oauth.md)
+  The client flow and scope constraints are implemented in `src/utils/OAuth.js`.
 
 ## Cross-Cutting Concerns
 
@@ -204,10 +206,15 @@ exchangeCode()   POST the code and verifier to the backend, which holds the
                  client secret and talks to Google
 ```
 
-The exchange is server side because Google's web client type requires a client
-secret at the token endpoint, and anything the browser holds is public: vue-cli
-inlines every `VUE_APP_*` value into the bundle whether the code reads it or not.
-The backend endpoint is `POST /mrcall/v1/{realm}/oauth/google/token`.
+Skill authorization additionally binds owner, business, exact saved grant,
+phase/instance, supported scopes and a safe local return location to that state.
+The callback consumes and verifies the context before connecting; see the
+[skill authorization contract](integration/zylch-integration.md#skill-authorization-handoff).
+
+The dashboard sends the code and verifier to
+`POST /mrcall/v1/mrcall0/oauth/google/token`. Token exchange and client-secret
+handling belong to StarChat. Browser environment values are public build
+configuration.
 
 ### Role-Based Access
 - Three roles: `owner`, `reseller`, `admin`
@@ -222,8 +229,9 @@ The backend endpoint is `POST /mrcall/v1/{realm}/oauth/google/token`.
 - UTM parameter capture and persistence via `UtmTracking.js` and `tracking` store module
 
 ### Security
-- Encrypted localStorage via secure-ls for Vuex persistence
-- Firebase JWT validation on all API calls
+- Vuex persistence uses secure-ls storage; encoding defaults require installed-dependency verification.
+- Authenticated clients send Firebase tokens; server-side validation belongs to the backend.
+- AI chat SSE uses native fetch and bypasses the Axios interceptor; see the integration contract.
 - PKCE for OAuth flows
 - Email verification enforcement for email/password users
 - No secrets in frontend code. Note that environment variables are not a hiding

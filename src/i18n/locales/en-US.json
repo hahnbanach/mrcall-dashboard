@@ -137,7 +137,20 @@
       "argumentsTitle": "What the assistant collects during the call",
       "argumentRequired": "required",
       "argumentOptional": "optional",
-      "argumentsTemplateHint": "Every name above can be used as %%name%% in the text fields of this card and in its success and failure prompts."
+      "argumentsTemplateHint": "Every name above can be used as %%name%% in the text fields of this card and in its success and failure prompts.",
+      "handoff": {
+        "manage": "Manage connection: {instance}",
+        "unavailable": "The saved skill connection cannot be opened here.",
+        "saveFirst": "Save this instance and its exact authorization reference before connecting.",
+        "refresh": "Refresh connection status",
+        "named": "Saved authorization reference: {grant}",
+        "shared": "Shared authorization (empty reference).",
+        "available": "Calendar access is available. A shared or fallback grant may provide it.",
+        "unknown": "Calendar access is unknown. An empty or failed check does not prove disconnection.",
+        "unsupported": "This provider or its scopes have no supported authorization flow here.",
+        "connecting": "Connecting the saved service…",
+        "callbackFailed": "Authorization could not be completed. Return to configuration and start again."
+      }
     },
     "templatedVariable": {
       "unavailable": "{option} is not available with the current settings: choose another one."
@@ -1639,7 +1652,42 @@
       "quickAction5Label": "The assistant's knowledge",
       "quickAction5Command": "On which topic can the assistant answer?",
       "quickAction6Label": "Add knowledge",
-      "quickAction6Command": "If the user wants to be called back, but hasn't said why, the assistant should always ask for the reason, and then say that it will send the request to an operator"
+      "quickAction6Command": "If the user wants to be called back, but hasn't said why, the assistant should always ask for the reason, and then say that it will send the request to an operator",
+      "pending": {
+        "save": "Save changes ({count})",
+        "discard": "Discard",
+        "before": "Before",
+        "after": "After",
+        "draft": "New instance draft",
+        "create": "Add instance",
+        "replace": "Change instance",
+        "remove": "Remove instance",
+        "prefetch": "Before the call",
+        "during": "During the call",
+        "final": "After the call",
+        "read": "Check outcome",
+        "accept": "Confirm instance {instance}",
+        "close": "Close without retrying",
+        "refresh": "Refresh pending changes",
+        "refreshed": "Pending changes refreshed.",
+        "completed": "Request completed. Review the outcomes below.",
+        "incomplete": "Some changes remain pending. Review the outcomes below.",
+        "responseLost": "The response was lost. Pending changes were reloaded where possible. Check the outcome before retrying.",
+        "recoveryFailed": "Pending changes could not be reloaded. Refresh before continuing.",
+        "connectionCheck": "Connection availability will be checked when saving an activation.",
+        "proposalRefused": "The proposal was refused. No change was queued.",
+        "proposalReady": "Change proposed. Review and Save to apply.",
+        "wizardWarning": "Skill proposals are retained in this wizard session and have not been saved. Open Configure via chat to make a new proposal; navigation does not transfer it.",
+        "saved": "Saved",
+        "closed": "Closed without retrying",
+        "conflict": "Configuration conflict",
+        "refused": "Refused",
+        "unconfirmed": "Outcome unknown",
+        "in_flight": "Save in progress",
+        "reconciling": "Checking outcome",
+        "pending": "Pending",
+        "loadingPending": "Loading pending changes…"
+      }
     },
     "aladminConfigurator": {
       "title": "AladMin Configurator",

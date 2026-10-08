@@ -136,7 +136,20 @@
       "argumentsTitle": "Was der Assistent wahrend des Anrufs erfasst",
       "argumentRequired": "erforderlich",
       "argumentOptional": "optional",
-      "argumentsTemplateHint": "Jeder Name oben kann als %%name%% in den Textfeldern dieser Karte und in ihren Erfolgs- und Fehlermeldungen verwendet werden."
+      "argumentsTemplateHint": "Jeder Name oben kann als %%name%% in den Textfeldern dieser Karte und in ihren Erfolgs- und Fehlermeldungen verwendet werden.",
+      "handoff": {
+        "manage": "Verbindung verwalten: {instance}",
+        "unavailable": "Die Verbindung des gespeicherten Skills kann hier nicht geöffnet werden.",
+        "saveFirst": "Speichern Sie diese Instanz und ihre genaue Autorisierungsreferenz vor dem Verbinden.",
+        "refresh": "Verbindungsstatus aktualisieren",
+        "named": "Gespeicherte Autorisierungsreferenz: {grant}",
+        "shared": "Gemeinsame Autorisierung (leere Referenz).",
+        "available": "Kalenderzugriff ist verfügbar. Eine gemeinsame oder ersatzweise Autorisierung kann ihn bereitstellen.",
+        "unknown": "Kalenderzugriff ist unbekannt. Eine leere oder fehlgeschlagene Prüfung beweist keine Trennung.",
+        "unsupported": "Für diesen Anbieter oder seine Berechtigungen gibt es hier keinen unterstützten Autorisierungsablauf.",
+        "connecting": "Gespeicherter Dienst wird verbunden…",
+        "callbackFailed": "Autorisierung fehlgeschlagen. Kehren Sie zur Konfiguration zurück und beginnen Sie erneut."
+      }
     }
   },
   "components": {
@@ -1517,7 +1530,8 @@
         "subtitleText": "Gib an, ob du dieses oder ein anderes Gerät konfigurierst",
         "thisPhone": "Dieses Gerät",
         "otherPhone": "Anderes Gerät"
-      }
+      },
+      "searchbusinessinfo": {}
     },
     "sign": {
       "magiclink": {
@@ -1663,7 +1677,42 @@
       "quickAction5Label": "Das Wissen des Assistenten",
       "quickAction5Command": "Zu welchen Themen kann der Assistent Auskunft geben?",
       "quickAction6Label": "Wissen hinzufügen",
-      "quickAction6Command": "Wenn der Anrufer zurückgerufen werden möchte, aber den Grund nicht genannt hat, soll der Assistent immer nach dem Grund fragen und dann sagen, dass die Anfrage an einen Mitarbeiter weitergeleitet wird"
+      "quickAction6Command": "Wenn der Anrufer zurückgerufen werden möchte, aber den Grund nicht genannt hat, soll der Assistent immer nach dem Grund fragen und dann sagen, dass die Anfrage an einen Mitarbeiter weitergeleitet wird",
+      "pending": {
+        "save": "Änderungen speichern ({count})",
+        "discard": "Verwerfen",
+        "before": "Vorher",
+        "after": "Nachher",
+        "draft": "Entwurf einer neuen Instanz",
+        "create": "Instanz hinzufügen",
+        "replace": "Instanz ändern",
+        "remove": "Instanz entfernen",
+        "prefetch": "Vor dem Anruf",
+        "during": "Während des Anrufs",
+        "final": "Nach dem Anruf",
+        "read": "Ergebnis prüfen",
+        "accept": "Instanz {instance} bestätigen",
+        "close": "Ohne erneuten Versuch schließen",
+        "refresh": "Ausstehende Änderungen aktualisieren",
+        "refreshed": "Ausstehende Änderungen aktualisiert.",
+        "completed": "Anfrage abgeschlossen. Prüfen Sie die Ergebnisse unten.",
+        "incomplete": "Einige Änderungen stehen noch aus. Prüfen Sie die Ergebnisse unten.",
+        "responseLost": "Die Antwort ging verloren. Änderungen wurden nach Möglichkeit neu geladen. Prüfen Sie das Ergebnis vor einem erneuten Versuch.",
+        "recoveryFailed": "Änderungen konnten nicht geladen werden. Aktualisieren Sie vor dem Fortfahren.",
+        "connectionCheck": "Die Verbindung wird beim Speichern einer Aktivierung geprüft.",
+        "proposalRefused": "Vorschlag abgelehnt. Keine Änderung vorgemerkt.",
+        "proposalReady": "Änderung vorgeschlagen. Prüfen und speichern Sie zum Anwenden.",
+        "wizardWarning": "Skill-Vorschläge bleiben in dieser Assistentensitzung und wurden nicht gespeichert. Öffnen Sie Per Chat konfigurieren für einen neuen Vorschlag; die Navigation überträgt ihn nicht.",
+        "saved": "Gespeichert",
+        "closed": "Ohne erneuten Versuch geschlossen",
+        "conflict": "Konfigurationskonflikt",
+        "refused": "Abgelehnt",
+        "unconfirmed": "Ergebnis unbekannt",
+        "in_flight": "Wird gespeichert",
+        "reconciling": "Ergebnis wird geprüft",
+        "pending": "Ausstehend",
+        "loadingPending": "Ausstehende Änderungen werden geladen…"
+      }
     },
     "aladminConfigurator": {
       "title": "AladMin Konfigurator",

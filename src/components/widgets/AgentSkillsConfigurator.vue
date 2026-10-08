@@ -1,12 +1,12 @@
 <script setup>
-import { ref, watch, onMounted, computed } from 'vue';
+import { ref, watch, onMounted, computed, nextTick } from 'vue';
 import { useI18n } from "vue-i18n";
 import { useStore } from "vuex";
 import agentSkillsUtils from "@/utils/AgentSkills";
-import { GoogleAuthFlow } from '@/utils/OAuth';
+import { GoogleAuthFlow, assertScopesAllowed } from '@/utils/OAuth';
 import { useToast } from "primevue/usetoast";
 import SkillCard from '@/components/widgets/skills/SkillCard.vue';
-import { LABEL_FIELD_KEY, fieldsOf } from '@/components/widgets/skills/manifestFields';
+import { LABEL_FIELD_KEY, fieldsOf, oauthFields, valueOf } from '@/components/widgets/skills/manifestFields';
 import { useSkillGrants } from '@/components/widgets/skills/useSkillGrants';
 
 const { t, locale } = useI18n();
@@ -16,7 +16,8 @@ const store = useStore();
 const props = defineProps({
   modelValue: { type: [String, Object], default: '{}' },
   businessId: { type: String, default: '' },
-  disabled: { type: Boolean, default: false }
+  disabled: { type: Boolean, default: false },
+  focusTarget: { type: Object, default: null }
 });
 const emit = defineEmits(['update:modelValue', 'request-save']);
 
@@ -71,6 +72,8 @@ onMounted(async () => {
     availableSkills.value = await agentSkillsUtils.getAvailableSkills(user, props.businessId);
   }
   loading.value = false;
+  await checkChatOAuthStatus();
+  await focusSavedTarget();
 });
 
 const phaseInfo = computed(() => ({
@@ -333,6 +336,7 @@ async function handleOAuthDisconnect(field, phase, entryIdx, entry) {
 }
 
 async function handleOAuthConnect(field, phase, entryIdx, entry) {
+  if (isChatTarget(entry, phase)) return handleChatOAuthConnect(field, entry, phase);
   try {
     // THIS INSTANCE'S OWN ID, never the name currently in the field.
     //
@@ -434,6 +438,123 @@ watch([openEntry, availableSkills], () => {
   }
 }, { deep: true });
 
+function isChatTarget(entry, phase) {
+  return props.focusTarget?.phase === phase && props.focusTarget?.instanceId === entry.instanceId;
+}
+
+function getOauthFields(entry) { return oauthFields(getSkillObj(entry.skill)); }
+
+const oauthStatus = ref({});
+const savedConfig = ref(null);
+const oauthBusy = ref(false);
+
+function oauthKey(field, entry, phase) {
+  return JSON.stringify([phase, entry.instanceId, field.key]);
+}
+
+function supportedOAuth(field) {
+  if (field.provider !== 'google_calendar' || field.key !== 'SKILL_CALENDAR_AUTH') return false;
+  try {
+    return assertScopesAllowed(field.scopes || [], 'skill-calendar').split(' ').includes('https://www.googleapis.com/auth/calendar');
+  } catch { return false; }
+}
+
+function savedEntry(entry, phase) {
+  return savedConfig.value?.[phase]?.find(item => item.instanceId === entry.instanceId && item.skill === entry.skill);
+}
+
+function oauthGrant(field, entry, phase) {
+  const saved = savedEntry(entry, phase);
+  if (!saved) return null;
+  const value = saved.params?.[field.key];
+  return value === undefined ? '' : typeof value === 'string' ? value : null;
+}
+
+function oauthAvailability(field, entry, phase) {
+  if (!supportedOAuth(field)) return 'unsupported';
+  return oauthStatus.value[oauthKey(field, entry, phase)] || 'unknown';
+}
+
+async function checkChatOAuthStatus() {
+  const user = store.state.user;
+  if (!user || oauthBusy.value) return;
+  oauthBusy.value = true;
+  oauthStatus.value = {};
+  try {
+    savedConfig.value = await agentSkillsUtils.getSavedConfiguration(user, props.businessId);
+    for (const phase of PHASES) {
+      for (const entry of config.value[phase] || []) {
+        if (!isChatTarget(entry, phase)) continue;
+        for (const field of getOauthFields(entry, phase)) {
+          if (!supportedOAuth(field) || !savedEntry(entry, phase) || typeof oauthGrant(field, entry, phase) !== 'string') continue;
+          try {
+            oauthStatus.value[oauthKey(field, entry, phase)] = await agentSkillsUtils.getCalendarAvailability(
+              user, props.businessId, oauthGrant(field, entry, phase));
+          } catch {
+            oauthStatus.value[oauthKey(field, entry, phase)] = 'unknown';
+          }
+        }
+      }
+    }
+  } catch {
+    savedConfig.value = null;
+  } finally {
+    oauthBusy.value = false;
+  }
+}
+
+async function handleChatOAuthConnect(field, entry, phase) {
+  if (props.disabled || oauthBusy.value || !supportedOAuth(field)) return;
+  oauthBusy.value = true;
+  try {
+    const user = store.state.user;
+    if (!user || !entry.instanceId) throw new Error('saved_instance_required');
+    const scopes = assertScopesAllowed(field.scopes || [], 'skill-calendar');
+    savedConfig.value = await agentSkillsUtils.getSavedConfiguration(user, props.businessId);
+    const saved = savedEntry(entry, phase);
+    if (!saved || (valueOf(entry, field.key) || '') !== (saved.params?.[field.key] || '')) {
+      throw new Error('saved_grant_required');
+    }
+    const grantName = oauthGrant(field, entry, phase);
+    if (typeof grantName !== 'string') throw new Error('invalid_saved_grant');
+    const returnQuery = new URLSearchParams({ id: props.businessId, skillPhase: phase, skillInstance: entry.instanceId });
+    const { state, codeChallenge } = await GoogleAuthFlow.begin({
+      provider: field.provider, businessId: props.businessId, grantName, phase,
+      instanceId: entry.instanceId, ownerUid: user.uid,
+      returnUrl: '/businessconfiguration?' + returnQuery, scopes: scopes.split(' ')
+    });
+    const authUrl = new URL('https://accounts.google.com/o/oauth2/v2/auth');
+    authUrl.searchParams.set('client_id', process.env.VUE_APP_GOOGLE_CLIENT_ID);
+    authUrl.searchParams.set('redirect_uri', process.env.VUE_APP_GOOGLE_REDIRECT_URI);
+    authUrl.searchParams.set('response_type', 'code');
+    authUrl.searchParams.set('scope', scopes);
+    authUrl.searchParams.set('access_type', 'offline');
+    authUrl.searchParams.set('prompt', 'consent');
+    authUrl.searchParams.set('state', state);
+    authUrl.searchParams.set('code_challenge', codeChallenge);
+    authUrl.searchParams.set('code_challenge_method', 'S256');
+    window.location.href = authUrl.toString();
+  } catch {
+    toast.add({ severity: 'error', summary: t('widgets.agentSkills.handoff.unavailable'),
+      detail: t('widgets.agentSkills.handoff.saveFirst'), life: 8000 });
+  } finally {
+    oauthBusy.value = false;
+  }
+}
+
+async function focusSavedTarget() {
+  const target = props.focusTarget;
+  if (!target || !PHASES.includes(target.phase)) return;
+  openPhase.value = target.phase;
+  openEntry.value[target.phase] = target.instanceId;
+  await nextTick();
+  const cards = document.querySelectorAll('.agent-skills-configurator [data-skill-instance]');
+  [...cards].find(card => card.dataset.skillInstance === target.instanceId && card.dataset.skillPhase === target.phase)
+    ?.scrollIntoView({ block: 'center' });
+}
+
+watch(() => props.focusTarget, async () => { await checkChatOAuthStatus(); await focusSavedTarget(); }, { deep: true });
+
 </script>
 
 <template>
@@ -492,6 +613,9 @@ watch([openEntry, availableSkills], () => {
             <SkillCard v-for="(entry, idx) in getPhaseEntries(phase)"
                        :key="entryKeyOf(entry, idx)"
                        :entry="entry"
+                       :data-skill-instance="entry.instanceId" :data-skill-phase="phase"
+                       :class="{ 'entry-focused': isChatTarget(entry, phase) }"
+                       :chat-authorization="isChatTarget(entry, phase) ? { availability: field => oauthAvailability(field, entry, phase), grant: field => oauthGrant(field, entry, phase), supported: supportedOAuth, busy: oauthBusy, refresh: checkChatOAuthStatus } : null"
                        :skill="getSkillObj(entry.skill)"
                        :phase="phase"
                        :open="isEntryOpen(phase, entry, idx)"
@@ -632,4 +756,5 @@ watch([openEntry, availableSkills], () => {
   width: 100%;
 }
 
+.entry-focused { outline: 2px solid var(--primary-color); }
 </style>

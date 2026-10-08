@@ -192,7 +192,7 @@ export default {
     ).then((response) => {
       return response.data;
     }).catch((error) => {
-      console.error("Error retrieving history:", error);
+      console.error("Error retrieving history:", error.response?.status || "network");
       throw error;
     });
   },
@@ -342,7 +342,7 @@ export default {
    * @param {Array} changes - Array of {variable_name, new_value}
    * @returns {Promise<Object>} {success, applied, errors}
    */
-  applyChanges: function(user, businessId, changes, sessionId = null) {
+  applyChanges: function(user, businessId, changes, sessionId = null, skillOperationIds = []) {
     const headers = {
       "Content-type": "application/json; charset=UTF-8",
       "Authorization": "Bearer " + user.accessToken
@@ -350,6 +350,7 @@ export default {
 
     const body = { business_id: businessId, changes: changes };
     if (sessionId) body.session_id = sessionId;
+    if (skillOperationIds.length) body.skill_operation_ids = skillOperationIds;
 
     return axios.post(
       process.env.VUE_APP_ZYLCH_URL + "/api/mrcall/apply-changes",
@@ -358,8 +359,23 @@ export default {
     ).then((response) => {
       return response.data;
     }).catch((error) => {
-      console.error("Error applying changes:", error);
+      console.error("Error applying changes:", error.response?.status || "network");
       throw error;
     });
+  },
+
+  discardPending: function(user, businessId, sessionId, changes, skillOperationIds) {
+    return axios.post(process.env.VUE_APP_ZYLCH_URL + "/api/mrcall/pending/discard", {
+      business_id: businessId, session_id: sessionId, changes,
+      skill_operation_ids: skillOperationIds,
+    }, { headers: { Authorization: "Bearer " + user.accessToken } }).then(response => response.data);
+  },
+
+  reconcilePending: function(user, businessId, sessionId, operationId, resolution = null, instanceId = null) {
+    const body = { business_id: businessId, session_id: sessionId, operation_id: operationId };
+    if (resolution) body.resolution = resolution;
+    if (instanceId) body.instance_id = instanceId;
+    return axios.post(process.env.VUE_APP_ZYLCH_URL + "/api/mrcall/pending/reconcile", body,
+      { headers: { Authorization: "Bearer " + user.accessToken } }).then(response => response.data);
   }
 };

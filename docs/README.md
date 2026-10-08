@@ -1,12 +1,16 @@
 # MrCall Dashboard — Documentation Index
 
+<!-- doc-scope:start -->
+Scope: Routes repository-wide dashboard architecture, development rules, integration guides, and work traces; application inventory belongs to the root AGENTS.md.
+<!-- doc-scope:end -->
+
 Entry point for this repository's documentation. Start here.
 
 ## Architecture and development
 
 | File | Contents |
 |------|----------|
-| [ARCHITECTURE.md](ARCHITECTURE.md) | Vue component map, Vuex store, routing (76+ routes) |
+| [ARCHITECTURE.md](ARCHITECTURE.md) | Vue component map, Vuex store, routing and data flow |
 | [system-rules.md](system-rules.md) | Tech stack, coding standards |
 | [execution-plans/](execution-plans/) | One file per workstream; lifecycle lives in YAML frontmatter, never in prose |
 
@@ -14,18 +18,17 @@ Entry point for this repository's documentation. Start here.
 
 | File | Contents |
 |------|----------|
+| [development.md](development.md) | Commands, browser tests, deployment and related repositories |
+| [active-context-archive.md](active-context-archive.md) | Historical snapshots, preserved verbatim; outside startup context |
+| [active-context.md](active-context.md) | Current state, unresolved constraints and next actions |
+| [briefs/](briefs/) | Workstream objectives and design decisions |
+| [harness-backlog.md](harness-backlog.md) | Documentation maintenance decisions |
 
 ## Integrations
 
 | File | Contents |
 |------|----------|
-| [integration/zylch-integration.md](integration/zylch-integration.md) | mrcall-agent integration: chat API, apply-changes, Save button, troubleshooting |
-
-## Reviews
-
-| File | Contents |
-|------|----------|
-| [reviews/](reviews/) | One-off code reviews, dated |
+| [integration/zylch-integration.md](integration/zylch-integration.md) | mrcall-agent integration: chat, installed-skill preview/Save/recovery and supported OAuth handoff |
 
 ## Quick context
 

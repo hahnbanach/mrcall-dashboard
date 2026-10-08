@@ -135,7 +135,20 @@
       "argumentsTitle": "Hva assistenten samler inn under samtalen",
       "argumentRequired": "pakrevd",
       "argumentOptional": "valgfritt",
-      "argumentsTemplateHint": "Hvert navn ovenfor kan brukes som %%navn%% i tekstfeltene pa dette kortet."
+      "argumentsTemplateHint": "Hvert navn ovenfor kan brukes som %%navn%% i tekstfeltene pa dette kortet.",
+      "handoff": {
+        "manage": "Administrer tilkobling: {instance}",
+        "unavailable": "Den lagrede skillens tilkobling kan ikke åpnes her.",
+        "saveFirst": "Lagre denne instansen og dens nøyaktige autorisasjonsreferanse før tilkobling.",
+        "refresh": "Oppdater tilkoblingsstatus",
+        "named": "Lagret autorisasjonsreferanse: {grant}",
+        "shared": "Delt autorisasjon (tom referanse).",
+        "available": "Kalendertilgang er tilgjengelig. En delt eller alternativ autorisasjon kan gi den.",
+        "unknown": "Kalendertilgang er ukjent. En tom eller mislykket kontroll beviser ikke frakobling.",
+        "unsupported": "Denne leverandøren eller tillatelsene har ingen støttet autorisasjonsflyt her.",
+        "connecting": "Kobler til den lagrede tjenesten…",
+        "callbackFailed": "Autorisasjonen kunne ikke fullføres. Gå tilbake til konfigurasjonen og start på nytt."
+      }
     }
   },
   "components": {
@@ -1518,7 +1531,8 @@
         "subtitleText": "Angi om du setter opp denne enheten eller en annen enhet",
         "thisPhone": "Denne enheten",
         "otherPhone": "Annen enhet"
-      }
+      },
+      "searchbusinessinfo": {}
     },
     "sign": {
       "magiclink": {
@@ -1664,7 +1678,42 @@
         "Memorerer reglene for samtaleoverføring... bip bop.",
         "Kjører de siste kvalitetssjekkene på alle funksjoner...",
         "Polerer konfigurasjonen til den skinner..."
-      ]
+      ],
+      "pending": {
+        "save": "Lagre endringer ({count})",
+        "discard": "Forkast",
+        "before": "Før",
+        "after": "Etter",
+        "draft": "Utkast til ny instans",
+        "create": "Legg til instans",
+        "replace": "Endre instans",
+        "remove": "Fjern instans",
+        "prefetch": "Før samtalen",
+        "during": "Under samtalen",
+        "final": "Etter samtalen",
+        "read": "Kontroller resultat",
+        "accept": "Bekreft instans {instance}",
+        "close": "Lukk uten nytt forsøk",
+        "refresh": "Oppdater ventende endringer",
+        "refreshed": "Ventende endringer oppdatert.",
+        "completed": "Forespørsel fullført. Se resultatene nedenfor.",
+        "incomplete": "Noen endringer venter. Se resultatene nedenfor.",
+        "responseLost": "Svaret gikk tapt. Endringer er lastet på nytt der det var mulig. Kontroller resultatet før et nytt forsøk.",
+        "recoveryFailed": "Endringer kunne ikke lastes på nytt. Oppdater før du fortsetter.",
+        "connectionCheck": "Tilkoblingen kontrolleres når en aktivering lagres.",
+        "proposalRefused": "Forslaget ble avvist. Ingen endring satt i kø.",
+        "proposalReady": "Endring foreslått. Se gjennom og lagre for å bruke.",
+        "wizardWarning": "Skillforslag blir i denne veiviserøkten og er ikke lagret. Åpne Konfigurer via chat for et nytt forslag; navigasjon overfører det ikke.",
+        "saved": "Lagret",
+        "closed": "Lukket uten nytt forsøk",
+        "conflict": "Konfigurasjonskonflikt",
+        "refused": "Avvist",
+        "unconfirmed": "Ukjent resultat",
+        "in_flight": "Lagrer",
+        "reconciling": "Kontrollerer resultat",
+        "pending": "Venter",
+        "loadingPending": "Laster ventende endringer…"
+      }
     },
     "aladminConfigurator": {
       "title": "AladMin Configurator",

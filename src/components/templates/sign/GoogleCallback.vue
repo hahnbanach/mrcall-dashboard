@@ -6,7 +6,7 @@
         @select="handleCalendarSelected"
       />
     </div>
-    <p v-else-if="isSkillFlow">{{ skillStatus || 'Connecting service...' }}</p>
+    <p v-else-if="isSkillFlow">{{ skillStatus || $t('widgets.agentSkills.handoff.connecting') }}</p>
     <p v-else>{{ isCalendarFlow ? 'Connecting calendar...' : 'Processing sign in...' }}</p>
   </div>
 </template>
@@ -14,9 +14,10 @@
 <script>
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { getAuth, signInWithCredential, GoogleAuthProvider, getAdditionalUserInfo } from 'firebase/auth'
 import axios from 'axios'
-import { OAuthHelper, GoogleAuthFlow } from '@/utils/OAuth'
+import { OAuthHelper, GoogleAuthFlow, assertScopesAllowed } from '@/utils/OAuth'
 import store from '@/store'
 import businessUtils from '@/utils/Business'
 import CalendarSelector from '@/components/CalendarSelector.vue'
@@ -30,6 +31,7 @@ export default {
 
   setup() {
     const router = useRouter()
+    const { t } = useI18n()
     const auth = getAuth()
     const isCalendarFlow = ref(false)
     const showCalendarSelector = ref(false)
@@ -40,12 +42,12 @@ export default {
 
     // Detect if this callback is from a skill OAuth flow (AgentSkillsConfigurator)
     const oauthProvider = localStorage.getItem('oauthProvider')
-    // Which business asked for this authorisation, and which skill instance it belongs to. Absent
-    // means the authorisation the owner gave before these were scoped, which every skill of every
-    // business of that owner falls back to.
     const oauthBusinessId = localStorage.getItem('oauthBusinessId') || ''
     const oauthGrantName = localStorage.getItem('oauthGrantName') || ''
-    const isSkillFlow = ref(!!oauthProvider)
+    const boundSkillFlow = !!localStorage.getItem('oauthSkillContext') ||
+      String(new URLSearchParams(window.location.search).get('state') || '').startsWith('skill.')
+    const isSkillFlow = ref(!!oauthProvider || !!localStorage.getItem('oauthSkillContext') ||
+      String(new URLSearchParams(window.location.search).get('state') || '').startsWith('skill.'))
     const skillStatus = ref('')
 
     const handleCallback = async () => {
@@ -53,16 +55,21 @@ export default {
         const urlParams = new URLSearchParams(window.location.search)
         const code = urlParams.get('code')
 
-        if (!code) {
-          throw new Error('Missing authorization code')
-        }
-
         // Checks the returned state against the one stored when the flow started,
         // and hands back the verifier. Throws on a mismatch, which is what a
         // callback forged by someone else looks like: without it an attacker can
         // plant their own code and the victim ends up signed into the attacker's
         // Google account. Consumes both values, they are single use.
-        const codeVerifier = GoogleAuthFlow.consume(urlParams.get('state'))
+        const { codeVerifier, context } = await GoogleAuthFlow.consumeWithContext(urlParams.get('state'))
+        if (!code) throw new Error('Missing authorization code')
+        if (boundSkillFlow && !context) throw new Error('missing_skill_oauth_context')
+        let skillUser = null
+        if (context) {
+          skillUser = auth.currentUser || await new Promise(resolve => {
+            const unsubscribe = auth.onAuthStateChanged(restoredUser => { unsubscribe(); resolve(restoredUser) })
+          })
+          if (!skillUser || skillUser.uid !== context.ownerUid) throw new Error('skill_oauth_owner_changed')
+        }
 
         // Exchanged by the backend, which holds the client secret. Doing it here
         // meant shipping that secret in the bundle, where anyone could read it.
@@ -71,56 +78,40 @@ export default {
         const { access_token, refresh_token, expires_in, scope, id_token } = tokenResponse
         const scopes = scope.split(' ')
 
-        // Check if this is a skill OAuth flow (Sheets, Docs, Drive, etc.)
+        if (context) {
+          skillStatus.value = t('widgets.agentSkills.handoff.connecting')
+          const grantedScopes = assertScopesAllowed(scopes, 'skill-callback').split(' ')
+          if (!context.scopes.every(item => grantedScopes.includes(item))) throw new Error('skill_oauth_scope_missing')
+          const firebaseToken = await skillUser.getIdToken()
+          if (auth.currentUser?.uid !== context.ownerUid) throw new Error('skill_oauth_owner_changed')
+          const connectUrl = process.env.VUE_APP_STARCHAT_URL +
+            '/mrcall/v1/mrcall0/oauth/providers/' + encodeURIComponent(context.provider) + '/connect'
+          await axios.post(connectUrl, {
+            accessToken: access_token, refreshToken: refresh_token,
+            expiresAt: Date.now() + (expires_in * 1000), scopes: grantedScopes,
+            businessId: context.businessId, grantName: context.grantName,
+            providerAccountId: accountEmailFrom(id_token)
+          }, { headers: { 'Content-type': 'application/json; charset=UTF-8', auth: firebaseToken } })
+          localStorage.removeItem('oauthProvider')
+          localStorage.removeItem('oauthReturnUrl')
+          localStorage.removeItem('oauthFlow')
+          await router.replace(context.returnUrl)
+          return
+        }
+
         if (isSkillFlow.value && oauthProvider) {
-          skillStatus.value = 'Storing credentials...'
-
-          // Wait for Firebase to restore auth state
-          let user = auth.currentUser
-          if (!user) {
-            user = await new Promise((resolve) => {
-              const unsubscribe = auth.onAuthStateChanged((restoredUser) => {
-                unsubscribe()
-                resolve(restoredUser)
-              })
-            })
-          }
-          if (!user) {
-            throw new Error('No authenticated user found. Please sign in first.')
-          }
-
-          // Store tokens in backend via /oauth/providers/{provider}/connect
-          const headers = {
-            'Content-type': 'application/json; charset=UTF-8',
-            'auth': await user.getIdToken()
-          }
+          const user = auth.currentUser || await new Promise(resolve => {
+            const unsubscribe = auth.onAuthStateChanged(restored => { unsubscribe(); resolve(restored) })
+          })
+          if (!user) throw new Error('No authenticated user found')
           const connectUrl = process.env.VUE_APP_STARCHAT_URL +
             '/mrcall/v1/mrcall0/oauth/providers/' + encodeURIComponent(oauthProvider) + '/connect'
-
           await axios.post(connectUrl, {
-            accessToken: access_token,
-            refreshToken: refresh_token,
-            expiresAt: Date.now() + (expires_in * 1000),
-            scopes: scopes,
-            businessId: oauthBusinessId,
-            grantName: oauthGrantName,
-            // WHICH ACCOUNT this grant is on. Stored as `provider_account_id`, and it is not only a
-            // label: when an instance names no calendar, StarChat resolves the account's own
-            // primary calendar from it, and a grant without it falls through to whatever calendar
-            // the BUSINESS books on — which may belong to a different Google account than the one
-            // just authorised. Every skill grant written before this line has it null.
+            accessToken: access_token, refreshToken: refresh_token,
+            expiresAt: Date.now() + (expires_in * 1000), scopes,
+            businessId: oauthBusinessId, grantName: oauthGrantName,
             providerAccountId: accountEmailFrom(id_token)
-          }, { headers })
-
-          // NO CALENDAR PICKER HERE, deliberately, and the reason is one line above: the connect
-          // now carries `providerAccountId`. An instance that names no calendar resolves the
-          // authorised account's own, because the account's address IS its primary calendar's id
-          // (GCCalendarAtomService, `fromOAuthTokens(tokens, provider.providerAccountId)`). Asking
-          // again here would be a second place to answer a question that already has one — the
-          // calendar field on the card being returned to, which is where the answer lives
-          // afterwards anyway — and carrying that answer back across a redirect is what made
-          // authorising one card write onto another. The account-level calendar connect still
-          // shows the picker: there the calendar IS the connection.
+          }, { headers: { 'Content-type': 'application/json; charset=UTF-8', auth: await user.getIdToken() } })
           returnToConfiguration()
           return
         }
@@ -201,9 +192,14 @@ export default {
         }
 
       } catch (error) {
-        console.error('Error processing callback:', error)
+        console.error('Error processing callback:', error.response?.status || 'oauth_callback_failed')
         if (isSkillFlow.value) {
-          returnToConfiguration()
+          if (!boundSkillFlow) { returnToConfiguration(); return }
+          localStorage.removeItem('oauthProvider')
+          localStorage.removeItem('oauthReturnUrl')
+          localStorage.removeItem('oauthSkillContext')
+          localStorage.removeItem('oauthFlow')
+          skillStatus.value = t('widgets.agentSkills.handoff.callbackFailed')
         } else {
           router.replace(isCalendarFlow.value ? '/account' : '/signin')
         }

@@ -135,7 +135,20 @@
       "argumentsTitle": "Lo que el asistente recoge durante la llamada",
       "argumentRequired": "obligatorio",
       "argumentOptional": "opcional",
-      "argumentsTemplateHint": "Cada nombre de arriba se puede usar como %%nombre%% en los campos de texto de esta tarjeta y en sus mensajes de éxito y de error."
+      "argumentsTemplateHint": "Cada nombre de arriba se puede usar como %%nombre%% en los campos de texto de esta tarjeta y en sus mensajes de éxito y de error.",
+      "handoff": {
+        "manage": "Gestionar conexión: {instance}",
+        "unavailable": "No se puede abrir aquí la conexión de la skill guardada.",
+        "saveFirst": "Guarda esta instancia y su referencia exacta de autorización antes de conectarla.",
+        "refresh": "Actualizar estado de conexión",
+        "named": "Referencia de autorización guardada: {grant}",
+        "shared": "Autorización compartida (referencia vacía).",
+        "available": "El acceso al calendario está disponible. Puede proceder de una autorización compartida o alternativa.",
+        "unknown": "Se desconoce el acceso al calendario. Una comprobación vacía o fallida no demuestra desconexión.",
+        "unsupported": "Este proveedor o sus permisos no tienen aquí un flujo de autorización compatible.",
+        "connecting": "Conectando el servicio guardado…",
+        "callbackFailed": "No se completó la autorización. Vuelve a la configuración y empieza de nuevo."
+      }
     }
   },
   "components": {
@@ -1529,7 +1542,8 @@
       "assistantcreatedfunfact": {
         "funFactTitle": "Del frigorífico al teléfono",
         "funFactText": "Antes de que el buzón de voz fuera un archivo digital, era una persona con una libreta. En los años 30, el primer 'contestador automático' era un mueble del tamaño de un frigorífico. Hoy MrCall es tu operador personal, sin necesidad de frigoríficos ni silbidos."
-      }
+      },
+      "searchbusinessinfo": {}
     },
     "sign": {
       "magiclink": {
@@ -1665,7 +1679,42 @@
       "quickAction6Label": "Añadir conocimiento",
       "quickAction6Command": "Si el usuario quiere que le devuelvan la llamada pero no ha dicho el motivo, el asistente siempre debe preguntar la razón, y luego decir que enviará la solicitud a un operador",
       "classicConfigurator": "Configurador clásico",
-      "loadingMessage": "Conectando con tu asistente..."
+      "loadingMessage": "Conectando con tu asistente...",
+      "pending": {
+        "save": "Guardar cambios ({count})",
+        "discard": "Descartar",
+        "before": "Antes",
+        "after": "Después",
+        "draft": "Borrador de nueva instancia",
+        "create": "Añadir instancia",
+        "replace": "Modificar instancia",
+        "remove": "Eliminar instancia",
+        "prefetch": "Antes de la llamada",
+        "during": "Durante la llamada",
+        "final": "Después de la llamada",
+        "read": "Comprobar resultado",
+        "accept": "Confirmar instancia {instance}",
+        "close": "Cerrar sin reintentar",
+        "refresh": "Actualizar cambios pendientes",
+        "refreshed": "Cambios pendientes actualizados.",
+        "completed": "Solicitud completada. Revisa los resultados abajo.",
+        "incomplete": "Quedan cambios pendientes. Revisa los resultados abajo.",
+        "responseLost": "Se perdió la respuesta. Se recargaron los cambios cuando fue posible. Comprueba el resultado antes de reintentar.",
+        "recoveryFailed": "No se pudieron recargar los cambios. Actualiza antes de continuar.",
+        "connectionCheck": "La conexión se comprobará al guardar una activación.",
+        "proposalRefused": "Propuesta rechazada. No se añadió ningún cambio.",
+        "proposalReady": "Cambio propuesto. Revisa y guarda para aplicarlo.",
+        "wizardWarning": "Las propuestas de skills siguen en esta sesión del asistente y no se guardaron. Abre Configurar por chat para proponerlas de nuevo; navegar no las transfiere.",
+        "saved": "Guardado",
+        "closed": "Cerrado sin reintentar",
+        "conflict": "Conflicto de configuración",
+        "refused": "Rechazado",
+        "unconfirmed": "Resultado desconocido",
+        "in_flight": "Guardando",
+        "reconciling": "Comprobando resultado",
+        "pending": "Pendiente",
+        "loadingPending": "Cargando cambios pendientes…"
+      }
     },
     "activation": {
       "titleText": "Activa tu asistente",

@@ -36,6 +36,7 @@
       <ConfigureAIPanel
           v-if="selectedMenupage?.collection.id === '__CONFIGURE_AI__' && businessId"
           :business-id="businessId"
+          @open-skill="openSkillTarget"
       />
       <RetentionSettings
           v-if="selectedMenupage?.collection.id === '__DATA_RETENTION__' && businessId && user"
@@ -58,6 +59,7 @@
                 <AgentSkillsConfigurator
                     v-model="skillsConfig"
                     :businessId="business.businessId || ''"
+                    :focus-target="skillFocusTarget"
                     :disabled="businessVariablesUtils.checkIfDisabledByParentsDecorator(business, variable, isAdmin)"
                     @request-save="done => saveBusiness().then(done)"
                 />
@@ -456,7 +458,7 @@
 
 <script>
 import BusinessFrame from "@/components/templates/business/BusinessFrame";
-import {computed, ref} from "vue";
+import {computed, ref, nextTick} from "vue";
 import router from "@/router";
 import {useStore} from "vuex";
 import {onAuthStateChanged} from "firebase/auth";
@@ -602,11 +604,43 @@ export default {
       businessPhoneNumberValid,
       isOnboarding,
       selectedMenupage,
+      skillFocusTarget: null,
       message,
       countryCodesMap,
     }
   },
   methods: {
+    async openSkillTarget(target) {
+      try {
+        if (!['prefetch', 'during', 'final'].includes(target.phase) || !target.instanceId) throw new Error('invalid_target')
+        const business = await businessUtils.getBusiness(this.store, this.user, this.businessId)
+        const saved = await this.agentSkillsUtils.getSavedConfiguration(this.user, this.businessId)
+        const entry = saved[target.phase].find(item => item.instanceId === target.instanceId)
+        if (!entry) throw new Error('missing_saved_instance')
+        const catalogue = await this.agentSkillsUtils.getAvailableSkills(this.user, this.businessId)
+        const skill = this.agentSkillsUtils.findSkill(catalogue, entry.skill)
+        const fields = skill ? this.agentSkillsUtils.getSkillFields(skill) : []
+        const applicableOAuth = fields.some(field => (field.type === 'oauth' || field.widget === 'oauth') &&
+          (!field.phases?.length || field.phases.includes(target.phase)) &&
+          Object.entries(field.visibleWhen || {}).every(([key, expected]) => {
+            const sibling = fields.find(item => item.key === key)
+            return String(entry.params[key] ?? sibling?.default ?? '') === String(expected)
+          }))
+        if (!applicableOAuth) throw new Error('skill_authorization_unavailable')
+        const collection = this.variablesAnnotations.find(item => item.variables.flat().some(variable =>
+          variable.name === this.agentSkillsUtils.phaseVariables.prefetch &&
+          this.businessVariablesUtils.isVariableVisible(variable, this.isAdmin, this.advancedMode) &&
+          this.businessVariablesUtils.shouldShowInput(business, variable)))
+        if (!collection) throw new Error('skill_editor_unavailable')
+        for (const [phase, variable] of Object.entries(this.agentSkillsUtils.phaseVariables)) business.variables[variable] = saved[phase]
+        this.business = business
+        this.skillFocusTarget = { phase: target.phase, instanceId: target.instanceId }
+        await this.switchToMenupage(collection.collection.id)
+        await nextTick()
+      } catch {
+        await this.setMessage('warn', this.t('widgets.agentSkills.handoff.unavailable'))
+      }
+    },
     validatePhone(value) {
       if(value.isValid) {
         const phoneNumber = value.e164
@@ -989,6 +1023,9 @@ export default {
         // The URL decides which section opens. Not a push: this is the first render of the page
         // the person is already on.
         await this.switchToMenupage(this.$route.query?.section, { pushUrl: false })
+        if (this.$route.query.skillPhase && this.$route.query.skillInstance) {
+          await this.openSkillTarget({ phase: this.$route.query.skillPhase, instanceId: this.$route.query.skillInstance })
+        }
         console.debug("VariablesAnnotations: ", this.variablesAnnotations)
       }).catch((error) => {
         this.showProgressBar = false
@@ -1106,13 +1143,37 @@ export default {
 }
 
 .configure-ai-active {
+  height: 100% !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  :deep(#mrcall-configuration-base-content) {
+    min-height: 0 !important;
+    flex: 1 1 0 !important;
+    overflow: hidden !important;
+  }
+  :deep(#mrcall-configuration-central-section) {
+    height: 100% !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+  }
   :deep(#mrcall-configuration-central-section #content) {
+    min-height: 0 !important;
+    flex: 1 1 0 !important;
     max-width: none !important;
     padding: 0 !important;
     overflow: hidden !important;
   }
   :deep(#footer) {
     display: none !important;
+  }
+}
+
+@media screen and (max-width: 840px) {
+  .configure-ai-active :deep(#mrcall-configuration-central-section #content) {
+    overflow-y: auto !important;
+  }
+  .configure-ai-active :deep(.configure-ai-panel) {
+    flex: 0 0 auto;
   }
 }
 

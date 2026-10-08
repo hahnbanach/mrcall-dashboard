@@ -104,6 +104,7 @@
 <script>
 import { ref, reactive, computed, onMounted, nextTick, watch } from 'vue';
 import { useStore } from 'vuex';
+import { useI18n } from 'vue-i18n';
 import Button from 'primevue/button';
 import Tooltip from 'primevue/tooltip';
 import ZylchAPI from '@/utils/Zylch.js';
@@ -134,15 +135,17 @@ export default {
       default: false
     }
   },
-  emits: ['pending-changes'],
+  emits: ['pending-changes', 'processing', 'history-state'],
   setup(props, { emit }) {
     const store = useStore();
+    const { t } = useI18n();
     const user = computed(() => store.state.user);
 
     const messages = ref([]);
     const currentMessage = ref('');
     const isProcessing = ref(false);
     const errorMessage = ref(null);
+    const historyFailed = ref(false);
     const sessionId = ref(null);
     const messagesContainer = ref(null);
     const textareaRef = ref(null);
@@ -163,10 +166,15 @@ export default {
     }, { deep: true });
 
     const loadHistory = async () => {
+      emit('history-state', 'loading');
       try {
         // Use initialSessionId prop to scope chat per business (if provided)
         const sid = props.initialSessionId || null;
         const response = await ZylchAPI.getHistory(user.value, sid);
+        if (response.success === false || !Object.prototype.hasOwnProperty.call(response, 'pending_changes') ||
+            (response.pending_changes !== null && !Array.isArray(response.pending_changes))) {
+          throw new Error('invalid_pending_snapshot');
+        }
         if (response.success && response.messages.length > 0) {
           messages.value = response.messages;
           sessionId.value = response.session_id;
@@ -177,21 +185,28 @@ export default {
         // Rehydrate pending_changes so the Save changes bar survives a
         // tab switch / reload. Server merges per-turn dry-run deltas into
         // mrcall_chat_sessions.pending_changes; ConfigureAIPanel listens.
-        if (response.pending_changes && response.pending_changes.length > 0) {
-          emit('pending-changes', response.pending_changes);
-        }
+        emit('pending-changes', response.pending_changes || []);
+        if (historyFailed.value) errorMessage.value = null;
+        historyFailed.value = false;
+        emit('history-state', 'ready');
+        return true;
       } catch (error) {
-        console.error('Error loading history:', error);
+        console.error('Error loading history:', error.response?.status || 'network');
+        historyFailed.value = true;
+        emit('history-state', 'failed');
         // Don't show error for empty history
         if (error.response?.status !== 404) {
-          errorMessage.value = 'Failed to load conversation history';
+          errorMessage.value = t('views.configureAI.pending.recoveryFailed');
         }
         // Still set sessionId from prop so messages go to the right session
         if (props.initialSessionId) {
           sessionId.value = props.initialSessionId;
         }
+        return false;
       }
     };
+
+    watch(isProcessing, value => emit('processing', value));
 
     const handleKeydown = (e) => {
       // Enter sends, Shift+Enter adds newline
@@ -254,7 +269,7 @@ export default {
     const sendMessage = async (options = {}) => {
       const { silent = false, hideResponse = false } = options;
 
-      if ((!currentMessage.value.trim() && attachments.value.length === 0) || isProcessing.value) {
+      if ((!currentMessage.value.trim() && attachments.value.length === 0) || isProcessing.value || (!silent && props.disabled)) {
         return;
       }
 
@@ -262,7 +277,7 @@ export default {
       const messageAttachments = [...attachments.value];
       currentMessage.value = '';
       attachments.value = [];
-      errorMessage.value = null;
+      if (!silent && !historyFailed.value) errorMessage.value = null;
 
       // Reset textarea height
       if (textareaRef.value) {
@@ -336,13 +351,17 @@ export default {
               },
               onToolResult: (toolUsed, result) => {
                 assistantMessage.progress = '';
+                if (toolUsed === 'configure_skill_instance') {
+                  if (result?.success === false) {
+                    assistantMessage.content += (assistantMessage.content ? '\n\n' : '') + t('views.configureAI.pending.proposalRefused');
+                  }
+                  return;
+                }
                 if (toolUsed && toolUsed.startsWith('configure_')) {
-                  // Dry-run: a configure_* result is a PROPOSED change, applied
-                  // only when the user clicks Save. Never assert "updated" — the
-                  // backend response_text already speaks in pending/Save terms;
-                  // the fallback must too (avoids the "says it saved but didn't" lie).
-                  const responseText = result?.response_text || `${toolUsed.replace('configure_', '').replace('_', ' ')} change ready — click Save to apply`;
-                  assistantMessage.content += (assistantMessage.content ? '\n\n' : '') + '📝 ' + responseText;
+                  const responseText = result?.response_text || t(
+                    result?.success === false ? 'views.configureAI.pending.proposalRefused' : 'views.configureAI.pending.proposalReady'
+                  );
+                  assistantMessage.content += (assistantMessage.content ? '\n\n' : '') + responseText;
                 }
               },
               onMetadata: (metadata) => {
@@ -421,7 +440,7 @@ export default {
       // 1. Protect code blocks first - replace with placeholders
       // Using <<>> instead of __ __ to avoid collision with bold regex
       const codeBlocks = [];
-      let formatted = content.replace(/`([^`]+)`/g, (match, code) => {
+      let formatted = content.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/`([^`]+)`/g, (match, code) => {
         codeBlocks.push(code);
         return `<<CODE_BLOCK_${codeBlocks.length - 1}>>`;
       });
@@ -494,6 +513,7 @@ export default {
       fileInput,
       attachments,
       ACCEPTED_TYPES,
+      loadHistory,
       sendMessage,
       sendSilent,
       handleKeydown,

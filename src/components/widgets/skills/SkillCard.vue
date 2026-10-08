@@ -41,7 +41,8 @@ const props = defineProps({
   /** Whether another instance already carries the same written name. */
   labelClash: { type: Boolean, default: false },
   /** The authorisations, from `useSkillGrants`. */
-  grants: { type: Object, required: true }
+  grants: { type: Object, required: true },
+  chatAuthorization: { type: Object, default: null }
 });
 
 const emit = defineEmits([
@@ -178,6 +179,21 @@ function fieldProps(field) {
 
     <div v-if="open && authFields.length > 0" class="entry-oauth">
       <div v-for="field in authFields" :key="field.key" class="oauth-field">
+        <template v-if="chatAuthorization">
+          <span class="oauth-label">{{ label(field) }}</span>
+          <p class="oauth-availability">{{ t(`widgets.agentSkills.handoff.${chatAuthorization.availability(field)}`) }}</p>
+          <small v-if="chatAuthorization.grant(field) !== null">{{ chatAuthorization.grant(field) === '' ? t('widgets.agentSkills.handoff.shared') : t('widgets.agentSkills.handoff.named', { grant: chatAuthorization.grant(field) }) }}</small>
+          <div class="oauth-actions">
+            <Button :label="t('widgets.agentSkills.oauthConnect')" icon="pi pi-external-link"
+                    outlined size="small" class="skill-oauth-connect"
+                    @click="emit('oauth-connect', field)"
+                    :disabled="disabled || chatAuthorization.busy || !chatAuthorization.supported(field) || chatAuthorization.grant(field) === null || diagnostics.length > 0" />
+            <Button :label="t('widgets.agentSkills.handoff.refresh')" icon="pi pi-refresh"
+                    text size="small" :disabled="chatAuthorization.busy || !chatAuthorization.supported(field)"
+                    @click="chatAuthorization.refresh" />
+          </div>
+        </template>
+        <template v-else>
         <div class="oauth-status">
           <i :class="grants.isOAuthConnected(field, entry) ? 'pi pi-check-circle' : 'pi pi-exclamation-circle'"
              :style="{ color: grants.isOAuthConnected(field, entry) ? '#22c55e' : '#f59e0b' }"></i>
@@ -222,6 +238,7 @@ function fieldProps(field) {
                     class="oauth-reuse-select"
                     @change="emit('use-grant', { field, grantName: $event.value })" />
         </div>
+        </template>
         <small v-if="field.key === CALENDAR_FIELD_KEY" class="config-hint">
           {{ value(field.key)
                ? t('widgets.agentSkills.calendarChosen')
@@ -462,4 +479,5 @@ function fieldProps(field) {
   color: #d97706;
   font-style: italic;
 }
+.oauth-availability { margin: 0; font-size: .85rem; overflow-wrap: anywhere; }
 </style>

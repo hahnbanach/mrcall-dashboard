@@ -135,7 +135,20 @@
       "argumentsTitle": "Wat de assistent tijdens het gesprek verzamelt",
       "argumentRequired": "verplicht",
       "argumentOptional": "optioneel",
-      "argumentsTemplateHint": "Elke naam hierboven kan als %%naam%% in de tekstvelden van deze kaart worden gebruikt."
+      "argumentsTemplateHint": "Elke naam hierboven kan als %%naam%% in de tekstvelden van deze kaart worden gebruikt.",
+      "handoff": {
+        "manage": "Verbinding beheren: {instance}",
+        "unavailable": "De verbinding van de opgeslagen skill kan hier niet worden geopend.",
+        "saveFirst": "Sla deze instantie en de exacte autorisatiereferentie op voordat u verbinding maakt.",
+        "refresh": "Verbindingsstatus vernieuwen",
+        "named": "Opgeslagen autorisatiereferentie: {grant}",
+        "shared": "Gedeelde autorisatie (lege referentie).",
+        "available": "Kalendertoegang is beschikbaar. Een gedeelde of alternatieve autorisatie kan deze leveren.",
+        "unknown": "Kalendertoegang is onbekend. Een lege of mislukte controle bewijst geen verbroken verbinding.",
+        "unsupported": "Deze provider of zijn machtigingen hebben hier geen ondersteunde autorisatiestroom.",
+        "connecting": "Opgeslagen dienst verbinden…",
+        "callbackFailed": "Autorisatie mislukt. Ga terug naar de configuratie en begin opnieuw."
+      }
     }
   },
   "components": {
@@ -1518,7 +1531,8 @@
         "subtitleText": "Geef aan of u dit apparaat of een ander apparaat instelt",
         "thisPhone": "Dit apparaat",
         "otherPhone": "Ander apparaat"
-      }
+      },
+      "searchbusinessinfo": {}
     },
     "sign": {
       "magiclink": {
@@ -1664,7 +1678,42 @@
       "quickAction5Label": "De kennis van de assistent",
       "quickAction5Command": "Over welke onderwerpen kan de assistent informatie geven?",
       "quickAction6Label": "Kennis toevoegen",
-      "quickAction6Command": "Als de beller teruggebeld wil worden maar niet heeft gezegd waarom, moet de assistent altijd naar de reden vragen en vervolgens zeggen dat het verzoek wordt doorgestuurd naar een medewerker"
+      "quickAction6Command": "Als de beller teruggebeld wil worden maar niet heeft gezegd waarom, moet de assistent altijd naar de reden vragen en vervolgens zeggen dat het verzoek wordt doorgestuurd naar een medewerker",
+      "pending": {
+        "save": "Wijzigingen opslaan ({count})",
+        "discard": "Verwerpen",
+        "before": "Voor",
+        "after": "Na",
+        "draft": "Concept voor nieuwe instantie",
+        "create": "Instantie toevoegen",
+        "replace": "Instantie wijzigen",
+        "remove": "Instantie verwijderen",
+        "prefetch": "Voor het gesprek",
+        "during": "Tijdens het gesprek",
+        "final": "Na het gesprek",
+        "read": "Resultaat controleren",
+        "accept": "Instantie {instance} bevestigen",
+        "close": "Sluiten zonder opnieuw te proberen",
+        "refresh": "Openstaande wijzigingen vernieuwen",
+        "refreshed": "Openstaande wijzigingen vernieuwd.",
+        "completed": "Verzoek voltooid. Bekijk de resultaten hieronder.",
+        "incomplete": "Er staan nog wijzigingen open. Bekijk de resultaten hieronder.",
+        "responseLost": "Het antwoord is verloren gegaan. Wijzigingen zijn waar mogelijk opnieuw geladen. Controleer het resultaat voordat u opnieuw probeert.",
+        "recoveryFailed": "Wijzigingen konden niet worden geladen. Vernieuw voordat u verdergaat.",
+        "connectionCheck": "De verbinding wordt gecontroleerd bij het opslaan van een activering.",
+        "proposalRefused": "Voorstel geweigerd. Geen wijziging klaargezet.",
+        "proposalReady": "Wijziging voorgesteld. Controleer en sla op om toe te passen.",
+        "wizardWarning": "Skillvoorstellen blijven in deze wizardsessie en zijn niet opgeslagen. Open Configureren via chat voor een nieuw voorstel; navigatie draagt het niet over.",
+        "saved": "Opgeslagen",
+        "closed": "Gesloten zonder nieuwe poging",
+        "conflict": "Configuratieconflict",
+        "refused": "Geweigerd",
+        "unconfirmed": "Resultaat onbekend",
+        "in_flight": "Bezig met opslaan",
+        "reconciling": "Resultaat wordt gecontroleerd",
+        "pending": "Openstaand",
+        "loadingPending": "Openstaande wijzigingen laden…"
+      }
     },
     "aladminConfigurator": {
       "title": "AladMin Configurator",

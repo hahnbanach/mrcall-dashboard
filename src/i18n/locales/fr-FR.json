@@ -136,7 +136,20 @@
       "argumentsTitle": "Ce que l'assistant recueille pendant l'appel",
       "argumentRequired": "obligatoire",
       "argumentOptional": "facultatif",
-      "argumentsTemplateHint": "Chaque nom ci-dessus peut être utilisé comme %%nom%% dans les champs de texte de cette carte et dans ses messages de succès et d'erreur."
+      "argumentsTemplateHint": "Chaque nom ci-dessus peut être utilisé comme %%nom%% dans les champs de texte de cette carte et dans ses messages de succès et d'erreur.",
+      "handoff": {
+        "manage": "Gérer la connexion : {instance}",
+        "unavailable": "La connexion de la skill enregistrée ne peut pas être ouverte ici.",
+        "saveFirst": "Enregistrez cette instance et sa référence exacte d’autorisation avant de la connecter.",
+        "refresh": "Actualiser la connexion",
+        "named": "Référence d’autorisation enregistrée : {grant}",
+        "shared": "Autorisation partagée (référence vide).",
+        "available": "L’accès au calendrier est disponible. Une autorisation partagée ou de secours peut le fournir.",
+        "unknown": "L’accès au calendrier est inconnu. Une vérification vide ou échouée ne prouve pas une déconnexion.",
+        "unsupported": "Ce fournisseur ou ses permissions ne disposent pas ici d’un parcours d’autorisation pris en charge.",
+        "connecting": "Connexion au service enregistré…",
+        "callbackFailed": "L’autorisation a échoué. Revenez à la configuration et recommencez."
+      }
     }
   },
   "components": {
@@ -1517,7 +1530,8 @@
         "subtitleText": "Spécifiez si vous configurez cet appareil ou un autre",
         "thisPhone": "Cet appareil",
         "otherPhone": "Autre appareil"
-      }
+      },
+      "searchbusinessinfo": {}
     },
     "sign": {
       "magiclink": {
@@ -1663,7 +1677,42 @@
       "quickAction5Label": "Les connaissances de l'assistant",
       "quickAction5Command": "Sur quels sujets l'assistant peut-il répondre ?",
       "quickAction6Label": "Ajouter une connaissance",
-      "quickAction6Command": "Si l'utilisateur souhaite être rappelé mais n'a pas dit pourquoi, l'assistant doit toujours demander la raison, puis dire qu'il transmettra la demande à un opérateur"
+      "quickAction6Command": "Si l'utilisateur souhaite être rappelé mais n'a pas dit pourquoi, l'assistant doit toujours demander la raison, puis dire qu'il transmettra la demande à un opérateur",
+      "pending": {
+        "save": "Enregistrer ({count})",
+        "discard": "Abandonner",
+        "before": "Avant",
+        "after": "Après",
+        "draft": "Brouillon de nouvelle instance",
+        "create": "Ajouter une instance",
+        "replace": "Modifier une instance",
+        "remove": "Supprimer une instance",
+        "prefetch": "Avant l’appel",
+        "during": "Pendant l’appel",
+        "final": "Après l’appel",
+        "read": "Vérifier le résultat",
+        "accept": "Confirmer l’instance {instance}",
+        "close": "Fermer sans réessayer",
+        "refresh": "Actualiser les modifications",
+        "refreshed": "Modifications en attente actualisées.",
+        "completed": "Demande terminée. Vérifiez les résultats ci-dessous.",
+        "incomplete": "Des modifications restent en attente. Vérifiez les résultats ci-dessous.",
+        "responseLost": "La réponse a été perdue. Les modifications ont été rechargées si possible. Vérifiez le résultat avant de réessayer.",
+        "recoveryFailed": "Impossible de recharger les modifications. Actualisez avant de continuer.",
+        "connectionCheck": "La connexion sera vérifiée lors de l’enregistrement d’une activation.",
+        "proposalRefused": "Proposition refusée. Aucune modification ajoutée.",
+        "proposalReady": "Modification proposée. Vérifiez puis enregistrez pour appliquer.",
+        "wizardWarning": "Les propositions de skills restent dans cette session et ne sont pas enregistrées. Ouvrez Configurer par chat pour les proposer à nouveau ; la navigation ne les transfère pas.",
+        "saved": "Enregistré",
+        "closed": "Fermé sans réessayer",
+        "conflict": "Conflit de configuration",
+        "refused": "Refusé",
+        "unconfirmed": "Résultat inconnu",
+        "in_flight": "Enregistrement en cours",
+        "reconciling": "Vérification en cours",
+        "pending": "En attente",
+        "loadingPending": "Chargement des modifications en attente…"
+      }
     },
     "aladminConfigurator": {
       "title": "Configurateur AladMin",

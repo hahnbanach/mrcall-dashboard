@@ -53,6 +53,26 @@ import axios from "axios";
  * instanceId is auto-generated for multi-instance skills: {outputPrefix}_{N}
  */
 export default {
+    getSavedConfiguration: async function(user, businessId) {
+        const response = await axios.get(process.env.VUE_APP_STARCHAT_URL +
+            '/mrcall/v1/mrcall0/apidomain/agent/skills/configuration/' + encodeURIComponent(businessId),
+            { headers: { auth: user.accessToken } });
+        if (!response.data || !['prefetch', 'during', 'final'].every(phase => Array.isArray(response.data[phase]) &&
+                response.data[phase].every(entry => entry && typeof entry === 'object' &&
+                    entry.params && typeof entry.params === 'object' && !Array.isArray(entry.params)))) {
+            throw new Error('invalid_saved_skill_configuration');
+        }
+        return response.data;
+    },
+
+    getCalendarAvailability: async function(user, businessId, grantName) {
+        const response = await axios.get(process.env.VUE_APP_STARCHAT_URL +
+            '/mrcall/v1/mrcall0/oauth/providers/google_calendar/calendars', {
+            headers: { auth: user.accessToken }, params: { businessId, grantName }
+        });
+        return Array.isArray(response.data) && response.data.length > 0 &&
+            response.data.every(item => item && typeof item.id === 'string' && item.id.trim()) ? 'available' : 'unknown';
+    },
 
     getAvailableSkills: async function(user, businessId) {
         const headers = {

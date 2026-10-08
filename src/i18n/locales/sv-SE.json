@@ -135,7 +135,20 @@
       "argumentsTitle": "Vad assistenten samlar in under samtalet",
       "argumentRequired": "obligatorisk",
       "argumentOptional": "valfri",
-      "argumentsTemplateHint": "Varje namn ovan kan anvandas som %%namn%% i textfalten pa det har kortet."
+      "argumentsTemplateHint": "Varje namn ovan kan anvandas som %%namn%% i textfalten pa det har kortet.",
+      "handoff": {
+        "manage": "Hantera anslutning: {instance}",
+        "unavailable": "Den sparade skillens anslutning kan inte öppnas här.",
+        "saveFirst": "Spara instansen och dess exakta auktoriseringsreferens innan du ansluter.",
+        "refresh": "Uppdatera anslutningsstatus",
+        "named": "Sparad auktoriseringsreferens: {grant}",
+        "shared": "Delad auktorisering (tom referens).",
+        "available": "Kalenderåtkomst är tillgänglig. En delad eller alternativ auktorisering kan ge den.",
+        "unknown": "Kalenderåtkomst är okänd. En tom eller misslyckad kontroll bevisar inte frånkoppling.",
+        "unsupported": "Denna leverantör eller dess behörigheter saknar ett auktoriseringsflöde som stöds här.",
+        "connecting": "Ansluter den sparade tjänsten…",
+        "callbackFailed": "Auktoriseringen kunde inte slutföras. Gå tillbaka till konfigurationen och börja om."
+      }
     }
   },
   "components": {
@@ -1518,7 +1531,8 @@
         "subtitleText": "Ange om du konfigurerar denna enhet eller en annan enhet",
         "thisPhone": "Denna enhet",
         "otherPhone": "Annan enhet"
-      }
+      },
+      "searchbusinessinfo": {}
     },
     "sign": {
       "magiclink": {
@@ -1664,7 +1678,42 @@
       "quickAction5Label": "Assistentens kunskap",
       "quickAction5Command": "Vilka ämnen kan assistenten svara på?",
       "quickAction6Label": "Lägg till kunskap",
-      "quickAction6Command": "Om uppringaren vill bli uppringd men inte har sagt varför, ska assistenten alltid fråga efter anledningen och sedan säga att förfrågan skickas vidare till en handläggare"
+      "quickAction6Command": "Om uppringaren vill bli uppringd men inte har sagt varför, ska assistenten alltid fråga efter anledningen och sedan säga att förfrågan skickas vidare till en handläggare",
+      "pending": {
+        "save": "Spara ändringar ({count})",
+        "discard": "Kasta",
+        "before": "Före",
+        "after": "Efter",
+        "draft": "Utkast till ny instans",
+        "create": "Lägg till instans",
+        "replace": "Ändra instans",
+        "remove": "Ta bort instans",
+        "prefetch": "Före samtalet",
+        "during": "Under samtalet",
+        "final": "Efter samtalet",
+        "read": "Kontrollera resultat",
+        "accept": "Bekräfta instans {instance}",
+        "close": "Stäng utan nytt försök",
+        "refresh": "Uppdatera väntande ändringar",
+        "refreshed": "Väntande ändringar uppdaterade.",
+        "completed": "Begäran slutförd. Granska resultaten nedan.",
+        "incomplete": "Vissa ändringar väntar. Granska resultaten nedan.",
+        "responseLost": "Svaret förlorades. Ändringar har lästs in igen där det var möjligt. Kontrollera resultatet innan du försöker igen.",
+        "recoveryFailed": "Ändringar kunde inte läsas in. Uppdatera innan du fortsätter.",
+        "connectionCheck": "Anslutningen kontrolleras när en aktivering sparas.",
+        "proposalRefused": "Förslaget avvisades. Ingen ändring köades.",
+        "proposalReady": "Ändring föreslagen. Granska och spara för att tillämpa.",
+        "wizardWarning": "Skillförslag finns kvar i denna guidesession och har inte sparats. Öppna Konfigurera via chatt för ett nytt förslag; navigering överför det inte.",
+        "saved": "Sparat",
+        "closed": "Stängt utan nytt försök",
+        "conflict": "Konfigurationskonflikt",
+        "refused": "Avvisat",
+        "unconfirmed": "Okänt resultat",
+        "in_flight": "Sparar",
+        "reconciling": "Kontrollerar resultat",
+        "pending": "Väntande",
+        "loadingPending": "Läser in väntande ändringar…"
+      }
     },
     "aladminConfigurator": {
       "title": "AladMin-konfigurator",
