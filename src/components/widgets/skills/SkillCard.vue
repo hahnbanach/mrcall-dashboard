@@ -14,9 +14,12 @@
  *
  * The authorisation API arrives as a prop rather than an import: one business can hold several
  * grants, the composable that tracks them belongs to the screen, and a card asks it questions.
+ *
+ * Who is looking arrives the same way, as `audience`. The card read `store.state.role` for a while,
+ * and that made it a component that could not be mounted without a Vuex store: its unit tests all
+ * failed at mount. The configurator owns the screen and reads the role once; a card is told.
  */
 import { computed } from 'vue';
-import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
 import { componentFor } from '@/components/widgets/skills/fields';
 import SkillArguments from '@/components/widgets/skills/SkillArguments.vue';
@@ -43,7 +46,11 @@ const props = defineProps({
   labelClash: { type: Boolean, default: false },
   /** The authorisations, from `useSkillGrants`. */
   grants: { type: Object, required: true },
-  chatAuthorization: { type: Object, default: null }
+  chatAuthorization: { type: Object, default: null },
+  /** Who is looking: `admin` also sees the fields a manifest marks `x-audience: platform`, `owner`
+   *  does not. Required, so that a caller who forgets it is told rather than silently shown the
+   *  owner's view. */
+  audience: { type: String, required: true, validator: v => v === 'admin' || v === 'owner' }
 });
 
 const emit = defineEmits([
@@ -64,9 +71,8 @@ const authFields = computed(() => oauthFields(props.skill).filter(field => !prop
   * the ones the skill declares: they are one declaration and reading them apart is what made a
   * person wonder where the model's values come from. */
 const EXTRAS_FIELD_KEY = 'variables';
-const store = useStore();
 /** An admin sees the fields a manifest keeps for the platform's people; an owner does not. */
-const viewer = computed(() => ({ admin: store.state.role === 'admin' }));
+const viewer = computed(() => ({ admin: props.audience === 'admin' }));
 const bodyFields = computed(() =>
   configurableFields(props.skill, props.entry, props.phase, viewer.value).filter(f => f.key !== EXTRAS_FIELD_KEY));
 const extrasField = computed(() =>
