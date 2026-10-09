@@ -133,7 +133,8 @@ export function retiredAndEmpty(entry, field) {
 /**
  * Whether the person looking is meant to see this field. A manifest marks a technical field
  * `x-audience: platform` (carried down as `audience`): an admin sees it, an owner does not. It hides;
- * it does not protect: the server refuses no field by role, and nothing an owner needs is marked so.
+ * it does not protect: the server refuses no field by role. The one field marked so today, the
+ * restaurant's `tables`, is one an owner does set, on the Bookings page, not as raw JSON here.
  */
 export function visibleTo(field, viewer) {
   return field.audience !== 'platform' || !!(viewer && viewer.admin);

@@ -77,7 +77,7 @@ const entry = { skill: 'calendar_availability', instanceId: 'calendar_availabili
 function card (props = {}) {
   return mount(SkillCard, {
     global,
-    props: { entry, skill, phase: 'during', open: true, title: 'Availability', grants: noGrants(), ...props }
+    props: { entry, skill, phase: 'during', open: true, title: 'Availability', grants: noGrants(), audience: 'owner', ...props }
   })
 }
 
@@ -314,5 +314,39 @@ describe('an instance whose skill is gone', () => {
     expect(orphan.text()).toContain('This skill is not installed')
     expect(orphan.text()).not.toContain('Duration')
     expect(orphan.classes()).toContain('entry-orphaned')
+  })
+})
+
+/* Who is looking is a prop the configurator hands down, not something the card reads from the
+ * store: a card that reached into Vuex could not be mounted here with only its props, and every test
+ * in this file failed with "Cannot read properties of undefined (reading 'state')".
+ *
+ * Seen failing first, 2026-10-09: against the card that read `store.state.role`, both tests below
+ * failed with that TypeError at mount. With the prop wired, three perturbations each failed exactly
+ * one of them: `visibleTo` answering true for everybody failed the owner test; `visibleTo` hiding a
+ * platform field from everybody failed the admin test; the card ignoring the prop and treating every
+ * viewer as an admin failed the owner test. */
+describe('a field the manifest keeps for the platform', () => {
+  const withPlatformField = {
+    ...skill,
+    configSchema: {
+      fields: [
+        ...skill.configSchema.fields,
+        { key: 'tables', type: 'json', widget: 'json', audience: 'platform', labels: { en: { label: 'Tables' } } }
+      ]
+    }
+  }
+  const tablesEntry = { ...entry, params: { ...entry.params, tables: '{"indoor":[{"size":2,"count":8}]}' } }
+
+  it('is not drawn for an owner, while the fields an owner may set still are', () => {
+    const open = card({ skill: withPlatformField, entry: tablesEntry, audience: 'owner' })
+    expect(open.text()).not.toContain('Tables')
+    expect(open.text()).toContain('Duration')
+  })
+
+  it('is drawn for an admin, beside everything else', () => {
+    const open = card({ skill: withPlatformField, entry: tablesEntry, audience: 'admin' })
+    expect(open.text()).toContain('Tables')
+    expect(open.text()).toContain('Duration')
   })
 })

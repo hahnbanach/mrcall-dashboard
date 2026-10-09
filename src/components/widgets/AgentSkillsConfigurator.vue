@@ -73,6 +73,11 @@ onMounted(async () => {
   loading.value = false;
 });
 
+/** Who is looking, read here once and handed to every card, so a card needs no store to be drawn.
+ *  Anything that is not `admin` (an owner, a reseller) gets the owner's view. This hides fields; it
+ *  does not authorise anything: what may be written is the server's decision. */
+const audience = computed(() => (store.state.role === 'admin' ? 'admin' : 'owner'));
+
 const phaseInfo = computed(() => ({
   prefetch: { label: t('widgets.agentSkills.phasePrefetch'), hint: t('widgets.agentSkills.phasePrefetchHint'), icon: 'pi pi-download', color: '#3b82f6' },
   during: { label: t('widgets.agentSkills.phaseDuring'), hint: t('widgets.agentSkills.phaseDuringHint'), icon: 'pi pi-phone', color: '#22c55e' },
@@ -500,6 +505,7 @@ watch([openEntry, availableSkills], () => {
                        :subtitle="instanceSubtitle(entry)"
                        :label-clash="labelClashes(entry)"
                        :grants="grants"
+                       :audience="audience"
                        @toggle="toggleEntry(phase, entry, idx)"
                        @update:field="setFieldValue(phase, idx, $event.key, $event.value)"
                        @duplicate="duplicateEntry(phase, idx)"
