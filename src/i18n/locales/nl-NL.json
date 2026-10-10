@@ -1117,7 +1117,7 @@
       }
     },
     "restaurant": {
-      "menu": "Reserveringen",
+      "menu": "Restaurantreserveringen",
       "unavailable": "Het reserveringenboek is op deze server nog niet beschikbaar. Het verschijnt hier zodra de server is bijgewerkt.",
       "loadError": "De reserveringen konden niet worden geladen.",
       "notConfigured": "De tafelreservering is nog niet ingesteld: stel dit in bij de AI-configuratie.",
@@ -1233,7 +1233,16 @@
         "error": "Er is iets misgegaan: probeer het opnieuw."
       },
       "noSkill": "Deze assistent neemt geen tafelreserveringen aan: voeg de functie voor tafelreserveringen toe in de AI-configuratie om hier een reserveringsboek te hebben.",
-      "tableWithoutSize": "Elke tafel heeft een grootte nodig: vul die in of verwijder de rij."
+      "tableWithoutSize": "Elke tafel heeft een grootte nodig: vul die in of verwijder de rij.",
+      "confirmCancel": {
+        "cancelTitle": "Deze reservering annuleren?",
+        "declineTitle": "Dit verzoek afwijzen?",
+        "message": "{who}, {day} om {time}, {people}. Dit kan niet ongedaan worden gemaakt.",
+        "cancel": "Reservering annuleren",
+        "decline": "Verzoek afwijzen",
+        "keep": "Behouden",
+        "noName": "gast zonder naam"
+      }
     }
   },
   "views": {

@@ -1119,7 +1119,7 @@
       }
     },
     "restaurant": {
-      "menu": "Reservierungen",
+      "menu": "Restaurantreservierungen",
       "unavailable": "Das Reservierungsbuch ist auf diesem Server noch nicht verfügbar. Es erscheint hier, sobald der Server aktualisiert wurde.",
       "loadError": "Die Reservierungen konnten nicht geladen werden.",
       "notConfigured": "Die Tischreservierungsfunktion ist noch nicht eingerichtet: Richten Sie sie in der KI-Konfiguration ein.",
@@ -1235,7 +1235,16 @@
         "error": "Etwas ist schiefgegangen: Versuchen Sie es erneut."
       },
       "noSkill": "Dieser Assistent nimmt keine Tischreservierungen an: Fügen Sie in der KI-Konfiguration die Funktion für Tischreservierungen hinzu, um hier ein Reservierungsbuch zu haben.",
-      "tableWithoutSize": "Jeder Tisch braucht eine Größe: Tragen Sie sie ein oder entfernen Sie die Zeile."
+      "tableWithoutSize": "Jeder Tisch braucht eine Größe: Tragen Sie sie ein oder entfernen Sie die Zeile.",
+      "confirmCancel": {
+        "cancelTitle": "Diese Reservierung stornieren?",
+        "declineTitle": "Diese Anfrage ablehnen?",
+        "message": "{who}, {day} um {time}, {people}. Dies kann nicht rückgängig gemacht werden.",
+        "cancel": "Reservierung stornieren",
+        "decline": "Anfrage ablehnen",
+        "keep": "Behalten",
+        "noName": "Gast ohne Namen"
+      }
     }
   },
   "views": {

@@ -39,7 +39,7 @@
           @open-skill="openSkillTarget"
       />
       <RestaurantBook
-          v-if="selectedMenupage?.collection.id === '__RESTAURANT__' && businessId && user"
+          v-if="selectedMenupage?.collection.id === '__RESTAURANT_BOOKING__' && businessId && user"
           :business-id="businessId"
           :user="user"
       />
@@ -540,7 +540,7 @@ export default {
     /** A synthetic page that saves through its own API and button, where the footer's Save has no place. */
     ownSavePage() {
       const id = this.selectedMenupage?.collection?.id
-      return id === '__DATA_RETENTION__' || id === '__RESTAURANT__'
+      return id === '__DATA_RETENTION__' || id === '__RESTAURANT_BOOKING__'
     },
     /** The business runs the restaurant_booking skill: only then has it a book to show. */
     hasRestaurant() {
@@ -865,7 +865,7 @@ export default {
       const CONFIGURE_AI_ID = '__CONFIGURE_AI__'
       // a page of its own, not a template collection: how long the business keeps its calls
       const RETENTION_ID = '__DATA_RETENTION__'
-      const RESTAURANT_ID = '__RESTAURANT__'
+      const RESTAURANT_ID = '__RESTAURANT_BOOKING__'
       const requested = id || CONFIGURE_AI_ID
       const known = Array.isArray(this.variablesAnnotations)
         && this.variablesAnnotations.some((obj) => obj.collection.id === requested)
@@ -1013,7 +1013,7 @@ export default {
         },
         visible: () => true,
       }
-      const RESTAURANT_ID = '__RESTAURANT__'
+      const RESTAURANT_ID = '__RESTAURANT_BOOKING__'
       const restaurantItem = {
         label: this.t('components.restaurant.menu'),
         icon: 'pi pi-fw pi-calendar',

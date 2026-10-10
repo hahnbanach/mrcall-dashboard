@@ -60,7 +60,7 @@ function day (date) {
   }
 }
 
-async function mockPage (page, { restaurant = true, putStatus = 200, bookStatus = 201, role = 'owner', skill = instance.skill, extra = [] } = {}) {
+async function mockPage (page, { restaurant = true, putStatus = 200, bookStatus = 201, moveStatus = 200, role = 'owner', skill = instance.skill, extra = [] } = {}) {
   const calls = []
   // `skill` null: a business that runs no restaurant skill; otherwise the name its configuration uses.
   const entry = skill ? { ...instance, skill } : null
@@ -105,13 +105,17 @@ async function mockPage (page, { restaurant = true, putStatus = 200, bookStatus 
         body: JSON.stringify(bookStatus === 201 ? { id: 'n1', version: 1 } :
           { diagnostics: [{ path: '/', code: 'full', detail: 'the party does not fit there; send overbook: true to book it anyway' }] }) })
     }
+    if (request.method() === 'PATCH' && moveStatus !== 200 && !(body && body.overbook)) {
+      return route.fulfill({ status: moveStatus, contentType: 'application/json',
+        body: JSON.stringify({ diagnostics: [{ path: '/', code: 'full', detail: 'the party does not fit there; send overbook: true to book it anyway' }] }) })
+    }
     return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ id: 'x', version: 2 }) })
   })
   return calls
 }
 
 async function openPage (page) {
-  await page.goto(`/businessconfiguration?id=${mockBusiness.businessId}&section=__RESTAURANT__`)
+  await page.goto(`/businessconfiguration?id=${mockBusiness.businessId}&section=__RESTAURANT_BOOKING__`)
   await expect(page.locator('.restaurant-slot').first()).toBeVisible({ timeout: 20000 })
 }
 
@@ -121,7 +125,10 @@ test.describe('the restaurant page', () => {
     await page.goto(`/businessconfiguration?id=${mockBusiness.businessId}`)
     const narrowMenu = page.locator('.header_buttonbar button')
     if (await narrowMenu.isVisible()) await narrowMenu.click()
-    await page.getByRole('menuitem', { name: 'Bookings' }).locator('visible=true').first().click()
+    // Exact, because "Bookings" alone also matched the label this one replaced. The section id
+    // is what a bookmark carries. Seen failing on 2026-10-10 against the old id and label.
+    await page.getByRole('menuitem', { name: 'Restaurant bookings', exact: true }).locator('visible=true').first().click()
+    await expect(page).toHaveURL(/[?&]section=__RESTAURANT_BOOKING__(&|$)/)
     await expect(page.locator('.restaurant-slot')).toHaveCount(2, { timeout: 20000 })
     const first = page.locator('.restaurant-slot').first()
     await expect(first.locator('.restaurant-table-use')).toHaveText(['0/2 tables of 2', '1/2 tables of 4'])
@@ -212,7 +219,7 @@ test.describe('the restaurant page', () => {
 
   test('says the book is not available on a server without the restaurant routes', async ({ authenticatedPage: page }) => {
     await mockPage(page, { restaurant: false })
-    await page.goto(`/businessconfiguration?id=${mockBusiness.businessId}&section=__RESTAURANT__`)
+    await page.goto(`/businessconfiguration?id=${mockBusiness.businessId}&section=__RESTAURANT_BOOKING__`)
     await expect(page.getByText('The table book is not available on this server yet.', { exact: false })).toBeVisible({ timeout: 20000 })
     await expect(page.locator('.restaurant-new')).toHaveCount(0)
   })
@@ -230,7 +237,7 @@ test.describe('the restaurant page', () => {
   // 2026-10-06 with the short name recognised: the book opened and its Save would answer 422.
   test('offers no book for an instance under a name the platform does not run', async ({ authenticatedPage: page }) => {
     await mockPage(page, { skill: 'restaurant_booking' })
-    await page.goto(`/businessconfiguration?id=${mockBusiness.businessId}&section=__RESTAURANT__`)
+    await page.goto(`/businessconfiguration?id=${mockBusiness.businessId}&section=__RESTAURANT_BOOKING__`)
     await expect(page.getByText('This assistant does not take table bookings', { exact: false })).toBeVisible({ timeout: 20000 })
     await expect(page.locator('.restaurant-settings')).toHaveCount(0)
   })
@@ -238,7 +245,7 @@ test.describe('the restaurant page', () => {
   // Seen failing on 2026-10-06 with the section opening the book for a business without the skill.
   test('says there is no book on the section URL of a business without the skill', async ({ authenticatedPage: page }) => {
     await mockPage(page, { skill: null })
-    await page.goto(`/businessconfiguration?id=${mockBusiness.businessId}&section=__RESTAURANT__`)
+    await page.goto(`/businessconfiguration?id=${mockBusiness.businessId}&section=__RESTAURANT_BOOKING__`)
     await expect(page.getByText('This assistant does not take table bookings', { exact: false })).toBeVisible({ timeout: 20000 })
     await expect(page.locator('.restaurant-new')).toHaveCount(0)
     await expect(page.locator('.restaurant-settings')).toHaveCount(0)
@@ -281,5 +288,68 @@ test.describe('the restaurant page', () => {
     await page.locator('.restaurant-settings').getByRole('button', { name: 'Save' }).click()
     await expect(page.getByText('Every table needs a size: fill it in or remove the row.')).toBeVisible()
     expect(calls.filter(c => c.method === 'PUT')).toHaveLength(0)
+  })
+
+  // A cancellation cannot be undone, and a mis-click on the row's trash cancelled at once. The confirmation
+  // names whom, when and how many, so the wrong row is recognised before anything is sent. Seen failing on
+  // 2026-10-10 against v2.2.17: the click sent the DELETE straight away and no dialog appeared.
+  test('asks before cancelling a booking or declining a request, naming the party, and sends nothing on keep', async ({ authenticatedPage: page }) => {
+    const calls = await mockPage(page)
+    await openPage(page)
+    const day = await page.evaluate(() => {
+      const d = new Date()
+      return d.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long' })
+    })
+    await page.locator('.restaurant-booking').filter({ hasText: 'Bianchi' }).getByRole('button', { name: 'Cancel' }).click()
+    const confirm = page.locator('.mrcall-confirm-dialog')
+    await expect(confirm).toContainText('Bianchi')
+    await expect(confirm).toContainText(day)
+    await expect(confirm).toContainText('20:00')
+    await expect(confirm).toContainText('4 people')
+    await confirm.getByRole('button', { name: 'Keep it' }).click()
+    await expect(confirm).toHaveCount(0)
+    expect(calls.filter(c => c.method === 'DELETE')).toHaveLength(0)
+
+    await page.locator('.restaurant-booking').filter({ hasText: 'Bianchi' }).getByRole('button', { name: 'Cancel' }).click()
+    await confirm.getByRole('button', { name: 'Cancel booking' }).click()
+    await expect(page.getByText('Cancelled.')).toBeVisible()
+    const deletes = calls.filter(c => c.method === 'DELETE')
+    expect(deletes.map(c => c.path.split('/').pop() + c.search)).toEqual(['r1?expectedVersion=1'])
+
+    await page.locator('.restaurant-request').getByRole('button', { name: 'Decline' }).click()
+    await expect(confirm).toContainText('Galli')
+    await expect(confirm).toContainText('9 people')
+    await confirm.getByRole('button', { name: 'Keep it' }).click()
+    expect(calls.filter(c => c.method === 'DELETE')).toHaveLength(1)
+  })
+
+  // A refused move closed its dialog and said so far down the page, where it went unseen. The refusal now
+  // stays in the dialog that asked, with the override beside it. Seen failing on 2026-10-10 against v2.2.17:
+  // the dialog closed and the answer was not inside it.
+  test('keeps a refused move in its dialog, says why there, and moves anyway from there', async ({ authenticatedPage: page }) => {
+    const calls = await mockPage(page, { moveStatus: 409 })
+    await openPage(page)
+    await page.locator('.restaurant-booking').filter({ hasText: 'Bianchi' }).getByRole('button', { name: 'Change' }).click()
+    const dialog = page.locator('.restaurant-move-dialog')
+    await dialog.locator('input[type="time"]').fill('21:00')
+    await dialog.getByRole('button', { name: 'Save' }).click()
+    await expect(dialog.getByText('There is no room at that time.')).toBeVisible()
+    await expect(page.locator('.restaurant-message')).toHaveCount(0)
+    await dialog.getByRole('button', { name: 'Book anyway' }).click()
+    await expect(dialog).toHaveCount(0)
+    await expect(page.getByText('Booking changed.')).toBeVisible()
+    const patches = calls.filter(c => c.method === 'PATCH')
+    expect(patches.map(c => !!c.body.overbook)).toEqual([false, true])
+    expect(patches[1].body).toMatchObject({ time: '21:00', expectedVersion: 1 })
+  })
+
+  // The book keeps a phone as digits with no "+", by design. Seen failing on 2026-10-10 against v2.2.17:
+  // the row showed 393331112233 and nothing to call.
+  test('shows a guest\'s phone in international form, as a number to call', async ({ authenticatedPage: page }) => {
+    await mockPage(page)
+    await openPage(page)
+    const phone = page.locator('.restaurant-booking').filter({ hasText: 'Bianchi' }).locator('a.restaurant-phone')
+    await expect(phone).toHaveText('+39 333 111 2233')
+    await expect(phone).toHaveAttribute('href', 'tel:+393331112233')
   })
 })

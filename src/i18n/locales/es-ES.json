@@ -1131,7 +1131,7 @@
       }
     },
     "restaurant": {
-      "menu": "Reservas",
+      "menu": "Reservas del restaurante",
       "unavailable": "El libro de reservas todavía no está disponible en este servidor. Aparecerá aquí en cuanto se actualice el servidor.",
       "loadError": "No se han podido leer las reservas.",
       "notConfigured": "La función de reserva de mesas todavía no está configurada: configúrela en los ajustes de la IA.",
@@ -1247,7 +1247,16 @@
         "error": "Algo ha ido mal: inténtelo de nuevo."
       },
       "noSkill": "Este asistente no gestiona reservas de mesas: añada la función de reserva de mesas en la configuración de la IA para tener aquí el libro de reservas.",
-      "tableWithoutSize": "Cada mesa necesita un tamaño: indíquelo o elimine la fila."
+      "tableWithoutSize": "Cada mesa necesita un tamaño: indíquelo o elimine la fila.",
+      "confirmCancel": {
+        "cancelTitle": "¿Cancelar esta reserva?",
+        "declineTitle": "¿Rechazar esta solicitud?",
+        "message": "{who}, {day} a las {time}, {people}. No se puede deshacer.",
+        "cancel": "Cancelar reserva",
+        "decline": "Rechazar solicitud",
+        "keep": "Mantener",
+        "noName": "cliente sin nombre"
+      }
     }
   },
   "views": {

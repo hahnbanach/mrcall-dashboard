@@ -1122,7 +1122,7 @@
       }
     },
     "restaurant": {
-      "menu": "Bookings",
+      "menu": "Restaurant bookings",
       "unavailable": "The table book is not available on this server yet. It will appear here once the server is updated.",
       "loadError": "The bookings could not be read.",
       "notConfigured": "The table booking skill is not configured yet: set it up in the AI configuration.",
@@ -1238,7 +1238,16 @@
         "error": "Something went wrong: try again."
       },
       "noSkill": "This assistant does not take table bookings: add the table booking skill in the AI configuration to have a book here.",
-      "tableWithoutSize": "Every table needs a size: fill it in or remove the row."
+      "tableWithoutSize": "Every table needs a size: fill it in or remove the row.",
+      "confirmCancel": {
+        "cancelTitle": "Cancel this booking?",
+        "declineTitle": "Decline this request?",
+        "message": "{who}, {day} at {time}, {people}. This cannot be undone.",
+        "cancel": "Cancel booking",
+        "decline": "Decline request",
+        "keep": "Keep it",
+        "noName": "guest with no name"
+      }
     }
   },
   "views": {

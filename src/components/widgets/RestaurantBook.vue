@@ -60,12 +60,13 @@
         <section v-if="requests.length" class="restaurant-requests">
           <h3>{{ $t("components.restaurant.requests") }}</h3>
           <div v-for="r in requests" :key="r.id" class="restaurant-row restaurant-request">
-            <span>{{ r.time }} · {{ $t("components.restaurant.people", { covers: r.covers }) }} · {{ r.name || "" }} {{ r.phone || "" }}</span>
+            <span>{{ r.time }} · {{ $t("components.restaurant.people", { covers: r.covers }) }} · {{ r.name || "" }}</span>
+            <a v-if="phoneOf(r.phone)" class="restaurant-phone" :href="phoneOf(r.phone).uri">{{ phoneOf(r.phone).text }}</a>
             <span v-if="r.requestReason" class="restaurant-reason">{{ $t(`components.restaurant.reason.${r.requestReason}`) }}</span>
             <span v-if="r.notes" class="restaurant-notes">{{ r.notes }}</span>
             <Button :label="$t('components.restaurant.accept')" icon="pi pi-check" size="small" :disabled="busy" @click="openAccept(r)" />
             <Button :label="$t('components.restaurant.decline')" icon="pi pi-times" size="small" severity="secondary"
-                    :disabled="busy" @click="cancel(r)" />
+                    :disabled="busy" @click="confirmCancel(r, 'decline')" />
           </div>
         </section>
 
@@ -80,7 +81,8 @@
             <span v-if="r.tableSize" class="restaurant-booking-table">
               {{ $t("components.restaurant.tableOf", { size: r.tableSize, tables: r.tables || 1 }) }}
             </span>
-            <span>{{ r.name || "" }} {{ r.phone || "" }}</span>
+            <span>{{ r.name || "" }}</span>
+            <a v-if="phoneOf(r.phone)" class="restaurant-phone" :href="phoneOf(r.phone).uri">{{ phoneOf(r.phone).text }}</a>
             <span v-if="r.allergies" class="restaurant-allergies">{{ $t("components.restaurant.allergies") }}: {{ r.allergies }}</span>
             <span v-if="r.notes" class="restaurant-notes">{{ r.notes }}</span>
             <Tag v-if="r.status === 'no_show'" severity="danger">{{ $t("components.restaurant.status.no_show") }}</Tag>
@@ -91,7 +93,7 @@
                       :disabled="busy" @click="openMove(r)" />
               <Button :label="$t('components.restaurant.noShow')" size="small" severity="secondary" :disabled="busy" @click="noShow(r)" />
               <Button :label="$t('components.restaurant.cancel')" icon="pi pi-trash" size="small" severity="danger" text
-                      :disabled="busy" @click="cancel(r)" />
+                      :disabled="busy" @click="confirmCancel(r, 'cancel')" />
             </template>
           </div>
         </section>
@@ -192,6 +194,11 @@
         </label>
         <label v-if="moving.tableSize">{{ $t("components.restaurant.tables") }}<InputNumber v-model="moving.tables" :min="1" :max="200" :useGrouping="false" /></label>
       </div>
+      <Message v-if="moving.message" :severity="moving.message.severity" :closable="false" class="restaurant-dialog-message">
+        {{ moving.message.text }}
+        <Button v-if="moving.message.overbook" :label="$t('components.restaurant.bookAnyway')" size="small" severity="warn"
+                class="restaurant-overbook" :disabled="busy" @click="moving.message.overbook()" />
+      </Message>
       <template #footer>
         <Button :label="$t('components.restaurant.close')" severity="secondary" text @click="moving.visible = false" />
         <Button :label="$t('components.restaurant.save')" icon="pi pi-check" :disabled="busy" @click="move(false)" />
@@ -204,6 +211,11 @@
         </label>
         <label v-if="accepting.tableSize">{{ $t("components.restaurant.tables") }}<InputNumber v-model="accepting.tables" :min="1" :max="200" :useGrouping="false" /></label>
       </div>
+      <Message v-if="accepting.message" :severity="accepting.message.severity" :closable="false" class="restaurant-dialog-message">
+        {{ accepting.message.text }}
+        <Button v-if="accepting.message.overbook" :label="$t('components.restaurant.bookAnyway')" size="small" severity="warn"
+                class="restaurant-overbook" :disabled="busy" @click="accepting.message.overbook()" />
+      </Message>
       <template #footer>
         <Button :label="$t('components.restaurant.close')" severity="secondary" text @click="accepting.visible = false" />
         <Button :label="$t('components.restaurant.accept')" icon="pi pi-check" :disabled="busy" @click="acceptChosen()" />
@@ -213,6 +225,8 @@
 </template>
 
 <script>
+import parsePhoneNumber from "libphonenumber-js";
+import { useConfirm } from "primevue/useconfirm";
 import RestaurantApi from "@/utils/Restaurant";
 
 const KNOWN_CODES = ["full", "closed", "not_offered", "too_late", "beyond_horizon", "large_party", "bad_covers", "stale",
@@ -238,6 +252,9 @@ function isoDay(offset) {
  * server (404) the page says so and offers nothing.
  */
 export default {
+  setup() {
+    return { confirm: useConfirm() };
+  },
   props: {
     businessId: { type: String, required: true },
     user: { type: Object, required: true },
@@ -253,8 +270,8 @@ export default {
       message: null,
       form: { time: "", covers: 2, name: "", phone: "", area: null, tableSize: null, tables: 1, notes: "" },
       blockForm: { service: "dinner", area: "indoor", covers: null, tableSize: null, tables: 1, note: "" },
-      moving: { visible: false, row: null, time: "", covers: 2, area: "indoor", tableSize: null, tables: 1 },
-      accepting: { visible: false, row: null, tableSize: null, tables: 1 },
+      moving: { visible: false, row: null, time: "", covers: 2, area: "indoor", tableSize: null, tables: 1, message: null },
+      accepting: { visible: false, row: null, tableSize: null, tables: 1, message: null },
       instance: null,
       settings: null,
       settingsMessage: null,
@@ -335,6 +352,11 @@ export default {
       this.loadError = false;
       try {
         this.info = await RestaurantApi.day(this.user, this.businessId, this.date);
+        // An open dialog acts on the row as last read: after a stale answer, a retry carries the new version.
+        [this.moving, this.accepting].forEach(dialog => {
+          const fresh = dialog.row && this.rows.find(r => r.id === dialog.row.id);
+          if (fresh) dialog.row = fresh;
+        });
       } catch (e) {
         if (e.restaurant && e.restaurant.status === 404 && !e.restaurant.code) {
           this.unavailable = true;
@@ -393,22 +415,57 @@ export default {
     refusal(e, retry) {
       const code = e.restaurant ? e.restaurant.code : null;
       const known = KNOWN_CODES.includes(code) ? code : "error";
-      this.message = { severity: known === "error" ? "error" : "warn", text: this.$t(`components.restaurant.answer.${known}`) };
-      if (retry && ["full", "not_offered", "too_late", "large_party", "closed"].includes(code)) this.message.overbook = retry;
+      const message = { severity: known === "error" ? "error" : "warn", text: this.$t(`components.restaurant.answer.${known}`) };
+      if (retry && ["full", "not_offered", "too_late", "large_party", "closed"].includes(code)) message.overbook = retry;
       if (code === "stale") this.load();
+      return message;
     },
-    async run(action, done, retry) {
+    /** Runs one change. Started from a dialog, the dialog stays open until the server agrees, and a refusal
+      * is said inside it, where the change was asked for, rather than at the top of a page it covers. */
+    async run(action, done, retry, dialog) {
       this.busy = true;
       this.message = null;
+      if (dialog) dialog.message = null;
       try {
         await action();
+        if (dialog) dialog.visible = false;
         if (done) this.say("success", done);
         await this.load();
       } catch (e) {
-        this.refusal(e, retry);
+        const message = this.refusal(e, retry);
+        if (dialog && dialog.visible) dialog.message = message;
+        else this.message = message;
       } finally {
         this.busy = false;
       }
+    },
+    /** A phone as the book keeps it (digits, no "+") in international form, with the URI to call it. */
+    phoneOf(raw) {
+      const digits = String(raw || "").replace(/[^\d+]/g, "");
+      if (!digits) return null;
+      const e164 = digits.startsWith("+") ? digits : `+${digits}`;
+      const parsed = parsePhoneNumber(e164);
+      return parsed ? { text: parsed.formatInternational(), uri: parsed.getURI() } : { text: e164, uri: `tel:${e164}` };
+    },
+    /** Cancelling a booking or declining a request cannot be undone, so it is confirmed first, naming
+      * the party: who, which day, what time, how many. */
+    confirmCancel(r, kind) {
+      const phone = this.phoneOf(r.phone);
+      const who = r.name || (phone && phone.text) || this.$t("components.restaurant.confirmCancel.noName");
+      const day = new Date(`${r.date || this.date}T12:00:00`)
+        .toLocaleDateString(this.$i18n.locale, { weekday: "long", day: "numeric", month: "long" });
+      this.confirm.require({
+        header: this.$t(`components.restaurant.confirmCancel.${kind}Title`),
+        message: this.$t("components.restaurant.confirmCancel.message", {
+          who, day, time: r.time, people: this.$t("components.restaurant.people", { covers: r.covers }) }),
+        icon: "pi pi-exclamation-triangle",
+        acceptLabel: this.$t(`components.restaurant.confirmCancel.${kind}`),
+        rejectLabel: this.$t("components.restaurant.confirmCancel.keep"),
+        acceptProps: { severity: "danger" },
+        rejectProps: { severity: "secondary", outlined: true },
+        defaultFocus: "reject",
+        accept: () => this.cancel(r),
+      });
     },
     choice(source) {
       return source.tableSize ? { tableSize: source.tableSize, tables: source.tables || 1 } : {};
@@ -431,15 +488,15 @@ export default {
       // without a choice a group above the party limit is refused. Staff can still pick a size here.
       const several = (r.tables || 1) > 1 && !!r.tableSize;
       this.moving = { visible: true, row: r, time: r.time, covers: r.covers, area: r.area,
-        tableSize: several ? r.tableSize : null, tables: several ? r.tables : 1 };
+        tableSize: several ? r.tableSize : null, tables: several ? r.tables : 1, message: null };
     },
     move(overbook) {
-      const r = this.moving.row;
-      const body = Object.assign({ expectedVersion: r.version, time: this.moving.time, covers: this.moving.covers,
-        area: this.moving.area, overbook: overbook || undefined }, this.choice(this.moving));
-      this.moving.visible = false;
+      const dialog = this.moving;
+      const r = dialog.row;
+      const body = Object.assign({ expectedVersion: r.version, time: dialog.time, covers: dialog.covers,
+        area: dialog.area, overbook: overbook || undefined }, this.choice(dialog));
       return this.run(() => RestaurantApi.change(this.user, this.businessId, r.id, body), "components.restaurant.moved",
-        overbook ? null : () => { this.moving.visible = false; return this.move(true); });
+        overbook ? null : () => this.move(true), dialog);
     },
     cancel(r) {
       return this.run(() => RestaurantApi.cancel(this.user, this.businessId, r.id, r.version), "components.restaurant.cancelled");
@@ -460,17 +517,20 @@ export default {
         tableSize = fits || sizes[sizes.length - 1];
         tables = fits ? 1 : Math.ceil(r.covers / tableSize);
       }
-      this.accepting = { visible: true, row: r, tableSize, tables };
+      this.accepting = { visible: true, row: r, tableSize, tables, message: null };
     },
-    acceptChosen() {
-      const a = this.accepting;
-      this.accepting = Object.assign({}, a, { visible: false });
-      return this.accept(a.row, false, a.tableSize ? { tableSize: a.tableSize, tables: a.tables || 1 } : {});
+    acceptChosen(overbook) {
+      const dialog = this.accepting;
+      const choice = dialog.tableSize ? { tableSize: dialog.tableSize, tables: dialog.tables || 1 } : {};
+      return this.run(() => RestaurantApi.accept(this.user, this.businessId, dialog.row.id,
+        Object.assign({ expectedVersion: dialog.row.version, overbook: overbook || undefined }, choice)), "components.restaurant.accepted",
+        overbook ? null : () => this.acceptChosen(true), dialog);
     },
-    accept(r, overbook, choice) {
+    /** Accepting a request in an area without tables: nothing to choose, so no dialog. */
+    accept(r, overbook) {
       return this.run(() => RestaurantApi.accept(this.user, this.businessId, r.id,
-        Object.assign({ expectedVersion: r.version, overbook: overbook || undefined }, choice || {})), "components.restaurant.accepted",
-        overbook ? null : () => this.accept(r, true, choice));
+        { expectedVersion: r.version, overbook: overbook || undefined }), "components.restaurant.accepted",
+        overbook ? null : () => this.accept(r, true));
     },
     stopSell(service) {
       return this.run(() => RestaurantApi.stopSell(this.user, this.businessId, this.date, service), "components.restaurant.stopped");
@@ -665,5 +725,10 @@ h4 {
 
 .restaurant-overbook {
   margin-left: 8px;
+}
+
+.restaurant-phone {
+  color: @mrcall_blue;
+  white-space: nowrap;
 }
 </style>

@@ -1117,7 +1117,7 @@
       }
     },
     "restaurant": {
-      "menu": "Bokningar",
+      "menu": "Restaurangbokningar",
       "unavailable": "Bokningsboken är ännu inte tillgänglig på den här servern. Den visas här så snart servern har uppdaterats.",
       "loadError": "Bokningarna kunde inte läsas in.",
       "notConfigured": "Bordsbokningsfunktionen är ännu inte konfigurerad: ställ in den i AI-konfigurationen.",
@@ -1233,7 +1233,16 @@
         "error": "Något gick fel: försök igen."
       },
       "noSkill": "Den här assistenten tar inte emot bordsbokningar: lägg till funktionen för bordsbokning i AI-konfigurationen för att få en bokningsbok här.",
-      "tableWithoutSize": "Varje bord behöver en storlek: fyll i den eller ta bort raden."
+      "tableWithoutSize": "Varje bord behöver en storlek: fyll i den eller ta bort raden.",
+      "confirmCancel": {
+        "cancelTitle": "Avboka den här bokningen?",
+        "declineTitle": "Avslå den här förfrågan?",
+        "message": "{who}, {day} kl. {time}, {people}. Det går inte att ångra.",
+        "cancel": "Avboka",
+        "decline": "Avslå förfrågan",
+        "keep": "Behåll",
+        "noName": "gäst utan namn"
+      }
     }
   },
   "views": {

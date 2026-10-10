@@ -1123,7 +1123,7 @@
       }
     },
     "restaurant": {
-      "menu": "Prenotazioni",
+      "menu": "Prenotazioni Ristorante",
       "unavailable": "Il registro delle prenotazioni non è ancora disponibile su questo server. Apparirà qui non appena il server sarà aggiornato.",
       "loadError": "Non è stato possibile leggere le prenotazioni.",
       "notConfigured": "La funzione di prenotazione tavoli non è ancora configurata: impostala nella configurazione dell'IA.",
@@ -1239,7 +1239,16 @@
         "error": "Qualcosa è andato storto: riprova."
       },
       "noSkill": "Questo assistente non prende prenotazioni dei tavoli: aggiunga la funzione di prenotazione tavoli nella configurazione dell'IA per avere qui il registro.",
-      "tableWithoutSize": "Ogni tavolo deve avere una dimensione: la inserisca o elimini la riga."
+      "tableWithoutSize": "Ogni tavolo deve avere una dimensione: la inserisca o elimini la riga.",
+      "confirmCancel": {
+        "cancelTitle": "Annullare questa prenotazione?",
+        "declineTitle": "Rifiutare questa richiesta?",
+        "message": "{who}, {day} alle {time}, {people}. Non si può annullare.",
+        "cancel": "Annulla prenotazione",
+        "decline": "Rifiuta richiesta",
+        "keep": "Mantieni",
+        "noName": "ospite senza nome"
+      }
     }
   },
   "views": {
