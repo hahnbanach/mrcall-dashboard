@@ -1104,7 +1104,7 @@
       }
     },
     "restaurant": {
-      "menu": "Broneeringud",
+      "menu": "Restorani broneeringud",
       "unavailable": "Broneerimisraamat ei ole selles serveris veel saadaval. See ilmub siia, kui server on uuendatud.",
       "loadError": "Broneeringuid ei saanud laadida.",
       "notConfigured": "Laudade broneerimise funktsioon ei ole veel seadistatud: seadista see AI seadetes.",
@@ -1220,7 +1220,16 @@
         "error": "Midagi läks valesti: proovi uuesti."
       },
       "noSkill": "See assistent ei võta lauabroneeringuid: lisage tehisintellekti seadetes lauabroneeringu funktsioon, et broneeringuraamat oleks siin.",
-      "tableWithoutSize": "Igal laual peab olema suurus: sisestage see või eemaldage rida."
+      "tableWithoutSize": "Igal laual peab olema suurus: sisestage see või eemaldage rida.",
+      "confirmCancel": {
+        "cancelTitle": "Kas tühistada see broneering?",
+        "declineTitle": "Kas keelduda sellest päringust?",
+        "message": "{who}, {day} kell {time}, {people}. Seda ei saa tagasi võtta.",
+        "cancel": "Tühista broneering",
+        "decline": "Keeldu päringust",
+        "keep": "Jäta alles",
+        "noName": "nimeta külaline"
+      }
     }
   },
   "views": {

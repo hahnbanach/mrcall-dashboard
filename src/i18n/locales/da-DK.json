@@ -1104,7 +1104,7 @@
       }
     },
     "restaurant": {
-      "menu": "Reservationer",
+      "menu": "Restaurantreservationer",
       "unavailable": "Reservationsbogen er endnu ikke tilgængelig på denne server. Den vises her, så snart serveren er opdateret.",
       "loadError": "Reservationerne kunne ikke indlæses.",
       "notConfigured": "Bordreservationsfunktionen er endnu ikke konfigureret: konfigurer den i AI-opsætningen.",
@@ -1220,7 +1220,16 @@
         "error": "Noget gik galt: prøv igen."
       },
       "noSkill": "Denne assistent tager ikke imod bordreservationer: tilføj funktionen til bordreservationer i AI-konfigurationen for at få en reservationsbog her.",
-      "tableWithoutSize": "Hvert bord skal have en størrelse: udfyld den, eller fjern rækken."
+      "tableWithoutSize": "Hvert bord skal have en størrelse: udfyld den, eller fjern rækken.",
+      "confirmCancel": {
+        "cancelTitle": "Annuller denne reservation?",
+        "declineTitle": "Afvis denne anmodning?",
+        "message": "{who}, {day} kl. {time}, {people}. Det kan ikke fortrydes.",
+        "cancel": "Annuller reservation",
+        "decline": "Afvis anmodning",
+        "keep": "Behold",
+        "noName": "gæst uden navn"
+      }
     }
   },
   "views": {

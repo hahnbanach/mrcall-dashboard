@@ -1106,7 +1106,7 @@
       }
     },
     "restaurant": {
-      "menu": "Réservations",
+      "menu": "Réservations restaurant",
       "unavailable": "Le registre des réservations n'est pas encore disponible sur ce serveur. Il apparaîtra ici une fois le serveur mis à jour.",
       "loadError": "Impossible de charger les réservations.",
       "notConfigured": "La fonction de réservation de tables n'est pas encore configurée : configurez-la dans les paramètres de l'IA.",
@@ -1222,7 +1222,16 @@
         "error": "Une erreur s'est produite : réessayez."
       },
       "noSkill": "Cet assistant ne prend pas de réservations de tables : ajoutez la fonction de réservation de tables dans la configuration de l'IA pour avoir ici le carnet de réservations.",
-      "tableWithoutSize": "Chaque table doit avoir une taille : indiquez-la ou supprimez la ligne."
+      "tableWithoutSize": "Chaque table doit avoir une taille : indiquez-la ou supprimez la ligne.",
+      "confirmCancel": {
+        "cancelTitle": "Annuler cette réservation ?",
+        "declineTitle": "Refuser cette demande ?",
+        "message": "{who}, {day} à {time}, {people}. Cette action est irréversible.",
+        "cancel": "Annuler la réservation",
+        "decline": "Refuser la demande",
+        "keep": "Conserver",
+        "noName": "client sans nom"
+      }
     }
   },
   "views": {

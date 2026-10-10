@@ -1104,7 +1104,7 @@
       }
     },
     "restaurant": {
-      "menu": "Varaukset",
+      "menu": "Ravintolavaraukset",
       "unavailable": "Varauskirja ei ole vielä käytettävissä tällä palvelimella. Se näkyy tässä, kun palvelin on päivitetty.",
       "loadError": "Varauksia ei voitu lukea.",
       "notConfigured": "Pöytävaraustoimintoa ei ole vielä määritetty: määritä se tekoälyasetuksissa.",
@@ -1220,7 +1220,16 @@
         "error": "Tapahtui virhe: yritä uudelleen."
       },
       "noSkill": "Tämä avustaja ei ota pöytävarauksia: lisää pöytävaraustoiminto tekoälyn asetuksiin, niin varauskirja näkyy tässä.",
-      "tableWithoutSize": "Jokaisella pöydällä on oltava koko: täytä se tai poista rivi."
+      "tableWithoutSize": "Jokaisella pöydällä on oltava koko: täytä se tai poista rivi.",
+      "confirmCancel": {
+        "cancelTitle": "Perutaanko tämä varaus?",
+        "declineTitle": "Hylätäänkö tämä pyyntö?",
+        "message": "{who}, {day} klo {time}, {people}. Tätä ei voi perua.",
+        "cancel": "Peru varaus",
+        "decline": "Hylkää pyyntö",
+        "keep": "Säilytä",
+        "noName": "nimetön asiakas"
+      }
     }
   },
   "views": {
