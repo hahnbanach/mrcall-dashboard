@@ -3,16 +3,18 @@ const { mockBusiness } = require('./mock-data')
 
 /**
  * A StarChat restaurant book in memory, for the restaurant page's browser tests: the routes the page calls,
- * answering in the shapes StarChat answers (ApiDomainRestaurantResource) and, where milestone R4 is still
- * being built, in the shapes its brief states: tables without an id get one from the server, a join may name
- * a table by name, bookings carry `callIds`, the skill read carries the store-backed `layout` section and
- * `minFreeMinutes`, and the finder is GET /seatings.
+ * answering in the shapes StarChat 9.34.63 answers (ApiDomainRestaurantResource, LayoutDraft,
+ * RestaurantLayoutSection): tables without an id get one from the server, a join may name a table by name,
+ * bookings carry `callIds`, the day read carries `minFreeMinutes` and each table's free windows
+ * (`freeTables`), the skill read carries the store-backed `layout` section, and the finder is
+ * GET /suggestions.
  *
  * It is stateful on purpose: a write changes what the next read returns, so a test sees the page redraw
  * from the server's answer and not from what it sent. Every write is recorded in `calls`.
  *
- * The finder here is NOT the server's decision function: it seats a party at the first free declared
- * seating, which is all a test of the page needs (the page shows whatever the server answers).
+ * The finder and the free windows here are NOT the server's computation: the finder seats a party at the free
+ * declared seatings, the windows are the gaps between the day's bookings (DayBook.freeWindows' rule, without
+ * blocks or re-seating), which is all a test of the page needs (the page shows whatever the server answers).
  */
 
 const pad = n => String(n).padStart(2, '0')
@@ -65,7 +67,7 @@ function tomorrowsDinner () {
     r('b-gallo', '21:00', 2, 'Gallo', [7], { source: 'walk_in', name: null, phone: null }),
     r('b-req', '21:30', 9, 'Galli', [], { status: 'requested', requestReason: 'large_party', conversationId: 'CON-req', callIds: ['CON-req'] }),
     // three weeks ahead, on a day no test opens: the page does not know of it, the server does
-    r('b-far', '20:00', 3, 'Moretti', [5], { date: addDays(TODAY, 20) })
+    r('b-far', '20:00', 3, 'Moretti', [5], { date: addDays(TODAY, 20), conversationId: 'CON-far', callIds: ['CON-far'] })
   ]
 }
 
@@ -87,7 +89,7 @@ const lunch = JSON.stringify(Object.fromEntries(WEEK.map(d => [d, ['12:00-14:00'
 /**
  * Installs the book on `page`. Options:
  *   layout: false for a restaurant without tables (the wizard); hours: false for an instance with no hours;
- *   seatings: false for a server without the finder route; restaurant: false for a server without the routes;
+ *   suggestions: false for a finder that fails (500); restaurant: false for a server without the routes;
  *   refuseBook: the code the first POST /reservations is refused with; refuseLayout: answer layout saves 422.
  */
 async function mockRestaurant (page, opts = {}) {
@@ -119,6 +121,26 @@ async function mockRestaurant (page, opts = {}) {
     const singles = state.layout.tables.filter(t => t.active).map(t => ({ ids: [t.id], min: t.min, max: t.max, zone: t.zone, joined: false }))
     const joins = state.layout.joins.map(j => ({ ids: j.tables.slice(), min: j.min, max: j.max, zone: 'sala', joined: true }))
     return singles.sort((a, b) => a.max - b.max).concat(joins)
+  }
+  const minFree = () => Number(state.params.minFreeMinutes || state.params.tableMinutes2)
+  /** DayBook.freeWindows: per active table, the gaps of each service (first arrival to last arrival plus the
+   *  longest table time) at least the minimum free time long, as "HH:MM", past midnight as 24:30. */
+  const freeTablesOf = date => {
+    const spans = [[toMin('12:00'), toMin('14:00') + 150], [toMin('19:00'), toMin('22:00') + 150]]
+    const out = {}
+    state.layout.tables.filter(t => t.active).forEach(t => {
+      const busy = state.rows.filter(r => r.date === date && takes(r) && r.tableIds.includes(t.id)).map(r => [toMin(r.time), end(r)]).sort((a, b) => a[0] - b[0])
+      out[t.id] = []
+      spans.forEach(([start, stop]) => {
+        let cursor = start
+        busy.filter(([a, b]) => a < stop && b > start).forEach(([a, b]) => {
+          if (a > cursor && a - cursor >= minFree()) out[t.id].push({ from: fmt(cursor), to: fmt(a) })
+          cursor = Math.max(cursor, b)
+        })
+        if (stop - cursor >= minFree()) out[t.id].push({ from: fmt(cursor), to: fmt(stop) })
+      })
+    })
+    return out
   }
   const fitsAt = (date, time, covers) => {
     const from = toMin(time)
@@ -165,6 +187,7 @@ async function mockRestaurant (page, opts = {}) {
       const date = url.searchParams.get('date')
       return json(route, 200, {
         date, configured: !!state.layout, held: 0, heldTables: [], covers: {}, zonesClosed: [],
+        minFreeMinutes: minFree(), freeTables: state.layout ? freeTablesOf(date) : undefined,
         layout: state.layout ? Object.assign({ revision: state.layout.revision, nextTableId: state.layout.nextTableId }, layoutDoc()) : null,
         reservations: state.rows.filter(r => r.date === date).map(wire)
       })
@@ -178,14 +201,16 @@ async function mockRestaurant (page, opts = {}) {
       }
       return json(route, 200, { from: url.searchParams.get('from'), to: url.searchParams.get('to'), by: 'staff', days })
     }
-    if (method === 'GET' && path === '/seatings') {
-      if (opts.seatings === false) return route.fulfill({ status: 404, contentType: 'text/plain', body: 'The requested resource could not be found.' })
+    if (method === 'GET' && path === '/suggestions') {
+      if (opts.suggestions === false) return diag(route, 500, 'internal')
       const date = url.searchParams.get('date')
+      const time = url.searchParams.get('time')
       const covers = Number(url.searchParams.get('covers'))
-      const fits = fitsAt(date, url.searchParams.get('time'), covers)
-      const later = []
-      for (let m = toMin(url.searchParams.get('time')) + 15; m <= toMin('22:00'); m += 15) if (fitsAt(date, fmt(m), covers).length) later.push(fmt(m))
-      return json(route, 200, { fits: fits.map(f => ({ tableIds: f.ids, zone: f.zone, joined: f.joined })), later })
+      const fits = fitsAt(date, time, covers)
+      return json(route, 200, { date, time, covers,
+        suggestions: fits.map(f => ({ zone: f.zone, zoneName: f.zone === 'sala' ? 'Dining room' : 'Terrace', tableIds: f.ids,
+          tableNames: tableNames(f.ids), minutes: covers <= 2 ? 90 : covers <= 4 ? 105 : 120, moves: [] })),
+        refusal: fits.length ? undefined : 'full' })
     }
     if (method === 'POST' && path === '/reservations') {
       if (state.refuseBook && !body.overbook) {

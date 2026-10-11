@@ -1287,12 +1287,9 @@
         "nothing": "midagi erilist pole",
         "allergies": "1 allergiaga | {n} allergiaga",
         "groups": "1 seltskond 6+ inimest | {n} seltskonda 6+ inimest",
-        "noshows": "1 varem mitteilmunud | {n} varem mitteilmunut",
-        "pastNoShows": "1 varasem mitteilmumine | {n} varasemat mitteilmumist",
         "title": {
           "allergies": "Allergiaga",
-          "groups": "6 või enama inimese seltskonnad",
-          "noshows": "Varem mitteilmunud"
+          "groups": "6 või enama inimese seltskonnad"
         }
       },
       "toolbar": {
@@ -1306,13 +1303,13 @@
         "clear": "Tühjenda",
         "findHint": "Vali inimeste arv: ütlen, kuhu nad kell {time} mahuvad.",
         "asking": "Küsin broneeringusüsteemilt…",
-        "unavailable": "Server ei oska sellele veel vastata: broneeri ja süsteem valib laua.",
         "forAt": "{n} inimesele kell {time}:",
         "best": "soovitatud",
         "andMore": "ja veel {n}",
         "noneAt": "{n} inimesele kell {time}: lauda pole;",
         "later": "esimesed vabad ajad:",
-        "noneLater": "selles teenindusvahetuses aega pole, vaata ülal olevaid päevi."
+        "noneLater": "selles teenindusvahetuses aega pole, vaata ülal olevaid päevi.",
+        "moves": "nihutab 1 broneeringut | nihutab {n} broneeringut"
       },
       "move": {
         "banner": "Vii {name} ({party}, {time}): puuduta soovitud vaba lauda; ääristatud lauad sobivad.",
@@ -1368,7 +1365,6 @@
         "cancelled": "Broneering tühistatud.",
         "noShow": "Märgitud mitteilmunuks.",
         "request": "Päring, mille peab otsustama inimene",
-        "pastNoShows": "1 varasem mitteilmumine selle numbriga. | {n} varasemat mitteilmumist selle numbriga.",
         "overbooked": "Broneeritud üle saali mahutavuse.",
         "table": "Laud",
         "pinnedShort": "kinnitatud",

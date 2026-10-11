@@ -1287,12 +1287,9 @@
         "nothing": "niets bijzonders",
         "allergies": "1 met allergieën | {n} met allergieën",
         "groups": "1 gezelschap van 6+ | {n} gezelschappen van 6+",
-        "noshows": "1 met eerdere no-shows | {n} met eerdere no-shows",
-        "pastNoShows": "1 eerdere no-show | {n} eerdere no-shows",
         "title": {
           "allergies": "Met allergieën",
-          "groups": "Gezelschappen van 6 of meer",
-          "noshows": "Met eerdere no-shows"
+          "groups": "Gezelschappen van 6 of meer"
         }
       },
       "toolbar": {
@@ -1306,13 +1303,13 @@
         "clear": "Wissen",
         "findHint": "Kies hoeveel personen: ik zeg je waar ze om {time} zitten.",
         "asking": "Het boek raadplegen…",
-        "unavailable": "De server kan dit nog niet beantwoorden: reserveer en hij kiest de tafel.",
         "forAt": "Voor {n} om {time}:",
         "best": "aanbevolen",
         "andMore": "en nog {n}",
         "noneAt": "Voor {n} om {time}: geen tafel;",
         "later": "eerste vrije tijdstippen:",
-        "noneLater": "geen tijdstip in deze service, kijk naar de dagen hierboven."
+        "noneLater": "geen tijdstip in deze service, kijk naar de dagen hierboven.",
+        "moves": "verplaatst 1 reservering | verplaatst {n} reserveringen"
       },
       "move": {
         "banner": "{name} verplaatsen ({party}, {time}): tik op de vrije tafel die je wilt; de omlijnde passen.",
@@ -1368,7 +1365,6 @@
         "cancelled": "Reservering geannuleerd.",
         "noShow": "Gemarkeerd als niet verschenen.",
         "request": "Aanvraag waarover een persoon moet beslissen",
-        "pastNoShows": "1 eerdere no-show met dit nummer. | {n} eerdere no-shows met dit nummer.",
         "overbooked": "Gereserveerd boven de capaciteit van de zaal.",
         "table": "Tafel",
         "pinnedShort": "vastgezet",

@@ -156,7 +156,7 @@ export default {
       if (this.fixed) return this.$t("components.restaurant.newb.freeFixed", { tables: this.fixed.label, zone: this.fixedZone, n: this.form.party });
       const a = this.findAnswer;
       if (!a || a.loading) return this.$t("components.restaurant.toolbar.asking");
-      if (a.unavailable || a.error) return this.$t("components.restaurant.newb.serverChooses");
+      if (a.error) return this.$t("components.restaurant.newb.serverChooses");
       const best = a.fits[0];
       const z = this.layout.zones.find(x => x.id === best.zone);
       return this.$t("components.restaurant.newb.freeFixed", { tables: best.label, zone: z ? z.name : "", n: this.form.party });

@@ -80,45 +80,40 @@ describe('a booking on the page', () => {
     expect(callsOf({ conversationId: null, callIds: [] })).toEqual([])
   })
 
-  it('reads a row of the day read, with call_ids as R4 may spell it', () => {
+  it('reads a row of the day read with the calls that touched it', () => {
     const b = bookingFromWire({ id: 'r', version: 2, time: '20:15', minutes: 105, covers: 4, status: 'confirmed', serviceState: 'arrived',
-      source: 'assistant', tableIds: [3], conversationId: 'A', call_ids: ['A', 'B'] })
+      source: 'assistant', tableIds: [3], conversationId: 'A', callIds: ['A', 'B'] })
     expect(b).toMatchObject({ start: toMin('20:15'), end: toMin('22:00'), party: 4, tables: [3], state: 'arrived', callIds: ['A', 'B'] })
   })
 })
 
-// Seen failing on 2026-10-11: with the minimum ignored (a booking blocks only if it starts within a minute)
-// the first and the third case fail; without the cut at the end of the service, the fourth.
-describe('a free table, for the minimum free time', () => {
-  // The brief's case: minFreeMinutes 90 and a table free 19:45-20:00 before a booking is not free at 19:45.
+// The free windows are the server's (the day read's `freeTables`, DayBook.freeWindows); the page reads a
+// time against them with the server's rule: free at t when from <= t <= to - minFreeMinutes.
+// Seen failing on 2026-10-11 with the rule read as from <= t < to: the second and fourth cases fail.
+describe('a free table, read from the server\'s free windows', () => {
+  const w = (from, to) => ({ from: toMin(from), to: toMin(to) })
+
+  // The brief's case: minFreeMinutes 90 and a table free 19:45-20:00 before a booking is not free at 19:45;
+  // the server gives no window for those 15 minutes, only the one after the booking.
   it('is not free at a time from which it stays free for less than the minimum', () => {
-    const list = [booking('a', '20:00', 90, [1])]
-    expect(isFreeAt(list, 'dinner', 1, toMin('19:45'), 90, win)).toBe(false)
-    expect(fmt(freeFrom(list, 'dinner', 1, toMin('19:45'), 90, win))).toBe('21:30')
-    expect(isFreeAt(list, 'dinner', 2, toMin('19:45'), 90, win)).toBe(true)
+    const windows = [w('21:30', '24:30')]
+    expect(isFreeAt(windows, toMin('19:45'), 90)).toBe(false)
+    expect(fmt(freeFrom(windows, toMin('19:45'), 90))).toBe('21:30')
   })
 
-  it('counts a shorter minimum: 15 minutes free before a booking is enough for 15', () => {
-    const list = [booking('a', '20:00', 90, [1])]
-    expect(isFreeAt(list, 'dinner', 1, toMin('19:45'), 15, win)).toBe(true)
+  it('is free inside a window up to the minimum before its end, not after', () => {
+    const windows = [w('19:00', '21:00')]
+    expect(isFreeAt(windows, toMin('19:30'), 90)).toBe(true)
+    expect(isFreeAt(windows, toMin('19:30'), 91)).toBe(false)
   })
 
-  it('is never free again when it frees after the last arrival', () => {
-    const list = [booking('a', '20:30', 150, [1])]
-    expect(freeFrom(list, 'dinner', 1, toMin('20:15'), 90, win)).toBeNull()
+  it('reads a window that runs past midnight, as the server writes it (24:30)', () => {
+    expect(fmt(freeFrom([w('22:00', '24:30')], toMin('21:00'), 90))).toBe('22:00')
   })
 
-  it('ends a free window at the end of the service too', () => {
-    expect(isFreeAt([], 'dinner', 1, win.close - 30, 90, win)).toBe(false)
-  })
-
-  it('frees a table at the minute a party left, and holds the tables a block closes', () => {
-    const left = [booking('a', '19:00', 50, [1], { state: 'left' })]
-    expect(isFreeAt(left, 'dinner', 1, toMin('19:50'), 90, win)).toBe(true)
-    const block = [booking('b', '19:00', 180, [], { state: 'block', blockTableIds: [2] })]
-    expect(isFreeAt(block, 'dinner', 2, toMin('20:00'), 90, win)).toBe(false)
-    const cancelled = [booking('c', '20:00', 90, [3], { state: 'cancelled' })]
-    expect(isFreeAt(cancelled, 'dinner', 3, toMin('20:00'), 90, win)).toBe(true)
+  it('never frees when no window is left, or the table has none', () => {
+    expect(freeFrom([w('19:00', '20:30')], toMin('20:00'), 90)).toBeNull()
+    expect(freeFrom(undefined, toMin('20:00'), 90)).toBeNull()
   })
 })
 
@@ -158,13 +153,13 @@ describe('the period strip', () => {
 })
 
 describe('"Da sapere" and the search', () => {
-  it('names the guests with allergies, the large parties and the past no-shows, by time', () => {
+  it('names the guests with allergies and the large parties, by time', () => {
     const list = [booking('b', '21:00', 90, [1], { allergies: 'nuts' }), booking('a', '20:00', 120, [3], { party: 7 }),
-      booking('c', '19:00', 90, [2], { pastNoShows: 1 }), booking('x', '19:00', 90, [2], { allergies: 'x', state: 'cancelled' })]
+      booking('x', '19:00', 90, [2], { allergies: 'x', state: 'cancelled' })]
     const k = knowCounts(list, 'dinner')
     expect(k.allergies.map(b => b.id)).toEqual(['b'])
     expect(k.groups.map(b => b.id)).toEqual(['a'])
-    expect(k.noshows.map(b => b.id)).toEqual(['c'])
+    expect(Object.keys(k)).toEqual(['allergies', 'groups'])
   })
 
   it('matches a name, or the digits of a phone however it is spaced', () => {

@@ -14,7 +14,9 @@ const { mockRestaurant, openRestaurant, tomorrowDinner, TODAY, TOMORROW } = requ
  * the one that passed is the notice on a server without the routes, a behaviour the new page keeps. Each of
  * these was also seen failing on the new page with one fault put in (Undo at the version read instead of the
  * new one; the calls oldest first; the layout section sent with the minimum free time; the minimum free time
- * ignored by the tiles; the cancel confirmation without "Keep it" focused). Tests that need a mouse drag
+ * ignored by the tiles; the cancel confirmation without "Keep it" focused). After the page moved to StarChat
+ * 9.34.63's shapes: the day read without `freeTables` fails the first test (the tiles read the server's
+ * windows, nothing else), and the finder asking no later time fails the "nothing free" test. Tests that need a mouse drag
  * run on the desktop project only.
  */
 
@@ -82,9 +84,9 @@ test.describe('the restaurant page', () => {
     await page.getByRole('button', { name: 'One person more' }).click()
     const best = page.locator('.find-line .chip').first()
     await expect(best).toHaveText('T1 (recommended)')
-    const asked = calls.filter(c => c.path === '/seatings').pop()
-    expect(new URLSearchParams(asked.search).get('covers')).toBe('2')
-    expect(new URLSearchParams(asked.search).get('time')).toBe('20:00')
+    // one question per party size, at the time chosen: 1, then 2, at 20:00
+    expect(calls.filter(c => c.path === '/suggestions').map(c => c.search).slice(0, 2))
+      .toEqual([`?date=${TOMORROW}&time=20%3A00&covers=1`, `?date=${TOMORROW}&time=20%3A00&covers=2`])
     await expect(tile(page, 'T1')).toHaveClass(/fit/)
     await best.click()
     const panel = page.locator('.panel')
@@ -101,13 +103,25 @@ test.describe('the restaurant page', () => {
     expect(calls.filter(c => c.method === 'DELETE').map(c => c.path + c.search)).toEqual(['/reservations/n1?expectedVersion=1'])
   })
 
-  test('without the finder route the finder says so instead of guessing', async ({ authenticatedPage: page }) => {
-    await mockRestaurant(page, { seatings: false })
+  test('with nothing free the finder asks the next times and offers them; a failing finder says so', async ({ authenticatedPage: page }) => {
+    const { calls } = await mockRestaurant(page)
+    await openRestaurant(page)
+    await ready(page)
+    await tomorrowDinner(page)
+    // T6 (6 seats) is Bianchi's from 19:30 to 21:30: a party of 6 fits again at 21:30.
+    for (let i = 0; i < 6; i++) await page.getByRole('button', { name: 'One person more' }).click()
+    await expect(page.locator('.find-line')).toContainText('For 6 at 20:00: no table')
+    await expect(page.locator('.find-line .chip').first()).toHaveText('21:30')
+    expect(calls.filter(c => c.path === '/suggestions' && new URLSearchParams(c.search).get('covers') === '6').length).toBeGreaterThan(1)
+  })
+
+  test('a finder that fails says so instead of guessing', async ({ authenticatedPage: page }) => {
+    await mockRestaurant(page, { suggestions: false })
     await openRestaurant(page)
     await ready(page)
     await tomorrowDinner(page)
     await page.getByRole('button', { name: 'One person more' }).click()
-    await expect(page.locator('.find-line')).toContainText('The server cannot answer this yet')
+    await expect(page.locator('.find-line')).toContainText('Something went wrong')
     await expect(page.locator('.find-line .chip')).toHaveCount(0)
   })
 

@@ -1292,12 +1292,9 @@
         "nothing": "nothing in particular",
         "allergies": "1 with allergies | {n} with allergies",
         "groups": "1 party of 6+ | {n} parties of 6+",
-        "noshows": "1 with past no-shows | {n} with past no-shows",
-        "pastNoShows": "1 past no-show | {n} past no-shows",
         "title": {
           "allergies": "With allergies",
-          "groups": "Parties of 6 or more",
-          "noshows": "With past no-shows"
+          "groups": "Parties of 6 or more"
         }
       },
       "toolbar": {
@@ -1311,13 +1308,13 @@
         "clear": "Clear",
         "findHint": "Choose how many people: I'll tell you where they sit at {time}.",
         "asking": "Asking the book…",
-        "unavailable": "The server cannot answer this yet: book and it will choose the table.",
         "forAt": "For {n} at {time}:",
         "best": "recommended",
         "andMore": "and {n} more",
         "noneAt": "For {n} at {time}: no table;",
         "later": "first free times:",
-        "noneLater": "no time in this service, look at the days above."
+        "noneLater": "no time in this service, look at the days above.",
+        "moves": "moves 1 booking | moves {n} bookings"
       },
       "move": {
         "banner": "Move {name} ({party}, {time}): tap the free table you want; the outlined ones fit.",
@@ -1373,7 +1370,6 @@
         "cancelled": "Booking cancelled.",
         "noShow": "Marked as no-show.",
         "request": "Request for a person to decide",
-        "pastNoShows": "1 past no-show with this number. | {n} past no-shows with this number.",
         "overbooked": "Booked beyond the room's capacity.",
         "table": "Table",
         "pinnedShort": "pinned",

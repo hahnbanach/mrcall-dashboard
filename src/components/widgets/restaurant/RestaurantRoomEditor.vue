@@ -248,8 +248,13 @@ export default {
       if (this.minFreeError) out.push({ ref: "set-minfree", text: this.$t("components.restaurant.check.minFree", this.limits) });
       return out;
     },
+    /** What the server's preview of the draft refuses: the problems the save would answer, said before it. */
+    previewProblems() {
+      const ps = (this.preview.data && this.preview.data.problems) || [];
+      return ps.map(p => ({ ref: this.refOf(p.path), text: this.problemText(p) }));
+    },
     allErrors() {
-      return this.clientErrors.concat(this.serverProblems);
+      return this.clientErrors.concat(this.serverProblems.length ? this.serverProblems : this.previewProblems);
     },
     warnings() {
       const ws = (this.preview.data && this.preview.data.warnings) || [];
@@ -450,7 +455,8 @@ export default {
     },
     /** The field a server problem is about, from its path in the layout the save sent. */
     refOf(path) {
-      const m = /^\/layout\/(zones|tables|joins)\/(\d+)\/?(\w+)?/.exec(path || "");
+      // a save's paths start with /layout, the preview's are the document's own
+      const m = /^(?:\/layout)?\/(zones|tables|joins)\/(\d+)\/?(\w+)?/.exec(path || "");
       if (!m) return "";
       const i = Number(m[2]);
       if (m[1] === "zones") return this.draft.zones[i] ? `z-${this.draft.zones[i].id}-name` : "";

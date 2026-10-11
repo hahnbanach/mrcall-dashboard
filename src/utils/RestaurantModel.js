@@ -8,10 +8,10 @@
  *
  * WHAT DOES NOT. Whether a party fits (pacing, notice, the assistant's share, re-seating) is the
  * server's one decision function: the period strip, the finder ("Cerca posto") and every write ask it.
- * The page never computes a different answer to show instead. Two things are computed here because
- * the page draws them and the day read carries everything they need: a table's free window for the
- * minimum free time (holds plus a number, the rule the brief states) and, while a booking is being
- * dragged, which tables are physically free for its interval. The server still judges the move.
+ * The page never computes a different answer to show instead. When a table is free for the minimum free
+ * time is the server's too: the day read carries each table's free windows (`freeTables`), and the page
+ * only reads a time against them. One thing is computed here because the page draws it while a booking is
+ * being dragged: which tables are physically free for its interval. The server still judges the move.
  */
 
 export const SERVICES = ['lunch', 'dinner']
@@ -204,27 +204,22 @@ export function tableAt (list, service, tableId, t) {
 }
 
 /**
- * The earliest time from `t` on at which a table stays free for at least `minFree` minutes, until its
- * next booking or the end of the service; `t` itself when it counts as free now, null when it does not
- * become free again before the last arrival. The brief's rule: a table free for 15 minutes before a
- * booking is not shown as free.
+ * The earliest time from `t` on at which a table stays free for at least `minFree` minutes, read from the
+ * server's free windows of that table (the day read's `freeTables`: free from `from` until `to`, each
+ * window at least `minFree` long, the service's end included): `t` itself when it is free now, null when
+ * no window is left. A time `t` is free when `from <= t <= to - minFree`, as the server states it.
  */
-export function freeFrom (list, service, tableId, t, minFree, win) {
-  const bs = live(list, service).filter(b => occupiedTables(b).includes(tableId))
-  const end = win ? win.close : Infinity
-  const last = win ? win.last : Infinity
-  let s = t
-  for (let guard = 0; guard < 100; guard++) {
-    if (end - s < minFree) return null
-    const blocking = bs.filter(b => b.start < s + minFree && b.end > s)
-    if (!blocking.length) return (s === t || s <= last) ? s : null
-    s = Math.max(...blocking.map(b => b.end))
-  }
-  return null
+export function freeFrom (windows, t, minFree) {
+  let best = null
+  ;(windows || []).forEach(w => {
+    const s = Math.max(t, w.from)
+    if (s <= w.to - minFree && (best === null || s < best)) best = s
+  })
+  return best
 }
 
-export function isFreeAt (list, service, tableId, t, minFree, win) {
-  return freeFrom(list, service, tableId, t, minFree, win) === t
+export function isFreeAt (windows, t, minFree) {
+  return freeFrom(windows, t, minFree) === t
 }
 
 // ---------------------------------------------------------------- the layout
@@ -322,12 +317,11 @@ export function stripStatus (summary, { past, arrivals, step }) {
 
 // ---------------------------------------------------------------- "Da sapere"
 
-/** The guests the service should know about before it starts. `noShows` is read when the day read
- *  carries it; without it the chip is not offered. */
+/** The guests the service should know about before it starts. The prototype also names guests with past
+ *  no-shows; StarChat's day read carries no such count, so that chip is not offered. */
 export const KNOW = {
   allergies: b => !!b.allergies,
-  groups: b => b.party >= 6,
-  noshows: b => (b.pastNoShows || 0) > 0
+  groups: b => b.party >= 6
 }
 
 export function knowCounts (list, service) {

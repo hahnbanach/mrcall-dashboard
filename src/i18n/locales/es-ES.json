@@ -1301,12 +1301,9 @@
         "nothing": "nada en particular",
         "allergies": "1 con alergias | {n} con alergias",
         "groups": "1 grupo de 6 o más | {n} grupos de 6 o más",
-        "noshows": "1 con ausencias previas | {n} con ausencias previas",
-        "pastNoShows": "1 ausencia previa | {n} ausencias previas",
         "title": {
           "allergies": "Con alergias",
-          "groups": "Grupos de 6 o más",
-          "noshows": "Con ausencias previas"
+          "groups": "Grupos de 6 o más"
         }
       },
       "toolbar": {
@@ -1320,13 +1317,13 @@
         "clear": "Borrar",
         "findHint": "Elige cuántas personas: te diré dónde se sientan a las {time}.",
         "asking": "Consultando el libro…",
-        "unavailable": "El servidor todavía no puede responder a esto: reserva y él elegirá la mesa.",
         "forAt": "Para {n} a las {time}:",
         "best": "recomendada",
         "andMore": "y {n} más",
         "noneAt": "Para {n} a las {time}: ninguna mesa;",
         "later": "primeras horas libres:",
-        "noneLater": "ninguna hora en este servicio, mira los días de arriba."
+        "noneLater": "ninguna hora en este servicio, mira los días de arriba.",
+        "moves": "mueve 1 reserva | mueve {n} reservas"
       },
       "move": {
         "banner": "Mover {name} ({party}, {time}): toca la mesa libre que quieras; las marcadas con borde son aptas.",
@@ -1382,7 +1379,6 @@
         "cancelled": "Reserva cancelada.",
         "noShow": "Marcada como no presentada.",
         "request": "Solicitud para que decida una persona",
-        "pastNoShows": "1 ausencia previa con este número. | {n} ausencias previas con este número.",
         "overbooked": "Reservada por encima de la capacidad de la sala.",
         "table": "Mesa",
         "pinnedShort": "fijada",

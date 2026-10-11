@@ -45,7 +45,7 @@
           <RestaurantStrip :cells="stripCells" :mode="stripMode" :title="stripTitle" @go-day="setDate" @shift="shiftStrip"
                            @mode="setStripMode" />
           <RestaurantDayView :date="date" :today="today" :service="service" :time="time" :win="win" :rules="rules" :layout="layout"
-                             :list="list" :held-tables="day ? day.heldTables : []" :summaries="periodOf(date)" :find="find"
+                             :list="list" :free-tables="day ? day.freeTables : {}" :min-free-minutes="minFree" :held-tables="day ? day.heldTables : []" :summaries="periodOf(date)" :find="find"
                              :find-answer="findAnswer" :moving="moving" :search="search" :busy="busy"
                              @go-day="setDate" @set-service="setService" @set-time="setTime" @find="setFind"
                              @open="openBooking" @tile-free="tileFree" @fit-book="fitBook" @new-booking="openNew(null, time, find || 2)"
@@ -93,6 +93,9 @@ import RestaurantNewPanel from "@/components/widgets/restaurant/RestaurantNewPan
 import RestaurantRoomEditor from "@/components/widgets/restaurant/RestaurantRoomEditor.vue";
 import RestaurantWizard from "@/components/widgets/restaurant/RestaurantWizard.vue";
 import RestaurantCallModal from "@/components/widgets/restaurant/RestaurantCallModal.vue";
+
+/** When nothing fits, how many of the next arrival times the finder asks about. */
+const LATER_ASKED = 16;
 
 /** The days the search reads ahead, from today: the period strip's. */
 const SEARCH_DAYS = 14;
@@ -171,6 +174,10 @@ export default {
     },
     win() {
       return serviceWindow(this.rules, this.date, this.service);
+    },
+    /** The minimum free time the day read judged its free windows by; the instance's when it gave none. */
+    minFree() {
+      return this.day && this.day.minFreeMinutes ? this.day.minFreeMinutes : this.rules.minFreeMinutes;
     },
     panelBooking() {
       return this.panel && this.panel.type === "booking" ? this.list.find(b => b.id === this.panel.id) || null : null;
@@ -347,23 +354,35 @@ export default {
     async askFinder() {
       const asked = { date: this.date, time: this.time, party: this.find };
       this.findAnswer = { loading: true, ...asked };
+      const answer = await this.askWhere(asked.date, asked.time, asked.party);
+      if (this.date !== asked.date || this.time !== asked.time || this.find !== asked.party) return;
+      this.findAnswer = { ...asked, ...answer };
+    },
+    /**
+     * Where a party sits at a time, asked of the server's finder (GET /suggestions, the assistant's decision).
+     * When nothing fits, the next arrival times of the service are asked too, the same way, until four fit:
+     * the finder answers one time per request and says nothing about later ones.
+     */
+    async askWhere(date, time, party) {
       try {
-        const answer = await RestaurantApi.seatings(this.user, this.businessId, this.date, fmt(this.time), this.find);
-        if (this.date !== asked.date || this.time !== asked.time || this.find !== asked.party) return;
-        this.findAnswer = answer === null ? { unavailable: true, ...asked } : { ...asked, ...this.fitsOf(answer) };
+        const now = await RestaurantApi.suggestions(this.user, this.businessId, date, fmt(time), party);
+        const fits = now.fits.map(f => ({ ...f, joined: f.ids.length > 1, label: seatLabel(this.layout, f.ids) }));
+        if (fits.length) return { fits, refusal: null, later: [] };
+        const win = serviceWindow(this.rules, date, this.service);
+        const next = arrivalTimes(win).filter(t => t > time).slice(0, LATER_ASKED);
+        const answers = await Promise.all(next.map(t => RestaurantApi.suggestions(this.user, this.businessId, date, fmt(t), party)
+          .then(a => (a.fits.length ? t : null), () => null)));
+        return { fits, refusal: now.refusal, later: answers.filter(t => t !== null).slice(0, 4) };
       } catch (e) {
         console.warn("Restaurant finder not answered:", e.restaurant ? e.restaurant.code || e.restaurant.status : e);
-        this.findAnswer = { error: true, ...asked };
+        return { error: true };
       }
     },
-    fitsOf(answer) {
-      const fits = (answer.fits || []).map(f => ({ ids: (f.tableIds || []).slice(), zone: f.zone, joined: !!f.joined,
-        label: seatLabel(this.layout, f.tableIds || []) }));
-      return { fits, later: (answer.later || []).map(toMin).filter(t => t !== null) };
-    },
+    /** A suggestion that moves other bookings is the server's own re-seating: it is booked without naming
+     *  tables, so the server seats it as it suggested (named tables are never re-seated around). */
     fitBook(i) {
       const fit = this.findAnswer && this.findAnswer.fits ? this.findAnswer.fits[i] : null;
-      if (fit) this.openNew(fit.ids, this.time, this.find);
+      if (fit) this.openNew(fit.moves.length ? null : fit.ids, this.time, this.find);
     },
 
     // ------------------------------------------------------------ panels
@@ -386,14 +405,8 @@ export default {
       const p = { start: form.start, party: form.party };
       this.asked = p;
       this.newFit = { loading: true };
-      try {
-        const answer = await RestaurantApi.seatings(this.user, this.businessId, this.date, fmt(p.start), p.party);
-        if (this.asked !== p) return;
-        this.newFit = answer === null ? { unavailable: true } : this.fitsOf(answer);
-      } catch (e) {
-        console.warn("Restaurant finder not answered:", e.restaurant ? e.restaurant.code || e.restaurant.status : e);
-        this.newFit = { error: true };
-      }
+      const answer = await this.askWhere(this.date, p.start, p.party);
+      if (this.asked === p) this.newFit = answer;
     },
     closePanel() {
       this.panel = null;
@@ -403,11 +416,11 @@ export default {
       if (this.moving) return this.moveTo(tid);
       if (this.find && this.findAnswer && this.findAnswer.fits) {
         const fit = this.findAnswer.fits.find(f => f.ids.includes(tid));
-        if (fit) return this.openNew(fit.ids, this.time, this.find);
+        if (fit) return this.openNew(fit.moves.length ? null : fit.ids, this.time, this.find);
       }
       const t = tableById(this.layout, tid);
       // a table not free long enough opens on the time it frees up
-      const from = freeFrom(this.list, this.service, tid, this.time, this.rules.minFreeMinutes, this.win);
+      const from = freeFrom(this.day.freeTables[tid], this.time, this.minFree);
       this.openNew([tid], from !== null ? from : this.time, Math.min(t.max, Math.max(t.min, 2)));
     },
     timelineNew({ tableId, minute }) {

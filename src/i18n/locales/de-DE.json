@@ -1289,12 +1289,9 @@
         "nothing": "nichts Besonderes",
         "allergies": "1 mit Allergien | {n} mit Allergien",
         "groups": "1 Gruppe ab 6 | {n} Gruppen ab 6",
-        "noshows": "1 mit früheren No-Shows | {n} mit früheren No-Shows",
-        "pastNoShows": "1 früherer No-Show | {n} frühere No-Shows",
         "title": {
           "allergies": "Mit Allergien",
-          "groups": "Gruppen ab 6 Personen",
-          "noshows": "Mit früheren No-Shows"
+          "groups": "Gruppen ab 6 Personen"
         }
       },
       "toolbar": {
@@ -1308,13 +1305,13 @@
         "clear": "Zurücksetzen",
         "findHint": "Personenzahl wählen: Es wird angezeigt, wo sie um {time} sitzen.",
         "asking": "Frage das Buch ab…",
-        "unavailable": "Der Server kann das noch nicht beantworten: Reservieren, dann wählt er den Tisch.",
         "forAt": "Für {n} um {time}:",
         "best": "empfohlen",
         "andMore": "und {n} weitere",
         "noneAt": "Für {n} um {time}: kein Tisch;",
         "later": "erste freie Zeiten:",
-        "noneLater": "keine Uhrzeit in diesem Service, die Tage oben ansehen."
+        "noneLater": "keine Uhrzeit in diesem Service, die Tage oben ansehen.",
+        "moves": "verschiebt 1 Reservierung | verschiebt {n} Reservierungen"
       },
       "move": {
         "banner": "{name} verschieben ({party}, {time}): den gewünschten freien Tisch antippen; die umrandeten passen.",
@@ -1370,7 +1367,6 @@
         "cancelled": "Reservierung storniert.",
         "noShow": "Als No-Show markiert.",
         "request": "Anfrage, über die eine Person entscheidet",
-        "pastNoShows": "1 früherer No-Show mit dieser Nummer. | {n} frühere No-Shows mit dieser Nummer.",
         "overbooked": "Über die Kapazität des Raums hinaus reserviert.",
         "table": "Tisch",
         "pinnedShort": "fixiert",

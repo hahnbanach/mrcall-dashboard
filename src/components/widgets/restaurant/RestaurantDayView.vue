@@ -66,16 +66,16 @@
           <div class="find-line" role="status">
             <span v-if="!find" class="muted">{{ $t("components.restaurant.toolbar.findHint", { time: fmt(time) }) }}</span>
             <span v-else-if="!findAnswer || findAnswer.loading" class="muted">{{ $t("components.restaurant.toolbar.asking") }}</span>
-            <span v-else-if="findAnswer.unavailable" class="muted">{{ $t("components.restaurant.toolbar.unavailable") }}</span>
             <span v-else-if="findAnswer.error" class="err">{{ $t("components.restaurant.answer.error") }}</span>
             <template v-else-if="findAnswer.fits.length">
               <b>{{ $t("components.restaurant.toolbar.forAt", { n: find, time: fmt(time) }) }}</b>
               <button v-for="(f, i) in findAnswer.fits.slice(0, 4)" :key="f.ids.join()" class="chip" :title="zoneName(f.zone)"
-                      @click="$emit('fit-book', i)">{{ f.label }}<template v-if="i === 0"> ({{ $t("components.restaurant.toolbar.best") }})</template></button>
+                      @click="$emit('fit-book', i)">{{ f.label }}<template v-if="i === 0"> ({{ $t("components.restaurant.toolbar.best") }})</template><template v-if="f.moves.length"> · {{ $t("components.restaurant.toolbar.moves", { n: f.moves.length }, f.moves.length) }}</template></button>
               <small v-if="findAnswer.fits.length > 4">{{ $t("components.restaurant.toolbar.andMore", { n: findAnswer.fits.length - 4 }) }}</small>
             </template>
             <template v-else>
               <b>{{ $t("components.restaurant.toolbar.noneAt", { n: find, time: fmt(time) }) }}</b>
+              <span v-if="findAnswer.refusal && findAnswer.refusal !== 'full'" class="refusal-why">{{ $t(refusalKey(findAnswer.refusal)) }}</span>
               <template v-if="findAnswer.later.length">
                 {{ $t("components.restaurant.toolbar.later") }}
                 <button v-for="t in findAnswer.later.slice(0, 4)" :key="t" class="chip" @click="$emit('set-time', t)">{{ fmt(t) }}</button>
@@ -222,12 +222,12 @@
 
 <script>
 import {
-  addDays, fmt, live, guests, usableTables, orderedZones, zoneOpen, tableAt, freeFrom, tableById, seatLabel, occupiedTables,
+  addDays, fmt, live, guests, usableTables, orderedZones, zoneOpen, tableAt, freeFrom, isFreeAt, tableById, seatLabel, occupiedTables,
   knowCounts, matches, callsOf, dropTargets, serviceWindow
 } from "@/utils/RestaurantModel";
-import { longDate } from "@/components/widgets/restaurant/format";
+import { longDate, refusalKey } from "@/components/widgets/restaurant/format";
 
-const KNOW_CLASS = { allergies: "red", groups: "blue", noshows: "amber" };
+const KNOW_CLASS = { allergies: "red", groups: "blue" };
 const FILTERS = ["all", "waiting", "seated", "left"];
 
 /**
@@ -248,6 +248,9 @@ export default {
     layout: { type: Object, required: true },
     list: { type: Array, required: true },
     heldTables: { type: Array, default: () => [] },
+    /** The server's free windows per table id (the day read's `freeTables`), and the minimum they are judged by. */
+    freeTables: { type: Object, default: () => ({}) },
+    minFreeMinutes: { type: Number, required: true },
     summaries: { type: Object, default: null },
     find: { type: Number, default: 0 },
     findAnswer: { type: Object, default: null },
@@ -262,7 +265,7 @@ export default {
   },
   computed: {
     minFree() {
-      return this.rules.minFreeMinutes;
+      return this.minFreeMinutes;
     },
     /** Closed when the server's period says so, and when the weekly hours have no window to draw it in. */
     closed() {
@@ -395,7 +398,7 @@ export default {
       return live(this.list, s).filter(b => b.state !== "block").reduce((a, b) => a + b.party, 0);
     },
     freeCountAt(t) {
-      return this.usable.filter(tb => freeFrom(this.list, this.service, tb.id, t, this.minFree, this.win) === t).length;
+      return this.usable.filter(tb => isFreeAt(this.freeTables[tb.id], t, this.minFree)).length;
     },
     zoneName(id) {
       const z = this.layout.zones.find(x => x.id === id);
@@ -418,9 +421,9 @@ export default {
     },
     knowDetail(b) {
       if (this.know === "allergies") return b.allergies;
-      if (this.know === "groups") return this.$t("components.restaurant.people", { n: b.party });
-      return this.$t("components.restaurant.know.pastNoShows", { n: b.pastNoShows });
+      return this.$t("components.restaurant.people", { n: b.party });
     },
+    refusalKey,
     stateOfTile(b) {
       const t = this.time;
       if (b.state === "block") return { cls: "blocked", text: this.blockName };
@@ -456,7 +459,7 @@ export default {
       };
     },
     freeTile(t, info) {
-      const from = freeFrom(this.list, this.service, t.id, this.time, this.minFree, this.win);
+      const from = freeFrom(this.freeTables[t.id], this.time, this.minFree);
       const free = from === this.time;
       const fit = this.fitIds.get(t.id);
       const hits = this.hitsOn([t.id], null);

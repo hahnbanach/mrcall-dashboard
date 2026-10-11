@@ -14,7 +14,6 @@
     <div v-if="booking.state === 'requested'" class="callout amber">{{ $t("components.restaurant.panel.request") }}<template v-if="booking.requestReason">: {{ $t(`components.restaurant.reason.${booking.requestReason}`) }}</template></div>
     <div v-if="booking.allergies" class="callout red"><b>{{ $t("components.restaurant.allergies") }}:</b> {{ booking.allergies }}</div>
     <div v-if="booking.notes" class="callout amber">{{ booking.notes }}</div>
-    <div v-if="booking.pastNoShows" class="callout amber">{{ $t("components.restaurant.panel.pastNoShows", { n: booking.pastNoShows }) }}</div>
     <div v-if="booking.overbooked" class="callout amber">{{ $t("components.restaurant.panel.overbooked") }}</div>
     <dl class="kv">
       <dt>{{ $t("components.restaurant.panel.table") }}</dt>

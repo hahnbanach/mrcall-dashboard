@@ -1287,12 +1287,9 @@
         "nothing": "inget särskilt",
         "allergies": "1 med allergier | {n} med allergier",
         "groups": "1 sällskap på 6+ | {n} sällskap på 6+",
-        "noshows": "1 med tidigare uteblivna besök | {n} med tidigare uteblivna besök",
-        "pastNoShows": "1 tidigare uteblivet besök | {n} tidigare uteblivna besök",
         "title": {
           "allergies": "Med allergier",
-          "groups": "Sällskap på 6 eller fler",
-          "noshows": "Med tidigare uteblivna besök"
+          "groups": "Sällskap på 6 eller fler"
         }
       },
       "toolbar": {
@@ -1306,13 +1303,13 @@
         "clear": "Rensa",
         "findHint": "Välj antal personer: jag visar var de kan sitta kl. {time}.",
         "asking": "Frågar boken…",
-        "unavailable": "Servern kan inte svara på detta ännu: boka så väljer den bord.",
         "forAt": "För {n} kl. {time}:",
         "best": "rekommenderas",
         "andMore": "och {n} till",
         "noneAt": "För {n} kl. {time}: inget bord;",
         "later": "första lediga tider:",
-        "noneLater": "ingen tid under den här serveringen, titta på dagarna ovan."
+        "noneLater": "ingen tid under den här serveringen, titta på dagarna ovan.",
+        "moves": "flyttar 1 bokning | flyttar {n} bokningar"
       },
       "move": {
         "banner": "Flytta {name} ({party}, {time}): tryck på det lediga bord du vill ha; de markerade passar.",
@@ -1368,7 +1365,6 @@
         "cancelled": "Bokningen avbokad.",
         "noShow": "Markerad som uteblev.",
         "request": "Förfrågan som en person ska avgöra",
-        "pastNoShows": "1 tidigare uteblivet besök med det här numret. | {n} tidigare uteblivna besök med det här numret.",
         "overbooked": "Bokad över salens kapacitet.",
         "table": "Bord",
         "pinnedShort": "låst",

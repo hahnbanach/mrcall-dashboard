@@ -7,10 +7,8 @@ import { stateOf, toMin } from "@/utils/RestaurantModel";
  * and writes the minimum free time to (/apidomain/agent/skills/configuration/{businessId}).
  *
  * THE ONE PLACE THE WIRE SHAPES LIVE. Every request the page makes, and the translation of every answer
- * into the shapes the page draws, is here. StarChat's milestone R4 (named tables configured like every
- * skill) changes some of these shapes while this page is being built; each place that codes against the
- * brief's contract rather than a released server says so with "R4:" below, so that adjusting to the
- * final shapes is an edit of this file.
+ * into the shapes the page draws, is here. The shapes are StarChat 9.34.63's
+ * (ApiDomainRestaurantResource, LayoutDraft, RestaurantLayoutSection, the restaurant_booking manifest).
  *
  * Every write answers the server's own words: a refusal rejects with the server body as `error.restaurant`
  * (`code` is its first diagnostic's code: `full`, `stale`, `large_party`, `busy_retry`, ...), so the page
@@ -78,12 +76,10 @@ export function layoutFromWire(raw) {
 }
 
 /**
- * The layout as a save sends it.
- *
- * R4: a new table goes without an id and the server assigns one from its `next_table_id`, which the
- * client never handles; a join names a table that has no id yet by its name, names being unique in the
- * layout. Here a table the page added carries a negative draft id, so on the wire it loses the id and the
- * joins name it. Tables the server numbered keep their ids.
+ * The layout as a save and the preview send it (LayoutDraft): a new table goes without an id and the server
+ * assigns one; a join names a table that has no id yet by its name, names being unique in the layout; the
+ * client never sends `nextTableId`. A table the page added carries a negative draft id, so on the wire it
+ * loses the id and the joins name it. Tables the server numbered keep their ids.
  */
 export function layoutToWire(draft) {
     const byId = new Map(draft.tables.map(t => [t.id, t]));
@@ -98,11 +94,8 @@ export function layoutToWire(draft) {
 
 /**
  * A row of the day read as the page draws it: minutes since midnight, the tables it holds, the state it is
- * in, and the calls that touched it.
- *
- * R4: `callIds` (also read as `call_ids`) lists every phone action on the booking, in the order they
- * happened; `conversationId` stays the call that made it. `pastNoShows` (the guest's earlier no-shows) is
- * read when the server sends it; the day read does not carry it today.
+ * in, and the calls that touched it: `callIds` in the order they happened, each once, the first being the
+ * call that made the booking (`conversationId`); a staff booking or a walk-in has none.
  */
 export function bookingFromWire(r) {
     const start = toMin(r.time);
@@ -114,15 +107,26 @@ export function bookingFromWire(r) {
         serviceState: r.serviceState || null, tables: (r.tableIds || []).slice(),
         blockScope: r.blockScope || null, blockTableIds: r.blockTableIds || null,
         conversationId: r.conversationId || null,
-        callIds: (r.callIds || r.call_ids || []).slice(),
-        pastNoShows: r.pastNoShows || 0,
+        callIds: (r.callIds || []).slice(),
     };
     row.state = stateOf(row);
     return row;
 }
 
+/** The day read's `freeTables`: per table id, the windows in which it is free for at least the minimum
+ *  free time, as minutes of the day (a window past midnight ends at "24:30"). */
+function freeTablesFromWire(raw) {
+    const out = {};
+    Object.keys(raw || {}).forEach(id => {
+        out[Number(id)] = (raw[id] || []).map(w => ({ from: toMin(w.from), to: toMin(w.to) }));
+    });
+    return out;
+}
+
 function dayFromWire(raw) {
     return {
+        minFreeMinutes: raw.minFreeMinutes === undefined ? null : raw.minFreeMinutes,
+        freeTables: freeTablesFromWire(raw.freeTables),
         date: raw.date,
         configured: !!raw.configured,
         layout: layoutFromWire(raw.layout),
@@ -149,22 +153,20 @@ export default {
     },
 
     /**
-     * Where a party of `covers` sits at `time`, asked of the server's decision function, the one the assistant
-     * is answered from: `{fits: [{tableIds, zone, joined}], later: ["HH:MM", ...]}`, best first. Null when the
-     * server has no such route.
-     *
-     * R4: the brief has the page's finder ask the one decision function; this is the route it is assumed to
-     * be, GET /seatings?date&time&covers. Until the server has it the finder says it is not available rather
-     * than computing an answer the server would not give.
+     * The table finder: the seatings the assistant would give a party of `covers` at `time`, in the order it
+     * would be given them (the first is its own), each free for the party's whole table time:
+     * `{fits: [{ids, zone, zoneName, minutes, moves}], refusal}`. A fit found only by moving other bookings
+     * carries the moves; none fits, `refusal` is why (full, closed, ...).
      */
-    seatings: async function(user, businessId, date, time, covers) {
-        try {
-            return await call(() => axios.get(base(businessId) + "/seatings?date=" + encodeURIComponent(date) + "&time=" +
-                encodeURIComponent(time) + "&covers=" + encodeURIComponent(covers), { headers: headers(user) }));
-        } catch (e) {
-            if (isMissingRoute(e)) return null;
-            throw e;
-        }
+    suggestions: async function(user, businessId, date, time, covers, zone) {
+        const answer = await call(() => axios.get(base(businessId) + "/suggestions?date=" + encodeURIComponent(date) + "&time=" +
+            encodeURIComponent(time) + "&covers=" + encodeURIComponent(covers) + (zone ? "&zone=" + encodeURIComponent(zone) : ""),
+            { headers: headers(user) }));
+        return {
+            fits: (answer.suggestions || []).map(s => ({ ids: (s.tableIds || []).slice(), zone: s.zone, zoneName: s.zoneName || "",
+                minutes: s.minutes, moves: s.moves || [] })),
+            refusal: answer.refusal || null,
+        };
     },
 
     book: function(user, businessId, booking) {
@@ -218,8 +220,8 @@ export default {
         return { layout: layoutFromWire(answer.layout), warnings: answer.warnings || [] };
     },
 
-    /** The evening a draft would sell, judged by the server before it is saved: `{problems, warnings, services}`.
-     *  R4: the draft is sent as a save sends it, new tables without ids. */
+    /** The evening a draft would sell, judged by the server before it is saved: `{date, problems, warnings,
+     *  services}`. The draft is sent as a save sends it, and its problems are the ones the save would answer. */
     previewLayout: function(user, businessId, date, draft) {
         return call(() => axios.post(base(businessId) + "/layout/preview", { date, layout: layoutToWire(draft) },
             { headers: headers(user) }));
@@ -250,8 +252,10 @@ export default {
      * Writes the instance's configuration at the revision read, with `changes` over what was read: 409 when
      * somebody else wrote in between, 422 with diagnostics when the skill refuses it.
      *
-     * R4: the read carries the store-backed `layout` section; a write without it leaves the layout untouched,
-     * which is what this write wants (the layout is saved by its own route), so the section is never sent.
+     * The read carries the store-backed `layout` section (RestaurantLayoutSection); a write without it leaves
+     * the layout untouched, which is what this write wants (the layout is saved by its own route), so the
+     * section is never sent. `minFreeMinutes` is written as the string the variables hold, like every other
+     * number of the instance (`x-encoding: json-string`).
      */
     saveInstance: function(user, businessId, instance, changes) {
         const params = Object.assign({}, instance.params, changes);

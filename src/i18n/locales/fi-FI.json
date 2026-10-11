@@ -1287,12 +1287,9 @@
         "nothing": "ei mitään erityistä",
         "allergies": "1 allergian kanssa | {n} allergian kanssa",
         "groups": "1 seurue, 6+ henkeä | {n} seuruetta, 6+ henkeä",
-        "noshows": "1 aiemmin saapumatta jättänyt | {n} aiemmin saapumatta jättänyttä",
-        "pastNoShows": "1 aiempi saapumatta jääminen | {n} aiempaa saapumatta jäämistä",
         "title": {
           "allergies": "Allergiat",
-          "groups": "Vähintään 6 hengen seurueet",
-          "noshows": "Aiemmin saapumatta jättäneet"
+          "groups": "Vähintään 6 hengen seurueet"
         }
       },
       "toolbar": {
@@ -1306,13 +1303,13 @@
         "clear": "Tyhjennä",
         "findHint": "Valitse henkilömäärä: kerron, minne he mahtuvat klo {time}.",
         "asking": "Kysytään varauskirjasta…",
-        "unavailable": "Palvelin ei vielä osaa vastata tähän: tee varaus, niin järjestelmä valitsee pöydän.",
         "forAt": "{n} hengelle klo {time}:",
         "best": "suositus",
         "andMore": "ja {n} muuta",
         "noneAt": "{n} hengelle klo {time}: ei pöytää;",
         "later": "ensimmäiset vapaat ajat:",
-        "noneLater": "ei aikaa tässä palvelussa, katso yllä olevia päiviä."
+        "noneLater": "ei aikaa tässä palvelussa, katso yllä olevia päiviä.",
+        "moves": "siirtää 1 varauksen | siirtää {n} varausta"
       },
       "move": {
         "banner": "Siirrä {name} ({party}, {time}): napauta haluamaasi vapaata pöytää; korostetut sopivat.",
@@ -1368,7 +1365,6 @@
         "cancelled": "Varaus peruttu.",
         "noShow": "Merkitty ei-saapuneeksi.",
         "request": "Pyyntö, josta henkilön on päätettävä",
-        "pastNoShows": "1 aiempi saapumatta jääminen tällä numerolla. | {n} aiempaa saapumatta jäämistä tällä numerolla.",
         "overbooked": "Varattu salin kapasiteetin yli.",
         "table": "Pöytä",
         "pinnedShort": "lukittu",

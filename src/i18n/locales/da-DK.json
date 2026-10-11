@@ -1287,12 +1287,9 @@
         "nothing": "intet særligt",
         "allergies": "1 med allergier | {n} med allergier",
         "groups": "1 selskab på 6+ | {n} selskaber på 6+",
-        "noshows": "1 med tidligere udeblivelser | {n} med tidligere udeblivelser",
-        "pastNoShows": "1 tidligere udeblivelse | {n} tidligere udeblivelser",
         "title": {
           "allergies": "Med allergier",
-          "groups": "Selskaber på 6 eller flere",
-          "noshows": "Med tidligere udeblivelser"
+          "groups": "Selskaber på 6 eller flere"
         }
       },
       "toolbar": {
@@ -1306,13 +1303,13 @@
         "clear": "Ryd",
         "findHint": "Vælg antal personer: jeg fortæller, hvor de kan sidde kl. {time}.",
         "asking": "Spørger bogen…",
-        "unavailable": "Serveren kan ikke svare på dette endnu: reservér, så vælger den bord.",
         "forAt": "Til {n} kl. {time}:",
         "best": "anbefalet",
         "andMore": "og {n} flere",
         "noneAt": "Til {n} kl. {time}: intet bord;",
         "later": "første ledige tidspunkter:",
-        "noneLater": "intet tidspunkt i denne servering, se dagene ovenfor."
+        "noneLater": "intet tidspunkt i denne servering, se dagene ovenfor.",
+        "moves": "flytter 1 booking | flytter {n} bookinger"
       },
       "move": {
         "banner": "Flyt {name} ({party}, {time}): tryk på det ledige bord, du vil have; de markerede passer.",
@@ -1368,7 +1365,6 @@
         "cancelled": "Reservationen er aflyst.",
         "noShow": "Markeret som udeblevet.",
         "request": "Forespørgsel, som en person skal afgøre",
-        "pastNoShows": "1 tidligere udeblivelse med dette nummer. | {n} tidligere udeblivelser med dette nummer.",
         "overbooked": "Reserveret ud over salens kapacitet.",
         "table": "Bord",
         "pinnedShort": "låst",

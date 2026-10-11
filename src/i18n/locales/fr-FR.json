@@ -1289,12 +1289,9 @@
         "nothing": "rien de particulier",
         "allergies": "1 avec allergies | {n} avec allergies",
         "groups": "1 groupe de 6+ | {n} groupes de 6+",
-        "noshows": "1 avec no-shows passés | {n} avec no-shows passés",
-        "pastNoShows": "1 no-show passé | {n} no-shows passés",
         "title": {
           "allergies": "Avec allergies",
-          "groups": "Groupes de 6 personnes ou plus",
-          "noshows": "Avec no-shows passés"
+          "groups": "Groupes de 6 personnes ou plus"
         }
       },
       "toolbar": {
@@ -1308,13 +1305,13 @@
         "clear": "Effacer",
         "findHint": "Choisissez le nombre de personnes : je vous indique où elles s'installent à {time}.",
         "asking": "Consultation du registre…",
-        "unavailable": "Le serveur ne peut pas encore répondre : réservez et il choisira la table.",
         "forAt": "Pour {n} à {time} :",
         "best": "recommandé",
         "andMore": "et {n} autres",
         "noneAt": "Pour {n} à {time} : aucune table ;",
         "later": "premiers horaires libres :",
-        "noneLater": "aucun horaire dans ce service, consultez les jours ci-dessus."
+        "noneLater": "aucun horaire dans ce service, consultez les jours ci-dessus.",
+        "moves": "déplace 1 réservation | déplace {n} réservations"
       },
       "move": {
         "banner": "Déplacer {name} ({party}, {time}) : touchez la table libre souhaitée ; celles qui sont entourées conviennent.",
@@ -1370,7 +1367,6 @@
         "cancelled": "Réservation annulée.",
         "noShow": "Marquée comme no-show.",
         "request": "Demande qu'une personne doit trancher",
-        "pastNoShows": "1 no-show passé avec ce numéro. | {n} no-shows passés avec ce numéro.",
         "overbooked": "Réservée au-delà de la capacité de la salle.",
         "table": "Table",
         "pinnedShort": "épinglée",

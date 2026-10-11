@@ -1290,12 +1290,9 @@
         "nothing": "niente di particolare",
         "allergies": "1 con allergie | {n} con allergie",
         "groups": "1 gruppo da 6+ | {n} gruppi da 6+",
-        "noshows": "1 con no-show passati | {n} con no-show passati",
-        "pastNoShows": "1 no-show in passato | {n} no-show in passato",
         "title": {
           "allergies": "Con allergie",
-          "groups": "Gruppi da 6 o più",
-          "noshows": "Con no-show passati"
+          "groups": "Gruppi da 6 o più"
         }
       },
       "toolbar": {
@@ -1309,13 +1306,13 @@
         "clear": "Azzera",
         "findHint": "Scegli quante persone: ti dico dove si siedono alle {time}.",
         "asking": "Chiedo al registro…",
-        "unavailable": "Il server non sa ancora rispondere: prenota e sceglierà lui il tavolo.",
         "forAt": "Per {n} alle {time}:",
         "best": "consigliato",
         "andMore": "e altri {n}",
         "noneAt": "Per {n} alle {time}: nessun tavolo;",
         "later": "primi orari liberi:",
-        "noneLater": "nessun orario in questo servizio, guarda i giorni sopra."
+        "noneLater": "nessun orario in questo servizio, guarda i giorni sopra.",
+        "moves": "sposta 1 prenotazione | sposta {n} prenotazioni"
       },
       "move": {
         "banner": "Sposta {name} ({party}, {time}): tocca il tavolo libero che vuoi, evidenziati quelli dove entrano.",
@@ -1371,7 +1368,6 @@
         "cancelled": "Prenotazione annullata.",
         "noShow": "Segnata come no-show.",
         "request": "Richiesta che decide una persona",
-        "pastNoShows": "1 no-show in passato con questo numero. | {n} no-show in passato con questo numero.",
         "overbooked": "Prenotata oltre la capienza della sala.",
         "table": "Tavolo",
         "pinnedShort": "fissato",
