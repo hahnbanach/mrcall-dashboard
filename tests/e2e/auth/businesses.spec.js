@@ -86,4 +86,41 @@ test.describe('Businesses Page (Authenticated)', () => {
     await bizPage.clickEditAssistant()
     await authenticatedPage.waitForURL(/businessconfiguration/)
   })
+
+  // The credit is StarChat's balance net of debt (v2.2.16). These pin what the card says for each
+  // answer of the balance endpoint, which the fixture's catch-all used to answer with a business:
+  // that answer is not a balance, and the card showed it as €0.00 and "No minutes left".
+  test.describe('credit', () => {
+    const answerBalance = (page, body) => page.route('**/crm/business/resources/balance*', route =>
+      route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(body) }))
+
+    test('shows the balance and minutes available when the business has credit', async ({ authenticatedPage: page }) => {
+      await answerBalance(page, { available: 100, debt: 0, net: 100 })
+      await new BusinessesPage(page).goto()
+      const card = page.locator(selectors.businessCard).first()
+      await expect(card).toContainText('€1.00')
+      await expect(card).toContainText('Minutes available')
+    })
+
+    test('shows a debt as a negative credit, with the notice, and no minutes', async ({ authenticatedPage: page }) => {
+      await answerBalance(page, { available: 0, debt: 200, net: -200 })
+      await new BusinessesPage(page).goto()
+      const card = page.locator(selectors.businessCard).first()
+      await expect(card.locator('.credit-negative')).toHaveText('-€2.00')
+      await expect(card.locator('.credit-debt-notice')).toContainText('Negative credit: -€2.00')
+      await expect(card.locator('.health-debt')).toContainText('Negative credit')
+    })
+
+    // Seen failing on 2026-10-11 against v2.2.19 (0d83641): the card read €0.00 and "No minutes left"
+    // for an answer that is not a balance.
+    test('says the credit is unknown, not zero, when the answer is not a balance', async ({ authenticatedPage: page }) => {
+      await answerBalance(page, { businessId: 'not-a-balance' })
+      await new BusinessesPage(page).goto()
+      const card = page.locator(selectors.businessCard).first()
+      await expect(card.locator('.credit-unknown')).toHaveText('—')
+      await expect(card).not.toContainText('€0.00')
+      await expect(card).not.toContainText('No minutes left')
+      await expect(card).not.toContainText('Minutes available')
+    })
+  })
 })

@@ -333,6 +333,17 @@ async function setupApiMocks(page, overrides = {}) {
     })
   })
 
+  // Business credit balance - POST /business/resources/balance
+  // {available, debt, net} in credits; without this the catch-all above answered with a business,
+  // which is not a balance, and every card read its credit as unknown.
+  await page.route('**/crm/business/resources/balance*', (route) => {
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ available: 100, debt: 0, net: 100 }),
+    })
+  })
+
   // Business subscription info - GET /business/subscription?id=X
   // Returns subscription object directly (registered last, checked first)
   await page.route('**/crm/business/subscription*', (route) => {
