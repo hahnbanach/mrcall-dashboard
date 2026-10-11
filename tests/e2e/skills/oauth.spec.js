@@ -60,7 +60,10 @@ test('calendar check errors do not claim disconnection and refresh uses fresh sa
   model.configuration.during[0].params.SKILL_CALENDAR_AUTH = 'new-saved-reference'
   await card(page).getByRole('button', { name: 'Refresh connection status' }).click()
   await expect(card(page)).toContainText('new-saved-reference')
-  expect(model.calendarReads.at(-1).grantName).toBe('new-saved-reference')
+  // The reference is drawn as soon as the saved configuration is read again, and the calendar check
+  // that uses it starts after: read at once, the last check could still be the previous one. Seen
+  // failing on 2026-10-11 at bf2d2d0 on desktop only (received business-grant-exact).
+  await expect.poll(() => model.calendarReads.at(-1).grantName).toBe('new-saved-reference')
   expect(model.mutations).toEqual([])
 })
 

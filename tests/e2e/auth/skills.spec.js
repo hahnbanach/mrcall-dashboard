@@ -108,6 +108,15 @@ async function mockSkillsScreen (page, { saveStatus = 200, saveBody = null, role
   }))
 
   await page.route('**/apidomain/agent/skills/configuration/**', route => {
+    // The screen also reads the saved configuration from this path (the chat's OAuth status and
+    // hand-off check it against what is saved). A read is not a write: recording it as one made the
+    // first "write" a GET with no body. Seen on 2026-10-11 at bf2d2d0: writes were GET, then the PUT.
+    if (route.request().method() === 'GET') {
+      return route.fulfill({
+        status: 200, contentType: 'application/json',
+        body: JSON.stringify({ prefetch: [], during: configured, final: [] })
+      })
+    }
     writes.skills.push(route.request().postDataJSON())
     return route.fulfill({
       status: saveStatus, contentType: 'application/json',

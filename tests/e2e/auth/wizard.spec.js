@@ -91,7 +91,9 @@ test.describe('Configuration Wizard (Authenticated)', () => {
 
     expect(sent.messages[0]).toBe('/mrcall open test123')
     expect(sent.messages[1]).toMatch(/^\/agent mrcall run /)
-    expect(sent.applied).toEqual([{ business_id: 'test123',
+    // Applied in the wizard's own agent session, whose pending changes these are (a4e0dd5). Seen
+    // failing on 2026-10-11 at bf2d2d0 while it still expected the body without session_id.
+    expect(sent.applied).toEqual([{ business_id: 'test123', session_id: 'mrcall_wizard_test123',
       changes: [{ variable_name: 'CONVERSATION_PROMPT', new_value: 'Buongiorno, come posso aiutarla?' }] }])
   })
 
