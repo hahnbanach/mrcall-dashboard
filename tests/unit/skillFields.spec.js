@@ -105,3 +105,29 @@ describe('a calendar field', () => {
     expect(wrapper.findComponent({ name: 'Dropdown' }).props('options')).toHaveLength(1)
   })
 })
+
+describe('the restaurant room field', () => {
+  // A stand-in for router-link that shows where it points: the card is mounted here without a router.
+  const RouterLink = { props: ['to'], template: '<a :data-to="JSON.stringify(to)"><slot /></a>' }
+  const room = { revision: 3, zones: [{ id: 'sala' }, { id: 'dehors' }], tables: [{ id: 1 }, { id: 2, active: false }, { id: 3 }] }
+
+  it('is drawn for the store-backed layout section, as a link to the room editor', () => {
+    expect(componentFor({ widget: 'restaurant_layout' })).toBe(fieldComponents.restaurant_layout)
+    const wrapper = mount(fieldComponents.restaurant_layout, {
+      props: { field: { key: 'layout' }, modelValue: room },
+      global: { plugins: [i18n, PrimeVue], stubs: { RouterLink } }
+    })
+    expect(JSON.parse(wrapper.find('a').attributes('data-to')).query).toMatchObject({ section: '__RESTAURANT_BOOKING__', tab: 'room' })
+    expect(wrapper.text()).toContain('widgets.agentSkills.restaurantLayout.summary')
+  })
+
+  // Seen failing with the field emitting the room back on mount: the card would then send an edited
+  // section and the server would save a layout nobody changed.
+  it('never writes a value: the card sends back exactly what it read', () => {
+    const wrapper = mount(fieldComponents.restaurant_layout, {
+      props: { field: { key: 'layout' }, modelValue: room },
+      global: { plugins: [i18n, PrimeVue], stubs: { RouterLink } }
+    })
+    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
+  })
+})

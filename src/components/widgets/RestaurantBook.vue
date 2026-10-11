@@ -1,5 +1,5 @@
 <template>
-  <div class="restaurant">
+  <div class="rb restaurant">
     <Message v-if="unavailable" severity="info" :closable="false" class="restaurant-unavailable">
       {{ $t("components.restaurant.unavailable") }}
     </Message>
@@ -8,250 +8,112 @@
     </Message>
     <Message v-else-if="loadError" severity="error" :closable="false">{{ $t("components.restaurant.loadError") }}</Message>
 
-    <template v-if="!unavailable && !noSkill">
-      <div class="restaurant-day-picker">
-        <SelectButton v-model="dayChoice" :options="dayOptions" optionLabel="label" optionValue="value" :allowEmpty="false"
-                      :aria-label="$t('components.restaurant.day')" />
-        <InputText v-model="date" type="date" class="restaurant-date" :aria-label="$t('components.restaurant.day')" />
-      </div>
+    <template v-else-if="ready">
+      <RestaurantWizard v-if="!layout" :user="user" :business-id="businessId" :instance="instance" :rules="rules"
+                        @instance-saved="loadInstance" @done="onWizardDone" />
 
-      <Message v-if="message" :severity="message.severity" :closable="false" class="restaurant-message">
-        {{ message.text }}
-        <Button v-if="message.overbook" :label="$t('components.restaurant.bookAnyway')" size="small" severity="warn"
-                class="restaurant-overbook" @click="message.overbook()" />
-      </Message>
-
-      <template v-if="info">
-        <Message v-if="!info.configured" severity="warn" :closable="false">{{ $t("components.restaurant.notConfigured") }}</Message>
-
-        <!-- per service: the slots, with what arrives and what is in use against the room and the assistant's line -->
-        <section v-for="service in services" :key="service.name" class="restaurant-service">
-          <div class="restaurant-service-head">
-            <h3>{{ $t(`components.restaurant.service.${service.name}`) }}</h3>
-            <span class="restaurant-covers">{{ $t("components.restaurant.coversBooked", { covers: (info.covers || {})[service.name] || 0 }) }}</span>
-            <Button :label="$t('components.restaurant.stopSell')" icon="pi pi-ban" size="small" severity="secondary"
-                    :disabled="busy" @click="stopSell(service.name)" />
+      <template v-else>
+        <div class="rb-head">
+          <div class="tabs" role="tablist" :aria-label="$t('components.restaurant.sections')">
+            <button role="tab" class="tab" :aria-selected="tab === 'day'" @click="setTab('day')">{{ $t("components.restaurant.tabDay") }}</button>
+            <button role="tab" class="tab" :aria-selected="tab === 'room'" @click="setTab('room')">{{ $t("components.restaurant.tabRoom") }}</button>
           </div>
-          <div class="restaurant-slots">
-            <div v-for="slot in service.slots" :key="slot.time" class="restaurant-slot">
-              <span class="restaurant-slot-time">{{ slot.time }}</span>
-              <span class="restaurant-slot-arriving" :title="$t('components.restaurant.arriving')">
-                {{ $t("components.restaurant.arrivingCovers", { covers: slot.arriving }) }}
-              </span>
-              <span v-for="area in slot.areas" :key="area.area" class="restaurant-slot-area">
-                <strong>{{ $t(`components.restaurant.area.${area.area}`) }}</strong>
-                <template v-if="area.tables && area.tables.length">
-                  <Tag v-for="t in area.tables" :key="t.size" :severity="severityOf(t.used, t.assistantLimit, t.count)"
-                       class="restaurant-table-use" :data-state="stateOf(t.used, t.assistantLimit, t.count)">
-                    {{ $t("components.restaurant.tableUse", { size: t.size, used: t.used, count: t.count }) }}
-                  </Tag>
-                </template>
-                <Tag v-else :severity="severityOf(area.seatsUsed, area.assistantSeats, area.seats)" class="restaurant-seat-use"
-                     :data-state="stateOf(area.seatsUsed, area.assistantSeats, area.seats)">
-                  {{ $t("components.restaurant.seatUse", { used: area.seatsUsed, seats: area.seats }) }}
-                </Tag>
-              </span>
+          <div class="head-tools">
+            <div class="search">
+              <input v-model="search" type="search" :placeholder="$t('components.restaurant.searchPlaceholder')"
+                     :aria-label="$t('components.restaurant.searchLabel')" autocomplete="off" @input="onSearch" @keydown.esc="search = ''" />
+              <div v-if="search.trim().length >= 2" class="search-results" role="listbox">
+                <button v-for="r in searchResults" :key="r.b.id" class="sr-item" role="option" @click="openFound(r)">
+                  <b>{{ r.b.name }}</b> · {{ $t("components.restaurant.peopleShort", { n: r.b.party }) }}<template v-if="r.b.phone"> · {{ r.b.phone }}</template><br>
+                  <small>{{ shortDate(r.date) }} · {{ $t(`components.restaurant.service.${r.b.service}`) }} {{ fmt(r.b.start) }} · {{ seatLabelOf(r.b) }}
+                    <template v-if="r.b.state === 'cancelled'"> · {{ $t("components.restaurant.state.cancelled") }}</template></small>
+                </button>
+                <div v-if="!searchResults.length" class="sr-empty">
+                  {{ searching ? $t("components.restaurant.searching") : $t("components.restaurant.searchNone", { days: SEARCH_DAYS }) }}
+                </div>
+              </div>
             </div>
+            <button class="btn ghost" :title="$t('components.restaurant.exportHint')" @click="exportCsv">{{ $t("components.restaurant.export") }}</button>
           </div>
-        </section>
-        <p class="restaurant-legend">{{ $t("components.restaurant.legend") }}</p>
-
-        <!-- requests a person decides on -->
-        <section v-if="requests.length" class="restaurant-requests">
-          <h3>{{ $t("components.restaurant.requests") }}</h3>
-          <div v-for="r in requests" :key="r.id" class="restaurant-row restaurant-request">
-            <span>{{ r.time }} · {{ $t("components.restaurant.people", { covers: r.covers }) }} · {{ r.name || "" }}</span>
-            <a v-if="phoneOf(r.phone)" class="restaurant-phone" :href="phoneOf(r.phone).uri">{{ phoneOf(r.phone).text }}</a>
-            <span v-if="r.requestReason" class="restaurant-reason">{{ $t(`components.restaurant.reason.${r.requestReason}`) }}</span>
-            <span v-if="r.notes" class="restaurant-notes">{{ r.notes }}</span>
-            <Button :label="$t('components.restaurant.accept')" icon="pi pi-check" size="small" :disabled="busy" @click="openAccept(r)" />
-            <Button :label="$t('components.restaurant.decline')" icon="pi pi-times" size="small" severity="secondary"
-                    :disabled="busy" @click="confirmCancel(r, 'decline')" />
-          </div>
-        </section>
-
-        <!-- the bookings of the day -->
-        <section class="restaurant-bookings">
-          <h3>{{ $t("components.restaurant.bookings") }}</h3>
-          <p v-if="!bookings.length" class="restaurant-empty">{{ $t("components.restaurant.noBookings") }}</p>
-          <div v-for="r in bookings" :key="r.id" class="restaurant-row restaurant-booking" :data-status="r.status">
-            <span class="restaurant-booking-time">{{ r.time }}</span>
-            <span>{{ $t("components.restaurant.people", { covers: r.covers }) }}</span>
-            <span>{{ $t(`components.restaurant.area.${r.area}`) }}</span>
-            <span v-if="r.tableSize" class="restaurant-booking-table">
-              {{ $t("components.restaurant.tableOf", { size: r.tableSize, tables: r.tables || 1 }) }}
-            </span>
-            <span>{{ r.name || "" }}</span>
-            <a v-if="phoneOf(r.phone)" class="restaurant-phone" :href="phoneOf(r.phone).uri">{{ phoneOf(r.phone).text }}</a>
-            <span v-if="r.allergies" class="restaurant-allergies">{{ $t("components.restaurant.allergies") }}: {{ r.allergies }}</span>
-            <span v-if="r.notes" class="restaurant-notes">{{ r.notes }}</span>
-            <Tag v-if="r.status === 'no_show'" severity="danger">{{ $t("components.restaurant.status.no_show") }}</Tag>
-            <Tag v-else-if="r.status === 'cancelled'" severity="secondary">{{ $t("components.restaurant.status.cancelled") }}</Tag>
-            <Tag v-if="r.overbooked" severity="warn">{{ $t("components.restaurant.overbooked") }}</Tag>
-            <template v-if="r.status === 'confirmed'">
-              <Button :label="$t('components.restaurant.move')" icon="pi pi-pencil" size="small" severity="secondary"
-                      :disabled="busy" @click="openMove(r)" />
-              <Button :label="$t('components.restaurant.noShow')" size="small" severity="secondary" :disabled="busy" @click="noShow(r)" />
-              <Button :label="$t('components.restaurant.cancel')" icon="pi pi-trash" size="small" severity="danger" text
-                      :disabled="busy" @click="confirmCancel(r, 'cancel')" />
-            </template>
-          </div>
-        </section>
-
-        <!-- blocks and stopped services, each undone by removing it -->
-        <section v-if="blocks.length" class="restaurant-blocks">
-          <h3>{{ $t("components.restaurant.blocks") }}</h3>
-          <div v-for="b in blocks" :key="b.id" class="restaurant-row restaurant-block">
-            <span>{{ $t(`components.restaurant.service.${b.service}`) }} · {{ $t(`components.restaurant.area.${b.area}`) }}</span>
-            <span v-if="b.tableSize">{{ $t("components.restaurant.tableOf", { size: b.tableSize, tables: b.tables || 1 }) }}</span>
-            <span v-else>{{ $t("components.restaurant.people", { covers: b.covers }) }}</span>
-            <Button :label="$t('components.restaurant.removeBlock')" size="small" severity="secondary" :disabled="busy" @click="cancel(b)" />
-          </div>
-        </section>
-
-        <!-- a booking taken by phone or at the door -->
-        <section class="restaurant-new">
-          <h3>{{ $t("components.restaurant.newBooking") }}</h3>
-          <div class="restaurant-form">
-            <label>{{ $t("components.restaurant.time") }}<InputText v-model="form.time" type="time" /></label>
-            <label>{{ $t("components.restaurant.covers") }}<InputNumber v-model="form.covers" :min="1" :max="200" :useGrouping="false" /></label>
-            <label>{{ $t("components.restaurant.name") }}<InputText v-model="form.name" /></label>
-            <label>{{ $t("components.restaurant.phone") }}<InputText v-model="form.phone" type="tel" /></label>
-            <label>{{ $t("components.restaurant.areaLabel") }}
-              <Dropdown v-model="form.area" :options="areaOptions" optionLabel="label" optionValue="value" showClear />
-            </label>
-            <label v-if="sizeOptions.length">{{ $t("components.restaurant.tableSize") }}
-              <Dropdown v-model="form.tableSize" :options="sizeOptions" optionLabel="label" optionValue="value" showClear />
-            </label>
-            <label v-if="form.tableSize">{{ $t("components.restaurant.tables") }}<InputNumber v-model="form.tables" :min="1" :max="200" :useGrouping="false" /></label>
-            <label class="restaurant-form-wide">{{ $t("components.restaurant.notes") }}<InputText v-model="form.notes" /></label>
-          </div>
-          <Button :label="$t('components.restaurant.book')" icon="pi pi-plus" :disabled="busy || !form.time || !form.covers" @click="book(false)" />
-        </section>
-
-        <!-- seats or tables taken out of the book for a service -->
-        <section class="restaurant-new-block">
-          <h3>{{ $t("components.restaurant.newBlock") }}</h3>
-          <div class="restaurant-form">
-            <label>{{ $t("components.restaurant.serviceLabel") }}
-              <Dropdown v-model="blockForm.service" :options="serviceOptions" optionLabel="label" optionValue="value" />
-            </label>
-            <label>{{ $t("components.restaurant.areaLabel") }}
-              <Dropdown v-model="blockForm.area" :options="areaOptions" optionLabel="label" optionValue="value" />
-            </label>
-            <label v-if="blockSizes.length">{{ $t("components.restaurant.tableSize") }}
-              <Dropdown v-model="blockForm.tableSize" :options="blockSizes" optionLabel="label" optionValue="value" />
-            </label>
-            <label v-if="blockSizes.length">{{ $t("components.restaurant.tables") }}<InputNumber v-model="blockForm.tables" :min="1" :max="200" :useGrouping="false" /></label>
-            <label v-else>{{ $t("components.restaurant.covers") }}<InputNumber v-model="blockForm.covers" :min="1" :max="500" :useGrouping="false" /></label>
-            <label class="restaurant-form-wide">{{ $t("components.restaurant.notes") }}<InputText v-model="blockForm.note" /></label>
-          </div>
-          <Button :label="$t('components.restaurant.block')" icon="pi pi-lock" severity="secondary" :disabled="busy || !blockComplete" @click="addBlock" />
-        </section>
-      </template>
-
-      <!-- the room: tables per area, the rule for a small party, the assistant's share -->
-      <section v-if="settings" class="restaurant-settings">
-        <h3>{{ $t("components.restaurant.settings") }}</h3>
-        <p class="restaurant-help">{{ $t("components.restaurant.settingsHelp") }}</p>
-        <div v-for="area in ['indoor', 'outdoor']" :key="area" class="restaurant-settings-area" :data-area="area">
-          <h4>{{ $t(`components.restaurant.area.${area}`) }}</h4>
-          <div v-for="(t, i) in settings.tables[area]" :key="i" class="restaurant-table-type">
-            <label>{{ $t("components.restaurant.tableSize") }}<InputNumber v-model="t.size" :min="1" :max="30" :useGrouping="false" /></label>
-            <label>{{ $t("components.restaurant.tableCount") }}<InputNumber v-model="t.count" :min="0" :max="200" :useGrouping="false" /></label>
-            <label>{{ $t("components.restaurant.minParty") }}<InputNumber v-model="t.minParty" :min="1" :max="30" :useGrouping="false" /></label>
-            <Button icon="pi pi-trash" text severity="danger" :aria-label="$t('components.restaurant.removeTable')" @click="settings.tables[area].splice(i, 1)" />
-          </div>
-          <Button :label="$t('components.restaurant.addTable')" icon="pi pi-plus" size="small" text @click="addTableType(area)" />
-          <label v-if="!settings.tables[area].length" class="restaurant-seats">
-            {{ $t("components.restaurant.seats") }}<InputNumber v-model="settings.seats[area]" :min="0" :max="2000" :useGrouping="false" />
-          </label>
         </div>
-        <label>{{ $t("components.restaurant.policy") }}
-          <Dropdown v-model="settings.policy" :options="policyOptions" optionLabel="label" optionValue="value" />
-        </label>
-        <label v-if="settings.policy === 'close_to_service'">{{ $t("components.restaurant.relaxMinutes") }}
-          <InputNumber v-model="settings.relaxMinutes" :min="0" :max="1440" :useGrouping="false" />
-        </label>
-        <label>{{ $t("components.restaurant.assistantShare") }}
-          <InputNumber v-model="settings.share" :min="50" :max="100" suffix="%" :useGrouping="false" />
-        </label>
-        <p class="restaurant-help">{{ $t("components.restaurant.assistantShareHelp") }}</p>
-        <Message v-if="settingsMessage" :severity="settingsMessage.severity" :closable="false">{{ settingsMessage.text }}</Message>
-        <Button :label="$t('components.restaurant.saveSettings')" icon="pi pi-check" :loading="saving" @click="saveSettings" />
-      </section>
+
+        <RestaurantRoomEditor v-if="tab === 'room'" :user="user" :business-id="businessId" :layout="layout" :instance="instance"
+                              :rules="rules" :today="today" :bookings-on="bookingsOnTable"
+                              @saved="onRoomSaved" @instance-saved="loadInstance" @toast="showToast" />
+
+        <template v-else>
+          <RestaurantStrip :cells="stripCells" :mode="stripMode" :title="stripTitle" @go-day="setDate" @shift="shiftStrip"
+                           @mode="setStripMode" />
+          <RestaurantDayView :date="date" :today="today" :service="service" :time="time" :win="win" :rules="rules" :layout="layout"
+                             :list="list" :held-tables="day ? day.heldTables : []" :summaries="periodOf(date)" :find="find"
+                             :find-answer="findAnswer" :moving="moving" :search="search" :busy="busy"
+                             @go-day="setDate" @set-service="setService" @set-time="setTime" @find="setFind"
+                             @open="openBooking" @tile-free="tileFree" @fit-book="fitBook" @new-booking="openNew(null, time, find || 2)"
+                             @timeline-new="timelineNew" @state="setState" @move-cancel="moving = null" @move-to="moveTo" @drop="dropOn"
+                             @accept="accept" @decline="decline" @call="openCalls" />
+        </template>
+      </template>
     </template>
 
-    <Dialog v-model:visible="moving.visible" modal :header="$t('components.restaurant.move')" class="restaurant-move-dialog">
-      <div class="restaurant-form">
-        <label>{{ $t("components.restaurant.time") }}<InputText v-model="moving.time" type="time" /></label>
-        <label>{{ $t("components.restaurant.covers") }}<InputNumber v-model="moving.covers" :min="1" :max="200" :useGrouping="false" /></label>
-        <label>{{ $t("components.restaurant.areaLabel") }}
-          <Dropdown v-model="moving.area" :options="areaOptions" optionLabel="label" optionValue="value" />
-        </label>
-        <label v-if="sizeOptions.length">{{ $t("components.restaurant.tableSize") }}
-          <Dropdown v-model="moving.tableSize" :options="sizeOptions" optionLabel="label" optionValue="value" showClear />
-        </label>
-        <label v-if="moving.tableSize">{{ $t("components.restaurant.tables") }}<InputNumber v-model="moving.tables" :min="1" :max="200" :useGrouping="false" /></label>
+    <template v-if="panel">
+      <div class="scrim" @click="closePanel"></div>
+      <aside class="panel" :aria-label="$t('components.restaurant.panelLabel')" @keydown.esc="closePanel">
+        <RestaurantBookingPanel v-if="panel.type === 'booking' && panelBooking" :booking="panelBooking" :layout="layout" :date="date"
+                                :busy="busy" @close="closePanel" @state="setState" @pin="togglePin" @no-show="noShow" @cancel="cancel"
+                                @move="startMove" @call="openCalls" />
+        <RestaurantNewPanel v-else-if="panel.type === 'new'" :key="panel.key" :draft="panel" :message="panel.message" :layout="layout"
+                            :date="date" :service="service" :win="win" :rules="rules" :list="list" :is-today="date === today" :busy="busy"
+                            :find-answer="newFit" @close="closePanel" @save="saveNew" @walk-in="walkIn" @changed="askNewFit" />
+      </aside>
+    </template>
+
+    <RestaurantCallModal v-model:visible="calls.visible" :ids="calls.ids" :title="calls.title" :user="user" :business-id="businessId" />
+
+    <div class="toasts" aria-live="polite">
+      <div v-if="toast" class="toast" :class="{ err: toast.error }" role="status">
+        <span>{{ toast.text }}</span>
+        <button v-if="toast.undo" :disabled="busy" @click="undo">{{ $t("components.restaurant.undo") }}</button>
       </div>
-      <Message v-if="moving.message" :severity="moving.message.severity" :closable="false" class="restaurant-dialog-message">
-        {{ moving.message.text }}
-        <Button v-if="moving.message.overbook" :label="$t('components.restaurant.bookAnyway')" size="small" severity="warn"
-                class="restaurant-overbook" :disabled="busy" @click="moving.message.overbook()" />
-      </Message>
-      <template #footer>
-        <Button :label="$t('components.restaurant.close')" severity="secondary" text @click="moving.visible = false" />
-        <Button :label="$t('components.restaurant.save')" icon="pi pi-check" :disabled="busy" @click="move(false)" />
-      </template>
-    </Dialog>
-    <Dialog v-model:visible="accepting.visible" modal :header="$t('components.restaurant.accept')" class="restaurant-accept-dialog">
-      <div class="restaurant-form">
-        <label>{{ $t("components.restaurant.tableSize") }}
-          <Dropdown v-model="accepting.tableSize" :options="acceptSizes" optionLabel="label" optionValue="value" showClear />
-        </label>
-        <label v-if="accepting.tableSize">{{ $t("components.restaurant.tables") }}<InputNumber v-model="accepting.tables" :min="1" :max="200" :useGrouping="false" /></label>
-      </div>
-      <Message v-if="accepting.message" :severity="accepting.message.severity" :closable="false" class="restaurant-dialog-message">
-        {{ accepting.message.text }}
-        <Button v-if="accepting.message.overbook" :label="$t('components.restaurant.bookAnyway')" size="small" severity="warn"
-                class="restaurant-overbook" :disabled="busy" @click="accepting.message.overbook()" />
-      </Message>
-      <template #footer>
-        <Button :label="$t('components.restaurant.close')" severity="secondary" text @click="accepting.visible = false" />
-        <Button :label="$t('components.restaurant.accept')" icon="pi pi-check" :disabled="busy" @click="acceptChosen()" />
-      </template>
-    </Dialog>
+    </div>
   </div>
 </template>
 
 <script>
-import parsePhoneNumber from "libphonenumber-js";
 import { useConfirm } from "primevue/useconfirm";
-import RestaurantApi from "@/utils/Restaurant";
+import RestaurantApi, { isMissingRoute } from "@/utils/Restaurant";
+import {
+  rulesOf, serviceWindow, serviceAt, defaultTime, arrivalTimes, keyOf, addDays, dateOf, fmt, toMin, minuteOfDay,
+  stripStatus, seatLabel, dropTargets, tableById, freeFrom, matches, live, occupiedTables, callsOf, SERVICES
+} from "@/utils/RestaurantModel";
+import { longDate, shortDate, monthTitle, refusalKey, OVERRIDABLE } from "@/components/widgets/restaurant/format";
+import RestaurantStrip from "@/components/widgets/restaurant/RestaurantStrip.vue";
+import RestaurantDayView from "@/components/widgets/restaurant/RestaurantDayView.vue";
+import RestaurantBookingPanel from "@/components/widgets/restaurant/RestaurantBookingPanel.vue";
+import RestaurantNewPanel from "@/components/widgets/restaurant/RestaurantNewPanel.vue";
+import RestaurantRoomEditor from "@/components/widgets/restaurant/RestaurantRoomEditor.vue";
+import RestaurantWizard from "@/components/widgets/restaurant/RestaurantWizard.vue";
+import RestaurantCallModal from "@/components/widgets/restaurant/RestaurantCallModal.vue";
 
-const KNOWN_CODES = ["full", "closed", "not_offered", "too_late", "beyond_horizon", "large_party", "bad_covers", "stale",
-  "busy_retry", "idempotency_key_reused", "not_found", "not_configured"];
-const SETTINGS_CODES = ["out_of_range", "share_below_party", "duplicate_size", "bad_table", "party_larger_than_room", "no_seats",
-  "pace_below_party", "unknown_policy"];
-
-function isoDay(offset) {
-  const d = new Date();
-  d.setDate(d.getDate() + offset);
-  const pad = n => String(n).padStart(2, "0");
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-}
+/** The days the search reads ahead, from today: the period strip's. */
+const SEARCH_DAYS = 14;
 
 /**
- * The restaurateur's page for the book the assistant writes into: today and tomorrow (or any day) by
- * service, each arrival slot with the covers arriving and the seats or tables in use against the room
- * and against the share the assistant may sell; requests to accept or decline; bookings to add, move,
- * cancel or mark as no-show; blocks and stopped services, undone by removing them; and the room itself
- * (tables per area, the rule for a small party at a big table, the assistant's share), saved to the
- * restaurant_booking instance at the revision read. StarChat decides everything; the page shows its
- * answers in the owner's language and never the server's English. Without the restaurant routes on the
- * server (404) the page says so and offers nothing.
+ * "Prenotazioni Ristorante": the service-time page of a restaurant whose assistant books its tables.
+ *
+ * The specification is the prototype Angelo approved on 2026-10-11, committed in
+ * docs/design/restaurant-page-prototype/. Two tabs: the evening ("Serata": the period strip, the day by
+ * service with the tables by zone or on a timeline, the bookings, the finder) and the room ("Sala e
+ * tavoli": zones, tables, joins, the minimum free time). A restaurant with no layout opens on the wizard.
+ *
+ * StarChat decides everything: whether a party fits, where it sits, whether a layout may be saved. The page
+ * reads the day and the period, asks, and shows the answers in the owner's language, never the server's
+ * English. Every change goes to the server at the version it was read at; the ones the server can reverse
+ * (a state, a pin, a move, a new booking) offer Undo, the two it cannot (a cancellation, a no-show) are
+ * confirmed first with "Keep it" focused. Without the restaurant routes (404) the page says so and offers
+ * nothing.
  */
 export default {
+  components: { RestaurantStrip, RestaurantDayView, RestaurantBookingPanel, RestaurantNewPanel, RestaurantRoomEditor, RestaurantWizard, RestaurantCallModal },
   setup() {
     return { confirm: useConfirm() };
   },
@@ -260,474 +122,560 @@ export default {
     user: { type: Object, required: true },
   },
   data() {
+    const today = keyOf(new Date());
     return {
-      date: isoDay(0),
-      info: null,
+      SEARCH_DAYS,
+      today,
+      ready: false,
       unavailable: false,
       noSkill: false,
       loadError: false,
       busy: false,
-      message: null,
-      form: { time: "", covers: 2, name: "", phone: "", area: null, tableSize: null, tables: 1, notes: "" },
-      blockForm: { service: "dinner", area: "indoor", covers: null, tableSize: null, tables: 1, note: "" },
-      moving: { visible: false, row: null, time: "", covers: 2, area: "indoor", tableSize: null, tables: 1, message: null },
-      accepting: { visible: false, row: null, tableSize: null, tables: 1, message: null },
       instance: null,
-      settings: null,
-      settingsMessage: null,
-      saving: false,
+      tab: this.$route && this.$route.query && this.$route.query.tab === "room" ? "room" : "day",
+      date: today,
+      service: "dinner",
+      time: 0,
+      days: {},
+      period: {},
+      stripMode: "14",
+      stripStart: today,
+      monthKey: today.slice(0, 7),
+      find: 0,
+      findAnswer: null,
+      newFit: null,
+      moving: null,
+      search: "",
+      searching: false,
+      panel: null,
+      calls: { visible: false, ids: [], title: "" },
+      toast: null,
+      lastRefusal: null,
+      searchLoaded: false,
     };
   },
   computed: {
-    dayChoice: {
-      get() {
-        return this.date === isoDay(0) ? "today" : this.date === isoDay(1) ? "tomorrow" : null;
-      },
-      set(value) {
-        this.date = value === "tomorrow" ? isoDay(1) : isoDay(0);
-      },
+    rules() {
+      return rulesOf(this.instance ? this.instance.params : {});
     },
-    dayOptions() {
-      return [
-        { value: "today", label: this.$t("components.restaurant.today") },
-        { value: "tomorrow", label: this.$t("components.restaurant.tomorrow") },
-      ];
+    day() {
+      return this.days[this.date] || null;
     },
-    rows() {
-      return (this.info && this.info.reservations) || [];
+    /** The layout as the last day read returned it: one read gives the rows and the room they sit in. */
+    layout() {
+      const any = this.day || Object.values(this.days)[0];
+      return any ? any.layout : null;
     },
-    requests() {
-      return this.rows.filter(r => r.status === "requested");
+    list() {
+      return this.day ? this.day.reservations : [];
     },
-    bookings() {
-      return this.rows.filter(r => r.source !== "block" && ["confirmed", "no_show"].includes(r.status))
-        .sort((a, b) => a.time.localeCompare(b.time));
+    win() {
+      return serviceWindow(this.rules, this.date, this.service);
     },
-    blocks() {
-      return this.rows.filter(r => r.source === "block" && r.status === "confirmed");
+    panelBooking() {
+      return this.panel && this.panel.type === "booking" ? this.list.find(b => b.id === this.panel.id) || null : null;
     },
-    services() {
-      const occupancy = (this.info && this.info.occupancy) || {};
-      return ["lunch", "dinner"].filter(s => occupancy[s]).map(s => ({ name: s, slots: occupancy[s] }));
+    stripDays() {
+      if (this.stripMode === "14") return Array.from({ length: 14 }, (_, i) => addDays(this.stripStart, i));
+      const [y, m] = this.monthKey.split("-").map(Number);
+      const n = new Date(y, m, 0).getDate();
+      return Array.from({ length: n }, (_, i) => keyOf(new Date(y, m - 1, i + 1)));
     },
-    areaOptions() {
-      return ["indoor", "outdoor"].map(a => ({ value: a, label: this.$t(`components.restaurant.area.${a}`) }));
+    stripTitle() {
+      const locale = this.$i18n.locale;
+      if (this.stripMode === "14") return `${shortDate(this.stripDays[0], locale)} - ${shortDate(this.stripDays[13], locale)}`;
+      return monthTitle(this.monthKey + "-01", locale);
     },
-    serviceOptions() {
-      return ["lunch", "dinner"].map(s => ({ value: s, label: this.$t(`components.restaurant.service.${s}`) }));
+    stripCells() {
+      const lead = this.stripMode === "month" ? (dateOf(this.stripDays[0]).getDay() + 6) % 7 : 0;
+      const blanks = Array.from({ length: lead }, (_, i) => ({ blank: true, key: `blank-${i}` }));
+      return blanks.concat(this.stripDays.map(key => {
+        const summaries = this.periodOf(key);
+        const services = {};
+        SERVICES.forEach(s => {
+          const sum = summaries ? summaries[s] : null;
+          const win = serviceWindow(this.rules, key, s);
+          const past = key < this.today || (key === this.today && win && minuteOfDay(new Date()) >= win.close - 30);
+          services[s] = sum
+            ? { status: stripStatus(sum, { past, arrivals: arrivalTimes(win).length, step: this.rules.step }), max: sum.largestParty, covers: sum.coversTaken, bookable: sum.bookable || {} }
+            : { status: key < this.today ? "past" : "unknown" };
+        });
+        return { key, sel: key === this.date, today: key === this.today, services };
+      }));
     },
-    policyOptions() {
-      return ["refuse", "accept", "close_to_service"].map(p => ({ value: p, label: this.$t(`components.restaurant.policies.${p}`) }));
-    },
-    sizeOptions() {
-      const tables = (this.info && this.info.tables) || {};
-      const sizes = new Set();
-      Object.values(tables).forEach(list => (list || []).forEach(t => sizes.add(t.size)));
-      return [...sizes].sort((a, b) => a - b).map(s => ({ value: s, label: this.$t("components.restaurant.seatsAtTable", { size: s }) }));
-    },
-    /** The table sizes of the area the request is for. */
-    acceptSizes() {
-      const r = this.accepting.row;
-      const list = (r && ((this.info && this.info.tables) || {})[r.area]) || [];
-      return list.map(t => ({ value: t.size, label: this.$t("components.restaurant.seatsAtTable", { size: t.size }) }));
-    },
-    blockSizes() {
-      const list = ((this.info && this.info.tables) || {})[this.blockForm.area] || [];
-      return list.map(t => ({ value: t.size, label: this.$t("components.restaurant.seatsAtTable", { size: t.size }) }));
-    },
-    blockComplete() {
-      return this.blockSizes.length ? !!this.blockForm.tableSize && this.blockForm.tables > 0 : this.blockForm.covers > 0;
+    searchResults() {
+      const q = this.search;
+      if (q.trim().length < 2) return [];
+      const out = [];
+      Object.keys(this.days).sort().forEach(date => (this.days[date].reservations || []).forEach(b => {
+        if (b.state !== "block" && b.source !== "walk_in" && matches(b, q)) out.push({ date, b });
+      }));
+      return out.filter(r => r.date >= this.today).concat(out.filter(r => r.date < this.today).reverse()).slice(0, 10);
     },
   },
   watch: {
     date() {
-      this.load();
+      this.moving = null;
     },
   },
   async mounted() {
-    await Promise.all([this.load(), this.loadSettings()]);
+    try {
+      await this.loadInstance();
+      if (this.noSkill) return;
+      this.service = serviceAt(this.rules, this.date, minuteOfDay(new Date()));
+      await this.loadDay(this.date);
+      this.resetTime();
+      this.ready = !this.unavailable;
+      this.loadPeriod();
+    } catch (e) {
+      console.error("Restaurant page not loaded:", e.restaurant ? e.restaurant.status : e);
+      this.loadError = true;
+    }
   },
   methods: {
-    async load() {
-      this.loadError = false;
+    fmt,
+    shortDate(key) {
+      return shortDate(key, this.$i18n.locale);
+    },
+    seatLabelOf(b) {
+      return b.tables.length ? seatLabel(this.layout || { tables: [] }, b.tables) : this.$t("components.restaurant.noTable");
+    },
+
+    // ------------------------------------------------------------ reading
+
+    async loadInstance() {
+      this.instance = await RestaurantApi.instance(this.user, this.businessId);
+      // A business that runs no restaurant skill has no book: the page says so instead of offering one.
+      this.noSkill = !this.instance;
+    },
+    async loadDay(date) {
       try {
-        this.info = await RestaurantApi.day(this.user, this.businessId, this.date);
-        // An open dialog acts on the row as last read: after a stale answer, a retry carries the new version.
-        [this.moving, this.accepting].forEach(dialog => {
-          const fresh = dialog.row && this.rows.find(r => r.id === dialog.row.id);
-          if (fresh) dialog.row = fresh;
+        const day = await RestaurantApi.day(this.user, this.businessId, date);
+        this.days = Object.assign({}, this.days, { [date]: day });
+        return day;
+      } catch (e) {
+        if (isMissingRoute(e)) this.unavailable = true;
+        else throw e;
+        return null;
+      }
+    },
+    /** The period strip, read a month at a time at most, from today to the horizon. */
+    async loadPeriod() {
+      const horizon = addDays(this.today, this.rules.daysAhead);
+      const from = this.stripDays[0] < this.today ? this.today : this.stripDays[0];
+      const last = this.stripDays[this.stripDays.length - 1];
+      const to = last > horizon ? horizon : last;
+      if (to < from) return;
+      try {
+        const answer = await RestaurantApi.period(this.user, this.businessId, from, to);
+        const next = Object.assign({}, this.period);
+        (answer.days || []).forEach(d => {
+          next[d.date] = Object.fromEntries((d.services || []).map(s => [s.service, s]));
         });
+        this.period = next;
       } catch (e) {
-        if (e.restaurant && e.restaurant.status === 404 && !e.restaurant.code) {
-          this.unavailable = true;
-        } else {
-          console.error("Restaurant book not loaded:", e.restaurant ? e.restaurant.status : e);
-          this.loadError = true;
-        }
+        // The strip stays grey: the day below still works.
+        console.warn("Restaurant period not read:", e.restaurant ? e.restaurant.code || e.restaurant.status : e);
       }
     },
-    async loadSettings() {
+    periodOf(key) {
+      return this.period[key] || null;
+    },
+    async reload() {
+      await this.loadDay(this.date);
+      this.loadPeriod();
+      if (this.find) this.askFinder();
+    },
+
+    // ------------------------------------------------------------ navigation
+
+    resetTime() {
+      this.time = defaultTime(this.win, this.date === this.today, minuteOfDay(new Date()));
+    },
+    async setDate(key) {
+      if (!key) return;
+      this.panel = null;
+      this.date = key;
+      if (this.stripMode === "14" && (key < this.stripStart || key > addDays(this.stripStart, 13))) {
+        this.stripStart = key < this.today ? key : (key <= addDays(this.today, 13) ? this.today : key);
+        this.loadPeriod();
+      }
+      if (this.stripMode === "month" && key.slice(0, 7) !== this.monthKey) {
+        this.monthKey = key.slice(0, 7);
+        this.loadPeriod();
+      }
+      this.resetTime();
+      await this.loadDay(key);
+      if (this.find) this.askFinder();
+    },
+    setService(s) {
+      this.service = s;
+      this.moving = null;
+      this.resetTime();
+      if (this.find) this.askFinder();
+    },
+    setTime(t) {
+      this.time = t;
+      if (this.find) this.askFinder();
+    },
+    shiftStrip(n) {
+      if (this.stripMode === "14") this.stripStart = addDays(this.stripStart, n);
+      else {
+        const [y, m] = this.monthKey.split("-").map(Number);
+        this.monthKey = keyOf(new Date(y, m - 1 + n, 1)).slice(0, 7);
+      }
+      this.loadPeriod();
+    },
+    setStripMode(mode) {
+      this.stripMode = mode;
+      this.monthKey = this.date.slice(0, 7);
+      this.loadPeriod();
+    },
+    setTab(tab) {
+      this.tab = tab;
+      this.panel = null;
+      this.moving = null;
+    },
+
+    // ------------------------------------------------------------ the finder, asked of the server
+
+    setFind(n) {
+      this.find = n;
+      if (n) this.askFinder();
+      else this.findAnswer = null;
+    },
+    async askFinder() {
+      const asked = { date: this.date, time: this.time, party: this.find };
+      this.findAnswer = { loading: true, ...asked };
       try {
-        this.instance = await RestaurantApi.instance(this.user, this.businessId);
-        // A business that runs no restaurant skill has no book: the page says so instead of offering one.
-        this.noSkill = !this.instance;
+        const answer = await RestaurantApi.seatings(this.user, this.businessId, this.date, fmt(this.time), this.find);
+        if (this.date !== asked.date || this.time !== asked.time || this.find !== asked.party) return;
+        this.findAnswer = answer === null ? { unavailable: true, ...asked } : { ...asked, ...this.fitsOf(answer) };
       } catch (e) {
-        console.error("Restaurant settings not loaded:", e.restaurant ? e.restaurant.status : e);
-        this.instance = null;
+        console.warn("Restaurant finder not answered:", e.restaurant ? e.restaurant.code || e.restaurant.status : e);
+        this.findAnswer = { error: true, ...asked };
       }
-      this.settings = this.instance ? this.settingsOf(this.instance.params) : null;
     },
-    settingsOf(params) {
-      let tables = {};
+    fitsOf(answer) {
+      const fits = (answer.fits || []).map(f => ({ ids: (f.tableIds || []).slice(), zone: f.zone, joined: !!f.joined,
+        label: seatLabel(this.layout, f.tableIds || []) }));
+      return { fits, later: (answer.later || []).map(toMin).filter(t => t !== null) };
+    },
+    fitBook(i) {
+      const fit = this.findAnswer && this.findAnswer.fits ? this.findAnswer.fits[i] : null;
+      if (fit) this.openNew(fit.ids, this.time, this.find);
+    },
+
+    // ------------------------------------------------------------ panels
+
+    openBooking(id) {
+      if (this.moving) {
+        this.showToast(this.$t("components.restaurant.moveTapFree"));
+        return;
+      }
+      this.panel = { type: "booking", id };
+    },
+    openNew(tables, start, party, extra) {
+      const last = this.win ? this.win.last : start;
+      this.panel = Object.assign({ type: "new", key: Date.now(), tables: tables && tables.length ? tables.slice() : null,
+        start: Math.min(start, last + 30), party: party || 2, name: "", phone: "", notes: "", allergies: "", message: null }, extra || {});
+      this.askNewFit(this.panel);
+    },
+    /** What the server would give the new booking, shown before it is saved: the finder's answer. */
+    async askNewFit(form) {
+      const p = { start: form.start, party: form.party };
+      this.asked = p;
+      this.newFit = { loading: true };
       try {
-        tables = typeof params.tables === "string" && params.tables.trim() ? JSON.parse(params.tables) : (params.tables || {});
-      } catch {
-        tables = {};
+        const answer = await RestaurantApi.seatings(this.user, this.businessId, this.date, fmt(p.start), p.party);
+        if (this.asked !== p) return;
+        this.newFit = answer === null ? { unavailable: true } : this.fitsOf(answer);
+      } catch (e) {
+        console.warn("Restaurant finder not answered:", e.restaurant ? e.restaurant.code || e.restaurant.status : e);
+        this.newFit = { error: true };
       }
-      const list = area => (Array.isArray(tables[area]) ? tables[area] : [])
-        .map(t => ({ size: t.size, count: t.count, minParty: t.minParty ?? (t.size <= 2 ? 1 : t.size - 1) }));
-      const number = (v, fallback) => (v === undefined || v === null || String(v).trim() === "" ? fallback : Number(v));
-      return {
-        tables: { indoor: list("indoor"), outdoor: list("outdoor") },
-        seats: { indoor: number(params.indoorSeats, 0), outdoor: number(params.outdoorSeats, 0) },
-        policy: params.smallPartyPolicy || "refuse",
-        relaxMinutes: number(params.relaxMinutes, 60),
-        share: number(params.assistantShare, 100),
-      };
     },
-    addTableType(area) {
-      this.settings.tables[area].push({ size: 4, count: 1, minParty: 3 });
+    closePanel() {
+      this.panel = null;
+      this.moving = null;
     },
-    severityOf(used, limit, total) {
-      const state = this.stateOf(used, limit, total);
-      return state === "over" ? "danger" : state === "staff" ? "warn" : "success";
+    tileFree(tid) {
+      if (this.moving) return this.moveTo(tid);
+      if (this.find && this.findAnswer && this.findAnswer.fits) {
+        const fit = this.findAnswer.fits.find(f => f.ids.includes(tid));
+        if (fit) return this.openNew(fit.ids, this.time, this.find);
+      }
+      const t = tableById(this.layout, tid);
+      // a table not free long enough opens on the time it frees up
+      const from = freeFrom(this.list, this.service, tid, this.time, this.rules.minFreeMinutes, this.win);
+      this.openNew([tid], from !== null ? from : this.time, Math.min(t.max, Math.max(t.min, 2)));
     },
-    /** free: the assistant may still sell here; staff: only staff may; over: more than the room holds. */
-    stateOf(used, limit, total) {
-      if (used > total) return "over";
-      if (used >= limit) return "staff";
-      return "free";
+    timelineNew({ tableId, minute }) {
+      const t = tableById(this.layout, tableId);
+      this.openNew([tableId], minute, Math.min(t.max, Math.max(t.min, 2)));
     },
-    say(severity, key, params) {
-      this.message = { severity, text: this.$t(key, params || {}) };
+    async openCalls(b) {
+      const ids = callsOf(b);
+      if (!ids.length) return;
+      this.calls = { visible: true, ids, title: b.name || "" };
     },
-    /** The server's answer as a sentence in the owner's language, never its English. */
-    refusal(e, retry) {
-      const code = e.restaurant ? e.restaurant.code : null;
-      const known = KNOWN_CODES.includes(code) ? code : "error";
-      const message = { severity: known === "error" ? "error" : "warn", text: this.$t(`components.restaurant.answer.${known}`) };
-      if (retry && ["full", "not_offered", "too_late", "large_party", "closed"].includes(code)) message.overbook = retry;
-      if (code === "stale") this.load();
-      return message;
-    },
-    /** Runs one change. Started from a dialog, the dialog stays open until the server agrees, and a refusal
-      * is said inside it, where the change was asked for, rather than at the top of a page it covers. */
-    async run(action, done, retry, dialog) {
+
+    // ------------------------------------------------------------ writing
+
+    /** Runs one change, reloads the day, and says what happened with Undo when the server can reverse it. */
+    async act(run, { done, undo, inPanel } = {}) {
+      if (this.busy) return null;
       this.busy = true;
-      this.message = null;
-      if (dialog) dialog.message = null;
+      this.lastRefusal = null;
       try {
-        await action();
-        if (dialog) dialog.visible = false;
-        if (done) this.say("success", done);
-        await this.load();
+        const answer = await run();
+        await this.reload();
+        this.showToast(done ? done(answer) : this.$t("components.restaurant.saved"), undo ? () => undo(answer) : null);
+        return answer || true;
       } catch (e) {
-        const message = this.refusal(e, retry);
-        if (dialog && dialog.visible) dialog.message = message;
-        else this.message = message;
+        const code = e.restaurant ? e.restaurant.code : null;
+        this.lastRefusal = this.refusalOf(e);
+        if (code === "stale") await this.reload();
+        if (!e.restaurant || e.restaurant.status >= 500 || !e.restaurant.status) {
+          console.error("Restaurant change failed:", e.restaurant ? e.restaurant.status : e);
+        }
+        if (inPanel && this.panel) {
+          this.panel = Object.assign({}, this.panel, { message: this.lastRefusal });
+        } else {
+          this.showToast(this.$t(refusalKey(code)), null, true);
+        }
+        return null;
       } finally {
         this.busy = false;
       }
     },
-    /** A phone as the book keeps it (digits, no "+") in international form, with the URI to call it. */
-    phoneOf(raw) {
-      const digits = String(raw || "").replace(/[^\d+]/g, "");
-      if (!digits) return null;
-      const e164 = digits.startsWith("+") ? digits : `+${digits}`;
-      const parsed = parsePhoneNumber(e164);
-      return parsed ? { text: parsed.formatInternational(), uri: parsed.getURI() } : { text: e164, uri: `tel:${e164}` };
+    refusalOf(e) {
+      const body = (e.restaurant && e.restaurant.body) || {};
+      const code = e.restaurant ? e.restaurant.code : null;
+      return {
+        code, text: this.$t(refusalKey(code)), overridable: OVERRIDABLE.includes(code),
+        alternatives: (body.alternatives || []).filter(a => a.date === this.date).map(a => toMin(a.time)).filter(t => t !== null),
+      };
     },
-    /** Cancelling a booking or declining a request cannot be undone, so it is confirmed first, naming
-      * the party: who, which day, what time, how many. */
-    confirmCancel(r, kind) {
-      const phone = this.phoneOf(r.phone);
-      const who = r.name || (phone && phone.text) || this.$t("components.restaurant.confirmCancel.noName");
-      const day = new Date(`${r.date || this.date}T12:00:00`)
-        .toLocaleDateString(this.$i18n.locale, { weekday: "long", day: "numeric", month: "long" });
+    showToast(text, undo = null, error = false) {
+      clearTimeout(this.toastTimer);
+      this.toast = { text, undo, error };
+      this.toastTimer = setTimeout(() => { this.toast = null; }, undo ? 8000 : 5000);
+    },
+    async undo() {
+      const run = this.toast && this.toast.undo;
+      if (!run) return;
+      this.toast = null;
+      await this.act(run, { done: () => this.$t("components.restaurant.undone") });
+    },
+    stateWord(st) {
+      return this.$t(`components.restaurant.stateDone.${st}`);
+    },
+    setState(b, st) {
+      const before = b.serviceState || null;
+      const wire = st === "booked" ? null : st;
+      if (wire === before) return;
+      return this.act(() => RestaurantApi.state(this.user, this.businessId, b.id, b.version, wire), {
+        done: () => `${b.name || this.$t("components.restaurant.walkInName")}: ${this.stateWord(st)}`,
+        undo: answer => RestaurantApi.state(this.user, this.businessId, b.id, answer.version, before),
+      });
+    },
+    togglePin(b) {
+      return this.act(() => RestaurantApi.pin(this.user, this.businessId, b.id, b.version, !b.pinned), {
+        done: () => this.$t(b.pinned ? "components.restaurant.unpinned" : "components.restaurant.pinned", { name: b.name }),
+        undo: answer => RestaurantApi.pin(this.user, this.businessId, b.id, answer.version, b.pinned),
+      });
+    },
+    /** Cancelling and marking a no-show cannot be undone on the server, so each is confirmed first, naming
+     *  the party, with "Keep it" focused. */
+    askIrreversible(kind, b, run) {
       this.confirm.require({
-        header: this.$t(`components.restaurant.confirmCancel.${kind}Title`),
-        message: this.$t("components.restaurant.confirmCancel.message", {
-          who, day, time: r.time, people: this.$t("components.restaurant.people", { covers: r.covers }) }),
+        header: this.$t(`components.restaurant.confirm.${kind}Title`),
+        message: this.$t("components.restaurant.confirm.message", {
+          who: b.name || this.$t("components.restaurant.walkInName"), day: longDate(this.date, this.$i18n.locale).toLowerCase(),
+          time: fmt(b.start), people: this.$t("components.restaurant.people", { n: b.party }) }),
         icon: "pi pi-exclamation-triangle",
-        acceptLabel: this.$t(`components.restaurant.confirmCancel.${kind}`),
-        rejectLabel: this.$t("components.restaurant.confirmCancel.keep"),
+        acceptLabel: this.$t(`components.restaurant.confirm.${kind}`),
+        rejectLabel: this.$t("components.restaurant.confirm.keep"),
         acceptClass: "p-button-danger",
         defaultFocus: "reject",
-        accept: () => this.cancel(r),
+        accept: run,
       });
     },
-    choice(source) {
-      return source.tableSize ? { tableSize: source.tableSize, tables: source.tables || 1 } : {};
+    cancel(b) {
+      this.askIrreversible(b.state === "requested" ? "decline" : "cancel", b, async () => {
+        const ok = await this.act(() => RestaurantApi.cancel(this.user, this.businessId, b.id, b.version), {
+          done: () => this.$t(b.state === "requested" ? "components.restaurant.declined" : "components.restaurant.cancelled", { name: b.name }),
+        });
+        if (ok) this.panel = null;
+      });
     },
-    book(overbook) {
-      const body = Object.assign({
-        date: this.date, time: this.form.time, covers: this.form.covers, name: this.form.name || undefined,
-        phone: this.form.phone || undefined, notes: this.form.notes || undefined, area: this.form.area || undefined,
-        overbook: overbook || undefined,
-      }, this.choice(this.form));
-      return this.run(async () => {
-        await RestaurantApi.book(this.user, this.businessId, body);
-        this.form = { time: "", covers: 2, name: "", phone: "", area: null, tableSize: null, tables: 1, notes: "" };
-      }, "components.restaurant.booked", overbook ? null : () => this.book(true));
+    decline(b) {
+      this.cancel(b);
     },
-    openMove(r) {
-      // A move decides the table again: a party at one table is sent with no size, so the book gives it the
-      // smallest free one at the new time (pre-filling the row's size had a move refused as full where
-      // that size was taken and a smaller one was free). A party on several tables keeps them, since
-      // without a choice a group above the party limit is refused. Staff can still pick a size here.
-      const several = (r.tables || 1) > 1 && !!r.tableSize;
-      this.moving = { visible: true, row: r, time: r.time, covers: r.covers, area: r.area,
-        tableSize: several ? r.tableSize : null, tables: several ? r.tables : 1, message: null };
+    noShow(b) {
+      this.askIrreversible("noShow", b, () => this.act(() => RestaurantApi.noShow(this.user, this.businessId, b.id, b.version), {
+        done: () => this.$t("components.restaurant.noShowDone", { name: b.name }),
+      }));
     },
-    move(overbook) {
-      const dialog = this.moving;
-      const r = dialog.row;
-      const body = Object.assign({ expectedVersion: r.version, time: dialog.time, covers: dialog.covers,
-        area: dialog.area, overbook: overbook || undefined }, this.choice(dialog));
-      return this.run(() => RestaurantApi.change(this.user, this.businessId, r.id, body), "components.restaurant.moved",
-        overbook ? null : () => this.move(true), dialog);
-    },
-    cancel(r) {
-      return this.run(() => RestaurantApi.cancel(this.user, this.businessId, r.id, r.version), "components.restaurant.cancelled");
-    },
-    noShow(r) {
-      return this.run(() => RestaurantApi.noShow(this.user, this.businessId, r.id, r.version), "components.restaurant.noShowRecorded");
-    },
-    /** Accepting in an area with tables asks which tables. A large party is refused to staff unless they
-      * name the tables it takes (design 18.9.2), so for one the dialog starts on the tables its covers
-      * need, the book's own rule (18.9.1): the smallest size that holds it, else as many of the largest
-      * as it fills. Any other party starts with none, and the book picks the smallest free table. */
-    openAccept(r) {
-      const sizes = (((this.info && this.info.tables) || {})[r.area] || []).map(t => t.size).sort((a, b) => a - b);
-      if (!sizes.length) return this.accept(r);
-      let tableSize = null, tables = 1;
-      if (r.requestReason === "large_party") {
-        const fits = sizes.find(size => size >= r.covers);
-        tableSize = fits || sizes[sizes.length - 1];
-        tables = fits ? 1 : Math.ceil(r.covers / tableSize);
+    /** Accepts a request: the server seats it. Refused for room, a person may accept it anyway, beyond what
+     *  the assistant sells, after saying so. */
+    async accept(b, overbook = false) {
+      const ok = await this.act(() => RestaurantApi.accept(this.user, this.businessId, b.id,
+        { expectedVersion: b.version, overbook: overbook || undefined }), {
+        done: () => this.$t("components.restaurant.acceptedDone", { name: b.name }),
+      });
+      const refusal = this.lastRefusal;
+      if (!ok && !overbook && refusal && refusal.overridable) {
+        this.confirm.require({
+          header: this.$t("components.restaurant.acceptAnywayTitle"),
+          message: refusal.text,
+          acceptLabel: this.$t("components.restaurant.bookAnyway"),
+          rejectLabel: this.$t("components.restaurant.confirm.keep"),
+          defaultFocus: "reject",
+          accept: () => {
+            const again = this.list.find(r => r.id === b.id);
+            if (again) this.accept(again, true);
+          },
+        });
       }
-      this.accepting = { visible: true, row: r, tableSize, tables, message: null };
     },
-    acceptChosen(overbook) {
-      const dialog = this.accepting;
-      const choice = dialog.tableSize ? { tableSize: dialog.tableSize, tables: dialog.tables || 1 } : {};
-      return this.run(() => RestaurantApi.accept(this.user, this.businessId, dialog.row.id,
-        Object.assign({ expectedVersion: dialog.row.version, overbook: overbook || undefined }, choice)), "components.restaurant.accepted",
-        overbook ? null : () => this.acceptChosen(true), dialog);
+    startMove(b) {
+      this.panel = null;
+      this.moving = b.id;
+      this.time = b.start;
     },
-    /** Accepting a request in an area without tables: nothing to choose, so no dialog. */
-    accept(r, overbook) {
-      return this.run(() => RestaurantApi.accept(this.user, this.businessId, r.id,
-        { expectedVersion: r.version, overbook: overbook || undefined }), "components.restaurant.accepted",
-        overbook ? null : () => this.accept(r, true));
+    moveTo(tableId) {
+      const b = this.list.find(x => x.id === this.moving);
+      if (!b) { this.moving = null; return; }
+      return this.dropOn({ bookingId: b.id, tableId });
     },
-    stopSell(service) {
-      return this.run(() => RestaurantApi.stopSell(this.user, this.businessId, this.date, service), "components.restaurant.stopped");
-    },
-    addBlock() {
-      const f = this.blockForm;
-      const body = { date: this.date, service: f.service, area: f.area, note: f.note || undefined };
-      if (this.blockSizes.length) Object.assign(body, { tableSize: f.tableSize, tables: f.tables });
-      else body.covers = f.covers;
-      return this.run(() => RestaurantApi.block(this.user, this.businessId, body), "components.restaurant.blocked");
-    },
-    async saveSettings() {
-      this.settingsMessage = null;
-      const s = this.settings;
-      // A row whose size was cleared is not dropped in silence: the owner fills it in or removes the row.
-      const sizeless = ["indoor", "outdoor"].some(area => s.tables[area].some(t => !(t.size > 0)));
-      if (sizeless) {
-        this.settingsMessage = { severity: "error", text: this.$t("components.restaurant.tableWithoutSize") };
+    /** A booking dropped on a table: the best declared seating with that table that holds the party and is
+     *  free over its interval. The server judges the move. */
+    dropOn({ bookingId, tableId }) {
+      const b = this.list.find(x => x.id === bookingId);
+      const t = tableById(this.layout, tableId);
+      if (!b || !t) return;
+      const options = dropTargets(this.layout, this.date, this.list, b, tableId);
+      if (!options.length) {
+        const why = b.party > t.max ? "moveTooMany" : b.party < t.min ? "moveTooFew" : "moveBusy";
+        this.showToast(this.$t(`components.restaurant.${why}`, { name: b.name, party: b.party, table: t.name, seats: t.max, min: t.min,
+          from: fmt(b.start), to: fmt(b.end) }), null, true);
         return;
       }
-      this.saving = true;
-      const tables = {};
-      ["indoor", "outdoor"].forEach(area => {
-        const list = s.tables[area].map(t => ({ size: t.size, count: t.count || 0, minParty: t.minParty }));
-        if (list.length) tables[area] = list;
+      const to = options[0].ids;
+      const from = b.tables.slice();
+      this.moving = null;
+      return this.act(() => RestaurantApi.change(this.user, this.businessId, b.id, { expectedVersion: b.version, tableIds: to }), {
+        done: () => this.$t("components.restaurant.movedTo", { name: b.name, tables: seatLabel(this.layout, to) }),
+        undo: answer => RestaurantApi.change(this.user, this.businessId, b.id,
+          { expectedVersion: answer.version, tableIds: from.length ? from : undefined, time: fmt(b.start) }),
       });
-      const params = Object.assign({}, this.instance.params, {
-        tables: Object.keys(tables).length ? JSON.stringify(tables) : "",
-        indoorSeats: String(s.seats.indoor ?? 0),
-        outdoorSeats: String(s.seats.outdoor ?? 0),
-        smallPartyPolicy: s.policy,
-        relaxMinutes: String(s.relaxMinutes ?? 60),
-        assistantShare: String(s.share ?? 100),
+    },
+    newBody(p, overbook) {
+      return {
+        date: this.date, time: fmt(p.start), covers: p.party, name: p.name.trim() || undefined, phone: p.phone.trim() || undefined,
+        notes: p.notes.trim() || undefined, allergies: p.allergies.trim() || undefined, tableIds: p.tables || undefined,
+        overbook: overbook || undefined,
+      };
+    },
+    async saveNew({ form, overbook }) {
+      const p = form;
+      const body = this.newBody(p, overbook);
+      const ok = await this.act(() => p.requestId
+        ? RestaurantApi.accept(this.user, this.businessId, p.requestId, { expectedVersion: p.requestVersion, tableIds: p.tables || undefined, overbook: overbook || undefined })
+        : RestaurantApi.book(this.user, this.businessId, body), {
+        inPanel: true,
+        done: answer => this.$t("components.restaurant.bookedDone", { name: p.name.trim(), people: this.$t("components.restaurant.people", { n: p.party }),
+          day: this.shortDate(this.date), time: fmt(p.start), tables: answer && answer.tableNames && answer.tableNames.length ? answer.tableNames.join("+") : "" }),
+        undo: p.requestId ? null : answer => RestaurantApi.cancel(this.user, this.businessId, answer.id, answer.version),
       });
+      if (ok) this.panel = null;
+    },
+    async walkIn({ form, party }) {
+      const p = form;
+      const now = minuteOfDay(new Date());
+      let tables = p.tables;
+      if (tables) {
+        const seat = live(this.list, this.service);
+        const t = tables.map(id => tableById(this.layout, id));
+        const fits = t.reduce((a, x) => a + x.max, 0) >= party && party >= Math.min(...t.map(x => x.min));
+        const clash = seat.some(b => occupiedTables(b).some(id => tables.includes(id)) && b.start < now + this.rules.tableMinutes.upTo2 && b.end > now);
+        if (!fits || clash) tables = null;
+      }
+      const ok = await this.act(() => RestaurantApi.book(this.user, this.businessId,
+        { date: this.date, time: fmt(now), covers: party, walkIn: true, tableIds: tables || undefined }), {
+        inPanel: true,
+        done: answer => this.$t("components.restaurant.walkInDone", { party,
+          tables: answer && answer.tableNames && answer.tableNames.length ? answer.tableNames.join("+") : "" }),
+        undo: answer => RestaurantApi.cancel(this.user, this.businessId, answer.id, answer.version),
+      });
+      if (ok) this.panel = null;
+    },
+
+    // ------------------------------------------------------------ the room
+
+    async onWizardDone() {
+      await this.loadDay(this.date);
+      this.tab = "day";
+      this.resetTime();
+      this.loadPeriod();
+      this.showToast(this.$t("components.restaurant.wizard.ready", { n: this.layout ? this.layout.tables.length : 0 }));
+    },
+    async onRoomSaved() {
+      const dates = Object.keys(this.days);
+      await Promise.all(dates.map(d => this.loadDay(d)));
+      this.loadPeriod();
+    },
+    /** The bookings from today on, among the days the page has read, that sit on a table: for a refused
+     *  layout save, which names the table and not who is on it. */
+    bookingsOnTable(tableId) {
+      return Object.keys(this.days).filter(d => d >= this.today).sort().flatMap(d =>
+        this.days[d].reservations.filter(b => ["booked", "arrived", "seated"].includes(b.state) && b.tables.includes(tableId))
+          .map(b => ({ date: d, b })));
+    },
+
+    // ------------------------------------------------------------ search and export
+
+    async onSearch() {
+      if (this.search.trim().length < 2 || this.searchLoaded) return;
+      this.searchLoaded = true;
+      this.searching = true;
+      const missing = Array.from({ length: SEARCH_DAYS }, (_, i) => addDays(this.today, i)).filter(d => !this.days[d]);
       try {
-        await RestaurantApi.saveInstance(this.user, this.businessId, this.instance, params);
-        await this.loadSettings();
-        await this.load();
-        this.settingsMessage = { severity: "success", text: this.$t("components.restaurant.settingsSaved") };
-      } catch (e) {
-        const status = e.restaurant ? e.restaurant.status : null;
-        if (status === 409) {
-          await this.loadSettings();
-          this.settingsMessage = { severity: "warn", text: this.$t("components.restaurant.changedMeanwhile") };
-        } else if (status === 422) {
-          const codes = ((e.restaurant.body && e.restaurant.body.diagnostics) || []).map(d => d.code);
-          const first = codes.find(c => SETTINGS_CODES.includes(c));
-          this.settingsMessage = { severity: "error",
-            text: this.$t(first ? `components.restaurant.settingsRefused.${first}` : "components.restaurant.settingsRefused.other") };
-        } else {
-          console.error("Restaurant settings not saved:", status || e);
-          this.settingsMessage = { severity: "error", text: this.$t("components.restaurant.answer.error") };
-        }
+        await Promise.all(missing.map(d => this.loadDay(d)));
       } finally {
-        this.saving = false;
+        this.searching = false;
+      }
+    },
+    async openFound(r) {
+      this.search = "";
+      this.tab = "day";
+      this.service = r.b.service;
+      await this.setDate(r.date);
+      this.time = r.b.start;
+      this.panel = { type: "booking", id: r.b.id };
+    },
+    async exportCsv() {
+      const from = this.stripDays[0];
+      const to = this.stripDays[this.stripDays.length - 1];
+      try {
+        const blob = await RestaurantApi.exportCsv(this.user, this.businessId, from, to);
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob instanceof Blob ? blob : new Blob([blob], { type: "text/csv" }));
+        a.download = `prenotazioni-${from}-${to}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        this.showToast(this.$t("components.restaurant.exported", { from: this.shortDate(from), to: this.shortDate(to) }));
+      } catch (e) {
+        this.showToast(this.$t(refusalKey(e.restaurant ? e.restaurant.code : null)), null, true);
       }
     },
   },
 };
 </script>
 
-<style lang="less" scoped>
-@import "../../assets/style/colors";
-
-.restaurant {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  max-width: 1100px;
-}
-
-h3 {
-  margin: 0 0 8px;
-  font-size: 16px;
-}
-
-h4 {
-  margin: 0 0 6px;
-  font-size: 14px;
-}
-
-.restaurant-day-picker,
-.restaurant-service-head,
-.restaurant-row,
-.restaurant-table-type {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-}
-
-.restaurant-service-head h3 {
-  margin: 0;
-}
-
-.restaurant-covers,
-.restaurant-help,
-.restaurant-legend,
-.restaurant-empty,
-.restaurant-notes,
-.restaurant-reason {
-  color: @mrcall_grey_text;
-  font-size: 13px;
-  margin: 0;
-}
-
-.restaurant-slots {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  margin-top: 8px;
-}
-
-.restaurant-slot {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  padding: 4px 0;
-  border-bottom: 1px solid @mrcall_light_grey_2;
-}
-
-.restaurant-slot-time {
-  font-weight: 600;
-  min-width: 48px;
-}
-
-.restaurant-slot-arriving {
-  min-width: 90px;
-  font-size: 13px;
-}
-
-.restaurant-slot-area {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 4px;
-}
-
-.restaurant-row {
-  padding: 6px 0;
-  border-bottom: 1px solid @mrcall_light_grey_2;
-}
-
-.restaurant-booking-time {
-  font-weight: 600;
-}
-
-.restaurant-allergies {
-  color: @mrcall_red;
-}
-
-.restaurant-form {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 10px;
-  margin-bottom: 10px;
-
-  label {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    font-size: 13px;
-  }
-}
-
-.restaurant-form-wide {
-  grid-column: 1 / -1;
-}
-
-.restaurant-settings {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-
-  > label {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    font-size: 13px;
-    max-width: 320px;
-  }
-}
-
-.restaurant-table-type label,
-.restaurant-seats {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  font-size: 13px;
-}
-
-.restaurant-overbook {
-  margin-left: 8px;
-}
-
-.restaurant-phone {
-  color: @mrcall_blue;
-  white-space: nowrap;
-}
+<style lang="less">
+@import "./restaurant/restaurant.less";
 </style>

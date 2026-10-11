@@ -2,360 +2,405 @@
 const { expect } = require('@playwright/test')
 const { test } = require('../fixtures/auth')
 const { mockBusiness } = require('../fixtures/mock-data')
+const { mockRestaurant, openRestaurant, tomorrowDinner, TODAY, TOMORROW } = require('../fixtures/restaurant')
 
 /**
- * The restaurant page, end to end against a mocked StarChat: it is reached from the configuration menu
- * of a business that runs the restaurant_booking skill; it shows each slot's tables in use against the
- * room and the assistant's share; a refusal is said in the owner's language and can be overridden;
- * requests are accepted at the version read; the room is saved to the skill instance at the revision
- * read; and on a server without the restaurant routes the page says so instead of failing.
+ * "Prenotazioni Ristorante", end to end against a StarChat book in memory (fixtures/restaurant.js): the
+ * evening (period strip, tables by zone judged by the minimum free time, the finder, the list and the
+ * booking panel), the call that made a booking, the room editor and the first-run wizard. Each test drives
+ * the page as a person does and checks what reached the server.
  *
- * Each test was seen failing before the page existed (2026-10-06): the menu item, the section and every
- * string below were absent, so each first assertion timed out.
+ * Seen failing: on 2026-10-11 the suite ran against the counts page it replaces (desktop): 20 failed, and
+ * the one that passed is the notice on a server without the routes, a behaviour the new page keeps. Each of
+ * these was also seen failing on the new page with one fault put in (Undo at the version read instead of the
+ * new one; the calls oldest first; the layout section sent with the minimum free time; the minimum free time
+ * ignored by the tiles; the cancel confirmation without "Keep it" focused). Tests that need a mouse drag
+ * run on the desktop project only.
  */
 
-const annotations = [{
-  collection: { id: '__BUSINESS_DATA__', humanName: 'Business data', description: '' },
-  variables: []
-}]
-
-const instance = {
-  skill: 'skill_restaurant_booking',
-  instanceId: 'restaurant_booking_1',
-  params: {
-    enabled: 'true',
-    indoorSeats: '40',
-    outdoorSeats: '0',
-    tables: JSON.stringify({ indoor: [{ size: 2, count: 2 }, { size: 4, count: 2 }] })
-  }
+const addDays = (key, n) => {
+  const [y, m, d] = key.split('-').map(Number)
+  const x = new Date(y, m - 1, d)
+  x.setDate(x.getDate() + n)
+  return `${x.getFullYear()}-${String(x.getMonth() + 1).padStart(2, '0')}-${String(x.getDate()).padStart(2, '0')}`
 }
 
-
-function day (date) {
-  return {
-    date,
-    configured: true,
-    held: 0,
-    covers: { dinner: 6 },
-    seats: { indoor: 12 },
-    assistantShare: 50,
-    tables: { indoor: [{ size: 2, count: 2, minParty: 1 }, { size: 4, count: 2, minParty: 3 }] },
-    reservations: [
-      { id: 'r1', version: 1, date, time: '20:00', minutes: 105, covers: 4, area: 'indoor', service: 'dinner',
-        status: 'confirmed', source: 'assistant', name: 'Bianchi', phone: '393331112233', overbooked: false,
-        tableSize: 4, tables: 1 },
-      { id: 'r2', version: 3, date, time: '20:30', minutes: 150, covers: 9, area: 'indoor', service: 'dinner',
-        status: 'requested', source: 'assistant', name: 'Galli', requestReason: 'large_party', overbooked: false },
-      { id: 'b1', version: 2, date, time: '19:00', minutes: 330, covers: 4, area: 'indoor', service: 'dinner',
-        status: 'confirmed', source: 'block', notes: 'stop dinner', overbooked: false, tableSize: 2, tables: 2 }
-    ],
-    occupancy: {
-      dinner: [
-        { time: '20:00', arriving: 4, areas: [{ area: 'indoor', seatsUsed: 6, seats: 12, assistantSeats: 6,
-          tables: [{ size: 2, used: 0, count: 2, assistantLimit: 1 }, { size: 4, used: 1, count: 2, assistantLimit: 1 }] }] },
-        { time: '20:15', arriving: 0, areas: [{ area: 'indoor', seatsUsed: 14, seats: 12, assistantSeats: 6,
-          tables: [{ size: 2, used: 0, count: 2, assistantLimit: 1 }, { size: 4, used: 3, count: 2, assistantLimit: 1 }] }] }
-      ]
-    }
-  }
+async function ready (page) {
+  await expect(page.locator('.strip .dcell').first()).toBeVisible({ timeout: 20000 })
 }
 
-async function mockPage (page, { restaurant = true, putStatus = 200, bookStatus = 201, moveStatus = 200, role = 'owner', skill = instance.skill, extra = [] } = {}) {
-  const calls = []
-  // `skill` null: a business that runs no restaurant skill; otherwise the name its configuration uses.
-  const entry = skill ? { ...instance, skill } : null
-  const business = { ...mockBusiness,
-    variables: { ...mockBusiness.variables, ...(entry ? { SKILL_RUNNINGLOOP_CONFIGURATION: JSON.stringify([entry]) } : {}) } }
-  await page.route('**/crm/variables*', route => route.fulfill({
-    status: 200, contentType: 'application/json', body: JSON.stringify(annotations) }))
-  await page.route('**/crm/business*', route => route.fulfill({
-    status: 200, contentType: 'application/json', body: JSON.stringify([business]),
-    headers: { 'x-mrcall-role': role, 'access-control-expose-headers': 'x-mrcall-role' } }))
-  await page.route('**/apidomain/agent/skills/configuration/**', route => {
-    const request = route.request()
-    if (request.method() === 'PUT') {
-      calls.push({ method: 'PUT', url: request.url(), body: request.postDataJSON() })
-      return route.fulfill({ status: putStatus, contentType: 'application/json',
-        body: JSON.stringify({ saved: putStatus === 200, revision: 'rev-2', diagnostics: [] }) })
-    }
-    return route.fulfill({ status: 200, contentType: 'application/json',
-      body: JSON.stringify({ prefetch: [], during: entry ? [entry] : [], final: [], revisions: { prefetch: 'p', during: 'rev-1', final: 'f' } }) })
-  })
-  await page.route('**/apidomain/restaurant/**', route => {
-    const request = route.request()
-    const url = new URL(request.url())
-    if (!restaurant) {
-      // what an older StarChat answers: no such route at all
-      return route.fulfill({ status: 404, contentType: 'text/plain', body: 'The requested resource could not be found.' })
-    }
-    if (request.method() === 'GET') {
-      const answer = day(url.searchParams.get('date'))
-      answer.reservations = answer.reservations.concat(extra.map(r => ({ ...r, date: answer.date })))
-      return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(answer) })
-    }
-    const body = request.postData() ? request.postDataJSON() : null
-    calls.push({ method: request.method(), path: url.pathname, search: url.search, body })
-    // As the server answers: a large party is refused to staff unless they name the tables it takes.
-    if (url.pathname.endsWith('/accept') && !(body && (body.tableSize || body.overbook))) {
-      return route.fulfill({ status: 409, contentType: 'application/json',
-        body: JSON.stringify({ diagnostics: [{ path: '/', code: 'large_party', detail: 'name the tables or overbook' }] }) })
-    }
-    if (url.pathname.endsWith('/reservations') && request.method() === 'POST' && !(body && body.overbook)) {
-      return route.fulfill({ status: bookStatus, contentType: 'application/json',
-        body: JSON.stringify(bookStatus === 201 ? { id: 'n1', version: 1 } :
-          { diagnostics: [{ path: '/', code: 'full', detail: 'the party does not fit there; send overbook: true to book it anyway' }] }) })
-    }
-    if (request.method() === 'PATCH' && moveStatus !== 200 && !(body && body.overbook)) {
-      return route.fulfill({ status: moveStatus, contentType: 'application/json',
-        body: JSON.stringify({ diagnostics: [{ path: '/', code: 'full', detail: 'the party does not fit there; send overbook: true to book it anyway' }] }) })
-    }
-    return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ id: 'x', version: 2 }) })
-  })
-  return calls
+/** Taps a control a third of the way down the screen: on phones the dashboard's support bar covers the
+ *  bottom half and its header the top. */
+async function tap (locator) {
+  await locator.evaluate(el => window.scrollBy(0, el.getBoundingClientRect().top - window.innerHeight * 0.3))
+  await locator.click()
 }
 
-async function openPage (page) {
-  await page.goto(`/businessconfiguration?id=${mockBusiness.businessId}&section=__RESTAURANT_BOOKING__`)
-  await expect(page.locator('.restaurant-slot').first()).toBeVisible({ timeout: 20000 })
+function tile (page, name) {
+  return page.locator(`.tile[data-table="${name}"]`)
 }
 
 test.describe('the restaurant page', () => {
-  test('opens from the menu and paints each slot\'s tables against the room and the assistant\'s share', async ({ authenticatedPage: page }, testInfo) => {
-    await mockPage(page)
+  test('opens from the menu on the evening: the strip is the server\'s, tables by zone, free judged by the minimum free time', async ({ authenticatedPage: page }, testInfo) => {
+    await mockRestaurant(page)
     await page.goto(`/businessconfiguration?id=${mockBusiness.businessId}`)
     const narrowMenu = page.locator('.header_buttonbar button')
     if (await narrowMenu.isVisible()) await narrowMenu.click()
-    // Exact, because "Bookings" alone also matched the label this one replaced. The section id
-    // is what a bookmark carries. Seen failing on 2026-10-10 against the old id and label.
     await page.getByRole('menuitem', { name: 'Restaurant bookings', exact: true }).locator('visible=true').first().click()
     await expect(page).toHaveURL(/[?&]section=__RESTAURANT_BOOKING__(&|$)/)
-    await expect(page.locator('.restaurant-slot')).toHaveCount(2, { timeout: 20000 })
-    const first = page.locator('.restaurant-slot').first()
-    await expect(first.locator('.restaurant-table-use')).toHaveText(['0/2 tables of 2', '1/2 tables of 4'])
-    // What is painted, not only the attribute: the assistant's share reached is drawn apart from free,
-    // and a slot over the room apart from both.
-    const colour = loc => loc.evaluate(el => getComputedStyle(el).backgroundColor)
-    const free = await colour(first.locator('[data-state="free"]'))
-    const staffOnly = await colour(first.locator('[data-state="staff"]'))
-    const over = await colour(page.locator('.restaurant-slot').nth(1).locator('[data-state="over"]'))
-    expect(new Set([free, staffOnly, over]).size).toBe(3)
-    await expect(page.locator('.restaurant-booking')).toContainText(['20:00'])
-    await expect(page.locator('.restaurant-booking').first()).toContainText('1 × table of 4')
-    // No raw server English anywhere on the page
-    await expect(page.locator('.restaurant').getByText(/overbook: true|does not fit there/)).toHaveCount(0)
-    await page.screenshot({ path: testInfo.outputPath('restaurant.png'), fullPage: true })
-  })
+    await ready(page)
+    await expect(page.locator('.strip .dcell')).toHaveCount(14)
+    const cell = key => page.locator(`.dcell[data-date="${key}"]`)
+    await expect(cell(addDays(TODAY, 3)).locator('[data-service="dinner"]')).toContainText('full')
+    await expect(cell(addDays(TODAY, 5)).locator('[data-service="dinner"]')).toContainText('closed')
+    await expect(cell(TOMORROW).locator('[data-service="dinner"]')).toContainText('max 6')
+    await expect(cell(TOMORROW).locator('[data-service="dinner"]')).toContainText('12 cov.')
 
-  test('says a refusal in its own words and books anyway on request', async ({ authenticatedPage: page }) => {
-    const calls = await mockPage(page, { bookStatus: 409 })
-    await openPage(page)
-    const form = page.locator('.restaurant-new')
-    await form.locator('input[type="time"]').fill('20:00')
-    await form.getByRole('button', { name: 'Book' }).click()
-    await expect(page.getByText('There is no room at that time.')).toBeVisible()
-    await expect(page.getByText(/send overbook/)).toHaveCount(0)
-    await page.getByRole('button', { name: 'Book anyway' }).click()
-    await expect(page.getByText('Booking saved.')).toBeVisible()
-    const posts = calls.filter(c => c.method === 'POST' && c.path.endsWith('/reservations'))
-    expect(posts.map(c => !!c.body.overbook)).toEqual([false, true])
-    expect(posts[1].body).toMatchObject({ time: '20:00', covers: 2 })
-  })
-
-  // A large party is refused to staff unless they name its tables (design 18.9.2), so accepting one names
-  // them: the dialog offers the tables its covers need, which staff may change. Seen failing on
-  // 2026-10-06 with Accept sending only the version: the server's large_party, then only "book anyway".
-  test('accepts a large party on the tables it needs, at the version it read', async ({ authenticatedPage: page }) => {
-    const calls = await mockPage(page)
-    await openPage(page)
-    await page.locator('.restaurant-request').getByRole('button', { name: 'Accept' }).click()
-    const dialog = page.locator('.restaurant-accept-dialog')
-    await expect(dialog.getByRole('spinbutton')).toHaveValue('3')
-    await dialog.getByRole('button', { name: 'Accept' }).click()
-    await expect(page.getByText('Request accepted.')).toBeVisible()
-    const accepts = calls.filter(c => c.path.endsWith('/reservations/r2/accept'))
-    expect(accepts.map(c => c.body)).toEqual([{ expectedVersion: 3, tableSize: 4, tables: 3 }])
-  })
-
-  test('saves the room to the skill instance with the revision it read, tables as the skill stores them', async ({ authenticatedPage: page }) => {
-    const calls = await mockPage(page)
-    await openPage(page)
-    const settings = page.locator('.restaurant-settings')
-    await expect(settings.locator('.restaurant-table-type')).toHaveCount(2)
-    await settings.getByRole('button', { name: 'Save' }).click()
-    await expect(page.getByText('Settings saved.')).toBeVisible()
-    const put = calls.find(c => c.method === 'PUT')
-    expect(put.url).toContain('/during/restaurant_booking_1')
-    expect(put.body.expectedRevision).toBe('rev-1')
-    expect(put.body.skill).toBe('skill_restaurant_booking')
-    expect(JSON.parse(put.body.params.tables)).toEqual({ indoor: [{ size: 2, count: 2, minParty: 1 }, { size: 4, count: 2, minParty: 3 }] })
-    expect(put.body.params.assistantShare).toBe('100')
-    expect(put.body.params.enabled).toBe('true')
-  })
-
-  test('reloads and says so when the room changed in the meantime', async ({ authenticatedPage: page }) => {
-    await mockPage(page, { putStatus: 409 })
-    await openPage(page)
-    await page.locator('.restaurant-settings').getByRole('button', { name: 'Save' }).click()
-    await expect(page.getByText('The settings changed in the meantime', { exact: false })).toBeVisible()
-  })
-
-  // Seen failing on 2026-10-06 with the page's Remove not wired (no DELETE left the page).
-  test('stops a service and removes a block with the version read', async ({ authenticatedPage: page }) => {
-    const calls = await mockPage(page)
-    await openPage(page)
-    await page.locator('.restaurant-service').getByRole('button', { name: 'Stop bookings' }).click()
-    await expect(page.getByText('Bookings stopped for this service.')).toBeVisible()
-    const stop = calls.find(c => c.path.endsWith('/stop-sell'))
-    expect(stop.body).toMatchObject({ service: 'dinner' })
-    expect(typeof stop.body.idempotencyKey).toBe('string')
-    const block = page.locator('.restaurant-block')
-    await expect(block).toContainText('2 × table of 2')
-    await block.getByRole('button', { name: 'Remove' }).click()
-    await expect(page.getByText('Cancelled.')).toBeVisible()
-    const removal = calls.find(c => c.method === 'DELETE')
-    expect(removal && removal.path).toMatch(/\/reservations\/b1$/)
-    expect(removal.search).toBe('?expectedVersion=2')
-  })
-
-  test('says the book is not available on a server without the restaurant routes', async ({ authenticatedPage: page }) => {
-    await mockPage(page, { restaurant: false })
-    await page.goto(`/businessconfiguration?id=${mockBusiness.businessId}&section=__RESTAURANT_BOOKING__`)
-    await expect(page.getByText('The table book is not available on this server yet.', { exact: false })).toBeVisible({ timeout: 20000 })
-    await expect(page.locator('.restaurant-new')).toHaveCount(0)
-  })
-
-  test('has no footer Save for an owner', async ({ authenticatedPage: page }) => {
-    await mockPage(page)
-    await openPage(page)
+    await tomorrowDinner(page)
+    await expect(page.locator('.zone[data-zone="sala"] h3')).toHaveText('Dining room')
+    await expect(page.locator('.zone[data-zone="dehors"] h3')).toHaveText('Terrace')
+    // T3 frees at 20:00 for 30 minutes before Verdi's 20:30: under a 90-minute minimum it is not free.
+    await expect(tile(page, 'T3')).toHaveClass(/short/)
+    await expect(tile(page, 'T3')).toContainText('not available')
+    await expect(tile(page, 'T1')).toHaveClass(/free/)
+    await expect(tile(page, 'T4')).toContainText('Rossi')
+    await expect(page.locator('.free-count b')).toHaveText('4')
+    // What is painted, not only the class: free is green, too short is grey.
+    const bg = loc => loc.evaluate(el => getComputedStyle(el).backgroundColor)
+    expect(await bg(tile(page, 'T1'))).not.toBe(await bg(tile(page, 'T3')))
+    await expect(page.locator('.restaurant').getByText(/server English/)).toHaveCount(0)
     await expect(page.locator('#footer')).toHaveCount(0)
+    await page.screenshot({ path: testInfo.outputPath('restaurant-evening.png'), fullPage: true })
   })
 
-  // Seen failing on 2026-10-06 with the page recognising only skill_restaurant_booking: no menu item.
-  // The platform runs a skill instance only under the name its skills index has, skill_restaurant_booking:
-  // an instance written as restaurant_booking is refused by the configuration route (skill_unknown) and
-  // takes no call, so the page offers no book for it rather than one it cannot save. Seen failing on
-  // 2026-10-06 with the short name recognised: the book opened and its Save would answer 422.
-  test('offers no book for an instance under a name the platform does not run', async ({ authenticatedPage: page }) => {
-    await mockPage(page, { skill: 'restaurant_booking' })
-    await page.goto(`/businessconfiguration?id=${mockBusiness.businessId}&section=__RESTAURANT_BOOKING__`)
-    await expect(page.getByText('This assistant does not take table bookings', { exact: false })).toBeVisible({ timeout: 20000 })
-    await expect(page.locator('.restaurant-settings')).toHaveCount(0)
+  test('the finder asks the server where a party sits, books there, and Undo cancels it', async ({ authenticatedPage: page }) => {
+    const { calls } = await mockRestaurant(page)
+    await openRestaurant(page)
+    await ready(page)
+    await tomorrowDinner(page)
+    await page.getByRole('button', { name: 'One person more' }).click()
+    await page.getByRole('button', { name: 'One person more' }).click()
+    const best = page.locator('.find-line .chip').first()
+    await expect(best).toHaveText('T1 (recommended)')
+    const asked = calls.filter(c => c.path === '/seatings').pop()
+    expect(new URLSearchParams(asked.search).get('covers')).toBe('2')
+    expect(new URLSearchParams(asked.search).get('time')).toBe('20:00')
+    await expect(tile(page, 'T1')).toHaveClass(/fit/)
+    await best.click()
+    const panel = page.locator('.panel')
+    await expect(panel.getByRole('heading', { name: 'New booking' })).toBeVisible()
+    await panel.getByLabel('Name').fill('Neri')
+    await panel.locator('.save-btn').click()
+    await expect(page.locator('.toast')).toContainText('Saved: Neri')
+    const post = calls.find(c => c.method === 'POST' && c.path === '/reservations')
+    expect(post.body).toMatchObject({ date: TOMORROW, time: '20:00', covers: 2, name: 'Neri', tableIds: [1] })
+    expect(typeof post.body.idempotencyKey).toBe('string')
+    await expect(tile(page, 'T1')).toContainText('Neri')
+    await page.locator('.toast').getByRole('button', { name: 'Undo' }).click()
+    await expect(page.locator('.toast')).toContainText('action undone')
+    expect(calls.filter(c => c.method === 'DELETE').map(c => c.path + c.search)).toEqual(['/reservations/n1?expectedVersion=1'])
   })
 
-  // Seen failing on 2026-10-06 with the section opening the book for a business without the skill.
-  test('says there is no book on the section URL of a business without the skill', async ({ authenticatedPage: page }) => {
-    await mockPage(page, { skill: null })
-    await page.goto(`/businessconfiguration?id=${mockBusiness.businessId}&section=__RESTAURANT_BOOKING__`)
-    await expect(page.getByText('This assistant does not take table bookings', { exact: false })).toBeVisible({ timeout: 20000 })
-    await expect(page.locator('.restaurant-new')).toHaveCount(0)
-    await expect(page.locator('.restaurant-settings')).toHaveCount(0)
+  test('without the finder route the finder says so instead of guessing', async ({ authenticatedPage: page }) => {
+    await mockRestaurant(page, { seatings: false })
+    await openRestaurant(page)
+    await ready(page)
+    await tomorrowDinner(page)
+    await page.getByRole('button', { name: 'One person more' }).click()
+    await expect(page.locator('.find-line')).toContainText('The server cannot answer this yet')
+    await expect(page.locator('.find-line .chip')).toHaveCount(0)
   })
 
-  // Seen failing on 2026-10-06 with a row whose size was cleared dropped from the save in silence.
-  // A move decides the table again (design 18.9.3): the dialog names no size for a party at one table,
-  // so the book gives it the smallest free one at the new time; a party on several tables keeps them,
-  // because without them a group above the party limit is refused. Seen failing on 2026-10-06 with the
-  // dialog pre-filled from the row: the move to 21:00 sent tableSize 4.
-  test('lets the book choose the table when a party at one table is moved, and keeps a party on several', async ({ authenticatedPage: page }) => {
-    const group = { id: 'r3', version: 5, time: '21:00', minutes: 150, covers: 8, area: 'indoor', service: 'dinner',
-      status: 'confirmed', source: 'staff', name: 'Neri', overbooked: false, tableSize: 4, tables: 2 }
-    const calls = await mockPage(page, { extra: [group] })
-    await openPage(page)
-    const moveTo = async (name, time) => {
-      await page.locator('.restaurant-booking').filter({ hasText: name }).getByRole('button', { name: 'Change' }).click()
-      const dialog = page.locator('.restaurant-move-dialog')
-      await dialog.locator('input[type="time"]').fill(time)
-      await dialog.getByRole('button', { name: 'Save' }).click()
-      await expect(page.getByText('Booking changed.')).toBeVisible()
-    }
-    await moveTo('Bianchi', '21:00')
-    await moveTo('Neri', '21:30')
-    const patches = calls.filter(c => c.method === 'PATCH')
-    expect(patches.map(c => c.path.split('/').pop())).toEqual(['r1', 'r3'])
-    expect(patches[0].body).toMatchObject({ time: '21:00', covers: 4, expectedVersion: 1 })
-    expect(patches[0].body.tableSize).toBeUndefined()
-    expect(patches[1].body).toMatchObject({ time: '21:30', covers: 8, tableSize: 4, tables: 2, expectedVersion: 5 })
+  test('seats a guest in one tap from the list, and Undo puts the state back at the new version', async ({ authenticatedPage: page }) => {
+    const { calls } = await mockRestaurant(page)
+    await openRestaurant(page)
+    await ready(page)
+    await tomorrowDinner(page)
+    await page.locator('.brow', { hasText: 'Rossi' }).getByRole('button', { name: 'Seated' }).click()
+    await expect(page.locator('.toast')).toContainText('Rossi: seated')
+    await page.locator('.toast').getByRole('button', { name: 'Undo' }).click()
+    await expect(page.locator('.toast')).toContainText('action undone')
+    expect(calls.filter(c => c.path === '/reservations/b-rossi/state').map(c => c.body))
+      .toEqual([{ expectedVersion: 1, state: 'seated' }, { expectedVersion: 2, state: null }])
   })
 
-  test('refuses to save a table row whose size was cleared, and says why', async ({ authenticatedPage: page }) => {
-    const calls = await mockPage(page)
-    await openPage(page)
-    const size = page.locator('.restaurant-settings .restaurant-table-type').first().locator('input').first()
-    await size.click()
-    await size.press('ControlOrMeta+a')
-    await size.press('Backspace')
-    await size.press('Tab')
-    await page.locator('.restaurant-settings').getByRole('button', { name: 'Save' }).click()
-    await expect(page.getByText('Every table needs a size: fill it in or remove the row.')).toBeVisible()
-    expect(calls.filter(c => c.method === 'PUT')).toHaveLength(0)
-  })
-
-  // A cancellation cannot be undone, and a mis-click on the row's trash cancelled at once. The confirmation
-  // names whom, when and how many, so the wrong row is recognised before anything is sent. Seen failing on
-  // 2026-10-10 against v2.2.17: the click sent the DELETE straight away and no dialog appeared.
-  test('asks before cancelling a booking or declining a request, naming the party, and sends nothing on keep', async ({ authenticatedPage: page }) => {
-    const calls = await mockPage(page)
-    await openPage(page)
-    const day = await page.evaluate(() => {
-      const d = new Date()
-      return d.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long' })
-    })
-    await page.locator('.restaurant-booking').filter({ hasText: 'Bianchi' }).getByRole('button', { name: 'Cancel' }).click()
+  test('asks before cancelling, naming the party with "Keep it" focused and readable, and sends nothing on keep', async ({ authenticatedPage: page }) => {
+    const { calls } = await mockRestaurant(page)
+    await openRestaurant(page)
+    await ready(page)
+    await tomorrowDinner(page)
+    await page.locator('.brow', { hasText: 'Rossi' }).click()
+    const panel = page.locator('.panel')
+    await panel.getByRole('button', { name: 'Cancel booking' }).click()
     const confirm = page.locator('.mrcall-confirm-dialog')
-    await expect(confirm).toContainText('Bianchi')
-    await expect(confirm).toContainText(day)
+    await expect(confirm).toContainText('Rossi')
     await expect(confirm).toContainText('20:00')
     await expect(confirm).toContainText('4 people')
-    // The focused "Keep it" must be readable: the dashboard paints every button blue (default.less), so
-    // a secondary outlined button kept its grey text on that blue and looked disabled. Seen failing on
-    // 2026-10-10 with rejectProps secondary/outlined: rgb(100, 116, 139) on rgb(0, 104, 255).
     const keep = confirm.getByRole('button', { name: 'Keep it' })
     await expect(keep).toBeFocused()
     await expect(keep).toHaveCSS('color', 'rgb(255, 255, 255)')
     await keep.click()
     await expect(confirm).toHaveCount(0)
     expect(calls.filter(c => c.method === 'DELETE')).toHaveLength(0)
-
-    await page.locator('.restaurant-booking').filter({ hasText: 'Bianchi' }).getByRole('button', { name: 'Cancel' }).click()
+    await panel.getByRole('button', { name: 'Cancel booking' }).click()
     await confirm.getByRole('button', { name: 'Cancel booking' }).click()
-    await expect(page.getByText('Cancelled.')).toBeVisible()
-    const deletes = calls.filter(c => c.method === 'DELETE')
-    expect(deletes.map(c => c.path.split('/').pop() + c.search)).toEqual(['r1?expectedVersion=1'])
-
-    await page.locator('.restaurant-request').getByRole('button', { name: 'Decline' }).click()
-    await expect(confirm).toContainText('Galli')
-    await expect(confirm).toContainText('9 people')
-    await confirm.getByRole('button', { name: 'Keep it' }).click()
-    expect(calls.filter(c => c.method === 'DELETE')).toHaveLength(1)
+    await expect(page.locator('.toast')).toContainText('Cancelled: Rossi')
+    expect(calls.filter(c => c.method === 'DELETE').map(c => c.path + c.search)).toEqual(['/reservations/b-rossi?expectedVersion=1'])
   })
 
-  // A refused move closed its dialog and said so far down the page, where it went unseen. The refusal now
-  // stays in the dialog that asked, with the override beside it. Seen failing on 2026-10-10 against v2.2.17:
-  // the dialog closed and the answer was not inside it.
-  test('keeps a refused move in its dialog, says why there, and moves anyway from there', async ({ authenticatedPage: page }) => {
-    const calls = await mockPage(page, { moveStatus: 409 })
-    await openPage(page)
-    await page.locator('.restaurant-booking').filter({ hasText: 'Bianchi' }).getByRole('button', { name: 'Change' }).click()
-    const dialog = page.locator('.restaurant-move-dialog')
-    await dialog.locator('input[type="time"]').fill('21:00')
-    await dialog.getByRole('button', { name: 'Save' }).click()
-    await expect(dialog.getByText('There is no room at that time.')).toBeVisible()
-    await expect(page.locator('.restaurant-message')).toHaveCount(0)
-    await dialog.getByRole('button', { name: 'Book anyway' }).click()
+  test('marks a no-show after confirming, and shows the phone as a number to call and to write to', async ({ authenticatedPage: page }) => {
+    const { calls } = await mockRestaurant(page)
+    await openRestaurant(page)
+    await ready(page)
+    await tomorrowDinner(page)
+    await page.locator('.brow', { hasText: 'Rossi' }).click()
+    const panel = page.locator('.panel')
+    await expect(panel.locator('a.restaurant-phone')).toHaveText('+39 333 111 2233')
+    await expect(panel.locator('a.restaurant-phone')).toHaveAttribute('href', 'tel:+393331112233')
+    await expect(panel.getByRole('link', { name: 'WhatsApp' })).toHaveAttribute('href', 'https://wa.me/393331112233')
+    await expect(panel).toContainText('Celiac')
+    await panel.getByRole('button', { name: 'No-show' }).click()
+    await page.locator('.mrcall-confirm-dialog').getByRole('button', { name: 'Mark as no-show' }).click()
+    await expect(page.locator('.toast')).toContainText('Rossi: marked as no-show')
+    expect(calls.filter(c => c.path.endsWith('/no-show')).map(c => c.search)).toEqual(['?expectedVersion=1'])
+  })
+
+  test('reads the calls that made and changed a booking, newest first, and returns to the same booking', async ({ authenticatedPage: page }) => {
+    const { calls } = await mockRestaurant(page)
+    await openRestaurant(page)
+    await ready(page)
+    await tomorrowDinner(page)
+    await page.locator('.brow', { hasText: 'Rossi' }).click()
+    await page.locator('.panel').getByRole('button', { name: 'Read the call' }).click()
+    const dialog = page.locator('.restaurant-call-dialog')
+    await expect(dialog).toContainText('Asked to move the booking')
+    await expect(dialog.getByRole('button', { name: 'Latest call' })).toHaveAttribute('aria-pressed', 'true')
+    await dialog.getByRole('button', { name: 'First call' }).click()
+    await expect(dialog).toContainText('Booked a table for 4 tomorrow at 20:00.')
+    await expect(dialog).toContainText('A table for four tomorrow at eight.')
+    expect(calls.filter(c => c.path === '/conversation/search').map(c => c.body.id)).toEqual(['CON-moved', 'CON-made'])
+    await page.keyboard.press('Escape')
     await expect(dialog).toHaveCount(0)
-    await expect(page.getByText('Booking changed.')).toBeVisible()
-    const patches = calls.filter(c => c.method === 'PATCH')
-    expect(patches.map(c => !!c.body.overbook)).toEqual([false, true])
-    expect(patches[1].body).toMatchObject({ time: '21:00', expectedVersion: 1 })
+    await expect(page.locator('.panel h2')).toHaveText('Rossi')
+    await expect(page.locator(`.dcell[data-date="${TOMORROW}"]`)).toHaveClass(/sel/)
+    // A staff booking and a walk-in were made by no call: nothing to read.
+    await page.locator('.panel').getByRole('button', { name: 'Close' }).click()
+    await page.locator('.brow', { hasText: 'Verdi' }).click()
+    await expect(page.locator('.panel h2')).toHaveText('Verdi')
+    await expect(page.locator('.panel').getByRole('button', { name: 'Read the call' })).toHaveCount(0)
   })
 
-  // The book keeps a phone as digits with no "+", by design. Seen failing on 2026-10-10 against v2.2.17:
-  // the row showed 393331112233 and nothing to call.
-  test('shows a guest\'s phone in international form, as a number to call', async ({ authenticatedPage: page }) => {
-    await mockPage(page)
-    await openPage(page)
-    const phone = page.locator('.restaurant-booking').filter({ hasText: 'Bianchi' }).locator('a.restaurant-phone')
-    await expect(phone).toHaveText('+39 333 111 2233')
-    await expect(phone).toHaveAttribute('href', 'tel:+393331112233')
+  test('moves a booking from its panel by tapping a free table, and Undo moves it back', async ({ authenticatedPage: page }) => {
+    const { calls } = await mockRestaurant(page)
+    await openRestaurant(page)
+    await ready(page)
+    await tomorrowDinner(page)
+    await page.locator('.brow', { hasText: 'Rossi' }).click()
+    await page.locator('.panel').getByRole('button', { name: 'Move' }).click()
+    await expect(page.locator('.move-banner')).toContainText('Move Rossi')
+    await expect(tile(page, 'T5')).toHaveClass(/fit/)
+    await tap(tile(page, 'T5'))
+    await expect(page.locator('.toast')).toContainText('Rossi moved to T5')
+    await page.locator('.toast').getByRole('button', { name: 'Undo' }).click()
+    await expect(page.locator('.toast')).toContainText('action undone')
+    expect(calls.filter(c => c.method === 'PATCH').map(c => c.body))
+      .toEqual([{ expectedVersion: 1, tableIds: [5] }, { expectedVersion: 2, tableIds: [4], time: '20:00' }])
+  })
+
+  test('moves a booking by dragging it onto a free table', async ({ authenticatedPage: page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'desktop', 'a drag needs a mouse')
+    const { calls } = await mockRestaurant(page)
+    await openRestaurant(page)
+    await ready(page)
+    await tomorrowDinner(page)
+    await tile(page, 'T4').dragTo(tile(page, 'T5'))
+    await expect(page.locator('.toast')).toContainText('Rossi moved to T5')
+    expect(calls.filter(c => c.method === 'PATCH').map(c => c.body)).toEqual([{ expectedVersion: 1, tableIds: [5] }])
+  })
+
+  test('seats a walk-in in two taps: a free table, then how many', async ({ authenticatedPage: page }) => {
+    const { calls } = await mockRestaurant(page)
+    await openRestaurant(page)
+    await ready(page)
+    await tap(tile(page, 'D2'))
+    await page.locator('.panel .walkin').getByRole('button', { name: '2', exact: true }).click()
+    await expect(page.locator('.toast')).toContainText('Walk-in of 2 seated')
+    const post = calls.find(c => c.method === 'POST' && c.path === '/reservations')
+    expect(post.body).toMatchObject({ date: TODAY, covers: 2, walkIn: true, tableIds: [8] })
+  })
+
+  test('a refused booking says why in its panel, offers the free time, and books anyway on request', async ({ authenticatedPage: page }) => {
+    const { calls } = await mockRestaurant(page, { refuseBook: 'full' })
+    await openRestaurant(page)
+    await ready(page)
+    await tomorrowDinner(page)
+    await page.locator('.new-booking').click()
+    const panel = page.locator('.panel')
+    await panel.getByLabel('Name').fill('Neri')
+    await panel.locator('.save-btn').click()
+    await expect(panel.locator('.refusal')).toContainText('There is no room at that time.')
+    await expect(panel.locator('.refusal').getByRole('button', { name: '21:15' })).toBeVisible()
+    await expect(page.getByText(/server English/)).toHaveCount(0)
+    await panel.getByRole('button', { name: 'Book anyway' }).click()
+    await expect(page.locator('.toast')).toContainText('Saved: Neri')
+    const posts = calls.filter(c => c.method === 'POST' && c.path === '/reservations')
+    expect(posts.map(c => !!c.body.overbook)).toEqual([false, true])
+  })
+
+  test('accepts a request at the version read, and opens the call it came from', async ({ authenticatedPage: page }) => {
+    const { calls } = await mockRestaurant(page)
+    await openRestaurant(page)
+    await ready(page)
+    await tomorrowDinner(page)
+    const request = page.locator('.req', { hasText: 'Galli' })
+    await expect(request).toContainText('Large party')
+    await request.getByRole('button', { name: 'Read the call' }).click()
+    await expect(page.locator('.restaurant-call-dialog')).toContainText('A party of nine.')
+    await page.keyboard.press('Escape')
+    await request.getByRole('button', { name: 'Accept' }).click()
+    await expect(page.locator('.toast')).toContainText('Request accepted: Galli')
+    expect(calls.filter(c => c.path.endsWith('/accept')).map(c => c.body)).toEqual([{ expectedVersion: 1 }])
+  })
+
+  test('"Good to know" names who has allergies and who is a large party, and highlights them', async ({ authenticatedPage: page }) => {
+    await mockRestaurant(page)
+    await openRestaurant(page)
+    await ready(page)
+    await tomorrowDinner(page)
+    await page.getByRole('button', { name: '1 with allergies' }).click()
+    await expect(page.locator('.know-pop')).toContainText('Rossi')
+    await expect(page.locator('.know-pop')).toContainText('Celiac')
+    await expect(tile(page, 'T4')).toHaveClass(/hit/)
+    await page.getByRole('button', { name: '1 party of 6+' }).click()
+    await expect(page.locator('.know-pop')).toContainText('Bianchi')
+  })
+
+  test('search finds a booking on another day and opens it there', async ({ authenticatedPage: page }) => {
+    await mockRestaurant(page)
+    await openRestaurant(page)
+    await ready(page)
+    await page.getByRole('searchbox', { name: 'Search a booking by name or phone' }).fill('Ross')
+    await page.locator('.sr-item', { hasText: 'Rossi' }).click()
+    await expect(page.locator('.panel h2')).toHaveText('Rossi')
+    await expect(page.locator(`.dcell[data-date="${TOMORROW}"]`)).toHaveClass(/sel/)
+  })
+
+  test('exports the days shown as the server\'s CSV', async ({ authenticatedPage: page }) => {
+    const { calls } = await mockRestaurant(page)
+    await openRestaurant(page)
+    await ready(page)
+    const download = page.waitForEvent('download')
+    await page.getByRole('button', { name: 'Export CSV' }).click()
+    expect((await download).suggestedFilename()).toBe(`prenotazioni-${TODAY}-${addDays(TODAY, 13)}.csv`)
+    expect(calls.filter(c => c.path === '/export').map(c => c.search)).toEqual([`?from=${TODAY}&to=${addDays(TODAY, 13)}`])
+  })
+
+  test('the room: generated tables and a join by name are saved as one layout at its revision, the minimum free time through the skill', async ({ authenticatedPage: page }) => {
+    const { calls } = await mockRestaurant(page)
+    await openRestaurant(page)
+    await ready(page)
+    await page.getByRole('tab', { name: 'Room and tables' }).click()
+    const editor = page.locator('.room-editor')
+    await editor.getByLabel('How many tables').fill('2')
+    await editor.getByLabel('Seats per table').fill('4')
+    await editor.getByLabel('Area', { exact: true }).selectOption('dehors')
+    await expect(editor.locator('.gen .names')).toContainText('D3, D4')
+    await editor.locator('.gen').getByRole('button', { name: 'Add' }).click()
+    await tap(editor.locator('.pick').last().getByLabel('D3'))
+    await tap(editor.locator('.pick').last().getByLabel('D4'))
+    await editor.getByRole('button', { name: 'Create join' }).click()
+    // the limits are the skill's: 1 to the longest table time (150)
+    await editor.getByLabel('Minimum free time in minutes').fill('200')
+    await expect(editor.locator('.issues')).toContainText('between 1 and 150 minutes')
+    await expect(editor.locator('.save-room')).toBeDisabled()
+    await editor.getByLabel('Minimum free time in minutes').fill('60')
+    const pending = editor.locator('.pending')
+    await expect(pending).toContainText('Tables added: D3, D4')
+    await expect(pending).toContainText('Join added: D3+D4 (5-8)')
+    await expect(pending).toContainText('Minimum free time: 90 → 60 min')
+    await editor.locator('.save-room').click()
+    await expect(page.locator('.toast')).toContainText('3 changes saved')
+    const put = calls.find(c => c.method === 'PUT' && c.path === '/layout')
+    expect(put.body.expectedRevision).toBe(3)
+    expect(put.body.layout.tables.filter(t => t.zone === 'dehors')).toEqual([
+      { id: 7, name: 'D1', zone: 'dehors', min: 1, max: 2, active: true },
+      { id: 8, name: 'D2', zone: 'dehors', min: 1, max: 2, active: true },
+      { name: 'D3', zone: 'dehors', min: 2, max: 4, active: true },
+      { name: 'D4', zone: 'dehors', min: 2, max: 4, active: true }])
+    expect(put.body.layout.joins).toContainEqual({ tables: ['D3', 'D4'], min: 5, max: 8 })
+    expect(put.body.layout.nextTableId).toBeUndefined()
+    const skill = calls.find(c => c.method === 'PUT' && c.path.includes('/skills/configuration/'))
+    expect(skill.path).toContain('/during/restaurant_booking_1')
+    expect(skill.body.expectedRevision).toBe('rev-1')
+    expect(skill.body.params.minFreeMinutes).toBe('60')
+    expect(skill.body.params.layout).toBeUndefined()
+    expect(skill.body.params.dinner).toContain('19:00-22:00')
+    // the server's ids are on the page now: nothing is left to save
+    await expect(editor.locator('.savebar')).toContainText('No changes')
+  })
+
+  test('the room: removing a table someone is booked on is refused, naming who', async ({ authenticatedPage: page }) => {
+    const { calls } = await mockRestaurant(page)
+    await openRestaurant(page)
+    await ready(page)
+    // Read tomorrow first, as a person who has looked at the evening: the page knows who sits on T4.
+    await tomorrowDinner(page)
+    await page.getByRole('tab', { name: 'Room and tables' }).click()
+    const editor = page.locator('.room-editor')
+    await editor.getByRole('button', { name: 'Delete T4' }).click()
+    await expect(page.locator('.toast')).toContainText('T4 cannot be deleted')
+    await expect(page.locator('.toast')).toContainText('Rossi')
+    // The server is the judge: T5 is booked on a day the page has not read, so the page lets the removal
+    // through and the save is refused, naming the table.
+    await editor.getByRole('button', { name: 'Delete T5' }).click()
+    await editor.locator('.save-room').click()
+    await expect(editor.locator('.issues')).toContainText('T5: it has future bookings')
+    expect(calls.filter(c => c.method === 'PUT' && c.path === '/layout')).toHaveLength(1)
+    // Discarding asks first, with "Keep it" focused.
+    await editor.getByRole('button', { name: 'Discard changes' }).click()
+    await expect(page.locator('.mrcall-confirm-dialog').getByRole('button', { name: 'Keep it' })).toBeFocused()
+  })
+
+  test('a restaurant without tables opens on the wizard and saves its first room, numbered by the server', async ({ authenticatedPage: page }) => {
+    const { calls } = await mockRestaurant(page, { layout: false })
+    await openRestaurant(page)
+    await expect(page.getByRole('heading', { name: 'Let\'s set up the room' })).toBeVisible({ timeout: 20000 })
+    await page.getByRole('button', { name: 'Terrace' }).click()
+    await page.getByRole('button', { name: 'Next', exact: true }).click()
+    // named as the prototype names them: a zone's initial (Sala alone gives T), unique across zones
+    await expect(page.locator('.wz-zone[data-zone="Dining room"]')).toContainText('D1, D2, D3, D4, D5, D6, D7, D8, D9, D10')
+    await expect(page.locator('.wz-zone[data-zone="Terrace"]')).toContainText('T1, T2, T3, T4')
+    await page.getByRole('button', { name: 'Next', exact: true }).click()
+    await page.locator('.wz-zone', { hasText: 'Dining room' }).getByRole('checkbox').check()
+    await page.getByRole('button', { name: 'Done: open the evening' }).click()
+    await ready(page)
+    await expect(page.locator('.toast')).toContainText('Room ready: 14 tables')
+    const put = calls.find(c => c.method === 'PUT' && c.path === '/layout')
+    expect(put.body.expectedRevision).toBeNull()
+    expect(put.body.layout.zones.map(z => [z.id, z.name])).toEqual([['dining-room', 'Dining room'], ['terrace', 'Terrace']])
+    expect(put.body.layout.tables.every(t => t.id === undefined)).toBe(true)
+    expect(put.body.layout.joins[0]).toEqual({ tables: ['D1', 'D2'], min: 3, max: 4 })
+    await expect(tile(page, 'T4')).toBeVisible()
+  })
+
+  test('a restaurant without hours is asked for them before any table', async ({ authenticatedPage: page }) => {
+    await mockRestaurant(page, { layout: false, hours: false })
+    await openRestaurant(page)
+    await expect(page.getByRole('heading', { name: 'When do guests arrive?' })).toBeVisible({ timeout: 20000 })
+    await expect(page.getByRole('button', { name: 'Next', exact: true })).toBeDisabled()
+  })
+
+  test('says the book is not available on a server without the restaurant routes', async ({ authenticatedPage: page }) => {
+    await mockRestaurant(page, { restaurant: false })
+    await openRestaurant(page)
+    await expect(page.getByText('The table book is not available on this server yet.', { exact: false })).toBeVisible({ timeout: 20000 })
+    await expect(page.locator('.strip')).toHaveCount(0)
+  })
+
+  test('opens the room editor from a link that names its tab', async ({ authenticatedPage: page }) => {
+    await mockRestaurant(page)
+    await openRestaurant(page, '&tab=room')
+    await expect(page.locator('.room-editor')).toBeVisible({ timeout: 20000 })
+    await expect(page.getByRole('tab', { name: 'Room and tables' })).toHaveAttribute('aria-selected', 'true')
   })
 })
