@@ -178,8 +178,9 @@
                 v-tooltip.bottom="$t('mrcallCredits.tooltip', { factor: creditTooltipFactor(business) })"
               ></i>
             </span>
-            <span :class="['info-value', creditDebt[business.businessId] > 0 ? 'credit-negative' : '']">{{ creditsToEuro(counterResources[business.businessId]['CALLCREDIT']) }}</span>
-            <small v-if="creditDebt[business.businessId] > 0" class="credit-debt-notice">
+            <span v-if="creditKnown(business.businessId)" :class="['info-value', creditDebt[business.businessId] > 0 ? 'credit-negative' : '']">{{ creditsToEuro(counterResources[business.businessId]['CALLCREDIT']) }}</span>
+            <span v-else class="info-value credit-unknown">—</span>
+            <small v-if="creditKnown(business.businessId) && creditDebt[business.businessId] > 0" class="credit-debt-notice">
               {{ $t('mrcallCredits.debtNotice', { amount: creditsToEuro(counterResources[business.businessId]['CALLCREDIT']) }) }}
             </small>
           </div>
@@ -195,7 +196,7 @@
             <i :class="['ACTIVE','TRIALING','FREE'].includes(subscriptionInfo[business.businessId]?.status) ? 'pi pi-check-circle' : 'pi pi-exclamation-circle'"></i>
             {{ ['ACTIVE','TRIALING','FREE'].includes(subscriptionInfo[business.businessId]?.status) ? $t('components.businesses.health.planActive') : $t('components.businesses.health.noPlan') }}
           </span>
-          <span v-if="counterResources[business.businessId]" :class="['health-pill', creditPill(business.businessId).cls]">
+          <span v-if="creditKnown(business.businessId)" :class="['health-pill', creditPill(business.businessId).cls]">
             <i :class="creditPill(business.businessId).icon"></i>
             {{ $t(creditPill(business.businessId).label) }}
           </span>
@@ -624,9 +625,14 @@ export default {
       // 1 credit = €0.01 (Stripe products call50/300/600_euros map 1:100); negative while in debt.
       return creditsToEuro(callcredits, this.$i18n.locale) ;
     },
+    /** Whether StarChat gave a balance. Without one the card says it does not know, rather than
+     *  showing zero and "No minutes left" for a business that may well have credit. */
+    creditKnown(businessId) {
+      return typeof this.counterResources[businessId]?.['CALLCREDIT'] === 'number'
+    },
     creditPill(businessId) {
       const state = creditState({
-        net: this.counterResources[businessId]?.['CALLCREDIT'] ?? 0,
+        net: this.counterResources[businessId]['CALLCREDIT'],
         debt: this.creditDebt[businessId] ?? 0
       })
       if (state === 'debt') {
