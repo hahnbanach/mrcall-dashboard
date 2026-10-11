@@ -306,7 +306,13 @@ test.describe('the restaurant page', () => {
     await expect(confirm).toContainText(day)
     await expect(confirm).toContainText('20:00')
     await expect(confirm).toContainText('4 people')
-    await confirm.getByRole('button', { name: 'Keep it' }).click()
+    // The focused "Keep it" must be readable: the dashboard paints every button blue (default.less), so
+    // a secondary outlined button kept its grey text on that blue and looked disabled. Seen failing on
+    // 2026-10-10 with rejectProps secondary/outlined: rgb(100, 116, 139) on rgb(0, 104, 255).
+    const keep = confirm.getByRole('button', { name: 'Keep it' })
+    await expect(keep).toBeFocused()
+    await expect(keep).toHaveCSS('color', 'rgb(255, 255, 255)')
+    await keep.click()
     await expect(confirm).toHaveCount(0)
     expect(calls.filter(c => c.method === 'DELETE')).toHaveLength(0)
 
