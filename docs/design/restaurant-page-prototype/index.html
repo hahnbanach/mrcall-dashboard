@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prenotazioni Ristorante · prototipo MrCall</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="side" aria-label="Menu della dashboard">
+      <div class="brand">MrCall</div>
+      <nav>
+        <a class="nav-item" aria-disabled="true">Home</a>
+        <a class="nav-item" aria-disabled="true">Conversazioni</a>
+        <a class="nav-item" aria-disabled="true">Contatti</a>
+        <a class="nav-item active" aria-current="page">Prenotazioni Ristorante</a>
+        <a class="nav-item" aria-disabled="true">Assistente</a>
+        <a class="nav-item" aria-disabled="true">Impostazioni</a>
+      </nav>
+      <p class="side-note">Prototipo statico: i dati sono inventati e nessuna azione esce da questa pagina.</p>
+    </aside>
+
+    <main class="main">
+      <header class="page-head">
+        <div class="page-title">
+          <h1>Prenotazioni Ristorante</h1>
+          <span class="proto-badge" title="Prototipo: la serata è simulata alle 20:30 di oggi">Prototipo · ora simulata 20:30</span>
+        </div>
+        <div class="tabs" role="tablist" aria-label="Sezioni">
+          <button role="tab" class="tab" data-act="tab" data-tab="day" id="tab-day">Serata</button>
+          <button role="tab" class="tab" data-act="tab" data-tab="config" id="tab-config">Sala e tavoli</button>
+        </div>
+        <div class="head-tools">
+          <div class="search">
+            <input id="search" type="search" placeholder="Cerca nome o telefono" aria-label="Cerca prenotazione per nome o telefono" data-bind="search" autocomplete="off">
+            <div id="search-results" class="search-results" hidden></div>
+          </div>
+          <button class="btn ghost" data-act="export" title="Scarica le prenotazioni dei giorni nella striscia in CSV">Esporta CSV</button>
+          <label class="scenario">
+            <span>Scenario</span>
+            <select data-bind="scenario" aria-label="Scenario del prototipo">
+              <option value="configured">Ristorante configurato</option>
+              <option value="empty">Ristorante nuovo, senza tavoli</option>
+            </select>
+          </label>
+        </div>
+      </header>
+
+      <div id="view" class="view"></div>
+    </main>
+  </div>
+
+  <div id="scrim" class="scrim" hidden data-act="panel-close"></div>
+  <aside id="panel" class="panel" hidden aria-live="polite"></aside>
+  <div id="modal-root"></div>
+  <div id="toasts" class="toasts" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
