@@ -461,8 +461,7 @@ export default {
         icon: "pi pi-exclamation-triangle",
         acceptLabel: this.$t(`components.restaurant.confirmCancel.${kind}`),
         rejectLabel: this.$t("components.restaurant.confirmCancel.keep"),
-        acceptProps: { severity: "danger" },
-        rejectProps: { severity: "secondary", outlined: true },
+        acceptClass: "p-button-danger",
         defaultFocus: "reject",
         accept: () => this.cancel(r),
       });
