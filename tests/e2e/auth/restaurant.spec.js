@@ -269,7 +269,22 @@ test.describe('the restaurant page', () => {
     await expect(page.locator('.sr-empty')).toContainText('No booking found')
   })
 
-  // Criterion 7: a no-show is one tap, on the late guest's row. The page's clock is set to 20:20 today.
+  // Criterion 7: a no-show is one tap, on the late guest's row; late is the tile's rule, ten minutes after the
+  // arrival time. Seen failing on 2026-10-12 with the button from minute 0 (it showed at 20:05).
+  test('a guest due at 20:00 is not late at 20:05, and is at 20:10', async ({ authenticatedPage: page }) => {
+    await mockRestaurant(page)
+    await page.clock.setFixedTime(new Date(`${TODAY}T20:05:00`))
+    await openRestaurant(page)
+    await ready(page)
+    await expect(page.locator('.brow', { hasText: 'Lato' })).toHaveCount(1)
+    await expect(page.locator('.brow .quick-noshow')).toHaveCount(0)
+    await page.clock.setFixedTime(new Date(`${TODAY}T20:10:00`))
+    await page.reload()
+    await ready(page)
+    await expect(page.locator('.brow', { hasText: 'Lato' }).locator('.quick-noshow')).toHaveCount(1)
+  })
+
+  // The page's clock is set to 20:20 today.
   test('a late guest is a no-show in one tap on its row, with Undo', async ({ authenticatedPage: page }) => {
     const { calls } = await mockRestaurant(page)
     await page.clock.setFixedTime(new Date(`${TODAY}T20:20:00`))
@@ -315,6 +330,7 @@ test.describe('the restaurant page', () => {
     await expect(panel.locator('a.restaurant-phone')).toHaveAttribute('href', 'tel:+393331112233')
     await expect(panel.getByRole('link', { name: 'WhatsApp' })).toHaveAttribute('href', 'https://wa.me/393331112233')
     await expect(panel).toContainText('Celiac')
+    await expect(panel).toContainText('from the message at the bottom. On the phone the assistant said')
     await panel.getByRole('button', { name: 'No-show' }).click()
     await expect(page.locator('.mrcall-confirm-dialog')).toHaveCount(0)
     await expect(page.locator('.toast')).toContainText('Rossi: marked as no-show')
@@ -518,7 +534,7 @@ test.describe('the restaurant page', () => {
     // through and the save is refused, naming the table.
     await editor.getByRole('button', { name: 'Delete T5' }).click()
     await editor.locator('.save-room').click()
-    await expect(editor.locator('.issues')).toContainText('T5: it has future bookings')
+    await expect(editor.locator('.issues')).toContainText('T5 has future bookings: move or cancel them before you remove the table')
     expect(calls.filter(c => c.method === 'PUT' && c.path === '/layout')).toHaveLength(1)
     // Discarding asks first, with "Keep it" focused.
     await editor.getByRole('button', { name: 'Discard changes' }).click()
@@ -592,4 +608,95 @@ test.describe('the restaurant page', () => {
       }
     })
   }
+
+  // Inside the dashboard the page sits between the left menu and the open assistant panel, in a column of at most
+  // 800 px: the side columns (the evening preview, the bookings list) must go below their main column rather than
+  // squeeze it, and nothing may lie over anything else. Seen failing on 2026-10-12 against 945a956: at 1280, 1440
+  // and 1920 wide the room editor was 277-340 px beside a 380 px preview.
+  async function sideBySide (page, mainSel, sideSel) {
+    return page.evaluate(([mainSel, sideSel]) => {
+      const main = document.querySelector(mainSel)
+      const side = document.querySelector(sideSel)
+      const m = main.getBoundingClientRect()
+      const s = side.getBoundingClientRect()
+      const meets = (a, b) => a.left < b.right - 1 && a.right > b.left + 1 && a.top < b.bottom - 1 && a.bottom > b.top + 1
+      const overlapping = Array.from(main.querySelectorAll('*')).filter(el => {
+        const r = el.getBoundingClientRect()
+        return r.width > 0 && r.height > 0 && meets(r, s)
+      }).length
+      // stacked either way: on a phone the list comes first
+      return { below: s.top >= m.bottom - 1 || s.bottom <= m.top + 1, mainWidth: Math.round(m.width), overlapping }
+    }, [mainSel, sideSel])
+  }
+
+  const WIDTHS = [1280, 1440, 1920]
+  test('in the dashboard with the assistant panel open, the room editor stays readable and the preview never covers it', async ({ authenticatedPage: page }, testInfo) => {
+    await mockRestaurant(page)
+    for (const width of testInfo.project.name === 'desktop' ? WIDTHS : [null]) {
+      if (width) await page.setViewportSize({ width, height: 900 })
+      await openRestaurant(page, '&tab=room')
+      await expect(page.locator('.room-editor .preview')).toBeVisible({ timeout: 20000 })
+      if (testInfo.project.name === 'desktop') await expect(page.locator('#support-large')).toBeVisible()
+      const r = await sideBySide(page, '.room-editor > div:first-child', '.room-editor .preview')
+      expect(r.overlapping, `${width || testInfo.project.name}: elements of the editor under the preview`).toBe(0)
+      expect(r.below || r.mainWidth >= 480, `${width || testInfo.project.name}: editor ${r.mainWidth}px beside the preview`).toBe(true)
+    }
+  })
+
+  test('in the dashboard with the assistant panel open, the tables and the bookings list never cover each other', async ({ authenticatedPage: page }, testInfo) => {
+    await mockRestaurant(page)
+    for (const width of testInfo.project.name === 'desktop' ? WIDTHS : [null]) {
+      if (width) await page.setViewportSize({ width, height: 900 })
+      await openRestaurant(page)
+      await ready(page)
+      await tomorrowDinner(page)
+      await expect(page.locator('.tile').first()).toBeVisible()
+      const r = await sideBySide(page, '.day-body > div:first-child', '.day-body .list')
+      expect(r.overlapping, `${width || testInfo.project.name}: tiles under the list`).toBe(0)
+      expect(r.below || r.mainWidth >= 480, `${width || testInfo.project.name}: tables ${r.mainWidth}px beside the list`).toBe(true)
+    }
+  })
+
+  // The evening preview moves through days as the day view does; clicking through days asks the server once,
+  // for the day the owner stops on. Seen failing on 2026-10-12 against 945a956 (Today and Tomorrow only).
+  test('the evening preview moves through days with the arrows and asks once per day it settles on', async ({ authenticatedPage: page }) => {
+    const { calls } = await mockRestaurant(page)
+    await openRestaurant(page, '&tab=room')
+    const nav = page.locator('.room-editor .preview-day')
+    await expect(nav).toBeVisible({ timeout: 20000 })
+    await expect.poll(() => calls.filter(c => c.path === '/layout/preview').map(c => c.body.date)).toEqual([TOMORROW])
+    await nav.getByRole('button', { name: 'Next day' }).click()
+    await nav.getByRole('button', { name: 'Next day' }).click()
+    await nav.getByRole('button', { name: 'Next day' }).click()
+    await expect.poll(() => calls.filter(c => c.path === '/layout/preview').map(c => c.body.date)).toEqual([TOMORROW, addDays(TODAY, 4)])
+    await page.waitForTimeout(1200)
+    expect(calls.filter(c => c.path === '/layout/preview')).toHaveLength(2)
+    await nav.getByRole('button', { name: 'Today' }).click()
+    await expect.poll(() => calls.filter(c => c.path === '/layout/preview').map(c => c.body.date)).toEqual([TOMORROW, addDays(TODAY, 4), TODAY])
+    await nav.getByRole('button', { name: 'Previous day' }).click()
+    await expect.poll(() => calls.filter(c => c.path === '/layout/preview').pop().body.date).toBe(addDays(TODAY, -1))
+  })
+
+  // A warning about the room says what happens, with the numbers, and what the owner can do; without the server's
+  // values it says the same without numbers, never the server's English. Seen failing on 2026-10-12 against
+  // 945a956 (no numbers: "The largest party the assistant books does not fit any table or join").
+  test('the room\'s warnings say what happens with the numbers, and what to do', async ({ authenticatedPage: page }) => {
+    await mockRestaurant(page)
+    await openRestaurant(page, '&tab=room')
+    const issues = page.locator('.room-editor .issues')
+    await expect(issues).toContainText('Good to know (you can save anyway)', { timeout: 20000 })
+    await expect(issues).toContainText('The assistant accepts parties of up to 10 people, but the largest table or join seats 8. It does not book parties of 9 to 10')
+    await expect(issues).toContainText('No table or join fits a party of 5')
+    await expect(issues.getByText(/no seating takes it|larger parties become requests/)).toHaveCount(0)
+  })
+
+  test('without the server\'s values the warnings are said without numbers, never in its English', async ({ authenticatedPage: page }) => {
+    await mockRestaurant(page, { values: false })
+    await openRestaurant(page, '&tab=room')
+    const issues = page.locator('.room-editor .issues')
+    await expect(issues).toContainText('The assistant accepts parties larger than the largest table or join', { timeout: 20000 })
+    await expect(issues).toContainText('For some party sizes no table or join fits')
+    await expect(issues.getByText(/\{|no seating takes it|larger parties become requests/)).toHaveCount(0)
+  })
 })
+

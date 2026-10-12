@@ -46,7 +46,7 @@
               @click="$emit('no-show', booking)">{{ $t("components.restaurant.panel.noShowAction") }}</button>
       <button class="btn danger" :disabled="closed || busy" @click="$emit('cancel', booking)">{{ $t(booking.state === 'requested' ? 'components.restaurant.list.decline' : 'components.restaurant.panel.cancel') }}</button>
     </div>
-    <p class="muted small-note">{{ $t("components.restaurant.panel.undoHint") }}<template v-if="booking.source === 'assistant'"> {{ $t("components.restaurant.panel.assistantSaid", { n: booking.party }) }}</template></p>
+    <p class="muted small-note">{{ $t("components.restaurant.panel.undoHint") }}<template v-if="booking.source === 'assistant'">{{ " " + $t("components.restaurant.panel.assistantSaid", { n: booking.party }) }}</template></p>
   </div>
 </template>
 

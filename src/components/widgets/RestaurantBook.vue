@@ -1,5 +1,7 @@
 <template>
   <div class="rb restaurant">
+    <!-- the flow of the page, which its layouts measure (restaurant.less, .rb-flow); the fixed panels stay outside -->
+    <div class="rb-flow">
     <Message v-if="unavailable" severity="info" :closable="false" class="restaurant-unavailable">
       {{ $t("components.restaurant.unavailable") }}
     </Message>
@@ -55,6 +57,8 @@
         </template>
       </template>
     </template>
+
+    </div>
 
     <template v-if="panel">
       <div class="scrim" @click="closePanel"></div>

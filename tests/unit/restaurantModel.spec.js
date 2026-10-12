@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import {
   rulesOf, hasHours, tableMinutesFor, serviceWindow, defaultTime, stateOf, freeFrom, isFreeAt, seatings, dropTargets,
   stripStatus, countInRanges, knowCounts, matches, genNames, addTables, draftProblems, diffLayout, wizardLayout, zoneIdFor,
-  joinRange, callsOf, minFreeLimits, toMin, fmt, live, guests
+  joinRange, callsOf, minFreeLimits, toMin, fmt, live, guests, lateBy
 } from '@/utils/RestaurantModel'
 import { layoutToWire, bookingFromWire, layoutFromWire, instanceIn } from '@/utils/Restaurant'
 
@@ -65,6 +65,13 @@ describe('the rules the page draws with', () => {
 })
 
 describe('a booking on the page', () => {
+  it('is late ten minutes after its arrival time, only while booked (one rule for the tile and the row)', () => {
+    const b = { state: 'booked', start: toMin('20:00') }
+    expect(lateBy(b, toMin('20:05'))).toBe(0)
+    expect(lateBy(b, toMin('20:10'))).toBe(10)
+    expect(lateBy({ ...b, state: 'arrived' }, toMin('20:30'))).toBe(0)
+  })
+
   it('shows one state, keeping the evening apart from the lifecycle as the server does', () => {
     expect(stateOf({ status: 'confirmed', serviceState: null })).toBe('booked')
     expect(stateOf({ status: 'confirmed', serviceState: 'seated' })).toBe('seated')

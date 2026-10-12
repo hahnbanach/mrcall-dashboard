@@ -293,7 +293,9 @@ async function mockRestaurant (page, opts = {}) {
       const heldGone = state.layout ? state.layout.tables.filter(t => !kept.includes(t.id) && state.rows.some(r => takes(r) && r.date >= TODAY && r.tableIds.includes(t.id))) : []
       if (heldGone.length) {
         return json(route, 422, { diagnostics: heldGone.map(t => ({ path: '/layout/tables', code: 'table_has_holds',
-          detail: `table '${t.name}' (${t.id}) has future bookings; move them before removing it` })) })
+          detail: `table '${t.name}' (${t.id}) has future bookings; move them before removing it`,
+          // ASSUMED shape of the values StarChat is adding to every restaurant problem (not released yet)
+          ...(opts.values === false ? {} : { values: { table: t.name } }) })) })
       }
       let next = state.layout ? state.layout.nextTableId : 1
       const tables = sent.tables.map(t => Object.assign({}, t, { id: t.id || next++, active: t.active !== false }))
@@ -304,7 +306,10 @@ async function mockRestaurant (page, opts = {}) {
     }
     if (method === 'POST' && path === '/layout/preview') {
       return json(route, 200, { date: body.date, problems: [],
-        warnings: [{ path: '/tables', code: 'size_never_bookable', detail: 'the assistant can never book a party of 5: no seating takes it' }],
+        warnings: [{ path: '/tables', code: 'size_never_bookable', detail: 'the assistant can never book a party of 5: no seating takes it',
+          ...(opts.values === false ? {} : { values: { sizes: [5] } }) },
+        { path: '/maxPartySize', code: 'party_larger_than_room', detail: '10 people fit no seating (8 at most): larger parties become requests',
+          ...(opts.values === false ? {} : { values: { maxPartySize: 10, largestSeating: 8 } }) }],
         services: [{ service: 'lunch', open: true, coversTaken: 0, largestParty: 6, bookable: { 2: ['12:00-14:00'], 4: ['12:00-14:00'], 6: ['12:00-14:00'] } },
           { service: 'dinner', open: true, coversTaken: 0, largestParty: 6, bookable: { 2: ['19:00-22:00'], 4: ['19:00-22:00'], 6: ['19:00-21:30'] } }] })
     }

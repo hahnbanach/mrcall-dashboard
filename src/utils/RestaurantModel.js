@@ -173,6 +173,16 @@ export function stateOf (row) {
   }
 }
 
+/** How long after its arrival time a booked guest who has not arrived is late: from then the tile says so and
+ *  the row offers a no-show in one tap. One rule for both. */
+export const LATE_MINUTES = 10
+
+/** Minutes a booked, not yet arrived guest is late at `minute` of the booking's own day; 0 when not late. */
+export function lateBy (b, minute) {
+  const late = minute - b.start
+  return b.state === 'booked' && late >= LATE_MINUTES ? late : 0
+}
+
 /** States that take a table. */
 export const TAKES_ROOM = new Set(['booked', 'arrived', 'seated', 'left', 'block'])
 

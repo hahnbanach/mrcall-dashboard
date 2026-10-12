@@ -339,6 +339,9 @@
   .issues { margin-bottom: var(--sp-4); }
   .savebar { position: sticky; bottom: 0; background: var(--white); border-top: 1px solid var(--border); padding: 12px var(--sp-4); display: flex; gap: var(--sp-3); align-items: center; z-index: 30; box-shadow: 0 -4px 20px rgba(15, 17, 12, .06); grid-column: 1 / -1; flex-wrap: wrap; }
   .preview { position: sticky; top: 8px; }
+  .preview-day { margin-bottom: 8px; }
+  .day-nav.compact { gap: var(--sp-1); }
+  .day-nav.compact .day-title { min-width: 0; font-size: 15px; font-weight: 700; color: var(--ink); text-align: center; flex: 1; }
   .preview table { width: 100%; border-collapse: collapse; font-size: 13px; }
   .preview td, .preview th { padding: 6px 4px; border-bottom: 1px solid var(--grey-2); text-align: left; vertical-align: top; }
   .preview th { font-size: 12px; color: var(--muted); }
@@ -361,36 +364,56 @@
   .wz-row input[type="number"] { width: 64px; text-align: center; border: 1px solid var(--grey-1); border-radius: var(--r-s); min-height: 40px; }
   .wz-nav { display: flex; gap: var(--sp-2); justify-content: flex-end; margin-top: var(--sp-4); flex-wrap: wrap; }
   .wz-nav .left { margin-right: auto; }
+}
 
-  @media (max-width: 1200px) {
-    .day-body { grid-template-columns: minmax(0, 1fr) 300px; }
-    .cfg { grid-template-columns: minmax(0, 1fr); }
-    .preview { position: static; }
-  }
-  @media (max-width: 900px) {
-    .head-tools { margin-left: 0; width: 100%; }
-    .search { flex: 1; }
-    .search input { width: 100%; }
-    .day-body { grid-template-columns: minmax(0, 1fr); }
-    .list { position: static; max-height: none; }
-    .toolbar { grid-template-columns: minmax(0, 1fr); }
-    .tb-find { border-left: 0; padding-left: 0; border-top: 1px solid var(--border); padding-top: var(--sp-3); }
-    .day-title { min-width: 0; font-size: 20px; }
-    .zgrid { grid-template-columns: 1fr; }
-    .strip-days { grid-template-columns: repeat(14, 70px); }
-    .strip-days.month { grid-template-columns: repeat(7, minmax(40px, 1fr)); }
-  }
-  /* phone: the list first, the tables one scroll away */
-  @media (max-width: 600px) {
-    .list { order: -1; }
-    .tiles { grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); }
-    .tile.joined { grid-column: span 2; }
-    .states { grid-template-columns: repeat(2, 1fr); }
-    // on a phone the screen is short: the move banner scrolls away with the page instead of covering it
-    .move-banner { position: static; padding: 8px 10px; font-size: 14px; }
-    table.tt input[type="text"] { width: 80px; }
-    table.tt input[type="number"] { width: 52px; }
-  }
+/* THE PAGE ANSWERS TO THE WIDTH IT HAS, NOT TO THE SCREEN'S. Inside the dashboard the page sits between the
+   left menu and the assistant panel, in a column of at most 800 px (BusinessFrame #content): measured on
+   2026-10-12, at 1280, 1440 and 1920 wide the page had 673-736 px, and the room editor, beside a 380 px
+   preview, was squeezed to 277-340 px while viewport media queries still saw a wide screen. So every
+   two-column layout of the page is decided by a container query on the page's own flow (`.rb-flow`), and
+   splits only when the main column keeps at least 480 px; otherwise the side column goes below it.
+   The container is the flow, not the page root: a container gets layout containment, which would make it the
+   containing block of the fixed side panel, the scrim and the toasts. */
+.rb-flow { container-type: inline-size; container-name: rb; }
+
+/* the room editor beside its preview: 480 + 16 + 380 */
+@container rb (max-width: 875px) {
+  .rb .cfg { grid-template-columns: minmax(0, 1fr); }
+  .rb .preview { position: static; }
+}
+/* the tables beside the list: 480 + 16 + 340 */
+@container rb (max-width: 835px) {
+  .rb .day-body { grid-template-columns: minmax(0, 1fr); }
+  .rb .list { position: static; max-height: none; }
+}
+/* the time chips beside the finder: 480 + 16 + 300 */
+@container rb (max-width: 795px) {
+  .rb .toolbar { grid-template-columns: minmax(0, 1fr); }
+  .rb .tb-find { border-left: 0; padding-left: 0; border-top: 1px solid var(--border); padding-top: var(--sp-3); }
+}
+@container rb (max-width: 700px) {
+  .rb .head-tools { margin-left: 0; width: 100%; }
+  .rb .search { flex: 1; }
+  .rb .search input { width: 100%; }
+  .rb .day-title { min-width: 0; font-size: 20px; }
+  .rb .zgrid { grid-template-columns: 1fr; }
+  .rb .strip-days { grid-template-columns: repeat(14, 70px); }
+  .rb .strip-days.month { grid-template-columns: repeat(7, minmax(40px, 1fr)); }
+}
+/* phone-sized: the list first, the tables one scroll away */
+@container rb (max-width: 600px) {
+  .rb .list { order: -1; }
+  .rb .tiles { grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); }
+  .rb .tile.joined { grid-column: span 2; }
+  .rb .tile.wide { grid-column: span 2; }
+  // the screen is short: the move banner scrolls away with the page instead of covering it
+  .rb .move-banner { position: static; padding: 8px 10px; font-size: 14px; }
+  .rb table.tt input[type="text"] { width: 80px; }
+  .rb table.tt input[type="number"] { width: 52px; }
+}
+/* The side panels are fixed to the screen, so they still follow the screen. */
+@media (max-width: 600px) {
+  .rb .states { grid-template-columns: repeat(2, 1fr); }
 }
 
 /* The call modal is a PrimeVue dialog, drawn outside the page. */

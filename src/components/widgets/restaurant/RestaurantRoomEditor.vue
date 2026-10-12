@@ -138,9 +138,8 @@
       <h2>{{ $t("components.restaurant.room.preview") }}</h2>
       <p class="muted">{{ $t("components.restaurant.room.previewHint") }}</p>
       <div class="tb-row">
-        <div class="seg" role="group" :aria-label="$t('components.restaurant.room.previewDay')">
-          <button :aria-pressed="preview.day === 0" @click="setPreview({ day: 0 })">{{ $t("components.restaurant.day.today") }}</button>
-          <button :aria-pressed="preview.day === 1" @click="setPreview({ day: 1 })">{{ $t("components.restaurant.room.tomorrow") }}</button>
+        <div class="preview-day" role="group" :aria-label="$t('components.restaurant.room.previewDay')">
+          <RestaurantDayNav :date="preview.date" :today="today" compact @go-day="d => setPreview({ date: d })" />
         </div>
         <div class="seg" role="group" :aria-label="$t('components.restaurant.day.serviceLabel')">
           <button v-for="s in ['lunch', 'dinner']" :key="s" :aria-pressed="preview.service === s" @click="setPreview({ service: s })">{{ $t(`components.restaurant.service.${s}`) }}</button>
@@ -179,6 +178,8 @@ import {
   minFreeLimits, addDays, fmt
 } from "@/utils/RestaurantModel";
 import { shortDate } from "@/components/widgets/restaurant/format";
+import RestaurantDayNav from "@/components/widgets/restaurant/RestaurantDayNav.vue";
+import { layoutMessage } from "@/components/widgets/restaurant/layoutMessages";
 
 /**
  * "Sala e tavoli": the whole room in one form, saved as one layout at the revision read. Nothing reaches the
@@ -191,6 +192,7 @@ import { shortDate } from "@/components/widgets/restaurant/format";
  * per field, naming the bookings the page has read on that table.
  */
 export default {
+  components: { RestaurantDayNav },
   setup() {
     return { confirm: useConfirm() };
   },
@@ -215,7 +217,7 @@ export default {
       serverProblems: [],
       saveMessage: null,
       saving: false,
-      preview: { day: 1, service: "dinner", loading: false, error: false, data: null },
+      preview: { date: addDays(this.today, 1), service: "dinner", loading: false, error: false, data: null },
     };
   },
   computed: {
@@ -443,15 +445,10 @@ export default {
 
     /** A refusal or a warning in the owner's words, by its code; a table that still has bookings names them. */
     problemText(p) {
-      const code = p.code;
-      const known = this.$te(`components.restaurant.layoutCode.${code}`) ? code : "other";
-      const held = /'(.+?)' \((\d+)\)/.exec(p.detail || "");
-      const named = /table '(.+?)'/.exec(p.detail || "");
-      const tableName = held ? held[1] : named ? named[1] : "";
-      const table = tableName ? this.layout.tables.find(t => t.name === tableName) : null;
-      const who = table ? this.namesOn(table.id) : "";
-      const sizes = (code === "size_never_bookable" && /of ([\d, ]+)/.exec(p.detail || "")) || null;
-      return this.$t(`components.restaurant.layoutCode.${known}`, { table: tableName, who: who || "–", sizes: sizes ? sizes[1].trim() : "" });
+      return layoutMessage(p, { t: (k, a) => this.$t(k, a || {}), te: k => this.$te(k), whoOn: table => {
+        const found = this.layout.tables.find(x => x.name === table || x.id === table);
+        return found ? this.namesOn(found.id) : "";
+      } });
     },
     /** The field a server problem is about, from its path in the layout the save sent. */
     refOf(path) {
@@ -467,9 +464,11 @@ export default {
       clearTimeout(this.previewTimer);
       this.previewTimer = setTimeout(() => this.loadPreview(), 600);
     },
+    /** Another day or service of the preview. A day changes the server's answer, so it is asked once the owner
+     *  stops clicking through days (the same wait as an edit); a service is in the answer already. */
     setPreview(change) {
       Object.assign(this.preview, change);
-      this.loadPreview();
+      if (change.date) this.schedulePreview();
     },
     async loadPreview() {
       if (draftProblems(this.draft).length) return;
@@ -477,7 +476,7 @@ export default {
       this.preview.loading = true;
       this.preview.error = false;
       try {
-        const data = await RestaurantApi.previewLayout(this.user, this.businessId, addDays(this.today, this.preview.day), asked);
+        const data = await RestaurantApi.previewLayout(this.user, this.businessId, this.preview.date, asked);
         this.preview.data = data;
       } catch (e) {
         console.warn("Restaurant layout preview not answered:", e.restaurant ? e.restaurant.code || e.restaurant.status : e);

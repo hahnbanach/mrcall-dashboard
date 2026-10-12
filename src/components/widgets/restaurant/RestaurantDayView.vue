@@ -1,13 +1,7 @@
 <template>
   <section class="day" :aria-label="$t('components.restaurant.day.label')">
     <div class="day-head">
-      <div class="day-nav">
-        <button class="icon-btn" :aria-label="$t('components.restaurant.day.prev')" @click="$emit('go-day', shift(-1))"><i class="pi pi-chevron-left" aria-hidden="true"></i></button>
-        <h2 class="day-title">{{ longDate(date) }}</h2>
-        <button class="icon-btn" :aria-label="$t('components.restaurant.day.next')" @click="$emit('go-day', shift(1))"><i class="pi pi-chevron-right" aria-hidden="true"></i></button>
-        <button class="btn ghost small" :disabled="date === today" @click="$emit('go-day', today)">{{ $t("components.restaurant.day.today") }}</button>
-        <input class="date-input" type="date" :value="date" :aria-label="$t('components.restaurant.day.pick')" @change="e => e.target.value && $emit('go-day', e.target.value)">
-      </div>
+      <RestaurantDayNav :date="date" :today="today" @go-day="d => $emit('go-day', d)" />
       <div class="svc-tabs" role="group" :aria-label="$t('components.restaurant.day.serviceLabel')">
         <button v-for="s in ['lunch', 'dinner']" :key="s" class="svc-tab" :aria-pressed="service === s" @click="$emit('set-service', s)">
           <b>{{ $t(`components.restaurant.service.${s}`) }}</b>
@@ -224,10 +218,11 @@
 
 <script>
 import {
-  addDays, fmt, live, guests, usableTables, orderedZones, zoneOpen, tableAt, freeFrom, isFreeAt, tableById, seatLabel, occupiedTables,
-  knowCounts, matches, callsOf, dropTargets, serviceWindow, minuteOfDay
+  fmt, live, guests, usableTables, orderedZones, zoneOpen, tableAt, freeFrom, isFreeAt, tableById, seatLabel, occupiedTables,
+  knowCounts, matches, callsOf, dropTargets, serviceWindow, minuteOfDay, lateBy
 } from "@/utils/RestaurantModel";
-import { longDate, refusalKey } from "@/components/widgets/restaurant/format";
+import { refusalKey } from "@/components/widgets/restaurant/format";
+import RestaurantDayNav from "@/components/widgets/restaurant/RestaurantDayNav.vue";
 
 const KNOW_CLASS = { allergies: "red", groups: "blue", noshows: "amber" };
 const FILTERS = ["all", "waiting", "seated", "left"];
@@ -240,6 +235,7 @@ const FILTERS = ["all", "waiting", "seated", "left"];
  * being moved, the tables it physically fits on are outlined, and the server judges the move.
  */
 export default {
+  components: { RestaurantDayNav },
   props: {
     date: { type: String, required: true },
     today: { type: String, required: true },
@@ -384,12 +380,6 @@ export default {
   },
   methods: {
     fmt,
-    longDate(key) {
-      return longDate(key, this.$i18n.locale);
-    },
-    shift(n) {
-      return addDays(this.date, n);
-    },
     isClosed(s) {
       const sum = this.summaries ? this.summaries[s] : null;
       if (sum && sum.open === false) return true;
@@ -418,9 +408,9 @@ export default {
     isHit(b) {
       return this.hits.some(h => h.id === b.id);
     },
-    /** Booked, not yet arrived, and its arrival time is past (today, by the clock). */
+    /** Late by the clock, as the tile calls it (`lateBy`, the one rule): today, booked, LATE_MINUTES past arrival. */
     isLate(b) {
-      return b.state === "booked" && this.date === this.today && minuteOfDay(new Date()) >= b.start;
+      return this.date === this.today && lateBy(b, minuteOfDay(new Date())) > 0;
     },
     hasCalls(b) {
       return callsOf(b).length > 0;
@@ -437,8 +427,8 @@ export default {
       if (b.state === "seated") return { cls: "busy", text: this.$t("components.restaurant.tile.seated", { time: fmt(b.end) }) };
       if (b.state === "arrived") return { cls: "arrived", text: this.$t("components.restaurant.tile.arrived") };
       if (b.state === "left") return { cls: "busy", text: this.$t("components.restaurant.tile.left", { time: fmt(b.end) }) };
-      const late = this.date === this.today ? t - b.start : 0;
-      if (late >= 10) return { cls: "booked late", text: this.$t("components.restaurant.tile.late", { n: late }) };
+      const late = this.date === this.today ? lateBy(b, t) : 0;
+      if (late) return { cls: "booked late", text: this.$t("components.restaurant.tile.late", { n: late }) };
       return { cls: "booked", text: this.$t("components.restaurant.tile.coming", { time: fmt(b.start) }) };
     },
     stateText(b) {
