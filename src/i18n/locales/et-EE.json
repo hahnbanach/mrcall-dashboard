@@ -1422,7 +1422,7 @@
         "minFree": "Vaba aja miinimum",
         "minFreeLabel": "Vaba aja miinimum minutites",
         "minutes": "minutit",
-        "minFreeHint": "Laud kuvatakse vabana ainult siis, kui see jääb vabaks vähemalt nii kauaks: 120 minuti korral ei loeta lauda, mis on kell 20:00 vaba, kuid kell 21:00 broneeritud, vabaks. Kui sa seda ei muuda, on see {n} minutit. 1 kuni {max} minutit.",
+        "minFreeHint": "Laud kuvatakse vabana ainult siis, kui see jääb vabaks vähemalt nii kauaks: 120 minuti korral ei loeta lauda, mis on kell 20:00 vaba, kuid kell 21:00 broneeritud, vabaks. 1 kuni {max} minutit.",
         "generator": "Lisa lauad korraga",
         "genAdd": "Lisa",
         "genHowMany": "Mitu lauda",
@@ -1517,7 +1517,11 @@
         "goMaxParty": "Muuda suurimat seltskonda",
         "goTableMin": "Muuda laudade minimaalset kohtade arvu",
         "goJoins": "Mine ühenduste juurde",
-        "settingsRefused": "Server ei võtnud seadeid vastu: kontrolli vaba aja miinimumi ja suurimat seltskonda."
+        "settingsRefused": "Server ei võtnud seadeid vastu: kontrolli vaba aja miinimumi ja suurimat seltskonda.",
+        "defaultMinutes": "Vaikimisi: {n} minutit",
+        "defaultPeople": "Vaikimisi: {n} inimest",
+        "byDefault": "vaikimisi ({n})",
+        "defaultTag": "vaikimisi"
       },
       "check": {
         "zoneNameMissing": "Ala {n} · Nimi: kohustuslik",
@@ -1662,7 +1666,9 @@
         "unknown_zone": "Laud {table} on alas „{zone}“, mida enam pole: vali veerus Ala mõni teine.",
         "duplicate_join": "Lauad {tables} on ühendatud kaks korda: eemalda üks kahest ühendusest.",
         "bad_value": "„{value}“ ei ole kehtiv väärtus: kontrolli esiletõstetud välja."
-      }
+      },
+      "manifestMissing": "Funktsiooni seadeid ei õnnestunud lugeda, seega ei saa leht näidata vaikeväärtusi.",
+      "retry": "Proovi uuesti"
     }
   },
   "views": {

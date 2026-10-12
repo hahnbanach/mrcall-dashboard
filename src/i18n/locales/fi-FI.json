@@ -1422,7 +1422,7 @@
         "minFree": "Vapaan ajan vähimmäispituus",
         "minFreeLabel": "Vapaan ajan vähimmäispituus minuutteina",
         "minutes": "minuuttia",
-        "minFreeHint": "Pöytä näkyy vapaana vain, jos se pysyy vapaana vähintään näin pitkään: 120 minuutilla pöytä, joka on vapaa klo 20:00 mutta varattu klo 21:00, ei näy vapaana. Jos et muuta arvoa, se on {n} minuuttia. 1-{max} minuuttia.",
+        "minFreeHint": "Pöytä näkyy vapaana vain, jos se pysyy vapaana vähintään näin pitkään: 120 minuutilla pöytä, joka on vapaa klo 20:00 mutta varattu klo 21:00, ei näy vapaana. 1-{max} minuuttia.",
         "generator": "Lisää pöytiä kerralla",
         "genAdd": "Lisää",
         "genHowMany": "Kuinka monta pöytää",
@@ -1517,7 +1517,11 @@
         "goMaxParty": "Muuta suurinta seuruetta",
         "goTableMin": "Muuta pöytien vähimmäispaikkamäärää",
         "goJoins": "Siirry yhdistelmiin",
-        "settingsRefused": "Palvelin ei hyväksynyt asetuksia: tarkista vapaan ajan vähimmäispituus ja suurin seurue."
+        "settingsRefused": "Palvelin ei hyväksynyt asetuksia: tarkista vapaan ajan vähimmäispituus ja suurin seurue.",
+        "defaultMinutes": "Oletus: {n} minuuttia",
+        "defaultPeople": "Oletus: {n} henkeä",
+        "byDefault": "oletus ({n})",
+        "defaultTag": "oletus"
       },
       "check": {
         "zoneNameMissing": "Alue {n} · Nimi: pakollinen",
@@ -1662,7 +1666,9 @@
         "unknown_zone": "Pöytä {table} on alueella ”{zone}”, jota ei enää ole: valitse toinen alue Alue-sarakkeesta.",
         "duplicate_join": "Pöydät {tables} on yhdistetty kahdesti: poista toinen yhdistelmistä.",
         "bad_value": "”{value}” ei ole kelvollinen arvo: tarkista korostettu kenttä."
-      }
+      },
+      "manifestMissing": "Toiminnon asetuksia ei voitu lukea, joten sivu ei voi näyttää oletusarvoja.",
+      "retry": "Yritä uudelleen"
     }
   },
   "views": {

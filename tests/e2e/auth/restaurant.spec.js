@@ -704,15 +704,52 @@ test.describe('the restaurant page', () => {
     await expect(issues.getByText(/\{|no seating takes it|larger parties become requests/)).toHaveCount(0)
   })
 
-  // The minimum free time unset is the manifest's default, read from the skill catalogue (120), never a number
-  // written in the page. Seen failing on 2026-10-12 against e228974: 90, the table time of two.
-  test('an unset minimum free time shows the manifest\'s default', async ({ authenticatedPage: page }) => {
+  // A setting not stored is StarChat's default, the manifest's (120 for the minimum free time): the field is
+  // empty, says it is the default and what it is. Seen failing on 2026-10-12 against e228974 (90, the table time).
+  test('an unset minimum free time shows the manifest\'s default, as the default', async ({ authenticatedPage: page }) => {
     await mockRestaurant(page, { minFree: false })
     await openRestaurant(page, '&tab=room')
     const input = page.getByLabel('Minimum free time in minutes')
-    await expect(input).toHaveValue('120', { timeout: 20000 })
-    await expect(page.locator('.room-editor .min-free')).toContainText('If you do not change it, it is 120 minutes')
+    await expect(input).toHaveValue('', { timeout: 20000 })
+    await expect(input).toHaveAttribute('placeholder', '120')
+    await expect(page.locator('.room-editor .min-free')).toContainText('Default: 120 minutes')
+    await expect(page.locator('.room-editor .min-free .default-tag')).toBeVisible()
     await expect(page.locator('.room-editor .savebar')).toContainText('No changes')
+  })
+
+  // A stored value different from the default shows that value, and emptying the field goes back to the default,
+  // written as unset. Seen failing on 2026-10-12 against 8a110e9: the hint said "it is 120" over a stored 90, and
+  // the emptied field was refused as not a number.
+  test('a stored minimum free time shows as itself, and emptying it goes back to the default, written as unset', async ({ authenticatedPage: page }) => {
+    const { calls } = await mockRestaurant(page)
+    await openRestaurant(page, '&tab=room')
+    const input = page.getByLabel('Minimum free time in minutes')
+    await expect(input).toHaveValue('90', { timeout: 20000 })
+    await expect(page.locator('.room-editor .min-free')).toContainText('Default: 120 minutes')
+    await expect(page.locator('.room-editor .min-free .default-tag')).toHaveCount(0)
+    await input.fill('')
+    await expect(page.locator('.room-editor .min-free .default-tag')).toBeVisible()
+    await expect(page.locator('.room-editor .pending')).toContainText('Minimum free time: 90 → default (120) min')
+    await expect(page.locator('.room-editor .save-room')).toBeEnabled()
+    await page.locator('.room-editor .save-room').click()
+    await expect(page.locator('.toast')).toContainText('1 change saved')
+    const put = calls.find(c => c.method === 'PUT' && c.path.includes('/skills/configuration/'))
+    expect('minFreeMinutes' in put.body.params).toBe(false)
+    expect(put.body.params.dinner).toContain('19:00-22:00')
+  })
+
+  // Without the skill's manifest the page has no defaults to show: it says so and reads it again on request,
+  // never drawing with numbers of its own. Seen failing on 2026-10-12 against 8a110e9 (drawn with fallbacks,
+  // and a failed read kept for good).
+  test('a catalogue that could not be read is said, and read again on request', async ({ authenticatedPage: page }) => {
+    await mockRestaurant(page, { manifest: 'once' })
+    await openRestaurant(page)
+    const missing = page.locator('.restaurant-manifest-missing')
+    await expect(missing).toContainText('could not be read', { timeout: 20000 })
+    await expect(page.locator('.strip')).toHaveCount(0)
+    await missing.getByRole('button', { name: 'Try again' }).click()
+    await ready(page)
+    await expect(missing).toHaveCount(0)
   })
 
   // The largest party the assistant books by itself is set here, written through the skill instance with its
@@ -721,7 +758,10 @@ test.describe('the restaurant page', () => {
     const { calls } = await mockRestaurant(page)
     await openRestaurant(page, '&tab=room')
     const field = page.getByLabel('Largest party the assistant books by itself')
-    await expect(field).toHaveValue('8', { timeout: 20000 })
+    // not stored: empty, the manifest's 8 shown as the default
+    await expect(field).toHaveValue('', { timeout: 20000 })
+    await expect(field).toHaveAttribute('placeholder', '8')
+    await expect(page.locator('.room-editor .max-party')).toContainText('Default: 8 people')
     await page.locator('.room-editor .issues').getByRole('button', { name: 'Change the largest party' }).click()
     await expect(field).toBeFocused()
     await page.locator('.room-editor .issues').getByRole('button', { name: 'Go to the joins' }).click()
@@ -729,7 +769,7 @@ test.describe('the restaurant page', () => {
     await field.fill('101')
     await expect(page.locator('.room-editor .issues')).toContainText('Largest party: between 1 and 100 people')
     await field.fill('6')
-    await expect(page.locator('.room-editor .pending')).toContainText('Largest party the assistant books: 8 → 6 people')
+    await expect(page.locator('.room-editor .pending')).toContainText('Largest party the assistant books: default (8) → 6 people')
     await page.locator('.room-editor .save-room').click()
     await expect(page.locator('.toast')).toContainText('1 change saved')
     const put = calls.find(c => c.method === 'PUT' && c.path.includes('/skills/configuration/'))

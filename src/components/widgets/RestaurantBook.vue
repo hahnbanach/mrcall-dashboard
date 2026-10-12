@@ -9,6 +9,10 @@
       {{ $t("components.restaurant.noSkill") }}
     </Message>
     <Message v-else-if="loadError" severity="error" :closable="false">{{ $t("components.restaurant.loadError") }}</Message>
+    <Message v-else-if="manifestMissing" severity="warn" :closable="false" class="restaurant-manifest-missing">
+      {{ $t("components.restaurant.manifestMissing") }}
+      <Button :label="$t('components.restaurant.retry')" size="small" class="ml-2" @click="start" />
+    </Message>
 
     <template v-else-if="ready">
       <RestaurantWizard v-if="!layout" :user="user" :business-id="businessId" :instance="instance" :rules="rules"
@@ -161,6 +165,7 @@ export default {
       lastRefusal: null,
       deferred: {},
       manifest: null,
+      manifestMissing: false,
       searchResults: [],
       searchTruncated: false,
     };
@@ -238,20 +243,28 @@ export default {
     clearTimeout(this.toastTimer);
   },
   async mounted() {
-    try {
-      await this.loadInstance();
-      if (this.noSkill) return;
-      this.service = serviceAt(this.rules, this.date, minuteOfDay(new Date()));
-      await this.loadDay(this.date);
-      this.resetTime();
-      this.ready = !this.unavailable;
-      this.loadPeriod();
-    } catch (e) {
-      console.error("Restaurant page not loaded:", e.restaurant ? e.restaurant.status : e);
-      this.loadError = true;
-    }
+    await this.start();
   },
   methods: {
+    /** Reads what the page needs to draw anything: the instance, the skill's manifest, the day. Without the
+     *  manifest the page has no defaults to show, so it says so and offers to read it again (`retry`). */
+    async start() {
+      this.loadError = false;
+      try {
+        await this.loadInstance();
+        if (this.noSkill) return;
+        if (!this.manifest) { this.manifestMissing = true; return; }
+        this.manifestMissing = false;
+        this.service = serviceAt(this.rules, this.date, minuteOfDay(new Date()));
+        await this.loadDay(this.date);
+        this.resetTime();
+        this.ready = !this.unavailable;
+        this.loadPeriod();
+      } catch (e) {
+        console.error("Restaurant page not loaded:", e.restaurant ? e.restaurant.status : e);
+        this.loadError = true;
+      }
+    },
     fmt,
     shortDate(key) {
       return shortDate(key, this.$i18n.locale);
@@ -263,9 +276,10 @@ export default {
     // ------------------------------------------------------------ reading
 
     async loadInstance() {
+      // the manifest is asked again until it is read: a failed read is never kept as an answer
       const [instance, manifest] = await Promise.all([RestaurantApi.instance(this.user, this.businessId),
         this.manifest ? this.manifest : RestaurantApi.manifest(this.user, this.businessId)]);
-      this.manifest = manifest;
+      this.manifest = manifest || null;
       this.instance = instance;
       // A business that runs no restaurant skill has no book: the page says so instead of offering one.
       this.noSkill = !this.instance;

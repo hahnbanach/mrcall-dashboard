@@ -1424,7 +1424,7 @@
         "minFree": "Durée libre minimale",
         "minFreeLabel": "Durée libre minimale en minutes",
         "minutes": "minutes",
-        "minFreeHint": "Une table n'apparaît comme libre que si elle reste libre au moins aussi longtemps : avec 120 minutes, une table libre à 20:00 mais réservée à 21:00 n'apparaît pas comme libre. Si vous ne la modifiez pas, la valeur est de {n} minutes. De 1 à {max} minutes.",
+        "minFreeHint": "Une table n'apparaît comme libre que si elle reste libre au moins aussi longtemps : avec 120 minutes, une table libre à 20:00 mais réservée à 21:00 n'apparaît pas comme libre. De 1 à {max} minutes.",
         "generator": "Ajouter des tables en une fois",
         "genAdd": "Ajouter",
         "genHowMany": "Combien de tables",
@@ -1519,7 +1519,11 @@
         "goMaxParty": "Modifier le plus grand groupe",
         "goTableMin": "Modifier les places min des tables",
         "goJoins": "Aller aux jonctions",
-        "settingsRefused": "Le serveur n'a pas accepté les paramètres : vérifiez la durée libre minimale et le plus grand groupe."
+        "settingsRefused": "Le serveur n'a pas accepté les paramètres : vérifiez la durée libre minimale et le plus grand groupe.",
+        "defaultMinutes": "Par défaut : {n} minutes",
+        "defaultPeople": "Par défaut : {n} personnes",
+        "byDefault": "par défaut ({n})",
+        "defaultTag": "par défaut"
       },
       "check": {
         "zoneNameMissing": "Zone {n} · Nom : obligatoire",
@@ -1664,7 +1668,9 @@
         "unknown_zone": "{table} est dans la zone « {zone} », qui n'existe plus : choisissez-en une autre dans la colonne Zone.",
         "duplicate_join": "Les tables {tables} sont jointes deux fois : supprimez l'une des deux jonctions.",
         "bad_value": "« {value} » n'est pas une valeur valide : vérifiez le champ en évidence."
-      }
+      },
+      "manifestMissing": "Les réglages de la fonction n'ont pas pu être lus : la page ne peut pas afficher ses valeurs par défaut.",
+      "retry": "Réessayer"
     }
   },
   "views": {

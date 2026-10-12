@@ -280,18 +280,20 @@ export default {
     /**
      * The restaurant_booking skill's configuration fields as the skill catalogue declares them (the manifest's
      * `config`): `{key: {default, min, max}}`, so an unset value is shown as the manifest's default, never a
-     * number written here. `{}` when the catalogue cannot be read.
+     * number written here. Null when the catalogue cannot be read or does not list the skill: the page then says
+     * so and offers to read it again, rather than drawing with numbers of its own.
      */
     manifest: async function(user, businessId) {
         try {
             const skills = await call(() => axios.get(process.env.VUE_APP_STARCHAT_URL + "/mrcall/v1/mrcall0/apidomain/agent/skills" +
                 (businessId ? "?businessId=" + encodeURIComponent(businessId) : ""), { headers: headers(user) }));
             const skill = (Array.isArray(skills) ? skills : []).find(s => s && SKILL_NAMES.includes(s.name));
-            const fields = (skill && skill.configSchema && skill.configSchema.fields) || [];
+            const fields = skill && skill.configSchema && skill.configSchema.fields;
+            if (!Array.isArray(fields) || !fields.length) return null;
             return Object.fromEntries(fields.map(f => [f.key, { default: f.default, min: f.min, max: f.max }]));
         } catch (e) {
             console.warn("Restaurant skill manifest not read:", e.restaurant ? e.restaurant.status : e);
-            return {};
+            return null;
         }
     },
 
@@ -316,6 +318,9 @@ export default {
     saveInstance: function(user, businessId, instance, changes) {
         const params = Object.assign({}, instance.params, changes);
         delete params.layout;
+        // A setting changed to null goes back to its default: it is left out, which StarChat reads as unset
+        // (RestaurantRules.field: absent, null and empty text alike) and fills from the manifest.
+        Object.keys(changes).forEach(k => { if (changes[k] === null) delete params[k]; });
         return call(() => axios.put(skillsBase(businessId) + "/" + encodeURIComponent(instance.phase) + "/" +
             encodeURIComponent(instance.instanceId),
             { skill: instance.skill || SKILL, params: params, expectedRevision: instance.revision }, { headers: headers(user) }));

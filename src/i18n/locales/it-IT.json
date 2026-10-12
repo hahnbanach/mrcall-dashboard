@@ -1425,7 +1425,7 @@
         "minFree": "Tempo minimo libero",
         "minFreeLabel": "Tempo minimo libero in minuti",
         "minutes": "minuti",
-        "minFreeHint": "Un tavolo risulta libero solo se resta libero almeno per questo tempo: con 120 minuti, un tavolo libero alle 20:00 ma prenotato alle 21:00 non risulta libero. Se non lo cambiate vale {n} minuti. Da 1 a {max} minuti.",
+        "minFreeHint": "Un tavolo risulta libero solo se resta libero almeno per questo tempo: con 120 minuti, un tavolo libero alle 20:00 ma prenotato alle 21:00 non risulta libero. Da 1 a {max} minuti.",
         "generator": "Aggiungi tavoli in un colpo",
         "genAdd": "Aggiungi",
         "genHowMany": "Quanti tavoli",
@@ -1520,7 +1520,11 @@
         "goMaxParty": "Cambia il gruppo più grande",
         "goTableMin": "Cambia il minimo di posti",
         "goJoins": "Vai alle unioni",
-        "settingsRefused": "Il server non ha accettato le impostazioni: controllate il tempo minimo libero e il gruppo più grande."
+        "settingsRefused": "Il server non ha accettato le impostazioni: controllate il tempo minimo libero e il gruppo più grande.",
+        "defaultMinutes": "Predefinito: {n} minuti",
+        "defaultPeople": "Predefinito: {n} persone",
+        "byDefault": "predefinito ({n})",
+        "defaultTag": "predefinito"
       },
       "check": {
         "zoneNameMissing": "Zona {n} · Nome: obbligatorio",
@@ -1668,7 +1672,9 @@
         "unknown_zone": "{table} è nella zona \"{zone}\", che non esiste più: sceglietene un'altra nella colonna Zona.",
         "duplicate_join": "I tavoli {tables} sono uniti due volte: togliete una delle due unioni.",
         "bad_value": "\"{value}\" non è un valore valido: controllate il campo evidenziato."
-      }
+      },
+      "manifestMissing": "Non è stato possibile leggere le impostazioni della funzione, perciò la pagina non può mostrare i valori predefiniti.",
+      "retry": "Riprova"
     }
   },
   "views": {

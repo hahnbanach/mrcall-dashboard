@@ -9,10 +9,13 @@ import { layoutToWire, bookingFromWire, layoutFromWire, instanceIn } from '@/uti
 /** The page's arithmetic: what it draws from the server's answers. What the server decides is not here. */
 
 const DAY = '2026-10-16' // a Friday
+// the restaurant manifest's defaults, as the skill catalogue gives them
+const MANIFEST = Object.fromEntries(Object.entries({ arrivalEveryMinutes: 15, tableMinutes2: 90, tableMinutes4: 105, tableMinutes6: 120,
+  tableMinutesLarger: 150, minFreeMinutes: 120, daysAhead: 60, maxPartySize: 8 }).map(([k, d]) => [k, { default: d }]))
 const rules = rulesOf({
   dinner: JSON.stringify({ friday: ['19:00-22:00'] }), lunch: '{}', arrivalEveryMinutes: '15',
   tableMinutes2: '90', tableMinutes4: '105', tableMinutes6: '120', tableMinutesLarger: '150', minFreeMinutes: '90'
-})
+}, MANIFEST)
 const win = serviceWindow(rules, DAY, 'dinner')
 
 const layout = () => ({
@@ -34,14 +37,30 @@ describe('the rules the page draws with', () => {
   it('reads the skill\'s strings and JSON strings, with the manifest\'s defaults', () => {
     expect(rules.step).toBe(15)
     expect(rules.minFreeMinutes).toBe(90)
-    expect(rulesOf({}).minFreeMinutes).toBe(90) // the default is the shortest table time
-    expect(rulesOf({ tableMinutes2: '75' }).minFreeMinutes).toBe(75)
+    expect(rules.minFreeSet).toBe(true)
+    // a manifest without a minFreeMinutes default (9.34.65's): the shortest table time, as that server computes it
+    const { minFreeMinutes, ...older } = MANIFEST
+    expect(minFreeMinutes.default).toBe(120)
+    expect(rulesOf({}, older).minFreeMinutes).toBe(90)
+    expect(rulesOf({ tableMinutes2: '75' }, older).minFreeMinutes).toBe(75)
+  })
+
+  // Seen failing on 2026-10-12 against 8a110e9, whose rulesOf answered 90 and 8 from numbers of its own.
+  it('has no default of its own: without the manifest a setting is unknown, not invented', () => {
+    expect(rulesOf({}, {}).maxPartySize).toBeUndefined()
+    expect(rulesOf({}, {}).tableMinutes.upTo2).toBeUndefined()
+  })
+
+  it('tells a stored setting from one left to its default', () => {
+    expect(rulesOf({ minFreeMinutes: '90' }, MANIFEST)).toMatchObject({ minFreeSet: true, minFreeMinutes: 90, minFreeDefault: 120 })
+    expect(rulesOf({ minFreeMinutes: '' }, MANIFEST)).toMatchObject({ minFreeSet: false, minFreeMinutes: 120 })
+    expect(rulesOf({}, MANIFEST)).toMatchObject({ maxPartySet: false, maxPartySize: 8, maxPartyDefault: 8 })
   })
 
   it('knows whether the instance has any arrival window: without one the first room cannot be saved', () => {
     expect(hasHours(rules)).toBe(true)
-    expect(hasHours(rulesOf({ lunch: '{}', dinner: '{}' }))).toBe(false)
-    expect(hasHours(rulesOf({ dinner: '{"monday": []}' }))).toBe(false)
+    expect(hasHours(rulesOf({ lunch: '{}', dinner: '{}' }, MANIFEST))).toBe(false)
+    expect(hasHours(rulesOf({ dinner: '{"monday": []}' }, MANIFEST))).toBe(false)
   })
 
   it('gives a party the table time the server gives it', () => {
@@ -61,12 +80,12 @@ describe('the rules the page draws with', () => {
 
   // Seen failing on 2026-10-12 against e228974, which took the shortest table time (90) for an unset value.
   it('takes an unset minimum free time from the manifest, capped at the longest table time', () => {
-    const manifest = { minFreeMinutes: { default: 120 }, maxPartySize: { default: 8, min: 1, max: 100 } }
+    const manifest = { ...MANIFEST, maxPartySize: { default: 8, min: 1, max: 100 } }
     expect(rulesOf({}, manifest).minFreeMinutes).toBe(120)
     expect(rulesOf({ tableMinutesLarger: '100' }, manifest).minFreeMinutes).toBe(100)
     expect(rulesOf({ minFreeMinutes: '45' }, manifest).minFreeMinutes).toBe(45)
     expect(rulesOf({}, manifest).maxPartyRange).toEqual({ min: 1, max: 100 })
-    expect(rulesOf({}, { maxPartySize: { default: 10 } }).maxPartySize).toBe(10)
+    expect(rulesOf({}, { ...MANIFEST, maxPartySize: { default: 10 } }).maxPartySize).toBe(10)
   })
 
   it('bounds the minimum free time from 1 to the longest table time, as the skill checks it', () => {

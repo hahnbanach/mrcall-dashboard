@@ -11,11 +11,12 @@ import { rulesOf } from '@/utils/RestaurantModel'
   * them, so the wizard asks for the hours first and writes them to the skill at the revision read. */
 
 const i18n = createI18n({ legacy: false, locale: 'en-US', messages: { 'en-US': enUS } })
+const MANIFEST = { arrivalEveryMinutes: { default: 15 }, tableMinutes2: { default: 90 }, tableMinutesLarger: { default: 150 } }
 const instance = { phase: 'during', instanceId: 'restaurant_booking_1', revision: 'rev-1', params: { enabled: 'true', lunch: '{}', dinner: '{}' } }
 
 function draw (params = instance.params) {
   return mount(RestaurantWizard, {
-    props: { user: { accessToken: 't' }, businessId: 'b', instance: { ...instance, params }, rules: rulesOf(params) },
+    props: { user: { accessToken: 't' }, businessId: 'b', instance: { ...instance, params }, rules: rulesOf(params, MANIFEST) },
     global: { plugins: [i18n, PrimeVue], stubs: { WeeklyHoursField: true } }
   })
 }

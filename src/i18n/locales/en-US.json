@@ -1427,7 +1427,7 @@
         "minFree": "Minimum free time",
         "minFreeLabel": "Minimum free time in minutes",
         "minutes": "minutes",
-        "minFreeHint": "A table shows as free only if it stays free at least this long: with 120 minutes, a table free at 20:00 but booked at 21:00 does not show as free. If you do not change it, it is {n} minutes. From 1 to {max} minutes.",
+        "minFreeHint": "A table shows as free only if it stays free at least this long: with 120 minutes, a table free at 20:00 but booked at 21:00 does not show as free. From 1 to {max} minutes.",
         "generator": "Add tables in one go",
         "genAdd": "Add",
         "genHowMany": "How many tables",
@@ -1522,7 +1522,11 @@
         "goMaxParty": "Change the largest party",
         "goTableMin": "Change the tables' minimum",
         "goJoins": "Go to the joins",
-        "settingsRefused": "The server did not accept the settings: check the minimum free time and the largest party."
+        "settingsRefused": "The server did not accept the settings: check the minimum free time and the largest party.",
+        "defaultMinutes": "Default: {n} minutes",
+        "defaultPeople": "Default: {n} people",
+        "byDefault": "default ({n})",
+        "defaultTag": "default"
       },
       "check": {
         "zoneNameMissing": "Area {n} · Name: required",
@@ -1667,7 +1671,9 @@
         "unknown_zone": "{table} is in the area \"{zone}\", which no longer exists: choose another one in the Area column.",
         "duplicate_join": "The tables {tables} are joined twice: remove one of the two joins.",
         "bad_value": "\"{value}\" is not a valid value: check the highlighted field."
-      }
+      },
+      "manifestMissing": "The skill's settings could not be read, so the page cannot show its defaults.",
+      "retry": "Try again"
     }
   },
   "views": {

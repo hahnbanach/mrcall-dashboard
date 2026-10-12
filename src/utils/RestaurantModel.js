@@ -77,30 +77,33 @@ function weekly (v) {
 export function rulesOf (params, manifest) {
   const p = params || {}
   const m = manifest || {}
-  // An unset value is the manifest's default, read from the skill catalogue (`manifest`); the numbers below are
-  // only what the page shows while the catalogue cannot be read.
-  const def = (key, fallback) => {
+  // An unset value is the manifest's default, read from the skill catalogue (`manifest`): no default is written
+  // in the page. The page draws nothing until the catalogue is read (RestaurantBook), so every key has one.
+  const def = key => {
     const d = m[key] && m[key].default
-    return d === undefined || d === null || d === '' ? fallback : number(d, fallback)
+    return d === undefined || d === null || d === '' ? undefined : number(d, undefined)
   }
-  const t2 = number(p.tableMinutes2, def('tableMinutes2', 90))
-  const t4 = number(p.tableMinutes4, def('tableMinutes4', 105))
-  const t6 = number(p.tableMinutes6, def('tableMinutes6', 120))
-  const larger = number(p.tableMinutesLarger, def('tableMinutesLarger', 150))
-  // StarChat's minimum free time when unset: its manifest default, capped at the longest table time (and the
-  // shortest table time when the catalogue is not read, which is what a server before 120 did).
-  const minFreeDefault = Math.max(1, Math.min(larger, def('minFreeMinutes', t2)))
-  const range = (key, min, max) => ({ min: m[key] && m[key].min !== undefined ? m[key].min : min, max: m[key] && m[key].max !== undefined ? m[key].max : max })
+  const value = key => number(p[key], def(key))
+  const isSet = key => !(p[key] === undefined || p[key] === null || String(p[key]).trim() === '')
+  const t2 = value('tableMinutes2')
+  const larger = value('tableMinutesLarger')
+  // StarChat's rule for an unset minimum free time: the manifest's default, capped at the longest table time; a
+  // manifest without one (9.34.65's) means the shortest table time, as that server computed it.
+  const minFreeDefault = Math.max(1, Math.min(larger, def('minFreeMinutes') !== undefined ? def('minFreeMinutes') : t2))
+  const range = key => ({ min: m[key] ? m[key].min : undefined, max: m[key] ? m[key].max : undefined })
   return {
     lunch: weekly(p.lunch),
     dinner: weekly(p.dinner),
-    step: number(p.arrivalEveryMinutes, def('arrivalEveryMinutes', 15)),
-    tableMinutes: { upTo2: t2, upTo4: t4, upTo6: t6, larger },
-    minFreeMinutes: number(p.minFreeMinutes, minFreeDefault),
+    step: value('arrivalEveryMinutes'),
+    tableMinutes: { upTo2: t2, upTo4: value('tableMinutes4'), upTo6: value('tableMinutes6'), larger },
+    minFreeMinutes: isSet('minFreeMinutes') ? number(p.minFreeMinutes, minFreeDefault) : minFreeDefault,
     minFreeDefault,
-    daysAhead: number(p.daysAhead, def('daysAhead', 60)),
-    maxPartySize: number(p.maxPartySize, def('maxPartySize', 8)),
-    maxPartyRange: range('maxPartySize', 1, 100)
+    minFreeSet: isSet('minFreeMinutes'),
+    daysAhead: value('daysAhead'),
+    maxPartySize: value('maxPartySize'),
+    maxPartyDefault: def('maxPartySize'),
+    maxPartySet: isSet('maxPartySize'),
+    maxPartyRange: range('maxPartySize')
   }
 }
 

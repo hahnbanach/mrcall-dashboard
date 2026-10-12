@@ -1424,7 +1424,7 @@
         "minFree": "Mindestfreizeit",
         "minFreeLabel": "Mindestfreizeit in Minuten",
         "minutes": "Minuten",
-        "minFreeHint": "Ein Tisch wird nur dann als frei angezeigt, wenn er mindestens so lange frei bleibt: Bei 120 Minuten gilt ein Tisch, der um 20:00 frei, aber um 21:00 reserviert ist, nicht als frei. Wenn Sie nichts ändern, gilt {n} Minuten. Von 1 bis {max} Minuten.",
+        "minFreeHint": "Ein Tisch wird nur dann als frei angezeigt, wenn er mindestens so lange frei bleibt: Bei 120 Minuten gilt ein Tisch, der um 20:00 frei, aber um 21:00 reserviert ist, nicht als frei. Von 1 bis {max} Minuten.",
         "generator": "Tische auf einmal hinzufügen",
         "genAdd": "Hinzufügen",
         "genHowMany": "Wie viele Tische",
@@ -1519,7 +1519,11 @@
         "goMaxParty": "Größte Gruppe ändern",
         "goTableMin": "Mindestplätze der Tische ändern",
         "goJoins": "Zu den Verbindungen",
-        "settingsRefused": "Der Server hat die Einstellungen nicht übernommen: Mindestfreizeit und größte Gruppe prüfen."
+        "settingsRefused": "Der Server hat die Einstellungen nicht übernommen: Mindestfreizeit und größte Gruppe prüfen.",
+        "defaultMinutes": "Standard: {n} Minuten",
+        "defaultPeople": "Standard: {n} Personen",
+        "byDefault": "Standard ({n})",
+        "defaultTag": "Standard"
       },
       "check": {
         "zoneNameMissing": "Bereich {n} · Name: erforderlich",
@@ -1664,7 +1668,9 @@
         "unknown_zone": "{table} gehört zum Bereich „{zone}“, den es nicht mehr gibt: in der Spalte Bereich einen anderen auswählen.",
         "duplicate_join": "Die Tische {tables} sind zweimal verbunden: eine der beiden Verbindungen entfernen.",
         "bad_value": "„{value}“ ist kein gültiger Wert: das markierte Feld prüfen."
-      }
+      },
+      "manifestMissing": "Die Einstellungen der Funktion konnten nicht gelesen werden, daher kann die Seite die Standardwerte nicht anzeigen.",
+      "retry": "Erneut versuchen"
     }
   },
   "views": {

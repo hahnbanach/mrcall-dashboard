@@ -23,17 +23,21 @@
         <h2>{{ $t("components.restaurant.room.settings") }}</h2>
         <label class="field min-free">
           <span>{{ $t("components.restaurant.room.minFree") }}</span>
-          <span class="tb-row"><input class="input" type="number" :min="limits.min" :max="limits.max" step="5" :value="minFree" data-ref="set-minfree"
-                                      :class="{ invalid: minFreeError }" :aria-label="$t('components.restaurant.room.minFreeLabel')"
-                                      @input="e => minFree = e.target.value === '' ? NaN : Number(e.target.value)"> {{ $t("components.restaurant.room.minutes") }}</span>
-          <small>{{ $t("components.restaurant.room.minFreeHint", { n: rules.minFreeDefault, max: limits.max }) }}</small>
+          <span class="tb-row"><input class="input" type="number" :min="limits.min" :max="limits.max" step="5" :value="minFree === null ? '' : minFree"
+                                      :placeholder="String(rules.minFreeDefault)" data-ref="set-minfree"
+                                      :class="{ invalid: minFreeError, 'is-default': minFree === null }" :aria-label="$t('components.restaurant.room.minFreeLabel')"
+                                      @input="e => minFree = settingOf(e.target.value)"> {{ $t("components.restaurant.room.minutes") }}
+            <span v-if="minFree === null" class="pill default-tag">{{ $t("components.restaurant.room.defaultTag") }}</span></span>
+          <small>{{ $t("components.restaurant.room.defaultMinutes", { n: rules.minFreeDefault }) }}. {{ $t("components.restaurant.room.minFreeHint", { max: limits.max }) }}</small>
         </label>
         <label class="field max-party">
           <span>{{ $t("components.restaurant.room.maxParty") }}</span>
-          <span class="tb-row"><input class="input" type="number" :min="partyLimits.min" :max="partyLimits.max" step="1" :value="maxParty" data-ref="set-maxparty"
-                                      :class="{ invalid: maxPartyError }" :aria-label="$t('components.restaurant.room.maxParty')"
-                                      @input="e => maxParty = e.target.value === '' ? NaN : Number(e.target.value)"> {{ $t("components.restaurant.room.people") }}</span>
-          <small>{{ $t("components.restaurant.room.maxPartyHint") }}</small>
+          <span class="tb-row"><input class="input" type="number" :min="partyLimits.min" :max="partyLimits.max" step="1" :value="maxParty === null ? '' : maxParty"
+                                      :placeholder="String(rules.maxPartyDefault)" data-ref="set-maxparty"
+                                      :class="{ invalid: maxPartyError, 'is-default': maxParty === null }" :aria-label="$t('components.restaurant.room.maxParty')"
+                                      @input="e => maxParty = settingOf(e.target.value)"> {{ $t("components.restaurant.room.people") }}
+            <span v-if="maxParty === null" class="pill default-tag">{{ $t("components.restaurant.room.defaultTag") }}</span></span>
+          <small>{{ $t("components.restaurant.room.defaultPeople", { n: rules.maxPartyDefault }) }}. {{ $t("components.restaurant.room.maxPartyHint") }}</small>
         </label>
       </section>
 
@@ -217,8 +221,9 @@ export default {
   data() {
     return {
       draft: clone(this.layout),
-      minFree: this.rules.minFreeMinutes,
-      maxParty: this.rules.maxPartySize,
+      // null: the setting is not stored and StarChat uses the manifest's default; emptying the field goes back to it
+      minFree: this.rules.minFreeSet ? this.rules.minFreeMinutes : null,
+      maxParty: this.rules.maxPartySet ? this.rules.maxPartySize : null,
       gen: { n: 4, size: 2, zone: this.layout.zones.length ? this.layout.zones[0].id : null },
       closeForms: {},
       joinPick: [],
@@ -233,28 +238,37 @@ export default {
     limits() {
       return minFreeLimits(this.rules);
     },
+    storedMinFree() {
+      return this.rules.minFreeSet ? this.rules.minFreeMinutes : null;
+    },
+    storedMaxParty() {
+      return this.rules.maxPartySet ? this.rules.maxPartySize : null;
+    },
     minFreeError() {
       const n = this.minFree;
+      if (n === null) return false;
       return !(Number.isInteger(n) && n >= this.limits.min && n <= this.limits.max);
     },
     minFreeChanged() {
-      return this.minFree !== this.rules.minFreeMinutes;
+      return this.minFree !== this.storedMinFree;
     },
     partyLimits() {
       return this.rules.maxPartyRange;
     },
     maxPartyError() {
       const n = this.maxParty;
+      if (n === null) return false;
       return !(Number.isInteger(n) && n >= this.partyLimits.min && n <= this.partyLimits.max);
     },
     maxPartyChanged() {
-      return this.maxParty !== this.rules.maxPartySize;
+      return this.maxParty !== this.storedMaxParty;
     },
     /** What the skill instance is written with: the settings of this page that live there, as strings. */
     instanceChanges() {
       const out = {};
-      if (this.minFreeChanged) out.minFreeMinutes = String(this.minFree);
-      if (this.maxPartyChanged) out.maxPartySize = String(this.maxParty);
+      // null leaves the setting out (Restaurant.saveInstance): unset, so StarChat uses the manifest's default
+      if (this.minFreeChanged) out.minFreeMinutes = this.minFree === null ? null : String(this.minFree);
+      if (this.maxPartyChanged) out.maxPartySize = this.maxParty === null ? null : String(this.maxParty);
       return out;
     },
     layoutChanges() {
@@ -262,8 +276,11 @@ export default {
     },
     changes() {
       const out = this.layoutChanges.map(c => this.$t(`components.restaurant.diff.${c.code}`, c.args));
-      if (this.minFreeChanged) out.push(this.$t("components.restaurant.diff.minFree", { from: this.rules.minFreeMinutes, to: this.minFree }));
-      if (this.maxPartyChanged) out.push(this.$t("components.restaurant.diff.maxParty", { from: this.rules.maxPartySize, to: this.maxParty }));
+      const shown = (v, d) => (v === null ? this.$t("components.restaurant.room.byDefault", { n: d }) : v);
+      if (this.minFreeChanged) out.push(this.$t("components.restaurant.diff.minFree",
+        { from: shown(this.storedMinFree, this.rules.minFreeDefault), to: shown(this.minFree, this.rules.minFreeDefault) }));
+      if (this.maxPartyChanged) out.push(this.$t("components.restaurant.diff.maxParty",
+        { from: shown(this.storedMaxParty, this.rules.maxPartyDefault), to: shown(this.maxParty, this.rules.maxPartyDefault) }));
       return out;
     },
     totalChanges() {
@@ -323,10 +340,10 @@ export default {
       this.draft = clone(next);
       this.serverProblems = [];
     },
-    "rules.minFreeMinutes"(n) {
+    storedMinFree(n) {
       this.minFree = n;
     },
-    "rules.maxPartySize"(n) {
+    storedMaxParty(n) {
       this.maxParty = n;
     },
     draft: {
@@ -465,8 +482,8 @@ export default {
         defaultFocus: "reject",
         accept: () => {
           this.draft = clone(this.layout);
-          this.minFree = this.rules.minFreeMinutes;
-          this.maxParty = this.rules.maxPartySize;
+          this.minFree = this.storedMinFree;
+          this.maxParty = this.storedMaxParty;
           this.joinPick = [];
           this.joinEdit = null;
           this.$emit("toast", this.$t("components.restaurant.room.discarded"));
@@ -487,6 +504,10 @@ export default {
           .concat([{ ref: "joins", label: this.$t("components.restaurant.room.goJoins") }]);
       }
       return [];
+    },
+    /** A setting as typed: empty is the default (null), anything else a number, checked as one. */
+    settingOf(text) {
+      return String(text).trim() === "" ? null : Number(text);
     },
     problemText(p) {
       return layoutMessage(p, { t: (k, a) => this.$t(k, a || {}), te: k => this.$te(k), whoOn: table => {

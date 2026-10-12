@@ -1422,7 +1422,7 @@
         "minFree": "Minimale vrije tijd",
         "minFreeLabel": "Minimale vrije tijd in minuten",
         "minutes": "minuten",
-        "minFreeHint": "Een tafel wordt alleen als vrij getoond als hij minstens zo lang vrij blijft: bij 120 minuten telt een tafel die om 20:00 vrij is maar om 21:00 gereserveerd is, niet als vrij. Als je het niet wijzigt, is het {n} minuten. Van 1 tot {max} minuten.",
+        "minFreeHint": "Een tafel wordt alleen als vrij getoond als hij minstens zo lang vrij blijft: bij 120 minuten telt een tafel die om 20:00 vrij is maar om 21:00 gereserveerd is, niet als vrij. Van 1 tot {max} minuten.",
         "generator": "Tafels in één keer toevoegen",
         "genAdd": "Toevoegen",
         "genHowMany": "Hoeveel tafels",
@@ -1517,7 +1517,11 @@
         "goMaxParty": "Grootste gezelschap wijzigen",
         "goTableMin": "Minimale plekken van de tafels wijzigen",
         "goJoins": "Naar de koppelingen",
-        "settingsRefused": "De server heeft de instellingen niet geaccepteerd: controleer de minimale vrije tijd en het grootste gezelschap."
+        "settingsRefused": "De server heeft de instellingen niet geaccepteerd: controleer de minimale vrije tijd en het grootste gezelschap.",
+        "defaultMinutes": "Standaard: {n} minuten",
+        "defaultPeople": "Standaard: {n} personen",
+        "byDefault": "standaard ({n})",
+        "defaultTag": "standaard"
       },
       "check": {
         "zoneNameMissing": "Gedeelte {n} · Naam: verplicht",
@@ -1662,7 +1666,9 @@
         "unknown_zone": "{table} staat in het gedeelte „{zone}“, dat niet meer bestaat: kies een ander in de kolom Gedeelte.",
         "duplicate_join": "De tafels {tables} zijn twee keer gekoppeld: verwijder een van de twee koppelingen.",
         "bad_value": "„{value}“ is geen geldige waarde: controleer het gemarkeerde veld."
-      }
+      },
+      "manifestMissing": "De instellingen van de functie konden niet worden gelezen, dus de pagina kan de standaardwaarden niet tonen.",
+      "retry": "Opnieuw proberen"
     }
   },
   "views": {

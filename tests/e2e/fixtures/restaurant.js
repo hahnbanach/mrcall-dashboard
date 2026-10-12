@@ -169,13 +169,21 @@ async function mockRestaurant (page, opts = {}) {
     headers: { 'x-mrcall-role': 'owner', 'access-control-expose-headers': 'x-mrcall-role' } }))
 
   // the skill catalogue: the restaurant manifest's configuration fields, their defaults and limits
-  await page.route(url => url.pathname.endsWith('/apidomain/agent/skills'), route => json(route, 200, [{
-    name: 'skill_restaurant_booking',
-    configSchema: { fields: [
-      { key: 'minFreeMinutes', type: 'number', default: MANIFEST_MIN_FREE, min: 1, max: 480 },
-      { key: 'maxPartySize', type: 'number', default: 8, min: 1, max: 100 },
-      { key: 'tableMinutes2', type: 'number', default: 90 }, { key: 'tableMinutesLarger', type: 'number', default: 150 }] }
-  }]))
+  // `manifest: 'once'` fails the first read (a catalogue that could not be read), then answers
+  let manifestReads = 0
+  await page.route(url => url.pathname.endsWith('/apidomain/agent/skills'), route => {
+    manifestReads++
+    if (opts.manifest === 'once' && manifestReads === 1) return diag(route, 500, 'internal')
+    return json(route, 200, [{
+      name: 'skill_restaurant_booking',
+      configSchema: { fields: [
+        { key: 'minFreeMinutes', type: 'number', default: MANIFEST_MIN_FREE, min: 1, max: 480 },
+        { key: 'maxPartySize', type: 'number', default: 8, min: 1, max: 100 },
+        { key: 'arrivalEveryMinutes', type: 'number', default: 15 }, { key: 'daysAhead', type: 'number', default: 60 },
+        { key: 'tableMinutes2', type: 'number', default: 90 }, { key: 'tableMinutes4', type: 'number', default: 105 },
+        { key: 'tableMinutes6', type: 'number', default: 120 }, { key: 'tableMinutesLarger', type: 'number', default: 150 }] }
+    }])
+  })
   await page.route('**/apidomain/agent/skills/configuration/**', route => {
     const request = route.request()
     if (request.method() === 'PUT') {

@@ -1436,7 +1436,7 @@
         "minFree": "Tiempo libre mínimo",
         "minFreeLabel": "Tiempo libre mínimo en minutos",
         "minutes": "minutos",
-        "minFreeHint": "Una mesa se muestra como libre solo si sigue libre al menos este tiempo: con 120 minutos, una mesa libre a las 20:00 pero reservada a las 21:00 no se muestra como libre. Si no lo cambias, son {n} minutos. De 1 a {max} minutos.",
+        "minFreeHint": "Una mesa se muestra como libre solo si sigue libre al menos este tiempo: con 120 minutos, una mesa libre a las 20:00 pero reservada a las 21:00 no se muestra como libre. De 1 a {max} minutos.",
         "generator": "Añadir mesas de una vez",
         "genAdd": "Añadir",
         "genHowMany": "Cuántas mesas",
@@ -1531,7 +1531,11 @@
         "goMaxParty": "Cambiar el grupo más grande",
         "goTableMin": "Cambiar las plazas mínimas de las mesas",
         "goJoins": "Ir a las uniones",
-        "settingsRefused": "El servidor no ha aceptado los ajustes: revisa el tiempo libre mínimo y el grupo más grande."
+        "settingsRefused": "El servidor no ha aceptado los ajustes: revisa el tiempo libre mínimo y el grupo más grande.",
+        "defaultMinutes": "Predeterminado: {n} minutos",
+        "defaultPeople": "Predeterminado: {n} personas",
+        "byDefault": "predeterminado ({n})",
+        "defaultTag": "predeterminado"
       },
       "check": {
         "zoneNameMissing": "Zona {n} · Nombre: obligatorio",
@@ -1676,7 +1680,9 @@
         "unknown_zone": "{table} está en la zona «{zone}», que ya no existe: elige otra en la columna Zona.",
         "duplicate_join": "Las mesas {tables} están unidas dos veces: quita una de las dos uniones.",
         "bad_value": "«{value}» no es un valor válido: revisa el campo resaltado."
-      }
+      },
+      "manifestMissing": "No se han podido leer los ajustes de la función, así que la página no puede mostrar sus valores predeterminados.",
+      "retry": "Reintentar"
     }
   },
   "views": {

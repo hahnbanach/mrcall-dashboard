@@ -1422,7 +1422,7 @@
         "minFree": "Minsta lediga tid",
         "minFreeLabel": "Minsta lediga tid i minuter",
         "minutes": "minuter",
-        "minFreeHint": "Ett bord visas som ledigt bara om det förblir ledigt minst så här länge: med 120 minuter räknas ett bord som är ledigt kl. 20:00 men bokat kl. 21:00 inte som ledigt. Om du inte ändrar det gäller {n} minuter. Från 1 till {max} minuter.",
+        "minFreeHint": "Ett bord visas som ledigt bara om det förblir ledigt minst så här länge: med 120 minuter räknas ett bord som är ledigt kl. 20:00 men bokat kl. 21:00 inte som ledigt. Från 1 till {max} minuter.",
         "generator": "Lägg till bord på en gång",
         "genAdd": "Lägg till",
         "genHowMany": "Hur många bord",
@@ -1517,7 +1517,11 @@
         "goMaxParty": "Ändra största sällskap",
         "goTableMin": "Ändra bordens minsta antal platser",
         "goJoins": "Gå till hopslagningarna",
-        "settingsRefused": "Servern accepterade inte inställningarna: kontrollera minsta lediga tid och största sällskap."
+        "settingsRefused": "Servern accepterade inte inställningarna: kontrollera minsta lediga tid och största sällskap.",
+        "defaultMinutes": "Standard: {n} minuter",
+        "defaultPeople": "Standard: {n} personer",
+        "byDefault": "standard ({n})",
+        "defaultTag": "standard"
       },
       "check": {
         "zoneNameMissing": "Område {n} · Namn: obligatoriskt",
@@ -1662,7 +1666,9 @@
         "unknown_zone": "{table} ligger i området ”{zone}”, som inte finns längre: välj ett annat i kolumnen Område.",
         "duplicate_join": "Borden {tables} är hopslagna två gånger: ta bort en av de två hopslagningarna.",
         "bad_value": "”{value}” är inget giltigt värde: kontrollera det markerade fältet."
-      }
+      },
+      "manifestMissing": "Funktionens inställningar kunde inte läsas, så sidan kan inte visa standardvärdena.",
+      "retry": "Försök igen"
     }
   },
   "views": {
