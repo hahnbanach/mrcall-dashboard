@@ -7,8 +7,10 @@ import { stateOf, toMin } from "@/utils/RestaurantModel";
  * and writes the minimum free time to (/apidomain/agent/skills/configuration/{businessId}).
  *
  * THE ONE PLACE THE WIRE SHAPES LIVE. Every request the page makes, and the translation of every answer
- * into the shapes the page draws, is here. The shapes are StarChat 9.34.63's
- * (ApiDomainRestaurantResource, LayoutDraft, RestaurantLayoutSection, the restaurant_booking manifest).
+ * into the shapes the page draws, is here. The shapes are StarChat's restaurant routes as of 9.34.63 plus R5
+ * (ApiDomainRestaurantResource, LayoutDraft, RestaurantLayoutSection, the restaurant_booking manifest):
+ * R5 adds the reinstatement (the Undo of a no-show or a staff cancellation), the staff search, the guest's
+ * past no-shows and the finder's later times.
  *
  * Every write answers the server's own words: a refusal rejects with the server body as `error.restaurant`
  * (`code` is its first diagnostic's code: `full`, `stale`, `large_party`, `busy_retry`, ...), so the page
@@ -95,7 +97,9 @@ export function layoutToWire(draft) {
 /**
  * A row of the day read as the page draws it: minutes since midnight, the tables it holds, the state it is
  * in, and the calls that touched it: `callIds` in the order they happened, each once, the first being the
- * call that made the booking (`conversationId`); a staff booking or a walk-in has none.
+ * call that made the booking (`conversationId`); a staff booking or a walk-in has none. `pastNoShows` is the
+ * guest's earlier no-shows here (only for a guest with a number); `cancelledBy` says who cancelled (caller or
+ * staff) and `reinstatable` whether staff may take a cancellation or a no-show back now.
  */
 export function bookingFromWire(r) {
     const start = toMin(r.time);
@@ -108,6 +112,9 @@ export function bookingFromWire(r) {
         blockScope: r.blockScope || null, blockTableIds: r.blockTableIds || null,
         conversationId: r.conversationId || null,
         callIds: (r.callIds || []).slice(),
+        pastNoShows: r.pastNoShows || 0,
+        cancelledBy: r.cancelledBy || null,
+        reinstatable: r.reinstatable === true,
     };
     row.state = stateOf(row);
     return row;
@@ -156,7 +163,8 @@ export default {
      * The table finder: the seatings the assistant would give a party of `covers` at `time`, in the order it
      * would be given them (the first is its own), each free for the party's whole table time:
      * `{fits: [{ids, zone, zoneName, minutes, moves}], refusal}`. A fit found only by moving other bookings
-     * carries the moves; none fits, `refusal` is why (full, closed, ...).
+     * carries the moves; none fits, `refusal` is why (full, closed, ...), and `later` the next arrival times of
+     * the service at which the assistant would seat the party (a few at most), as minutes of the day.
      */
     suggestions: async function(user, businessId, date, time, covers, zone) {
         const answer = await call(() => axios.get(base(businessId) + "/suggestions?date=" + encodeURIComponent(date) + "&time=" +
@@ -166,7 +174,29 @@ export default {
             fits: (answer.suggestions || []).map(s => ({ ids: (s.tableIds || []).slice(), zone: s.zone, zoneName: s.zoneName || "",
                 minutes: s.minutes, moves: s.moves || [] })),
             refusal: answer.refusal || null,
+            later: (answer.later || []).map(toMin).filter(t => t !== null),
         };
+    },
+
+    /**
+     * Bookings by a part of the guest's name or number over a period (POST so the name never travels in a URL):
+     * by default from a week ago to sixty days ahead, at most `limit` rows. `{results: [{date, b}], truncated}`.
+     */
+    search: async function(user, businessId, q, limit) {
+        const answer = await call(() => axios.post(base(businessId) + "/search", Object.assign({ q }, limit ? { limit } : {}),
+            { headers: headers(user) }));
+        return { results: (answer.reservations || []).map(r => ({ date: r.date, b: bookingFromWire(r) })), truncated: !!answer.truncated };
+    },
+
+    /**
+     * A no-show, or a booking staff cancelled, confirmed again on the tables it released, at the version read:
+     * the Undo of both. Refused 409 `not_reversible` (`reason`: cancelled_by_caller, not_cancelled_or_no_show,
+     * block, service_over) or 409 `table_taken` (`conflicts`: who holds each table now, `gone`: tables no longer
+     * in the room); with `overbook` it is confirmed with no table yet.
+     */
+    reinstate: function(user, businessId, id, expectedVersion, overbook) {
+        return call(() => axios.post(base(businessId) + "/reservations/" + encodeURIComponent(id) + "/reinstate?expectedVersion=" +
+            encodeURIComponent(expectedVersion) + (overbook ? "&overbook=true" : ""), {}, { headers: headers(user) }));
     },
 
     book: function(user, businessId, booking) {

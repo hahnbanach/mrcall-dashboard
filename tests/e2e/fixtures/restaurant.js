@@ -63,7 +63,7 @@ function tomorrowsDinner () {
   return [
     r('b-rossi', '20:00', 4, 'Rossi', [4], { conversationId: 'CON-made', callIds: ['CON-made', 'CON-moved'], allergies: 'Celiac (1 person)' }),
     r('b-verdi', '20:30', 2, 'Verdi', [3], { source: 'staff', phone: '' }),
-    r('b-bianchi', '19:30', 6, 'Bianchi', [6], { notes: 'Birthday cake at 22:00' }),
+    r('b-bianchi', '19:30', 6, 'Bianchi', [6], { notes: 'Birthday cake at 22:00', pastNoShows: 1 }),
     r('b-gallo', '21:00', 2, 'Gallo', [7], { source: 'walk_in', name: null, phone: null }),
     r('b-req', '21:30', 9, 'Galli', [], { status: 'requested', requestReason: 'large_party', conversationId: 'CON-req', callIds: ['CON-req'] }),
     // three weeks ahead, on a day no test opens: the page does not know of it, the server does
@@ -112,7 +112,13 @@ async function mockRestaurant (page, opts = {}) {
   const diag = (route, status, code, extra = {}) => json(route, status, Object.assign({ diagnostics: [{ path: '/', code, detail: `server English for ${code}` }] }, extra))
 
   const tableNames = ids => (ids || []).map(id => (state.layout.tables.find(t => t.id === id) || {}).name).filter(Boolean)
-  const wire = r => Object.assign({}, r, { tableNames: tableNames(r.tableIds) })
+  // A cancelled or no-show row has released its tables (the server's day read gives it none); the mock keeps
+  // them aside so that a reinstatement can take them back or find them taken.
+  const reinstatable = r => r.status === 'no_show' || (r.status === 'cancelled' && r.cancelledBy === 'staff')
+  const wire = r => {
+    const ids = r.status === 'confirmed' || r.status === 'held' ? r.tableIds : []
+    return Object.assign({}, r, { tableIds: ids, tableNames: tableNames(ids), reinstatable: reinstatable(r) })
+  }
   const end = r => toMin(r.time) + r.minutes
   const takes = r => r.status === 'confirmed'
   const freeFor = (date, ids, from, to, except) => !state.rows.some(r => r.date === date && takes(r) && r.id !== except &&
@@ -207,7 +213,11 @@ async function mockRestaurant (page, opts = {}) {
       const time = url.searchParams.get('time')
       const covers = Number(url.searchParams.get('covers'))
       const fits = fitsAt(date, time, covers)
-      return json(route, 200, { date, time, covers,
+      const later = []
+      if (!fits.length) {
+        for (let m = toMin(time) + 15; m <= toMin('22:00') && later.length < 8; m += 15) if (fitsAt(date, fmt(m), covers).length) later.push(fmt(m))
+      }
+      return json(route, 200, { date, time, covers, later,
         suggestions: fits.map(f => ({ zone: f.zone, zoneName: f.zone === 'sala' ? 'Dining room' : 'Terrace', tableIds: f.ids,
           tableNames: tableNames(f.ids), minutes: covers <= 2 ? 90 : covers <= 4 ? 105 : 120, moves: [] })),
         refusal: fits.length ? undefined : 'full' })
@@ -225,6 +235,13 @@ async function mockRestaurant (page, opts = {}) {
       state.rows.push(row)
       return json(route, 201, wire(row))
     }
+    if (method === 'POST' && path === '/search') {
+      const q = String(body.q || '').toLowerCase()
+      const digits = q.replace(/\D/g, '')
+      const found = state.rows.filter(r => r.source !== 'block' && ((r.name || '').toLowerCase().includes(q) ||
+        (!/[a-z]/.test(q) && digits.length >= 3 && (r.phone || '').includes(digits))))
+      return json(route, 200, { from: addDays(TODAY, -7), to: addDays(TODAY, 60), reservations: found.map(wire), truncated: false })
+    }
     const one = /^\/reservations\/([^/]+)(\/[a-z-]+)?$/.exec(path)
     if (one) {
       const row = state.rows.find(r => r.id === one[1])
@@ -232,7 +249,21 @@ async function mockRestaurant (page, opts = {}) {
       const version = body && body.expectedVersion !== undefined ? body.expectedVersion : Number(url.searchParams.get('expectedVersion'))
       if (version !== row.version) return diag(route, 409, 'stale', { currentVersion: row.version })
       const action = one[2] || ''
-      if (method === 'DELETE') row.status = row.status === 'requested' ? 'handled' : 'cancelled'
+      if (action === '/reinstate') {
+        if (!reinstatable(row)) return diag(route, 409, 'not_reversible', { reason: row.status === 'cancelled' ? 'cancelled_by_caller' : 'not_cancelled_or_no_show' })
+        const conflicts = state.rows.filter(o => o.id !== row.id && o.date === row.date && takes(o) && o.tableIds.some(t => row.tableIds.includes(t)) &&
+          toMin(o.time) < end(row) && end(o) > toMin(row.time))
+        if (conflicts.length && url.searchParams.get('overbook') !== 'true') {
+          return diag(route, 409, 'table_taken', { conflicts: conflicts.map(o => ({ tableId: o.tableIds.find(t => row.tableIds.includes(t)),
+            reservation: o.id, source: o.source, name: o.name, time: o.time, covers: o.covers })), gone: [] })
+        }
+        if (conflicts.length) { row.tableIds = []; row.overbooked = true }
+        row.status = 'confirmed'
+        row.cancelledBy = undefined
+      } else if (method === 'DELETE') {
+        if (row.status === 'requested') row.status = 'handled'
+        else { row.status = 'cancelled'; row.cancelledBy = 'staff' }
+      }
       else if (action === '/state') row.serviceState = body.state
       else if (action === '/pin') row.pinned = body.pinned
       else if (action === '/no-show') row.status = 'no_show'

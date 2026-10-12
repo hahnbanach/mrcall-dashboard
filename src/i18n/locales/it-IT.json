@@ -1135,7 +1135,7 @@
       "searchPlaceholder": "Cerca nome o telefono",
       "searchLabel": "Cerca prenotazione per nome o telefono",
       "searching": "Cerco…",
-      "searchNone": "Nessuna prenotazione trovata nei prossimi {days} giorni.",
+      "searchNone": "Nessuna prenotazione trovata da una settimana fa a sessanta giorni avanti.",
       "export": "Esporta CSV",
       "exportHint": "Scarica in CSV le prenotazioni dei giorni mostrati sopra",
       "exported": "CSV scaricato: {from} - {to}",
@@ -1204,14 +1204,7 @@
       "moveTooFew": "{name} ({party}) non entra: {table} parte da {min} persone.",
       "moveBusy": "{name} non entra: {table} non è libero dalle {from} alle {to}.",
       "confirm": {
-        "cancelTitle": "Annullare la prenotazione?",
-        "cancel": "Annulla prenotazione",
-        "declineTitle": "Rifiutare la richiesta?",
-        "decline": "Rifiuta",
-        "noShowTitle": "Segnare come no-show?",
-        "noShow": "Segna no-show",
-        "keep": "Mantieni",
-        "message": "{who}, {people}, {day} alle {time}. Non si può annullare."
+        "keep": "Mantieni"
       },
       "answer": {
         "full": "A quell'ora non c'è posto.",
@@ -1231,7 +1224,9 @@
         "join_across_zones": "Non si possono unire tavoli di zone diverse.",
         "person_required": "Solo una persona collegata può farlo.",
         "scope_missing": "Questo accesso non lo permette.",
-        "error": "Qualcosa non ha funzionato: riprova."
+        "error": "Qualcosa non ha funzionato: riprova.",
+        "not_reversible": "Questa prenotazione non si può più ripristinare.",
+        "table_taken": "I suoi tavoli sono occupati."
       },
       "strip": {
         "label": "Disponibilità dei prossimi giorni",
@@ -1292,8 +1287,11 @@
         "groups": "1 gruppo da 6+ | {n} gruppi da 6+",
         "title": {
           "allergies": "Con allergie",
-          "groups": "Gruppi da 6 o più"
-        }
+          "groups": "Gruppi da 6 o più",
+          "noshows": "Con no-show passati"
+        },
+        "noshows": "1 con no-show passati | {n} con no-show passati",
+        "pastNoShows": "1 no-show in passato | {n} no-show in passato"
       },
       "toolbar": {
         "time": "Ora",
@@ -1384,8 +1382,11 @@
         "pinHint": "Un tavolo fissato non viene mai spostato dal sistema per fare posto ad altri",
         "noShowAction": "No-show",
         "cancel": "Annulla prenotazione",
-        "undoHint": "Stato, tavolo e fissaggio si annullano dal messaggio in basso.",
-        "assistantSaid": "Al telefono l'assistente ha detto \"un tavolo per {n}\", mai il nome del tavolo."
+        "undoHint": "Ogni azione si può annullare dal messaggio in basso.",
+        "assistantSaid": "Al telefono l'assistente ha detto \"un tavolo per {n}\", mai il nome del tavolo.",
+        "pastNoShows": "1 no-show in passato con questo numero. | {n} no-show in passato con questo numero.",
+        "cancelledByCaller": "Annullata dal cliente al telefono: non si può ripristinare, va prenotata di nuovo.",
+        "reinstate": "Ripristina"
       },
       "newb": {
         "title": "Nuova prenotazione",
@@ -1631,7 +1632,16 @@
       },
       "noSkill": "Questo assistente non prende prenotazioni dei tavoli: aggiunga la funzione di prenotazione tavoli nella configurazione dell'IA per avere qui il registro.",
       "unavailable": "Il registro delle prenotazioni non è ancora disponibile su questo server. Apparirà qui non appena il server sarà aggiornato.",
-      "loadError": "Non è stato possibile leggere le prenotazioni."
+      "loadError": "Non è stato possibile leggere le prenotazioni.",
+      "searchTruncated": "Ci sono altre prenotazioni: scrivi di più del nome o del numero.",
+      "reinstated": "{name}: prenotazione ripristinata",
+      "reinstate": {
+        "takenTitle": "I tavoli di {name} sono occupati",
+        "conflict": "{table}: {name}, {time}, {people}",
+        "gone": "{table} non è più in sala",
+        "withoutTable": "Ripristina senza tavolo",
+        "doneWithoutTable": "{name}: ripristinata, ancora senza tavolo"
+      }
     }
   },
   "views": {

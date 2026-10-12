@@ -1132,7 +1132,7 @@
       "searchPlaceholder": "Søg navn eller telefon",
       "searchLabel": "Søg en reservation på navn eller telefon",
       "searching": "Søger…",
-      "searchNone": "Ingen reservation fundet i de næste {days} dage.",
+      "searchNone": "Ingen reservation fundet, fra en uge tilbage til tres dage frem.",
       "export": "Eksportér CSV",
       "exportHint": "Download reservationerne for dagene ovenfor som CSV",
       "exported": "CSV downloadet: {from} - {to}",
@@ -1201,14 +1201,7 @@
       "moveTooFew": "{name} ({party}) passer ikke: {table} starter fra {min} personer.",
       "moveBusy": "{name} er der ikke plads til: {table} er ikke ledigt fra {from} til {to}.",
       "confirm": {
-        "cancelTitle": "Aflys reservationen?",
-        "cancel": "Aflys reservation",
-        "declineTitle": "Afvis forespørgslen?",
-        "decline": "Afvis",
-        "noShowTitle": "Markér som udeblevet?",
-        "noShow": "Markér som udeblevet",
-        "keep": "Behold den",
-        "message": "{who}, {people}, {day} kl. {time}. Det kan ikke fortrydes."
+        "keep": "Behold den"
       },
       "answer": {
         "full": "Der er ikke plads på det tidspunkt.",
@@ -1228,7 +1221,9 @@
         "join_across_zones": "Borde i forskellige områder kan ikke lægges sammen.",
         "person_required": "Kun en person, der er logget ind, kan gøre dette.",
         "scope_missing": "Denne adgang tillader det ikke.",
-        "error": "Noget gik galt: prøv igen."
+        "error": "Noget gik galt: prøv igen.",
+        "not_reversible": "Denne reservation kan ikke længere gendannes.",
+        "table_taken": "Dens borde er optaget."
       },
       "strip": {
         "label": "Ledighed de kommende dage",
@@ -1289,8 +1284,11 @@
         "groups": "1 selskab på 6+ | {n} selskaber på 6+",
         "title": {
           "allergies": "Med allergier",
-          "groups": "Selskaber på 6 eller flere"
-        }
+          "groups": "Selskaber på 6 eller flere",
+          "noshows": "Med tidligere udeblivelser"
+        },
+        "noshows": "1 med tidligere udeblivelser | {n} med tidligere udeblivelser",
+        "pastNoShows": "1 tidligere udeblivelse | {n} tidligere udeblivelser"
       },
       "toolbar": {
         "time": "Tidspunkt",
@@ -1381,8 +1379,11 @@
         "pinHint": "Et låst bord flyttes aldrig af systemet for at gøre plads til andre",
         "noShowAction": "Udeblevet",
         "cancel": "Aflys reservation",
-        "undoHint": "Ændringer af status, bord og låsning kan fortrydes fra beskeden nederst.",
-        "assistantSaid": "I telefonen sagde assistenten \"et bord til {n}\", aldrig bordets navn."
+        "undoHint": "Hver ændring kan fortrydes fra beskeden nederst.",
+        "assistantSaid": "I telefonen sagde assistenten \"et bord til {n}\", aldrig bordets navn.",
+        "pastNoShows": "1 tidligere udeblivelse med dette nummer. | {n} tidligere udeblivelser med dette nummer.",
+        "cancelledByCaller": "Aflyst af gæsten i telefonen: den kan ikke gendannes, book igen.",
+        "reinstate": "Gendan"
       },
       "newb": {
         "title": "Ny reservation",
@@ -1625,6 +1626,15 @@
         "done": "Færdig: åbn aftenen",
         "refused": "Serveren afviste salen: kontrollér områderne og bordene.",
         "ready": "Salen er klar: 1 bord. Assistenten reserverer fra nu af. | Salen er klar: {n} borde. Assistenten reserverer fra nu af."
+      },
+      "searchTruncated": "Der er flere reservationer: skriv mere af navnet eller nummeret.",
+      "reinstated": "{name}: reservationen er gendannet",
+      "reinstate": {
+        "takenTitle": "Bordene til {name} er optaget",
+        "conflict": "{table}: {name}, {time}, {people}",
+        "gone": "{table} er ikke længere i salen",
+        "withoutTable": "Gendan uden bord",
+        "doneWithoutTable": "{name}: gendannet, endnu uden bord"
       }
     }
   },

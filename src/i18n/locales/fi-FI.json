@@ -1132,7 +1132,7 @@
       "searchPlaceholder": "Hae nimellä tai puhelinnumerolla",
       "searchLabel": "Hae varausta nimellä tai puhelinnumerolla",
       "searching": "Haetaan…",
-      "searchNone": "Varausta ei löytynyt seuraavan {days} päivän ajalta.",
+      "searchNone": "Varausta ei löytynyt viikon takaa kuudenkymmenen päivän päähän.",
       "export": "Vie CSV",
       "exportHint": "Lataa yllä näkyvien päivien varaukset CSV-tiedostona",
       "exported": "CSV ladattu: {from} - {to}",
@@ -1201,14 +1201,7 @@
       "moveTooFew": "{name} ({party}) ei sovi: pöytä {table} alkaa {min} hengestä.",
       "moveBusy": "{name} ei mahdu: pöytä {table} ei ole vapaa klo {from}-{to}.",
       "confirm": {
-        "cancelTitle": "Perutaanko varaus?",
-        "cancel": "Peru varaus",
-        "declineTitle": "Hylätäänkö pyyntö?",
-        "decline": "Hylkää",
-        "noShowTitle": "Merkitäänkö ei-saapuneeksi?",
-        "noShow": "Merkitse ei-saapuneeksi",
-        "keep": "Säilytä",
-        "message": "{who}, {people}, {day} klo {time}. Tätä ei voi kumota."
+        "keep": "Säilytä"
       },
       "answer": {
         "full": "Siihen aikaan ei ole tilaa.",
@@ -1228,7 +1221,9 @@
         "join_across_zones": "Eri alueiden pöytiä ei voi yhdistää.",
         "person_required": "Vain kirjautunut henkilö voi tehdä tämän.",
         "scope_missing": "Tämä käyttöoikeus ei salli sitä.",
-        "error": "Jokin meni pieleen: yritä uudelleen."
+        "error": "Jokin meni pieleen: yritä uudelleen.",
+        "not_reversible": "Tätä varausta ei voi enää palauttaa.",
+        "table_taken": "Sen pöydät ovat varattuja."
       },
       "strip": {
         "label": "Tulevien päivien saatavuus",
@@ -1289,8 +1284,11 @@
         "groups": "1 seurue, 6+ henkeä | {n} seuruetta, 6+ henkeä",
         "title": {
           "allergies": "Allergiat",
-          "groups": "Vähintään 6 hengen seurueet"
-        }
+          "groups": "Vähintään 6 hengen seurueet",
+          "noshows": "Aiemmin saapumatta jättäneet"
+        },
+        "noshows": "1 aiemmin saapumatta jättänyt | {n} aiemmin saapumatta jättänyttä",
+        "pastNoShows": "1 aiempi saapumatta jääminen | {n} aiempaa saapumatta jäämistä"
       },
       "toolbar": {
         "time": "Aika",
@@ -1381,8 +1379,11 @@
         "pinHint": "Järjestelmä ei koskaan siirrä lukittua pöytää tehdäkseen tilaa muille",
         "noShowAction": "Ei saapunut",
         "cancel": "Peru varaus",
-        "undoHint": "Tilan, pöydän ja lukituksen muutokset voi kumota alareunan viestistä.",
-        "assistantSaid": "Puhelimessa avustaja sanoi \"pöytä {n} hengelle\", ei koskaan pöydän nimeä."
+        "undoHint": "Jokaisen muutoksen voi kumota alareunan viestistä.",
+        "assistantSaid": "Puhelimessa avustaja sanoi \"pöytä {n} hengelle\", ei koskaan pöydän nimeä.",
+        "pastNoShows": "1 aiempi saapumatta jääminen tällä numerolla. | {n} aiempaa saapumatta jäämistä tällä numerolla.",
+        "cancelledByCaller": "Asiakas perui puhelimessa: sitä ei voi palauttaa, tee uusi varaus.",
+        "reinstate": "Palauta"
       },
       "newb": {
         "title": "Uusi varaus",
@@ -1625,6 +1626,15 @@
         "done": "Valmis: avaa ilta",
         "refused": "Palvelin hylkäsi salin: tarkista alueet ja pöydät.",
         "ready": "Sali valmis: 1 pöytä. Avustaja ottaa varauksia tästä lähtien. | Sali valmis: {n} pöytää. Avustaja ottaa varauksia tästä lähtien."
+      },
+      "searchTruncated": "Lisää varauksia täsmää: kirjoita enemmän nimeä tai numeroa.",
+      "reinstated": "{name}: varaus palautettu",
+      "reinstate": {
+        "takenTitle": "Varauksen {name} pöydät ovat varattuja",
+        "conflict": "{table}: {name}, klo {time}, {people}",
+        "gone": "{table} ei ole enää salissa",
+        "withoutTable": "Palauta ilman pöytää",
+        "doneWithoutTable": "{name}: palautettu, ei vielä pöytää"
       }
     }
   },

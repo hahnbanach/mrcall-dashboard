@@ -26,10 +26,11 @@
                 <button v-for="r in searchResults" :key="r.b.id" class="sr-item" role="option" @click="openFound(r)">
                   <b>{{ r.b.name }}</b> · {{ $t("components.restaurant.peopleShort", { n: r.b.party }) }}<template v-if="r.b.phone"> · {{ r.b.phone }}</template><br>
                   <small>{{ shortDate(r.date) }} · {{ $t(`components.restaurant.service.${r.b.service}`) }} {{ fmt(r.b.start) }} · {{ seatLabelOf(r.b) }}
-                    <template v-if="r.b.state === 'cancelled'"> · {{ $t("components.restaurant.state.cancelled") }}</template></small>
+                    <template v-if="r.b.state === 'cancelled' || r.b.state === 'noshow'"> · {{ $t(`components.restaurant.state.${r.b.state}`) }}</template></small>
                 </button>
+                <div v-if="searchTruncated" class="sr-empty">{{ $t("components.restaurant.searchTruncated") }}</div>
                 <div v-if="!searchResults.length" class="sr-empty">
-                  {{ searching ? $t("components.restaurant.searching") : $t("components.restaurant.searchNone", { days: SEARCH_DAYS }) }}
+                  {{ searching ? $t("components.restaurant.searching") : $t("components.restaurant.searchNone") }}
                 </div>
               </div>
             </div>
@@ -59,7 +60,7 @@
       <div class="scrim" @click="closePanel"></div>
       <aside class="panel" :aria-label="$t('components.restaurant.panelLabel')" @keydown.esc="closePanel">
         <RestaurantBookingPanel v-if="panel.type === 'booking' && panelBooking" :booking="panelBooking" :layout="layout" :date="date"
-                                :busy="busy" @close="closePanel" @state="setState" @pin="togglePin" @no-show="noShow" @cancel="cancel"
+                                :busy="busy" @close="closePanel" @state="setState" @pin="togglePin" @no-show="noShow" @cancel="cancel" @reinstate="reinstate"
                                 @move="startMove" @call="openCalls" />
         <RestaurantNewPanel v-else-if="panel.type === 'new'" :key="panel.key" :draft="panel" :message="panel.message" :layout="layout"
                             :date="date" :service="service" :win="win" :rules="rules" :list="list" :is-today="date === today" :busy="busy"
@@ -81,11 +82,12 @@
 <script>
 import { useConfirm } from "primevue/useconfirm";
 import RestaurantApi, { isMissingRoute } from "@/utils/Restaurant";
+import DeferredCommit from "@/utils/DeferredCommit";
 import {
   rulesOf, serviceWindow, serviceAt, defaultTime, arrivalTimes, keyOf, addDays, dateOf, fmt, toMin, minuteOfDay,
-  stripStatus, seatLabel, dropTargets, tableById, freeFrom, matches, live, occupiedTables, callsOf, SERVICES
+  stripStatus, seatLabel, dropTargets, tableById, freeFrom, live, occupiedTables, callsOf, SERVICES
 } from "@/utils/RestaurantModel";
-import { longDate, shortDate, monthTitle, refusalKey, OVERRIDABLE } from "@/components/widgets/restaurant/format";
+import { shortDate, monthTitle, refusalKey, OVERRIDABLE } from "@/components/widgets/restaurant/format";
 import RestaurantStrip from "@/components/widgets/restaurant/RestaurantStrip.vue";
 import RestaurantDayView from "@/components/widgets/restaurant/RestaurantDayView.vue";
 import RestaurantBookingPanel from "@/components/widgets/restaurant/RestaurantBookingPanel.vue";
@@ -94,11 +96,11 @@ import RestaurantRoomEditor from "@/components/widgets/restaurant/RestaurantRoom
 import RestaurantWizard from "@/components/widgets/restaurant/RestaurantWizard.vue";
 import RestaurantCallModal from "@/components/widgets/restaurant/RestaurantCallModal.vue";
 
-/** When nothing fits, how many of the next arrival times the finder asks about. */
-const LATER_ASKED = 16;
+/** How long an Undo is offered, and a held decline waits before it is sent. */
+const UNDO_MS = 8000;
 
-/** The days the search reads ahead, from today: the period strip's. */
-const SEARCH_DAYS = 14;
+/** The most rows one search shows. */
+const SEARCH_LIMIT = 20;
 
 /**
  * "Prenotazioni Ristorante": the service-time page of a restaurant whose assistant books its tables.
@@ -127,7 +129,6 @@ export default {
   data() {
     const today = keyOf(new Date());
     return {
-      SEARCH_DAYS,
       today,
       ready: false,
       unavailable: false,
@@ -154,7 +155,9 @@ export default {
       calls: { visible: false, ids: [], title: "" },
       toast: null,
       lastRefusal: null,
-      searchLoaded: false,
+      declining: {},
+      searchResults: [],
+      searchTruncated: false,
     };
   },
   computed: {
@@ -169,8 +172,9 @@ export default {
       const any = this.day || Object.values(this.days)[0];
       return any ? any.layout : null;
     },
+    /** The day's rows, without the requests whose decline is held back for its Undo. */
     list() {
-      return this.day ? this.day.reservations : [];
+      return this.day ? this.day.reservations.filter(r => !this.declining[r.id]) : [];
     },
     win() {
       return serviceWindow(this.rules, this.date, this.service);
@@ -209,21 +213,24 @@ export default {
         });
         return { key, sel: key === this.date, today: key === this.today, services };
       }));
-    },
-    searchResults() {
-      const q = this.search;
-      if (q.trim().length < 2) return [];
-      const out = [];
-      Object.keys(this.days).sort().forEach(date => (this.days[date].reservations || []).forEach(b => {
-        if (b.state !== "block" && b.source !== "walk_in" && matches(b, q)) out.push({ date, b });
-      }));
-      return out.filter(r => r.date >= this.today).concat(out.filter(r => r.date < this.today).reverse()).slice(0, 10);
-    },
+    }
   },
   watch: {
     date() {
       this.moving = null;
     },
+  },
+  created() {
+    this.commits = new DeferredCommit({ onSettled: (id, error) => this.declineSettled(id, error) });
+    this.flushCommits = () => this.commits.flush();
+    window.addEventListener("pagehide", this.flushCommits);
+  },
+  /** Leaving the page (another section, another route) sends the held declines now. */
+  beforeUnmount() {
+    window.removeEventListener("pagehide", this.flushCommits);
+    this.unmounted = true;
+    this.commits.flush();
+    clearTimeout(this.toastTimer);
   },
   async mounted() {
     try {
@@ -358,21 +365,13 @@ export default {
       if (this.date !== asked.date || this.time !== asked.time || this.find !== asked.party) return;
       this.findAnswer = { ...asked, ...answer };
     },
-    /**
-     * Where a party sits at a time, asked of the server's finder (GET /suggestions, the assistant's decision).
-     * When nothing fits, the next arrival times of the service are asked too, the same way, until four fit:
-     * the finder answers one time per request and says nothing about later ones.
-     */
+    /** Where a party sits at a time, asked of the server's finder (GET /suggestions, the assistant's decision),
+     *  and, when nothing fits, the next times of the service at which it would. */
     async askWhere(date, time, party) {
       try {
-        const now = await RestaurantApi.suggestions(this.user, this.businessId, date, fmt(time), party);
-        const fits = now.fits.map(f => ({ ...f, joined: f.ids.length > 1, label: seatLabel(this.layout, f.ids) }));
-        if (fits.length) return { fits, refusal: null, later: [] };
-        const win = serviceWindow(this.rules, date, this.service);
-        const next = arrivalTimes(win).filter(t => t > time).slice(0, LATER_ASKED);
-        const answers = await Promise.all(next.map(t => RestaurantApi.suggestions(this.user, this.businessId, date, fmt(t), party)
-          .then(a => (a.fits.length ? t : null), () => null)));
-        return { fits, refusal: now.refusal, later: answers.filter(t => t !== null).slice(0, 4) };
+        const answer = await RestaurantApi.suggestions(this.user, this.businessId, date, fmt(time), party);
+        const fits = answer.fits.map(f => ({ ...f, joined: f.ids.length > 1, label: seatLabel(this.layout, f.ids) }));
+        return { fits, refusal: answer.refusal, later: fits.length ? [] : answer.later };
       } catch (e) {
         console.warn("Restaurant finder not answered:", e.restaurant ? e.restaurant.code || e.restaurant.status : e);
         return { error: true };
@@ -449,6 +448,10 @@ export default {
         const code = e.restaurant ? e.restaurant.code : null;
         this.lastRefusal = this.refusalOf(e);
         if (code === "stale") await this.reload();
+        if (code === "table_taken" && e.reinstating) {
+          this.askReinstateWithoutTable(e.reinstating, e.restaurant.body || {});
+          return null;
+        }
         if (!e.restaurant || e.restaurant.status >= 500 || !e.restaurant.status) {
           console.error("Restaurant change failed:", e.restaurant ? e.restaurant.status : e);
         }
@@ -470,16 +473,18 @@ export default {
         alternatives: (body.alternatives || []).filter(a => a.date === this.date).map(a => toMin(a.time)).filter(t => t !== null),
       };
     },
-    showToast(text, undo = null, error = false) {
+    /** A toast; with `undo` (a request to the server) or `localUndo` (a held write dropped) it offers Undo. */
+    showToast(text, undo = null, error = false, localUndo = null) {
       clearTimeout(this.toastTimer);
-      this.toast = { text, undo, error };
-      this.toastTimer = setTimeout(() => { this.toast = null; }, undo ? 8000 : 5000);
+      this.toast = { text, undo: undo || localUndo, server: !!undo, error };
+      this.toastTimer = setTimeout(() => { this.toast = null; }, this.toast.undo ? UNDO_MS : 5000);
     },
     async undo() {
-      const run = this.toast && this.toast.undo;
-      if (!run) return;
+      const toast = this.toast;
+      if (!toast || !toast.undo) return;
       this.toast = null;
-      await this.act(run, { done: () => this.$t("components.restaurant.undone") });
+      if (!toast.server) return toast.undo();
+      await this.act(toast.undo, { done: () => this.$t("components.restaurant.undone") });
     },
     stateWord(st) {
       return this.$t(`components.restaurant.stateDone.${st}`);
@@ -499,37 +504,86 @@ export default {
         undo: answer => RestaurantApi.pin(this.user, this.businessId, b.id, answer.version, b.pinned),
       });
     },
-    /** Cancelling and marking a no-show cannot be undone on the server, so each is confirmed first, naming
-     *  the party, with "Keep it" focused. */
-    askIrreversible(kind, b, run) {
-      this.confirm.require({
-        header: this.$t(`components.restaurant.confirm.${kind}Title`),
-        message: this.$t("components.restaurant.confirm.message", {
-          who: b.name || this.$t("components.restaurant.walkInName"), day: longDate(this.date, this.$i18n.locale).toLowerCase(),
-          time: fmt(b.start), people: this.$t("components.restaurant.people", { n: b.party }) }),
-        icon: "pi pi-exclamation-triangle",
-        acceptLabel: this.$t(`components.restaurant.confirm.${kind}`),
-        rejectLabel: this.$t("components.restaurant.confirm.keep"),
-        acceptClass: "p-button-danger",
-        defaultFocus: "reject",
-        accept: run,
-      });
-    },
-    cancel(b) {
-      this.askIrreversible(b.state === "requested" ? "decline" : "cancel", b, async () => {
-        const ok = await this.act(() => RestaurantApi.cancel(this.user, this.businessId, b.id, b.version), {
-          done: () => this.$t(b.state === "requested" ? "components.restaurant.declined" : "components.restaurant.cancelled", { name: b.name }),
-        });
-        if (ok) this.panel = null;
-      });
-    },
+    /**
+     * Declining a request has no server reverse, and will not get one: a declined request is never revived into
+     * a booking. So the decline is held back: the request leaves the list at once and the toast offers Undo, and
+     * the DELETE is sent only when the toast's time is up, or at once when the page is left (`DeferredCommit`).
+     * Undo inside the window sends nothing.
+     */
     decline(b) {
-      this.cancel(b);
+      this.declining = Object.assign({}, this.declining, { [b.id]: true });
+      if (this.panel && this.panel.id === b.id) this.panel = null;
+      this.commits.schedule(b.id, () => RestaurantApi.cancel(this.user, this.businessId, b.id, b.version), UNDO_MS);
+      this.showToast(this.$t("components.restaurant.declined", { name: b.name }), null, false, () => {
+        if (this.commits.cancel(b.id)) this.forgetDecline(b.id);
+        this.showToast(this.$t("components.restaurant.undone"));
+      });
+    },
+    forgetDecline(id) {
+      const next = Object.assign({}, this.declining);
+      delete next[id];
+      this.declining = next;
+    },
+    /** A held decline was sent: the day is read again; refused, the request comes back and the refusal is said. */
+    async declineSettled(id, error) {
+      if (error) {
+        console.warn("Restaurant decline refused:", error.restaurant ? error.restaurant.code || error.restaurant.status : error);
+        if (!this.unmounted) this.showToast(this.$t(refusalKey(error.restaurant ? error.restaurant.code : null)), null, true);
+      }
+      if (this.unmounted) return;
+      await this.reload();
+      this.forgetDecline(id);
+    },
+    /** A cancellation by staff and a no-show are one tap each: the server can take both back
+     *  (POST .../reinstate), so they get Undo like every other change instead of a confirmation. */
+    async cancel(b) {
+      if (b.state === "requested") return this.decline(b);
+      const ok = await this.act(() => RestaurantApi.cancel(this.user, this.businessId, b.id, b.version), {
+        done: () => this.$t("components.restaurant.cancelled", { name: b.name }),
+        undo: answer => this.reinstateRun(b, answer.version),
+      });
+      if (ok) this.panel = null;
     },
     noShow(b) {
-      this.askIrreversible("noShow", b, () => this.act(() => RestaurantApi.noShow(this.user, this.businessId, b.id, b.version), {
+      return this.act(() => RestaurantApi.noShow(this.user, this.businessId, b.id, b.version), {
         done: () => this.$t("components.restaurant.noShowDone", { name: b.name }),
-      }));
+        undo: answer => this.reinstateRun(b, answer.version),
+      });
+    },
+    /** The request that takes a cancellation or a no-show back; a refusal for taken tables carries the booking,
+     *  so `act` can offer to reinstate it without a table. */
+    async reinstateRun(b, version, overbook = false) {
+      try {
+        return await RestaurantApi.reinstate(this.user, this.businessId, b.id, version, overbook);
+      } catch (e) {
+        e.reinstating = Object.assign({}, b, { version });
+        throw e;
+      }
+    },
+    /** "Ripristina" on a cancelled or no-show booking, the same as its Undo. */
+    reinstate(b) {
+      return this.act(() => this.reinstateRun(b, b.version), {
+        done: () => this.$t("components.restaurant.reinstated", { name: b.name }),
+      });
+    },
+    /** Its tables are taken (or gone from the room): who holds each is said by name, and reinstating it with no
+     *  table yet is offered explicitly, never done silently. */
+    askReinstateWithoutTable(b, body) {
+      const tableName = id => { const t = tableById(this.layout, id); return t ? t.name : String(id); };
+      const lines = (body.conflicts || []).map(c => this.$t("components.restaurant.reinstate.conflict", {
+        table: tableName(c.tableId), name: c.source === "block" ? this.$t("components.restaurant.floor.blocked") : c.name || this.$t("components.restaurant.walkInName"),
+        time: c.time, people: this.$t("components.restaurant.people", { n: c.covers }) }))
+        .concat((body.gone || []).map(id => this.$t("components.restaurant.reinstate.gone", { table: tableName(id) })));
+      this.confirm.require({
+        header: this.$t("components.restaurant.reinstate.takenTitle", { name: b.name || this.$t("components.restaurant.walkInName") }),
+        message: lines.join("; "),
+        acceptLabel: this.$t("components.restaurant.reinstate.withoutTable"),
+        rejectLabel: this.$t("components.restaurant.confirm.keep"),
+        defaultFocus: "reject",
+        accept: () => this.act(() => this.reinstateRun(b, b.version, true), {
+          done: () => this.$t("components.restaurant.reinstate.doneWithoutTable", { name: b.name }),
+        }),
+      });
     },
     /** Accepts a request: the server seats it. Refused for room, a person may accept it anyway, beyond what
      *  the assistant sells, after saying so. */
@@ -650,16 +704,26 @@ export default {
 
     // ------------------------------------------------------------ search and export
 
-    async onSearch() {
-      if (this.search.trim().length < 2 || this.searchLoaded) return;
-      this.searchLoaded = true;
+    /** The server's search (POST /search: a part of the name or the number, from a week ago to sixty days
+     *  ahead), asked once the typing pauses. */
+    onSearch() {
+      clearTimeout(this.searchTimer);
+      const q = this.search.trim();
+      if (q.length < 2) { this.searchResults = []; return; }
       this.searching = true;
-      const missing = Array.from({ length: SEARCH_DAYS }, (_, i) => addDays(this.today, i)).filter(d => !this.days[d]);
-      try {
-        await Promise.all(missing.map(d => this.loadDay(d)));
-      } finally {
-        this.searching = false;
-      }
+      this.searchTimer = setTimeout(async () => {
+        try {
+          const found = await RestaurantApi.search(this.user, this.businessId, q.slice(0, 64), SEARCH_LIMIT);
+          if (this.search.trim() !== q) return;
+          this.searchResults = found.results.filter(r => r.b.state !== "block");
+          this.searchTruncated = found.truncated;
+        } catch (e) {
+          console.warn("Restaurant search not answered:", e.restaurant ? e.restaurant.code || e.restaurant.status : e);
+          this.searchResults = [];
+        } finally {
+          if (this.search.trim() === q) this.searching = false;
+        }
+      }, 300);
     },
     async openFound(r) {
       this.search = "";

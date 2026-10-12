@@ -10,10 +10,14 @@
     <div class="when">{{ longDate }} · {{ fmt(booking.start) }}
       <small>{{ $t(`components.restaurant.service.${booking.service}`) }} · {{ $t("components.restaurant.people", { n: booking.party }) }} · {{ $t("components.restaurant.until", { time: fmt(booking.end) }) }}</small>
     </div>
-    <div v-if="closed" class="callout red">{{ $t(booking.state === 'cancelled' ? 'components.restaurant.panel.cancelled' : 'components.restaurant.panel.noShow') }}</div>
+    <div v-if="closed" class="callout red">
+      {{ $t(booking.state === 'noshow' ? 'components.restaurant.panel.noShow' : booking.cancelledBy === 'caller' ? 'components.restaurant.panel.cancelledByCaller' : 'components.restaurant.panel.cancelled') }}
+      <button v-if="booking.reinstatable" class="btn ghost small reinstate" :disabled="busy" @click="$emit('reinstate', booking)">{{ $t("components.restaurant.panel.reinstate") }}</button>
+    </div>
     <div v-if="booking.state === 'requested'" class="callout amber">{{ $t("components.restaurant.panel.request") }}<template v-if="booking.requestReason">: {{ $t(`components.restaurant.reason.${booking.requestReason}`) }}</template></div>
     <div v-if="booking.allergies" class="callout red"><b>{{ $t("components.restaurant.allergies") }}:</b> {{ booking.allergies }}</div>
     <div v-if="booking.notes" class="callout amber">{{ booking.notes }}</div>
+    <div v-if="booking.pastNoShows" class="callout amber">{{ $t("components.restaurant.panel.pastNoShows", { n: booking.pastNoShows }, booking.pastNoShows) }}</div>
     <div v-if="booking.overbooked" class="callout amber">{{ $t("components.restaurant.panel.overbooked") }}</div>
     <dl class="kv">
       <dt>{{ $t("components.restaurant.panel.table") }}</dt>
@@ -58,7 +62,7 @@ export default {
     date: { type: String, required: true },
     busy: { type: Boolean, default: false },
   },
-  emits: ["close", "state", "pin", "no-show", "cancel", "move", "call"],
+  emits: ["close", "state", "pin", "no-show", "cancel", "move", "call", "reinstate"],
   computed: {
     closed() {
       return this.booking.state === "cancelled" || this.booking.state === "noshow";

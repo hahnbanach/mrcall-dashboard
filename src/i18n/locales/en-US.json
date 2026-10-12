@@ -1137,7 +1137,7 @@
       "searchPlaceholder": "Search name or phone",
       "searchLabel": "Search a booking by name or phone",
       "searching": "Searching…",
-      "searchNone": "No booking found in the next {days} days.",
+      "searchNone": "No booking found from a week ago to sixty days ahead.",
       "export": "Export CSV",
       "exportHint": "Download the bookings of the days shown above as CSV",
       "exported": "CSV downloaded: {from} - {to}",
@@ -1206,14 +1206,7 @@
       "moveTooFew": "{name} ({party}) does not fit: {table} starts from {min} people.",
       "moveBusy": "{name} does not fit: {table} is not free from {from} to {to}.",
       "confirm": {
-        "cancelTitle": "Cancel the booking?",
-        "cancel": "Cancel booking",
-        "declineTitle": "Decline the request?",
-        "decline": "Decline",
-        "noShowTitle": "Mark as no-show?",
-        "noShow": "Mark as no-show",
-        "keep": "Keep it",
-        "message": "{who}, {people}, {day} at {time}. This cannot be undone."
+        "keep": "Keep it"
       },
       "answer": {
         "full": "There is no room at that time.",
@@ -1233,7 +1226,9 @@
         "join_across_zones": "Tables of different areas cannot be joined.",
         "person_required": "Only a signed-in person can do this.",
         "scope_missing": "This access does not allow it.",
-        "error": "Something went wrong: try again."
+        "error": "Something went wrong: try again.",
+        "not_reversible": "This booking can no longer be reinstated.",
+        "table_taken": "Its tables are taken."
       },
       "strip": {
         "label": "Availability of the coming days",
@@ -1294,8 +1289,11 @@
         "groups": "1 party of 6+ | {n} parties of 6+",
         "title": {
           "allergies": "With allergies",
-          "groups": "Parties of 6 or more"
-        }
+          "groups": "Parties of 6 or more",
+          "noshows": "With past no-shows"
+        },
+        "noshows": "1 with past no-shows | {n} with past no-shows",
+        "pastNoShows": "1 past no-show | {n} past no-shows"
       },
       "toolbar": {
         "time": "Time",
@@ -1386,8 +1384,11 @@
         "pinHint": "A pinned table is never moved by the system to make room for others",
         "noShowAction": "No-show",
         "cancel": "Cancel booking",
-        "undoHint": "Changes of state, table and pin can be undone from the message at the bottom.",
-        "assistantSaid": "On the phone the assistant said \"a table for {n}\", never the table's name."
+        "undoHint": "Every change can be undone from the message at the bottom.",
+        "assistantSaid": "On the phone the assistant said \"a table for {n}\", never the table's name.",
+        "pastNoShows": "1 past no-show with this number. | {n} past no-shows with this number.",
+        "cancelledByCaller": "Cancelled by the guest on the phone: it cannot be reinstated, book them again.",
+        "reinstate": "Reinstate"
       },
       "newb": {
         "title": "New booking",
@@ -1630,6 +1631,15 @@
         "done": "Done: open the evening",
         "refused": "The server refused the room: check the areas and the tables.",
         "ready": "Room ready: 1 table. The assistant books from now on. | Room ready: {n} tables. The assistant books from now on."
+      },
+      "searchTruncated": "More bookings match: type more of the name or the number.",
+      "reinstated": "{name}: booking reinstated",
+      "reinstate": {
+        "takenTitle": "The tables of {name} are taken",
+        "conflict": "{table}: {name}, {time}, {people}",
+        "gone": "{table} is no longer in the room",
+        "withoutTable": "Reinstate without a table",
+        "doneWithoutTable": "{name}: reinstated with no table yet"
       }
     }
   },

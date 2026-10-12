@@ -1134,7 +1134,7 @@
       "searchPlaceholder": "Name oder Telefon suchen",
       "searchLabel": "Reservierung nach Name oder Telefon suchen",
       "searching": "Suche läuft…",
-      "searchNone": "Keine Reservierung in den nächsten {days} Tagen gefunden.",
+      "searchNone": "Keine Reservierung gefunden, von vor einer Woche bis sechzig Tage voraus.",
       "export": "CSV exportieren",
       "exportHint": "Die Reservierungen der oben angezeigten Tage als CSV herunterladen",
       "exported": "CSV heruntergeladen: {from} - {to}",
@@ -1203,14 +1203,7 @@
       "moveTooFew": "{name} ({party}) passt nicht: {table} beginnt ab {min} Personen.",
       "moveBusy": "{name} passt nicht: {table} ist von {from} bis {to} nicht frei.",
       "confirm": {
-        "cancelTitle": "Reservierung stornieren?",
-        "cancel": "Reservierung stornieren",
-        "declineTitle": "Anfrage ablehnen?",
-        "decline": "Ablehnen",
-        "noShowTitle": "Als No-Show markieren?",
-        "noShow": "Als No-Show markieren",
-        "keep": "Beibehalten",
-        "message": "{who}, {people}, {day} um {time}. Das kann nicht rückgängig gemacht werden."
+        "keep": "Beibehalten"
       },
       "answer": {
         "full": "Zu dieser Zeit ist kein Platz frei.",
@@ -1230,7 +1223,9 @@
         "join_across_zones": "Tische verschiedener Bereiche können nicht verbunden werden.",
         "person_required": "Das kann nur eine angemeldete Person tun.",
         "scope_missing": "Dieser Zugang erlaubt das nicht.",
-        "error": "Etwas ist schiefgegangen: bitte noch einmal versuchen."
+        "error": "Etwas ist schiefgegangen: bitte noch einmal versuchen.",
+        "not_reversible": "Diese Reservierung kann nicht mehr wiederhergestellt werden.",
+        "table_taken": "Die Tische dieser Reservierung sind belegt."
       },
       "strip": {
         "label": "Verfügbarkeit der kommenden Tage",
@@ -1291,8 +1286,11 @@
         "groups": "1 Gruppe ab 6 | {n} Gruppen ab 6",
         "title": {
           "allergies": "Mit Allergien",
-          "groups": "Gruppen ab 6 Personen"
-        }
+          "groups": "Gruppen ab 6 Personen",
+          "noshows": "Mit früheren No-Shows"
+        },
+        "noshows": "1 mit früheren No-Shows | {n} mit früheren No-Shows",
+        "pastNoShows": "1 früherer No-Show | {n} frühere No-Shows"
       },
       "toolbar": {
         "time": "Uhrzeit",
@@ -1383,8 +1381,11 @@
         "pinHint": "Ein fixierter Tisch wird vom System nie verschoben, um Platz für andere zu schaffen",
         "noShowAction": "No-Show",
         "cancel": "Reservierung stornieren",
-        "undoHint": "Änderungen von Status, Tisch und Fixierung lassen sich über die Meldung unten rückgängig machen.",
-        "assistantSaid": "Am Telefon hat der Assistent „ein Tisch für {n}“ gesagt, nie den Namen des Tisches."
+        "undoHint": "Jede Änderung lässt sich über die Meldung unten rückgängig machen.",
+        "assistantSaid": "Am Telefon hat der Assistent „ein Tisch für {n}“ gesagt, nie den Namen des Tisches.",
+        "pastNoShows": "1 früherer No-Show mit dieser Nummer. | {n} frühere No-Shows mit dieser Nummer.",
+        "cancelledByCaller": "Vom Gast am Telefon storniert: Sie kann nicht wiederhergestellt werden, bitte neu reservieren.",
+        "reinstate": "Wiederherstellen"
       },
       "newb": {
         "title": "Neue Reservierung",
@@ -1627,6 +1628,15 @@
         "done": "Fertig: den Abend öffnen",
         "refused": "Der Server hat den Raum abgelehnt: Bereiche und Tische prüfen.",
         "ready": "Raum bereit: 1 Tisch. Der Assistent reserviert ab sofort. | Raum bereit: {n} Tische. Der Assistent reserviert ab sofort."
+      },
+      "searchTruncated": "Es passen weitere Reservierungen: mehr vom Namen oder von der Nummer eingeben.",
+      "reinstated": "{name}: Reservierung wiederhergestellt",
+      "reinstate": {
+        "takenTitle": "Die Tische von {name} sind belegt",
+        "conflict": "{table}: {name}, {time}, {people}",
+        "gone": "{table} ist nicht mehr im Raum",
+        "withoutTable": "Ohne Tisch wiederherstellen",
+        "doneWithoutTable": "{name}: wiederhergestellt, noch ohne Tisch"
       }
     }
   },

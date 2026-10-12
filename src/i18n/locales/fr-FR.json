@@ -1134,7 +1134,7 @@
       "searchPlaceholder": "Rechercher un nom ou un téléphone",
       "searchLabel": "Rechercher une réservation par nom ou téléphone",
       "searching": "Recherche en cours…",
-      "searchNone": "Aucune réservation trouvée dans les {days} prochains jours.",
+      "searchNone": "Aucune réservation trouvée, de il y a une semaine à soixante jours à venir.",
       "export": "Exporter en CSV",
       "exportHint": "Télécharger en CSV les réservations des jours affichés ci-dessus",
       "exported": "CSV téléchargé : {from} - {to}",
@@ -1203,14 +1203,7 @@
       "moveTooFew": "{name} ({party}) ne tient pas : {table} commence à {min} personnes.",
       "moveBusy": "{name} ne tient pas : {table} n'est pas libre de {from} à {to}.",
       "confirm": {
-        "cancelTitle": "Annuler la réservation ?",
-        "cancel": "Annuler la réservation",
-        "declineTitle": "Refuser la demande ?",
-        "decline": "Refuser",
-        "noShowTitle": "Marquer comme no-show ?",
-        "noShow": "Marquer comme no-show",
-        "keep": "Conserver",
-        "message": "{who}, {people}, {day} à {time}. Cette action est irréversible."
+        "keep": "Conserver"
       },
       "answer": {
         "full": "Il n'y a plus de place à cette heure-là.",
@@ -1230,7 +1223,9 @@
         "join_across_zones": "Les tables de zones différentes ne peuvent pas être jointes.",
         "person_required": "Seule une personne connectée peut le faire.",
         "scope_missing": "Cet accès ne le permet pas.",
-        "error": "Une erreur s'est produite : réessayez."
+        "error": "Une erreur s'est produite : réessayez.",
+        "not_reversible": "Cette réservation ne peut plus être rétablie.",
+        "table_taken": "Ses tables sont occupées."
       },
       "strip": {
         "label": "Disponibilité des prochains jours",
@@ -1291,8 +1286,11 @@
         "groups": "1 groupe de 6+ | {n} groupes de 6+",
         "title": {
           "allergies": "Avec allergies",
-          "groups": "Groupes de 6 personnes ou plus"
-        }
+          "groups": "Groupes de 6 personnes ou plus",
+          "noshows": "Avec no-shows passés"
+        },
+        "noshows": "1 avec no-shows passés | {n} avec no-shows passés",
+        "pastNoShows": "1 no-show passé | {n} no-shows passés"
       },
       "toolbar": {
         "time": "Heure",
@@ -1383,8 +1381,11 @@
         "pinHint": "Une table épinglée n'est jamais déplacée par le système pour faire de la place à d'autres",
         "noShowAction": "No-show",
         "cancel": "Annuler la réservation",
-        "undoHint": "Les changements d'état, de table et d'épinglage peuvent être annulés depuis le message en bas.",
-        "assistantSaid": "Au téléphone, l'assistant a dit « une table pour {n} », jamais le nom de la table."
+        "undoHint": "Chaque changement peut être annulé depuis le message en bas.",
+        "assistantSaid": "Au téléphone, l'assistant a dit « une table pour {n} », jamais le nom de la table.",
+        "pastNoShows": "1 no-show passé avec ce numéro. | {n} no-shows passés avec ce numéro.",
+        "cancelledByCaller": "Annulée par le client au téléphone : elle ne peut pas être rétablie, il faut la reprendre.",
+        "reinstate": "Rétablir"
       },
       "newb": {
         "title": "Nouvelle réservation",
@@ -1627,6 +1628,15 @@
         "done": "Terminé : ouvrir la soirée",
         "refused": "Le serveur a refusé la salle : vérifiez les zones et les tables.",
         "ready": "Salle prête : 1 table. L'assistant réserve dès maintenant. | Salle prête : {n} tables. L'assistant réserve dès maintenant."
+      },
+      "searchTruncated": "D'autres réservations correspondent : saisissez davantage du nom ou du numéro.",
+      "reinstated": "{name} : réservation rétablie",
+      "reinstate": {
+        "takenTitle": "Les tables de {name} sont occupées",
+        "conflict": "{table} : {name}, {time}, {people}",
+        "gone": "{table} n'est plus dans la salle",
+        "withoutTable": "Rétablir sans table",
+        "doneWithoutTable": "{name} : rétablie, pas encore de table"
       }
     }
   },

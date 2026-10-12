@@ -1132,7 +1132,7 @@
       "searchPlaceholder": "Otsi nime või telefoni järgi",
       "searchLabel": "Otsi broneeringut nime või telefoni järgi",
       "searching": "Otsin…",
-      "searchNone": "Järgmise {days} päeva jooksul broneeringut ei leitud.",
+      "searchNone": "Broneeringut ei leitud, nädala tagant kuuekümne päeva kaugusele.",
       "export": "Ekspordi CSV",
       "exportHint": "Laadi ülal näidatud päevade broneeringud alla CSV-failina",
       "exported": "CSV alla laaditud: {from} - {to}",
@@ -1201,14 +1201,7 @@
       "moveTooFew": "{name} ({party}) ei sobi: laud {table} algab {min} inimesest.",
       "moveBusy": "{name} ei mahu: laud {table} ei ole vaba ajavahemikus {from}-{to}.",
       "confirm": {
-        "cancelTitle": "Tühistada broneering?",
-        "cancel": "Tühista broneering",
-        "declineTitle": "Lükata päring tagasi?",
-        "decline": "Lükka tagasi",
-        "noShowTitle": "Märkida mitteilmunuks?",
-        "noShow": "Märgi mitteilmunuks",
-        "keep": "Jäta alles",
-        "message": "{who}, {people}, {day} kell {time}. Seda ei saa tagasi võtta."
+        "keep": "Jäta alles"
       },
       "answer": {
         "full": "Sellel ajal pole ruumi.",
@@ -1228,7 +1221,9 @@
         "join_across_zones": "Eri alade laudu ei saa ühendada.",
         "person_required": "Seda saab teha ainult sisse logitud isik.",
         "scope_missing": "See juurdepääs seda ei võimalda.",
-        "error": "Midagi läks valesti: proovi uuesti."
+        "error": "Midagi läks valesti: proovi uuesti.",
+        "not_reversible": "Seda broneeringut ei saa enam taastada.",
+        "table_taken": "Selle lauad on hõivatud."
       },
       "strip": {
         "label": "Eelseisvate päevade vabad kohad",
@@ -1289,8 +1284,11 @@
         "groups": "1 seltskond 6+ inimest | {n} seltskonda 6+ inimest",
         "title": {
           "allergies": "Allergiaga",
-          "groups": "6 või enama inimese seltskonnad"
-        }
+          "groups": "6 või enama inimese seltskonnad",
+          "noshows": "Varem mitteilmunud"
+        },
+        "noshows": "1 varem mitteilmunud | {n} varem mitteilmunut",
+        "pastNoShows": "1 varasem mitteilmumine | {n} varasemat mitteilmumist"
       },
       "toolbar": {
         "time": "Kellaaeg",
@@ -1381,8 +1379,11 @@
         "pinHint": "Süsteem ei liiguta kinnitatud lauda kunagi, et teistele ruumi teha",
         "noShowAction": "Ei ilmunud",
         "cancel": "Tühista broneering",
-        "undoHint": "Oleku, laua ja kinnituse muudatusi saab tagasi võtta allosas olevast teatest.",
-        "assistantSaid": "Telefonis ütles assistent \"laud {n} inimesele\", mitte kunagi laua nime."
+        "undoHint": "Iga muudatuse saab tagasi võtta allosas olevast teatest.",
+        "assistantSaid": "Telefonis ütles assistent \"laud {n} inimesele\", mitte kunagi laua nime.",
+        "pastNoShows": "1 varasem mitteilmumine selle numbriga. | {n} varasemat mitteilmumist selle numbriga.",
+        "cancelledByCaller": "Külaline tühistas telefonis: seda ei saa taastada, tee uus broneering.",
+        "reinstate": "Taasta"
       },
       "newb": {
         "title": "Uus broneering",
@@ -1625,6 +1626,15 @@
         "done": "Valmis: ava õhtu",
         "refused": "Server lükkas saali tagasi: kontrolli alasid ja laudu.",
         "ready": "Saal valmis: 1 laud. Assistent broneerib nüüdsest. | Saal valmis: {n} lauda. Assistent broneerib nüüdsest."
+      },
+      "searchTruncated": "Sobivaid broneeringuid on veel: kirjuta nimest või numbrist rohkem.",
+      "reinstated": "{name}: broneering taastatud",
+      "reinstate": {
+        "takenTitle": "Broneeringu {name} lauad on hõivatud",
+        "conflict": "{table}: {name}, {time}, {people}",
+        "gone": "{table} ei ole enam saalis",
+        "withoutTable": "Taasta ilma lauata",
+        "doneWithoutTable": "{name}: taastatud, lauda veel pole"
       }
     }
   },

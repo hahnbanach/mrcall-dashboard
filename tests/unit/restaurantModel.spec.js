@@ -82,8 +82,9 @@ describe('a booking on the page', () => {
 
   it('reads a row of the day read with the calls that touched it', () => {
     const b = bookingFromWire({ id: 'r', version: 2, time: '20:15', minutes: 105, covers: 4, status: 'confirmed', serviceState: 'arrived',
-      source: 'assistant', tableIds: [3], conversationId: 'A', callIds: ['A', 'B'] })
-    expect(b).toMatchObject({ start: toMin('20:15'), end: toMin('22:00'), party: 4, tables: [3], state: 'arrived', callIds: ['A', 'B'] })
+      source: 'assistant', tableIds: [3], conversationId: 'A', callIds: ['A', 'B'],
+      pastNoShows: 2, cancelledBy: null, reinstatable: false })
+    expect(b).toMatchObject({ start: toMin('20:15'), end: toMin('22:00'), party: 4, tables: [3], state: 'arrived', callIds: ['A', 'B'], pastNoShows: 2, reinstatable: false })
   })
 })
 
@@ -153,13 +154,13 @@ describe('the period strip', () => {
 })
 
 describe('"Da sapere" and the search', () => {
-  it('names the guests with allergies and the large parties, by time', () => {
+  it('names the guests with allergies, the large parties and the past no-shows, by time', () => {
     const list = [booking('b', '21:00', 90, [1], { allergies: 'nuts' }), booking('a', '20:00', 120, [3], { party: 7 }),
-      booking('x', '19:00', 90, [2], { allergies: 'x', state: 'cancelled' })]
+      booking('c', '19:00', 90, [2], { pastNoShows: 1 }), booking('x', '19:00', 90, [2], { allergies: 'x', state: 'cancelled' })]
     const k = knowCounts(list, 'dinner')
     expect(k.allergies.map(b => b.id)).toEqual(['b'])
     expect(k.groups.map(b => b.id)).toEqual(['a'])
-    expect(Object.keys(k)).toEqual(['allergies', 'groups'])
+    expect(k.noshows.map(b => b.id)).toEqual(['c'])
   })
 
   it('matches a name, or the digits of a phone however it is spaced', () => {

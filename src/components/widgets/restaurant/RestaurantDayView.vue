@@ -227,7 +227,7 @@ import {
 } from "@/utils/RestaurantModel";
 import { longDate, refusalKey } from "@/components/widgets/restaurant/format";
 
-const KNOW_CLASS = { allergies: "red", groups: "blue" };
+const KNOW_CLASS = { allergies: "red", groups: "blue", noshows: "amber" };
 const FILTERS = ["all", "waiting", "seated", "left"];
 
 /**
@@ -421,7 +421,8 @@ export default {
     },
     knowDetail(b) {
       if (this.know === "allergies") return b.allergies;
-      return this.$t("components.restaurant.people", { n: b.party });
+      if (this.know === "groups") return this.$t("components.restaurant.people", { n: b.party });
+      return this.$t("components.restaurant.know.pastNoShows", { n: b.pastNoShows }, b.pastNoShows);
     },
     refusalKey,
     stateOfTile(b) {

@@ -317,11 +317,12 @@ export function stripStatus (summary, { past, arrivals, step }) {
 
 // ---------------------------------------------------------------- "Da sapere"
 
-/** The guests the service should know about before it starts. The prototype also names guests with past
- *  no-shows; StarChat's day read carries no such count, so that chip is not offered. */
+/** The guests the service should know about before it starts: allergies, parties of six or more, and guests
+ *  with earlier no-shows here (the day read's `pastNoShows`, known only for a guest with a number). */
 export const KNOW = {
   allergies: b => !!b.allergies,
-  groups: b => b.party >= 6
+  groups: b => b.party >= 6,
+  noshows: b => (b.pastNoShows || 0) > 0
 }
 
 export function knowCounts (list, service) {

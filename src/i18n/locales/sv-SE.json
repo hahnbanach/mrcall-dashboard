@@ -1132,7 +1132,7 @@
       "searchPlaceholder": "Sök namn eller telefon",
       "searchLabel": "Sök en bokning på namn eller telefon",
       "searching": "Söker…",
-      "searchNone": "Ingen bokning hittades de kommande {days} dagarna.",
+      "searchNone": "Ingen bokning hittades, från en vecka tillbaka till sextio dagar framåt.",
       "export": "Exportera CSV",
       "exportHint": "Ladda ner bokningarna för dagarna ovan som CSV",
       "exported": "CSV nedladdad: {from} - {to}",
@@ -1201,14 +1201,7 @@
       "moveTooFew": "{name} ({party}) passar inte: {table} börjar från {min} personer.",
       "moveBusy": "{name} ryms inte: {table} är inte ledigt från {from} till {to}.",
       "confirm": {
-        "cancelTitle": "Avboka bokningen?",
-        "cancel": "Avboka bokning",
-        "declineTitle": "Avslå förfrågan?",
-        "decline": "Avslå",
-        "noShowTitle": "Markera som uteblev?",
-        "noShow": "Markera som uteblev",
-        "keep": "Behåll",
-        "message": "{who}, {people}, {day} kl. {time}. Det går inte att ångra."
+        "keep": "Behåll"
       },
       "answer": {
         "full": "Det finns inget utrymme vid den tiden.",
@@ -1228,7 +1221,9 @@
         "join_across_zones": "Bord i olika områden kan inte slås ihop.",
         "person_required": "Bara en inloggad person kan göra detta.",
         "scope_missing": "Den här åtkomsten tillåter det inte.",
-        "error": "Något gick fel: försök igen."
+        "error": "Något gick fel: försök igen.",
+        "not_reversible": "Den här bokningen kan inte längre återställas.",
+        "table_taken": "Dess bord är upptagna."
       },
       "strip": {
         "label": "Tillgänglighet kommande dagar",
@@ -1289,8 +1284,11 @@
         "groups": "1 sällskap på 6+ | {n} sällskap på 6+",
         "title": {
           "allergies": "Med allergier",
-          "groups": "Sällskap på 6 eller fler"
-        }
+          "groups": "Sällskap på 6 eller fler",
+          "noshows": "Med tidigare uteblivna besök"
+        },
+        "noshows": "1 med tidigare uteblivna besök | {n} med tidigare uteblivna besök",
+        "pastNoShows": "1 tidigare uteblivet besök | {n} tidigare uteblivna besök"
       },
       "toolbar": {
         "time": "Tid",
@@ -1381,8 +1379,11 @@
         "pinHint": "Ett låst bord flyttas aldrig av systemet för att ge plats åt andra",
         "noShowAction": "Uteblev",
         "cancel": "Avboka bokning",
-        "undoHint": "Ändringar av status, bord och låsning kan ångras från meddelandet längst ned.",
-        "assistantSaid": "I telefon sa assistenten \"ett bord för {n}\", aldrig bordets namn."
+        "undoHint": "Varje ändring kan ångras från meddelandet längst ned.",
+        "assistantSaid": "I telefon sa assistenten \"ett bord för {n}\", aldrig bordets namn.",
+        "pastNoShows": "1 tidigare uteblivet besök med det här numret. | {n} tidigare uteblivna besök med det här numret.",
+        "cancelledByCaller": "Avbokad av gästen i telefon: den kan inte återställas, boka om.",
+        "reinstate": "Återställ"
       },
       "newb": {
         "title": "Ny bokning",
@@ -1625,6 +1626,15 @@
         "done": "Klart: öppna kvällen",
         "refused": "Servern avvisade salen: kontrollera områdena och borden.",
         "ready": "Salen är klar: 1 bord. Assistenten bokar från och med nu. | Salen är klar: {n} bord. Assistenten bokar från och med nu."
+      },
+      "searchTruncated": "Fler bokningar matchar: skriv mer av namnet eller numret.",
+      "reinstated": "{name}: bokningen återställd",
+      "reinstate": {
+        "takenTitle": "Borden för {name} är upptagna",
+        "conflict": "{table}: {name}, {time}, {people}",
+        "gone": "{table} finns inte längre i salen",
+        "withoutTable": "Återställ utan bord",
+        "doneWithoutTable": "{name}: återställd, än så länge utan bord"
       }
     }
   },

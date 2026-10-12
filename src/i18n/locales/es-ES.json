@@ -1146,7 +1146,7 @@
       "searchPlaceholder": "Buscar nombre o teléfono",
       "searchLabel": "Buscar una reserva por nombre o teléfono",
       "searching": "Buscando…",
-      "searchNone": "No hay ninguna reserva en los próximos {days} días.",
+      "searchNone": "No se ha encontrado ninguna reserva desde hace una semana hasta sesenta días por delante.",
       "export": "Exportar CSV",
       "exportHint": "Descarga en CSV las reservas de los días mostrados arriba",
       "exported": "CSV descargado: {from} - {to}",
@@ -1215,14 +1215,7 @@
       "moveTooFew": "{name} ({party}) no cabe: {table} empieza desde {min} personas.",
       "moveBusy": "{name} no cabe: {table} no está libre de {from} a {to}.",
       "confirm": {
-        "cancelTitle": "¿Cancelar la reserva?",
-        "cancel": "Cancelar reserva",
-        "declineTitle": "¿Rechazar la solicitud?",
-        "decline": "Rechazar",
-        "noShowTitle": "¿Marcar como no presentada?",
-        "noShow": "Marcar como no presentada",
-        "keep": "Mantenerla",
-        "message": "{who}, {people}, {day} a las {time}. Esta acción no se puede deshacer."
+        "keep": "Mantenerla"
       },
       "answer": {
         "full": "No hay sitio a esa hora.",
@@ -1242,7 +1235,9 @@
         "join_across_zones": "No se pueden unir mesas de zonas distintas.",
         "person_required": "Solo una persona con sesión iniciada puede hacerlo.",
         "scope_missing": "Este acceso no lo permite.",
-        "error": "Algo ha salido mal: inténtalo de nuevo."
+        "error": "Algo ha salido mal: inténtalo de nuevo.",
+        "not_reversible": "Esta reserva ya no se puede restablecer.",
+        "table_taken": "Sus mesas están ocupadas."
       },
       "strip": {
         "label": "Disponibilidad de los próximos días",
@@ -1303,8 +1298,11 @@
         "groups": "1 grupo de 6 o más | {n} grupos de 6 o más",
         "title": {
           "allergies": "Con alergias",
-          "groups": "Grupos de 6 o más"
-        }
+          "groups": "Grupos de 6 o más",
+          "noshows": "Con ausencias previas"
+        },
+        "noshows": "1 con ausencias previas | {n} con ausencias previas",
+        "pastNoShows": "1 ausencia previa | {n} ausencias previas"
       },
       "toolbar": {
         "time": "Hora",
@@ -1395,8 +1393,11 @@
         "pinHint": "El sistema nunca mueve una mesa fijada para hacer sitio a otras",
         "noShowAction": "No presentada",
         "cancel": "Cancelar reserva",
-        "undoHint": "Los cambios de estado, mesa y fijación se pueden deshacer desde el mensaje de abajo.",
-        "assistantSaid": "Por teléfono el asistente dijo \"una mesa para {n}\", nunca el nombre de la mesa."
+        "undoHint": "Cada cambio se puede deshacer desde el mensaje de abajo.",
+        "assistantSaid": "Por teléfono el asistente dijo \"una mesa para {n}\", nunca el nombre de la mesa.",
+        "pastNoShows": "1 ausencia previa con este número. | {n} ausencias previas con este número.",
+        "cancelledByCaller": "Cancelada por el cliente por teléfono: no se puede restablecer, hay que reservar de nuevo.",
+        "reinstate": "Restablecer"
       },
       "newb": {
         "title": "Nueva reserva",
@@ -1639,6 +1640,15 @@
         "done": "Hecho: abrir la noche",
         "refused": "El servidor ha rechazado la sala: revisa las zonas y las mesas.",
         "ready": "Sala lista: 1 mesa. El asistente reserva desde ahora. | Sala lista: {n} mesas. El asistente reserva desde ahora."
+      },
+      "searchTruncated": "Hay más reservas que coinciden: escribe más del nombre o del número.",
+      "reinstated": "{name}: reserva restablecida",
+      "reinstate": {
+        "takenTitle": "Las mesas de {name} están ocupadas",
+        "conflict": "{table}: {name}, {time}, {people}",
+        "gone": "{table} ya no está en la sala",
+        "withoutTable": "Restablecer sin mesa",
+        "doneWithoutTable": "{name}: restablecida, todavía sin mesa"
       }
     }
   },

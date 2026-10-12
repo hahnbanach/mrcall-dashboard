@@ -1132,7 +1132,7 @@
       "searchPlaceholder": "Zoek op naam of telefoon",
       "searchLabel": "Zoek een reservering op naam of telefoonnummer",
       "searching": "Zoeken…",
-      "searchNone": "Geen reservering gevonden in de komende {days} dagen.",
+      "searchNone": "Geen reservering gevonden, van een week geleden tot zestig dagen vooruit.",
       "export": "CSV exporteren",
       "exportHint": "Download de reserveringen van de hierboven getoonde dagen als CSV",
       "exported": "CSV gedownload: {from} - {to}",
@@ -1201,14 +1201,7 @@
       "moveTooFew": "{name} ({party}) past niet: {table} begint bij {min} personen.",
       "moveBusy": "{name} past niet: {table} is niet vrij van {from} tot {to}.",
       "confirm": {
-        "cancelTitle": "De reservering annuleren?",
-        "cancel": "Reservering annuleren",
-        "declineTitle": "De aanvraag afwijzen?",
-        "decline": "Afwijzen",
-        "noShowTitle": "Markeren als niet verschenen?",
-        "noShow": "Markeren als niet verschenen",
-        "keep": "Behouden",
-        "message": "{who}, {people}, {day} om {time}. Dit kan niet ongedaan worden gemaakt."
+        "keep": "Behouden"
       },
       "answer": {
         "full": "Er is op dat tijdstip geen plek.",
@@ -1228,7 +1221,9 @@
         "join_across_zones": "Tafels uit verschillende gedeelten kunnen niet worden gekoppeld.",
         "person_required": "Alleen een ingelogd persoon kan dit doen.",
         "scope_missing": "Deze toegang staat dat niet toe.",
-        "error": "Er is iets misgegaan: probeer het opnieuw."
+        "error": "Er is iets misgegaan: probeer het opnieuw.",
+        "not_reversible": "Deze reservering kan niet meer worden hersteld.",
+        "table_taken": "De tafels ervan zijn bezet."
       },
       "strip": {
         "label": "Beschikbaarheid van de komende dagen",
@@ -1289,8 +1284,11 @@
         "groups": "1 gezelschap van 6+ | {n} gezelschappen van 6+",
         "title": {
           "allergies": "Met allergieën",
-          "groups": "Gezelschappen van 6 of meer"
-        }
+          "groups": "Gezelschappen van 6 of meer",
+          "noshows": "Met eerdere no-shows"
+        },
+        "noshows": "1 met eerdere no-shows | {n} met eerdere no-shows",
+        "pastNoShows": "1 eerdere no-show | {n} eerdere no-shows"
       },
       "toolbar": {
         "time": "Tijd",
@@ -1381,8 +1379,11 @@
         "pinHint": "Een vastgezette tafel wordt door het systeem nooit verplaatst om plaats te maken voor anderen",
         "noShowAction": "Niet verschenen",
         "cancel": "Reservering annuleren",
-        "undoHint": "Wijzigingen van status, tafel en vastzetten kunnen worden ongedaan gemaakt via het bericht onderaan.",
-        "assistantSaid": "Aan de telefoon zei de assistent \"een tafel voor {n}\", nooit de naam van de tafel."
+        "undoHint": "Elke wijziging kan worden ongedaan gemaakt via het bericht onderaan.",
+        "assistantSaid": "Aan de telefoon zei de assistent \"een tafel voor {n}\", nooit de naam van de tafel.",
+        "pastNoShows": "1 eerdere no-show met dit nummer. | {n} eerdere no-shows met dit nummer.",
+        "cancelledByCaller": "Door de gast aan de telefoon geannuleerd: ze kan niet worden hersteld, maak een nieuwe reservering.",
+        "reinstate": "Herstellen"
       },
       "newb": {
         "title": "Nieuwe reservering",
@@ -1625,6 +1626,15 @@
         "done": "Klaar: de avond openen",
         "refused": "De server heeft de zaal geweigerd: controleer de gedeeltes en de tafels.",
         "ready": "Zaal klaar: 1 tafel. De assistent reserveert vanaf nu. | Zaal klaar: {n} tafels. De assistent reserveert vanaf nu."
+      },
+      "searchTruncated": "Er zijn meer reserveringen: typ meer van de naam of het nummer.",
+      "reinstated": "{name}: reservering hersteld",
+      "reinstate": {
+        "takenTitle": "De tafels van {name} zijn bezet",
+        "conflict": "{table}: {name}, {time}, {people}",
+        "gone": "{table} staat niet meer in de zaal",
+        "withoutTable": "Herstellen zonder tafel",
+        "doneWithoutTable": "{name}: hersteld, nog zonder tafel"
       }
     }
   },

@@ -16,7 +16,10 @@ const { mockRestaurant, openRestaurant, tomorrowDinner, TODAY, TOMORROW } = requ
  * new one; the calls oldest first; the layout section sent with the minimum free time; the minimum free time
  * ignored by the tiles; the cancel confirmation without "Keep it" focused). After the page moved to StarChat
  * 9.34.63's shapes: the day read without `freeTables` fails the first test (the tiles read the server's
- * windows, nothing else), and the finder asking no later time fails the "nothing free" test. Tests that need a mouse drag
+ * windows, nothing else), and the finder asking no later time fails the "nothing free" test. After StarChat R5
+ * (reinstate, search, pastNoShows, the finder's later times), each failed with one fault put in: a cancellation
+ * without Undo, a table_taken refusal said as a plain error, pastNoShows not read, the server's later times
+ * ignored. Tests that need a mouse drag
  * run on the desktop project only.
  */
 
@@ -103,7 +106,7 @@ test.describe('the restaurant page', () => {
     expect(calls.filter(c => c.method === 'DELETE').map(c => c.path + c.search)).toEqual(['/reservations/n1?expectedVersion=1'])
   })
 
-  test('with nothing free the finder asks the next times and offers them; a failing finder says so', async ({ authenticatedPage: page }) => {
+  test('with nothing free the finder offers the next times the server gives', async ({ authenticatedPage: page }) => {
     const { calls } = await mockRestaurant(page)
     await openRestaurant(page)
     await ready(page)
@@ -112,7 +115,8 @@ test.describe('the restaurant page', () => {
     for (let i = 0; i < 6; i++) await page.getByRole('button', { name: 'One person more' }).click()
     await expect(page.locator('.find-line')).toContainText('For 6 at 20:00: no table')
     await expect(page.locator('.find-line .chip').first()).toHaveText('21:30')
-    expect(calls.filter(c => c.path === '/suggestions' && new URLSearchParams(c.search).get('covers') === '6').length).toBeGreaterThan(1)
+    // the later times are the server's answer to the one question at 20:00, not more questions
+    expect(calls.filter(c => c.path === '/suggestions' && new URLSearchParams(c.search).get('covers') === '6').map(c => new URLSearchParams(c.search).get('time'))).toEqual(['20:00'])
   })
 
   test('a finder that fails says so instead of guessing', async ({ authenticatedPage: page }) => {
@@ -138,31 +142,97 @@ test.describe('the restaurant page', () => {
       .toEqual([{ expectedVersion: 1, state: 'seated' }, { expectedVersion: 2, state: null }])
   })
 
-  test('asks before cancelling, naming the party with "Keep it" focused and readable, and sends nothing on keep', async ({ authenticatedPage: page }) => {
+  test('cancels in one tap, and Undo reinstates it at the version the cancellation answered', async ({ authenticatedPage: page }) => {
     const { calls } = await mockRestaurant(page)
     await openRestaurant(page)
     await ready(page)
     await tomorrowDinner(page)
     await page.locator('.brow', { hasText: 'Rossi' }).click()
-    const panel = page.locator('.panel')
-    await panel.getByRole('button', { name: 'Cancel booking' }).click()
-    const confirm = page.locator('.mrcall-confirm-dialog')
-    await expect(confirm).toContainText('Rossi')
-    await expect(confirm).toContainText('20:00')
-    await expect(confirm).toContainText('4 people')
-    const keep = confirm.getByRole('button', { name: 'Keep it' })
-    await expect(keep).toBeFocused()
-    await expect(keep).toHaveCSS('color', 'rgb(255, 255, 255)')
-    await keep.click()
-    await expect(confirm).toHaveCount(0)
-    expect(calls.filter(c => c.method === 'DELETE')).toHaveLength(0)
-    await panel.getByRole('button', { name: 'Cancel booking' }).click()
-    await confirm.getByRole('button', { name: 'Cancel booking' }).click()
+    await page.locator('.panel').getByRole('button', { name: 'Cancel booking' }).click()
+    await expect(page.locator('.mrcall-confirm-dialog')).toHaveCount(0)
     await expect(page.locator('.toast')).toContainText('Cancelled: Rossi')
+    await expect(tile(page, 'T4')).toHaveClass(/free/)
+    await page.locator('.toast').getByRole('button', { name: 'Undo' }).click()
+    await expect(page.locator('.toast')).toContainText('action undone')
+    await expect(tile(page, 'T4')).toContainText('Rossi')
     expect(calls.filter(c => c.method === 'DELETE').map(c => c.path + c.search)).toEqual(['/reservations/b-rossi?expectedVersion=1'])
+    expect(calls.filter(c => c.path.endsWith('/reinstate')).map(c => c.path + c.search)).toEqual(['/reservations/b-rossi/reinstate?expectedVersion=2'])
   })
 
-  test('marks a no-show after confirming, and shows the phone as a number to call and to write to', async ({ authenticatedPage: page }) => {
+  test('a reinstatement whose table was taken names who took it and reinstates without a table only when asked', async ({ authenticatedPage: page }) => {
+    const { calls } = await mockRestaurant(page)
+    await openRestaurant(page)
+    await ready(page)
+    await tomorrowDinner(page)
+    await page.locator('.brow', { hasText: 'Rossi' }).click()
+    await page.locator('.panel').getByRole('button', { name: 'Cancel booking' }).click()
+    await expect(page.locator('.toast')).toContainText('Cancelled: Rossi')
+    // T4 goes to somebody else
+    await tap(tile(page, 'T4'))
+    const panel = page.locator('.panel')
+    await panel.getByLabel('Name').fill('Neri')
+    await panel.locator('.save-btn').click()
+    await expect(page.locator('.toast')).toContainText('Saved: Neri')
+    // Rossi, among the cancelled, is taken back from its panel
+    await page.locator('details.gone summary').click()
+    await page.locator('details.gone .brow', { hasText: 'Rossi' }).click()
+    await page.locator('.panel').getByRole('button', { name: 'Reinstate' }).click()
+    const confirm = page.locator('.mrcall-confirm-dialog')
+    await expect(confirm).toContainText('The tables of Rossi are taken')
+    await expect(confirm).toContainText('T4: Neri, 20:00, 2 people')
+    await expect(confirm.getByRole('button', { name: 'Keep it' })).toBeFocused()
+    await confirm.getByRole('button', { name: 'Reinstate without a table' }).click()
+    await expect(page.locator('.toast')).toContainText('Rossi: reinstated with no table yet')
+    expect(calls.filter(c => c.path.endsWith('/reinstate')).map(c => c.search)).toEqual(['?expectedVersion=2', '?expectedVersion=2&overbook=true'])
+  })
+
+  // Declining has no server reverse: the DELETE is held back for the Undo window (8 s, the other undo toasts'
+  // time) and sent at its end, or at once when the page is left. Seen failing on 2026-10-12, one fault each: the
+  // Undo keeping the held DELETE, no flush when the page is left, the DELETE sent at once.
+  async function declineGalli (page) {
+    await tomorrowDinner(page)
+    await page.locator('.req', { hasText: 'Galli' }).getByRole('button', { name: 'Decline' }).click()
+    await expect(page.locator('.toast')).toContainText('Request declined: Galli')
+    await expect(page.locator('.req', { hasText: 'Galli' })).toHaveCount(0)
+  }
+
+  test('declining a request: Undo inside the window brings it back and sends nothing', async ({ authenticatedPage: page }) => {
+    const { calls } = await mockRestaurant(page)
+    await openRestaurant(page)
+    await ready(page)
+    await declineGalli(page)
+    await page.locator('.toast').getByRole('button', { name: 'Undo' }).click()
+    await expect(page.locator('.req', { hasText: 'Galli' })).toHaveCount(1)
+    await page.waitForTimeout(9000)
+    expect(calls.filter(c => c.method === 'DELETE')).toHaveLength(0)
+  })
+
+  test('declining a request: when the Undo time is up, exactly one DELETE at the version read', async ({ authenticatedPage: page }) => {
+    const { calls } = await mockRestaurant(page)
+    await openRestaurant(page)
+    await ready(page)
+    await declineGalli(page)
+    expect(calls.filter(c => c.method === 'DELETE')).toHaveLength(0)
+    await page.waitForRequest(r => r.method() === 'DELETE', { timeout: 15000 })
+    await page.waitForTimeout(2000)
+    expect(calls.filter(c => c.method === 'DELETE').map(c => c.path + c.search)).toEqual(['/reservations/b-req?expectedVersion=1'])
+    await expect(page.locator('.req', { hasText: 'Galli' })).toHaveCount(0)
+  })
+
+  test('declining a request: leaving the page sends the held decline at once', async ({ authenticatedPage: page }) => {
+    const { calls } = await mockRestaurant(page)
+    await openRestaurant(page)
+    await ready(page)
+    await declineGalli(page)
+    const narrowMenu = page.locator('.header_buttonbar button')
+    if (await narrowMenu.isVisible()) await narrowMenu.click()
+    const sent = page.waitForRequest(r => r.method() === 'DELETE', { timeout: 4000 })
+    await page.getByRole('menuitem', { name: 'Data retention', exact: true }).locator('visible=true').first().click()
+    await sent
+    expect(calls.filter(c => c.method === 'DELETE').map(c => c.path + c.search)).toEqual(['/reservations/b-req?expectedVersion=1'])
+  })
+
+  test('marks a no-show in one tap with Undo, and shows the phone as a number to call and to write to', async ({ authenticatedPage: page }) => {
     const { calls } = await mockRestaurant(page)
     await openRestaurant(page)
     await ready(page)
@@ -174,9 +244,12 @@ test.describe('the restaurant page', () => {
     await expect(panel.getByRole('link', { name: 'WhatsApp' })).toHaveAttribute('href', 'https://wa.me/393331112233')
     await expect(panel).toContainText('Celiac')
     await panel.getByRole('button', { name: 'No-show' }).click()
-    await page.locator('.mrcall-confirm-dialog').getByRole('button', { name: 'Mark as no-show' }).click()
+    await expect(page.locator('.mrcall-confirm-dialog')).toHaveCount(0)
     await expect(page.locator('.toast')).toContainText('Rossi: marked as no-show')
+    await page.locator('.toast').getByRole('button', { name: 'Undo' }).click()
+    await expect(page.locator('.toast')).toContainText('action undone')
     expect(calls.filter(c => c.path.endsWith('/no-show')).map(c => c.search)).toEqual(['?expectedVersion=1'])
+    expect(calls.filter(c => c.path.endsWith('/reinstate')).map(c => c.search)).toEqual(['?expectedVersion=2'])
   })
 
   test('reads the calls that made and changed a booking, newest first, and returns to the same booking', async ({ authenticatedPage: page }) => {
@@ -276,7 +349,7 @@ test.describe('the restaurant page', () => {
     expect(calls.filter(c => c.path.endsWith('/accept')).map(c => c.body)).toEqual([{ expectedVersion: 1 }])
   })
 
-  test('"Good to know" names who has allergies and who is a large party, and highlights them', async ({ authenticatedPage: page }) => {
+  test('"Good to know" names who has allergies, who is a large party and who did not come before, and highlights them', async ({ authenticatedPage: page }) => {
     await mockRestaurant(page)
     await openRestaurant(page)
     await ready(page)
@@ -287,16 +360,22 @@ test.describe('the restaurant page', () => {
     await expect(tile(page, 'T4')).toHaveClass(/hit/)
     await page.getByRole('button', { name: '1 party of 6+' }).click()
     await expect(page.locator('.know-pop')).toContainText('Bianchi')
+    await page.getByRole('button', { name: '1 with past no-shows' }).click()
+    await expect(page.locator('.know-pop')).toContainText('Bianchi')
+    await expect(page.locator('.know-pop')).toContainText('1 past no-show')
+    await page.locator('.know-pop').getByRole('button', { name: 'Bianchi' }).click()
+    await expect(page.locator('.panel')).toContainText('1 past no-show with this number.')
   })
 
-  test('search finds a booking on another day and opens it there', async ({ authenticatedPage: page }) => {
-    await mockRestaurant(page)
+  test('search asks the server once and opens a booking on another day there', async ({ authenticatedPage: page }) => {
+    const { calls } = await mockRestaurant(page)
     await openRestaurant(page)
     await ready(page)
     await page.getByRole('searchbox', { name: 'Search a booking by name or phone' }).fill('Ross')
     await page.locator('.sr-item', { hasText: 'Rossi' }).click()
     await expect(page.locator('.panel h2')).toHaveText('Rossi')
     await expect(page.locator(`.dcell[data-date="${TOMORROW}"]`)).toHaveClass(/sel/)
+    expect(calls.filter(c => c.path === '/search').map(c => c.body)).toEqual([{ q: 'Ross', limit: 20 }])
   })
 
   test('exports the days shown as the server\'s CSV', async ({ authenticatedPage: page }) => {
