@@ -208,7 +208,10 @@ test.describe('the restaurant page', () => {
   }
 
   for (const a of ANSWERS) {
+    // These wait the real 8 s window: under a full parallel run, load, 8 s and the reload ran past the default 30 s
+    // once (tablet, 2026-10-12), so they get twice that.
     test(`${a.button} on a request: Undo inside the window brings it back and sends nothing`, async ({ authenticatedPage: page }) => {
+      test.setTimeout(60000)
       const { calls } = await mockRestaurant(page)
       await openRestaurant(page)
       await ready(page)
@@ -220,6 +223,7 @@ test.describe('the restaurant page', () => {
     })
 
     test(`${a.button} on a request: when the Undo time is up, exactly one request at the version read, and its toast goes`, async ({ authenticatedPage: page }) => {
+      test.setTimeout(60000)
       const { calls } = await mockRestaurant(page)
       await openRestaurant(page)
       await ready(page)
@@ -250,6 +254,7 @@ test.describe('the restaurant page', () => {
   // as a guest of 9, its covers counted. The other new tests of this round (Accept held back, one-tap no-show, Undo
   // of a reinstatement, the export's name) failed against c1fbd1c too.
   test('a declined request, read again from the server, is no guest and adds no covers', async ({ authenticatedPage: page }) => {
+    test.setTimeout(60000)
     const { calls } = await mockRestaurant(page)
     await openRestaurant(page)
     await ready(page)
@@ -665,9 +670,9 @@ test.describe('the restaurant page', () => {
     const nav = page.locator('.room-editor .preview-day')
     await expect(nav).toBeVisible({ timeout: 20000 })
     await expect.poll(() => calls.filter(c => c.path === '/layout/preview').map(c => c.body.date)).toEqual([TOMORROW])
-    await nav.getByRole('button', { name: 'Next day' }).click()
-    await nav.getByRole('button', { name: 'Next day' }).click()
-    await nav.getByRole('button', { name: 'Next day' }).click()
+    // three clicks in one go, as fast as a person clicking through days (a click per Playwright action could be
+    // slower than the wait under a loaded machine, and ask for a day in between)
+    await nav.getByRole('button', { name: 'Next day' }).evaluate(b => { b.click(); b.click(); b.click() })
     await expect.poll(() => calls.filter(c => c.path === '/layout/preview').map(c => c.body.date)).toEqual([TOMORROW, addDays(TODAY, 4)])
     await page.waitForTimeout(1200)
     expect(calls.filter(c => c.path === '/layout/preview')).toHaveLength(2)
@@ -697,6 +702,41 @@ test.describe('the restaurant page', () => {
     await expect(issues).toContainText('The assistant accepts parties larger than the largest table or join', { timeout: 20000 })
     await expect(issues).toContainText('For some party sizes no table or join fits')
     await expect(issues.getByText(/\{|no seating takes it|larger parties become requests/)).toHaveCount(0)
+  })
+
+  // The minimum free time unset is the manifest's default, read from the skill catalogue (120), never a number
+  // written in the page. Seen failing on 2026-10-12 against e228974: 90, the table time of two.
+  test('an unset minimum free time shows the manifest\'s default', async ({ authenticatedPage: page }) => {
+    await mockRestaurant(page, { minFree: false })
+    await openRestaurant(page, '&tab=room')
+    const input = page.getByLabel('Minimum free time in minutes')
+    await expect(input).toHaveValue('120', { timeout: 20000 })
+    await expect(page.locator('.room-editor .min-free')).toContainText('If you do not change it, it is 120 minutes')
+    await expect(page.locator('.room-editor .savebar')).toContainText('No changes')
+  })
+
+  // The largest party the assistant books by itself is set here, written through the skill instance with its
+  // revision, and a warning that names it leads to it. Seen failing on 2026-10-12 against e228974: no such field.
+  test('the largest party is set in the room editor, and the warning about it leads there', async ({ authenticatedPage: page }) => {
+    const { calls } = await mockRestaurant(page)
+    await openRestaurant(page, '&tab=room')
+    const field = page.getByLabel('Largest party the assistant books by itself')
+    await expect(field).toHaveValue('8', { timeout: 20000 })
+    await page.locator('.room-editor .issues').getByRole('button', { name: 'Change the largest party' }).click()
+    await expect(field).toBeFocused()
+    await page.locator('.room-editor .issues').getByRole('button', { name: 'Go to the joins' }).click()
+    await expect(page.locator('.room-editor [data-ref="joins"]')).toBeFocused()
+    await field.fill('101')
+    await expect(page.locator('.room-editor .issues')).toContainText('Largest party: between 1 and 100 people')
+    await field.fill('6')
+    await expect(page.locator('.room-editor .pending')).toContainText('Largest party the assistant books: 8 → 6 people')
+    await page.locator('.room-editor .save-room').click()
+    await expect(page.locator('.toast')).toContainText('1 change saved')
+    const put = calls.find(c => c.method === 'PUT' && c.path.includes('/skills/configuration/'))
+    expect(put.body.expectedRevision).toBe('rev-1')
+    expect(put.body.params.maxPartySize).toBe('6')
+    expect(put.body.params.layout).toBeUndefined()
+    expect(calls.filter(c => c.method === 'PUT' && c.path === '/layout')).toHaveLength(0)
   })
 })
 

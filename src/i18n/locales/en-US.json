@@ -1427,7 +1427,7 @@
         "minFree": "Minimum free time",
         "minFreeLabel": "Minimum free time in minutes",
         "minutes": "minutes",
-        "minFreeHint": "A table shows as free only if it stays free at least this long: with 90 minutes, a table free at 20:00 but booked at 20:30 does not show as free. Usually this is how long a party of 2 keeps a table ({n} min). From 1 to {max} minutes.",
+        "minFreeHint": "A table shows as free only if it stays free at least this long: with 120 minutes, a table free at 20:00 but booked at 21:00 does not show as free. If you do not change it, it is {n} minutes. From 1 to {max} minutes.",
         "generator": "Add tables in one go",
         "genAdd": "Add",
         "genHowMany": "How many tables",
@@ -1515,9 +1515,14 @@
         "stale": "The room changed in the meantime: it has been read again, make your changes once more.",
         "configChanged": "The configuration changed in the meantime: it has been read again, try once more.",
         "needsHours": "Set the opening hours first: without them the room cannot be saved.",
-        "minFreeRefused": "Minimum free time: the server refused the value.",
-        "layoutSavedOnly": "The room was saved, the minimum free time was not.",
-        "andOthers": "{names} and {n} more"
+        "layoutSavedOnly": "The room was saved, the settings were not.",
+        "andOthers": "{names} and {n} more",
+        "maxParty": "Largest party the assistant books by itself",
+        "maxPartyHint": "Above this many people the assistant does not book: it records a request for you to confirm. Usually no more than the largest table or join.",
+        "goMaxParty": "Change the largest party",
+        "goTableMin": "Change the tables' minimum",
+        "goJoins": "Go to the joins",
+        "settingsRefused": "The server did not accept the settings: check the minimum free time and the largest party."
       },
       "check": {
         "zoneNameMissing": "Area {n} · Name: required",
@@ -1534,7 +1539,8 @@
         "joinMin": "Join {label} · Min people: at least 1",
         "joinMax": "Join {label} · Max people: at least {min}",
         "joinDuplicate": "Join {label}: there is already a join with the same tables",
-        "minFree": "Settings · Minimum free time: between {min} and {max} minutes"
+        "minFree": "Settings · Minimum free time: between {min} and {max} minutes",
+        "maxParty": "Settings · Largest party: between {min} and {max} people"
       },
       "layoutCode": {
         "table_has_holds": "A table you want to remove, switch off or move to another area has future bookings: move or cancel them first, then save.",
@@ -1556,7 +1562,7 @@
         "duplicate_join": "The same tables are joined twice: remove one of the two joins.",
         "decreasing": "The table numbering does not add up: reload the page and make the change again.",
         "no_capacity": "No area has an active table: the assistant cannot book anything until you add or switch on a table.",
-        "party_larger_than_room": "The assistant accepts parties larger than the largest table or join: it does not book those parties, it records them as requests for you to confirm. To book them, add a larger join or lower the maximum party size.",
+        "party_larger_than_room": "The assistant accepts parties larger than the largest table or join: it does not book those parties, it records them as requests for you to confirm. To book them, add a larger join or lower the largest party the assistant books by itself.",
         "size_never_bookable": "For some party sizes no table or join fits, so the assistant never books them: lower a table's minimum of people or add a join.",
         "other": "The room was not saved: check the areas, tables and joins and try again.",
         "missing": "Something the room needs is missing: check the highlighted fields.",
@@ -1579,7 +1585,8 @@
         "joinAdded": "Join added: {label} ({min}-{max})",
         "joinRemoved": "Join removed: {label}",
         "joinRange": "Join {label}: people {from} → {to}",
-        "minFree": "Minimum free time: {from} → {to} min"
+        "minFree": "Minimum free time: {from} → {to} min",
+        "maxParty": "Largest party the assistant books: {from} → {to} people"
       },
       "calls": {
         "title": "The call",
@@ -1645,14 +1652,21 @@
       "alreadySent": "Already sent: it can no longer be undone.",
       "exportFile": "bookings-{from}-{to}.csv",
       "layoutValues": {
-        "party_larger_than_room": "The assistant accepts parties of up to {maxPartySize} people, but the largest table or join seats {largestSeating}. It does not book parties of {from} to {maxPartySize}: it records them as requests for you to confirm. To book them, add a larger join or lower the maximum party size.",
+        "party_larger_than_room": "The assistant accepts parties of up to {maxPartySize} people, but the largest table or join seats {largestSeating}. It does not book parties of {from} to {maxPartySize}: it records them as requests for you to confirm. To book them, add a larger join or lower the largest party the assistant books by itself.",
         "size_never_bookable": "No table or join fits a party of {sizes}, so the assistant never books one: lower a table's minimum of people or add a join for that size.",
         "table_has_holds": "{table} has future bookings{who}: move or cancel them before you remove the table, switch it off or move it to another area.",
         "out_of_range": "{value} is out of range: it must be between {min} and {max}.",
-        "above_tables": "The join takes up to {value} people, but its tables seat {max}: lower its maximum to {max} or less.",
-        "duplicate_name": "Two tables are called {name}: give each one its own name.",
-        "join_across_zones": "The join {tables} has tables of different areas: a join stays in one area.",
-        "unknown_table": "The join names {tables}, which is no longer in the room: change the join's tables or remove it."
+        "above_tables": "The join takes up to {value} people, but its tables seat {seats}: lower its maximum to {seats} or less.",
+        "duplicate_name": "Two tables are called {table}: give each one its own name.",
+        "join_across_zones": "The join has tables of different areas ({tables}): a join stays in one area, choose tables of the same area.",
+        "unknown_table": "A join names {tables}, which is no longer in the room: change the join's tables or remove it.",
+        "bad_zone_id": "The area code \"{zone}\" is not valid: it must be one word of lowercase letters, digits or hyphens.",
+        "duplicate_zone": "Two areas have the code \"{zone}\": remove one of them and save again.",
+        "ends_before_start": "A closure ends on {to}, before it starts on {from}: check the \"from\" and \"until\" dates.",
+        "no_zone": "{table} has no area: choose one in the Area column.",
+        "unknown_zone": "{table} is in the area \"{zone}\", which no longer exists: choose another one in the Area column.",
+        "duplicate_join": "The tables {tables} are joined twice: remove one of the two joins.",
+        "bad_value": "\"{value}\" is not a valid value: check the highlighted field."
       }
     }
   },

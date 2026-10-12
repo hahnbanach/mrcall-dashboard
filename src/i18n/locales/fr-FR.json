@@ -1424,7 +1424,7 @@
         "minFree": "Durée libre minimale",
         "minFreeLabel": "Durée libre minimale en minutes",
         "minutes": "minutes",
-        "minFreeHint": "Une table n'apparaît comme libre que si elle reste libre au moins aussi longtemps : avec 90 minutes, une table libre à 20:00 mais réservée à 20:30 n'apparaît pas comme libre. En général, c'est la durée pendant laquelle 2 personnes occupent une table ({n} min). De 1 à {max} minutes.",
+        "minFreeHint": "Une table n'apparaît comme libre que si elle reste libre au moins aussi longtemps : avec 120 minutes, une table libre à 20:00 mais réservée à 21:00 n'apparaît pas comme libre. Si vous ne la modifiez pas, la valeur est de {n} minutes. De 1 à {max} minutes.",
         "generator": "Ajouter des tables en une fois",
         "genAdd": "Ajouter",
         "genHowMany": "Combien de tables",
@@ -1512,9 +1512,14 @@
         "stale": "La salle a changé entre-temps : elle a été relue, refaites vos modifications.",
         "configChanged": "La configuration a changé entre-temps : elle a été relue, réessayez.",
         "needsHours": "Définissez d'abord les horaires d'ouverture : sans eux, la salle ne peut pas être enregistrée.",
-        "minFreeRefused": "Durée libre minimale : le serveur a refusé la valeur.",
-        "layoutSavedOnly": "La salle a été enregistrée, pas la durée libre minimale.",
-        "andOthers": "{names} et {n} autres"
+        "layoutSavedOnly": "La salle a été enregistrée, pas les paramètres.",
+        "andOthers": "{names} et {n} autres",
+        "maxParty": "Plus grand groupe que l'assistant réserve seul",
+        "maxPartyHint": "Au-delà de ce nombre de personnes, l'assistant ne réserve pas : il enregistre une demande que vous confirmez. En général pas plus que la plus grande table ou jonction.",
+        "goMaxParty": "Modifier le plus grand groupe",
+        "goTableMin": "Modifier les places min des tables",
+        "goJoins": "Aller aux jonctions",
+        "settingsRefused": "Le serveur n'a pas accepté les paramètres : vérifiez la durée libre minimale et le plus grand groupe."
       },
       "check": {
         "zoneNameMissing": "Zone {n} · Nom : obligatoire",
@@ -1531,7 +1536,8 @@
         "joinMin": "Jonction {label} · Personnes min : au moins 1",
         "joinMax": "Jonction {label} · Personnes max : au moins {min}",
         "joinDuplicate": "Jonction {label} : il existe déjà une jonction avec les mêmes tables",
-        "minFree": "Paramètres · Durée libre minimale : entre {min} et {max} minutes"
+        "minFree": "Paramètres · Durée libre minimale : entre {min} et {max} minutes",
+        "maxParty": "Paramètres · Plus grand groupe : entre {min} et {max} personnes"
       },
       "layoutCode": {
         "table_has_holds": "Une table que vous voulez supprimer, désactiver ou déplacer dans une autre zone a des réservations à venir : déplacez-les ou annulez-les d'abord, puis enregistrez.",
@@ -1553,7 +1559,7 @@
         "duplicate_join": "Les mêmes tables sont jointes deux fois : supprimez l'une des deux jonctions.",
         "decreasing": "La numérotation des tables ne concorde pas : rechargez la page et refaites la modification.",
         "no_capacity": "Aucune zone n'a de table active : l'assistant ne peut rien réserver tant que vous n'ajoutez pas ou n'activez pas une table.",
-        "party_larger_than_room": "L'assistant accepte des groupes plus grands que la plus grande table ou jonction : il ne les réserve pas, il les enregistre comme des demandes que vous confirmez. Pour les réserver, ajoutez une jonction plus grande ou baissez la taille maximale de groupe.",
+        "party_larger_than_room": "L'assistant accepte des groupes plus grands que la plus grande table ou jonction : il ne les réserve pas, il les enregistre comme des demandes que vous confirmez. Pour les réserver, ajoutez une jonction plus grande ou baissez le plus grand groupe que l'assistant réserve seul.",
         "size_never_bookable": "Pour certaines tailles de groupe, aucune table ni jonction ne convient, donc l'assistant ne les réserve jamais : baissez le minimum de personnes d'une table ou ajoutez une jonction.",
         "other": "La salle n'a pas été enregistrée : vérifiez les zones, les tables et les jonctions, puis réessayez.",
         "missing": "Il manque quelque chose dont la salle a besoin : vérifiez les champs en surbrillance.",
@@ -1576,7 +1582,8 @@
         "joinAdded": "Jonction ajoutée : {label} ({min}-{max})",
         "joinRemoved": "Jonction retirée : {label}",
         "joinRange": "Jonction {label} : personnes {from} → {to}",
-        "minFree": "Durée libre minimale : {from} → {to} min"
+        "minFree": "Durée libre minimale : {from} → {to} min",
+        "maxParty": "Plus grand groupe que l'assistant réserve : {from} → {to} personnes"
       },
       "calls": {
         "title": "L'appel",
@@ -1642,14 +1649,21 @@
       "alreadySent": "Déjà envoyé : ce n'est plus annulable.",
       "exportFile": "reservations-{from}-{to}.csv",
       "layoutValues": {
-        "party_larger_than_room": "L'assistant accepte des groupes jusqu'à {maxPartySize} personnes, mais la plus grande table ou jonction compte {largestSeating} places. Il ne réserve pas les groupes de {from} à {maxPartySize} personnes : il les enregistre comme des demandes que vous confirmez. Pour les réserver, ajoutez une jonction plus grande ou baissez la taille maximale de groupe.",
+        "party_larger_than_room": "L'assistant accepte des groupes jusqu'à {maxPartySize} personnes, mais la plus grande table ou jonction compte {largestSeating} places. Il ne réserve pas les groupes de {from} à {maxPartySize} personnes : il les enregistre comme des demandes que vous confirmez. Pour les réserver, ajoutez une jonction plus grande ou baissez le plus grand groupe que l'assistant réserve seul.",
         "size_never_bookable": "Aucune table ni jonction ne convient à un groupe de {sizes}, donc l'assistant n'en réserve jamais : baissez le minimum de personnes d'une table ou ajoutez une jonction pour cette taille.",
         "table_has_holds": "{table} a des réservations à venir{who} : déplacez-les ou annulez-les avant de supprimer la table, de la désactiver ou de la déplacer dans une autre zone.",
         "out_of_range": "{value} est hors limites : la valeur doit être comprise entre {min} et {max}.",
-        "above_tables": "La jonction accepte jusqu'à {value} personnes, mais ses tables ont {max} places : baissez son maximum à {max} ou moins.",
-        "duplicate_name": "Deux tables s'appellent {name} : donnez à chacune son propre nom.",
-        "join_across_zones": "La jonction {tables} réunit des tables de zones différentes : une jonction reste dans une seule zone.",
-        "unknown_table": "La jonction nomme {tables}, qui n'est plus dans la salle : changez les tables de la jonction ou supprimez-la."
+        "above_tables": "La jonction accepte jusqu'à {value} personnes, mais ses tables ont {seats} places : baissez son maximum à {seats} ou moins.",
+        "duplicate_name": "Deux tables s'appellent {table} : donnez à chacune son propre nom.",
+        "join_across_zones": "La jonction réunit des tables de zones différentes ({tables}) : une jonction reste dans une seule zone, choisissez des tables de la même zone.",
+        "unknown_table": "Une jonction nomme {tables}, qui n'existe plus dans la salle : changez les tables de la jonction ou supprimez-la.",
+        "bad_zone_id": "Le code de zone « {zone} » n'est pas valide : il doit tenir en un seul mot de lettres minuscules, de chiffres ou de tirets.",
+        "duplicate_zone": "Deux zones ont le code « {zone} » : supprimez-en une et enregistrez à nouveau.",
+        "ends_before_start": "Une fermeture se termine le {to}, avant de commencer le {from} : vérifiez les dates « du » et « jusqu'au ».",
+        "no_zone": "{table} n'a pas de zone : choisissez-en une dans la colonne Zone.",
+        "unknown_zone": "{table} est dans la zone « {zone} », qui n'existe plus : choisissez-en une autre dans la colonne Zone.",
+        "duplicate_join": "Les tables {tables} sont jointes deux fois : supprimez l'une des deux jonctions.",
+        "bad_value": "« {value} » n'est pas une valeur valide : vérifiez le champ en évidence."
       }
     }
   },

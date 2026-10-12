@@ -13,7 +13,8 @@
         </div>
         <div v-if="warnings.length" class="callout amber">
           <b>{{ $t("components.restaurant.room.warnings") }}</b>
-          <ul><li v-for="(w, i) in warnings" :key="i">{{ w }}</li></ul>
+          <ul><li v-for="(w, i) in warnings" :key="i">{{ w.text }}
+            <template v-for="go in w.go" :key="go.ref"> <button class="linkish go" @click="focusRef(go.ref)">{{ go.label }}</button></template></li></ul>
         </div>
         <div v-if="saveMessage" class="callout" :class="saveMessage.ok ? 'blue' : 'red'" role="status">{{ saveMessage.text }}</div>
       </div>
@@ -25,7 +26,14 @@
           <span class="tb-row"><input class="input" type="number" :min="limits.min" :max="limits.max" step="5" :value="minFree" data-ref="set-minfree"
                                       :class="{ invalid: minFreeError }" :aria-label="$t('components.restaurant.room.minFreeLabel')"
                                       @input="e => minFree = e.target.value === '' ? NaN : Number(e.target.value)"> {{ $t("components.restaurant.room.minutes") }}</span>
-          <small>{{ $t("components.restaurant.room.minFreeHint", { n: rules.tableMinutes.upTo2, max: limits.max }) }}</small>
+          <small>{{ $t("components.restaurant.room.minFreeHint", { n: rules.minFreeDefault, max: limits.max }) }}</small>
+        </label>
+        <label class="field max-party">
+          <span>{{ $t("components.restaurant.room.maxParty") }}</span>
+          <span class="tb-row"><input class="input" type="number" :min="partyLimits.min" :max="partyLimits.max" step="1" :value="maxParty" data-ref="set-maxparty"
+                                      :class="{ invalid: maxPartyError }" :aria-label="$t('components.restaurant.room.maxParty')"
+                                      @input="e => maxParty = e.target.value === '' ? NaN : Number(e.target.value)"> {{ $t("components.restaurant.room.people") }}</span>
+          <small>{{ $t("components.restaurant.room.maxPartyHint") }}</small>
         </label>
       </section>
 
@@ -96,7 +104,7 @@
       </section>
 
       <section class="cfg-block card">
-        <h2>{{ $t("components.restaurant.room.joins") }}</h2>
+        <h2 tabindex="-1" data-ref="joins">{{ $t("components.restaurant.room.joins") }}</h2>
         <p class="muted">{{ $t("components.restaurant.room.joinsHint") }}</p>
         <div class="join-list">
           <div v-for="(j, ji) in draft.joins" :key="ji" class="jrow" :data-join="label(j.tables)">
@@ -210,6 +218,7 @@ export default {
     return {
       draft: clone(this.layout),
       minFree: this.rules.minFreeMinutes,
+      maxParty: this.rules.maxPartySize,
       gen: { n: 4, size: 2, zone: this.layout.zones.length ? this.layout.zones[0].id : null },
       closeForms: {},
       joinPick: [],
@@ -231,12 +240,30 @@ export default {
     minFreeChanged() {
       return this.minFree !== this.rules.minFreeMinutes;
     },
+    partyLimits() {
+      return this.rules.maxPartyRange;
+    },
+    maxPartyError() {
+      const n = this.maxParty;
+      return !(Number.isInteger(n) && n >= this.partyLimits.min && n <= this.partyLimits.max);
+    },
+    maxPartyChanged() {
+      return this.maxParty !== this.rules.maxPartySize;
+    },
+    /** What the skill instance is written with: the settings of this page that live there, as strings. */
+    instanceChanges() {
+      const out = {};
+      if (this.minFreeChanged) out.minFreeMinutes = String(this.minFree);
+      if (this.maxPartyChanged) out.maxPartySize = String(this.maxParty);
+      return out;
+    },
     layoutChanges() {
       return diffLayout(this.layout, this.draft);
     },
     changes() {
       const out = this.layoutChanges.map(c => this.$t(`components.restaurant.diff.${c.code}`, c.args));
       if (this.minFreeChanged) out.push(this.$t("components.restaurant.diff.minFree", { from: this.rules.minFreeMinutes, to: this.minFree }));
+      if (this.maxPartyChanged) out.push(this.$t("components.restaurant.diff.maxParty", { from: this.rules.maxPartySize, to: this.maxParty }));
       return out;
     },
     totalChanges() {
@@ -248,6 +275,7 @@ export default {
         if (t.max > 30) out.push({ ref: `t-${t.id}-max`, text: this.$t("components.restaurant.check.tableTooBig", { name: t.name }) });
       });
       if (this.minFreeError) out.push({ ref: "set-minfree", text: this.$t("components.restaurant.check.minFree", this.limits) });
+      if (this.maxPartyError) out.push({ ref: "set-maxparty", text: this.$t("components.restaurant.check.maxParty", this.partyLimits) });
       return out;
     },
     /** What the server's preview of the draft refuses: the problems the save would answer, said before it. */
@@ -258,9 +286,10 @@ export default {
     allErrors() {
       return this.clientErrors.concat(this.serverProblems.length ? this.serverProblems : this.previewProblems);
     },
+    /** The preview's warnings, each with a way to the setting it tells the owner to change. */
     warnings() {
       const ws = (this.preview.data && this.preview.data.warnings) || [];
-      return ws.map(w => this.problemText(w));
+      return ws.map(w => ({ text: this.problemText(w), go: this.goTo(w) }));
     },
     activeTables() {
       return this.draft.tables.filter(t => t.active);
@@ -296,6 +325,9 @@ export default {
     },
     "rules.minFreeMinutes"(n) {
       this.minFree = n;
+    },
+    "rules.maxPartySize"(n) {
+      this.maxParty = n;
     },
     draft: {
       deep: true,
@@ -434,6 +466,7 @@ export default {
         accept: () => {
           this.draft = clone(this.layout);
           this.minFree = this.rules.minFreeMinutes;
+          this.maxParty = this.rules.maxPartySize;
           this.joinPick = [];
           this.joinEdit = null;
           this.$emit("toast", this.$t("components.restaurant.room.discarded"));
@@ -444,10 +477,24 @@ export default {
     // ------------------------------------------------------------ the server's judgement
 
     /** A refusal or a warning in the owner's words, by its code; a table that still has bookings names them. */
+    /** The fields a warning asks the owner to change: the largest party for a party larger than the room; the
+     *  tables' minimum and the joins for a party size nothing takes. */
+    goTo(w) {
+      if (w.code === "party_larger_than_room") return [{ ref: "set-maxparty", label: this.$t("components.restaurant.room.goMaxParty") }];
+      if (w.code === "size_never_bookable") {
+        const first = this.draft.tables[0];
+        return (first ? [{ ref: `t-${first.id}-min`, label: this.$t("components.restaurant.room.goTableMin") }] : [])
+          .concat([{ ref: "joins", label: this.$t("components.restaurant.room.goJoins") }]);
+      }
+      return [];
+    },
     problemText(p) {
       return layoutMessage(p, { t: (k, a) => this.$t(k, a || {}), te: k => this.$te(k), whoOn: table => {
         const found = this.layout.tables.find(x => x.name === table || x.id === table);
         return found ? this.namesOn(found.id) : "";
+      }, tableName: id => {
+        const found = this.draft.tables.find(x => x.id === id) || this.layout.tables.find(x => x.id === id);
+        return found ? found.name : String(id);
       } });
     },
     /** The field a server problem is about, from its path in the layout the save sent. */
@@ -500,9 +547,9 @@ export default {
             return;
           }
         }
-        if (this.minFreeChanged) {
+        if (Object.keys(this.instanceChanges).length) {
           try {
-            await RestaurantApi.saveInstance(this.user, this.businessId, this.instance, { minFreeMinutes: String(this.minFree) });
+            await RestaurantApi.saveInstance(this.user, this.businessId, this.instance, this.instanceChanges);
           } catch (e) {
             this.refused(e, "minFree", layoutCount > 0);
             if (layoutCount) this.$emit("saved");
@@ -528,7 +575,7 @@ export default {
       if (r.status === 409 && r.code === "stale") key = "components.restaurant.room.stale";
       else if (r.status === 409 && what === "minFree") key = "components.restaurant.room.configChanged";
       else if (r.status === 409 && r.code === "not_configured") key = "components.restaurant.room.needsHours";
-      else if (r.status === 422 && what === "minFree") key = "components.restaurant.room.minFreeRefused";
+      else if (r.status === 422 && what === "minFree") key = "components.restaurant.room.settingsRefused";
       else if (r.code) key = `components.restaurant.answer.${r.code}`;
       this.saveMessage = { ok: false, text: (partly ? this.$t("components.restaurant.room.layoutSavedOnly") + " " : "") +
         (this.$te(key) ? this.$t(key) : this.$t("components.restaurant.answer.error")) };

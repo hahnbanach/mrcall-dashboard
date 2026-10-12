@@ -74,21 +74,33 @@ function weekly (v) {
  * the table times, the minimum free time and the horizon. Defaults are the manifest's. The values come
  * as the variables store them, strings and JSON strings, or already parsed.
  */
-export function rulesOf (params) {
+export function rulesOf (params, manifest) {
   const p = params || {}
-  const t2 = number(p.tableMinutes2, 90)
-  const t4 = number(p.tableMinutes4, 105)
-  const t6 = number(p.tableMinutes6, 120)
-  const larger = number(p.tableMinutesLarger, 150)
+  const m = manifest || {}
+  // An unset value is the manifest's default, read from the skill catalogue (`manifest`); the numbers below are
+  // only what the page shows while the catalogue cannot be read.
+  const def = (key, fallback) => {
+    const d = m[key] && m[key].default
+    return d === undefined || d === null || d === '' ? fallback : number(d, fallback)
+  }
+  const t2 = number(p.tableMinutes2, def('tableMinutes2', 90))
+  const t4 = number(p.tableMinutes4, def('tableMinutes4', 105))
+  const t6 = number(p.tableMinutes6, def('tableMinutes6', 120))
+  const larger = number(p.tableMinutesLarger, def('tableMinutesLarger', 150))
+  // StarChat's minimum free time when unset: its manifest default, capped at the longest table time (and the
+  // shortest table time when the catalogue is not read, which is what a server before 120 did).
+  const minFreeDefault = Math.max(1, Math.min(larger, def('minFreeMinutes', t2)))
+  const range = (key, min, max) => ({ min: m[key] && m[key].min !== undefined ? m[key].min : min, max: m[key] && m[key].max !== undefined ? m[key].max : max })
   return {
     lunch: weekly(p.lunch),
     dinner: weekly(p.dinner),
-    step: number(p.arrivalEveryMinutes, 15),
+    step: number(p.arrivalEveryMinutes, def('arrivalEveryMinutes', 15)),
     tableMinutes: { upTo2: t2, upTo4: t4, upTo6: t6, larger },
-    // The brief's default: the shortest table time, which no larger party's time undercuts.
-    minFreeMinutes: number(p.minFreeMinutes, t2),
-    daysAhead: number(p.daysAhead, 60),
-    maxPartySize: number(p.maxPartySize, 8)
+    minFreeMinutes: number(p.minFreeMinutes, minFreeDefault),
+    minFreeDefault,
+    daysAhead: number(p.daysAhead, def('daysAhead', 60)),
+    maxPartySize: number(p.maxPartySize, def('maxPartySize', 8)),
+    maxPartyRange: range('maxPartySize', 1, 100)
   }
 }
 

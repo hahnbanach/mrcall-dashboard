@@ -1424,7 +1424,7 @@
         "minFree": "Mindestfreizeit",
         "minFreeLabel": "Mindestfreizeit in Minuten",
         "minutes": "Minuten",
-        "minFreeHint": "Ein Tisch wird nur dann als frei angezeigt, wenn er mindestens so lange frei bleibt: Bei 90 Minuten gilt ein Tisch, der um 20:00 frei, aber um 20:30 reserviert ist, nicht als frei. Üblicherweise ist das die Zeit, die eine Gruppe von 2 Personen am Tisch bleibt ({n} Min.). Von 1 bis {max} Minuten.",
+        "minFreeHint": "Ein Tisch wird nur dann als frei angezeigt, wenn er mindestens so lange frei bleibt: Bei 120 Minuten gilt ein Tisch, der um 20:00 frei, aber um 21:00 reserviert ist, nicht als frei. Wenn Sie nichts ändern, gilt {n} Minuten. Von 1 bis {max} Minuten.",
         "generator": "Tische auf einmal hinzufügen",
         "genAdd": "Hinzufügen",
         "genHowMany": "Wie viele Tische",
@@ -1512,9 +1512,14 @@
         "stale": "Der Raum hat sich zwischenzeitlich geändert: Er wurde neu gelesen, die Änderungen bitte noch einmal vornehmen.",
         "configChanged": "Die Konfiguration hat sich zwischenzeitlich geändert: Sie wurde neu gelesen, bitte noch einmal versuchen.",
         "needsHours": "Zuerst die Öffnungszeiten festlegen: Ohne sie kann der Raum nicht gespeichert werden.",
-        "minFreeRefused": "Mindestfreizeit: Der Server hat den Wert abgelehnt.",
-        "layoutSavedOnly": "Der Raum wurde gespeichert, die Mindestfreizeit nicht.",
-        "andOthers": "{names} und {n} weitere"
+        "layoutSavedOnly": "Der Raum wurde gespeichert, die Einstellungen nicht.",
+        "andOthers": "{names} und {n} weitere",
+        "maxParty": "Größte Gruppe, die der Assistent selbst reserviert",
+        "maxPartyHint": "Über dieser Personenzahl reserviert der Assistent nicht: Er erfasst eine Anfrage, die Sie bestätigen. Meist nicht mehr als der größte Tisch oder die größte Verbindung.",
+        "goMaxParty": "Größte Gruppe ändern",
+        "goTableMin": "Mindestplätze der Tische ändern",
+        "goJoins": "Zu den Verbindungen",
+        "settingsRefused": "Der Server hat die Einstellungen nicht übernommen: Mindestfreizeit und größte Gruppe prüfen."
       },
       "check": {
         "zoneNameMissing": "Bereich {n} · Name: erforderlich",
@@ -1531,7 +1536,8 @@
         "joinMin": "Verbindung {label} · Min. Personen: mindestens 1",
         "joinMax": "Verbindung {label} · Max. Personen: mindestens {min}",
         "joinDuplicate": "Verbindung {label}: Es gibt bereits eine Verbindung mit denselben Tischen",
-        "minFree": "Einstellungen · Mindestfreizeit: zwischen {min} und {max} Minuten"
+        "minFree": "Einstellungen · Mindestfreizeit: zwischen {min} und {max} Minuten",
+        "maxParty": "Einstellungen · Größte Gruppe: zwischen {min} und {max} Personen"
       },
       "layoutCode": {
         "table_has_holds": "Ein Tisch, der entfernt, ausgeschaltet oder in einen anderen Bereich verschoben werden soll, hat künftige Reservierungen: zuerst diese verschieben oder stornieren, dann speichern.",
@@ -1553,7 +1559,7 @@
         "duplicate_join": "Dieselben Tische sind zweimal verbunden: eine der beiden Verbindungen entfernen.",
         "decreasing": "Die Nummerierung der Tische stimmt nicht: die Seite neu laden und die Änderung noch einmal vornehmen.",
         "no_capacity": "Kein Bereich hat einen aktiven Tisch: Der Assistent kann nichts reservieren, bis ein Tisch hinzugefügt oder eingeschaltet wird.",
-        "party_larger_than_room": "Der Assistent nimmt Gruppen an, die größer sind als der größte Tisch oder die größte Verbindung: Er reserviert sie nicht, sondern erfasst sie als Anfragen, die Sie bestätigen. Um sie zu reservieren, eine größere Verbindung hinzufügen oder die maximale Gruppengröße senken.",
+        "party_larger_than_room": "Der Assistent nimmt Gruppen an, die größer sind als der größte Tisch oder die größte Verbindung: Er reserviert sie nicht, sondern erfasst sie als Anfragen, die Sie bestätigen. Um sie zu reservieren, eine größere Verbindung hinzufügen oder die größte Gruppe senken, die der Assistent selbst reserviert.",
         "size_never_bookable": "Für manche Gruppengrößen passt kein Tisch und keine Verbindung, der Assistent reserviert sie also nie: die Mindestzahl an Personen eines Tisches senken oder eine Verbindung hinzufügen.",
         "other": "Der Gastraum wurde nicht gespeichert: Bereiche, Tische und Verbindungen prüfen und es erneut versuchen.",
         "missing": "Etwas, das der Gastraum braucht, fehlt: die markierten Felder prüfen.",
@@ -1576,7 +1582,8 @@
         "joinAdded": "Verbindung hinzugefügt: {label} ({min}-{max})",
         "joinRemoved": "Verbindung entfernt: {label}",
         "joinRange": "Verbindung {label}: Personen {from} → {to}",
-        "minFree": "Mindestfreizeit: {from} → {to} Min."
+        "minFree": "Mindestfreizeit: {from} → {to} Min.",
+        "maxParty": "Größte Gruppe, die der Assistent reserviert: {from} → {to} Personen"
       },
       "calls": {
         "title": "Der Anruf",
@@ -1642,14 +1649,21 @@
       "alreadySent": "Bereits gesendet: Das lässt sich nicht mehr rückgängig machen.",
       "exportFile": "reservierungen-{from}-{to}.csv",
       "layoutValues": {
-        "party_larger_than_room": "Der Assistent nimmt Gruppen bis {maxPartySize} Personen an, aber der größte Tisch oder die größte Verbindung hat {largestSeating} Plätze. Gruppen von {from} bis {maxPartySize} Personen reserviert er nicht, sondern erfasst sie als Anfragen, die Sie bestätigen. Um sie zu reservieren, eine größere Verbindung hinzufügen oder die maximale Gruppengröße senken.",
+        "party_larger_than_room": "Der Assistent nimmt Gruppen bis {maxPartySize} Personen an, aber der größte Tisch oder die größte Verbindung hat {largestSeating} Plätze. Gruppen von {from} bis {maxPartySize} Personen reserviert er nicht, sondern erfasst sie als Anfragen, die Sie bestätigen. Um sie zu reservieren, eine größere Verbindung hinzufügen oder die größte Gruppe senken, die der Assistent selbst reserviert.",
         "size_never_bookable": "Kein Tisch und keine Verbindung passt für eine Gruppe von {sizes}, der Assistent reserviert sie also nie: die Mindestzahl an Personen eines Tisches senken oder eine Verbindung für diese Größe hinzufügen.",
         "table_has_holds": "{table} hat künftige Reservierungen{who}: diese verschieben oder stornieren, bevor der Tisch entfernt, ausgeschaltet oder in einen anderen Bereich verschoben wird.",
         "out_of_range": "{value} liegt außerhalb des erlaubten Bereichs: Der Wert muss zwischen {min} und {max} liegen.",
-        "above_tables": "Die Verbindung nimmt bis zu {value} Personen auf, aber ihre Tische haben {max} Plätze: die Höchstzahl auf {max} oder weniger senken.",
-        "duplicate_name": "Zwei Tische heißen {name}: jedem einen eigenen Namen geben.",
-        "join_across_zones": "Die Verbindung {tables} enthält Tische aus verschiedenen Bereichen: Eine Verbindung bleibt in einem Bereich.",
-        "unknown_table": "Die Verbindung nennt {tables}, was nicht mehr im Gastraum ist: die Tische der Verbindung ändern oder sie entfernen."
+        "above_tables": "Die Verbindung nimmt bis zu {value} Personen auf, ihre Tische haben aber nur {seats} Plätze: die Höchstzahl auf {seats} oder weniger senken.",
+        "duplicate_name": "Zwei Tische heißen {table}: jedem einen eigenen Namen geben.",
+        "join_across_zones": "Die Verbindung enthält Tische aus verschiedenen Bereichen ({tables}): Eine Verbindung bleibt in einem Bereich, Tische desselben Bereichs wählen.",
+        "unknown_table": "Eine Verbindung nennt {tables}, was es im Raum nicht mehr gibt: die Tische der Verbindung ändern oder sie entfernen.",
+        "bad_zone_id": "Der Bereichscode „{zone}“ ist ungültig: Er muss ein einzelnes Wort aus Kleinbuchstaben, Ziffern oder Bindestrichen sein.",
+        "duplicate_zone": "Zwei Bereiche haben den Code „{zone}“: einen davon entfernen und erneut speichern.",
+        "ends_before_start": "Eine Schließzeit endet am {to}, bevor sie am {from} beginnt: die Daten „ab“ und „bis“ prüfen.",
+        "no_zone": "{table} hat keinen Bereich: in der Spalte Bereich einen auswählen.",
+        "unknown_zone": "{table} gehört zum Bereich „{zone}“, den es nicht mehr gibt: in der Spalte Bereich einen anderen auswählen.",
+        "duplicate_join": "Die Tische {tables} sind zweimal verbunden: eine der beiden Verbindungen entfernen.",
+        "bad_value": "„{value}“ ist kein gültiger Wert: das markierte Feld prüfen."
       }
     }
   },

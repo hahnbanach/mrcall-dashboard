@@ -1422,7 +1422,7 @@
         "minFree": "Minste ledige tid",
         "minFreeLabel": "Minste ledige tid i minutter",
         "minutes": "minutter",
-        "minFreeHint": "Et bord vises som ledig bare hvis det forblir ledig minst så lenge: med 90 minutter regnes et bord som er ledig kl. 20:00 men booket kl. 20:30, ikke som ledig. Vanligvis er det tiden 2 personer sitter ved et bord ({n} min). Fra 1 til {max} minutter.",
+        "minFreeHint": "Et bord vises som ledig bare hvis det forblir ledig minst så lenge: med 120 minutter regnes et bord som er ledig kl. 20:00 men booket kl. 21:00, ikke som ledig. Hvis dere ikke endrer det, er det {n} minutter. Fra 1 til {max} minutter.",
         "generator": "Legg til bord på én gang",
         "genAdd": "Legg til",
         "genHowMany": "Hvor mange bord",
@@ -1510,9 +1510,14 @@
         "stale": "Salen ble endret i mellomtiden: den er lest på nytt, gjør endringene dine en gang til.",
         "configChanged": "Konfigurasjonen ble endret i mellomtiden: den er lest på nytt, prøv en gang til.",
         "needsHours": "Angi åpningstidene først: uten dem kan ikke salen lagres.",
-        "minFreeRefused": "Minste ledige tid: serveren avviste verdien.",
-        "layoutSavedOnly": "Salen ble lagret, men minste ledige tid ble ikke lagret.",
-        "andOthers": "{names} og {n} til"
+        "layoutSavedOnly": "Salen ble lagret, men innstillingene ble ikke lagret.",
+        "andOthers": "{names} og {n} til",
+        "maxParty": "Største selskap assistenten reserverer selv",
+        "maxPartyHint": "Over dette antallet personer reserverer assistenten ikke: den registrerer en forespørsel som dere bekrefter. Vanligvis ikke mer enn det største bordet eller den største sammenslåingen.",
+        "goMaxParty": "Endre største selskap",
+        "goTableMin": "Endre bordenes minste antall plasser",
+        "goJoins": "Gå til sammenslåingene",
+        "settingsRefused": "Serveren godtok ikke innstillingene: sjekk minste ledige tid og største selskap."
       },
       "check": {
         "zoneNameMissing": "Område {n} · Navn: påkrevd",
@@ -1529,7 +1534,8 @@
         "joinMin": "Sammenslåing {label} · Min personer: minst 1",
         "joinMax": "Sammenslåing {label} · Maks personer: minst {min}",
         "joinDuplicate": "Sammenslåing {label}: det finnes allerede en sammenslåing med de samme bordene",
-        "minFree": "Innstillinger · Minste ledige tid: mellom {min} og {max} minutter"
+        "minFree": "Innstillinger · Minste ledige tid: mellom {min} og {max} minutter",
+        "maxParty": "Innstillinger · Største selskap: mellom {min} og {max} personer"
       },
       "layoutCode": {
         "table_has_holds": "Et bord som dere vil fjerne, slå av eller flytte til et annet område, har framtidige reservasjoner: flytt eller avlys dem først, og lagre deretter.",
@@ -1551,7 +1557,7 @@
         "duplicate_join": "De samme bordene er slått sammen to ganger: fjern den ene av de to sammenslåingene.",
         "decreasing": "Nummereringen av bordene stemmer ikke: last siden på nytt, og gjør endringen en gang til.",
         "no_capacity": "Ingen områder har et aktivt bord: assistenten kan ikke reservere noe før dere legger til eller slår på et bord.",
-        "party_larger_than_room": "Assistenten tar imot selskaper som er større enn det største bordet eller den største sammenslåingen: den reserverer dem ikke, men registrerer dem som forespørsler som dere bekrefter. For å kunne reservere dem, legg til en større sammenslåing eller senk største selskapsstørrelse.",
+        "party_larger_than_room": "Assistenten tar imot selskaper som er større enn det største bordet eller den største sammenslåingen: den reserverer dem ikke, men registrerer dem som forespørsler som dere bekrefter. For å kunne reservere dem, legg til en større sammenslåing eller senk største selskap assistenten reserverer selv.",
         "size_never_bookable": "For noen selskapsstørrelser passer verken et bord eller en sammenslåing, så assistenten reserverer dem aldri: senk minste antall personer ved et bord, eller legg til en sammenslåing.",
         "other": "Salen ble ikke lagret: kontroller områder, bord og sammenslåinger, og prøv igjen.",
         "missing": "Noe som salen trenger, mangler: kontroller de markerte feltene.",
@@ -1574,7 +1580,8 @@
         "joinAdded": "Sammenslåing lagt til: {label} ({min}-{max})",
         "joinRemoved": "Sammenslåing fjernet: {label}",
         "joinRange": "Sammenslåing {label}: personer {from} → {to}",
-        "minFree": "Minste ledige tid: {from} → {to} min"
+        "minFree": "Minste ledige tid: {from} → {to} min",
+        "maxParty": "Største selskap assistenten reserverer: {from} → {to} personer"
       },
       "calls": {
         "title": "Samtalen",
@@ -1640,14 +1647,21 @@
       "alreadySent": "Allerede sendt: det kan ikke lenger angres.",
       "exportFile": "reservasjoner-{from}-{to}.csv",
       "layoutValues": {
-        "party_larger_than_room": "Assistenten tar imot selskaper på opptil {maxPartySize} personer, men det største bordet eller den største sammenslåingen har {largestSeating} plasser. Selskaper på {from} til {maxPartySize} personer reserverer den ikke, men registrerer dem som forespørsler som dere bekrefter. For å kunne reservere dem, legg til en større sammenslåing eller senk største selskapsstørrelse.",
+        "party_larger_than_room": "Assistenten tar imot selskaper på opptil {maxPartySize} personer, men det største bordet eller den største sammenslåingen har {largestSeating} plasser. Selskaper på {from} til {maxPartySize} personer reserverer den ikke, men registrerer dem som forespørsler som dere bekrefter. For å kunne reservere dem, legg til en større sammenslåing eller senk største selskap assistenten reserverer selv.",
         "size_never_bookable": "Ingen bord eller sammenslåing passer til et selskap på {sizes}, så assistenten reserverer det aldri: senk minste antall personer ved et bord, eller legg til en sammenslåing for den størrelsen.",
         "table_has_holds": "{table} har framtidige reservasjoner{who}: flytt eller avlys dem før dere fjerner bordet, slår det av eller flytter det til et annet område.",
         "out_of_range": "{value} er utenfor tillatt område: det må ligge mellom {min} og {max}.",
-        "above_tables": "Sammenslåingen tar opptil {value} personer, men bordene har {max} plasser: senk maksimum til {max} eller lavere.",
-        "duplicate_name": "To bord heter {name}: gi hvert bord sitt eget navn.",
-        "join_across_zones": "Sammenslåingen {tables} har bord fra ulike områder: en sammenslåing blir i ett område.",
-        "unknown_table": "Sammenslåingen nevner {tables}, som ikke lenger er i salen: endre bordene i sammenslåingen, eller fjern den."
+        "above_tables": "Sammenslåingen tar opptil {value} personer, men bordene har {seats} plasser: senk maksimum til {seats} eller lavere.",
+        "duplicate_name": "To bord heter {table}: gi hvert bord sitt eget navn.",
+        "join_across_zones": "Sammenslåingen har bord fra ulike områder ({tables}): en sammenslåing blir i ett område, velg bord fra samme område.",
+        "unknown_table": "En sammenslåing nevner {tables}, som ikke finnes i salen lenger: endre bordene i sammenslåingen, eller fjern den.",
+        "bad_zone_id": "Områdekoden «{zone}» er ugyldig: den må være ett enkelt ord med små bokstaver, tall eller bindestreker.",
+        "duplicate_zone": "To områder har koden «{zone}»: fjern det ene, og lagre på nytt.",
+        "ends_before_start": "En stengning slutter {to}, før den begynner {from}: kontroller datoene «fra» og «til».",
+        "no_zone": "{table} mangler område: velg ett i kolonnen Område.",
+        "unknown_zone": "{table} ligger i området «{zone}», som ikke finnes lenger: velg et annet i kolonnen Område.",
+        "duplicate_join": "Bordene {tables} er slått sammen to ganger: fjern den ene av de to sammenslåingene.",
+        "bad_value": "«{value}» er ikke en gyldig verdi: kontroller det markerte feltet."
       }
     }
   },

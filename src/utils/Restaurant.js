@@ -278,6 +278,24 @@ export default {
     },
 
     /**
+     * The restaurant_booking skill's configuration fields as the skill catalogue declares them (the manifest's
+     * `config`): `{key: {default, min, max}}`, so an unset value is shown as the manifest's default, never a
+     * number written here. `{}` when the catalogue cannot be read.
+     */
+    manifest: async function(user, businessId) {
+        try {
+            const skills = await call(() => axios.get(process.env.VUE_APP_STARCHAT_URL + "/mrcall/v1/mrcall0/apidomain/agent/skills" +
+                (businessId ? "?businessId=" + encodeURIComponent(businessId) : ""), { headers: headers(user) }));
+            const skill = (Array.isArray(skills) ? skills : []).find(s => s && SKILL_NAMES.includes(s.name));
+            const fields = (skill && skill.configSchema && skill.configSchema.fields) || [];
+            return Object.fromEntries(fields.map(f => [f.key, { default: f.default, min: f.min, max: f.max }]));
+        } catch (e) {
+            console.warn("Restaurant skill manifest not read:", e.restaurant ? e.restaurant.status : e);
+            return {};
+        }
+    },
+
+    /**
      * The restaurant_booking instance of the business and the revision of its phase, or null when the
      * business has none: the one StarChat serves, under either of its names, in the `during` phase only.
      * `params` is the instance configuration as the read returns it, the store-backed `layout` included.

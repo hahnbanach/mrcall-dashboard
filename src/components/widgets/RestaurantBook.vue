@@ -160,13 +160,14 @@ export default {
       toast: null,
       lastRefusal: null,
       deferred: {},
+      manifest: null,
       searchResults: [],
       searchTruncated: false,
     };
   },
   computed: {
     rules() {
-      return rulesOf(this.instance ? this.instance.params : {});
+      return rulesOf(this.instance ? this.instance.params : {}, this.manifest);
     },
     day() {
       return this.days[this.date] || null;
@@ -262,7 +263,10 @@ export default {
     // ------------------------------------------------------------ reading
 
     async loadInstance() {
-      this.instance = await RestaurantApi.instance(this.user, this.businessId);
+      const [instance, manifest] = await Promise.all([RestaurantApi.instance(this.user, this.businessId),
+        this.manifest ? this.manifest : RestaurantApi.manifest(this.user, this.businessId)]);
+      this.manifest = manifest;
+      this.instance = instance;
       // A business that runs no restaurant skill has no book: the page says so instead of offering one.
       this.noSkill = !this.instance;
     },

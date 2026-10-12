@@ -1436,7 +1436,7 @@
         "minFree": "Tiempo libre mínimo",
         "minFreeLabel": "Tiempo libre mínimo en minutos",
         "minutes": "minutos",
-        "minFreeHint": "Una mesa se muestra como libre solo si sigue libre al menos este tiempo: con 90 minutos, una mesa libre a las 20:00 pero reservada a las 20:30 no se muestra como libre. Lo habitual es el tiempo que 2 personas ocupan una mesa ({n} min). De 1 a {max} minutos.",
+        "minFreeHint": "Una mesa se muestra como libre solo si sigue libre al menos este tiempo: con 120 minutos, una mesa libre a las 20:00 pero reservada a las 21:00 no se muestra como libre. Si no lo cambias, son {n} minutos. De 1 a {max} minutos.",
         "generator": "Añadir mesas de una vez",
         "genAdd": "Añadir",
         "genHowMany": "Cuántas mesas",
@@ -1524,9 +1524,14 @@
         "stale": "La sala ha cambiado mientras tanto: se ha vuelto a leer, haz tus cambios de nuevo.",
         "configChanged": "La configuración ha cambiado mientras tanto: se ha vuelto a leer, inténtalo otra vez.",
         "needsHours": "Define primero el horario: sin él no se puede guardar la sala.",
-        "minFreeRefused": "Tiempo libre mínimo: el servidor ha rechazado el valor.",
-        "layoutSavedOnly": "La sala se guardó, el tiempo libre mínimo no.",
-        "andOthers": "{names} y {n} más"
+        "layoutSavedOnly": "La sala se guardó, los ajustes no.",
+        "andOthers": "{names} y {n} más",
+        "maxParty": "Grupo más grande que el asistente reserva por sí solo",
+        "maxPartyHint": "Por encima de este número de personas el asistente no reserva: registra una solicitud que confirmas tú. Lo habitual es que no supere la mesa o la unión más grande.",
+        "goMaxParty": "Cambiar el grupo más grande",
+        "goTableMin": "Cambiar las plazas mínimas de las mesas",
+        "goJoins": "Ir a las uniones",
+        "settingsRefused": "El servidor no ha aceptado los ajustes: revisa el tiempo libre mínimo y el grupo más grande."
       },
       "check": {
         "zoneNameMissing": "Zona {n} · Nombre: obligatorio",
@@ -1543,7 +1548,8 @@
         "joinMin": "Unión {label} · Personas mín.: al menos 1",
         "joinMax": "Unión {label} · Personas máx.: al menos {min}",
         "joinDuplicate": "Unión {label}: ya hay una unión con las mismas mesas",
-        "minFree": "Ajustes · Tiempo libre mínimo: entre {min} y {max} minutos"
+        "minFree": "Ajustes · Tiempo libre mínimo: entre {min} y {max} minutos",
+        "maxParty": "Ajustes · Grupo más grande: entre {min} y {max} personas"
       },
       "layoutCode": {
         "table_has_holds": "Una mesa que quieres quitar, desactivar o pasar a otra zona tiene reservas futuras: mueve o cancela esas reservas primero y luego guarda.",
@@ -1565,7 +1571,7 @@
         "duplicate_join": "Las mismas mesas están unidas dos veces: quita una de las dos uniones.",
         "decreasing": "La numeración de las mesas no cuadra: recarga la página y vuelve a hacer el cambio.",
         "no_capacity": "Ninguna zona tiene una mesa activa: el asistente no puede reservar nada hasta que añadas o actives una mesa.",
-        "party_larger_than_room": "El asistente acepta grupos mayores que la mesa o la unión más grande: no los reserva, los registra como solicitudes para que las confirmes. Para reservarlos, añade una unión más grande o baja el tamaño máximo de grupo.",
+        "party_larger_than_room": "El asistente acepta grupos mayores que la mesa o la unión más grande: no los reserva, los registra como solicitudes para que las confirmes. Para reservarlos, añade una unión más grande o baja el grupo más grande que el asistente reserva por sí solo.",
         "size_never_bookable": "Para algunos tamaños de grupo no cabe ninguna mesa ni unión, así que el asistente nunca los reserva: baja el mínimo de personas de una mesa o añade una unión.",
         "other": "La sala no se ha guardado: revisa las zonas, las mesas y las uniones e inténtalo de nuevo.",
         "missing": "Falta algo que necesita la sala: revisa los campos resaltados.",
@@ -1588,7 +1594,8 @@
         "joinAdded": "Unión añadida: {label} ({min}-{max})",
         "joinRemoved": "Unión quitada: {label}",
         "joinRange": "Unión {label}: personas {from} → {to}",
-        "minFree": "Tiempo libre mínimo: {from} → {to} min"
+        "minFree": "Tiempo libre mínimo: {from} → {to} min",
+        "maxParty": "Grupo más grande que reserva el asistente: {from} → {to} personas"
       },
       "calls": {
         "title": "La llamada",
@@ -1654,14 +1661,21 @@
       "alreadySent": "Ya enviado: ya no se puede deshacer.",
       "exportFile": "reservas-{from}-{to}.csv",
       "layoutValues": {
-        "party_larger_than_room": "El asistente acepta grupos de hasta {maxPartySize} personas, pero la mesa o la unión más grande tiene {largestSeating} plazas. No reserva grupos de {from} a {maxPartySize} personas: los registra como solicitudes para que las confirmes. Para reservarlos, añade una unión más grande o baja el tamaño máximo de grupo.",
+        "party_larger_than_room": "El asistente acepta grupos de hasta {maxPartySize} personas, pero la mesa o la unión más grande tiene {largestSeating} plazas. No reserva grupos de {from} a {maxPartySize} personas: los registra como solicitudes para que las confirmes. Para reservarlos, añade una unión más grande o baja el grupo más grande que el asistente reserva por sí solo.",
         "size_never_bookable": "Ninguna mesa ni unión es adecuada para un grupo de {sizes}, así que el asistente nunca lo reserva: baja el mínimo de personas de una mesa o añade una unión para ese tamaño.",
         "table_has_holds": "{table} tiene reservas futuras{who}: mueve o cancela esas reservas antes de quitar la mesa, desactivarla o pasarla a otra zona.",
         "out_of_range": "{value} está fuera de rango: debe estar entre {min} y {max}.",
-        "above_tables": "La unión admite hasta {value} personas, pero sus mesas tienen {max} plazas: baja su máximo a {max} o menos.",
-        "duplicate_name": "Dos mesas se llaman {name}: da a cada una su propio nombre.",
-        "join_across_zones": "La unión {tables} tiene mesas de zonas distintas: una unión se queda en una sola zona.",
-        "unknown_table": "La unión nombra {tables}, que ya no está en la sala: cambia las mesas de la unión o quítala."
+        "above_tables": "La unión admite hasta {value} personas, pero sus mesas tienen {seats} plazas: baja su máximo a {seats} o menos.",
+        "duplicate_name": "Dos mesas se llaman {table}: da a cada una su propio nombre.",
+        "join_across_zones": "La unión tiene mesas de zonas distintas ({tables}): una unión se queda en una sola zona, elige mesas de la misma zona.",
+        "unknown_table": "Una unión nombra {tables}, que ya no está en la sala: cambia las mesas de la unión o quítala.",
+        "bad_zone_id": "El código de zona «{zone}» no es válido: debe ser una sola palabra con letras minúsculas, cifras o guiones.",
+        "duplicate_zone": "Dos zonas tienen el código «{zone}»: quita una de ellas y vuelve a guardar.",
+        "ends_before_start": "Un cierre termina el {to}, antes de empezar el {from}: revisa las fechas «desde» y «hasta».",
+        "no_zone": "{table} no tiene zona: elige una en la columna Zona.",
+        "unknown_zone": "{table} está en la zona «{zone}», que ya no existe: elige otra en la columna Zona.",
+        "duplicate_join": "Las mesas {tables} están unidas dos veces: quita una de las dos uniones.",
+        "bad_value": "«{value}» no es un valor válido: revisa el campo resaltado."
       }
     }
   },

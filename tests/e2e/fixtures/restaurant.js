@@ -24,6 +24,8 @@ const toMin = t => { const [h, m] = t.split(':').map(Number); return h * 60 + m 
 const fmt = m => `${pad(Math.floor(m / 60))}:${pad(m % 60)}`
 
 const TODAY = keyOf(new Date())
+/** The restaurant manifest's default minimum free time (StarChat is moving it to 120). */
+const MANIFEST_MIN_FREE = 120
 const TOMORROW = addDays(TODAY, 1)
 const WEEK = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
 
@@ -96,13 +98,18 @@ const lunch = JSON.stringify(Object.fromEntries(WEEK.map(d => [d, ['12:00-14:00'
  */
 async function mockRestaurant (page, opts = {}) {
   const calls = []
+  // an uncaught error in the page is said where it happens (the dev server would otherwise cover the page)
+  // Microsoft Clarity, loaded by the app from the internet, throws cross-origin errors in a test page; the dev
+  // server's overlay then covered the page and a click timed out (seen once in a full run, 2026-10-12)
+  await page.route('**/*clarity.ms/**', route => route.abort())
+  page.on('pageerror', e => console.log(`PAGEERROR ${e.message}\n${(e.stack || '').split('\n').slice(0, 6).join('\n')}`))
   const state = {
     layout: opts.layout === false ? null : trattoria(),
     rows: tomorrowsDinner(),
     revision: 'rev-1',
     params: { enabled: 'true', dinner: opts.hours === false ? '{}' : hours, lunch: opts.hours === false ? '{}' : lunch,
       arrivalEveryMinutes: '15', tableMinutes2: '90', tableMinutes4: '105', tableMinutes6: '120', tableMinutesLarger: '150',
-      minFreeMinutes: '90', daysAhead: '60' },
+      ...(opts.minFree === false ? {} : { minFreeMinutes: '90' }), daysAhead: '60' },
     refuseBook: opts.refuseBook || null,
     nextId: 1
   }
@@ -130,7 +137,8 @@ async function mockRestaurant (page, opts = {}) {
     const joins = state.layout.joins.map(j => ({ ids: j.tables.slice(), min: j.min, max: j.max, zone: 'sala', joined: true }))
     return singles.sort((a, b) => a.max - b.max).concat(joins)
   }
-  const minFree = () => Number(state.params.minFreeMinutes || state.params.tableMinutes2)
+  // StarChat's minimum free time when unset: the manifest's default (120), capped at the longest table time
+  const minFree = () => Number(state.params.minFreeMinutes || Math.min(MANIFEST_MIN_FREE, Number(state.params.tableMinutesLarger)))
   /** DayBook.freeWindows: per active table, the gaps of each service (first arrival to last arrival plus the
    *  longest table time) at least the minimum free time long, as "HH:MM", past midnight as 24:30. */
   const freeTablesOf = date => {
@@ -160,6 +168,14 @@ async function mockRestaurant (page, opts = {}) {
   await page.route('**/crm/business*', route => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify([business]),
     headers: { 'x-mrcall-role': 'owner', 'access-control-expose-headers': 'x-mrcall-role' } }))
 
+  // the skill catalogue: the restaurant manifest's configuration fields, their defaults and limits
+  await page.route(url => url.pathname.endsWith('/apidomain/agent/skills'), route => json(route, 200, [{
+    name: 'skill_restaurant_booking',
+    configSchema: { fields: [
+      { key: 'minFreeMinutes', type: 'number', default: MANIFEST_MIN_FREE, min: 1, max: 480 },
+      { key: 'maxPartySize', type: 'number', default: 8, min: 1, max: 100 },
+      { key: 'tableMinutes2', type: 'number', default: 90 }, { key: 'tableMinutesLarger', type: 'number', default: 150 }] }
+  }]))
   await page.route('**/apidomain/agent/skills/configuration/**', route => {
     const request = route.request()
     if (request.method() === 'PUT') {
@@ -294,8 +310,8 @@ async function mockRestaurant (page, opts = {}) {
       if (heldGone.length) {
         return json(route, 422, { diagnostics: heldGone.map(t => ({ path: '/layout/tables', code: 'table_has_holds',
           detail: `table '${t.name}' (${t.id}) has future bookings; move them before removing it`,
-          // ASSUMED shape of the values StarChat is adding to every restaurant problem (not released yet)
-          ...(opts.values === false ? {} : { values: { table: t.name } }) })) })
+          // StarChat 9.34 after 9.34.65 (R6): table_has_holds carries {table, id}; `values: false` is 9.34.65
+          ...(opts.values === false ? {} : { values: { table: t.name, id: t.id } }) })) })
       }
       let next = state.layout ? state.layout.nextTableId : 1
       const tables = sent.tables.map(t => Object.assign({}, t, { id: t.id || next++, active: t.active !== false }))

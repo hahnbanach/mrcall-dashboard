@@ -1422,7 +1422,7 @@
         "minFree": "Minimale vrije tijd",
         "minFreeLabel": "Minimale vrije tijd in minuten",
         "minutes": "minuten",
-        "minFreeHint": "Een tafel wordt alleen als vrij getoond als hij minstens zo lang vrij blijft: bij 90 minuten telt een tafel die om 20:00 vrij is maar om 20:30 gereserveerd is, niet als vrij. Meestal is dit de tijd dat een groep van 2 personen een tafel bezet houdt ({n} min). Van 1 tot {max} minuten.",
+        "minFreeHint": "Een tafel wordt alleen als vrij getoond als hij minstens zo lang vrij blijft: bij 120 minuten telt een tafel die om 20:00 vrij is maar om 21:00 gereserveerd is, niet als vrij. Als je het niet wijzigt, is het {n} minuten. Van 1 tot {max} minuten.",
         "generator": "Tafels in één keer toevoegen",
         "genAdd": "Toevoegen",
         "genHowMany": "Hoeveel tafels",
@@ -1510,9 +1510,14 @@
         "stale": "De zaal is intussen gewijzigd: ze is opnieuw gelezen, doe je wijzigingen nog eens.",
         "configChanged": "De configuratie is intussen gewijzigd: ze is opnieuw gelezen, probeer het nog eens.",
         "needsHours": "Stel eerst de openingstijden in: zonder die kan de zaal niet worden opgeslagen.",
-        "minFreeRefused": "Minimale vrije tijd: de server heeft de waarde geweigerd.",
-        "layoutSavedOnly": "De zaal is opgeslagen, de minimale vrije tijd niet.",
-        "andOthers": "{names} en nog {n}"
+        "layoutSavedOnly": "De zaal is opgeslagen, de instellingen niet.",
+        "andOthers": "{names} en nog {n}",
+        "maxParty": "Grootste gezelschap dat de assistent zelf reserveert",
+        "maxPartyHint": "Boven dit aantal personen reserveert de assistent niet: hij legt een aanvraag vast die jij bevestigt. Meestal niet meer dan de grootste tafel of koppeling.",
+        "goMaxParty": "Grootste gezelschap wijzigen",
+        "goTableMin": "Minimale plekken van de tafels wijzigen",
+        "goJoins": "Naar de koppelingen",
+        "settingsRefused": "De server heeft de instellingen niet geaccepteerd: controleer de minimale vrije tijd en het grootste gezelschap."
       },
       "check": {
         "zoneNameMissing": "Gedeelte {n} · Naam: verplicht",
@@ -1529,7 +1534,8 @@
         "joinMin": "Koppeling {label} · Min. personen: minstens 1",
         "joinMax": "Koppeling {label} · Max. personen: minstens {min}",
         "joinDuplicate": "Koppeling {label}: er is al een koppeling met dezelfde tafels",
-        "minFree": "Instellingen · Minimale vrije tijd: tussen {min} en {max} minuten"
+        "minFree": "Instellingen · Minimale vrije tijd: tussen {min} en {max} minuten",
+        "maxParty": "Instellingen · Grootste gezelschap: tussen {min} en {max} personen"
       },
       "layoutCode": {
         "table_has_holds": "Een tafel die je wilt verwijderen, uitzetten of naar een ander gedeelte wilt verplaatsen, heeft reserveringen in de toekomst: verplaats of annuleer die eerst en sla dan op.",
@@ -1551,7 +1557,7 @@
         "duplicate_join": "Dezelfde tafels zijn twee keer gekoppeld: verwijder een van de twee koppelingen.",
         "decreasing": "De nummering van de tafels klopt niet: laad de pagina opnieuw en doe de wijziging nog een keer.",
         "no_capacity": "Geen enkel gedeelte heeft een actieve tafel: de assistent kan niets reserveren totdat je een tafel toevoegt of aanzet.",
-        "party_larger_than_room": "De assistent accepteert gezelschappen die groter zijn dan de grootste tafel of koppeling: hij reserveert ze niet, maar legt ze vast als aanvragen die jij bevestigt. Om ze wel te reserveren, voeg je een grotere koppeling toe of verlaag je de maximale grootte van een gezelschap.",
+        "party_larger_than_room": "De assistent accepteert gezelschappen die groter zijn dan de grootste tafel of koppeling: hij reserveert ze niet, maar legt ze vast als aanvragen die jij bevestigt. Om ze wel te reserveren, voeg je een grotere koppeling toe of verlaag je het grootste gezelschap dat de assistent zelf reserveert.",
         "size_never_bookable": "Voor sommige groottes van een gezelschap past geen tafel of koppeling, dus de assistent reserveert ze nooit: verlaag het minimum aantal personen van een tafel of voeg een koppeling toe.",
         "other": "De zaal is niet opgeslagen: controleer de gedeeltes, tafels en koppelingen en probeer het opnieuw.",
         "missing": "Er ontbreekt iets wat de zaal nodig heeft: controleer de gemarkeerde velden.",
@@ -1574,7 +1580,8 @@
         "joinAdded": "Koppeling toegevoegd: {label} ({min}-{max})",
         "joinRemoved": "Koppeling verwijderd: {label}",
         "joinRange": "Koppeling {label}: personen {from} → {to}",
-        "minFree": "Minimale vrije tijd: {from} → {to} min"
+        "minFree": "Minimale vrije tijd: {from} → {to} min",
+        "maxParty": "Grootste gezelschap dat de assistent reserveert: {from} → {to} personen"
       },
       "calls": {
         "title": "Het gesprek",
@@ -1640,14 +1647,21 @@
       "alreadySent": "Al verzonden: dit kan niet meer ongedaan worden gemaakt.",
       "exportFile": "reserveringen-{from}-{to}.csv",
       "layoutValues": {
-        "party_larger_than_room": "De assistent accepteert gezelschappen tot {maxPartySize} personen, maar de grootste tafel of koppeling heeft {largestSeating} plekken. Gezelschappen van {from} tot {maxPartySize} personen reserveert hij niet: hij legt ze vast als aanvragen die jij bevestigt. Om ze wel te reserveren, voeg je een grotere koppeling toe of verlaag je de maximale grootte van een gezelschap.",
+        "party_larger_than_room": "De assistent accepteert gezelschappen tot {maxPartySize} personen, maar de grootste tafel of koppeling heeft {largestSeating} plekken. Gezelschappen van {from} tot {maxPartySize} personen reserveert hij niet: hij legt ze vast als aanvragen die jij bevestigt. Om ze wel te reserveren, voeg je een grotere koppeling toe of verlaag je het grootste gezelschap dat de assistent zelf reserveert.",
         "size_never_bookable": "Geen enkele tafel of koppeling past bij een gezelschap van {sizes}, dus de assistent reserveert zo'n gezelschap nooit: verlaag het minimum aantal personen van een tafel of voeg een koppeling voor die grootte toe.",
         "table_has_holds": "{table} heeft reserveringen in de toekomst{who}: verplaats of annuleer die voordat je de tafel verwijdert, uitzet of naar een ander gedeelte verplaatst.",
         "out_of_range": "{value} valt buiten het toegestane bereik: de waarde moet tussen {min} en {max} liggen.",
-        "above_tables": "De koppeling neemt maximaal {value} personen, maar haar tafels hebben {max} plekken: verlaag het maximum naar {max} of minder.",
-        "duplicate_name": "Twee tafels heten {name}: geef elke tafel een eigen naam.",
-        "join_across_zones": "De koppeling {tables} heeft tafels uit verschillende gedeeltes: een koppeling blijft binnen één gedeelte.",
-        "unknown_table": "De koppeling noemt {tables}, dat niet meer in de zaal staat: wijzig de tafels van de koppeling of verwijder haar."
+        "above_tables": "De koppeling neemt tot {value} personen, maar haar tafels hebben {seats} plekken: verlaag het maximum tot {seats} of minder.",
+        "duplicate_name": "Twee tafels heten {table}: geef elke tafel een eigen naam.",
+        "join_across_zones": "De koppeling heeft tafels uit verschillende gedeeltes ({tables}): een koppeling blijft binnen één gedeelte, kies tafels uit hetzelfde gedeelte.",
+        "unknown_table": "Een koppeling noemt {tables}, die er in de zaal niet meer is: wijzig de tafels van de koppeling of verwijder haar.",
+        "bad_zone_id": "De gedeeltecode „{zone}“ is ongeldig: het moet één woord zijn van kleine letters, cijfers of streepjes.",
+        "duplicate_zone": "Twee gedeeltes hebben de code „{zone}“: verwijder er één en sla opnieuw op.",
+        "ends_before_start": "Een sluiting eindigt op {to}, voordat ze begint op {from}: controleer de datums „vanaf“ en „tot“.",
+        "no_zone": "{table} heeft geen gedeelte: kies er een in de kolom Gedeelte.",
+        "unknown_zone": "{table} staat in het gedeelte „{zone}“, dat niet meer bestaat: kies een ander in de kolom Gedeelte.",
+        "duplicate_join": "De tafels {tables} zijn twee keer gekoppeld: verwijder een van de twee koppelingen.",
+        "bad_value": "„{value}“ is geen geldige waarde: controleer het gemarkeerde veld."
       }
     }
   },

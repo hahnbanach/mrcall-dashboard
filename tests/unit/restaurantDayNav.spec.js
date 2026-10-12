@@ -13,10 +13,19 @@ const draw = (date, today = '2026-10-12', compact = false) =>
 
 describe('the day navigation', () => {
   it('goes to the previous and the next day, across a month', () => {
-    const w = draw('2026-10-31')
-    w.find('[aria-label="Previous day"]').trigger('click')
-    w.find('[aria-label="Next day"]').trigger('click')
-    expect(w.emitted('go-day').map(e => e[0])).toEqual(['2026-10-30', '2026-11-01'])
+    const back = draw('2026-11-01')
+    back.find('[aria-label="Previous day"]').trigger('click')
+    const ahead = draw('2026-10-31')
+    ahead.find('[aria-label="Next day"]').trigger('click')
+    expect(back.emitted('go-day')[0][0]).toBe('2026-10-31')
+    expect(ahead.emitted('go-day')[0][0]).toBe('2026-11-01')
+  })
+
+  it('moves one day per click even before the page has drawn the day it asked for', () => {
+    const w = draw('2026-10-13')
+    const next = w.find('[aria-label="Next day"]')
+    next.trigger('click'); next.trigger('click'); next.trigger('click')
+    expect(w.emitted('go-day').map(e => e[0])).toEqual(['2026-10-14', '2026-10-15', '2026-10-16'])
   })
 
   it('goes back to today, and offers it only away from today', async () => {

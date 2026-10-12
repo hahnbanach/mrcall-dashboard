@@ -59,6 +59,16 @@ describe('the rules the page draws with', () => {
     expect(fmt(defaultTime(win, true, toMin('11:00')))).toBe('20:00')
   })
 
+  // Seen failing on 2026-10-12 against e228974, which took the shortest table time (90) for an unset value.
+  it('takes an unset minimum free time from the manifest, capped at the longest table time', () => {
+    const manifest = { minFreeMinutes: { default: 120 }, maxPartySize: { default: 8, min: 1, max: 100 } }
+    expect(rulesOf({}, manifest).minFreeMinutes).toBe(120)
+    expect(rulesOf({ tableMinutesLarger: '100' }, manifest).minFreeMinutes).toBe(100)
+    expect(rulesOf({ minFreeMinutes: '45' }, manifest).minFreeMinutes).toBe(45)
+    expect(rulesOf({}, manifest).maxPartyRange).toEqual({ min: 1, max: 100 })
+    expect(rulesOf({}, { maxPartySize: { default: 10 } }).maxPartySize).toBe(10)
+  })
+
   it('bounds the minimum free time from 1 to the longest table time, as the skill checks it', () => {
     expect(minFreeLimits(rules)).toEqual({ min: 1, max: 150 })
   })

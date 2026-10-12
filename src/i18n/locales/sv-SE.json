@@ -1422,7 +1422,7 @@
         "minFree": "Minsta lediga tid",
         "minFreeLabel": "Minsta lediga tid i minuter",
         "minutes": "minuter",
-        "minFreeHint": "Ett bord visas som ledigt bara om det förblir ledigt minst så här länge: med 90 minuter räknas ett bord som är ledigt kl. 20:00 men bokat kl. 20:30 inte som ledigt. Vanligtvis är det tiden som 2 personer sitter vid ett bord ({n} min). Från 1 till {max} minuter.",
+        "minFreeHint": "Ett bord visas som ledigt bara om det förblir ledigt minst så här länge: med 120 minuter räknas ett bord som är ledigt kl. 20:00 men bokat kl. 21:00 inte som ledigt. Om du inte ändrar det gäller {n} minuter. Från 1 till {max} minuter.",
         "generator": "Lägg till bord på en gång",
         "genAdd": "Lägg till",
         "genHowMany": "Hur många bord",
@@ -1510,9 +1510,14 @@
         "stale": "Salen ändrades under tiden: den har lästs in igen, gör dina ändringar en gång till.",
         "configChanged": "Konfigurationen ändrades under tiden: den har lästs in igen, försök en gång till.",
         "needsHours": "Ange öppettiderna först: utan dem kan salen inte sparas.",
-        "minFreeRefused": "Minsta lediga tid: servern avvisade värdet.",
-        "layoutSavedOnly": "Salen sparades, men minsta lediga tid sparades inte.",
-        "andOthers": "{names} och {n} till"
+        "layoutSavedOnly": "Salen sparades, men inställningarna sparades inte.",
+        "andOthers": "{names} och {n} till",
+        "maxParty": "Största sällskap som assistenten bokar själv",
+        "maxPartyHint": "Över detta antal personer bokar assistenten inte: den sparar en förfrågan som du bekräftar. Vanligtvis inte mer än det största bordet eller den största hopslagningen.",
+        "goMaxParty": "Ändra största sällskap",
+        "goTableMin": "Ändra bordens minsta antal platser",
+        "goJoins": "Gå till hopslagningarna",
+        "settingsRefused": "Servern accepterade inte inställningarna: kontrollera minsta lediga tid och största sällskap."
       },
       "check": {
         "zoneNameMissing": "Område {n} · Namn: obligatoriskt",
@@ -1529,7 +1534,8 @@
         "joinMin": "Hopslagning {label} · Min personer: minst 1",
         "joinMax": "Hopslagning {label} · Max personer: minst {min}",
         "joinDuplicate": "Hopslagning {label}: det finns redan en hopslagning med samma bord",
-        "minFree": "Inställningar · Minsta lediga tid: mellan {min} och {max} minuter"
+        "minFree": "Inställningar · Minsta lediga tid: mellan {min} och {max} minuter",
+        "maxParty": "Inställningar · Största sällskap: mellan {min} och {max} personer"
       },
       "layoutCode": {
         "table_has_holds": "Ett bord som du vill ta bort, stänga av eller flytta till ett annat område har framtida bokningar: flytta eller avboka dem först och spara sedan.",
@@ -1551,7 +1557,7 @@
         "duplicate_join": "Samma bord är hopslagna två gånger: ta bort en av de två hopslagningarna.",
         "decreasing": "Numreringen av borden stämmer inte: ladda om sidan och gör ändringen igen.",
         "no_capacity": "Inget område har ett aktivt bord: assistenten kan inte boka något förrän du lägger till eller slår på ett bord.",
-        "party_larger_than_room": "Assistenten tar emot sällskap som är större än det största bordet eller den största hopslagningen: den bokar dem inte utan sparar dem som förfrågningar som du bekräftar. För att kunna boka dem, lägg till en större hopslagning eller sänk största sällskapsstorlek.",
+        "party_larger_than_room": "Assistenten tar emot sällskap som är större än det största bordet eller den största hopslagningen: den bokar dem inte utan sparar dem som förfrågningar som du bekräftar. För att kunna boka dem, lägg till en större hopslagning eller sänk det största sällskap som assistenten bokar själv.",
         "size_never_bookable": "För vissa sällskapsstorlekar passar varken något bord eller någon hopslagning, så assistenten bokar dem aldrig: sänk minsta antalet personer för ett bord eller lägg till en hopslagning.",
         "other": "Salen sparades inte: kontrollera områden, bord och hopslagningar och försök igen.",
         "missing": "Något som salen behöver saknas: kontrollera de markerade fälten.",
@@ -1574,7 +1580,8 @@
         "joinAdded": "Hopslagning tillagd: {label} ({min}-{max})",
         "joinRemoved": "Hopslagning borttagen: {label}",
         "joinRange": "Hopslagning {label}: personer {from} → {to}",
-        "minFree": "Minsta lediga tid: {from} → {to} min"
+        "minFree": "Minsta lediga tid: {from} → {to} min",
+        "maxParty": "Största sällskap som assistenten bokar: {from} → {to} personer"
       },
       "calls": {
         "title": "Samtalet",
@@ -1640,14 +1647,21 @@
       "alreadySent": "Redan skickat: det går inte längre att ångra.",
       "exportFile": "bokningar-{from}-{to}.csv",
       "layoutValues": {
-        "party_larger_than_room": "Assistenten tar emot sällskap på upp till {maxPartySize} personer, men det största bordet eller den största hopslagningen har {largestSeating} platser. Sällskap på {from} till {maxPartySize} personer bokar den inte utan sparar dem som förfrågningar som du bekräftar. För att kunna boka dem, lägg till en större hopslagning eller sänk största sällskapsstorlek.",
+        "party_larger_than_room": "Assistenten tar emot sällskap på upp till {maxPartySize} personer, men det största bordet eller den största hopslagningen har {largestSeating} platser. Sällskap på {from} till {maxPartySize} personer bokar den inte utan sparar dem som förfrågningar som du bekräftar. För att kunna boka dem, lägg till en större hopslagning eller sänk det största sällskap som assistenten bokar själv.",
         "size_never_bookable": "Inget bord eller ingen hopslagning passar ett sällskap på {sizes}, så assistenten bokar det aldrig: sänk minsta antalet personer för ett bord eller lägg till en hopslagning för den storleken.",
         "table_has_holds": "{table} har framtida bokningar{who}: flytta eller avboka dem innan du tar bort bordet, stänger av det eller flyttar det till ett annat område.",
         "out_of_range": "{value} ligger utanför tillåtet intervall: det måste vara mellan {min} och {max}.",
-        "above_tables": "Hopslagningen tar upp till {value} personer, men dess bord har {max} platser: sänk dess största antal till {max} eller lägre.",
-        "duplicate_name": "Två bord heter {name}: ge varje bord ett eget namn.",
-        "join_across_zones": "Hopslagningen {tables} har bord från olika områden: en hopslagning stannar inom ett område.",
-        "unknown_table": "Hopslagningen nämner {tables}, som inte finns kvar i salen: ändra hopslagningens bord eller ta bort den."
+        "above_tables": "Hopslagningen tar upp till {value} personer, men dess bord har {seats} platser: sänk dess största antal till {seats} eller lägre.",
+        "duplicate_name": "Två bord heter {table}: ge varje bord ett eget namn.",
+        "join_across_zones": "Hopslagningen har bord från olika områden ({tables}): en hopslagning stannar inom ett område, välj bord från samma område.",
+        "unknown_table": "En hopslagning nämner {tables}, som inte finns kvar i salen: ändra hopslagningens bord eller ta bort den.",
+        "bad_zone_id": "Områdeskoden ”{zone}” är ogiltig: den måste vara ett enda ord med små bokstäver, siffror eller bindestreck.",
+        "duplicate_zone": "Två områden har koden ”{zone}”: ta bort ett av dem och spara igen.",
+        "ends_before_start": "En stängning slutar den {to}, innan den börjar den {from}: kontrollera datumen ”från” och ”till”.",
+        "no_zone": "{table} saknar område: välj ett i kolumnen Område.",
+        "unknown_zone": "{table} ligger i området ”{zone}”, som inte finns längre: välj ett annat i kolumnen Område.",
+        "duplicate_join": "Borden {tables} är hopslagna två gånger: ta bort en av de två hopslagningarna.",
+        "bad_value": "”{value}” är inget giltigt värde: kontrollera det markerade fältet."
       }
     }
   },

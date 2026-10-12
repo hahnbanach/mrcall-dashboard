@@ -1422,7 +1422,7 @@
         "minFree": "Vaba aja miinimum",
         "minFreeLabel": "Vaba aja miinimum minutites",
         "minutes": "minutit",
-        "minFreeHint": "Laud kuvatakse vabana ainult siis, kui see jääb vabaks vähemalt nii kauaks: 90 minutiga ei loeta lauda, mis on vaba kell 20:00, aga broneeritud kell 20:30, vabaks. Tavaliselt on see aeg, mille 2 inimest laua taga veedavad ({n} min). 1 kuni {max} minutit.",
+        "minFreeHint": "Laud kuvatakse vabana ainult siis, kui see jääb vabaks vähemalt nii kauaks: 120 minuti korral ei loeta lauda, mis on kell 20:00 vaba, kuid kell 21:00 broneeritud, vabaks. Kui sa seda ei muuda, on see {n} minutit. 1 kuni {max} minutit.",
         "generator": "Lisa lauad korraga",
         "genAdd": "Lisa",
         "genHowMany": "Mitu lauda",
@@ -1510,9 +1510,14 @@
         "stale": "Saal muutus vahepeal: see loeti uuesti, tee oma muudatused veel kord.",
         "configChanged": "Seadistus muutus vahepeal: see loeti uuesti, proovi veel kord.",
         "needsHours": "Määra esmalt lahtiolekuajad: ilma nendeta ei saa saali salvestada.",
-        "minFreeRefused": "Vaba aja miinimum: server lükkas väärtuse tagasi.",
-        "layoutSavedOnly": "Saal salvestati, vaba aja miinimumi mitte.",
-        "andOthers": "{names} ja veel {n}"
+        "layoutSavedOnly": "Saal salvestati, seadeid mitte.",
+        "andOthers": "{names} ja veel {n}",
+        "maxParty": "Suurim seltskond, mille assistent ise broneerib",
+        "maxPartyHint": "Üle selle inimeste arvu assistent ei broneeri: ta salvestab taotluse, mille sa kinnitad. Tavaliselt mitte rohkem kui suurim laud või ühendus.",
+        "goMaxParty": "Muuda suurimat seltskonda",
+        "goTableMin": "Muuda laudade minimaalset kohtade arvu",
+        "goJoins": "Mine ühenduste juurde",
+        "settingsRefused": "Server ei võtnud seadeid vastu: kontrolli vaba aja miinimumi ja suurimat seltskonda."
       },
       "check": {
         "zoneNameMissing": "Ala {n} · Nimi: kohustuslik",
@@ -1529,7 +1534,8 @@
         "joinMin": "Ühendus {label} · Min. inimesi: vähemalt 1",
         "joinMax": "Ühendus {label} · Max. inimesi: vähemalt {min}",
         "joinDuplicate": "Ühendus {label}: samade laudadega ühendus on juba olemas",
-        "minFree": "Seaded · Vaba aja miinimum: {min} kuni {max} minutit"
+        "minFree": "Seaded · Vaba aja miinimum: {min} kuni {max} minutit",
+        "maxParty": "Seaded · Suurim seltskond: {min} kuni {max} inimest"
       },
       "layoutCode": {
         "table_has_holds": "Laual, mida tahad eemaldada, välja lülitada või teise alasse viia, on tulevasi broneeringuid: tõsta või tühista need kõigepealt ja salvesta siis.",
@@ -1551,7 +1557,7 @@
         "duplicate_join": "Samad lauad on ühendatud kaks korda: eemalda üks kahest ühendusest.",
         "decreasing": "Laudade numeratsioon ei klapi: lae leht uuesti ja tee muudatus uuesti.",
         "no_capacity": "Üheski alas pole aktiivset lauda: assistent ei saa midagi broneerida, kuni lisad laua või lülitad selle sisse.",
-        "party_larger_than_room": "Assistent võtab vastu seltskondi, kes on suuremad kui suurim laud või ühendus: ta ei broneeri neid, vaid salvestab need taotlustena, mille sa kinnitad. Nende broneerimiseks lisa suurem ühendus või vähenda seltskonna maksimaalset suurust.",
+        "party_larger_than_room": "Assistent võtab vastu seltskondi, kes on suuremad kui suurim laud või ühendus: ta ei broneeri neid, vaid salvestab need taotlustena, mille sa kinnitad. Nende broneerimiseks lisa suurem ühendus või vähenda suurimat seltskonda, mille assistent ise broneerib.",
         "size_never_bookable": "Mõne seltskonna suuruse jaoks ei sobi ükski laud ega ühendus, nii et assistent ei broneeri neid kunagi: vähenda laua inimeste miinimumi või lisa ühendus.",
         "other": "Saali ei salvestatud: kontrolli alasid, laudu ja ühendusi ning proovi uuesti.",
         "missing": "Midagi, mida saal vajab, puudub: kontrolli esiletõstetud välju.",
@@ -1574,7 +1580,8 @@
         "joinAdded": "Ühendus lisatud: {label} ({min}-{max})",
         "joinRemoved": "Ühendus eemaldatud: {label}",
         "joinRange": "Ühendus {label}: inimesi {from} → {to}",
-        "minFree": "Vaba aja miinimum: {from} → {to} min"
+        "minFree": "Vaba aja miinimum: {from} → {to} min",
+        "maxParty": "Suurim seltskond, mille assistent broneerib: {from} → {to} inimest"
       },
       "calls": {
         "title": "Kõne",
@@ -1640,14 +1647,21 @@
       "alreadySent": "Juba saadetud: seda ei saa enam tagasi võtta.",
       "exportFile": "broneeringud-{from}-{to}.csv",
       "layoutValues": {
-        "party_larger_than_room": "Assistent võtab vastu kuni {maxPartySize} inimese seltskondi, kuid suurimas laual või ühenduses on {largestSeating} kohta. Seltskondi vahemikus {from} kuni {maxPartySize} inimest ta ei broneeri, vaid salvestab need taotlustena, mille sa kinnitad. Nende broneerimiseks lisa suurem ühendus või vähenda seltskonna maksimaalset suurust.",
+        "party_larger_than_room": "Assistent võtab vastu kuni {maxPartySize} inimese seltskondi, kuid suurimas laual või ühenduses on {largestSeating} kohta. Seltskondi vahemikus {from} kuni {maxPartySize} inimest ta ei broneeri, vaid salvestab need taotlustena, mille sa kinnitad. Nende broneerimiseks lisa suurem ühendus või vähenda suurimat seltskonda, mille assistent ise broneerib.",
         "size_never_bookable": "Ükski laud ega ühendus ei sobi seltskonnale {sizes}, nii et assistent ei broneeri seda kunagi: vähenda laua inimeste miinimumi või lisa ühendus selle suuruse jaoks.",
         "table_has_holds": "Laual {table} on tulevasi broneeringuid{who}: tõsta või tühista need enne, kui laua eemaldad, välja lülitad või teise alasse viid.",
         "out_of_range": "{value} on lubatud vahemikust väljas: see peab olema vahemikus {min} kuni {max}.",
-        "above_tables": "Ühendusse mahub kuni {value} inimest, kuid selle laudades on {max} kohta: vähenda selle maksimumi väärtuseni {max} või väiksemaks.",
-        "duplicate_name": "Kaks lauda on nimega {name}: anna igaühele oma nimi.",
-        "join_across_zones": "Ühenduses {tables} on lauad eri aladest: ühendus jääb ühte alasse.",
-        "unknown_table": "Ühenduses on {tables}, mida enam saalis pole: muuda ühenduse lauad või eemalda see."
+        "above_tables": "Ühendusse mahub kuni {value} inimest, kuid selle laudades on {seats} kohta: vähenda maksimum väärtuseni {seats} või alla.",
+        "duplicate_name": "Kaks lauda on nimega {table}: anna igaühele oma nimi.",
+        "join_across_zones": "Ühenduses on lauad eri aladest ({tables}): ühendus jääb ühte alasse, vali sama ala lauad.",
+        "unknown_table": "Ühenduses on {tables}, mida enam saalis pole: muuda ühenduse lauad või eemalda see.",
+        "bad_zone_id": "Ala kood „{zone}“ ei kõlba: see peab olema üks sõna väikeste tähtede, numbrite või sidekriipsudega.",
+        "duplicate_zone": "Kahel alal on kood „{zone}“: eemalda üks neist ja salvesta uuesti.",
+        "ends_before_start": "Sulgemine lõpeb {to}, enne kui algab {from}: kontrolli kuupäevi „alates“ ja „kuni“.",
+        "no_zone": "Laual {table} pole ala: vali veerus Ala üks.",
+        "unknown_zone": "Laud {table} on alas „{zone}“, mida enam pole: vali veerus Ala mõni teine.",
+        "duplicate_join": "Lauad {tables} on ühendatud kaks korda: eemalda üks kahest ühendusest.",
+        "bad_value": "„{value}“ ei ole kehtiv väärtus: kontrolli esiletõstetud välja."
       }
     }
   },
