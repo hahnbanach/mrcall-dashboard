@@ -34,7 +34,7 @@ export function phoneOf(raw) {
 /** The refusals the page says in its own words; anything else is a generic failure. */
 export const KNOWN_CODES = ["full", "closed", "not_offered", "too_late", "beyond_horizon", "large_party", "bad_covers", "stale",
     "busy_retry", "idempotency_key_reused", "not_found", "not_configured", "unknown_zone", "unknown_table", "join_across_zones",
-    "person_required", "scope_missing"];
+    "person_required", "scope_missing", "not_reversible", "table_taken"];
 
 /** Refusals a person may override by booking anyway (the server's `overbook`). */
 export const OVERRIDABLE = ["full", "not_offered", "too_late", "large_party", "closed"];

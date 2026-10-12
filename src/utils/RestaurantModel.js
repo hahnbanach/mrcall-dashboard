@@ -160,11 +160,17 @@ export function defaultTime (win, isToday, nowMinute) {
  */
 export function stateOf (row) {
   if (row.source === 'block') return 'block'
-  if (row.status === 'cancelled') return 'cancelled'
-  if (row.status === 'no_show') return 'noshow'
-  if (row.status === 'requested') return 'requested'
-  if (row.status === 'held') return 'held'
-  return row.serviceState || 'booked'
+  switch (row.status) {
+    case 'confirmed': return row.serviceState || 'booked'
+    case 'cancelled': return 'cancelled'
+    case 'no_show': return 'noshow'
+    case 'requested': return 'requested'
+    // a request a person declined: never a guest, never in the covers, nothing to cancel or reinstate
+    case 'handled': return 'declined'
+    case 'held': return 'held'
+    // A status this page does not know is never drawn as a guest: it would count covers it does not hold.
+    default: return 'unknown'
+  }
 }
 
 /** States that take a table. */
@@ -183,8 +189,11 @@ export function live (list, service) {
 
 /** The bookings of a service the list shows: not the blocks, which are drawn on the tables. */
 export function guests (list, service) {
-  return list.filter(b => b.service === service && b.state !== 'block' && b.state !== 'held')
+  return list.filter(b => b.service === service && GUEST_STATES.has(b.state))
 }
+
+/** The states the list shows: guests, requests to decide, and the cancellations and no-shows apart. */
+export const GUEST_STATES = new Set(['booked', 'arrived', 'seated', 'left', 'requested', 'cancelled', 'noshow'])
 
 /** The calls a booking carries, newest first: the ones that touched it, then the one that made it. */
 export function callsOf (b) {

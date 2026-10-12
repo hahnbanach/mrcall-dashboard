@@ -152,7 +152,8 @@
       "restaurantLayout": {
         "empty": "Ei vielä salia: alueet ja pöydät määritetään ravintolan sivulla.",
         "summary": "{zones} aluetta, {tables} aktiivista pöytää. Niitä muokataan ravintolan sivulla.",
-        "open": "Avaa Sali ja pöydät"
+        "open": "Avaa Sali ja pöydät",
+        "unknown": "Salia ei voitu lukea juuri nyt; sitä muokataan ravintolan sivulla."
       }
     }
   },
@@ -1387,7 +1388,6 @@
       },
       "newb": {
         "title": "Uusi varaus",
-        "acceptTitle": "Hyväksy pyyntö",
         "fixed": "{tables} · {zone} · {min}-{max} henkilöä",
         "auto": "Järjestelmän valitsema pöytä",
         "letChoose": "Anna järjestelmän valita pöytä",
@@ -1635,7 +1635,9 @@
         "gone": "{table} ei ole enää salissa",
         "withoutTable": "Palauta ilman pöytää",
         "doneWithoutTable": "{name}: palautettu, ei vielä pöytää"
-      }
+      },
+      "alreadySent": "Jo lähetetty: sitä ei voi enää perua.",
+      "exportFile": "varaukset-{from}-{to}.csv"
     }
   },
   "views": {

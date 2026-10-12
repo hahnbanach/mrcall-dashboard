@@ -6,7 +6,8 @@
  *
  * `schedule(key, run, ms)` holds `run` for `ms`; `cancel(key)` drops it unsent (the Undo); `flush()` sends
  * everything still held, now (leaving the page). A key is held once: scheduling it again replaces the first.
- * `run` is called at most once. What it returns (a promise) is handed to `onSettled(key, error)`.
+ * `run` is called at most once; `onSend(key)` is told just before, so whatever offered its Undo can go with it.
+ * What `run` returns (a promise) is handed to `onSettled(key, error)`.
  *
  * What it does not cover: a tab killed or a machine switched off inside the window loses the held write,
  * since nothing was sent; a write flushed while the page unloads may be cut off by the browser before it
@@ -15,8 +16,9 @@
 export default class DeferredCommit {
     // The timers are called as plain functions: a browser's setTimeout called as a method of this object
     // throws "Illegal invocation" (seen in the browser suite on 2026-10-12; jsdom's does not).
-    constructor({ onSettled = () => {}, setTimer = (f, ms) => setTimeout(f, ms), clearTimer = t => clearTimeout(t) } = {}) {
+    constructor({ onSend = () => {}, onSettled = () => {}, setTimer = (f, ms) => setTimeout(f, ms), clearTimer = t => clearTimeout(t) } = {}) {
         this.held = new Map();
+        this.onSend = onSend;
         this.onSettled = onSettled;
         this.setTimer = setTimer;
         this.clearTimer = clearTimer;
@@ -52,6 +54,7 @@ export default class DeferredCommit {
         if (!entry) return Promise.resolve();
         this.clearTimer(entry.timer);
         this.held.delete(key);
+        this.onSend(key);
         return Promise.resolve().then(entry.run).then(() => this.onSettled(key, null), error => this.onSettled(key, error));
     }
 }

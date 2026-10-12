@@ -204,6 +204,8 @@
             <span class="t">{{ fmt(b.start) }}</span>
             <span class="n"><b>{{ b.name || $t("components.restaurant.walkInName") }} <i v-if="b.pinned" class="pi pi-thumbtack" :aria-label="$t('components.restaurant.pinnedMark')"></i> <i v-if="b.allergies" class="pi pi-exclamation-triangle" :aria-label="$t('components.restaurant.allergies')"></i></b>
               <small>{{ $t("components.restaurant.peopleShort", { n: b.party }) }} · {{ seatsOf(b) }} · {{ stateText(b) }}</small></span>
+            <!-- a guest past their arrival time and not here: no-show in one tap, with Undo (the prototype's late row) -->
+            <button v-if="isLate(b)" class="quick quick-noshow" :disabled="busy" @click.stop="$emit('no-show', b)">{{ $t("components.restaurant.panel.noShowAction") }}</button>
             <button v-if="b.state === 'booked' || b.state === 'arrived'" class="quick" :disabled="busy" @click.stop="$emit('state', b, 'seated')">{{ $t("components.restaurant.state.seatedShort") }}</button>
             <button v-else-if="b.state === 'seated'" class="quick" :disabled="busy" @click.stop="$emit('state', b, 'left')">{{ $t("components.restaurant.state.leftShort") }}</button>
           </div>
@@ -223,7 +225,7 @@
 <script>
 import {
   addDays, fmt, live, guests, usableTables, orderedZones, zoneOpen, tableAt, freeFrom, isFreeAt, tableById, seatLabel, occupiedTables,
-  knowCounts, matches, callsOf, dropTargets, serviceWindow
+  knowCounts, matches, callsOf, dropTargets, serviceWindow, minuteOfDay
 } from "@/utils/RestaurantModel";
 import { longDate, refusalKey } from "@/components/widgets/restaurant/format";
 
@@ -259,7 +261,7 @@ export default {
     busy: { type: Boolean, default: false },
   },
   emits: ["go-day", "set-service", "set-time", "find", "open", "tile-free", "fit-book", "new-booking", "timeline-new", "state",
-    "move-cancel", "move-to", "drop", "accept", "decline", "call"],
+    "move-cancel", "move-to", "drop", "accept", "decline", "call", "no-show"],
   data() {
     return { KNOW_CLASS, FILTERS, mode: "floor", filter: "all", know: null };
   },
@@ -415,6 +417,10 @@ export default {
     },
     isHit(b) {
       return this.hits.some(h => h.id === b.id);
+    },
+    /** Booked, not yet arrived, and its arrival time is past (today, by the clock). */
+    isLate(b) {
+      return b.state === "booked" && this.date === this.today && minuteOfDay(new Date()) >= b.start;
     },
     hasCalls(b) {
       return callsOf(b).length > 0;

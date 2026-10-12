@@ -2,14 +2,14 @@
   <div class="new-panel">
     <div class="panel-top">
       <div>
-        <h2 ref="heading" tabindex="-1">{{ $t(draft.requestId ? "components.restaurant.newb.acceptTitle" : "components.restaurant.newb.title") }}</h2>
+        <h2 ref="heading" tabindex="-1">{{ $t("components.restaurant.newb.title") }}</h2>
         <span class="muted">{{ fixed ? $t("components.restaurant.newb.fixed", { tables: fixed.label, zone: fixedZone, min: fixed.min, max: fixed.max }) : $t("components.restaurant.newb.auto") }}</span>
         <button v-if="fixed" class="btn ghost small" @click="seat(null)">{{ $t("components.restaurant.newb.letChoose") }}</button>
       </div>
       <button class="icon-btn" :aria-label="$t('components.restaurant.close')" @click="$emit('close')"><i class="pi pi-times" aria-hidden="true"></i></button>
     </div>
 
-    <div v-if="isToday && !draft.requestId" class="walkin">
+    <div v-if="isToday" class="walkin">
       <b>{{ $t("components.restaurant.newb.walkIn") }}</b> · {{ fixed ? $t("components.restaurant.newb.walkInAt", { tables: fixed.label }) : $t("components.restaurant.newb.walkInNow") }}
       <div class="row" role="group" :aria-label="$t('components.restaurant.newb.walkInParty')">
         <button v-for="n in walkInSizes" :key="n" class="btn walkin-party" :disabled="busy" @click="$emit('walk-in', { form, party: n })">{{ n }}</button>
@@ -92,7 +92,7 @@ export default {
     const d = this.draft;
     return {
       form: { tables: d.tables, start: d.start, party: d.party, name: d.name || "", phone: d.phone || "", notes: d.notes || "",
-        allergies: d.allergies || "", requestId: d.requestId || null, requestVersion: d.requestVersion },
+        allergies: d.allergies || "" },
       touched: false,
     };
   },

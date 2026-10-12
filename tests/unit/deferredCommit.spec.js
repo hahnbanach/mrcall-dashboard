@@ -57,4 +57,13 @@ describe('a deferred commit', () => {
     await vi.advanceTimersByTimeAsync(10)
     expect(settled).toHaveBeenCalledWith('r1', error)
   })
+
+  // The toast that offers the Undo goes when the write is sent: the commit's timer is the only clock.
+  it('says when it sends, before the request, once', async () => {
+    const order = []
+    const c = new DeferredCommit({ onSend: k => order.push('send ' + k), onSettled: k => order.push('settled ' + k) })
+    c.schedule('r1', () => { order.push('run') }, 100)
+    await vi.advanceTimersByTimeAsync(100)
+    expect(order).toEqual(['send r1', 'run', 'settled r1'])
+  })
 })

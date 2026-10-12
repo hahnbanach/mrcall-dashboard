@@ -7,9 +7,9 @@ import { stateOf, toMin } from "@/utils/RestaurantModel";
  * and writes the minimum free time to (/apidomain/agent/skills/configuration/{businessId}).
  *
  * THE ONE PLACE THE WIRE SHAPES LIVE. Every request the page makes, and the translation of every answer
- * into the shapes the page draws, is here. The shapes are StarChat's restaurant routes as of 9.34.63 plus R5
- * (ApiDomainRestaurantResource, LayoutDraft, RestaurantLayoutSection, the restaurant_booking manifest):
- * R5 adds the reinstatement (the Undo of a no-show or a staff cancellation), the staff search, the guest's
+ * into the shapes the page draws, is here. The shapes are StarChat 9.34.65's restaurant routes
+ * (ApiDomainRestaurantResource, LayoutDraft, RestaurantLayoutSection, the restaurant_booking manifest),
+ * including the reinstatement (the Undo of a no-show or a staff cancellation), the staff search, the guest's
  * past no-shows and the finder's later times.
  *
  * Every write answers the server's own words: a refusal rejects with the server body as `error.restaurant`
@@ -20,6 +20,11 @@ import { stateOf, toMin } from "@/utils/RestaurantModel";
 /** The one name the platform runs the skill under: its skills index has no other, so an instance written
  * under another name takes no call and its configuration cannot be saved (skill_unknown). */
 export const SKILL = "skill_restaurant_booking";
+
+/** The names StarChat reads a restaurant_booking instance under (RestaurantCalendarProjection.SkillNames), and
+ *  the one phase it reads it from (SkillPhaseConfiguration.RunningLoop, `during`). */
+export const SKILL_NAMES = ["restaurant_booking", SKILL];
+export const SKILL_PHASE = "during";
 
 function base(businessId) {
     return process.env.VUE_APP_STARCHAT_URL + "/mrcall/v1/mrcall0/apidomain/restaurant/" + encodeURIComponent(businessId);
@@ -128,6 +133,15 @@ function freeTablesFromWire(raw) {
         out[Number(id)] = (raw[id] || []).map(w => ({ from: toMin(w.from), to: toMin(w.to) }));
     });
     return out;
+}
+
+/** The restaurant instance StarChat serves in a configuration read (see `instance`). */
+export function instanceIn(configuration) {
+    const revisions = (configuration && configuration.revisions) || {};
+    const entries = configuration && Array.isArray(configuration[SKILL_PHASE]) ? configuration[SKILL_PHASE] : [];
+    const entry = entries.find(e => e && SKILL_NAMES.includes(e.skill));
+    return entry ? { phase: SKILL_PHASE, skill: entry.skill, instanceId: entry.instanceId, params: entry.params || {},
+        revision: revisions[SKILL_PHASE] } : null;
 }
 
 function dayFromWire(raw) {
@@ -265,17 +279,11 @@ export default {
 
     /**
      * The restaurant_booking instance of the business and the revision of its phase, or null when the
-     * business has none. `params` is the instance configuration as the read returns it.
+     * business has none: the one StarChat serves, under either of its names, in the `during` phase only.
+     * `params` is the instance configuration as the read returns it, the store-backed `layout` included.
      */
     instance: async function(user, businessId) {
-        const configuration = await call(() => axios.get(skillsBase(businessId), { headers: headers(user) }));
-        const revisions = (configuration && configuration.revisions) || {};
-        for (const phase of Object.keys(revisions)) {
-            const entries = Array.isArray(configuration[phase]) ? configuration[phase] : [];
-            const entry = entries.find(e => e && e.skill === SKILL);
-            if (entry) return { phase: phase, instanceId: entry.instanceId, params: entry.params || {}, revision: revisions[phase] };
-        }
-        return null;
+        return instanceIn(await call(() => axios.get(skillsBase(businessId), { headers: headers(user) })));
     },
 
     /**
@@ -292,6 +300,6 @@ export default {
         delete params.layout;
         return call(() => axios.put(skillsBase(businessId) + "/" + encodeURIComponent(instance.phase) + "/" +
             encodeURIComponent(instance.instanceId),
-            { skill: SKILL, params: params, expectedRevision: instance.revision }, { headers: headers(user) }));
+            { skill: instance.skill || SKILL, params: params, expectedRevision: instance.revision }, { headers: headers(user) }));
     }
 };

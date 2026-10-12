@@ -154,7 +154,8 @@
       "restaurantLayout": {
         "empty": "No room yet: the areas and tables are set on the restaurant page.",
         "summary": "{zones} areas, {tables} active tables. They are edited on the restaurant page.",
-        "open": "Open Room and tables"
+        "open": "Open Room and tables",
+        "unknown": "The room could not be read now; it is edited on the restaurant page."
       }
     },
     "templatedVariable": {
@@ -1392,7 +1393,6 @@
       },
       "newb": {
         "title": "New booking",
-        "acceptTitle": "Accept the request",
         "fixed": "{tables} · {zone} · {min}-{max} people",
         "auto": "Table chosen by the system",
         "letChoose": "Let the system choose the table",
@@ -1640,7 +1640,9 @@
         "gone": "{table} is no longer in the room",
         "withoutTable": "Reinstate without a table",
         "doneWithoutTable": "{name}: reinstated with no table yet"
-      }
+      },
+      "alreadySent": "Already sent: it can no longer be undone.",
+      "exportFile": "bookings-{from}-{to}.csv"
     }
   },
   "views": {

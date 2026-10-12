@@ -153,7 +153,8 @@
       "restaurantLayout": {
         "empty": "Pas encore de salle : les zones et les tables se définissent sur la page du restaurant.",
         "summary": "{zones} zones, {tables} tables actives. Elles se modifient sur la page du restaurant.",
-        "open": "Ouvrir Salle et tables"
+        "open": "Ouvrir Salle et tables",
+        "unknown": "La salle n'a pas pu être lue pour l'instant ; elle se modifie sur la page du restaurant."
       }
     }
   },
@@ -1389,7 +1390,6 @@
       },
       "newb": {
         "title": "Nouvelle réservation",
-        "acceptTitle": "Accepter la demande",
         "fixed": "{tables} · {zone} · {min}-{max} personnes",
         "auto": "Table choisie par le système",
         "letChoose": "Laisser le système choisir la table",
@@ -1637,7 +1637,9 @@
         "gone": "{table} n'est plus dans la salle",
         "withoutTable": "Rétablir sans table",
         "doneWithoutTable": "{name} : rétablie, pas encore de table"
-      }
+      },
+      "alreadySent": "Déjà envoyé : ce n'est plus annulable.",
+      "exportFile": "reservations-{from}-{to}.csv"
     }
   },
   "views": {

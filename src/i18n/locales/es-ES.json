@@ -152,7 +152,8 @@
       "restaurantLayout": {
         "empty": "Todavía no hay sala: las zonas y las mesas se configuran en la página del restaurante.",
         "summary": "{zones} zonas, {tables} mesas activas. Se editan en la página del restaurante.",
-        "open": "Abrir Sala y mesas"
+        "open": "Abrir Sala y mesas",
+        "unknown": "No se ha podido leer la sala ahora; se edita en la página del restaurante."
       }
     }
   },
@@ -1401,7 +1402,6 @@
       },
       "newb": {
         "title": "Nueva reserva",
-        "acceptTitle": "Aceptar la solicitud",
         "fixed": "{tables} · {zone} · {min}-{max} personas",
         "auto": "Mesa elegida por el sistema",
         "letChoose": "Que el sistema elija la mesa",
@@ -1649,7 +1649,9 @@
         "gone": "{table} ya no está en la sala",
         "withoutTable": "Restablecer sin mesa",
         "doneWithoutTable": "{name}: restablecida, todavía sin mesa"
-      }
+      },
+      "alreadySent": "Ya enviado: ya no se puede deshacer.",
+      "exportFile": "reservas-{from}-{to}.csv"
     }
   },
   "views": {

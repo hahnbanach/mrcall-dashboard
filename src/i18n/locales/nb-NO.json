@@ -152,7 +152,8 @@
       "restaurantLayout": {
         "empty": "Ingen sal ennå: områder og bord settes opp på restaurantsiden.",
         "summary": "{zones} områder, {tables} aktive bord. De redigeres på restaurantsiden.",
-        "open": "Åpne Sal og bord"
+        "open": "Åpne Sal og bord",
+        "unknown": "Salen kunne ikke leses akkurat nå; den redigeres på restaurantsiden."
       }
     }
   },
@@ -1387,7 +1388,6 @@
       },
       "newb": {
         "title": "Ny reservasjon",
-        "acceptTitle": "Godta forespørselen",
         "fixed": "{tables} · {zone} · {min}-{max} personer",
         "auto": "Bord valgt av systemet",
         "letChoose": "La systemet velge bord",
@@ -1635,7 +1635,9 @@
         "gone": "{table} er ikke lenger i salen",
         "withoutTable": "Gjenopprett uten bord",
         "doneWithoutTable": "{name}: gjenopprettet, foreløpig uten bord"
-      }
+      },
+      "alreadySent": "Allerede sendt: det kan ikke lenger angres.",
+      "exportFile": "reservasjoner-{from}-{to}.csv"
     }
   },
   "views": {

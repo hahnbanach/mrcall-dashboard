@@ -152,7 +152,8 @@
       "restaurantLayout": {
         "empty": "Nog geen zaal: zones en tafels stel je in op de restaurantpagina.",
         "summary": "{zones} zones, {tables} actieve tafels. Ze worden bewerkt op de restaurantpagina.",
-        "open": "Zaal en tafels openen"
+        "open": "Zaal en tafels openen",
+        "unknown": "De zaal kon nu niet worden gelezen; je bewerkt hem op de restaurantpagina."
       }
     }
   },
@@ -1387,7 +1388,6 @@
       },
       "newb": {
         "title": "Nieuwe reservering",
-        "acceptTitle": "De aanvraag accepteren",
         "fixed": "{tables} · {zone} · {min}-{max} personen",
         "auto": "Tafel gekozen door het systeem",
         "letChoose": "Laat het systeem de tafel kiezen",
@@ -1635,7 +1635,9 @@
         "gone": "{table} staat niet meer in de zaal",
         "withoutTable": "Herstellen zonder tafel",
         "doneWithoutTable": "{name}: hersteld, nog zonder tafel"
-      }
+      },
+      "alreadySent": "Al verzonden: dit kan niet meer ongedaan worden gemaakt.",
+      "exportFile": "reserveringen-{from}-{to}.csv"
     }
   },
   "views": {

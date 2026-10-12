@@ -152,7 +152,8 @@
       "restaurantLayout": {
         "empty": "Ingen matsal ännu: områden och bord ställs in på restaurangsidan.",
         "summary": "{zones} områden, {tables} aktiva bord. De redigeras på restaurangsidan.",
-        "open": "Öppna Sal och bord"
+        "open": "Öppna Sal och bord",
+        "unknown": "Matsalen kunde inte läsas just nu; den redigeras på restaurangsidan."
       }
     }
   },
@@ -1387,7 +1388,6 @@
       },
       "newb": {
         "title": "Ny bokning",
-        "acceptTitle": "Godkänn förfrågan",
         "fixed": "{tables} · {zone} · {min}-{max} personer",
         "auto": "Bord valt av systemet",
         "letChoose": "Låt systemet välja bord",
@@ -1635,7 +1635,9 @@
         "gone": "{table} finns inte längre i salen",
         "withoutTable": "Återställ utan bord",
         "doneWithoutTable": "{name}: återställd, än så länge utan bord"
-      }
+      },
+      "alreadySent": "Redan skickat: det går inte längre att ångra.",
+      "exportFile": "bokningar-{from}-{to}.csv"
     }
   },
   "views": {

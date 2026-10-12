@@ -3,8 +3,8 @@ const { mockBusiness } = require('./mock-data')
 
 /**
  * A StarChat restaurant book in memory, for the restaurant page's browser tests: the routes the page calls,
- * answering in the shapes StarChat 9.34.63 answers (ApiDomainRestaurantResource, LayoutDraft,
- * RestaurantLayoutSection): tables without an id get one from the server, a join may name a table by name,
+ * answering in the shapes StarChat 9.34.65 answers (ApiDomainRestaurantResource, LayoutDraft,
+ * RestaurantLayoutSection, NativeReservationBook in /Users/angelo/data/WORK/elegans.io/starchat at that tag): tables without an id get one from the server, a join may name a table by name,
  * bookings carry `callIds`, the day read carries `minFreeMinutes` and each table's free windows
  * (`freeTables`), the skill read carries the store-backed `layout` section, and the finder is
  * GET /suggestions.
@@ -65,6 +65,8 @@ function tomorrowsDinner () {
     r('b-verdi', '20:30', 2, 'Verdi', [3], { source: 'staff', phone: '' }),
     r('b-bianchi', '19:30', 6, 'Bianchi', [6], { notes: 'Birthday cake at 22:00', pastNoShows: 1 }),
     r('b-gallo', '21:00', 2, 'Gallo', [7], { source: 'walk_in', name: null, phone: null }),
+    // today at 20:00, still expected: late whenever the page's clock is past 20:00 (the one-tap no-show)
+    r('b-late', '20:00', 2, 'Lato', [2], { date: TODAY, source: 'staff' }),
     r('b-req', '21:30', 9, 'Galli', [], { status: 'requested', requestReason: 'large_party', conversationId: 'CON-req', callIds: ['CON-req'] }),
     // three weeks ahead, on a day no test opens: the page does not know of it, the server does
     r('b-far', '20:00', 3, 'Moretti', [5], { date: addDays(TODAY, 20), conversationId: 'CON-far', callIds: ['CON-far'] })
@@ -111,7 +113,7 @@ async function mockRestaurant (page, opts = {}) {
   const json = (route, status, body) => route.fulfill({ status, contentType: 'application/json', body: JSON.stringify(body) })
   const diag = (route, status, code, extra = {}) => json(route, status, Object.assign({ diagnostics: [{ path: '/', code, detail: `server English for ${code}` }] }, extra))
 
-  const tableNames = ids => (ids || []).map(id => (state.layout.tables.find(t => t.id === id) || {}).name).filter(Boolean)
+  const tableNames = ids => state.layout ? (ids || []).map(id => (state.layout.tables.find(t => t.id === id) || {}).name).filter(Boolean) : []
   // A cancelled or no-show row has released its tables (the server's day read gives it none); the mock keeps
   // them aside so that a reinstatement can take them back or find them taken.
   const reinstatable = r => r.status === 'no_show' || (r.status === 'cancelled' && r.cancelledBy === 'staff')
@@ -249,6 +251,10 @@ async function mockRestaurant (page, opts = {}) {
       const version = body && body.expectedVersion !== undefined ? body.expectedVersion : Number(url.searchParams.get('expectedVersion'))
       if (version !== row.version) return diag(route, 409, 'stale', { currentVersion: row.version })
       const action = one[2] || ''
+      // As StarChat 9.34.65's staffCancel (NativeReservationBook.scala:711-728): a live hold is not staff's (404);
+      // a request already handled or a row already cancelled is answered as it is, nothing written, no new version.
+      if (method === 'DELETE' && row.status === 'held') return diag(route, 404, 'not_found')
+      if (method === 'DELETE' && (row.status === 'handled' || row.status === 'cancelled')) return json(route, 200, wire(row))
       if (action === '/reinstate') {
         if (!reinstatable(row)) return diag(route, 409, 'not_reversible', { reason: row.status === 'cancelled' ? 'cancelled_by_caller' : 'not_cancelled_or_no_show' })
         const conflicts = state.rows.filter(o => o.id !== row.id && o.date === row.date && takes(o) && o.tableIds.some(t => row.tableIds.includes(t)) &&

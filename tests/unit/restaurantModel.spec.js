@@ -2,9 +2,9 @@ import { describe, it, expect } from 'vitest'
 import {
   rulesOf, hasHours, tableMinutesFor, serviceWindow, defaultTime, stateOf, freeFrom, isFreeAt, seatings, dropTargets,
   stripStatus, countInRanges, knowCounts, matches, genNames, addTables, draftProblems, diffLayout, wizardLayout, zoneIdFor,
-  joinRange, callsOf, minFreeLimits, toMin, fmt
+  joinRange, callsOf, minFreeLimits, toMin, fmt, live, guests
 } from '@/utils/RestaurantModel'
-import { layoutToWire, bookingFromWire, layoutFromWire } from '@/utils/Restaurant'
+import { layoutToWire, bookingFromWire, layoutFromWire, instanceIn } from '@/utils/Restaurant'
 
 /** The page's arithmetic: what it draws from the server's answers. What the server decides is not here. */
 
@@ -72,6 +72,16 @@ describe('a booking on the page', () => {
     expect(stateOf({ status: 'cancelled', serviceState: 'arrived' })).toBe('cancelled')
     expect(stateOf({ status: 'confirmed', source: 'block' })).toBe('block')
     expect(stateOf({ status: 'requested' })).toBe('requested')
+  })
+
+  // Seen failing on 2026-10-12: a declined request (`handled`, which StarChat's day read returns) fell through to
+  // `booked` and was drawn as a guest of 9 with its covers counted.
+  it('shows a declined request as declined, never as a guest; a status it does not know as nothing', () => {
+    expect(stateOf({ status: 'handled', serviceState: null })).toBe('declined')
+    expect(stateOf({ status: 'something_new' })).toBe('unknown')
+    const list = [{ id: 'r', service: 'dinner', state: stateOf({ status: 'handled' }), party: 9, start: 0, end: 90, tables: [] }]
+    expect(live(list, 'dinner')).toEqual([])
+    expect(guests(list, 'dinner')).toEqual([])
   })
 
   it('lists the calls that touched it newest first, ending with the one that made it', () => {
@@ -248,5 +258,18 @@ describe('the first-run wizard', () => {
     expect(L.tables.map(t => t.name)).toEqual(['T1', 'T2', 'T3', 'T4', 'T5', 'D1', 'D2'])
     expect(L.tables.every(t => t.id < 0)).toBe(true)
     expect(layoutToWire(L).joins).toEqual([{ tables: ['T1', 'T2'], min: 3, max: 4 }, { tables: ['T4', 'T5'], min: 5, max: 8 }])
+  })
+})
+
+describe('the restaurant instance StarChat serves', () => {
+  const read = (during, extra = {}) => ({ revisions: { prefetch: 'p', during: 'rev-d', final: 'f' }, prefetch: [], final: [], during, ...extra })
+
+  it('is read under either of its names, in the during phase only', () => {
+    expect(instanceIn(read([{ skill: 'restaurant_booking', instanceId: 'r1', params: { a: '1' } }])))
+      .toEqual({ phase: 'during', skill: 'restaurant_booking', instanceId: 'r1', params: { a: '1' }, revision: 'rev-d' })
+    expect(instanceIn(read([{ skill: 'skill_restaurant_booking', instanceId: 'r2' }])).instanceId).toBe('r2')
+    // Seen failing on 2026-10-12 with the read walking every phase (as the page did): an instance in `final` was taken.
+    expect(instanceIn(read([], { final: [{ skill: 'skill_restaurant_booking', instanceId: 'r3' }] }))).toBeNull()
+    expect(instanceIn(read([{ skill: 'skill_calendar_booking', instanceId: 'c' }]))).toBeNull()
   })
 })

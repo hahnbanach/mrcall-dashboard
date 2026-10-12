@@ -154,7 +154,8 @@
       "restaurantLayout": {
         "empty": "Nessuna sala ancora: zone e tavoli si impostano nella pagina del ristorante.",
         "summary": "{zones} zone, {tables} tavoli attivi. Si modificano nella pagina del ristorante.",
-        "open": "Apri Sala e tavoli"
+        "open": "Apri Sala e tavoli",
+        "unknown": "Non è stato possibile leggere la sala ora; si modifica nella pagina del ristorante."
       }
     },
     "templatedVariable": {
@@ -1390,7 +1391,6 @@
       },
       "newb": {
         "title": "Nuova prenotazione",
-        "acceptTitle": "Accetta la richiesta",
         "fixed": "{tables} · {zone} · {min}-{max} persone",
         "auto": "Tavolo scelto dal sistema",
         "letChoose": "Lascia scegliere il tavolo al sistema",
@@ -1641,7 +1641,9 @@
         "gone": "{table} non è più in sala",
         "withoutTable": "Ripristina senza tavolo",
         "doneWithoutTable": "{name}: ripristinata, ancora senza tavolo"
-      }
+      },
+      "alreadySent": "Già inviato: non si può più annullare.",
+      "exportFile": "prenotazioni-{from}-{to}.csv"
     }
   },
   "views": {

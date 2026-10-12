@@ -184,55 +184,127 @@ test.describe('the restaurant page', () => {
     await confirm.getByRole('button', { name: 'Reinstate without a table' }).click()
     await expect(page.locator('.toast')).toContainText('Rossi: reinstated with no table yet')
     expect(calls.filter(c => c.path.endsWith('/reinstate')).map(c => c.search)).toEqual(['?expectedVersion=2', '?expectedVersion=2&overbook=true'])
+    // and that too can be undone: the cancellation again, at the version the reinstatement answered
+    await page.locator('.toast').getByRole('button', { name: 'Undo' }).click()
+    await expect(page.locator('.toast')).toContainText('action undone')
+    expect(calls.filter(c => c.method === 'DELETE' && c.path.endsWith('b-rossi')).map(c => c.search)).toEqual(['?expectedVersion=1', '?expectedVersion=3'])
   })
 
-  // Declining has no server reverse: the DELETE is held back for the Undo window (8 s, the other undo toasts'
-  // time) and sent at its end, or at once when the page is left. Seen failing on 2026-10-12, one fault each: the
-  // Undo keeping the held DELETE, no flush when the page is left, the DELETE sent at once.
-  async function declineGalli (page) {
+  // Declining and accepting a request have no server reverse: each is held back for the Undo window (8 s, the
+  // other undo toasts' time) and sent at its end, or at once when the page is left. Seen failing on 2026-10-12,
+  // one fault each: the Undo keeping the held request, no flush when the page is left, the request sent at once.
+  const ANSWERS = [
+    { button: 'Decline', toast: 'Request declined: Galli', method: 'DELETE', sent: c => c.method === 'DELETE',
+      what: c => c.path + c.search, expected: '/reservations/b-req?expectedVersion=1' },
+    { button: 'Accept', toast: 'Request accepted: Galli', method: 'POST', sent: c => c.path.endsWith('/accept'),
+      what: c => c.path + JSON.stringify(c.body), expected: '/reservations/b-req/accept{"expectedVersion":1}' }
+  ]
+
+  async function answerGalli (page, a) {
     await tomorrowDinner(page)
-    await page.locator('.req', { hasText: 'Galli' }).getByRole('button', { name: 'Decline' }).click()
-    await expect(page.locator('.toast')).toContainText('Request declined: Galli')
+    await page.locator('.req', { hasText: 'Galli' }).getByRole('button', { name: a.button }).click()
+    await expect(page.locator('.toast')).toContainText(a.toast)
     await expect(page.locator('.req', { hasText: 'Galli' })).toHaveCount(0)
   }
 
-  test('declining a request: Undo inside the window brings it back and sends nothing', async ({ authenticatedPage: page }) => {
-    const { calls } = await mockRestaurant(page)
-    await openRestaurant(page)
-    await ready(page)
-    await declineGalli(page)
-    await page.locator('.toast').getByRole('button', { name: 'Undo' }).click()
-    await expect(page.locator('.req', { hasText: 'Galli' })).toHaveCount(1)
-    await page.waitForTimeout(9000)
-    expect(calls.filter(c => c.method === 'DELETE')).toHaveLength(0)
-  })
+  for (const a of ANSWERS) {
+    test(`${a.button} on a request: Undo inside the window brings it back and sends nothing`, async ({ authenticatedPage: page }) => {
+      const { calls } = await mockRestaurant(page)
+      await openRestaurant(page)
+      await ready(page)
+      await answerGalli(page, a)
+      await page.locator('.toast').getByRole('button', { name: 'Undo' }).click()
+      await expect(page.locator('.req', { hasText: 'Galli' })).toHaveCount(1)
+      await page.waitForTimeout(9000)
+      expect(calls.filter(a.sent)).toHaveLength(0)
+    })
 
-  test('declining a request: when the Undo time is up, exactly one DELETE at the version read', async ({ authenticatedPage: page }) => {
+    test(`${a.button} on a request: when the Undo time is up, exactly one request at the version read, and its toast goes`, async ({ authenticatedPage: page }) => {
+      const { calls } = await mockRestaurant(page)
+      await openRestaurant(page)
+      await ready(page)
+      await answerGalli(page, a)
+      expect(calls.filter(a.sent)).toHaveLength(0)
+      await page.waitForRequest(r => r.method() === a.method && (a.method === 'DELETE' || r.url().endsWith('/accept')), { timeout: 15000 })
+      // the Undo went with the send: one clock, no Undo of something already sent
+      await expect(page.locator('.toast').getByRole('button', { name: 'Undo' })).toHaveCount(0)
+      await page.waitForTimeout(2000)
+      expect(calls.filter(a.sent).map(a.what)).toEqual([a.expected])
+    })
+
+    test(`${a.button} on a request: leaving the page sends it at once`, async ({ authenticatedPage: page }) => {
+      const { calls } = await mockRestaurant(page)
+      await openRestaurant(page)
+      await ready(page)
+      await answerGalli(page, a)
+      const narrowMenu = page.locator('.header_buttonbar button')
+      if (await narrowMenu.isVisible()) await narrowMenu.click()
+      const sent = page.waitForRequest(r => r.method() === a.method && (a.method === 'DELETE' || r.url().endsWith('/accept')), { timeout: 4000 })
+      await page.getByRole('menuitem', { name: 'Data retention', exact: true }).locator('visible=true').first().click()
+      await sent
+      expect(calls.filter(a.sent).map(a.what)).toEqual([a.expected])
+    })
+  }
+
+  // StarChat's day read returns a declined request as `handled`. Seen failing on 2026-10-12 against c1fbd1c: back
+  // as a guest of 9, its covers counted. The other new tests of this round (Accept held back, one-tap no-show, Undo
+  // of a reinstatement, the export's name) failed against c1fbd1c too.
+  test('a declined request, read again from the server, is no guest and adds no covers', async ({ authenticatedPage: page }) => {
     const { calls } = await mockRestaurant(page)
     await openRestaurant(page)
     await ready(page)
-    await declineGalli(page)
-    expect(calls.filter(c => c.method === 'DELETE')).toHaveLength(0)
+    await tomorrowDinner(page)
+    const dinner = page.locator('.svc-tab', { hasText: 'Dinner' }).locator('small')
+    const before = await dinner.innerText()
+    await page.locator('.req', { hasText: 'Galli' }).getByRole('button', { name: 'Decline' }).click()
     await page.waitForRequest(r => r.method() === 'DELETE', { timeout: 15000 })
-    await page.waitForTimeout(2000)
-    expect(calls.filter(c => c.method === 'DELETE').map(c => c.path + c.search)).toEqual(['/reservations/b-req?expectedVersion=1'])
+    await page.getByRole('button', { name: 'Previous day' }).click()
+    await page.getByRole('button', { name: 'Next day' }).click()
+    await expect(page.locator('.brow', { hasText: 'Rossi' })).toHaveCount(1)
+    expect(calls.filter(c => c.method === 'DELETE')).toHaveLength(1)
+    await expect(page.locator('.brow', { hasText: 'Galli' })).toHaveCount(0)
     await expect(page.locator('.req', { hasText: 'Galli' })).toHaveCount(0)
+    await expect(dinner).toHaveText(before)
+    await page.getByRole('searchbox', { name: 'Search a booking by name or phone' }).fill('Galli')
+    await expect(page.locator('.sr-empty')).toContainText('No booking found')
   })
 
-  test('declining a request: leaving the page sends the held decline at once', async ({ authenticatedPage: page }) => {
+  // Criterion 7: a no-show is one tap, on the late guest's row. The page's clock is set to 20:20 today.
+  test('a late guest is a no-show in one tap on its row, with Undo', async ({ authenticatedPage: page }) => {
+    const { calls } = await mockRestaurant(page)
+    await page.clock.setFixedTime(new Date(`${TODAY}T20:20:00`))
+    await openRestaurant(page)
+    await ready(page)
+    const row = page.locator('.brow', { hasText: 'Lato' })
+    await row.getByRole('button', { name: 'No-show' }).click()   // the one tap
+    await expect(page.locator('.toast')).toContainText('Lato: marked as no-show')
+    await expect(page.locator('.panel')).toHaveCount(0)
+    expect(calls.filter(c => c.path.endsWith('/no-show')).map(c => c.path + c.search)).toEqual(['/reservations/b-late/no-show?expectedVersion=1'])
+    await page.locator('.toast').getByRole('button', { name: 'Undo' }).click()
+    await expect(page.locator('.toast')).toContainText('action undone')
+    expect(calls.filter(c => c.path.endsWith('/reinstate')).map(c => c.search)).toEqual(['?expectedVersion=2'])
+    // back to expected, and still late: the late guest's row is the only one that offers it
+    await expect(page.locator('.brow .quick-noshow')).toHaveCount(1)
+  })
+
+  test('reinstating from the panel has Undo: the cancellation again at the version it answered', async ({ authenticatedPage: page }) => {
     const { calls } = await mockRestaurant(page)
     await openRestaurant(page)
     await ready(page)
-    await declineGalli(page)
-    const narrowMenu = page.locator('.header_buttonbar button')
-    if (await narrowMenu.isVisible()) await narrowMenu.click()
-    const sent = page.waitForRequest(r => r.method() === 'DELETE', { timeout: 4000 })
-    await page.getByRole('menuitem', { name: 'Data retention', exact: true }).locator('visible=true').first().click()
-    await sent
-    expect(calls.filter(c => c.method === 'DELETE').map(c => c.path + c.search)).toEqual(['/reservations/b-req?expectedVersion=1'])
+    await tomorrowDinner(page)
+    await page.locator('.brow', { hasText: 'Verdi' }).click()
+    await page.locator('.panel').getByRole('button', { name: 'Cancel booking' }).click()
+    await expect(page.locator('.toast')).toContainText('Cancelled: Verdi')
+    await page.locator('details.gone summary').click()
+    await page.locator('details.gone .brow', { hasText: 'Verdi' }).click()
+    await page.locator('.panel').getByRole('button', { name: 'Reinstate' }).click()
+    await expect(page.locator('.toast')).toContainText('Verdi: booking reinstated')
+    await page.locator('.toast').getByRole('button', { name: 'Undo' }).click()
+    await expect(page.locator('.toast')).toContainText('action undone')
+    expect(calls.filter(c => c.method === 'DELETE').map(c => c.search)).toEqual(['?expectedVersion=1', '?expectedVersion=3'])
   })
 
-  test('marks a no-show in one tap with Undo, and shows the phone as a number to call and to write to', async ({ authenticatedPage: page }) => {
+  test('marks a no-show from the panel with Undo, and shows the phone as a number to call and to write to', async ({ authenticatedPage: page }) => {
     const { calls } = await mockRestaurant(page)
     await openRestaurant(page)
     await ready(page)
@@ -334,7 +406,7 @@ test.describe('the restaurant page', () => {
     expect(posts.map(c => !!c.body.overbook)).toEqual([false, true])
   })
 
-  test('accepts a request at the version read, and opens the call it came from', async ({ authenticatedPage: page }) => {
+  test('opens the call a request came from', async ({ authenticatedPage: page }) => {
     const { calls } = await mockRestaurant(page)
     await openRestaurant(page)
     await ready(page)
@@ -344,9 +416,8 @@ test.describe('the restaurant page', () => {
     await request.getByRole('button', { name: 'Read the call' }).click()
     await expect(page.locator('.restaurant-call-dialog')).toContainText('A party of nine.')
     await page.keyboard.press('Escape')
-    await request.getByRole('button', { name: 'Accept' }).click()
-    await expect(page.locator('.toast')).toContainText('Request accepted: Galli')
-    expect(calls.filter(c => c.path.endsWith('/accept')).map(c => c.body)).toEqual([{ expectedVersion: 1 }])
+    await expect(page.locator('.restaurant-call-dialog')).toHaveCount(0)
+    expect(calls.filter(c => c.path === '/conversation/search').map(c => c.body.id)).toEqual(['CON-req'])
   })
 
   test('"Good to know" names who has allergies, who is a large party and who did not come before, and highlights them', async ({ authenticatedPage: page }) => {
@@ -384,7 +455,7 @@ test.describe('the restaurant page', () => {
     await ready(page)
     const download = page.waitForEvent('download')
     await page.getByRole('button', { name: 'Export CSV' }).click()
-    expect((await download).suggestedFilename()).toBe(`prenotazioni-${TODAY}-${addDays(TODAY, 13)}.csv`)
+    expect((await download).suggestedFilename()).toBe(`bookings-${TODAY}-${addDays(TODAY, 13)}.csv`)
     expect(calls.filter(c => c.path === '/export').map(c => c.search)).toEqual([`?from=${TODAY}&to=${addDays(TODAY, 13)}`])
   })
 
@@ -496,4 +567,29 @@ test.describe('the restaurant page', () => {
     await expect(page.locator('.room-editor')).toBeVisible({ timeout: 20000 })
     await expect(page.getByRole('tab', { name: 'Room and tables' })).toHaveAttribute('aria-selected', 'true')
   })
+
+  // The owner's change 2: in "What is still free" no text ever leaves its coloured box, in the longest languages
+  // and Greek, on every viewport, fourteen days and month. Seen failing on 2026-10-12 with a 43-letter word injected
+  // into de-DE's "max {n}" and the strip's `overflow-wrap` removed (the word ran 219 px out of its box); with the
+  // injected word alone the box wraps it and the test passes, which is the behaviour it guards.
+  for (const locale of ['it-IT', 'en-US', 'de-DE', 'el-GR']) {
+    test(`the strip keeps every label inside its coloured box (${locale})`, async ({ authenticatedPage: page }) => {
+      await page.addInitScript(l => localStorage.setItem('mrcall-user-locale', l), locale)
+      await mockRestaurant(page)
+      await openRestaurant(page)
+      await ready(page)
+      for (const mode of ['14', 'month']) {
+        if (mode === 'month') await page.locator('.strip .seg button').nth(1).click()
+        await expect(page.locator('.strip .dc-svc').first()).toBeVisible()
+        const outside = await page.locator('.strip .dc-svc').evaluateAll(boxes => boxes.flatMap(box => {
+          const b = box.getBoundingClientRect()
+          return Array.from(box.querySelectorAll('*')).filter(el => el.textContent.trim()).filter(el => {
+            const r = el.getBoundingClientRect()
+            return r.left < b.left - 1 || r.right > b.right + 1 || r.top < b.top - 1 || r.bottom > b.bottom + 1 || el.scrollWidth > el.clientWidth + 1
+          }).map(el => `${el.textContent.trim()} (${Math.round(el.getBoundingClientRect().right - b.right)}px)`)
+        }))
+        expect(outside, `${locale}, ${mode}`).toEqual([])
+      }
+    })
+  }
 })

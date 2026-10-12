@@ -152,7 +152,8 @@
       "restaurantLayout": {
         "empty": "Intet lokale endnu: områder og borde indstilles på restaurantsiden.",
         "summary": "{zones} områder, {tables} aktive borde. De redigeres på restaurantsiden.",
-        "open": "Åbn Sal og borde"
+        "open": "Åbn Sal og borde",
+        "unknown": "Lokalet kunne ikke læses lige nu; det redigeres på restaurantsiden."
       }
     }
   },
@@ -1387,7 +1388,6 @@
       },
       "newb": {
         "title": "Ny reservation",
-        "acceptTitle": "Acceptér forespørgslen",
         "fixed": "{tables} · {zone} · {min}-{max} personer",
         "auto": "Bord valgt af systemet",
         "letChoose": "Lad systemet vælge bord",
@@ -1635,7 +1635,9 @@
         "gone": "{table} er ikke længere i salen",
         "withoutTable": "Gendan uden bord",
         "doneWithoutTable": "{name}: gendannet, endnu uden bord"
-      }
+      },
+      "alreadySent": "Allerede sendt: det kan ikke længere fortrydes.",
+      "exportFile": "reservationer-{from}-{to}.csv"
     }
   },
   "views": {

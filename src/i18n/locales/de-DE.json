@@ -153,7 +153,8 @@
       "restaurantLayout": {
         "empty": "Noch kein Raum: Bereiche und Tische werden auf der Restaurantseite festgelegt.",
         "summary": "{zones} Bereiche, {tables} aktive Tische. Sie werden auf der Restaurantseite bearbeitet.",
-        "open": "Raum und Tische öffnen"
+        "open": "Raum und Tische öffnen",
+        "unknown": "Der Raum konnte gerade nicht gelesen werden; er wird auf der Restaurantseite bearbeitet."
       }
     }
   },
@@ -1389,7 +1390,6 @@
       },
       "newb": {
         "title": "Neue Reservierung",
-        "acceptTitle": "Anfrage annehmen",
         "fixed": "{tables} · {zone} · {min}-{max} Personen",
         "auto": "Tisch vom System gewählt",
         "letChoose": "Das System den Tisch wählen lassen",
@@ -1637,7 +1637,9 @@
         "gone": "{table} ist nicht mehr im Raum",
         "withoutTable": "Ohne Tisch wiederherstellen",
         "doneWithoutTable": "{name}: wiederhergestellt, noch ohne Tisch"
-      }
+      },
+      "alreadySent": "Bereits gesendet: Das lässt sich nicht mehr rückgängig machen.",
+      "exportFile": "reservierungen-{from}-{to}.csv"
     }
   },
   "views": {

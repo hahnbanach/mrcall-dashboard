@@ -152,7 +152,8 @@
       "restaurantLayout": {
         "empty": "Saali veel pole: alad ja lauad seadistatakse restorani lehel.",
         "summary": "{zones} ala, {tables} aktiivset lauda. Neid muudetakse restorani lehel.",
-        "open": "Ava Saal ja lauad"
+        "open": "Ava Saal ja lauad",
+        "unknown": "Saali ei õnnestunud praegu lugeda; seda muudetakse restorani lehel."
       }
     }
   },
@@ -1387,7 +1388,6 @@
       },
       "newb": {
         "title": "Uus broneering",
-        "acceptTitle": "Võta päring vastu",
         "fixed": "{tables} · {zone} · {min}-{max} inimest",
         "auto": "Süsteemi valitud laud",
         "letChoose": "Lase süsteemil laud valida",
@@ -1635,7 +1635,9 @@
         "gone": "{table} ei ole enam saalis",
         "withoutTable": "Taasta ilma lauata",
         "doneWithoutTable": "{name}: taastatud, lauda veel pole"
-      }
+      },
+      "alreadySent": "Juba saadetud: seda ei saa enam tagasi võtta.",
+      "exportFile": "broneeringud-{from}-{to}.csv"
     }
   },
   "views": {
