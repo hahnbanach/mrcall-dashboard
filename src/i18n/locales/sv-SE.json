@@ -1799,17 +1799,29 @@
       },
       "change": {
         "notFound": "Bokningen som förfrågan gäller hittades inte: öppna den och ändra den för hand.",
-        "done": "{name} flyttad till {day} {time}, {people}; förfrågan är stängd",
         "asked": "Ändring begärd i telefon",
         "make": "Gör ändringen",
         "close": "Stäng utan ändring",
         "asks": "{name} vill ändra {from} till {to}",
-        "otherDay": "en bokning en annan dag"
+        "otherDay": "en bokning en annan dag",
+        "applied": "Ändring gjord: {name}; förfrågan är stängd"
       },
       "acceptFields": {
         "title": "Godta {name}",
         "intro": "För att godtas behöver bokningen: {fields}.",
         "accept": "Godta"
+      },
+      "details": {
+        "title": "Gästens uppgifter",
+        "fromRequest": "Vad gästen bad om i telefon",
+        "applyMove": "Flytta den också till {day} {time}, {people}",
+        "late": "Kommer senare, kl. {time}: bordet ligger kvar, det står i anteckningarna.",
+        "lateNote": "Kommer kl. {time}",
+        "saveChange": "Spara ändringen och stäng förfrågan",
+        "save": "Spara uppgifter",
+        "cancel": "Avbryt",
+        "edit": "Ändra uppgifter",
+        "saved": "Uppgifter sparade: {name}"
       }
     }
   },

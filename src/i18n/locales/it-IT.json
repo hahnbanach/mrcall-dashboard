@@ -1805,17 +1805,29 @@
       },
       "change": {
         "notFound": "La prenotazione di questa richiesta non è stata trovata: aprila e cambiala a mano.",
-        "done": "{name} spostata a {day} {time}, {people}; la richiesta è chiusa",
         "asked": "Modifica chiesta al telefono",
         "make": "Fai la modifica",
         "close": "Chiudi senza cambiare",
         "asks": "{name} chiede di cambiare {from} in {to}",
-        "otherDay": "una prenotazione di un altro giorno"
+        "otherDay": "una prenotazione di un altro giorno",
+        "applied": "Modifica fatta: {name}; la richiesta è chiusa"
       },
       "acceptFields": {
         "title": "Accetta {name}",
         "intro": "Per accettarla, questa prenotazione deve avere: {fields}.",
         "accept": "Accetta"
+      },
+      "details": {
+        "title": "Dati dell'ospite",
+        "fromRequest": "Cosa ha chiesto l'ospite al telefono",
+        "applyMove": "Spostala anche a {day} {time}, {people}",
+        "late": "Arriva in ritardo alle {time}: il tavolo resta, è scritto nelle note.",
+        "lateNote": "Arriva alle {time}",
+        "saveChange": "Salva la modifica e chiudi la richiesta",
+        "save": "Salva i dati",
+        "cancel": "Annulla",
+        "edit": "Modifica i dati",
+        "saved": "Dati salvati: {name}"
       }
     }
   },

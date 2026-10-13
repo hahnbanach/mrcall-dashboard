@@ -25,10 +25,12 @@
     <div v-if="changeRequest" class="callout amber change-request">
       <b>{{ $t("components.restaurant.change.asked") }}:</b> {{ fmt(changeRequest.start) }} · {{ $t("components.restaurant.people", { n: changeRequest.party }) }}<template v-if="changeRequest.notes"> · {{ changeRequest.notes }}</template>
       <div class="tb-row">
-        <button class="btn small make-change" :disabled="busy" @click="$emit('make-change', changeRequest)">{{ $t("components.restaurant.change.make") }}</button>
+        <button class="btn small make-change" :disabled="busy || editing" @click="$emit('make-change', changeRequest)">{{ $t("components.restaurant.change.make") }}</button>
         <button class="btn ghost small close-request" :disabled="busy" @click="$emit('close-request', changeRequest)">{{ $t("components.restaurant.change.close") }}</button>
       </div>
     </div>
+    <RestaurantDetailsEditor v-if="editing" :key="change ? 'change' : 'edit'" :booking="booking" :field-rules="fieldRules" :change="change"
+                             :busy="busy" :message="message" @save="e => $emit('save-details', e)" @cancel="$emit('cancel-edit')" />
     <dl class="kv">
       <dt>{{ $t("components.restaurant.panel.table") }}</dt>
       <dd>{{ seats }}<template v-if="zoneName"> · {{ zoneName }}</template><template v-if="booking.pinned"> · {{ $t("components.restaurant.panel.pinnedShort") }}</template></dd>
@@ -49,6 +51,8 @@
     </template>
     <div class="section-title">{{ $t("components.restaurant.panel.actions") }}</div>
     <div class="actions">
+      <!-- staff correct a name, a phone, an allergy or a note, whoever made the booking (R8) -->
+      <button class="btn ghost edit-details" :disabled="busy || editing || booking.state === 'block'" @click="$emit('edit')">{{ $t("components.restaurant.details.edit") }}</button>
       <button class="btn ghost" :disabled="closed || busy || booking.state === 'requested'" @click="$emit('move', booking)">{{ $t("components.restaurant.panel.move") }}</button>
       <button class="btn ghost" :disabled="closed || busy || booking.state === 'requested'" :title="$t('components.restaurant.panel.pinHint')"
               @click="$emit('pin', booking)">{{ $t(booking.pinned ? 'components.restaurant.panel.unpin' : 'components.restaurant.panel.pin') }}</button>
@@ -63,9 +67,11 @@
 <script>
 import { fmt, seatLabel, callsOf } from "@/utils/RestaurantModel";
 import { longDate, phoneOf } from "@/components/widgets/restaurant/format";
+import RestaurantDetailsEditor from "@/components/widgets/restaurant/RestaurantDetailsEditor.vue";
 
 /** One booking: when, who, where, the call that made it, its state in the evening and what can be done. */
 export default {
+  components: { RestaurantDetailsEditor },
   props: {
     booking: { type: Object, required: true },
     layout: { type: Object, required: true },
@@ -75,8 +81,14 @@ export default {
     changeRequest: { type: Object, default: null },
     /** Whether the booking falls on a day or service closed after it was taken: staff call the guest. */
     onClosedDay: { type: Boolean, default: false },
+    /** "What we ask for every booking": which details the editor draws and requires. */
+    fieldRules: { type: Object, required: true },
+    /** The details editor is open; with `change`, pre-filled from a call-back request (`changeOf`). */
+    editing: { type: Boolean, default: false },
+    change: { type: Object, default: null },
+    message: { type: Object, default: null },
   },
-  emits: ["close", "state", "pin", "no-show", "cancel", "move", "call", "reinstate", "make-change", "close-request"],
+  emits: ["close", "state", "pin", "no-show", "cancel", "move", "call", "reinstate", "make-change", "close-request", "edit", "cancel-edit", "save-details"],
   computed: {
     closed() {
       return this.booking.state === "cancelled" || this.booking.state === "noshow";

@@ -1799,17 +1799,29 @@
       },
       "change": {
         "notFound": "Bestillingen forespørselen gjelder ble ikke funnet: åpne den og endre den for hånd.",
-        "done": "{name} flyttet til {day} {time}, {people}; forespørselen er lukket",
         "asked": "Endring ønsket på telefon",
         "make": "Gjør endringen",
         "close": "Lukk uten endring",
         "asks": "{name} ønsker å endre {from} til {to}",
-        "otherDay": "en bestilling en annen dag"
+        "otherDay": "en bestilling en annen dag",
+        "applied": "Endring gjort: {name}; forespørselen er lukket"
       },
       "acceptFields": {
         "title": "Godta {name}",
         "intro": "For å godtas trenger bestillingen: {fields}.",
         "accept": "Godta"
+      },
+      "details": {
+        "title": "Gjestens opplysninger",
+        "fromRequest": "Hva gjesten ba om på telefon",
+        "applyMove": "Flytt den også til {day} {time}, {people}",
+        "late": "Kommer senere, kl. {time}: bordet blir stående, det står i notatene.",
+        "lateNote": "Kommer kl. {time}",
+        "saveChange": "Lagre endringen og lukk forespørselen",
+        "save": "Lagre opplysninger",
+        "cancel": "Avbryt",
+        "edit": "Rediger opplysninger",
+        "saved": "Opplysninger lagret: {name}"
       }
     }
   },

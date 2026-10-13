@@ -1799,17 +1799,29 @@
       },
       "change": {
         "notFound": "De reservering van dit verzoek is niet gevonden: open haar en wijzig haar met de hand.",
-        "done": "{name} verplaatst naar {day} {time}, {people}; het verzoek is gesloten",
         "asked": "Wijziging gevraagd per telefoon",
         "make": "Wijziging uitvoeren",
         "close": "Sluiten zonder wijzigen",
         "asks": "{name} vraagt {from} te wijzigen in {to}",
-        "otherDay": "een reservering op een andere dag"
+        "otherDay": "een reservering op een andere dag",
+        "applied": "Wijziging uitgevoerd: {name}; het verzoek is gesloten"
       },
       "acceptFields": {
         "title": "{name} accepteren",
         "intro": "Om te accepteren heeft deze reservering nodig: {fields}.",
         "accept": "Accepteren"
+      },
+      "details": {
+        "title": "Gegevens van de gast",
+        "fromRequest": "Wat de gast per telefoon vroeg",
+        "applyMove": "Ook verplaatsen naar {day} {time}, {people}",
+        "late": "Komt later, om {time}: de tafel blijft, het staat in de opmerkingen.",
+        "lateNote": "Komt om {time}",
+        "saveChange": "Wijziging opslaan en verzoek sluiten",
+        "save": "Gegevens opslaan",
+        "cancel": "Annuleren",
+        "edit": "Gegevens bewerken",
+        "saved": "Gegevens opgeslagen: {name}"
       }
     }
   },

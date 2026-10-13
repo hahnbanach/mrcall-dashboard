@@ -1801,17 +1801,29 @@
       },
       "change": {
         "notFound": "Die Reservierung dieser Anfrage wurde nicht gefunden: öffnen Sie sie und ändern Sie sie von Hand.",
-        "done": "{name} verschoben auf {day} {time}, {people}; die Anfrage ist geschlossen",
         "asked": "Änderung am Telefon gewünscht",
         "make": "Änderung vornehmen",
         "close": "Ohne Änderung schließen",
         "asks": "{name} möchte {from} auf {to} ändern",
-        "otherDay": "eine Reservierung an einem anderen Tag"
+        "otherDay": "eine Reservierung an einem anderen Tag",
+        "applied": "Änderung vorgenommen: {name}; die Anfrage ist geschlossen"
       },
       "acceptFields": {
         "title": "{name} annehmen",
         "intro": "Zum Annehmen braucht diese Reservierung: {fields}.",
         "accept": "Annehmen"
+      },
+      "details": {
+        "title": "Angaben des Gastes",
+        "fromRequest": "Was der Gast am Telefon gewünscht hat",
+        "applyMove": "Auch verschieben auf {day} {time}, {people}",
+        "late": "Spätere Ankunft um {time}: der Tisch bleibt, es steht in den Notizen.",
+        "lateNote": "Kommt um {time}",
+        "saveChange": "Änderung speichern und Anfrage schließen",
+        "save": "Angaben speichern",
+        "cancel": "Abbrechen",
+        "edit": "Angaben bearbeiten",
+        "saved": "Angaben gespeichert: {name}"
       }
     }
   },

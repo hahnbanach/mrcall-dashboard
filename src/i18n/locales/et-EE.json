@@ -1799,17 +1799,29 @@
       },
       "change": {
         "notFound": "Broneeringut, mida taotlus puudutab, ei leitud: ava see ja muuda käsitsi.",
-        "done": "{name} viidud: {day} {time}, {people}; taotlus on suletud",
         "asked": "Muudatust küsiti telefonis",
         "make": "Tee muudatus",
         "close": "Sulge muutmata",
         "asks": "{name} soovib muuta {from} → {to}",
-        "otherDay": "teise päeva broneering"
+        "otherDay": "teise päeva broneering",
+        "applied": "Muudatus tehtud: {name}; taotlus on suletud"
       },
       "acceptFields": {
         "title": "Kinnita {name}",
         "intro": "Kinnitamiseks vajab see broneering: {fields}.",
         "accept": "Kinnita"
+      },
+      "details": {
+        "title": "Külalise andmed",
+        "fromRequest": "Mida külaline telefonis palus",
+        "applyMove": "Vii see ka: {day} {time}, {people}",
+        "late": "Saabub hiljem, kell {time}: laud jääb, see on märkustes.",
+        "lateNote": "Saabub kell {time}",
+        "saveChange": "Salvesta muudatus ja sulge taotlus",
+        "save": "Salvesta andmed",
+        "cancel": "Tühista",
+        "edit": "Muuda andmeid",
+        "saved": "Andmed salvestatud: {name}"
       }
     }
   },

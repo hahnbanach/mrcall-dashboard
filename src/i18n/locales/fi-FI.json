@@ -1799,17 +1799,29 @@
       },
       "change": {
         "notFound": "Varausta, jota pyyntö koskee, ei löytynyt: avaa se ja muuta sitä käsin.",
-        "done": "{name} siirretty: {day} {time}, {people}; pyyntö on suljettu",
         "asked": "Muutosta pyydetty puhelimessa",
         "make": "Tee muutos",
         "close": "Sulje muuttamatta",
         "asks": "{name} pyytää muuttamaan {from} → {to}",
-        "otherDay": "toisen päivän varaus"
+        "otherDay": "toisen päivän varaus",
+        "applied": "Muutos tehty: {name}; pyyntö on suljettu"
       },
       "acceptFields": {
         "title": "Hyväksy {name}",
         "intro": "Hyväksymiseen varaus tarvitsee: {fields}.",
         "accept": "Hyväksy"
+      },
+      "details": {
+        "title": "Vieraan tiedot",
+        "fromRequest": "Mitä vieras pyysi puhelimessa",
+        "applyMove": "Siirrä se myös: {day} {time}, {people}",
+        "late": "Saapuu myöhemmin klo {time}: pöytä pysyy, se kirjataan huomautuksiin.",
+        "lateNote": "Saapuu klo {time}",
+        "saveChange": "Tallenna muutos ja sulje pyyntö",
+        "save": "Tallenna tiedot",
+        "cancel": "Peruuta",
+        "edit": "Muokkaa tietoja",
+        "saved": "Tiedot tallennettu: {name}"
       }
     }
   },

@@ -11,7 +11,7 @@ const axios = (await import('axios')).default
 const Restaurant = await import('@/utils/Restaurant')
 const RestaurantApi = Restaurant.default
 const { PAGE_FIELDS, PAGE_EDITS, pageOffIn, isPageOff, allergiesSettingOf, layoutToWire, layoutFromWire } = Restaurant
-const { fieldRulesOf, missingRequired, closuresOf, withClosures, sameClosures, onClosedDay } = await import('@/utils/RestaurantModel')
+const { fieldRulesOf, missingRequired, closuresOf, withClosures, sameClosures, onClosedDay, changeOf } = await import('@/utils/RestaurantModel')
 
 /**
  * One editor per field (brief, addendum 2026-10-12 (2)): what the restaurant page writes, what the skill form draws,
@@ -201,5 +201,32 @@ describe('one list of closures', () => {
     expect(onClosedDay(b, [{ service: 'lunch', zone: null }], [])).toBe(false)
     expect(onClosedDay(b, [{ service: null, zone: 'dehors' }], [])).toBe(false)
     expect(onClosedDay(b, [], ['sala'])).toBe(true)
+  })
+})
+
+// Seen failing first, 2026-10-13, one fault at a time: no late arrival ever (the late test); a late arrival past the
+// booking's end (the move test); the caller's allergies dropped (the details test).
+describe('what a call-back request asks of its booking', () => {
+  const booking = { date: '2026-10-20', start: 1200, end: 1290, party: 2, name: 'Verdi', allergies: '', notes: 'Window' }
+  const late = m => `Arrives at ${m}`
+
+  it('a later time the same day, same people, before the booking ends, is a late arrival: no move, a note', () => {
+    const c = changeOf(booking, { date: '2026-10-20', start: 1245, party: 2, name: 'Verdi', notes: '' }, late)
+    expect(c.move).toBeNull()
+    expect(c.late).toBe(1245)
+    expect(c.details.notes).toBe('Arrives at 1245 · Window')
+  })
+
+  it('another day, a time past the booking\'s end or other people is a move', () => {
+    expect(changeOf(booking, { date: '2026-10-21', start: 1200, party: 2 }, late).move).toEqual({ date: '2026-10-21', start: 1200, party: 2 })
+    expect(changeOf(booking, { date: '2026-10-20', start: 1290, party: 2 }, late).move).toEqual({ date: '2026-10-20', start: 1290, party: 2 })
+    expect(changeOf(booking, { date: '2026-10-20', start: 1245, party: 3 }, late).late).toBeNull()
+  })
+
+  it('carries the allergies the caller gave and adds their words to the notes', () => {
+    const c = changeOf(booking, { date: '2026-10-20', start: 1200, party: 2, name: 'Verdi', allergies: 'Celiac', notes: 'Asks to note celiac' }, late)
+    expect(c.move).toBeNull()
+    expect(c.late).toBeNull()
+    expect(c.details).toEqual({ allergies: 'Celiac', notes: 'Window · Asks to note celiac' })
   })
 })

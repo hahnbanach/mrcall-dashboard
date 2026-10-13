@@ -1,0 +1,98 @@
+<template>
+  <div class="details-editor" role="group" :aria-label="$t('components.restaurant.details.title')">
+    <div class="section-title">{{ $t(change ? "components.restaurant.details.fromRequest" : "components.restaurant.details.title") }}</div>
+    <!-- What this restaurant asks for every booking (R8): a field not asked is not drawn, a required one is marked. -->
+    <label v-for="k in shown" :key="k" class="field" :data-detail="k">
+      <span>{{ $t(`components.restaurant.ask.field.${k}`) }}<template v-if="required(k)"> *</template></span>
+      <input :ref="k" v-model="form[k]" autocomplete="off" :inputmode="k === 'phone' ? 'tel' : null" :aria-required="required(k)"
+             :class="{ invalid: tried && missing.includes(k) }">
+    </label>
+    <!-- From a call-back request: the move it asks for, or the late arrival it announces (the table stays) -->
+    <label v-if="change && change.move" class="check-row apply-move">
+      <input v-model="applyMove" type="checkbox">
+      {{ $t("components.restaurant.details.applyMove", { day: changeDay, time: fmt(change.move.start), people: $t("components.restaurant.people", { n: change.move.party }) }) }}
+    </label>
+    <p v-if="change && change.late !== null" class="muted late-arrival">{{ $t("components.restaurant.details.late", { time: fmt(change.late) }) }}</p>
+    <p v-if="tried && missing.length" class="err" role="alert">{{ $t("components.restaurant.answer.missingFields", { fields: missing.map(k => $t(`components.restaurant.ask.field.${k}`)).join(", ") }) }}</p>
+    <p v-if="message" class="callout red" role="alert">{{ message.text }}</p>
+    <div class="tb-row">
+      <button class="btn save-details" :disabled="busy || (!dirty && !change)" @click="send">{{ $t(change ? "components.restaurant.details.saveChange" : "components.restaurant.details.save") }}</button>
+      <button class="btn ghost" :disabled="busy" @click="$emit('cancel')">{{ $t("components.restaurant.details.cancel") }}</button>
+    </div>
+  </div>
+</template>
+
+<script>
+import { fmt, missingRequired } from "@/utils/RestaurantModel";
+import { shortDate } from "@/components/widgets/restaurant/format";
+import { ASKED_FIELDS } from "@/utils/Restaurant";
+
+/** The guest's details staff may correct (R8), in this order; the zone is where the party sits, changed by a move. */
+const DETAILS = ASKED_FIELDS.filter(k => k !== "zone");
+
+/**
+ * Staff correct a booking's name, phone, allergies and notes, whoever made it. The fields follow "what we ask for
+ * every booking": not asked is not drawn, required is marked and cannot be emptied (StarChat refuses a write that
+ * clears a required field, `missing_fields`).
+ *
+ * Opened from a call-back request about this booking (`change`, see `RestaurantModel.changeOf`), it is pre-filled
+ * with what the caller asked: the details, the move as an option ticked by default, a late arrival as a note (the
+ * table stays, as the book records one), so staff never type a request again.
+ */
+export default {
+  props: {
+    booking: { type: Object, required: true },
+    fieldRules: { type: Object, required: true },
+    /** What a call-back request asks of this booking, or null. */
+    change: { type: Object, default: null },
+    busy: { type: Boolean, default: false },
+    message: { type: Object, default: null },
+  },
+  emits: ["save", "cancel"],
+  data() {
+    const b = this.booking;
+    const from = this.change ? this.change.details : {};
+    const pick = k => (from[k] !== undefined ? from[k] : b[k] || "");
+    return {
+      form: Object.fromEntries(DETAILS.map(k => [k, pick(k)])),
+      applyMove: !!(this.change && this.change.move),
+      tried: false,
+    };
+  },
+  computed: {
+    shown() {
+      return DETAILS.filter(k => this.fieldRules[k] !== "not_asked");
+    },
+    /** The required fields this edit would empty. A required field the booking never had is not asked for here: the
+     *  book checks only the fields a write sets or clears, so an older booking is never stuck (brief, R8). */
+    missing() {
+      return missingRequired(this.fieldRules, this.form, this.shown).filter(k => String(this.booking[k] || "").trim());
+    },
+    dirty() {
+      return this.shown.some(k => this.form[k].trim() !== (this.booking[k] || "").trim());
+    },
+    changeDay() {
+      return this.change && this.change.move ? shortDate(this.change.move.date, this.$i18n.locale) : "";
+    },
+  },
+  mounted() {
+    const first = this.$refs[this.shown[0]];
+    const el = Array.isArray(first) ? first[0] : first;
+    if (el && el.focus) el.focus({ preventScroll: true });
+  },
+  methods: {
+    fmt,
+    required(k) {
+      return this.fieldRules[k] === "required";
+    },
+    send() {
+      this.tried = true;
+      if (this.missing.length) return;
+      // Only what changed travels; an emptied field travels as "", which the book reads as cleared.
+      const guest = {};
+      this.shown.forEach(k => { if (this.form[k].trim() !== (this.booking[k] || "").trim()) guest[k] = this.form[k].trim(); });
+      this.$emit("save", { guest, move: this.applyMove && this.change ? this.change.move : null });
+    },
+  },
+};
+</script>

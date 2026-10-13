@@ -380,6 +380,11 @@ async function mockRestaurant (page, opts = {}) {
         row.status = 'confirmed'; row.tableIds = [6]
       }
       else if (method === 'PATCH') {
+        // a staff edit that clears a required field is refused, naming it (R8); one that sets a field replaces it
+        const cleared = ['name', 'phone', 'allergies', 'notes'].filter(k => k in body && !String(body[k] || '').trim())
+        const missing = cleared.filter(k => fieldRules()[k] === 'required')
+        if (missing.length) return json(route, 422, { diagnostics: [{ severity: 'error', path: '/', code: 'missing_fields', detail: 'server English', values: { fields: missing } }] })
+        ;['name', 'phone', 'allergies', 'notes'].forEach(k => { if (k in body) row[k] = String(body[k] || '').trim() || null })
         if (body.tableIds) row.tableIds = body.tableIds
         if (body.time) row.time = body.time
         if (body.date) row.date = body.date

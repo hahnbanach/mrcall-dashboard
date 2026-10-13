@@ -1801,17 +1801,29 @@
       },
       "change": {
         "notFound": "La réservation de cette demande n'a pas été trouvée : ouvrez-la et modifiez-la à la main.",
-        "done": "{name} déplacée au {day} {time}, {people} ; la demande est fermée",
         "asked": "Modification demandée au téléphone",
         "make": "Faire la modification",
         "close": "Fermer sans modifier",
         "asks": "{name} demande de changer {from} en {to}",
-        "otherDay": "une réservation d'un autre jour"
+        "otherDay": "une réservation d'un autre jour",
+        "applied": "Modification faite : {name} ; la demande est fermée"
       },
       "acceptFields": {
         "title": "Accepter {name}",
         "intro": "Pour l'accepter, cette réservation doit avoir : {fields}.",
         "accept": "Accepter"
+      },
+      "details": {
+        "title": "Coordonnées du client",
+        "fromRequest": "Ce que le client a demandé au téléphone",
+        "applyMove": "La déplacer aussi au {day} {time}, {people}",
+        "late": "Arrivée tardive à {time} : la table reste, c'est noté dans les notes.",
+        "lateNote": "Arrive à {time}",
+        "saveChange": "Enregistrer la modification et fermer la demande",
+        "save": "Enregistrer",
+        "cancel": "Annuler",
+        "edit": "Modifier les coordonnées",
+        "saved": "Coordonnées enregistrées : {name}"
       }
     }
   },

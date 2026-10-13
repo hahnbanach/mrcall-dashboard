@@ -1804,17 +1804,29 @@
       },
       "change": {
         "notFound": "The booking this request is about was not found: open it and change it by hand.",
-        "done": "{name} moved to {day} {time}, {people}; the request is closed",
         "asked": "Change asked by phone",
         "make": "Make the change",
         "close": "Close without changing",
         "asks": "{name} asks to change {from} to {to}",
-        "otherDay": "a booking on another day"
+        "otherDay": "a booking on another day",
+        "applied": "Change made: {name}; the request is closed"
       },
       "acceptFields": {
         "title": "Accept {name}",
         "intro": "To accept, this booking needs: {fields}.",
         "accept": "Accept"
+      },
+      "details": {
+        "title": "Guest details",
+        "fromRequest": "What the guest asked by phone",
+        "applyMove": "Also move it to {day} {time}, {people}",
+        "late": "Late arrival at {time}: the table stays, it is written in the notes.",
+        "lateNote": "Arrives at {time}",
+        "saveChange": "Save the change and close the request",
+        "save": "Save details",
+        "cancel": "Cancel",
+        "edit": "Edit details",
+        "saved": "Details saved: {name}"
       }
     }
   },

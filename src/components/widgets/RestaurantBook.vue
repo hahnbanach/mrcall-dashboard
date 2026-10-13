@@ -79,8 +79,12 @@
       <aside class="panel" :aria-label="$t('components.restaurant.panelLabel')" @keydown.esc="closePanel">
         <RestaurantBookingPanel v-if="panel.type === 'booking' && panelBooking" :booking="panelBooking" :layout="layout" :date="date"
                                 :busy="busy" :change-request="changeRequestFor(panelBooking)" :on-closed-day="isOnClosedDay(panelBooking)"
+                                :field-rules="rules.requiredFields" :editing="!!panel.editing" :change="panelChange" :message="panel.message"
                                 @close="closePanel" @state="setState" @pin="togglePin" @no-show="noShow" @cancel="cancel" @reinstate="reinstate"
-                                @move="startMove" @call="openCalls" @make-change="makeChange" @close-request="decline" />
+                                @move="startMove" @call="openCalls" @make-change="makeChange" @close-request="decline"
+                                @edit="panel = Object.assign({}, panel, { editing: true, change: null, message: null })"
+                                @cancel-edit="panel = Object.assign({}, panel, { editing: false, change: null, message: null })"
+                                @save-details="saveDetails" />
         <RestaurantNewPanel v-else-if="panel.type === 'new'" :key="panel.key" :draft="panel" :message="panel.message" :layout="layout"
                             :date="date" :service="service" :win="win" :rules="rules" :list="list" :is-today="date === today" :busy="busy"
                             :find-answer="newFit" @close="closePanel" @save="saveNew" @walk-in="walkIn" @changed="askNewFit" />
@@ -105,7 +109,7 @@ import { useConfirm } from "primevue/useconfirm";
 import RestaurantApi, { isMissingRoute, isPageOff, pageOffIn } from "@/utils/Restaurant";
 import DeferredCommit from "@/utils/DeferredCommit";
 import {
-  rulesOf, missingRequired, onClosedDay, serviceWindow, serviceAt, defaultTime, arrivalTimes, keyOf, addDays, dateOf, fmt, toMin, minuteOfDay,
+  rulesOf, missingRequired, onClosedDay, changeOf, serviceWindow, serviceAt, defaultTime, arrivalTimes, keyOf, addDays, dateOf, fmt, toMin, minuteOfDay,
   stripStatus, seatLabel, dropTargets, tableById, freeFrom, live, occupiedTables, callsOf, SERVICES, GUEST_STATES
 } from "@/utils/RestaurantModel";
 import { shortDate, monthTitle, refusalKey, missingFieldsOf, OVERRIDABLE } from "@/components/widgets/restaurant/format";
@@ -215,6 +219,11 @@ export default {
     },
     panelBooking() {
       return this.panel && this.panel.type === "booking" ? this.list.find(b => b.id === this.panel.id) || null : null;
+    },
+    /** What the call-back request the panel was opened from asks of its booking, pre-filling the details editor. */
+    panelChange() {
+      if (!this.panel || !this.panel.change || !this.panelBooking) return null;
+      return changeOf(this.panelBooking, this.panel.change, m => this.$t("components.restaurant.details.lateNote", { time: fmt(m) }));
     },
     panelRequest() {
       return this.panel && this.panel.type === "accept" ? this.list.find(b => b.id === this.panel.id) || null : null;
@@ -619,27 +628,52 @@ export default {
       return !!(b && this.day && ["booked", "arrived", "seated"].includes(b.state) && onClosedDay(b, this.day.closures, this.day.zonesClosed));
     },
     /**
-     * "Make the change" on a call-back request about a booking: the booking is moved to what the caller asked
-     * (day, time, people) at the version read, then the request is closed. Accepting such a request would make a
-     * second booking, so the server refuses it (`linked_request`) and the page never offers it. The booking named is
-     * looked for in the day read, then by the server's search on the guest's name; not found, the page says so.
+     * "Make the change" on a call-back request about a booking: the booking opens with its details editor pre-filled
+     * from the request (the details, the move ticked, a late arrival in the notes), staff check it and save once; the
+     * save changes the booking at the version read and closes the request. Accepting such a request would make a
+     * second booking, so the server refuses it (`linked_request`) and the page never offers it. The booking is looked
+     * for in the day read, then by the server's search on the guest's name; not found, the page says so.
      */
     async makeChange(request) {
       if (this.busy || !request || !request.about) return;
-      const original = this.list.find(b => b.id === request.about) || await this.findBooking(request.about, request.name);
-      if (!original) { this.showToast(this.$t("components.restaurant.change.notFound"), null, true); return; }
-      const back = { date: original.date || this.date, time: fmt(original.start), covers: original.party };
+      const asked = Object.assign({}, request, { date: request.date || this.date });
+      let original = this.list.find(b => b.id === request.about);
+      if (!original) {
+        const found = await this.findBooking(request.about, request.name);
+        if (!found) { this.showToast(this.$t("components.restaurant.change.notFound"), null, true); return; }
+        if (found.date !== this.date) {
+          this.service = found.service;
+          await this.setDate(found.date);
+        }
+        original = found;
+      }
+      this.panel = { type: "booking", id: original.id, editing: true, change: asked, message: null };
+    },
+    /**
+     * Saves the details editor: one change of the booking at the version read (the details that changed, an emptied
+     * one as "", which the book reads as cleared; with a move, the day, time and people), then, when it came from a
+     * call-back request, that request is closed. Undo puts back what was there.
+     */
+    async saveDetails({ guest, move }) {
+      const b = this.panelBooking;
+      if (!b) return;
+      const request = this.panel.change;
+      const body = Object.assign({ expectedVersion: b.version }, guest,
+        move ? { date: move.date, time: fmt(move.start), covers: move.party } : {});
+      const back = Object.fromEntries(Object.keys(guest).map(k => [k, b[k] || ""]));
+      if (move) Object.assign(back, { date: b.date || this.date, time: fmt(b.start), covers: b.party });
       const ok = await this.act(async () => {
-        const moved = await RestaurantApi.change(this.user, this.businessId, original.id, { expectedVersion: original.version,
-          date: request.date || this.date, time: fmt(request.start), covers: request.party });
-        await RestaurantApi.cancel(this.user, this.businessId, request.id, request.version);
-        return moved;
+        const changed = await RestaurantApi.change(this.user, this.businessId, b.id, body);
+        if (request) await RestaurantApi.cancel(this.user, this.businessId, request.id, request.version);
+        return changed;
       }, {
-        done: answer => this.$t("components.restaurant.change.done", { name: original.name || request.name, day: this.shortDate(request.date || this.date),
-          time: fmt(request.start), people: this.$t("components.restaurant.people", { n: request.party }) }) + this.warningsText(answer),
-        undo: answer => RestaurantApi.change(this.user, this.businessId, original.id, Object.assign({ expectedVersion: answer.version }, back)),
+        inPanel: true,
+        done: answer => (request
+          ? this.$t("components.restaurant.change.applied", { name: b.name || this.$t("components.restaurant.walkInName") })
+          : this.$t("components.restaurant.details.saved", { name: guest.name || b.name || this.$t("components.restaurant.walkInName") })) + this.warningsText(answer),
+        undo: answer => RestaurantApi.change(this.user, this.businessId, b.id, Object.assign({ expectedVersion: answer.version }, back)),
       });
-      if (ok) this.panel = null;
+      if (ok && this.panel) this.panel = { type: "booking", id: b.id };
     },
     async findBooking(id, name) {
       if (!name || name.trim().length < 2) return null;

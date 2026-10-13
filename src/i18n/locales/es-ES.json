@@ -1813,17 +1813,29 @@
       },
       "change": {
         "notFound": "No se encontró la reserva de esta solicitud: ábrela y cámbiala a mano.",
-        "done": "{name} movida al {day} {time}, {people}; la solicitud está cerrada",
         "asked": "Cambio pedido por teléfono",
         "make": "Hacer el cambio",
         "close": "Cerrar sin cambiar",
         "asks": "{name} pide cambiar {from} por {to}",
-        "otherDay": "una reserva de otro día"
+        "otherDay": "una reserva de otro día",
+        "applied": "Cambio hecho: {name}; la solicitud está cerrada"
       },
       "acceptFields": {
         "title": "Aceptar {name}",
         "intro": "Para aceptarla, esta reserva necesita: {fields}.",
         "accept": "Aceptar"
+      },
+      "details": {
+        "title": "Datos del cliente",
+        "fromRequest": "Lo que pidió el cliente por teléfono",
+        "applyMove": "Moverla también al {day} {time}, {people}",
+        "late": "Llega tarde a las {time}: la mesa se mantiene, queda en las notas.",
+        "lateNote": "Llega a las {time}",
+        "saveChange": "Guardar el cambio y cerrar la solicitud",
+        "save": "Guardar datos",
+        "cancel": "Cancelar",
+        "edit": "Editar datos",
+        "saved": "Datos guardados: {name}"
       }
     }
   },
