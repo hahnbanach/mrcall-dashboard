@@ -1813,7 +1813,15 @@
           "cancellation": "{name} möchte {from} stornieren"
         },
         "cancelBooking": "Reservierung stornieren",
-        "cancelled": "Wie gewünscht storniert: {name}; die Anfrage ist geschlossen"
+        "cancelled": "Wie gewünscht storniert: {name}; die Anfrage ist geschlossen",
+        "kindShort": {
+          "late_arrival": "spätere Ankunft",
+          "move": "Verschiebung",
+          "details": "Angaben",
+          "cancellation": "Stornierung"
+        },
+        "filedAt": "gewünscht am {when}",
+        "requestNotFound": "Die Anfrage wurde nicht gefunden: vielleicht wurde sie inzwischen bearbeitet. Lesen Sie den Tag neu."
       },
       "acceptFields": {
         "title": "{name} annehmen",

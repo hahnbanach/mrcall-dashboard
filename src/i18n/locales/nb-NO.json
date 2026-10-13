@@ -1811,7 +1811,15 @@
           "cancellation": "{name} ønsker å avbestille {from}"
         },
         "cancelBooking": "Avbestill bestillingen",
-        "cancelled": "Avbestilt som ønsket: {name}; forespørselen er lukket"
+        "cancelled": "Avbestilt som ønsket: {name}; forespørselen er lukket",
+        "kindShort": {
+          "late_arrival": "senere ankomst",
+          "move": "flytting",
+          "details": "opplysninger",
+          "cancellation": "avbestilling"
+        },
+        "filedAt": "ønsket {when}",
+        "requestNotFound": "Forespørselen ble ikke funnet: den kan allerede være besvart. Les dagen på nytt."
       },
       "acceptFields": {
         "title": "Godta {name}",

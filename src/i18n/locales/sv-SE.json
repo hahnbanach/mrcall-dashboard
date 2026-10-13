@@ -1811,7 +1811,15 @@
           "cancellation": "{name} vill avboka {from}"
         },
         "cancelBooking": "Avboka bokningen",
-        "cancelled": "Avbokad som begärt: {name}; förfrågan är stängd"
+        "cancelled": "Avbokad som begärt: {name}; förfrågan är stängd",
+        "kindShort": {
+          "late_arrival": "senare ankomst",
+          "move": "flytt",
+          "details": "uppgifter",
+          "cancellation": "avbokning"
+        },
+        "filedAt": "begärd {when}",
+        "requestNotFound": "Förfrågan hittades inte: den kan redan vara besvarad. Läs dagen igen."
       },
       "acceptFields": {
         "title": "Godta {name}",

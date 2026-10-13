@@ -1811,7 +1811,15 @@
           "cancellation": "{name} pyytää perumaan: {from}"
         },
         "cancelBooking": "Peru varaus",
-        "cancelled": "Peruttu pyynnöstä: {name}; pyyntö on suljettu"
+        "cancelled": "Peruttu pyynnöstä: {name}; pyyntö on suljettu",
+        "kindShort": {
+          "late_arrival": "myöhästyminen",
+          "move": "siirto",
+          "details": "tiedot",
+          "cancellation": "peruutus"
+        },
+        "filedAt": "pyydetty {when}",
+        "requestNotFound": "Pyyntöä ei löytynyt: se on ehkä jo käsitelty. Lue päivä uudelleen."
       },
       "acceptFields": {
         "title": "Hyväksy {name}",

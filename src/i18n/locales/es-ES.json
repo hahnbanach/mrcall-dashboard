@@ -1825,7 +1825,15 @@
           "cancellation": "{name} pide cancelar {from}"
         },
         "cancelBooking": "Cancelar la reserva",
-        "cancelled": "Cancelada como se pidió: {name}; la solicitud está cerrada"
+        "cancelled": "Cancelada como se pidió: {name}; la solicitud está cerrada",
+        "kindShort": {
+          "late_arrival": "llegada tarde",
+          "move": "cambio de fecha u hora",
+          "details": "datos",
+          "cancellation": "cancelación"
+        },
+        "filedAt": "pedido el {when}",
+        "requestNotFound": "No se encontró la solicitud: quizá ya se atendió. Vuelve a leer el día."
       },
       "acceptFields": {
         "title": "Aceptar {name}",

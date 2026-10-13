@@ -207,7 +207,7 @@ describe('one list of closures', () => {
 // The kind is the book's (StarChat 9.34 at 7bf981c51, `change.kind`): the page reads it and pre-fills from `change`.
 // Seen failing first, 2026-10-13, one fault at a time: the kind ignored and the old rule kept (a "move" at a later
 // time inside the booking pre-filled as a late arrival: the move test); `eta` not read (the late test); the asked
-// name dropped (the details test); `change` not read from the wire (the wire test).
+// name dropped (the details test); `change` or `openRequest` not read from the wire (the wire test).
 describe('what a call-back request asks of its booking', () => {
   const booking = { date: '2026-10-20', start: 1200, end: 1290, party: 2, zone: 'sala', name: 'Verdi', allergies: '', notes: 'Window' }
   const late = m => `Arrives at ${m}`
@@ -237,6 +237,8 @@ describe('what a call-back request asks of its booking', () => {
     expect(row.change).toEqual({ kind: 'move', date: '2026-10-21', start: 1290, party: 3, zone: 'sala', name: 'Verdi', eta: 1305 })
     expect(row.aboutReservation).toEqual({ id: 'b1', date: '2026-10-21', start: 1200, party: 2, name: 'Verdi' })
     expect(row.recognised).toBe(true)
-    expect(bookingFromWire({ id: 'b2', time: '20:00', covers: 2 })).toMatchObject({ recognised: false, change: null, aboutReservation: null })
+    expect(bookingFromWire({ id: 'b2', time: '20:00', covers: 2 })).toMatchObject({ recognised: false, change: null, aboutReservation: null, openRequest: null })
+    expect(bookingFromWire({ id: 'b3', time: '20:00', covers: 2, openRequest: { id: 'r9', kind: 'move', at: '2026-10-13T17:55:00Z' } }).openRequest)
+      .toEqual({ id: 'r9', kind: 'move', at: '2026-10-13T17:55:00Z' })
   })
 })

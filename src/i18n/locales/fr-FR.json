@@ -1813,7 +1813,15 @@
           "cancellation": "{name} demande d'annuler {from}"
         },
         "cancelBooking": "Annuler la réservation",
-        "cancelled": "Annulée comme demandé : {name} ; la demande est fermée"
+        "cancelled": "Annulée comme demandé : {name} ; la demande est fermée",
+        "kindShort": {
+          "late_arrival": "arrivée tardive",
+          "move": "déplacement",
+          "details": "coordonnées",
+          "cancellation": "annulation"
+        },
+        "filedAt": "demandé le {when}",
+        "requestNotFound": "La demande n'a pas été trouvée : elle a peut-être déjà été traitée. Relisez la journée."
       },
       "acceptFields": {
         "title": "Accepter {name}",

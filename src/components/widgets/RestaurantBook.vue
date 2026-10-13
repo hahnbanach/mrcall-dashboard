@@ -81,7 +81,7 @@
                                 :busy="busy" :change-request="changeRequestFor(panelBooking)" :on-closed-day="isOnClosedDay(panelBooking)"
                                 :field-rules="rules.requiredFields" :editing="!!panel.editing" :change="panelChange" :message="panel.message"
                                 @close="closePanel" @state="setState" @pin="togglePin" @no-show="noShow" @cancel="cancel" @reinstate="reinstate"
-                                @move="startMove" @call="openCalls" @make-change="makeChange" @close-request="decline"
+                                @move="startMove" @call="openCalls" @make-change="makeChange" @close-request="closeRequest"
                                 @edit="panel = Object.assign({}, panel, { editing: true, change: null, message: null })"
                                 @cancel-edit="panel = Object.assign({}, panel, { editing: false, change: null, message: null })"
                                 @save-details="saveDetails" />
@@ -621,8 +621,39 @@ export default {
       this.accept(request, false, guest);
     },
     /** The call-back request about a change of a booking (R8), when the day read holds one naming it. */
+    /** The open call-back request about this booking: its row when the day read holds it, otherwise what the booking
+     *  row says of it (`openRequest`, R8: filed for another day), to be read in full when staff act on it. */
     changeRequestFor(b) {
-      return b ? this.list.find(r => r.state === "requested" && r.about === b.id) || null : null;
+      if (!b) return null;
+      const here = this.list.find(r => r.state === "requested" && r.about === b.id);
+      if (here) return here;
+      const o = b.openRequest;
+      return o ? { id: o.id, about: b.id, remote: true, at: o.at, change: o.kind ? { kind: o.kind } : null } : null;
+    },
+    /**
+     * The full row of a request filed for another day, from what the booking says of it (`openRequest`): the server's
+     * search, by the guest's number or else name, filtered by the request's id. Acting on a request needs its version
+     * and what it asks, and no read returns one row by its id.
+     */
+    async resolveRequest(stub) {
+      if (!stub || !stub.remote) return stub;
+      const b = this.list.find(x => x.id === stub.about);
+      const digits = b ? String(b.phone || "").replace(/\D/g, "") : "";
+      const q = digits.length >= 2 ? digits : b && b.name ? b.name.trim() : "";
+      if (q.length < 2) return null;
+      try {
+        const found = await RestaurantApi.search(this.user, this.businessId, q.slice(0, 64), SEARCH_LIMIT);
+        const hit = found.results.find(r => r.b.id === stub.id);
+        return hit ? Object.assign({}, hit.b, { date: hit.date }) : null;
+      } catch (e) {
+        console.warn("Restaurant search not answered:", e.restaurant ? e.restaurant.code || e.restaurant.status : e);
+        return null;
+      }
+    },
+    async closeRequest(request) {
+      const row = await this.resolveRequest(request);
+      if (!row) { this.showToast(this.$t("components.restaurant.change.requestNotFound"), null, true); return; }
+      this.decline(row);
     },
     isOnClosedDay(b) {
       return !!(b && this.day && ["booked", "arrived", "seated"].includes(b.state) && onClosedDay(b, this.day.closures, this.day.zonesClosed));
@@ -635,8 +666,10 @@ export default {
      * would make a second booking, so the server refuses it (`linked_request`) and the page never offers it.
      * The booking is found wherever it is: the request names its day (`aboutReservation`), and the page goes there.
      */
-    async makeChange(request) {
-      if (this.busy || !request || !request.about) return;
+    async makeChange(stub) {
+      if (this.busy || !stub || !stub.about) return;
+      const request = await this.resolveRequest(stub);
+      if (!request) { this.showToast(this.$t("components.restaurant.change.requestNotFound"), null, true); return; }
       const asked = Object.assign({}, request, { date: request.date || this.date });
       let original = this.list.find(b => b.id === request.about);
       const where = request.aboutReservation;

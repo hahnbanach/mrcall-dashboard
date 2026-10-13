@@ -1811,7 +1811,15 @@
           "cancellation": "{name} ζητά ακύρωση: {from}"
         },
         "cancelBooking": "Ακύρωση της κράτησης",
-        "cancelled": "Ακυρώθηκε όπως ζητήθηκε: {name}· το αίτημα έκλεισε"
+        "cancelled": "Ακυρώθηκε όπως ζητήθηκε: {name}· το αίτημα έκλεισε",
+        "kindShort": {
+          "late_arrival": "καθυστέρηση",
+          "move": "μετακίνηση",
+          "details": "στοιχεία",
+          "cancellation": "ακύρωση"
+        },
+        "filedAt": "ζητήθηκε στις {when}",
+        "requestNotFound": "Το αίτημα δεν βρέθηκε: ίσως έχει ήδη απαντηθεί. Διαβάστε ξανά την ημέρα."
       },
       "acceptFields": {
         "title": "Αποδοχή {name}",

@@ -226,7 +226,7 @@
             <span class="n"><b>{{ b.name || $t("components.restaurant.walkInName") }} <i v-if="b.pinned" class="pi pi-thumbtack" :aria-label="$t('components.restaurant.pinnedMark')"></i> <i v-if="b.allergies" class="pi pi-exclamation-triangle" :aria-label="$t('components.restaurant.allergies')"></i></b>
               <small>{{ $t("components.restaurant.peopleShort", { n: b.party }) }} · {{ seatsOf(b) }} · {{ stateText(b) }}</small>
               <small v-if="closedFor(b)" class="pill red closed-mark">{{ $t("components.restaurant.day.closedMark") }}</small>
-              <small v-if="changeFor(b)" class="pill amber change-mark">{{ $t("components.restaurant.change.asked") }}</small>
+              <small v-if="changeFor(b) || b.openRequest" class="pill amber change-mark">{{ $t("components.restaurant.change.asked") }}</small>
               <small v-if="b.recognised" class="pill blue recognised-mark">{{ $t("components.restaurant.recognised.mark") }}</small></span>
             <!-- a guest past their arrival time and not here: no-show in one tap, with Undo (the prototype's late row) -->
             <button v-if="isLate(b)" class="quick quick-noshow" :disabled="busy" @click.stop="$emit('no-show', b)">{{ $t("components.restaurant.panel.noShowAction") }}</button>

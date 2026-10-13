@@ -1811,7 +1811,15 @@
           "cancellation": "{name} ønsker at aflyse {from}"
         },
         "cancelBooking": "Aflys bookingen",
-        "cancelled": "Aflyst som ønsket: {name}; anmodningen er lukket"
+        "cancelled": "Aflyst som ønsket: {name}; anmodningen er lukket",
+        "kindShort": {
+          "late_arrival": "senere ankomst",
+          "move": "flytning",
+          "details": "oplysninger",
+          "cancellation": "aflysning"
+        },
+        "filedAt": "ønsket {when}",
+        "requestNotFound": "Anmodningen blev ikke fundet: den er måske allerede besvaret. Læs dagen igen."
       },
       "acceptFields": {
         "title": "Godkend {name}",

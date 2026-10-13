@@ -1816,7 +1816,15 @@
           "cancellation": "{name} asks to cancel {from}"
         },
         "cancelBooking": "Cancel the booking",
-        "cancelled": "Cancelled as asked: {name}; the request is closed"
+        "cancelled": "Cancelled as asked: {name}; the request is closed",
+        "kindShort": {
+          "late_arrival": "late arrival",
+          "move": "move",
+          "details": "details",
+          "cancellation": "cancellation"
+        },
+        "filedAt": "asked on {when}",
+        "requestNotFound": "The request was not found: it may have been answered in the meantime. Read the day again."
       },
       "acceptFields": {
         "title": "Accept {name}",

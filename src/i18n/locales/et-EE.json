@@ -1811,7 +1811,15 @@
           "cancellation": "{name} soovib tühistada: {from}"
         },
         "cancelBooking": "Tühista broneering",
-        "cancelled": "Tühistatud soovi kohaselt: {name}; taotlus on suletud"
+        "cancelled": "Tühistatud soovi kohaselt: {name}; taotlus on suletud",
+        "kindShort": {
+          "late_arrival": "hilinemine",
+          "move": "ümberbroneerimine",
+          "details": "andmed",
+          "cancellation": "tühistamine"
+        },
+        "filedAt": "küsitud {when}",
+        "requestNotFound": "Taotlust ei leitud: see võib olla juba käsitletud. Loe päev uuesti."
       },
       "acceptFields": {
         "title": "Kinnita {name}",

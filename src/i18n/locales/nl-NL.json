@@ -1811,7 +1811,15 @@
           "cancellation": "{name} vraagt {from} te annuleren"
         },
         "cancelBooking": "Reservering annuleren",
-        "cancelled": "Geannuleerd zoals gevraagd: {name}; het verzoek is gesloten"
+        "cancelled": "Geannuleerd zoals gevraagd: {name}; het verzoek is gesloten",
+        "kindShort": {
+          "late_arrival": "latere aankomst",
+          "move": "verplaatsing",
+          "details": "gegevens",
+          "cancellation": "annulering"
+        },
+        "filedAt": "gevraagd op {when}",
+        "requestNotFound": "Het verzoek is niet gevonden: misschien is het intussen afgehandeld. Lees de dag opnieuw."
       },
       "acceptFields": {
         "title": "{name} accepteren",

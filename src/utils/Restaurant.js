@@ -205,6 +205,8 @@ export function bookingFromWire(r) {
         aboutReservation: r.aboutReservation ? { id: r.aboutReservation.id, date: r.aboutReservation.date,
             start: toMin(r.aboutReservation.time), party: r.aboutReservation.covers, name: r.aboutReservation.name || "" } : null,
         change: changeFromWire(r.change),
+        // On a booking: its open call-back request, whatever day it was filed for (R8): its id, kind and when it was written.
+        openRequest: r.openRequest && r.openRequest.id ? { id: r.openRequest.id, kind: r.openRequest.kind || null, at: r.openRequest.at || null } : null,
         // The guest's number is not the one that placed the booking (R8): a call from it is recognised, not the owner's.
         recognised: r.recognised === true,
         // An overbooking's tables staff named, not held (R8): shown on "no table yet".

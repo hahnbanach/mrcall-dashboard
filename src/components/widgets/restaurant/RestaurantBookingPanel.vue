@@ -24,7 +24,9 @@
     <div v-if="onClosedDay" class="callout red closed-day-note">{{ $t("components.restaurant.panel.closedDay") }}</div>
     <!-- the caller asked to change this booking by phone and the assistant could not (R8): what they asked, and the two actions -->
     <div v-if="changeRequest" class="callout amber change-request">
-      <b>{{ $t("components.restaurant.change.asked") }}:</b> {{ fmt(changeRequest.start) }} · {{ $t("components.restaurant.people", { n: changeRequest.party }) }}<template v-if="changeRequest.notes"> · {{ changeRequest.notes }}</template>
+      <!-- filed for another day (`openRequest`): its kind and when, read in full when staff act on it -->
+      <b>{{ $t("components.restaurant.change.asked") }}:</b> <template v-if="changeRequest.remote">{{ changeRequest.change ? $t(`components.restaurant.change.kindShort.${changeRequest.change.kind}`) : "" }}<template v-if="changeRequest.at"> · {{ $t("components.restaurant.change.filedAt", { when: when(changeRequest.at) }) }}</template></template>
+      <template v-else>{{ fmt(changeRequest.start) }} · {{ $t("components.restaurant.people", { n: changeRequest.party }) }}<template v-if="changeRequest.notes"> · {{ changeRequest.notes }}</template></template>
       <div class="tb-row">
         <button class="btn small make-change" :disabled="busy || editing" @click="$emit('make-change', changeRequest)">{{ $t(changeRequest.change && changeRequest.change.kind === 'cancellation' ? "components.restaurant.change.cancelBooking" : "components.restaurant.change.make") }}</button>
         <button class="btn ghost small close-request" :disabled="busy" @click="$emit('close-request', changeRequest)">{{ $t("components.restaurant.change.close") }}</button>
@@ -118,6 +120,11 @@ export default {
   mounted() {
     this.$nextTick(() => this.$refs.heading && this.$refs.heading.focus({ preventScroll: true }));
   },
-  methods: { fmt },
+  methods: {
+    fmt,
+    when(at) {
+      return new Date(at).toLocaleString(this.$i18n.locale, { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+    },
+  },
 };
 </script>
