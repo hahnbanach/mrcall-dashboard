@@ -20,7 +20,7 @@ const { mockRestaurant, openRestaurant, tomorrowDinner, TODAY, TOMORROW } = requ
  * request accepted without asking its missing field (the accept test); "make the change" without the closing
  * DELETE (the call-back test); the request's details not pre-filled (the call-back test); a late arrival treated as
  * a move (the late-arrival test); the editor drawing a not-asked field, or its Undo at the version read rather than
- * the one answered (the details test); `intendedTableIds` not read (the overbooking test); the menu ignoring the page
+ * the one answered (the details test); a not-asked allergy hidden although stored (the stored-allergy test); `intendedTableIds` not read (the overbooking test); the menu ignoring the page
  * switch (the menu test); the instance's page switch not read (the page-off test: the day was asked).
  */
 
@@ -287,6 +287,23 @@ test.describe('the restaurant page, one owner per setting', () => {
     await expect(panel.getByRole('heading', { name: 'Bianchi Neri' })).toBeVisible()
     await page.locator('.toast').getByRole('button', { name: 'Undo' }).click()
     await expect.poll(() => calls.filter(c => c.method === 'PATCH').map(c => c.body)[1]).toEqual({ expectedVersion: 2, name: 'Bianchi' })
+  })
+
+  test('with allergies not asked, a booking that holds one shows it with the hint, and staff can clear it', async ({ authenticatedPage: page }) => {
+    const { calls } = await mockRestaurant(page, { params: { requiredFields: JSON.stringify({ allergies: 'not_asked' }) } })
+    await openRestaurant(page)
+    await ready(page)
+    await tomorrowDinner(page)
+    await tap(page.locator('.brow', { hasText: 'Rossi' }))
+    const panel = page.locator('.panel')
+    await panel.locator('.edit-details').click()
+    const field = panel.locator('.details-editor [data-detail="allergies"]')
+    await expect(field.getByRole('textbox')).toHaveValue('Celiac (1 person)')
+    await expect(field).toContainText('Not asked in this restaurant')
+    await field.getByRole('textbox').fill('')
+    await panel.locator('.save-details').click()
+    await expect(page.locator('.toast')).toContainText('Details saved: Rossi')
+    expect(calls.find(c => c.method === 'PATCH').body).toEqual({ expectedVersion: 1, allergies: '' })
   })
 
   test('"close without changing" closes a call-back request and leaves the booking as it is', async ({ authenticatedPage: page }) => {

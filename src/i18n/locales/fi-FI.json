@@ -1821,7 +1821,8 @@
         "save": "Tallenna tiedot",
         "cancel": "Peruuta",
         "edit": "Muokkaa tietoja",
-        "saved": "Tiedot tallennettu: {name}"
+        "saved": "Tiedot tallennettu: {name}",
+        "notAsked": "Ei kysytä tässä ravintolassa: näytetään, koska varauksessa on arvo, jonka voit tyhjentää."
       }
     }
   },

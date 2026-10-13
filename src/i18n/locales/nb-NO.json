@@ -1821,7 +1821,8 @@
         "save": "Lagre opplysninger",
         "cancel": "Avbryt",
         "edit": "Rediger opplysninger",
-        "saved": "Opplysninger lagret: {name}"
+        "saved": "Opplysninger lagret: {name}",
+        "notAsked": "Spørres ikke i denne restauranten: vises fordi bestillingen har en verdi, som du kan slette."
       }
     }
   },

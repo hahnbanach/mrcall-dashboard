@@ -6,6 +6,7 @@
       <span>{{ $t(`components.restaurant.ask.field.${k}`) }}<template v-if="required(k)"> *</template></span>
       <input :ref="k" v-model="form[k]" autocomplete="off" :inputmode="k === 'phone' ? 'tel' : null" :aria-required="required(k)"
              :class="{ invalid: tried && missing.includes(k) }">
+      <small v-if="fieldRules[k] === 'not_asked'" class="muted not-asked-hint">{{ $t("components.restaurant.details.notAsked") }}</small>
     </label>
     <!-- From a call-back request: the move it asks for, or the late arrival it announces (the table stays) -->
     <label v-if="change && change.move" class="check-row apply-move">
@@ -60,8 +61,10 @@ export default {
     };
   },
   computed: {
+    /** The fields this restaurant asks; a field set to "not asked" is drawn only while the booking holds a value in
+     *  it, so staff can read it and clear it (an allergy stored before the setting changed is a guest's data). */
     shown() {
-      return DETAILS.filter(k => this.fieldRules[k] !== "not_asked");
+      return DETAILS.filter(k => this.fieldRules[k] !== "not_asked" || String(this.booking[k] || "").trim());
     },
     /** The required fields this edit would empty. A required field the booking never had is not asked for here: the
      *  book checks only the fields a write sets or clears, so an older booking is never stuck (brief, R8). */

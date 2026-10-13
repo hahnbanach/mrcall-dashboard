@@ -12,7 +12,7 @@ import RestaurantDetailsEditor from '@/components/widgets/restaurant/RestaurantD
  * the required check removed (the required test: the save went out with the name emptied); every field sent, not
  * only the changed ones (the changed-only test); the move not ticked by default (the request test); the required
  * check applied to a field the booking never had (the older-booking test: seen failing in the e2e first, a staff
- * booking without a phone could not take a change).
+ * booking without a phone could not take a change); a not-asked field hidden even with a value (the value test).
  */
 const i18n = createI18n({ legacy: false, locale: 'en-US', messages: { 'en-US': enUS } })
 const RULES = { name: 'required', phone: 'optional', allergies: 'not_asked', notes: 'optional', zone: 'optional' }
@@ -28,6 +28,14 @@ describe('the details editor', () => {
     expect(w.find('[data-detail="allergies"]').exists()).toBe(false)
     expect(w.find('[data-detail="name"]').text()).toContain('Name *')
     expect(w.find('[data-detail="notes"]').exists()).toBe(true)
+  })
+
+  it('a not-asked field that holds a value is shown, with the hint, and can be cleared', async () => {
+    const w = draw({ booking: { ...booking, allergies: 'Celiac' } })
+    expect(w.find('[data-detail="allergies"]').text()).toContain('Not asked in this restaurant')
+    await w.find('[data-detail="allergies"] input').setValue('')
+    await w.find('.save-details').trigger('click')
+    expect(w.emitted('save')[0][0]).toEqual({ guest: { allergies: '' }, move: null })
   })
 
   it('a booking that lacks a required field it never had can still be corrected', async () => {

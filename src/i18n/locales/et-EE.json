@@ -1821,7 +1821,8 @@
         "save": "Salvesta andmed",
         "cancel": "Tühista",
         "edit": "Muuda andmeid",
-        "saved": "Andmed salvestatud: {name}"
+        "saved": "Andmed salvestatud: {name}",
+        "notAsked": "Selles restoranis ei küsita: näidatud, sest broneeringul on väärtus, mille saad kustutada."
       }
     }
   },

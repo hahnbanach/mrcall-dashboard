@@ -1827,7 +1827,8 @@
         "save": "Salva i dati",
         "cancel": "Annulla",
         "edit": "Modifica i dati",
-        "saved": "Dati salvati: {name}"
+        "saved": "Dati salvati: {name}",
+        "notAsked": "Non chiesto in questo ristorante: è mostrato perché questa prenotazione ha un valore, che puoi cancellare."
       }
     }
   },

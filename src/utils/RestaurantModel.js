@@ -297,6 +297,10 @@ export function isFreeAt (windows, t, minFree) {
  * - Any other difference of day, time or people is a move: `{date, start, party}`.
  * - Details: the allergies the caller gave, and their words added to the booking's notes. The name is the booking's
  *   (the book copies it onto the request).
+ *
+ * THE ONE PLACE THIS IS DERIVED. StarChat is adding its own classification of a request (late arrival, move, details
+ * change) and the caller's new name; when they arrive this function reads them instead of re-deriving the rule, and
+ * nothing that calls it changes.
  */
 export function changeOf (booking, request, lateNote) {
   const date = request.date || booking.date

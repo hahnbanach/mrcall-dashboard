@@ -1835,7 +1835,8 @@
         "save": "Guardar datos",
         "cancel": "Cancelar",
         "edit": "Editar datos",
-        "saved": "Datos guardados: {name}"
+        "saved": "Datos guardados: {name}",
+        "notAsked": "No se pregunta en este restaurante: se muestra porque esta reserva tiene un valor, que puedes borrar."
       }
     }
   },

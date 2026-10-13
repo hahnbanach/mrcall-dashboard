@@ -1821,7 +1821,8 @@
         "save": "Gem oplysninger",
         "cancel": "Annuller",
         "edit": "Rediger oplysninger",
-        "saved": "Oplysninger gemt: {name}"
+        "saved": "Oplysninger gemt: {name}",
+        "notAsked": "Spørges ikke i denne restaurant: vises, fordi bookingen har en værdi, som du kan slette."
       }
     }
   },

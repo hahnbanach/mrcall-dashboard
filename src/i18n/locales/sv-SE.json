@@ -1821,7 +1821,8 @@
         "save": "Spara uppgifter",
         "cancel": "Avbryt",
         "edit": "Ändra uppgifter",
-        "saved": "Uppgifter sparade: {name}"
+        "saved": "Uppgifter sparade: {name}",
+        "notAsked": "Frågas inte i den här restaurangen: visas eftersom bokningen har ett värde, som du kan rensa."
       }
     }
   },

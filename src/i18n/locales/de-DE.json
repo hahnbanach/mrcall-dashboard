@@ -1823,7 +1823,8 @@
         "save": "Angaben speichern",
         "cancel": "Abbrechen",
         "edit": "Angaben bearbeiten",
-        "saved": "Angaben gespeichert: {name}"
+        "saved": "Angaben gespeichert: {name}",
+        "notAsked": "In diesem Restaurant nicht gefragt: angezeigt, weil diese Reservierung einen Wert enthält, den Sie löschen können."
       }
     }
   },

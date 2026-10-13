@@ -1826,7 +1826,8 @@
         "save": "Save details",
         "cancel": "Cancel",
         "edit": "Edit details",
-        "saved": "Details saved: {name}"
+        "saved": "Details saved: {name}",
+        "notAsked": "Not asked in this restaurant: shown because this booking holds a value, which you can clear."
       }
     }
   },

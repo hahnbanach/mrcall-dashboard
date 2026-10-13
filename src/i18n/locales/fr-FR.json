@@ -1823,7 +1823,8 @@
         "save": "Enregistrer",
         "cancel": "Annuler",
         "edit": "Modifier les coordonnées",
-        "saved": "Coordonnées enregistrées : {name}"
+        "saved": "Coordonnées enregistrées : {name}",
+        "notAsked": "Non demandé dans ce restaurant : affiché parce que cette réservation contient une valeur, que vous pouvez effacer."
       }
     }
   },

@@ -1821,7 +1821,8 @@
         "save": "Gegevens opslaan",
         "cancel": "Annuleren",
         "edit": "Gegevens bewerken",
-        "saved": "Gegevens opgeslagen: {name}"
+        "saved": "Gegevens opgeslagen: {name}",
+        "notAsked": "Niet gevraagd in dit restaurant: getoond omdat deze reservering een waarde bevat, die je kunt wissen."
       }
     }
   },
