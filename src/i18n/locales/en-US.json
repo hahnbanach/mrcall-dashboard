@@ -1809,7 +1809,14 @@
         "close": "Close without changing",
         "asks": "{name} asks to change {from} to {to}",
         "otherDay": "a booking on another day",
-        "applied": "Change made: {name}; the request is closed"
+        "applied": "Change made: {name}; the request is closed",
+        "kind": {
+          "late_arrival": "{name} ({from}) will arrive late, at {time}",
+          "details": "{name} ({from}) asks to change the details",
+          "cancellation": "{name} asks to cancel {from}"
+        },
+        "cancelBooking": "Cancel the booking",
+        "cancelled": "Cancelled as asked: {name}; the request is closed"
       },
       "acceptFields": {
         "title": "Accept {name}",
@@ -1828,6 +1835,10 @@
         "edit": "Edit details",
         "saved": "Details saved: {name}",
         "notAsked": "Not asked in this restaurant: shown because this booking holds a value, which you can clear."
+      },
+      "recognised": {
+        "mark": "recognised number",
+        "note": "Recognised number: the guest's number did not place this booking. On the phone they can hear it, add a note or a late arrival and leave a request, but not move or cancel it."
       }
     }
   },

@@ -197,7 +197,7 @@
               <template v-if="r.about">
                 <br><span class="change-about">{{ aboutLine(r) }}</span><span v-if="r.notes"> · {{ r.notes }}</span>
                 <div class="acts">
-                  <button class="btn small make-change" :disabled="busy" @click="$emit('make-change', r)">{{ $t("components.restaurant.change.make") }}</button>
+                  <button class="btn small make-change" :disabled="busy" @click="$emit('make-change', r)">{{ $t(r.change && r.change.kind === 'cancellation' ? "components.restaurant.change.cancelBooking" : "components.restaurant.change.make") }}</button>
                   <button class="btn ghost small close-request" :disabled="busy" @click="$emit('decline', r)">{{ $t("components.restaurant.change.close") }}</button>
                   <button v-if="hasCalls(r)" class="btn ghost small" @click="$emit('call', r)">{{ $t("components.restaurant.readCall") }}</button>
                 </div>
@@ -226,7 +226,8 @@
             <span class="n"><b>{{ b.name || $t("components.restaurant.walkInName") }} <i v-if="b.pinned" class="pi pi-thumbtack" :aria-label="$t('components.restaurant.pinnedMark')"></i> <i v-if="b.allergies" class="pi pi-exclamation-triangle" :aria-label="$t('components.restaurant.allergies')"></i></b>
               <small>{{ $t("components.restaurant.peopleShort", { n: b.party }) }} · {{ seatsOf(b) }} · {{ stateText(b) }}</small>
               <small v-if="closedFor(b)" class="pill red closed-mark">{{ $t("components.restaurant.day.closedMark") }}</small>
-              <small v-if="changeFor(b)" class="pill amber change-mark">{{ $t("components.restaurant.change.asked") }}</small></span>
+              <small v-if="changeFor(b)" class="pill amber change-mark">{{ $t("components.restaurant.change.asked") }}</small>
+              <small v-if="b.recognised" class="pill blue recognised-mark">{{ $t("components.restaurant.recognised.mark") }}</small></span>
             <!-- a guest past their arrival time and not here: no-show in one tap, with Undo (the prototype's late row) -->
             <button v-if="isLate(b)" class="quick quick-noshow" :disabled="busy" @click.stop="$emit('no-show', b)">{{ $t("components.restaurant.panel.noShowAction") }}</button>
             <button v-if="b.state === 'booked' || b.state === 'arrived'" class="quick" :disabled="busy" @click.stop="$emit('state', b, 'seated')">{{ $t("components.restaurant.state.seatedShort") }}</button>
@@ -250,7 +251,7 @@ import {
   fmt, live, guests, usableTables, orderedZones, zoneOpen, tableAt, freeFrom, isFreeAt, tableById, seatLabel, occupiedTables,
   knowCounts, matches, callsOf, dropTargets, serviceWindow, minuteOfDay, lateBy, onClosedDay
 } from "@/utils/RestaurantModel";
-import { refusalKey } from "@/components/widgets/restaurant/format";
+import { refusalKey, shortDate } from "@/components/widgets/restaurant/format";
 import RestaurantDayNav from "@/components/widgets/restaurant/RestaurantDayNav.vue";
 
 const KNOW_CLASS = { allergies: "red", groups: "blue", noshows: "amber" };
@@ -458,13 +459,20 @@ export default {
     changeFor(b) {
       return this.list.find(r => r.state === "requested" && r.about === b.id) || null;
     },
-    /** What a call-back request asks: the booking it names, and the day, time and people the caller wants. */
+    /** What a call-back request asks, in the book's words for its kind (`change.kind`), naming the booking wherever it
+     *  is (`aboutReservation`). */
     aboutLine(r) {
-      const original = this.list.find(b => b.id === r.about);
-      return this.$t("components.restaurant.change.asks", {
-        name: original ? original.name || this.$t("components.restaurant.walkInName") : r.name,
-        from: original ? `${fmt(original.start)} · ${this.$t("components.restaurant.people", { n: original.party })}` : this.$t("components.restaurant.change.otherDay"),
-        to: `${fmt(r.start)} · ${this.$t("components.restaurant.people", { n: r.party })}` });
+      const o = r.aboutReservation;
+      const people = n => this.$t("components.restaurant.people", { n });
+      const name = (o && o.name) || r.name || this.$t("components.restaurant.walkInName");
+      const from = o ? `${o.date && o.date !== this.date ? shortDate(o.date, this.$i18n.locale) + " " : ""}${fmt(o.start)} · ${people(o.party)}`
+        : this.$t("components.restaurant.change.otherDay");
+      const c = r.change || {};
+      if (c.kind === "late_arrival") return this.$t("components.restaurant.change.kind.late_arrival", { name, from, time: fmt(c.eta !== undefined ? c.eta : c.start) });
+      if (c.kind === "details") return this.$t("components.restaurant.change.kind.details", { name, from });
+      if (c.kind === "cancellation") return this.$t("components.restaurant.change.kind.cancellation", { name, from });
+      const to = `${c.date && c.date !== (o ? o.date : this.date) ? shortDate(c.date, this.$i18n.locale) + " " : ""}${fmt(c.start !== undefined ? c.start : r.start)} · ${people(c.party || r.party)}`;
+      return this.$t("components.restaurant.change.asks", { name, from, to });
     },
     intendedLabel(b) {
       return seatLabel(this.layout, b.intendedTables);

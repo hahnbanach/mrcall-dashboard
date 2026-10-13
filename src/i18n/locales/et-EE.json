@@ -1804,7 +1804,14 @@
         "close": "Sulge muutmata",
         "asks": "{name} soovib muuta {from} → {to}",
         "otherDay": "teise päeva broneering",
-        "applied": "Muudatus tehtud: {name}; taotlus on suletud"
+        "applied": "Muudatus tehtud: {name}; taotlus on suletud",
+        "kind": {
+          "late_arrival": "{name} ({from}) saabub hiljem, kell {time}",
+          "details": "{name} ({from}) soovib andmeid muuta",
+          "cancellation": "{name} soovib tühistada: {from}"
+        },
+        "cancelBooking": "Tühista broneering",
+        "cancelled": "Tühistatud soovi kohaselt: {name}; taotlus on suletud"
       },
       "acceptFields": {
         "title": "Kinnita {name}",
@@ -1823,6 +1830,10 @@
         "edit": "Muuda andmeid",
         "saved": "Andmed salvestatud: {name}",
         "notAsked": "Selles restoranis ei küsita: näidatud, sest broneeringul on väärtus, mille saad kustutada."
+      },
+      "recognised": {
+        "mark": "tuvastatud number",
+        "note": "Tuvastatud number: külalise number ei teinud seda broneeringut. Telefonis saab külaline seda kuulata, lisada märkuse või hilinemise ja jätta taotluse, kuid mitte seda muuta ega tühistada."
       }
     }
   },

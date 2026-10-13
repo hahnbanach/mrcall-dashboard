@@ -49,12 +49,10 @@ export const FIELD_RULES = ["required", "optional", "not_asked"];
  * server setting that is on in test and off in production until the owner settles the legal point (brief, "What
  * every reservation must carry", amended 2026-10-13).
  *
- * THE ONE ADAPTER FOR A FIELD STARCHAT DOES NOT SEND YET. On 2026-10-13 the setting exists in StarChat's working
- * tree (`RestaurantRules.allergiesSetting`, the save refusal `allergies_required_unavailable`) but no read carries
- * it. The shape read here, `{restaurant: {allergies: {stored, effective, requiredAvailable}}}` on the skill
- * configuration read, is an assumption: when StarChat publishes the field under another name, this function is the
- * only thing that changes. Without it the answer is null, and the page treats "required" as not available (it
- * never offers a choice the server may refuse without saying so); a stored "required" is still shown, with the note.
+ * Read from the skill configuration GET's `restaurant: {allergies: {stored, effective, requiredAvailable}}`
+ * (StarChat 9.34 at 7bf981c51, `SkillEditorFacts`), present only for a business with a restaurant_booking instance.
+ * Without it the answer is null, and the page treats "required" as not available: it never offers a choice the
+ * server may refuse without saying so. A stored "required" is still shown, with the note.
  */
 export function allergiesSettingOf(configuration) {
     const raw = configuration && configuration.restaurant && configuration.restaurant.allergies;
@@ -201,8 +199,14 @@ export function bookingFromWire(r) {
         pastNoShows: r.pastNoShows || 0,
         cancelledBy: r.cancelledBy || null,
         reinstatable: r.reinstatable === true,
-        // A call-back request about a change of a booking (R8): the booking it names.
+        // A call-back request about a change of a booking (R8): the booking it names, wherever that booking is
+        // (`aboutReservation`), and what the caller asked, classified by the book (`change.kind`).
         about: r.about || null,
+        aboutReservation: r.aboutReservation ? { id: r.aboutReservation.id, date: r.aboutReservation.date,
+            start: toMin(r.aboutReservation.time), party: r.aboutReservation.covers, name: r.aboutReservation.name || "" } : null,
+        change: changeFromWire(r.change),
+        // The guest's number is not the one that placed the booking (R8): a call from it is recognised, not the owner's.
+        recognised: r.recognised === true,
         // An overbooking's tables staff named, not held (R8): shown on "no table yet".
         intendedTables: (r.intendedTableIds || []).slice(),
         // What staff were warned of and not refused for, on a write's answer (R8).
@@ -210,6 +214,19 @@ export function bookingFromWire(r) {
     };
     row.state = stateOf(row);
     return row;
+}
+
+/** StarChat's `change` on a call-back request (R8): its kind (late_arrival, move, details, cancellation) and what the
+ *  caller asked, each key only when given; times as minutes of the day. */
+function changeFromWire(c) {
+    if (!c || !c.kind) return null;
+    const out = { kind: c.kind };
+    if (c.date) out.date = c.date;
+    if (c.time) out.start = toMin(c.time);
+    if (c.covers) out.party = c.covers;
+    ["zone", "name", "notes", "allergies"].forEach(k => { if (c[k]) out[k] = c[k]; });
+    if (c.eta) out.eta = toMin(c.eta);
+    return out;
 }
 
 /** The day read's `freeTables`: per table id, the windows in which it is free for at least the minimum

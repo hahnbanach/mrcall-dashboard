@@ -1818,7 +1818,14 @@
         "close": "Cerrar sin cambiar",
         "asks": "{name} pide cambiar {from} por {to}",
         "otherDay": "una reserva de otro día",
-        "applied": "Cambio hecho: {name}; la solicitud está cerrada"
+        "applied": "Cambio hecho: {name}; la solicitud está cerrada",
+        "kind": {
+          "late_arrival": "{name} ({from}) llegará tarde, a las {time}",
+          "details": "{name} ({from}) pide cambiar los datos",
+          "cancellation": "{name} pide cancelar {from}"
+        },
+        "cancelBooking": "Cancelar la reserva",
+        "cancelled": "Cancelada como se pidió: {name}; la solicitud está cerrada"
       },
       "acceptFields": {
         "title": "Aceptar {name}",
@@ -1837,6 +1844,10 @@
         "edit": "Editar datos",
         "saved": "Datos guardados: {name}",
         "notAsked": "No se pregunta en este restaurante: se muestra porque esta reserva tiene un valor, que puedes borrar."
+      },
+      "recognised": {
+        "mark": "número reconocido",
+        "note": "Número reconocido: el número del cliente no es el que hizo la reserva. Por teléfono puede escucharla, añadir una nota o un retraso y dejar una solicitud, pero no moverla ni cancelarla."
       }
     }
   },

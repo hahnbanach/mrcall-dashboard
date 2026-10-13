@@ -1804,7 +1804,14 @@
         "close": "Stäng utan ändring",
         "asks": "{name} vill ändra {from} till {to}",
         "otherDay": "en bokning en annan dag",
-        "applied": "Ändring gjord: {name}; förfrågan är stängd"
+        "applied": "Ändring gjord: {name}; förfrågan är stängd",
+        "kind": {
+          "late_arrival": "{name} ({from}) kommer senare, kl. {time}",
+          "details": "{name} ({from}) vill ändra uppgifterna",
+          "cancellation": "{name} vill avboka {from}"
+        },
+        "cancelBooking": "Avboka bokningen",
+        "cancelled": "Avbokad som begärt: {name}; förfrågan är stängd"
       },
       "acceptFields": {
         "title": "Godta {name}",
@@ -1823,6 +1830,10 @@
         "edit": "Ändra uppgifter",
         "saved": "Uppgifter sparade: {name}",
         "notAsked": "Frågas inte i den här restaurangen: visas eftersom bokningen har ett värde, som du kan rensa."
+      },
+      "recognised": {
+        "mark": "känt nummer",
+        "note": "Känt nummer: gästens nummer gjorde inte den här bokningen. I telefon kan gästen höra den, lägga till en anteckning eller en försening och lämna en förfrågan, men inte flytta eller avboka den."
       }
     }
   },

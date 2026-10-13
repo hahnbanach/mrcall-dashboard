@@ -10,7 +10,7 @@ vi.mock('axios', () => ({ default: { get: vi.fn(), put: vi.fn(), post: vi.fn(), 
 const axios = (await import('axios')).default
 const Restaurant = await import('@/utils/Restaurant')
 const RestaurantApi = Restaurant.default
-const { PAGE_FIELDS, PAGE_EDITS, pageOffIn, isPageOff, allergiesSettingOf, layoutToWire, layoutFromWire } = Restaurant
+const { PAGE_FIELDS, PAGE_EDITS, pageOffIn, isPageOff, allergiesSettingOf, layoutToWire, layoutFromWire, bookingFromWire } = Restaurant
 const { fieldRulesOf, missingRequired, closuresOf, withClosures, sameClosures, onClosedDay, changeOf } = await import('@/utils/RestaurantModel')
 
 /**
@@ -204,29 +204,39 @@ describe('one list of closures', () => {
   })
 })
 
-// Seen failing first, 2026-10-13, one fault at a time: no late arrival ever (the late test); a late arrival past the
-// booking's end (the move test); the caller's allergies dropped (the details test).
+// The kind is the book's (StarChat 9.34 at 7bf981c51, `change.kind`): the page reads it and pre-fills from `change`.
+// Seen failing first, 2026-10-13, one fault at a time: the kind ignored and the old rule kept (a "move" at a later
+// time inside the booking pre-filled as a late arrival: the move test); `eta` not read (the late test); the asked
+// name dropped (the details test); `change` not read from the wire (the wire test).
 describe('what a call-back request asks of its booking', () => {
-  const booking = { date: '2026-10-20', start: 1200, end: 1290, party: 2, name: 'Verdi', allergies: '', notes: 'Window' }
+  const booking = { date: '2026-10-20', start: 1200, end: 1290, party: 2, zone: 'sala', name: 'Verdi', allergies: '', notes: 'Window' }
   const late = m => `Arrives at ${m}`
 
-  it('a later time the same day, same people, before the booking ends, is a late arrival: no move, a note', () => {
-    const c = changeOf(booking, { date: '2026-10-20', start: 1245, party: 2, name: 'Verdi', notes: '' }, late)
-    expect(c.move).toBeNull()
-    expect(c.late).toBe(1245)
-    expect(c.details.notes).toBe('Arrives at 1245 · Window')
+  it('a late arrival keeps the table and is written in the notes at the time announced', () => {
+    const c = changeOf(booking, { change: { kind: 'late_arrival', date: '2026-10-20', start: 1200, party: 2, eta: 1230 } }, late)
+    expect(c).toEqual({ kind: 'late_arrival', details: { notes: 'Arrives at 1230 · Window' }, move: null, late: 1230 })
   })
 
-  it('another day, a time past the booking\'s end or other people is a move', () => {
-    expect(changeOf(booking, { date: '2026-10-21', start: 1200, party: 2 }, late).move).toEqual({ date: '2026-10-21', start: 1200, party: 2 })
-    expect(changeOf(booking, { date: '2026-10-20', start: 1290, party: 2 }, late).move).toEqual({ date: '2026-10-20', start: 1290, party: 2 })
-    expect(changeOf(booking, { date: '2026-10-20', start: 1245, party: 3 }, late).late).toBeNull()
-  })
-
-  it('carries the allergies the caller gave and adds their words to the notes', () => {
-    const c = changeOf(booking, { date: '2026-10-20', start: 1200, party: 2, name: 'Verdi', allergies: 'Celiac', notes: 'Asks to note celiac' }, late)
-    expect(c.move).toBeNull()
+  it('a move is what the book says is a move, whatever the page would have guessed', () => {
+    const c = changeOf(booking, { change: { kind: 'move', date: '2026-10-20', start: 1245, party: 2, zone: 'dehors' } }, late)
+    expect(c.move).toEqual({ date: '2026-10-20', start: 1245, party: 2, zone: 'dehors' })
     expect(c.late).toBeNull()
-    expect(c.details).toEqual({ allergies: 'Celiac', notes: 'Window · Asks to note celiac' })
+  })
+
+  it('details carry the asked name, allergies and words; a cancellation pre-fills nothing; no change, nothing', () => {
+    const c = changeOf(booking, { change: { kind: 'details', name: 'Verdi Neri', allergies: 'Celiac', notes: 'Celiac, two' } }, late)
+    expect(c).toEqual({ kind: 'details', details: { name: 'Verdi Neri', allergies: 'Celiac', notes: 'Window · Celiac, two' }, move: null, late: null })
+    expect(changeOf(booking, { change: { kind: 'cancellation' } }, late)).toEqual({ kind: 'cancellation', details: {}, move: null, late: null })
+    expect(changeOf(booking, {}, late)).toEqual({ kind: null, details: {}, move: null, late: null })
+  })
+
+  it('reads StarChat\'s request row: the change, the booking it is about wherever it is, the recognised number', () => {
+    const row = bookingFromWire({ id: 'r1', time: '21:30', covers: 3, status: 'requested', about: 'b1', recognised: true,
+      aboutReservation: { id: 'b1', date: '2026-10-21', time: '20:00', covers: 2, name: 'Verdi' },
+      change: { kind: 'move', date: '2026-10-21', time: '21:30', covers: 3, zone: 'sala', name: 'Verdi', eta: '21:45' } })
+    expect(row.change).toEqual({ kind: 'move', date: '2026-10-21', start: 1290, party: 3, zone: 'sala', name: 'Verdi', eta: 1305 })
+    expect(row.aboutReservation).toEqual({ id: 'b1', date: '2026-10-21', start: 1200, party: 2, name: 'Verdi' })
+    expect(row.recognised).toBe(true)
+    expect(bookingFromWire({ id: 'b2', time: '20:00', covers: 2 })).toMatchObject({ recognised: false, change: null, aboutReservation: null })
   })
 })

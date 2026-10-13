@@ -19,7 +19,9 @@ const { mockRestaurant, openRestaurant, tomorrowDinner, TODAY, TOMORROW } = requ
  * warnings not drawn (the warnings test); the missing-fields refusal said without its fields (the refusal test); a
  * request accepted without asking its missing field (the accept test); "make the change" without the closing
  * DELETE (the call-back test); the request's details not pre-filled (the call-back test); a late arrival treated as
- * a move (the late-arrival test); the editor drawing a not-asked field, or its Undo at the version read rather than
+ * a move (the late-arrival test); the kind not read (the late-arrival test: no "will arrive late"); the page not going
+ * to the day the request names (the other-day test); a cancellation pre-filling the editor (the
+ * cancellation test); `recognised` not read (the recognised test); the editor drawing a not-asked field, or its Undo at the version read rather than
  * the one answered (the details test); a not-asked allergy hidden although stored (the stored-allergy test); `intendedTableIds` not read (the overbooking test); the menu ignoring the page
  * switch (the menu test); the instance's page switch not read (the page-off test: the day was asked).
  */
@@ -222,7 +224,8 @@ test.describe('the restaurant page, one owner per setting', () => {
 
   test('a call-back request about a change is shown on the booking and in the inbox; "make the change" pre-fills it, and one save moves it and closes the request', async ({ authenticatedPage: page }) => {
     const { calls } = await mockRestaurant(page, { extraRows: [{ id: 'b-chg', time: '22:30', covers: 3, name: 'Verdi', phone: '393330001111',
-      status: 'requested', requestReason: 'callback', about: 'b-verdi', allergies: 'Celiac', notes: 'Asks for later' }] })
+      status: 'requested', requestReason: 'callback', about: 'b-verdi', allergies: 'Celiac', notes: 'Asks for later',
+      change: { kind: 'move', date: TOMORROW, time: '22:30', covers: 3, zone: 'sala', allergies: 'Celiac', notes: 'Asks for later' } }] })
     await openRestaurant(page)
     await ready(page)
     await tomorrowDinner(page)
@@ -250,12 +253,14 @@ test.describe('the restaurant page, one owner per setting', () => {
 
   test('a late arrival asked by phone is written in the notes and the table stays', async ({ authenticatedPage: page }) => {
     const { calls } = await mockRestaurant(page, { extraRows: [{ id: 'b-late-req', time: '21:00', covers: 4, name: 'Rossi', phone: '393331112233',
-      status: 'requested', requestReason: 'callback', about: 'b-rossi' }] })
+      status: 'requested', requestReason: 'callback', about: 'b-rossi',
+      change: { kind: 'late_arrival', date: TOMORROW, time: '20:00', covers: 4, zone: 'sala', eta: '21:00' } }] })
     await openRestaurant(page)
     await ready(page)
     await tomorrowDinner(page)
     await tap(page.locator('.req[data-request="b-late-req"] .make-change'))
     const editor = page.locator('.panel .details-editor')
+    await expect(page.locator('.req[data-request="b-late-req"]')).toContainText('Rossi (20:00 · 4 people) will arrive late, at 21:00')
     await expect(editor.locator('.late-arrival')).toContainText('Late arrival at 21:00')
     await expect(editor.locator('.apply-move')).toHaveCount(0)
     await expect(editor.getByLabel('Notes')).toHaveValue('Arrives at 21:00')
@@ -304,6 +309,54 @@ test.describe('the restaurant page, one owner per setting', () => {
     await panel.locator('.save-details').click()
     await expect(page.locator('.toast')).toContainText('Details saved: Rossi')
     expect(calls.find(c => c.method === 'PATCH').body).toEqual({ expectedVersion: 1, allergies: '' })
+  })
+
+  test('a request about a booking on another day finds it there, from the day the request names', async ({ authenticatedPage: page }) => {
+    const { calls } = await mockRestaurant(page, { extraRows: [{ id: 'b-far-req', time: '21:00', covers: 3, name: 'Moretti Bis', status: 'requested',
+      requestReason: 'callback', about: 'b-far', change: { kind: 'details', date: addDays(TODAY, 20), time: '20:00', covers: 3, zone: 'sala', name: 'Moretti Bis' } }] })
+    await openRestaurant(page)
+    await ready(page)
+    await tomorrowDinner(page)
+    const request = page.locator('.req[data-request="b-far-req"]')
+    await expect(request).toContainText('Moretti (')
+    await expect(request).toContainText('asks to change the details')
+    await tap(request.locator('.make-change'))
+    const editor = page.locator('.panel .details-editor')
+    await expect(editor.getByLabel('Name')).toHaveValue('Moretti Bis')
+    expect(calls.filter(c => c.path === '/reservations' && c.search === `?date=${addDays(TODAY, 20)}`)).toHaveLength(1)
+    expect(calls.filter(c => c.path === '/search')).toHaveLength(0)
+    await editor.locator('.save-details').click()
+    await expect(page.locator('.toast')).toContainText('the request is closed')
+    expect(calls.find(c => c.method === 'PATCH').body).toEqual({ expectedVersion: 1, name: 'Moretti Bis' })
+  })
+
+  test('a cancellation asked by phone: one action cancels the booking and closes the request, with Undo', async ({ authenticatedPage: page }) => {
+    const { calls } = await mockRestaurant(page, { extraRows: [{ id: 'b-cancel-req', time: '19:30', covers: 6, name: 'Bianchi', status: 'requested',
+      requestReason: 'callback', about: 'b-bianchi', change: { kind: 'cancellation', date: TOMORROW, time: '19:30', covers: 6, zone: 'sala' } }] })
+    await openRestaurant(page)
+    await ready(page)
+    await tomorrowDinner(page)
+    const request = page.locator('.req[data-request="b-cancel-req"]')
+    await expect(request).toContainText('Bianchi asks to cancel 19:30 · 6 people')
+    await tap(request.getByRole('button', { name: 'Cancel the booking' }))
+    await expect(page.locator('.toast')).toContainText('Cancelled as asked: Bianchi')
+    expect(calls.filter(c => c.method === 'DELETE').map(c => c.path + c.search))
+      .toEqual(['/reservations/b-bianchi?expectedVersion=1', '/reservations/b-cancel-req?expectedVersion=1'])
+    await page.locator('.toast').getByRole('button', { name: 'Undo' }).click()
+    await expect.poll(() => calls.filter(c => c.path.endsWith('/reinstate')).map(c => c.path)).toEqual(['/reservations/b-bianchi/reinstate'])
+  })
+
+  test('a booking whose number did not place it is marked as reached by a recognised number', async ({ authenticatedPage: page }) => {
+    await mockRestaurant(page, { extraRows: [{ id: 'b-rec', time: '19:00', covers: 2, name: 'Conti', phone: '393339998877', status: 'confirmed',
+      source: 'staff', tableIds: [8], zone: 'dehors', recognised: true }] })
+    await openRestaurant(page)
+    await ready(page)
+    await tomorrowDinner(page)
+    const row = page.locator('.brow', { hasText: 'Conti' })
+    await expect(row.locator('.recognised-mark')).toContainText('recognised number')
+    await expect(page.locator('.brow', { hasText: 'Rossi' }).locator('.recognised-mark')).toHaveCount(0)
+    await tap(row)
+    await expect(page.locator('.panel .recognised-note')).toContainText('did not place this booking')
   })
 
   test('"close without changing" closes a call-back request and leaves the booking as it is', async ({ authenticatedPage: page }) => {

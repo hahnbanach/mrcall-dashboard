@@ -1804,7 +1804,14 @@
         "close": "Luk uden ændring",
         "asks": "{name} ønsker at ændre {from} til {to}",
         "otherDay": "en booking på en anden dag",
-        "applied": "Ændring foretaget: {name}; anmodningen er lukket"
+        "applied": "Ændring foretaget: {name}; anmodningen er lukket",
+        "kind": {
+          "late_arrival": "{name} ({from}) kommer senere, kl. {time}",
+          "details": "{name} ({from}) ønsker at ændre oplysningerne",
+          "cancellation": "{name} ønsker at aflyse {from}"
+        },
+        "cancelBooking": "Aflys bookingen",
+        "cancelled": "Aflyst som ønsket: {name}; anmodningen er lukket"
       },
       "acceptFields": {
         "title": "Godkend {name}",
@@ -1823,6 +1830,10 @@
         "edit": "Rediger oplysninger",
         "saved": "Oplysninger gemt: {name}",
         "notAsked": "Spørges ikke i denne restaurant: vises, fordi bookingen har en værdi, som du kan slette."
+      },
+      "recognised": {
+        "mark": "genkendt nummer",
+        "note": "Genkendt nummer: gæstens nummer foretog ikke denne booking. I telefonen kan gæsten høre den, tilføje en note eller en forsinkelse og efterlade en anmodning, men ikke flytte eller aflyse den."
       }
     }
   },

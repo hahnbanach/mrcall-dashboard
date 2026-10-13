@@ -3,7 +3,8 @@ const { mockBusiness } = require('./mock-data')
 
 /**
  * A StarChat restaurant book in memory, for the restaurant page's browser tests: the routes the page calls,
- * answering in the shapes StarChat 9.34.65 answers (ApiDomainRestaurantResource, LayoutDraft,
+ * answering in the shapes StarChat answers (R8's fields as in 9.34 at 7bf981c51's openapi.yaml: `recognised`, `about`,
+ * `aboutReservation`, `change`, the configuration read's `restaurant.allergies`; earlier ones as 9.34.65) (ApiDomainRestaurantResource, LayoutDraft,
  * RestaurantLayoutSection, NativeReservationBook in /Users/angelo/data/WORK/elegans.io/starchat at that tag): tables without an id get one from the server, a join may name a table by name,
  * bookings carry `callIds`, the day read carries `minFreeMinutes` and each table's free windows
  * (`freeTables`), the skill read carries the store-backed `layout` section, and the finder is
@@ -173,7 +174,10 @@ async function mockRestaurant (page, opts = {}) {
   const reinstatable = r => r.status === 'no_show' || (r.status === 'cancelled' && r.cancelledBy === 'staff')
   const wire = r => {
     const ids = r.status === 'confirmed' || r.status === 'held' ? r.tableIds : []
-    return Object.assign({}, r, { tableIds: ids, tableNames: tableNames(ids), reinstatable: reinstatable(r) })
+    // a call-back request names the booking it is about wherever that booking is (StarChat 7bf981c51: aboutReservation)
+    const about = r.about ? state.rows.find(o => o.id === r.about) : null
+    return Object.assign({}, r, { tableIds: ids, tableNames: tableNames(ids), reinstatable: reinstatable(r) },
+      about ? { aboutReservation: { id: about.id, date: about.date, time: about.time, covers: about.covers, name: about.name } } : {})
   }
   const end = r => toMin(r.time) + r.minutes
   const takes = r => r.status === 'confirmed'

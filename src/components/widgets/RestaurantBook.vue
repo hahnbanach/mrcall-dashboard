@@ -629,25 +629,37 @@ export default {
     },
     /**
      * "Make the change" on a call-back request about a booking: the booking opens with its details editor pre-filled
-     * from the request (the details, the move ticked, a late arrival in the notes), staff check it and save once; the
-     * save changes the booking at the version read and closes the request. Accepting such a request would make a
-     * second booking, so the server refuses it (`linked_request`) and the page never offers it. The booking is looked
-     * for in the day read, then by the server's search on the guest's name; not found, the page says so.
+     * from what the caller asked (`change`, classified by the book: a move ticked, a late arrival in the notes, the
+     * details), staff check it and save once; the save changes the booking at the version read and closes the request.
+     * A cancellation asked by phone cancels the booking and closes the request, with Undo. Accepting such a request
+     * would make a second booking, so the server refuses it (`linked_request`) and the page never offers it.
+     * The booking is found wherever it is: the request names its day (`aboutReservation`), and the page goes there.
      */
     async makeChange(request) {
       if (this.busy || !request || !request.about) return;
       const asked = Object.assign({}, request, { date: request.date || this.date });
       let original = this.list.find(b => b.id === request.about);
-      if (!original) {
-        const found = await this.findBooking(request.about, request.name);
-        if (!found) { this.showToast(this.$t("components.restaurant.change.notFound"), null, true); return; }
-        if (found.date !== this.date) {
-          this.service = found.service;
-          await this.setDate(found.date);
-        }
-        original = found;
+      const where = request.aboutReservation;
+      if (!original && where && where.date && where.date !== this.date) {
+        await this.setDate(where.date);
+        original = this.list.find(b => b.id === request.about);
+        if (original) this.setService(original.service);
       }
+      if (!original) { this.showToast(this.$t("components.restaurant.change.notFound"), null, true); return; }
+      if (asked.change && asked.change.kind === "cancellation") return this.cancelAsked(original, asked);
       this.panel = { type: "booking", id: original.id, editing: true, change: asked, message: null };
+    },
+    /** A cancellation asked by phone of a booking the caller could not cancel themselves: staff cancel it and close the
+     *  request; Undo takes the booking back (the request stays closed). */
+    cancelAsked(original, request) {
+      return this.act(async () => {
+        const cancelled = await RestaurantApi.cancel(this.user, this.businessId, original.id, original.version);
+        await RestaurantApi.cancel(this.user, this.businessId, request.id, request.version);
+        return cancelled;
+      }, {
+        done: () => this.$t("components.restaurant.change.cancelled", { name: original.name || this.$t("components.restaurant.walkInName") }),
+        undo: answer => this.reinstateRun(original, answer.version, false, "cancelled"),
+      });
     },
     /**
      * Saves the details editor: one change of the booking at the version read (the details that changed, an emptied
@@ -659,9 +671,9 @@ export default {
       if (!b) return;
       const request = this.panel.change;
       const body = Object.assign({ expectedVersion: b.version }, guest,
-        move ? { date: move.date, time: fmt(move.start), covers: move.party } : {});
+        move ? Object.assign({ date: move.date, time: fmt(move.start), covers: move.party }, move.zone ? { zone: move.zone } : {}) : {});
       const back = Object.fromEntries(Object.keys(guest).map(k => [k, b[k] || ""]));
-      if (move) Object.assign(back, { date: b.date || this.date, time: fmt(b.start), covers: b.party });
+      if (move) Object.assign(back, { date: b.date || this.date, time: fmt(b.start), covers: b.party }, move.zone ? { zone: b.zone } : {});
       const ok = await this.act(async () => {
         const changed = await RestaurantApi.change(this.user, this.businessId, b.id, body);
         if (request) await RestaurantApi.cancel(this.user, this.businessId, request.id, request.version);
@@ -674,17 +686,6 @@ export default {
         undo: answer => RestaurantApi.change(this.user, this.businessId, b.id, Object.assign({ expectedVersion: answer.version }, back)),
       });
       if (ok && this.panel) this.panel = { type: "booking", id: b.id };
-    },
-    async findBooking(id, name) {
-      if (!name || name.trim().length < 2) return null;
-      try {
-        const found = await RestaurantApi.search(this.user, this.businessId, name.trim().slice(0, 64), SEARCH_LIMIT);
-        const hit = found.results.find(r => r.b.id === id);
-        return hit ? Object.assign({}, hit.b, { date: hit.date }) : null;
-      } catch (e) {
-        console.warn("Restaurant search not answered:", e.restaurant ? e.restaurant.code || e.restaurant.status : e);
-        return null;
-      }
     },
     forgetDeferred(id) {
       const next = Object.assign({}, this.deferred);

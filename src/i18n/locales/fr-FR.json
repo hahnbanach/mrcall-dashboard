@@ -1806,7 +1806,14 @@
         "close": "Fermer sans modifier",
         "asks": "{name} demande de changer {from} en {to}",
         "otherDay": "une réservation d'un autre jour",
-        "applied": "Modification faite : {name} ; la demande est fermée"
+        "applied": "Modification faite : {name} ; la demande est fermée",
+        "kind": {
+          "late_arrival": "{name} ({from}) arrivera en retard, à {time}",
+          "details": "{name} ({from}) demande à modifier ses coordonnées",
+          "cancellation": "{name} demande d'annuler {from}"
+        },
+        "cancelBooking": "Annuler la réservation",
+        "cancelled": "Annulée comme demandé : {name} ; la demande est fermée"
       },
       "acceptFields": {
         "title": "Accepter {name}",
@@ -1825,6 +1832,10 @@
         "edit": "Modifier les coordonnées",
         "saved": "Coordonnées enregistrées : {name}",
         "notAsked": "Non demandé dans ce restaurant : affiché parce que cette réservation contient une valeur, que vous pouvez effacer."
+      },
+      "recognised": {
+        "mark": "numéro reconnu",
+        "note": "Numéro reconnu : le numéro du client n'est pas celui qui a fait la réservation. Au téléphone, il peut l'entendre, ajouter une note ou un retard et laisser une demande, mais pas la déplacer ni l'annuler."
       }
     }
   },

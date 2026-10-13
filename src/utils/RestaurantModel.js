@@ -289,30 +289,30 @@ export function isFreeAt (windows, t, minFree) {
 
 /**
  * What a call-back request (R8: a request whose `about` names a booking) asks of that booking, for staff to apply
- * in one step: `{details, move, late}`.
+ * in one step: `{kind, details, move, late}`. The kind is the book's (`change.kind`: late_arrival, move, details,
+ * cancellation, StarChat `RequestedChange.kindOf`); the page reads it and no longer derives it.
  *
- * - A later time on the same day, same people, before the booking's end is a late arrival: the table stays, and it
- *   is written in the notes (`lateNote(minute)`), as the book records one the assistant takes. That is the book's
- *   own rule for "a seat the booking can hold" (StarChat R8r, decision (a)).
- * - Any other difference of day, time or people is a move: `{date, start, party}`.
- * - Details: the allergies the caller gave, and their words added to the booking's notes. The name is the booking's
- *   (the book copies it onto the request).
- *
- * THE ONE PLACE THIS IS DERIVED. StarChat is adding its own classification of a request (late arrival, move, details
- * change) and the caller's new name; when they arrive this function reads them instead of re-deriving the rule, and
- * nothing that calls it changes.
+ * - late_arrival: the table stays, the arrival time is written in the notes (`lateNote(minute)`), as the book records
+ *   one the assistant takes.
+ * - move: the day, time, people and area the caller asked.
+ * - details and every kind: the name, allergies and notes the caller gave (the caller's words added to the notes).
+ * - cancellation: nothing to pre-fill; the page cancels the booking and closes the request.
+ * A request without `change` (written before the book kept it) pre-fills nothing.
  */
 export function changeOf (booking, request, lateNote) {
-  const date = request.date || booking.date
-  const sameDay = date === booking.date
-  const late = sameDay && request.party === booking.party && request.start > booking.start && request.start < booking.end
-  const moved = !late && (!sameDay || request.start !== booking.start || request.party !== booking.party)
-  const notes = [late ? lateNote(request.start) : null, booking.notes || null, request.notes || null]
-    .filter(Boolean).join(' · ')
-  const details = { notes }
-  if (request.allergies && request.allergies !== booking.allergies) details.allergies = request.allergies
-  if (request.name && request.name !== booking.name) details.name = request.name
-  return { details, move: moved ? { date, start: request.start, party: request.party } : null, late: late ? request.start : null }
+  const c = request.change
+  if (!c) return { kind: null, details: {}, move: null, late: null }
+  const late = c.kind === 'late_arrival' ? (c.eta !== undefined ? c.eta : c.start) : null
+  const notes = [late !== null && late !== undefined ? lateNote(late) : null, booking.notes || null, c.notes || null].filter(Boolean).join(' · ')
+  const details = {}
+  if (notes !== (booking.notes || '')) details.notes = notes
+  if (c.allergies && c.allergies !== booking.allergies) details.allergies = c.allergies
+  if (c.name && c.name !== booking.name) details.name = c.name
+  const move = c.kind === 'move'
+    ? Object.assign({ date: c.date || booking.date, start: c.start !== undefined ? c.start : booking.start, party: c.party || booking.party },
+      c.zone && c.zone !== booking.zone ? { zone: c.zone } : {})
+    : null
+  return { kind: c.kind, details, move, late: late === undefined ? null : late }
 }
 
 // ---------------------------------------------------------------- closures and special openings

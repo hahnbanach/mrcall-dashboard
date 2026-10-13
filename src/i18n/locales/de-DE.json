@@ -1806,7 +1806,14 @@
         "close": "Ohne Änderung schließen",
         "asks": "{name} möchte {from} auf {to} ändern",
         "otherDay": "eine Reservierung an einem anderen Tag",
-        "applied": "Änderung vorgenommen: {name}; die Anfrage ist geschlossen"
+        "applied": "Änderung vorgenommen: {name}; die Anfrage ist geschlossen",
+        "kind": {
+          "late_arrival": "{name} ({from}) kommt später, um {time}",
+          "details": "{name} ({from}) möchte die Angaben ändern",
+          "cancellation": "{name} möchte {from} stornieren"
+        },
+        "cancelBooking": "Reservierung stornieren",
+        "cancelled": "Wie gewünscht storniert: {name}; die Anfrage ist geschlossen"
       },
       "acceptFields": {
         "title": "{name} annehmen",
@@ -1825,6 +1832,10 @@
         "edit": "Angaben bearbeiten",
         "saved": "Angaben gespeichert: {name}",
         "notAsked": "In diesem Restaurant nicht gefragt: angezeigt, weil diese Reservierung einen Wert enthält, den Sie löschen können."
+      },
+      "recognised": {
+        "mark": "erkannte Nummer",
+        "note": "Erkannte Nummer: die Nummer des Gastes hat diese Reservierung nicht aufgegeben. Am Telefon kann er sie hören, eine Notiz oder eine Verspätung hinzufügen und eine Anfrage hinterlassen, sie aber nicht verschieben oder stornieren."
       }
     }
   },

@@ -1804,7 +1804,14 @@
         "close": "Sluiten zonder wijzigen",
         "asks": "{name} vraagt {from} te wijzigen in {to}",
         "otherDay": "een reservering op een andere dag",
-        "applied": "Wijziging uitgevoerd: {name}; het verzoek is gesloten"
+        "applied": "Wijziging uitgevoerd: {name}; het verzoek is gesloten",
+        "kind": {
+          "late_arrival": "{name} ({from}) komt later, om {time}",
+          "details": "{name} ({from}) vraagt de gegevens te wijzigen",
+          "cancellation": "{name} vraagt {from} te annuleren"
+        },
+        "cancelBooking": "Reservering annuleren",
+        "cancelled": "Geannuleerd zoals gevraagd: {name}; het verzoek is gesloten"
       },
       "acceptFields": {
         "title": "{name} accepteren",
@@ -1823,6 +1830,10 @@
         "edit": "Gegevens bewerken",
         "saved": "Gegevens opgeslagen: {name}",
         "notAsked": "Niet gevraagd in dit restaurant: getoond omdat deze reservering een waarde bevat, die je kunt wissen."
+      },
+      "recognised": {
+        "mark": "herkend nummer",
+        "note": "Herkend nummer: het nummer van de gast heeft deze reservering niet geplaatst. Aan de telefoon kan de gast haar horen, een opmerking of een vertraging toevoegen en een verzoek achterlaten, maar haar niet verplaatsen of annuleren."
       }
     }
   },

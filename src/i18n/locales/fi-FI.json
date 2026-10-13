@@ -1804,7 +1804,14 @@
         "close": "Sulje muuttamatta",
         "asks": "{name} pyytää muuttamaan {from} → {to}",
         "otherDay": "toisen päivän varaus",
-        "applied": "Muutos tehty: {name}; pyyntö on suljettu"
+        "applied": "Muutos tehty: {name}; pyyntö on suljettu",
+        "kind": {
+          "late_arrival": "{name} ({from}) saapuu myöhässä, klo {time}",
+          "details": "{name} ({from}) pyytää muuttamaan tietoja",
+          "cancellation": "{name} pyytää perumaan: {from}"
+        },
+        "cancelBooking": "Peru varaus",
+        "cancelled": "Peruttu pyynnöstä: {name}; pyyntö on suljettu"
       },
       "acceptFields": {
         "title": "Hyväksy {name}",
@@ -1823,6 +1830,10 @@
         "edit": "Muokkaa tietoja",
         "saved": "Tiedot tallennettu: {name}",
         "notAsked": "Ei kysytä tässä ravintolassa: näytetään, koska varauksessa on arvo, jonka voit tyhjentää."
+      },
+      "recognised": {
+        "mark": "tunnistettu numero",
+        "note": "Tunnistettu numero: vieraan numero ei tehnyt tätä varausta. Puhelimessa vieras voi kuulla sen, lisätä huomautuksen tai myöhästymisen ja jättää pyynnön, mutta ei siirtää tai perua sitä."
       }
     }
   },
