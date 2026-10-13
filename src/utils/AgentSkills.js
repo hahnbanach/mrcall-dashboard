@@ -170,11 +170,16 @@ export default {
         }
     },
 
-    /** One sentence per diagnostic, in the order a person reads them. */
-    describeDiagnostics: function(diagnostics) {
+    /**
+     * One sentence per diagnostic, in the order a person reads them. `say` turns a diagnostic whose code the screen
+     * knows into the person's language (null when it does not): the refusals a person can act on, such as the
+     * restaurant's assistant switched on with its page off (`assistant_without_page`), are said readably rather than
+     * as the server's path and English.
+     */
+    describeDiagnostics: function(diagnostics, say = null) {
         return (diagnostics || [])
             .filter(d => d.severity === "error")
-            .map(d => `${d.path}: ${d.detail}`)
+            .map(d => (say && say(d)) || `${d.path}: ${d.detail}`)
             .join("; ");
     },
 

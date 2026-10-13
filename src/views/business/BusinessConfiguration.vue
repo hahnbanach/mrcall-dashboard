@@ -42,6 +42,7 @@
           v-if="selectedMenupage?.collection.id === '__RESTAURANT_BOOKING__' && businessId && user"
           :business-id="businessId"
           :user="user"
+          :skills-link="skillsLink"
       />
       <RetentionSettings
           v-if="selectedMenupage?.collection.id === '__DATA_RETENTION__' && businessId && user"
@@ -485,7 +486,7 @@ import TimeSlotsEditor from "@/components/widgets/TimeSlotsEditor.vue";
 import AgentSkillsConfigurator from "@/components/widgets/AgentSkillsConfigurator.vue";
 import RetentionSettings from "@/components/widgets/RetentionSettings.vue";
 import RestaurantBook from "@/components/widgets/RestaurantBook.vue";
-import { SKILL_NAMES as RESTAURANT_SKILLS, SKILL_PHASE as RESTAURANT_PHASE } from "@/utils/Restaurant";
+import { SKILL_NAMES as RESTAURANT_SKILLS, SKILL_PHASE as RESTAURANT_PHASE, pageOffIn } from "@/utils/Restaurant";
 import ConnectCalendar from "@/components/ConnectCalendar.vue";
 import ActionPanel from "@/components/ActionPanel.vue";
 import ConfigureAIPanel from "@/components/ConfigureAIPanel.vue";
@@ -547,7 +548,19 @@ export default {
     hasRestaurant() {
       const config = this.agentSkillsUtils.readPhaseConfig(this.business ? this.business.variables : {})
       // the instance StarChat serves: either of its names, in the one phase it reads (Restaurant.js `instanceIn`)
-      return (config[RESTAURANT_PHASE] || []).some(e => e && RESTAURANT_SKILLS.includes(e.skill))
+      // ...with its page on (R8): with the page switched off in the skill, the menu has no entry for it
+      return (config[RESTAURANT_PHASE] || []).some(e => e && RESTAURANT_SKILLS.includes(e.skill) && !pageOffIn(e.params, null))
+    },
+    /** The section that holds the skills' configuration (the template collection declaring the running-loop
+     *  variable), for the restaurant page's links to the skill form; null when this business has none. */
+    skillsLink() {
+      const name = this.agentSkillsUtils.phaseVariables.during
+      const holds = v => Array.isArray(v) ? v.some(holds) : !!(v && v.name === name)
+      const collection = (Array.isArray(this.variablesAnnotations) ? this.variablesAnnotations : []).find(a => holds(a.variables))
+      if (!collection) return null
+      const query = Object.assign({}, this.$route ? this.$route.query : {}, { section: collection.collection.id })
+      delete query.tab
+      return { path: this.$route ? this.$route.path : '/businessconfiguration', query }
     },
     skillsConfig: {
       get() {
@@ -819,7 +832,8 @@ export default {
         this.showProgressBar = false
         if (skillsOutcome && !skillsOutcome.saved) {
           this.setMessage("error", this.t('components.business.errorSavingSettings') +
-              " (" + (skillsOutcome.error || agentSkillsUtils.describeDiagnostics(skillsOutcome.diagnostics)) + ")")
+              " (" + (skillsOutcome.error || agentSkillsUtils.describeDiagnostics(skillsOutcome.diagnostics,
+                d => (this.$te(`widgets.agentSkills.code.${d.code}`) ? this.t(`widgets.agentSkills.code.${d.code}`) : null))) + ")")
           return false
         }
         if(response.headers["x-mrcall-role"] === "admin") {
@@ -869,7 +883,9 @@ export default {
       const requested = id || CONFIGURE_AI_ID
       const known = Array.isArray(this.variablesAnnotations)
         && this.variablesAnnotations.some((obj) => obj.collection.id === requested)
-      const resolvedId = (requested === CONFIGURE_AI_ID || requested === RETENTION_ID || requested === RESTAURANT_ID || known)
+      // The restaurant page only while the business has it with its page on (R8); otherwise the default, like any
+      // section this business does not have.
+      const resolvedId = (requested === CONFIGURE_AI_ID || requested === RETENTION_ID || (requested === RESTAURANT_ID && this.hasRestaurant) || known)
         ? requested : CONFIGURE_AI_ID
       if (resolvedId !== requested) {
         console.warn("Unknown configuration section, falling back to the default:", requested)
@@ -1089,6 +1105,10 @@ export default {
     },
   },
   watch: {
+    // The page switch of the restaurant skill decides whether the menu has its entry (R8).
+    hasRestaurant() {
+      if (this.itemsMenu) this.updateMenu()
+    },
     // The back and forward buttons, and any other navigation that changes the address without
     // rebuilding this component. Guarded on the section actually differing, because
     // `switchToMenupage` writes the URL and an unguarded watcher would answer its own write.

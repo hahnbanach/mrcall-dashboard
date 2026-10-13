@@ -154,6 +154,22 @@
         "summary": "{zones} zones, {tables} actieve tafels. Ze worden bewerkt op de restaurantpagina.",
         "open": "Zaal en tafels openen",
         "unknown": "De zaal kon nu niet worden gelezen; je bewerkt hem op de restaurantpagina."
+      },
+      "page": {
+        "pageOn": "Pagina aan",
+        "pageOff": "Pagina uit",
+        "assistantOn": "Assistent reserveert",
+        "assistantOff": "Assistent uit",
+        "assistantSwitch": "De assistent neemt reserveringen aan",
+        "assistantHint": "Uit: de pagina en het personeel werken door, de assistent reserveert niet.",
+        "assistantNeedsPage": "Zet eerst de pagina aan: de assistent reserveert nooit in een boek dat niemand ziet.",
+        "summaryTitle": "Ingesteld op de restaurantpagina",
+        "open": "Restaurantpagina openen",
+        "daysAheadNote": "Hoogstens de horizon van het boek ({n} dagen), ingesteld op de restaurantpagina: daarboven reserveert de assistent tot de horizon."
+      },
+      "code": {
+        "assistant_without_page": "De assistent kan geen reserveringen aannemen zolang de restaurantpagina uit staat: zet de assistent uit, of de pagina aan.",
+        "allergies_required_unavailable": "Allergieën kunnen hier nog niet verplicht zijn: elke beller ernaar vragen wacht tot het juridische punt is opgelost."
       }
     }
   },
@@ -1224,7 +1240,12 @@
         "scope_missing": "Deze toegang staat dat niet toe.",
         "error": "Er is iets misgegaan: probeer het opnieuw.",
         "not_reversible": "Deze reservering kan niet meer worden hersteld.",
-        "table_taken": "De tafels ervan zijn bezet."
+        "table_taken": "De tafels ervan zijn bezet.",
+        "missingFields": "Elke reservering hier heeft nodig: {fields}.",
+        "missing_fields": "Er ontbreekt een verplicht veld.",
+        "zone_closed": "Dat gedeelte is dan gesloten.",
+        "tables_unsuitable": "Die tafels kunnen deze groep niet ontvangen.",
+        "linked_request": "Dit verzoek wil een reservering wijzigen: voer de wijziging uit of sluit het."
       },
       "strip": {
         "label": "Beschikbaarheid van de komende dagen",
@@ -1276,7 +1297,9 @@
         "floor": "Zaal",
         "timeline": "Tijdlijn",
         "floorHint": "Groen = vrij om {time} voor minstens {n} min; grijs = komt maar heel kort vrij. Tik op een groene tafel om te reserveren, op een bezette om hem te openen. Sleep om te verplaatsen.",
-        "timelineHint": "Eén rij per tafel. Tik op een lege plek om op dat tijdstip te reserveren, op de kop om het tijdstip te wijzigen."
+        "timelineHint": "Eén rij per tafel. Tik op een lege plek om op dat tijdstip te reserveren, op de kop om het tijdstip te wijzigen.",
+        "toCall": "1 reservering in deze gesloten service: bel de gast | {n} reserveringen in deze gesloten service: bel de gasten",
+        "closedMark": "gesloten: bellen"
       },
       "know": {
         "label": "Goed om te weten:",
@@ -1358,7 +1381,8 @@
           "left": "Vertrokken"
         },
         "empty": "Hier staat geen reservering.",
-        "gone": "Geannuleerd en niet verschenen ({n})"
+        "gone": "Geannuleerd en niet verschenen ({n})",
+        "intended": "bedoeld voor {tables}"
       },
       "panel": {
         "cancelled": "Reservering geannuleerd.",
@@ -1384,7 +1408,8 @@
         "assistantSaid": "Aan de telefoon zei de assistent \"een tafel voor {n}\", nooit de naam van de tafel.",
         "pastNoShows": "1 eerdere no-show met dit nummer. | {n} eerdere no-shows met dit nummer.",
         "cancelledByCaller": "Door de gast aan de telefoon geannuleerd: ze kan niet worden hersteld, maak een nieuwe reservering.",
-        "reinstate": "Herstellen"
+        "reinstate": "Herstellen",
+        "closedDay": "Deze reservering valt op een dag, service of gedeelte dat na het aannemen is gesloten: bel de gast."
       },
       "newb": {
         "title": "Nieuwe reservering",
@@ -1411,18 +1436,16 @@
         "freeFixed": "Vrij: {tables} · {zone}. Zeg tegen de gast \"een tafel voor {n}\", zonder de naam van de tafel.",
         "serverChooses": "Het boek kiest de tafel bij het opslaan.",
         "alternatives": "In plaats daarvan vrij:",
-        "save": "Opslaan · {day} {time} · {people}"
+        "save": "Opslaan · {day} {time} · {people}",
+        "zone": "Gedeelte",
+        "anyZone": "Elk gedeelte",
+        "fieldMissing": "{field}: verplicht bij elke reservering."
       },
       "room": {
         "intro": "Hier bewerk je de hele zaal. Elk gedeelte, elke tafel en elke koppeling wijzig je in het eigen veld of verwijder je met ✕. Wijzigingen bereiken de assistent pas als je op Wijzigingen opslaan drukt; tot dan kun je ze allemaal verwerpen.",
         "pending": "1 wijziging om op te slaan | {n} wijzigingen om op te slaan",
         "errors": "1 fout om te herstellen voor het opslaan | {n} fouten om te herstellen voor het opslaan",
         "warnings": "Goed om te weten (je kunt toch opslaan)",
-        "settings": "Instellingen",
-        "minFree": "Minimale vrije tijd",
-        "minFreeLabel": "Minimale vrije tijd in minuten",
-        "minutes": "minuten",
-        "minFreeHint": "Een tafel wordt alleen als vrij getoond als hij minstens zo lang vrij blijft: bij 120 minuten telt een tafel die om 20:00 vrij is maar om 21:00 gereserveerd is, niet als vrij. Van 1 tot {max} minuten.",
         "generator": "Tafels in één keer toevoegen",
         "genAdd": "Toevoegen",
         "genHowMany": "Hoeveel tafels",
@@ -1450,11 +1473,6 @@
         "noteHint": "De assistent gebruikt dit om het gedeelte aan bellers te beschrijven.",
         "closures": "Sluitingen",
         "alwaysOpen": "Altijd open.",
-        "closedFrom": "Gesloten vanaf",
-        "closedTo": "Gesloten tot",
-        "closureAdd": "Sluiting toevoegen",
-        "closureDelete": "Sluiting verwijderen",
-        "closureDates": "Sluiting: kies de datums \"vanaf\" en \"tot\".",
         "tName": "Naam",
         "tMin": "Min. plekken",
         "tMax": "Max. plekken",
@@ -1510,18 +1528,13 @@
         "stale": "De zaal is intussen gewijzigd: ze is opnieuw gelezen, doe je wijzigingen nog eens.",
         "configChanged": "De configuratie is intussen gewijzigd: ze is opnieuw gelezen, probeer het nog eens.",
         "needsHours": "Stel eerst de openingstijden in: zonder die kan de zaal niet worden opgeslagen.",
-        "layoutSavedOnly": "De zaal is opgeslagen, de instellingen niet.",
         "andOthers": "{names} en nog {n}",
-        "maxParty": "Grootste gezelschap dat de assistent zelf reserveert",
-        "maxPartyHint": "Boven dit aantal personen reserveert de assistent niet: hij legt een aanvraag vast die jij bevestigt. Meestal niet meer dan de grootste tafel of koppeling.",
-        "goMaxParty": "Grootste gezelschap wijzigen",
         "goTableMin": "Minimale plekken van de tafels wijzigen",
         "goJoins": "Naar de koppelingen",
-        "settingsRefused": "De server heeft de instellingen niet geaccepteerd: controleer de minimale vrije tijd en het grootste gezelschap.",
-        "defaultMinutes": "Standaard: {n} minuten",
-        "defaultPeople": "Standaard: {n} personen",
         "byDefault": "standaard ({n})",
-        "defaultTag": "standaard"
+        "defaultTag": "standaard",
+        "closuresWhere": "Sluitingen stel je in bij Tijden en regels",
+        "goMaxPartySkill": "Wijzig het in de instellingen van de skill"
       },
       "check": {
         "zoneNameMissing": "Gedeelte {n} · Naam: verplicht",
@@ -1537,9 +1550,7 @@
         "joinZones": "Koppeling {label} · Tafels: ze staan in verschillende gedeeltes; een koppeling blijft binnen één gedeelte",
         "joinMin": "Koppeling {label} · Min. personen: minstens 1",
         "joinMax": "Koppeling {label} · Max. personen: minstens {min}",
-        "joinDuplicate": "Koppeling {label}: er is al een koppeling met dezelfde tafels",
-        "minFree": "Instellingen · Minimale vrije tijd: tussen {min} en {max} minuten",
-        "maxParty": "Instellingen · Grootste gezelschap: tussen {min} en {max} personen"
+        "joinDuplicate": "Koppeling {label}: er is al een koppeling met dezelfde tafels"
       },
       "layoutCode": {
         "table_has_holds": "Een tafel die je wilt verwijderen, uitzetten of naar een ander gedeelte wilt verplaatsen, heeft reserveringen in de toekomst: verplaats of annuleer die eerst en sla dan op.",
@@ -1583,9 +1594,7 @@
         "tableOff": "{name}: gedeactiveerd",
         "joinAdded": "Koppeling toegevoegd: {label} ({min}-{max})",
         "joinRemoved": "Koppeling verwijderd: {label}",
-        "joinRange": "Koppeling {label}: personen {from} → {to}",
-        "minFree": "Minimale vrije tijd: {from} → {to} min",
-        "maxParty": "Grootste gezelschap dat de assistent reserveert: {from} → {to} personen"
+        "joinRange": "Koppeling {label}: personen {from} → {to}"
       },
       "calls": {
         "title": "Het gesprek",
@@ -1668,7 +1677,140 @@
         "bad_value": "„{value}“ is geen geldige waarde: controleer het gemarkeerde veld."
       },
       "manifestMissing": "De instellingen van de functie konden niet worden gelezen, dus de pagina kan de standaardwaarden niet tonen.",
-      "retry": "Opnieuw proberen"
+      "retry": "Opnieuw proberen",
+      "pageOff": "De restaurantpagina staat uit in de instellingen van de skill: de reserveringen blijven bewaard, en export en wissen blijven beschikbaar. Zet haar aan om de pagina te gebruiken.",
+      "tabRules": "Tijden en regels",
+      "rules": {
+        "intro": "De tijden en regels van het restaurant, en wat elke reservering moet bevatten, wie haar ook aanneemt. Hoe de assistent reserveert (de grootste groep, de voorbereidingstijd, de dagen vooruit, wat hij zegt) stel je in bij de instellingen van de skill.",
+        "toSkill": "Instellingen van de skill openen",
+        "hours": "Openingstijden",
+        "tables": "Tafels en tempo",
+        "reach": "Hoe ver vooruit",
+        "field": {
+          "arrivalEveryMinutes": "Aankomst elke",
+          "tableMinutes2": "Tafelduur, 1-2 personen",
+          "tableMinutes4": "Tafelduur, 3-4 personen",
+          "tableMinutes6": "Tafelduur, 5-6 personen",
+          "tableMinutesLarger": "Tafelduur, 7 of meer",
+          "coversPerArrival": "Hoogstens tegelijk aankomende gasten",
+          "minFreeMinutes": "Minimale vrije tijd",
+          "horizonDays": "Horizon van het boek",
+          "walkInMinutes": "Venster voor gasten zonder reservering"
+        },
+        "unit": {
+          "minutes": "minuten",
+          "people": "personen",
+          "days": "dagen"
+        },
+        "defaultIs": {
+          "minutes": "Standaard: {n} minuten",
+          "people": "Standaard: {n} personen",
+          "days": "Standaard: {n} dagen"
+        },
+        "hint": {
+          "arrivalEveryMinutes": "De stap van de aankomsttijden: 15 geeft 19:00, 19:15, 19:30. Van {min} tot {max}.",
+          "tableMinutes2": "Hoe lang de tafel bezet blijft. Van {min} tot {max}.",
+          "tableMinutes4": "Hoe lang de tafel bezet blijft. Van {min} tot {max}.",
+          "tableMinutes6": "Hoe lang de tafel bezet blijft. Van {min} tot {max}.",
+          "tableMinutesLarger": "Hoe lang de tafel bezet blijft. Van {min} tot {max}.",
+          "coversPerArrival": "Hoeveel gasten de keuken op één aankomsttijd ontvangt, alle gedeelten samen; 0 betekent geen grens.",
+          "minFreeMinutes": "Een tafel staat alleen als vrij als ze minstens zo lang vrij blijft. Van {min} tot {max}.",
+          "horizonDays": "Hoe ver vooruit het boek en deze pagina open zijn, voor jou en het personeel. De assistent reserveert tot zijn eigen dagen vooruit, ingesteld in de skill, nooit verder. Van {min} tot {max}.",
+          "walkInMinutes": "Een gast zonder reservering komt nu: vandaag, binnen zoveel minuten van de tijd. Naam en telefoon mogen ontbreken; buiten het venster is het een gewone reservering. Van {min} tot {max}."
+        },
+        "changed": {
+          "hours": "{service}: aankomsttijden gewijzigd",
+          "number": "{what}: {from} → {to}",
+          "ask": "{what}: {to}",
+          "closures": "Sluitingen en speciale openingen gewijzigd"
+        },
+        "outOfRange": "{what}: tussen {min} en {max}.",
+        "code": {
+          "allergies_required_unavailable": "Allergieën kunnen hier nog niet verplicht zijn: elke beller ernaar vragen wacht tot het juridische punt is opgelost. Kies optioneel of niet gevraagd.",
+          "pace_below_party": "De tegelijk aankomende gasten ({coversPerArrival}) zijn minder dan de grootste groep die de assistent reserveert ({maxPartySize}): zo'n groep zou nooit kunnen aankomen.",
+          "days_ahead_beyond_horizon": "De assistent reserveert {daysAhead} dagen vooruit, voorbij de horizon van het boek van {horizonDays} dagen: hij reserveert tot {horizonDays}.",
+          "out_of_range": "{what}: de waarde ligt buiten het toegestane bereik."
+        },
+        "refusedField": "{what}: de waarde is niet geaccepteerd.",
+        "inSkill": "Wijzig het in de instellingen van de skill",
+        "savedToast": "1 wijziging opgeslagen | {n} wijzigingen opgeslagen"
+      },
+      "ask": {
+        "title": "Wat we bij elke reservering vragen",
+        "intro": "Voor elke reservering, wie haar ook aanneemt (de assistent, jij, het personeel): wat verplicht is, wat alleen gevraagd wordt als de gast het aanbiedt, en wat helemaal niet gevraagd wordt.",
+        "fixed": "Dag, tijd en personen",
+        "always": "Altijd verplicht",
+        "field": {
+          "name": "Naam",
+          "phone": "Telefoon",
+          "allergies": "Allergieën",
+          "notes": "Opmerkingen",
+          "zone": "Gedeelte"
+        },
+        "rule": {
+          "required": "Verplicht",
+          "optional": "Optioneel",
+          "not_asked": "Niet gevraagd"
+        },
+        "phoneNotAsked": "Telefoon niet gevraagd: geen enkele reservering vraagt een nummer, niet van de assistent en niet van jou. Het nummer van de beller wordt toch bewaard als het zichtbaar is.",
+        "phoneCaller": "Aan de telefoon telt het zichtbare nummer van de beller als telefoon: de assistent vraagt er alleen om als het nummer verborgen is.",
+        "allergiesActsOptional": "Opgeslagen als verplicht, maar in deze omgeving geldt het als optioneel: elke beller naar allergieën vragen wacht tot het juridische punt is opgelost.",
+        "allergiesUnavailable": "Verplicht is in deze omgeving nog niet beschikbaar: elke beller naar allergieën vragen wacht tot het juridische punt is opgelost.",
+        "walkIn": "Een gast die nu zonder reservering komt mag naam en telefoon weglaten."
+      },
+      "closures": {
+        "title": "Sluitingen en speciale openingen",
+        "intro": "Eén lijst voor elke gesloten dag, gesloten service en speciale opening, voor het hele restaurant of één gedeelte. Reserveringen die al zijn aangenomen op een dag die je sluit, blijven: de pagina toont ze, zodat je kunt bellen.",
+        "remove": "{what} verwijderen",
+        "fromCalendar": "uit de agenda",
+        "none": "Geen sluitingen.",
+        "whereCalendar": "Sluitingen uit de agenda wijzig je in de agenda die in de instellingen van de skill is gekoppeld: een afspraak waarvan de titel met het sluitingswoord begint.",
+        "add": "Toevoegen",
+        "from": "Van",
+        "to": "Tot (optioneel)",
+        "kind": "Wat",
+        "closed": "Gesloten",
+        "special": "Speciale opening",
+        "service": "Service",
+        "allDay": "hele dag",
+        "where": "Waar",
+        "wholeRestaurant": "hele restaurant",
+        "windows": "Aankomsttijden",
+        "addButton": "Aan de lijst toevoegen",
+        "neverRead": "De agenda is nog niet gelezen.",
+        "readAt": "Agenda gelezen op {when}.",
+        "lastFailed": "De laatste lezing, op {when}, is mislukt: de getoonde sluitingen zijn die van de lezing daarvoor.",
+        "describeOpen": "{days} · {service}: speciale opening {windows}",
+        "describeClosed": "{days} · {service} · {where}: gesloten",
+        "needFrom": "Kies de eerste dag.",
+        "backwards": "De laatste dag ligt voor de eerste.",
+        "badWindows": "Een speciale opening vraagt een service en aankomsttijden zoals 19:30-21:30.",
+        "refused": "De sluitingen zijn niet opgeslagen: probeer het opnieuw."
+      },
+      "warning": {
+        "outside_hours": "Buiten de openingstijden van de service.",
+        "off_grid": "Niet op de aankomsttijden (binnen de openingstijden).",
+        "within_notice": "Eerder dan de voorbereidingstijd van de assistent.",
+        "after_same_day_cutoff": "Na het tijdstip waarop de assistent stopt met reserveren voor vandaag.",
+        "beyond_days_ahead": "Verder vooruit dan de assistent reserveert.",
+        "above_max_party": "Groter dan de assistent zelf reserveert.",
+        "over_pace": "Meer tegelijk aankomende gasten dan het tempo van de keuken.",
+        "saidOnSave": "Goed om te weten: {list}"
+      },
+      "change": {
+        "notFound": "De reservering van dit verzoek is niet gevonden: open haar en wijzig haar met de hand.",
+        "done": "{name} verplaatst naar {day} {time}, {people}; het verzoek is gesloten",
+        "asked": "Wijziging gevraagd per telefoon",
+        "make": "Wijziging uitvoeren",
+        "close": "Sluiten zonder wijzigen",
+        "asks": "{name} vraagt {from} te wijzigen in {to}",
+        "otherDay": "een reservering op een andere dag"
+      },
+      "acceptFields": {
+        "title": "{name} accepteren",
+        "intro": "Om te accepteren heeft deze reservering nodig: {fields}.",
+        "accept": "Accepteren"
+      }
     }
   },
   "views": {

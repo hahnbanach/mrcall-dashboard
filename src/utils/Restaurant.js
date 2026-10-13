@@ -26,6 +26,42 @@ export const SKILL = "skill_restaurant_booking";
 export const SKILL_NAMES = ["restaurant_booking", SKILL];
 export const SKILL_PHASE = "during";
 
+/**
+ * The instance settings this page writes, and the only ones: each is marked `x-audience: page` in the
+ * restaurant_booking manifest, so the skill form never draws it (brief, addendum 2026-10-12 (2): one editor per
+ * field). The room (`layout`) is the page's too, but it is written through the layout route, never here.
+ * `saveInstance` refuses any other key, so the page cannot become a second editor of a setting the form owns.
+ */
+export const PAGE_FIELDS = ["lunch", "dinner", "arrivalEveryMinutes", "coversPerArrival", "tableMinutes2", "tableMinutes4",
+    "tableMinutes6", "tableMinutesLarger", "minFreeMinutes", "horizonDays", "walkInMinutes", "requiredFields"];
+
+/** Everything the page edits: its settings and the room. What the skill form summarises with a link here. */
+export const PAGE_EDITS = PAGE_FIELDS.concat(["layout"]);
+
+/** The fields "Cosa chiediamo per ogni prenotazione" decides, in the order the page shows them. Day, time and
+ *  covers are always required and are not among them. */
+export const ASKED_FIELDS = ["name", "phone", "allergies", "notes", "zone"];
+export const FIELD_RULES = ["required", "optional", "not_asked"];
+
+/**
+ * Whether "required" may be chosen for allergies here, and what the stored value does: StarChat's
+ * `RestaurantRules.AllergiesSetting` (stored, effective, requiredAvailable), read once at its startup from a
+ * server setting that is on in test and off in production until the owner settles the legal point (brief, "What
+ * every reservation must carry", amended 2026-10-13).
+ *
+ * THE ONE ADAPTER FOR A FIELD STARCHAT DOES NOT SEND YET. On 2026-10-13 the setting exists in StarChat's working
+ * tree (`RestaurantRules.allergiesSetting`, the save refusal `allergies_required_unavailable`) but no read carries
+ * it. The shape read here, `{restaurant: {allergies: {stored, effective, requiredAvailable}}}` on the skill
+ * configuration read, is an assumption: when StarChat publishes the field under another name, this function is the
+ * only thing that changes. Without it the answer is null, and the page treats "required" as not available (it
+ * never offers a choice the server may refuse without saying so); a stored "required" is still shown, with the note.
+ */
+export function allergiesSettingOf(configuration) {
+    const raw = configuration && configuration.restaurant && configuration.restaurant.allergies;
+    if (!raw || typeof raw !== "object" || typeof raw.requiredAvailable !== "boolean") return null;
+    return { stored: raw.stored || null, effective: raw.effective || null, requiredAvailable: raw.requiredAvailable };
+}
+
 function base(businessId) {
     return process.env.VUE_APP_STARCHAT_URL + "/mrcall/v1/mrcall0/apidomain/restaurant/" + encodeURIComponent(businessId);
 }
@@ -62,6 +98,25 @@ export function isMissingRoute(e) {
     return !!(e && e.restaurant && e.restaurant.status === 404 && !e.restaurant.code);
 }
 
+/** Whether a failure is the book answering that the restaurant's page is off (R8: 409 not_configured on `/page`). */
+export function isPageOff(e) {
+    const body = e && e.restaurant && e.restaurant.body;
+    const first = body && Array.isArray(body.diagnostics) ? body.diagnostics[0] : null;
+    return !!(first && first.code === "not_configured" && first.path === "/page");
+}
+
+/**
+ * Whether the instance has its page switched off (`page`, manifest default on, R8). Stored as the variables store a
+ * boolean: "false" or false is off; nothing stored is the manifest's default, and without a manifest, on (an
+ * instance saved before the switch existed keeps its page).
+ */
+export function pageOffIn(params, manifest) {
+    const raw = params ? params.page : undefined;
+    const def = manifest && manifest.page ? manifest.page.default : undefined;
+    const v = raw === undefined || raw === null || String(raw).trim() === "" ? def : raw;
+    return v !== undefined && v !== null && String(v).trim().toLowerCase() === "false";
+}
+
 /** A fresh key per write a person makes, so a retried request does not book twice. */
 export function idempotencyKey() {
     if (typeof crypto !== "undefined" && crypto.randomUUID) return crypto.randomUUID();
@@ -79,6 +134,30 @@ export function layoutFromWire(raw) {
             note: z.note || "", closures: (z.closures || []).map(c => ({ from: c.from, to: c.to })) })),
         tables: (raw.tables || []).map(t => ({ id: t.id, name: t.name || "", zone: t.zone, min: t.min, max: t.max, active: t.active !== false })),
         joins: (raw.joins || []).map(j => ({ tables: (j.tables || []).slice(), min: j.min, max: j.max })),
+        // The restaurant's calendar exceptions written in the page (R8): closed days and services, special openings,
+        // for the whole restaurant or a zone. A zone closed for whole days lives in that zone's `closures` instead.
+        exceptions: (raw.exceptions || []).map(exceptionFromWire),
+    };
+}
+
+function exceptionFromWire(e) {
+    return { from: e.from, to: e.to || e.from, service: e.service || null, zone: e.zone || null, windows: (e.windows || []).slice() };
+}
+
+function exceptionToWire(e) {
+    const out = { from: e.from, to: e.to || e.from };
+    if (e.service) out.service = e.service;
+    if (e.zone) out.zone = e.zone;
+    if (e.windows && e.windows.length) out.windows = e.windows.slice();
+    return out;
+}
+
+/** The calendar's closures beside the layout (GET /layout, R8): read-only here, with when they were last read. */
+function calendarFromWire(raw) {
+    const c = raw || {};
+    return {
+        closures: (c.closures || []).map(x => ({ date: x.date, service: x.service || null, zone: x.zone || null, title: x.title || "" })),
+        readAt: c.readAt || null, triedAt: c.triedAt || null, outcome: c.outcome || null,
     };
 }
 
@@ -96,6 +175,8 @@ export function layoutToWire(draft) {
         tables: draft.tables.map(t => Object.assign(t.id > 0 ? { id: t.id } : {},
             { name: t.name.trim(), zone: t.zone, min: t.min, max: t.max, active: t.active })),
         joins: draft.joins.map(j => ({ tables: j.tables.map(id => (id > 0 ? id : byId.get(id).name.trim())), min: j.min, max: j.max })),
+        // Always sent, so a save of the room keeps the exceptions the rules editor wrote, and the reverse.
+        exceptions: (draft.exceptions || []).map(exceptionToWire),
     };
 }
 
@@ -120,6 +201,12 @@ export function bookingFromWire(r) {
         pastNoShows: r.pastNoShows || 0,
         cancelledBy: r.cancelledBy || null,
         reinstatable: r.reinstatable === true,
+        // A call-back request about a change of a booking (R8): the booking it names.
+        about: r.about || null,
+        // An overbooking's tables staff named, not held (R8): shown on "no table yet".
+        intendedTables: (r.intendedTableIds || []).slice(),
+        // What staff were warned of and not refused for, on a write's answer (R8).
+        warnings: (r.warnings || []).map(w => w.code).filter(Boolean),
     };
     row.state = stateOf(row);
     return row;
@@ -141,7 +228,7 @@ export function instanceIn(configuration) {
     const entries = configuration && Array.isArray(configuration[SKILL_PHASE]) ? configuration[SKILL_PHASE] : [];
     const entry = entries.find(e => e && SKILL_NAMES.includes(e.skill));
     return entry ? { phase: SKILL_PHASE, skill: entry.skill, instanceId: entry.instanceId, params: entry.params || {},
-        revision: revisions[SKILL_PHASE] } : null;
+        revision: revisions[SKILL_PHASE], allergies: allergiesSettingOf(configuration) } : null;
 }
 
 function dayFromWire(raw) {
@@ -155,6 +242,9 @@ function dayFromWire(raw) {
         heldTables: raw.heldTables || [],
         covers: raw.covers || {},
         zonesClosed: raw.zonesClosed || [],
+        // The day's closures from either source (R8): {service, zone, source: page|calendar}. Bookings already on a
+        // closed day or service stay; the page shows them for staff to call.
+        closures: (raw.closures || []).map(c => ({ service: c.service || null, zone: c.zone || null, source: c.source || "page" })),
     };
 }
 
@@ -189,6 +279,9 @@ export default {
                 minutes: s.minutes, moves: s.moves || [] })),
             refusal: answer.refusal || null,
             later: (answer.later || []).map(toMin).filter(t => t !== null),
+            // A staff booking of this party then (R8): what it would be warned of, or why the book refuses it.
+            staff: answer.staff ? { warnings: (answer.staff.warnings || []).map(w => w.code).filter(Boolean),
+                refusal: answer.staff.refusal || null } : null,
         };
     },
 
@@ -255,6 +348,12 @@ export default {
         return layoutFromWire(answer && answer.layout);
     },
 
+    /** The layout with the closures read from the owner's calendar beside it: `{layout, calendar}`. */
+    layoutWithCalendar: async function(user, businessId) {
+        const answer = await call(() => axios.get(base(businessId) + "/layout", { headers: headers(user) }));
+        return { layout: layoutFromWire(answer && answer.layout), calendar: calendarFromWire(answer && answer.calendar) };
+    },
+
     /** Saves the whole layout at the revision read (null for the first): `{layout, warnings}`, or a refusal:
      *  422 with one diagnostic per problem (a table that still has bookings is named), 409 `stale`. */
     saveLayout: async function(user, businessId, expectedRevision, draft) {
@@ -290,7 +389,7 @@ export default {
             const skill = (Array.isArray(skills) ? skills : []).find(s => s && SKILL_NAMES.includes(s.name));
             const fields = skill && skill.configSchema && skill.configSchema.fields;
             if (!Array.isArray(fields) || !fields.length) return null;
-            return Object.fromEntries(fields.map(f => [f.key, { default: f.default, min: f.min, max: f.max }]));
+            return Object.fromEntries(fields.map(f => [f.key, { default: f.default, min: f.min, max: f.max, audience: f.audience || null }]));
         } catch (e) {
             console.warn("Restaurant skill manifest not read:", e.restaurant ? e.restaurant.status : e);
             return null;
@@ -316,6 +415,9 @@ export default {
      * number of the instance (`x-encoding: json-string`).
      */
     saveInstance: function(user, businessId, instance, changes) {
+        const foreign = Object.keys(changes).filter(k => !PAGE_FIELDS.includes(k));
+        // The page edits its own settings only (PAGE_FIELDS); everything else has its one editor in the skill form.
+        if (foreign.length) return Promise.reject(new Error("not a setting of the restaurant page: " + foreign.join(", ")));
         const params = Object.assign({}, instance.params, changes);
         delete params.layout;
         // A setting changed to null goes back to its default: it is left out, which StarChat reads as unset

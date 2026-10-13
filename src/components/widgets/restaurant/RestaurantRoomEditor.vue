@@ -14,32 +14,11 @@
         <div v-if="warnings.length" class="callout amber">
           <b>{{ $t("components.restaurant.room.warnings") }}</b>
           <ul><li v-for="(w, i) in warnings" :key="i">{{ w.text }}
-            <template v-for="go in w.go" :key="go.ref"> <button class="linkish go" @click="focusRef(go.ref)">{{ go.label }}</button></template></li></ul>
+            <template v-for="go in w.go" :key="go.ref || go.label"> <router-link v-if="go.to" class="linkish go" :to="go.to">{{ go.label }}</router-link><button v-else class="linkish go" @click="focusRef(go.ref)">{{ go.label }}</button></template></li></ul>
         </div>
         <div v-if="saveMessage" class="callout" :class="saveMessage.ok ? 'blue' : 'red'" role="status">{{ saveMessage.text }}</div>
       </div>
 
-      <section class="cfg-block card">
-        <h2>{{ $t("components.restaurant.room.settings") }}</h2>
-        <label class="field min-free">
-          <span>{{ $t("components.restaurant.room.minFree") }}</span>
-          <span class="tb-row"><input class="input" type="number" :min="limits.min" :max="limits.max" step="5" :value="minFree === null ? '' : minFree"
-                                      :placeholder="String(rules.minFreeDefault)" data-ref="set-minfree"
-                                      :class="{ invalid: minFreeError, 'is-default': minFree === null }" :aria-label="$t('components.restaurant.room.minFreeLabel')"
-                                      @input="e => minFree = settingOf(e.target.value)"> {{ $t("components.restaurant.room.minutes") }}
-            <span v-if="minFree === null" class="pill default-tag">{{ $t("components.restaurant.room.defaultTag") }}</span></span>
-          <small>{{ $t("components.restaurant.room.defaultMinutes", { n: rules.minFreeDefault }) }}. {{ $t("components.restaurant.room.minFreeHint", { max: limits.max }) }}</small>
-        </label>
-        <label class="field max-party">
-          <span>{{ $t("components.restaurant.room.maxParty") }}</span>
-          <span class="tb-row"><input class="input" type="number" :min="partyLimits.min" :max="partyLimits.max" step="1" :value="maxParty === null ? '' : maxParty"
-                                      :placeholder="String(rules.maxPartyDefault)" data-ref="set-maxparty"
-                                      :class="{ invalid: maxPartyError, 'is-default': maxParty === null }" :aria-label="$t('components.restaurant.room.maxParty')"
-                                      @input="e => maxParty = settingOf(e.target.value)"> {{ $t("components.restaurant.room.people") }}
-            <span v-if="maxParty === null" class="pill default-tag">{{ $t("components.restaurant.room.defaultTag") }}</span></span>
-          <small>{{ $t("components.restaurant.room.defaultPeople", { n: rules.maxPartyDefault }) }}. {{ $t("components.restaurant.room.maxPartyHint") }}</small>
-        </label>
-      </section>
 
       <section class="cfg-block">
         <h2>{{ $t("components.restaurant.room.generator") }}</h2>
@@ -74,14 +53,8 @@
               <textarea v-model="z.note" :placeholder="$t('components.restaurant.room.notePlaceholder')"></textarea>
               <small>{{ $t("components.restaurant.room.noteHint") }}</small></label>
             <div class="field"><span>{{ $t("components.restaurant.room.closures") }}</span>
-              <div v-for="(c, ci) in z.closures" :key="ci" class="closure">{{ shortDate(c.from) }} - {{ shortDate(c.to) }}
-                <button class="x-btn" :aria-label="$t('components.restaurant.room.closureDelete')" @click="z.closures.splice(ci, 1)">✕</button></div>
-              <small v-if="!z.closures.length">{{ $t("components.restaurant.room.alwaysOpen") }}</small>
-              <div class="closure-add">
-                <input v-model="closeForm(z.id).from" type="date" :aria-label="$t('components.restaurant.room.closedFrom')">
-                <input v-model="closeForm(z.id).to" type="date" :aria-label="$t('components.restaurant.room.closedTo')">
-                <button class="btn ghost small" @click="addClosure(z)">{{ $t("components.restaurant.room.closureAdd") }}</button>
-              </div>
+              <small>{{ zoneClosuresText(z) }}</small>
+              <button class="linkish" @click="$emit('go-rules')">{{ $t("components.restaurant.room.closuresWhere") }}</button>
             </div>
           </div>
           <table class="tt"><thead><tr>
@@ -187,7 +160,7 @@ import { useConfirm } from "primevue/useconfirm";
 import RestaurantApi from "@/utils/Restaurant";
 import {
   clone, diffLayout, draftProblems, addTables, genNames, minFor, newTableId, zoneIdFor, joinRange, seatLabel, tableById,
-  minFreeLimits, addDays, fmt
+  addDays, fmt
 } from "@/utils/RestaurantModel";
 import { shortDate } from "@/components/widgets/restaurant/format";
 import RestaurantDayNav from "@/components/widgets/restaurant/RestaurantDayNav.vue";
@@ -196,8 +169,9 @@ import { layoutMessage } from "@/components/widgets/restaurant/layoutMessages";
 /**
  * "Sala e tavoli": the whole room in one form, saved as one layout at the revision read. Nothing reaches the
  * assistant until "Salva modifiche"; until then the summary lists every pending change and "Annulla
- * modifiche" throws them away. The minimum free time is edited here too, but it belongs to the skill's
- * configuration: it is written there, with that configuration's own revision, by a second request.
+ * modifiche" throws them away. The settings of the restaurant (hours, table times, the minimum free time, the
+ * closures) are edited in "Orari e regole", and the assistant's (the largest party it books) in the skill form:
+ * a warning about one of those leads there instead of to a field of this form.
  *
  * The form says early what it can (an empty name, a join across zones); the server judges the layout on
  * the preview and on the save, and only it knows which tables still have bookings: its refusals are said
@@ -212,20 +186,18 @@ export default {
     user: { type: Object, required: true },
     businessId: { type: String, required: true },
     layout: { type: Object, required: true },
-    instance: { type: Object, required: true },
     rules: { type: Object, required: true },
+    /** Where the skill form is, for a warning about a setting it owns; null when the page does not know. */
+    skillsLink: { type: Object, default: null },
     today: { type: String, required: true },
     bookingsOn: { type: Function, required: true },
   },
-  emits: ["saved", "instance-saved", "toast"],
+  emits: ["saved", "toast", "go-rules"],
   data() {
     return {
       draft: clone(this.layout),
       // null: the setting is not stored and StarChat uses the manifest's default; emptying the field goes back to it
-      minFree: this.rules.minFreeSet ? this.rules.minFreeMinutes : null,
-      maxParty: this.rules.maxPartySet ? this.rules.maxPartySize : null,
       gen: { n: 4, size: 2, zone: this.layout.zones.length ? this.layout.zones[0].id : null },
-      closeForms: {},
       joinPick: [],
       joinEdit: null,
       serverProblems: [],
@@ -235,53 +207,11 @@ export default {
     };
   },
   computed: {
-    limits() {
-      return minFreeLimits(this.rules);
-    },
-    storedMinFree() {
-      return this.rules.minFreeSet ? this.rules.minFreeMinutes : null;
-    },
-    storedMaxParty() {
-      return this.rules.maxPartySet ? this.rules.maxPartySize : null;
-    },
-    minFreeError() {
-      const n = this.minFree;
-      if (n === null) return false;
-      return !(Number.isInteger(n) && n >= this.limits.min && n <= this.limits.max);
-    },
-    minFreeChanged() {
-      return this.minFree !== this.storedMinFree;
-    },
-    partyLimits() {
-      return this.rules.maxPartyRange;
-    },
-    maxPartyError() {
-      const n = this.maxParty;
-      if (n === null) return false;
-      return !(Number.isInteger(n) && n >= this.partyLimits.min && n <= this.partyLimits.max);
-    },
-    maxPartyChanged() {
-      return this.maxParty !== this.storedMaxParty;
-    },
-    /** What the skill instance is written with: the settings of this page that live there, as strings. */
-    instanceChanges() {
-      const out = {};
-      // null leaves the setting out (Restaurant.saveInstance): unset, so StarChat uses the manifest's default
-      if (this.minFreeChanged) out.minFreeMinutes = this.minFree === null ? null : String(this.minFree);
-      if (this.maxPartyChanged) out.maxPartySize = this.maxParty === null ? null : String(this.maxParty);
-      return out;
-    },
     layoutChanges() {
       return diffLayout(this.layout, this.draft);
     },
     changes() {
-      const out = this.layoutChanges.map(c => this.$t(`components.restaurant.diff.${c.code}`, c.args));
-      const shown = (v, d) => (v === null ? this.$t("components.restaurant.room.byDefault", { n: d }) : v);
-      if (this.minFreeChanged) out.push(this.$t("components.restaurant.diff.minFree",
-        { from: shown(this.storedMinFree, this.rules.minFreeDefault), to: shown(this.minFree, this.rules.minFreeDefault) }));
-      if (this.maxPartyChanged) out.push(this.$t("components.restaurant.diff.maxParty",
-        { from: shown(this.storedMaxParty, this.rules.maxPartyDefault), to: shown(this.maxParty, this.rules.maxPartyDefault) }));
-      return out;
+      return this.layoutChanges.map(c => this.$t(`components.restaurant.diff.${c.code}`, c.args));
     },
     totalChanges() {
       return this.changes.length;
@@ -291,8 +221,6 @@ export default {
       this.draft.tables.forEach(t => {
         if (t.max > 30) out.push({ ref: `t-${t.id}-max`, text: this.$t("components.restaurant.check.tableTooBig", { name: t.name }) });
       });
-      if (this.minFreeError) out.push({ ref: "set-minfree", text: this.$t("components.restaurant.check.minFree", this.limits) });
-      if (this.maxPartyError) out.push({ ref: "set-maxparty", text: this.$t("components.restaurant.check.maxParty", this.partyLimits) });
       return out;
     },
     /** What the server's preview of the draft refuses: the problems the save would answer, said before it. */
@@ -340,12 +268,6 @@ export default {
       this.draft = clone(next);
       this.serverProblems = [];
     },
-    storedMinFree(n) {
-      this.minFree = n;
-    },
-    storedMaxParty(n) {
-      this.maxParty = n;
-    },
     draft: {
       deep: true,
       handler() {
@@ -387,18 +309,10 @@ export default {
       const el = ref && this.$el.querySelector(`[data-ref="${ref}"]`);
       if (el) { el.scrollIntoView({ block: "center", behavior: "smooth" }); el.focus(); }
     },
-    closeForm(zoneId) {
-      if (!this.closeForms[zoneId]) this.closeForms[zoneId] = { from: "", to: "" };
-      return this.closeForms[zoneId];
-    },
-    addClosure(z) {
-      const f = this.closeForm(z.id);
-      if (!f.from || !f.to) {
-        this.$emit("toast", this.$t("components.restaurant.room.closureDates"), null, true);
-        return;
-      }
-      z.closures.push({ from: f.from, to: f.to });
-      this.closeForms[z.id] = { from: "", to: "" };
+    /** A zone's own closures, read-only here: the one list of closures is in "Hours and rules". */
+    zoneClosuresText(z) {
+      if (!(z.closures || []).length) return this.$t("components.restaurant.room.alwaysOpen");
+      return z.closures.map(c => c.from === c.to ? this.shortDate(c.from) : `${this.shortDate(c.from)} - ${this.shortDate(c.to)}`).join(", ");
     },
     toggleIn(list, id, on) {
       const i = list.indexOf(id);
@@ -482,8 +396,6 @@ export default {
         defaultFocus: "reject",
         accept: () => {
           this.draft = clone(this.layout);
-          this.minFree = this.storedMinFree;
-          this.maxParty = this.storedMaxParty;
           this.joinPick = [];
           this.joinEdit = null;
           this.$emit("toast", this.$t("components.restaurant.room.discarded"));
@@ -497,17 +409,14 @@ export default {
     /** The fields a warning asks the owner to change: the largest party for a party larger than the room; the
      *  tables' minimum and the joins for a party size nothing takes. */
     goTo(w) {
-      if (w.code === "party_larger_than_room") return [{ ref: "set-maxparty", label: this.$t("components.restaurant.room.goMaxParty") }];
+      // The largest party the assistant books is the assistant's policy: edited in the skill form, never here.
+      if (w.code === "party_larger_than_room") return this.skillsLink ? [{ to: this.skillsLink, label: this.$t("components.restaurant.room.goMaxPartySkill") }] : [];
       if (w.code === "size_never_bookable") {
         const first = this.draft.tables[0];
         return (first ? [{ ref: `t-${first.id}-min`, label: this.$t("components.restaurant.room.goTableMin") }] : [])
           .concat([{ ref: "joins", label: this.$t("components.restaurant.room.goJoins") }]);
       }
       return [];
-    },
-    /** A setting as typed: empty is the default (null), anything else a number, checked as one. */
-    settingOf(text) {
-      return String(text).trim() === "" ? null : Number(text);
     },
     problemText(p) {
       return layoutMessage(p, { t: (k, a) => this.$t(k, a || {}), te: k => this.$te(k), whoOn: table => {
@@ -558,34 +467,21 @@ export default {
       if (this.allErrors.length || this.saving) return;
       this.saving = true;
       this.saveMessage = null;
-      const layoutCount = this.layoutChanges.length;
       try {
-        if (layoutCount) {
-          try {
-            await RestaurantApi.saveLayout(this.user, this.businessId, this.layout.revision, this.draft);
-          } catch (e) {
-            this.refused(e, "layout");
-            return;
-          }
+        try {
+          await RestaurantApi.saveLayout(this.user, this.businessId, this.layout.revision, this.draft);
+        } catch (e) {
+          this.refused(e, "layout");
+          return;
         }
-        if (Object.keys(this.instanceChanges).length) {
-          try {
-            await RestaurantApi.saveInstance(this.user, this.businessId, this.instance, this.instanceChanges);
-          } catch (e) {
-            this.refused(e, "minFree", layoutCount > 0);
-            if (layoutCount) this.$emit("saved");
-            return;
-          }
-          this.$emit("instance-saved");
-        }
-        if (layoutCount) this.$emit("saved");
+        this.$emit("saved");
         const zones = this.draft.zones.filter(z => this.draft.tables.some(t => t.zone === z.id && t.active)).map(z => z.name).join(", ");
         this.$emit("toast", this.$t("components.restaurant.room.savedToast", { n: this.totalChanges, zones }));
       } finally {
         this.saving = false;
       }
     },
-    refused(e, what, partly = false) {
+    refused(e, what) {
       const r = e.restaurant || {};
       const diagnostics = (r.body && Array.isArray(r.body.diagnostics)) ? r.body.diagnostics : [];
       if (what === "layout" && r.status === 422 && diagnostics.length) {
@@ -594,14 +490,10 @@ export default {
       }
       let key = "components.restaurant.answer.error";
       if (r.status === 409 && r.code === "stale") key = "components.restaurant.room.stale";
-      else if (r.status === 409 && what === "minFree") key = "components.restaurant.room.configChanged";
       else if (r.status === 409 && r.code === "not_configured") key = "components.restaurant.room.needsHours";
-      else if (r.status === 422 && what === "minFree") key = "components.restaurant.room.settingsRefused";
       else if (r.code) key = `components.restaurant.answer.${r.code}`;
-      this.saveMessage = { ok: false, text: (partly ? this.$t("components.restaurant.room.layoutSavedOnly") + " " : "") +
-        (this.$te(key) ? this.$t(key) : this.$t("components.restaurant.answer.error")) };
+      this.saveMessage = { ok: false, text: this.$te(key) ? this.$t(key) : this.$t("components.restaurant.answer.error") };
       if (r.code === "stale") this.$emit("saved");
-      if (what === "minFree" && r.status === 409) this.$emit("instance-saved");
     },
   },
 };

@@ -54,7 +54,8 @@ describe('the rules the page draws with', () => {
   it('tells a stored setting from one left to its default', () => {
     expect(rulesOf({ minFreeMinutes: '90' }, MANIFEST)).toMatchObject({ minFreeSet: true, minFreeMinutes: 90, minFreeDefault: 120 })
     expect(rulesOf({ minFreeMinutes: '' }, MANIFEST)).toMatchObject({ minFreeSet: false, minFreeMinutes: 120 })
-    expect(rulesOf({}, MANIFEST)).toMatchObject({ maxPartySet: false, maxPartySize: 8, maxPartyDefault: 8 })
+    // the largest party is read (the page warns with it), never edited here: it is the assistant's, in the skill form
+    expect(rulesOf({}, MANIFEST)).toMatchObject({ maxPartySize: 8 })
   })
 
   it('knows whether the instance has any arrival window: without one the first room cannot be saved', () => {
@@ -84,7 +85,6 @@ describe('the rules the page draws with', () => {
     expect(rulesOf({}, manifest).minFreeMinutes).toBe(120)
     expect(rulesOf({ tableMinutesLarger: '100' }, manifest).minFreeMinutes).toBe(100)
     expect(rulesOf({ minFreeMinutes: '45' }, manifest).minFreeMinutes).toBe(45)
-    expect(rulesOf({}, manifest).maxPartyRange).toEqual({ min: 1, max: 100 })
     expect(rulesOf({}, { ...MANIFEST, maxPartySize: { default: 10 } }).maxPartySize).toBe(10)
   })
 
@@ -302,7 +302,7 @@ describe('the restaurant instance StarChat serves', () => {
 
   it('is read under either of its names, in the during phase only', () => {
     expect(instanceIn(read([{ skill: 'restaurant_booking', instanceId: 'r1', params: { a: '1' } }])))
-      .toEqual({ phase: 'during', skill: 'restaurant_booking', instanceId: 'r1', params: { a: '1' }, revision: 'rev-d' })
+      .toEqual({ phase: 'during', skill: 'restaurant_booking', instanceId: 'r1', params: { a: '1' }, revision: 'rev-d', allergies: null })
     expect(instanceIn(read([{ skill: 'skill_restaurant_booking', instanceId: 'r2' }])).instanceId).toBe('r2')
     // Seen failing on 2026-10-12 with the read walking every phase (as the page did): an instance in `final` was taken.
     expect(instanceIn(read([], { final: [{ skill: 'skill_restaurant_booking', instanceId: 'r3' }] }))).toBeNull()

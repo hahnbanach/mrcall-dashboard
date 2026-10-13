@@ -18,7 +18,17 @@
     <div v-if="booking.allergies" class="callout red"><b>{{ $t("components.restaurant.allergies") }}:</b> {{ booking.allergies }}</div>
     <div v-if="booking.notes" class="callout amber">{{ booking.notes }}</div>
     <div v-if="booking.pastNoShows" class="callout amber">{{ $t("components.restaurant.panel.pastNoShows", { n: booking.pastNoShows }, booking.pastNoShows) }}</div>
-    <div v-if="booking.overbooked" class="callout amber">{{ $t("components.restaurant.panel.overbooked") }}</div>
+    <div v-if="booking.overbooked" class="callout amber">{{ $t("components.restaurant.panel.overbooked") }}<template v-if="booking.intendedTables.length">
+      {{ $t("components.restaurant.list.intended", { tables: intended }) }}</template></div>
+    <div v-if="onClosedDay" class="callout red closed-day-note">{{ $t("components.restaurant.panel.closedDay") }}</div>
+    <!-- the caller asked to change this booking by phone and the assistant could not (R8): what they asked, and the two actions -->
+    <div v-if="changeRequest" class="callout amber change-request">
+      <b>{{ $t("components.restaurant.change.asked") }}:</b> {{ fmt(changeRequest.start) }} · {{ $t("components.restaurant.people", { n: changeRequest.party }) }}<template v-if="changeRequest.notes"> · {{ changeRequest.notes }}</template>
+      <div class="tb-row">
+        <button class="btn small make-change" :disabled="busy" @click="$emit('make-change', changeRequest)">{{ $t("components.restaurant.change.make") }}</button>
+        <button class="btn ghost small close-request" :disabled="busy" @click="$emit('close-request', changeRequest)">{{ $t("components.restaurant.change.close") }}</button>
+      </div>
+    </div>
     <dl class="kv">
       <dt>{{ $t("components.restaurant.panel.table") }}</dt>
       <dd>{{ seats }}<template v-if="zoneName"> · {{ zoneName }}</template><template v-if="booking.pinned"> · {{ $t("components.restaurant.panel.pinnedShort") }}</template></dd>
@@ -61,14 +71,21 @@ export default {
     layout: { type: Object, required: true },
     date: { type: String, required: true },
     busy: { type: Boolean, default: false },
+    /** The open call-back request about a change of this booking (R8), or null. */
+    changeRequest: { type: Object, default: null },
+    /** Whether the booking falls on a day or service closed after it was taken: staff call the guest. */
+    onClosedDay: { type: Boolean, default: false },
   },
-  emits: ["close", "state", "pin", "no-show", "cancel", "move", "call", "reinstate"],
+  emits: ["close", "state", "pin", "no-show", "cancel", "move", "call", "reinstate", "make-change", "close-request"],
   computed: {
     closed() {
       return this.booking.state === "cancelled" || this.booking.state === "noshow";
     },
     longDate() {
       return longDate(this.date, this.$i18n.locale);
+    },
+    intended() {
+      return seatLabel(this.layout, this.booking.intendedTables || []);
     },
     seats() {
       return this.booking.tables.length ? seatLabel(this.layout, this.booking.tables) : this.$t("components.restaurant.noTable");

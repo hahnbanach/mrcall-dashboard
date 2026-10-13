@@ -8,6 +8,10 @@
     <Message v-else-if="noSkill" severity="info" :closable="false" class="restaurant-unavailable">
       {{ $t("components.restaurant.noSkill") }}
     </Message>
+    <Message v-else-if="pageOff" severity="info" :closable="false" class="restaurant-page-off">
+      {{ $t("components.restaurant.pageOff") }}
+      <router-link v-if="skillsLink" class="ml-2" :to="skillsLink">{{ $t("components.restaurant.rules.toSkill") }}</router-link>
+    </Message>
     <Message v-else-if="loadError" severity="error" :closable="false">{{ $t("components.restaurant.loadError") }}</Message>
     <Message v-else-if="manifestMissing" severity="warn" :closable="false" class="restaurant-manifest-missing">
       {{ $t("components.restaurant.manifestMissing") }}
@@ -23,6 +27,7 @@
           <div class="tabs" role="tablist" :aria-label="$t('components.restaurant.sections')">
             <button role="tab" class="tab" :aria-selected="tab === 'day'" @click="setTab('day')">{{ $t("components.restaurant.tabDay") }}</button>
             <button role="tab" class="tab" :aria-selected="tab === 'room'" @click="setTab('room')">{{ $t("components.restaurant.tabRoom") }}</button>
+            <button role="tab" class="tab" :aria-selected="tab === 'rules'" @click="setTab('rules')">{{ $t("components.restaurant.tabRules") }}</button>
           </div>
           <div class="head-tools">
             <div class="search">
@@ -44,9 +49,13 @@
           </div>
         </div>
 
-        <RestaurantRoomEditor v-if="tab === 'room'" :user="user" :business-id="businessId" :layout="layout" :instance="instance"
-                              :rules="rules" :today="today" :bookings-on="bookingsOnTable"
-                              @saved="onRoomSaved" @instance-saved="loadInstance" @toast="showToast" />
+        <RestaurantRoomEditor v-if="tab === 'room'" :user="user" :business-id="businessId" :layout="layout"
+                              :rules="rules" :today="today" :bookings-on="bookingsOnTable" :skills-link="skillsLink"
+                              @saved="onRoomSaved" @toast="showToast" @go-rules="setTab('rules')" />
+
+        <RestaurantRulesEditor v-else-if="tab === 'rules'" :user="user" :business-id="businessId" :layout="layout" :instance="instance"
+                               :rules="rules" :manifest="manifest" :skills-link="skillsLink"
+                               @saved="onRoomSaved" @instance-saved="loadInstance" @toast="showToast" />
 
         <template v-else>
           <RestaurantStrip :cells="stripCells" :mode="stripMode" :title="stripTitle" @go-day="setDate" @shift="shiftStrip"
@@ -57,7 +66,8 @@
                              @go-day="setDate" @set-service="setService" @set-time="setTime" @find="setFind"
                              @open="openBooking" @tile-free="tileFree" @fit-book="fitBook" @new-booking="openNew(null, time, find || 2)"
                              @timeline-new="timelineNew" @state="setState" @move-cancel="moving = null" @move-to="moveTo" @drop="dropOn"
-                             @accept="accept" @decline="decline" @call="openCalls" @no-show="noShow" />
+                             :closures="day ? day.closures : []" :zones-closed="day ? day.zonesClosed : []"
+                             @accept="askAccept" @decline="decline" @call="openCalls" @no-show="noShow" @make-change="makeChange" />
         </template>
       </template>
     </template>
@@ -68,11 +78,14 @@
       <div class="scrim" @click="closePanel"></div>
       <aside class="panel" :aria-label="$t('components.restaurant.panelLabel')" @keydown.esc="closePanel">
         <RestaurantBookingPanel v-if="panel.type === 'booking' && panelBooking" :booking="panelBooking" :layout="layout" :date="date"
-                                :busy="busy" @close="closePanel" @state="setState" @pin="togglePin" @no-show="noShow" @cancel="cancel" @reinstate="reinstate"
-                                @move="startMove" @call="openCalls" />
+                                :busy="busy" :change-request="changeRequestFor(panelBooking)" :on-closed-day="isOnClosedDay(panelBooking)"
+                                @close="closePanel" @state="setState" @pin="togglePin" @no-show="noShow" @cancel="cancel" @reinstate="reinstate"
+                                @move="startMove" @call="openCalls" @make-change="makeChange" @close-request="decline" />
         <RestaurantNewPanel v-else-if="panel.type === 'new'" :key="panel.key" :draft="panel" :message="panel.message" :layout="layout"
                             :date="date" :service="service" :win="win" :rules="rules" :list="list" :is-today="date === today" :busy="busy"
                             :find-answer="newFit" @close="closePanel" @save="saveNew" @walk-in="walkIn" @changed="askNewFit" />
+        <RestaurantAcceptPanel v-else-if="panel.type === 'accept' && panelRequest" :key="panel.key" :request="panelRequest" :missing="panel.missing"
+                               :busy="busy" @close="closePanel" @accept="acceptWith" />
       </aside>
     </template>
 
@@ -89,13 +102,13 @@
 
 <script>
 import { useConfirm } from "primevue/useconfirm";
-import RestaurantApi, { isMissingRoute } from "@/utils/Restaurant";
+import RestaurantApi, { isMissingRoute, isPageOff, pageOffIn } from "@/utils/Restaurant";
 import DeferredCommit from "@/utils/DeferredCommit";
 import {
-  rulesOf, serviceWindow, serviceAt, defaultTime, arrivalTimes, keyOf, addDays, dateOf, fmt, toMin, minuteOfDay,
+  rulesOf, missingRequired, onClosedDay, serviceWindow, serviceAt, defaultTime, arrivalTimes, keyOf, addDays, dateOf, fmt, toMin, minuteOfDay,
   stripStatus, seatLabel, dropTargets, tableById, freeFrom, live, occupiedTables, callsOf, SERVICES, GUEST_STATES
 } from "@/utils/RestaurantModel";
-import { shortDate, monthTitle, refusalKey, OVERRIDABLE } from "@/components/widgets/restaurant/format";
+import { shortDate, monthTitle, refusalKey, missingFieldsOf, OVERRIDABLE } from "@/components/widgets/restaurant/format";
 import RestaurantStrip from "@/components/widgets/restaurant/RestaurantStrip.vue";
 import RestaurantDayView from "@/components/widgets/restaurant/RestaurantDayView.vue";
 import RestaurantBookingPanel from "@/components/widgets/restaurant/RestaurantBookingPanel.vue";
@@ -103,6 +116,8 @@ import RestaurantNewPanel from "@/components/widgets/restaurant/RestaurantNewPan
 import RestaurantRoomEditor from "@/components/widgets/restaurant/RestaurantRoomEditor.vue";
 import RestaurantWizard from "@/components/widgets/restaurant/RestaurantWizard.vue";
 import RestaurantCallModal from "@/components/widgets/restaurant/RestaurantCallModal.vue";
+import RestaurantRulesEditor from "@/components/widgets/restaurant/RestaurantRulesEditor.vue";
+import RestaurantAcceptPanel from "@/components/widgets/restaurant/RestaurantAcceptPanel.vue";
 
 /** How long an Undo is offered, and a held decline waits before it is sent. */
 const UNDO_MS = 8000;
@@ -126,13 +141,17 @@ const SEARCH_LIMIT = 20;
  * nothing.
  */
 export default {
-  components: { RestaurantStrip, RestaurantDayView, RestaurantBookingPanel, RestaurantNewPanel, RestaurantRoomEditor, RestaurantWizard, RestaurantCallModal },
+  components: { RestaurantStrip, RestaurantDayView, RestaurantBookingPanel, RestaurantNewPanel, RestaurantRoomEditor, RestaurantWizard,
+    RestaurantCallModal, RestaurantRulesEditor, RestaurantAcceptPanel },
   setup() {
     return { confirm: useConfirm() };
   },
   props: {
     businessId: { type: String, required: true },
     user: { type: Object, required: true },
+    /** Where the skill form is (the configuration section that holds the skills), for what this page does not edit:
+     *  the assistant's policy, the page switch. Null when the page cannot say. */
+    skillsLink: { type: Object, default: null },
   },
   data() {
     const today = keyOf(new Date());
@@ -141,10 +160,11 @@ export default {
       ready: false,
       unavailable: false,
       noSkill: false,
+      pageOff: false,
       loadError: false,
       busy: false,
       instance: null,
-      tab: this.$route && this.$route.query && this.$route.query.tab === "room" ? "room" : "day",
+      tab: this.$route && this.$route.query && ["room", "rules"].includes(this.$route.query.tab) ? this.$route.query.tab : "day",
       date: today,
       service: "dinner",
       time: 0,
@@ -195,6 +215,9 @@ export default {
     },
     panelBooking() {
       return this.panel && this.panel.type === "booking" ? this.list.find(b => b.id === this.panel.id) || null : null;
+    },
+    panelRequest() {
+      return this.panel && this.panel.type === "accept" ? this.list.find(b => b.id === this.panel.id) || null : null;
     },
     stripDays() {
       if (this.stripMode === "14") return Array.from({ length: 14 }, (_, i) => addDays(this.stripStart, i));
@@ -252,7 +275,7 @@ export default {
       this.loadError = false;
       try {
         await this.loadInstance();
-        if (this.noSkill) return;
+        if (this.noSkill || this.pageOff) return;
         if (!this.manifest) { this.manifestMissing = true; return; }
         this.manifestMissing = false;
         this.service = serviceAt(this.rules, this.date, minuteOfDay(new Date()));
@@ -283,6 +306,8 @@ export default {
       this.instance = instance;
       // A business that runs no restaurant skill has no book: the page says so instead of offering one.
       this.noSkill = !this.instance;
+      // The skill's page switch off (R8): the staff routes answer not_configured, and the page says where to turn it on.
+      this.pageOff = !!this.instance && pageOffIn(this.instance.params, this.manifest);
     },
     async loadDay(date) {
       try {
@@ -291,13 +316,15 @@ export default {
         return day;
       } catch (e) {
         if (isMissingRoute(e)) this.unavailable = true;
+        else if (isPageOff(e)) this.pageOff = true;
         else throw e;
         return null;
       }
     },
     /** The period strip, read a month at a time at most, from today to the horizon. */
     async loadPeriod() {
-      const horizon = addDays(this.today, this.rules.daysAhead);
+      // The book's horizon (R8), staff's: how far ahead the page opens; the assistant's `daysAhead` is shorter or equal.
+      const horizon = addDays(this.today, this.rules.horizonDays);
       const from = this.stripDays[0] < this.today ? this.today : this.stripDays[0];
       const last = this.stripDays[this.stripDays.length - 1];
       const to = last > horizon ? horizon : last;
@@ -393,7 +420,7 @@ export default {
       try {
         const answer = await RestaurantApi.suggestions(this.user, this.businessId, date, fmt(time), party);
         const fits = answer.fits.map(f => ({ ...f, joined: f.ids.length > 1, label: seatLabel(this.layout, f.ids) }));
-        return { fits, refusal: answer.refusal, later: fits.length ? [] : answer.later };
+        return { fits, refusal: answer.refusal, later: fits.length ? [] : answer.later, staff: answer.staff };
       } catch (e) {
         console.warn("Restaurant finder not answered:", e.restaurant ? e.restaurant.code || e.restaurant.status : e);
         return { error: true };
@@ -490,10 +517,21 @@ export default {
     refusalOf(e) {
       const body = (e.restaurant && e.restaurant.body) || {};
       const code = e.restaurant ? e.restaurant.code : null;
+      const missing = missingFieldsOf(e);
       return {
-        code, text: this.$t(refusalKey(code)), overridable: OVERRIDABLE.includes(code),
+        code, missing,
+        // A missing-fields refusal names each field from the server's `values` (R8), in the owner's words.
+        text: code === "missing_fields" && missing.length
+          ? this.$t("components.restaurant.answer.missingFields", { fields: missing.map(f => this.$t(`components.restaurant.ask.field.${f}`)).join(", ") })
+          : this.$t(refusalKey(code)),
+        overridable: OVERRIDABLE.includes(code),
         alternatives: (body.alternatives || []).filter(a => a.date === this.date).map(a => toMin(a.time)).filter(t => t !== null),
       };
+    },
+    /** What staff were warned of on a write the book accepted (R8), as one sentence; empty without warnings. */
+    warningsText(answer) {
+      const ws = (answer && answer.warnings) || [];
+      return ws.length ? " " + this.$t("components.restaurant.warning.saidOnSave", { list: ws.map(w => this.$t(`components.restaurant.warning.${w.code || w}`)).join("; ") }) : "";
     },
     /** A toast; with `undo` (a request to the server) or `localUndo` (a held write dropped) it offers Undo. */
     /** A toast; with `undo` (a request to the server) or `localUndo` (a held write dropped) it offers Undo. A
@@ -535,8 +573,8 @@ export default {
      * when the Undo window ends, or at once when the page is left. The commit's timer is the only clock: the toast
      * stays until the commit is sent, and an Undo that comes after the send says nothing was undone.
      */
-    defer(b, kind, run, text) {
-      this.deferred = Object.assign({}, this.deferred, { [b.id]: { kind, b } });
+    defer(b, kind, run, text, guest = null) {
+      this.deferred = Object.assign({}, this.deferred, { [b.id]: { kind, b, guest } });
       if (this.panel && this.panel.id === b.id) this.panel = null;
       this.commits.schedule(b.id, run, UNDO_MS);
       this.showToast(text, null, false, () => {
@@ -551,10 +589,68 @@ export default {
     },
     /** Accepts a request: the server seats it, once the Undo window is over. Refused for room, a person may accept
      *  it anyway, beyond what the assistant sells, after saying so; that accept is held back the same way. */
-    accept(b, overbook = false) {
+    accept(b, overbook = false, guest = null) {
       this.defer(b, overbook ? "acceptAnyway" : "accept",
-        () => RestaurantApi.accept(this.user, this.businessId, b.id, { expectedVersion: b.version, overbook: overbook || undefined }),
-        this.$t("components.restaurant.acceptedDone", { name: b.name }));
+        () => RestaurantApi.accept(this.user, this.businessId, b.id, Object.assign({ expectedVersion: b.version, overbook: overbook || undefined }, guest || {})),
+        this.$t("components.restaurant.acceptedDone", { name: (guest && guest.name) || b.name }), guest);
+    },
+    /**
+     * "Accept" on a request: one that lacks a field this restaurant requires (a request may come without them) asks
+     * for it first, and the accept carries it in the same call (R8); one that has them is accepted as before.
+     * Accepting needs no zone: the request already has one.
+     */
+    askAccept(b) {
+      const missing = missingRequired(this.rules.requiredFields, b, ["name", "phone", "allergies", "notes"]);
+      if (missing.length) {
+        this.panel = { type: "accept", id: b.id, key: Date.now(), missing };
+        return;
+      }
+      this.accept(b);
+    },
+    acceptWith({ request, guest }) {
+      this.panel = null;
+      this.accept(request, false, guest);
+    },
+    /** The call-back request about a change of a booking (R8), when the day read holds one naming it. */
+    changeRequestFor(b) {
+      return b ? this.list.find(r => r.state === "requested" && r.about === b.id) || null : null;
+    },
+    isOnClosedDay(b) {
+      return !!(b && this.day && ["booked", "arrived", "seated"].includes(b.state) && onClosedDay(b, this.day.closures, this.day.zonesClosed));
+    },
+    /**
+     * "Make the change" on a call-back request about a booking: the booking is moved to what the caller asked
+     * (day, time, people) at the version read, then the request is closed. Accepting such a request would make a
+     * second booking, so the server refuses it (`linked_request`) and the page never offers it. The booking named is
+     * looked for in the day read, then by the server's search on the guest's name; not found, the page says so.
+     */
+    async makeChange(request) {
+      if (this.busy || !request || !request.about) return;
+      const original = this.list.find(b => b.id === request.about) || await this.findBooking(request.about, request.name);
+      if (!original) { this.showToast(this.$t("components.restaurant.change.notFound"), null, true); return; }
+      const back = { date: original.date || this.date, time: fmt(original.start), covers: original.party };
+      const ok = await this.act(async () => {
+        const moved = await RestaurantApi.change(this.user, this.businessId, original.id, { expectedVersion: original.version,
+          date: request.date || this.date, time: fmt(request.start), covers: request.party });
+        await RestaurantApi.cancel(this.user, this.businessId, request.id, request.version);
+        return moved;
+      }, {
+        done: answer => this.$t("components.restaurant.change.done", { name: original.name || request.name, day: this.shortDate(request.date || this.date),
+          time: fmt(request.start), people: this.$t("components.restaurant.people", { n: request.party }) }) + this.warningsText(answer),
+        undo: answer => RestaurantApi.change(this.user, this.businessId, original.id, Object.assign({ expectedVersion: answer.version }, back)),
+      });
+      if (ok) this.panel = null;
+    },
+    async findBooking(id, name) {
+      if (!name || name.trim().length < 2) return null;
+      try {
+        const found = await RestaurantApi.search(this.user, this.businessId, name.trim().slice(0, 64), SEARCH_LIMIT);
+        const hit = found.results.find(r => r.b.id === id);
+        return hit ? Object.assign({}, hit.b, { date: hit.date }) : null;
+      } catch (e) {
+        console.warn("Restaurant search not answered:", e.restaurant ? e.restaurant.code || e.restaurant.status : e);
+        return null;
+      }
     },
     forgetDeferred(id) {
       const next = Object.assign({}, this.deferred);
@@ -580,6 +676,12 @@ export default {
       this.forgetDeferred(id);
       if (!error) return;
       const refusal = this.refusalOf(error);
+      // Accepted without a field this restaurant requires: the fields named by the server are asked, and the accept
+      // goes again with them.
+      if (held && refusal.code === "missing_fields" && refusal.missing.length) {
+        const again = this.list.find(r => r.id === id);
+        if (again) { this.panel = { type: "accept", id, key: Date.now(), missing: refusal.missing }; return; }
+      }
       if (held && held.kind === "accept" && refusal.overridable) {
         const again = this.list.find(r => r.id === id);
         if (again) this.confirm.require({
@@ -690,6 +792,7 @@ export default {
       return {
         date: this.date, time: fmt(p.start), covers: p.party, name: p.name.trim() || undefined, phone: p.phone.trim() || undefined,
         notes: p.notes.trim() || undefined, allergies: p.allergies.trim() || undefined, tableIds: p.tables || undefined,
+        zone: (!p.tables && p.zone) || undefined,
         overbook: overbook || undefined,
       };
     },
@@ -699,7 +802,8 @@ export default {
       const ok = await this.act(() => RestaurantApi.book(this.user, this.businessId, body), {
         inPanel: true,
         done: answer => this.$t("components.restaurant.bookedDone", { name: p.name.trim(), people: this.$t("components.restaurant.people", { n: p.party }),
-          day: this.shortDate(this.date), time: fmt(p.start), tables: answer && answer.tableNames && answer.tableNames.length ? answer.tableNames.join("+") : "" }),
+          day: this.shortDate(this.date), time: fmt(p.start), tables: answer && answer.tableNames && answer.tableNames.length ? answer.tableNames.join("+") : "" }) +
+          this.warningsText(answer),
         undo: answer => RestaurantApi.cancel(this.user, this.businessId, answer.id, answer.version),
       });
       if (ok) this.panel = null;

@@ -130,22 +130,72 @@ export function retiredAndEmpty(entry, field) {
     || String(value).trim() === '[]' || String(value).trim() === '{}';
 }
 
+/** The `x-audience` value of a field that only its skill's own page edits (StarChat R8). */
+export const PAGE_AUDIENCE = 'page';
+
 /**
  * Whether the person looking is meant to see this field. A manifest marks a technical field
  * `x-audience: platform` (carried down as `audience`): an admin sees it, an owner does not. It hides;
- * it does not protect: the server refuses no field by role. The one field marked so today, the
- * restaurant's `tables`, is one an owner does set, on the Bookings page, not as raw JSON here.
+ * it does not protect: the server refuses no field by role.
+ *
+ * `x-audience: page` is drawn by nobody here, admins included: the field has one editor, its skill's own
+ * page (the restaurant's hours, rules and "what we ask for every booking"), and a second editor in this form
+ * is the duplicate the owner asked to remove (brief, addendum 2026-10-12 (2)). `platform` could not be reused
+ * for it because an admin still sees a `platform` field. The card shows what those fields are and where they
+ * are edited instead (`pageFieldsOf`).
  */
 export function visibleTo(field, viewer) {
+  if (field.audience === PAGE_AUDIENCE) return false;
   return field.audience !== 'platform' || !!(viewer && viewer.admin);
 }
 
-/** Everything the card draws in its body: not the OAuth fields, not the two drawn by hand, not a
+/** The fields of a skill that only its page edits, in the manifest's order. */
+export function pageFieldsOf(skill) {
+  return fieldsOf(skill).filter(f => f.audience === PAGE_AUDIENCE);
+}
+
+/** The switch of a skill that has a page of its own: the page on or off. Declared by the manifest as an
+ *  ordinary boolean field named so; a skill without it has the one switch it always had, `enabled`. */
+export const PAGE_SWITCH_KEY = 'page';
+
+export function pageSwitchOf(skill) {
+  return fieldsOf(skill).find(f => f.key === PAGE_SWITCH_KEY && (f.type === 'boolean' || f.widget === 'boolean')) || null;
+}
+
+/** A boolean as the variables store it ("true", "false", a JSON boolean), or the field's default when the
+ *  instance stores nothing. */
+function booleanOf(entry, field) {
+  const raw = valueOf(entry, field.key);
+  const v = raw === '' || raw === undefined || raw === null ? field.default : raw;
+  return String(v === undefined || v === null ? '' : v).trim().toLowerCase() === 'true';
+}
+
+/** Whether the skill's page is on; true for a skill without a page switch, which has nothing to turn off. */
+export function isPageOn(skill, entry) {
+  const field = pageSwitchOf(skill);
+  return field ? booleanOf(entry, field) : true;
+}
+
+/**
+ * What one flick of the page switch writes. Off writes `enabled` off in the SAME edit, so the one save that
+ * follows carries both: StarChat refuses an instance with the assistant on and the page off
+ * (`assistant_without_page`) and does not switch the assistant off itself, so the editor must send both
+ * (plan R8r, "the coupled save"). On writes only the page: the assistant stays off until somebody turns it on.
+ */
+export function pageSwitchWrites(on) {
+  return on
+    ? [{ key: PAGE_SWITCH_KEY, value: 'true' }]
+    : [{ key: PAGE_SWITCH_KEY, value: 'false' }, { key: 'enabled', value: 'false' }];
+}
+
+/** Everything the card draws in its body: not the OAuth fields, not the two drawn by hand (nor the page
+ *  switch, drawn in the strip in place of `enabled`), not a
  *  retired one nobody filled, not one this phase or this state has no use for, not one meant for the
  *  platform's people when an owner is looking. */
 export function configurableFields(skill, entry, phase, viewer = { admin: false }) {
+  const pageSwitch = pageSwitchOf(skill);
   return fieldsOf(skill).filter(f =>
-    f.type !== 'oauth' && !HEADER_FIELD_KEYS.includes(f.key)
+    f.type !== 'oauth' && !HEADER_FIELD_KEYS.includes(f.key) && f !== pageSwitch
     && !retiredAndEmpty(entry, f)
     && visibleInPhase(f, phase) && visibleHere(skill, entry, f) && visibleTo(f, viewer));
 }

@@ -156,6 +156,22 @@
         "summary": "{zones} areas, {tables} active tables. They are edited on the restaurant page.",
         "open": "Open Room and tables",
         "unknown": "The room could not be read now; it is edited on the restaurant page."
+      },
+      "page": {
+        "pageOn": "Page on",
+        "pageOff": "Page off",
+        "assistantOn": "Assistant books",
+        "assistantOff": "Assistant off",
+        "assistantSwitch": "The assistant takes bookings",
+        "assistantHint": "Off: the page and the staff keep working, the assistant does not book.",
+        "assistantNeedsPage": "Turn the page on first: the assistant never books into a book nobody sees.",
+        "summaryTitle": "Set in the restaurant page",
+        "open": "Open the restaurant page",
+        "daysAheadNote": "At most the book's horizon ({n} days), set in the restaurant page: above it the assistant books up to the horizon."
+      },
+      "code": {
+        "assistant_without_page": "The assistant cannot take bookings while the restaurant page is off: switch the assistant off, or the page on.",
+        "allergies_required_unavailable": "Allergies cannot be made required here yet: asking every caller about them waits for the legal point to be settled."
       }
     },
     "templatedVariable": {
@@ -1229,7 +1245,12 @@
         "scope_missing": "This access does not allow it.",
         "error": "Something went wrong: try again.",
         "not_reversible": "This booking can no longer be reinstated.",
-        "table_taken": "Its tables are taken."
+        "table_taken": "Its tables are taken.",
+        "missingFields": "Every booking here needs: {fields}.",
+        "missing_fields": "A required field is missing.",
+        "zone_closed": "That area is closed then.",
+        "tables_unsuitable": "Those tables cannot take this party.",
+        "linked_request": "This request asks to change a booking: make the change or close it."
       },
       "strip": {
         "label": "Availability of the coming days",
@@ -1281,7 +1302,9 @@
         "floor": "Room",
         "timeline": "Timeline",
         "floorHint": "Green = free at {time} for at least {n} min; grey = frees up too briefly. Tap a green table to book it, a taken one to open it. Drag to move.",
-        "timelineHint": "One row per table. Tap an empty space to book at that time, the header to change the time."
+        "timelineHint": "One row per table. Tap an empty space to book at that time, the header to change the time.",
+        "toCall": "1 booking on this closed service: call the guest | {n} bookings on this closed service: call the guests",
+        "closedMark": "closed: call"
       },
       "know": {
         "label": "Good to know:",
@@ -1363,7 +1386,8 @@
           "left": "Left"
         },
         "empty": "No booking here.",
-        "gone": "Cancelled and no-shows ({n})"
+        "gone": "Cancelled and no-shows ({n})",
+        "intended": "meant for {tables}"
       },
       "panel": {
         "cancelled": "Booking cancelled.",
@@ -1389,7 +1413,8 @@
         "assistantSaid": "On the phone the assistant said \"a table for {n}\", never the table's name.",
         "pastNoShows": "1 past no-show with this number. | {n} past no-shows with this number.",
         "cancelledByCaller": "Cancelled by the guest on the phone: it cannot be reinstated, book them again.",
-        "reinstate": "Reinstate"
+        "reinstate": "Reinstate",
+        "closedDay": "This booking is on a day, service or area closed after it was taken: call the guest."
       },
       "newb": {
         "title": "New booking",
@@ -1416,18 +1441,16 @@
         "freeFixed": "Free: {tables} · {zone}. Tell the guest \"a table for {n}\", without the table's name.",
         "serverChooses": "The book chooses the table when you save.",
         "alternatives": "Free instead:",
-        "save": "Save · {day} {time} · {people}"
+        "save": "Save · {day} {time} · {people}",
+        "zone": "Area",
+        "anyZone": "Any area",
+        "fieldMissing": "{field}: required for every booking."
       },
       "room": {
         "intro": "The whole room is edited here. Every area, table and join is changed in its own field or removed with ✕. Changes reach the assistant only when you press Save changes; until then you can discard them all.",
         "pending": "1 change to save | {n} changes to save",
         "errors": "1 error to fix before saving | {n} errors to fix before saving",
         "warnings": "Good to know (you can save anyway)",
-        "settings": "Settings",
-        "minFree": "Minimum free time",
-        "minFreeLabel": "Minimum free time in minutes",
-        "minutes": "minutes",
-        "minFreeHint": "A table shows as free only if it stays free at least this long: with 120 minutes, a table free at 20:00 but booked at 21:00 does not show as free. From 1 to {max} minutes.",
         "generator": "Add tables in one go",
         "genAdd": "Add",
         "genHowMany": "How many tables",
@@ -1455,11 +1478,6 @@
         "noteHint": "The assistant uses it to describe the area to callers.",
         "closures": "Closures",
         "alwaysOpen": "Always open.",
-        "closedFrom": "Closed from",
-        "closedTo": "Closed until",
-        "closureAdd": "Add closure",
-        "closureDelete": "Remove closure",
-        "closureDates": "Closure: choose the \"from\" and \"until\" dates.",
         "tName": "Name",
         "tMin": "Min seats",
         "tMax": "Max seats",
@@ -1515,18 +1533,13 @@
         "stale": "The room changed in the meantime: it has been read again, make your changes once more.",
         "configChanged": "The configuration changed in the meantime: it has been read again, try once more.",
         "needsHours": "Set the opening hours first: without them the room cannot be saved.",
-        "layoutSavedOnly": "The room was saved, the settings were not.",
         "andOthers": "{names} and {n} more",
-        "maxParty": "Largest party the assistant books by itself",
-        "maxPartyHint": "Above this many people the assistant does not book: it records a request for you to confirm. Usually no more than the largest table or join.",
-        "goMaxParty": "Change the largest party",
         "goTableMin": "Change the tables' minimum",
         "goJoins": "Go to the joins",
-        "settingsRefused": "The server did not accept the settings: check the minimum free time and the largest party.",
-        "defaultMinutes": "Default: {n} minutes",
-        "defaultPeople": "Default: {n} people",
         "byDefault": "default ({n})",
-        "defaultTag": "default"
+        "defaultTag": "default",
+        "closuresWhere": "Closures are set in Hours and rules",
+        "goMaxPartySkill": "Change it in the skill settings"
       },
       "check": {
         "zoneNameMissing": "Area {n} · Name: required",
@@ -1542,9 +1555,7 @@
         "joinZones": "Join {label} · Tables: they are in different areas; a join stays in one area",
         "joinMin": "Join {label} · Min people: at least 1",
         "joinMax": "Join {label} · Max people: at least {min}",
-        "joinDuplicate": "Join {label}: there is already a join with the same tables",
-        "minFree": "Settings · Minimum free time: between {min} and {max} minutes",
-        "maxParty": "Settings · Largest party: between {min} and {max} people"
+        "joinDuplicate": "Join {label}: there is already a join with the same tables"
       },
       "layoutCode": {
         "table_has_holds": "A table you want to remove, switch off or move to another area has future bookings: move or cancel them first, then save.",
@@ -1588,9 +1599,7 @@
         "tableOff": "{name}: deactivated",
         "joinAdded": "Join added: {label} ({min}-{max})",
         "joinRemoved": "Join removed: {label}",
-        "joinRange": "Join {label}: people {from} → {to}",
-        "minFree": "Minimum free time: {from} → {to} min",
-        "maxParty": "Largest party the assistant books: {from} → {to} people"
+        "joinRange": "Join {label}: people {from} → {to}"
       },
       "calls": {
         "title": "The call",
@@ -1673,7 +1682,140 @@
         "bad_value": "\"{value}\" is not a valid value: check the highlighted field."
       },
       "manifestMissing": "The skill's settings could not be read, so the page cannot show its defaults.",
-      "retry": "Try again"
+      "retry": "Try again",
+      "pageOff": "The restaurant page is switched off in the skill settings: the bookings stay stored, and the export and erasure are still available. Turn it on to use the page.",
+      "tabRules": "Hours and rules",
+      "rules": {
+        "intro": "The restaurant's hours and rules, and what every booking must carry, whoever takes it. How the assistant books (the largest party, notice, days ahead, what it says) is set in the skill settings.",
+        "toSkill": "Open the skill settings",
+        "hours": "Opening hours",
+        "tables": "Tables and pace",
+        "reach": "How far ahead",
+        "field": {
+          "arrivalEveryMinutes": "Arrival every",
+          "tableMinutes2": "Table time, 1-2 people",
+          "tableMinutes4": "Table time, 3-4 people",
+          "tableMinutes6": "Table time, 5-6 people",
+          "tableMinutesLarger": "Table time, 7 or more",
+          "coversPerArrival": "Most guests arriving together",
+          "minFreeMinutes": "Minimum free time",
+          "horizonDays": "Book horizon",
+          "walkInMinutes": "Walk-in window"
+        },
+        "unit": {
+          "minutes": "minutes",
+          "people": "people",
+          "days": "days"
+        },
+        "defaultIs": {
+          "minutes": "Default: {n} minutes",
+          "people": "Default: {n} people",
+          "days": "Default: {n} days"
+        },
+        "hint": {
+          "arrivalEveryMinutes": "The step of arrival times: 15 gives 19:00, 19:15, 19:30. From {min} to {max}.",
+          "tableMinutes2": "How long the table stays taken. From {min} to {max}.",
+          "tableMinutes4": "How long the table stays taken. From {min} to {max}.",
+          "tableMinutes6": "How long the table stays taken. From {min} to {max}.",
+          "tableMinutesLarger": "How long the table stays taken. From {min} to {max}.",
+          "coversPerArrival": "How many guests the kitchen takes at one arrival time, all areas together; 0 means no limit.",
+          "minFreeMinutes": "A table shows as free only if it stays free at least this long. From {min} to {max}.",
+          "horizonDays": "How far ahead the book and this page open, for you and the staff. The assistant books up to its own days ahead, set in the skill, never beyond this. From {min} to {max}.",
+          "walkInMinutes": "A walk-in is a party arriving now: today, within this many minutes of the time. It may leave out name and phone; outside the window it is an ordinary booking. From {min} to {max}."
+        },
+        "changed": {
+          "hours": "{service}: arrival times changed",
+          "number": "{what}: {from} → {to}",
+          "ask": "{what}: {to}",
+          "closures": "Closures and special openings changed"
+        },
+        "outOfRange": "{what}: between {min} and {max}.",
+        "code": {
+          "allergies_required_unavailable": "Allergies cannot be made required here yet: asking every caller about them waits for the legal point to be settled. Choose optional or not asked.",
+          "pace_below_party": "The guests arriving together ({coversPerArrival}) are fewer than the largest party the assistant books ({maxPartySize}): such a party could never arrive.",
+          "days_ahead_beyond_horizon": "The assistant books {daysAhead} days ahead, beyond the book's horizon of {horizonDays} days: it books up to {horizonDays}.",
+          "out_of_range": "{what}: the value is outside the allowed range."
+        },
+        "refusedField": "{what}: the value was not accepted.",
+        "inSkill": "Change it in the skill settings",
+        "savedToast": "1 change saved | {n} changes saved"
+      },
+      "ask": {
+        "title": "What we ask for every booking",
+        "intro": "For every booking, whoever takes it (the assistant, you, the staff): what is required, what is asked only if the guest offers it, and what is not asked at all.",
+        "fixed": "Day, time and people",
+        "always": "Always required",
+        "field": {
+          "name": "Name",
+          "phone": "Phone",
+          "allergies": "Allergies",
+          "notes": "Notes",
+          "zone": "Area"
+        },
+        "rule": {
+          "required": "Required",
+          "optional": "Optional",
+          "not_asked": "Not asked"
+        },
+        "phoneNotAsked": "Phone not asked: no booking will require a number, from the assistant or from you. The caller's number is still kept when it is visible.",
+        "phoneCaller": "On the phone a visible caller's number counts as the phone: the assistant asks for one only when the number is hidden.",
+        "allergiesActsOptional": "Saved as required, but in this environment it acts as optional: asking every caller about allergies waits for the legal point to be settled.",
+        "allergiesUnavailable": "Required is not available in this environment yet: asking every caller about allergies waits for the legal point to be settled.",
+        "walkIn": "A walk-in arriving now may leave out name and phone."
+      },
+      "closures": {
+        "title": "Closures and special openings",
+        "intro": "One list for every closed day, closed service and special opening, for the whole restaurant or one area. Bookings already taken on a day you close stay: the page shows them, for you to call.",
+        "remove": "Remove {what}",
+        "fromCalendar": "from the calendar",
+        "none": "No closures.",
+        "whereCalendar": "Closures from the calendar are changed in the calendar connected in the skill settings: an event whose title starts with the closure word.",
+        "add": "Add",
+        "from": "From",
+        "to": "To (optional)",
+        "kind": "What",
+        "closed": "Closed",
+        "special": "Special opening",
+        "service": "Service",
+        "allDay": "whole day",
+        "where": "Where",
+        "wholeRestaurant": "whole restaurant",
+        "windows": "Arrival times",
+        "addButton": "Add to the list",
+        "neverRead": "The calendar has not been read yet.",
+        "readAt": "Calendar read on {when}.",
+        "lastFailed": "The last read, on {when}, failed: the closures shown are those of the read before.",
+        "describeOpen": "{days} · {service}: special opening {windows}",
+        "describeClosed": "{days} · {service} · {where}: closed",
+        "needFrom": "Choose the first day.",
+        "backwards": "The last day comes before the first.",
+        "badWindows": "A special opening needs a service and arrival times such as 19:30-21:30.",
+        "refused": "The closures were not saved: try again."
+      },
+      "warning": {
+        "outside_hours": "Outside the opening hours of the service.",
+        "off_grid": "Not on the arrival times (within the hours).",
+        "within_notice": "Sooner than the assistant's booking notice.",
+        "after_same_day_cutoff": "After the time the assistant stops taking same-day bookings.",
+        "beyond_days_ahead": "Further ahead than the assistant books.",
+        "above_max_party": "Larger than the assistant books by itself.",
+        "over_pace": "More guests arriving together than the kitchen's pace.",
+        "saidOnSave": "Noted: {list}"
+      },
+      "change": {
+        "notFound": "The booking this request is about was not found: open it and change it by hand.",
+        "done": "{name} moved to {day} {time}, {people}; the request is closed",
+        "asked": "Change asked by phone",
+        "make": "Make the change",
+        "close": "Close without changing",
+        "asks": "{name} asks to change {from} to {to}",
+        "otherDay": "a booking on another day"
+      },
+      "acceptFields": {
+        "title": "Accept {name}",
+        "intro": "To accept, this booking needs: {fields}.",
+        "accept": "Accept"
+      }
     }
   },
   "views": {

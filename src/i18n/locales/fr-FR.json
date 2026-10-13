@@ -155,6 +155,22 @@
         "summary": "{zones} zones, {tables} tables actives. Elles se modifient sur la page du restaurant.",
         "open": "Ouvrir Salle et tables",
         "unknown": "La salle n'a pas pu être lue pour l'instant ; elle se modifie sur la page du restaurant."
+      },
+      "page": {
+        "pageOn": "Page activée",
+        "pageOff": "Page désactivée",
+        "assistantOn": "L'assistant réserve",
+        "assistantOff": "Assistant désactivé",
+        "assistantSwitch": "L'assistant prend des réservations",
+        "assistantHint": "Désactivé : la page et l'équipe continuent, l'assistant ne réserve pas.",
+        "assistantNeedsPage": "Activez d'abord la page : l'assistant ne réserve jamais dans un cahier que personne ne voit.",
+        "summaryTitle": "Se règle dans la page du restaurant",
+        "open": "Ouvrir la page du restaurant",
+        "daysAheadNote": "Au plus l'horizon du cahier ({n} jours), réglé dans la page du restaurant : au-delà, l'assistant réserve jusqu'à l'horizon."
+      },
+      "code": {
+        "assistant_without_page": "L'assistant ne peut pas prendre de réservations tant que la page du restaurant est désactivée : désactivez l'assistant, ou activez la page.",
+        "allergies_required_unavailable": "Les allergies ne peuvent pas encore être obligatoires ici : les demander à chaque appelant attend que le point juridique soit réglé."
       }
     }
   },
@@ -1226,7 +1242,12 @@
         "scope_missing": "Cet accès ne le permet pas.",
         "error": "Une erreur s'est produite : réessayez.",
         "not_reversible": "Cette réservation ne peut plus être rétablie.",
-        "table_taken": "Ses tables sont occupées."
+        "table_taken": "Ses tables sont occupées.",
+        "missingFields": "Chaque réservation ici doit avoir : {fields}.",
+        "missing_fields": "Un champ obligatoire manque.",
+        "zone_closed": "Cette zone est fermée à ce moment-là.",
+        "tables_unsuitable": "Ces tables ne peuvent pas accueillir ce groupe.",
+        "linked_request": "Cette demande veut modifier une réservation : faites la modification ou fermez-la."
       },
       "strip": {
         "label": "Disponibilité des prochains jours",
@@ -1278,7 +1299,9 @@
         "floor": "Salle",
         "timeline": "Chronologie",
         "floorHint": "Vert = libre à {time} pendant au moins {n} min ; gris = se libère trop peu de temps. Touchez une table verte pour la réserver, une table occupée pour l'ouvrir. Faites glisser pour déplacer.",
-        "timelineHint": "Une ligne par table. Touchez un espace vide pour réserver à cette heure, l'en-tête pour changer l'heure."
+        "timelineHint": "Une ligne par table. Touchez un espace vide pour réserver à cette heure, l'en-tête pour changer l'heure.",
+        "toCall": "1 réservation sur ce service fermé : appelez le client | {n} réservations sur ce service fermé : appelez les clients",
+        "closedMark": "fermé : appeler"
       },
       "know": {
         "label": "À savoir :",
@@ -1360,7 +1383,8 @@
           "left": "Partis"
         },
         "empty": "Aucune réservation ici.",
-        "gone": "Annulées et no-shows ({n})"
+        "gone": "Annulées et no-shows ({n})",
+        "intended": "prévue pour {tables}"
       },
       "panel": {
         "cancelled": "Réservation annulée.",
@@ -1386,7 +1410,8 @@
         "assistantSaid": "Au téléphone, l'assistant a dit « une table pour {n} », jamais le nom de la table.",
         "pastNoShows": "1 no-show passé avec ce numéro. | {n} no-shows passés avec ce numéro.",
         "cancelledByCaller": "Annulée par le client au téléphone : elle ne peut pas être rétablie, il faut la reprendre.",
-        "reinstate": "Rétablir"
+        "reinstate": "Rétablir",
+        "closedDay": "Cette réservation tombe un jour, un service ou dans une zone fermés après sa prise : appelez le client."
       },
       "newb": {
         "title": "Nouvelle réservation",
@@ -1413,18 +1438,16 @@
         "freeFixed": "Libre : {tables} · {zone}. Dites au client « une table pour {n} », sans le nom de la table.",
         "serverChooses": "Le registre choisit la table à l'enregistrement.",
         "alternatives": "Libres à la place :",
-        "save": "Enregistrer · {day} {time} · {people}"
+        "save": "Enregistrer · {day} {time} · {people}",
+        "zone": "Zone",
+        "anyZone": "N'importe quelle zone",
+        "fieldMissing": "{field} : obligatoire pour chaque réservation."
       },
       "room": {
         "intro": "Toute la salle se modifie ici. Chaque zone, table et jonction se change dans son propre champ ou se supprime avec ✕. Les modifications ne parviennent à l'assistant qu'une fois Enregistrer les modifications pressé ; d'ici là, vous pouvez toutes les annuler.",
         "pending": "1 modification à enregistrer | {n} modifications à enregistrer",
         "errors": "1 erreur à corriger avant d'enregistrer | {n} erreurs à corriger avant d'enregistrer",
         "warnings": "Bon à savoir (vous pouvez enregistrer quand même)",
-        "settings": "Paramètres",
-        "minFree": "Durée libre minimale",
-        "minFreeLabel": "Durée libre minimale en minutes",
-        "minutes": "minutes",
-        "minFreeHint": "Une table n'apparaît comme libre que si elle reste libre au moins aussi longtemps : avec 120 minutes, une table libre à 20:00 mais réservée à 21:00 n'apparaît pas comme libre. De 1 à {max} minutes.",
         "generator": "Ajouter des tables en une fois",
         "genAdd": "Ajouter",
         "genHowMany": "Combien de tables",
@@ -1452,11 +1475,6 @@
         "noteHint": "L'assistant s'en sert pour décrire la zone aux appelants.",
         "closures": "Fermetures",
         "alwaysOpen": "Toujours ouverte.",
-        "closedFrom": "Fermée du",
-        "closedTo": "Fermée jusqu'au",
-        "closureAdd": "Ajouter une fermeture",
-        "closureDelete": "Retirer la fermeture",
-        "closureDates": "Fermeture : choisissez les dates « du » et « au ».",
         "tName": "Nom",
         "tMin": "Places min",
         "tMax": "Places max",
@@ -1512,18 +1530,13 @@
         "stale": "La salle a changé entre-temps : elle a été relue, refaites vos modifications.",
         "configChanged": "La configuration a changé entre-temps : elle a été relue, réessayez.",
         "needsHours": "Définissez d'abord les horaires d'ouverture : sans eux, la salle ne peut pas être enregistrée.",
-        "layoutSavedOnly": "La salle a été enregistrée, pas les paramètres.",
         "andOthers": "{names} et {n} autres",
-        "maxParty": "Plus grand groupe que l'assistant réserve seul",
-        "maxPartyHint": "Au-delà de ce nombre de personnes, l'assistant ne réserve pas : il enregistre une demande que vous confirmez. En général pas plus que la plus grande table ou jonction.",
-        "goMaxParty": "Modifier le plus grand groupe",
         "goTableMin": "Modifier les places min des tables",
         "goJoins": "Aller aux jonctions",
-        "settingsRefused": "Le serveur n'a pas accepté les paramètres : vérifiez la durée libre minimale et le plus grand groupe.",
-        "defaultMinutes": "Par défaut : {n} minutes",
-        "defaultPeople": "Par défaut : {n} personnes",
         "byDefault": "par défaut ({n})",
-        "defaultTag": "par défaut"
+        "defaultTag": "par défaut",
+        "closuresWhere": "Les fermetures se règlent dans Horaires et règles",
+        "goMaxPartySkill": "Le modifier dans les réglages de la skill"
       },
       "check": {
         "zoneNameMissing": "Zone {n} · Nom : obligatoire",
@@ -1539,9 +1552,7 @@
         "joinZones": "Jonction {label} · Tables : elles sont dans des zones différentes ; une jonction reste dans une seule zone",
         "joinMin": "Jonction {label} · Personnes min : au moins 1",
         "joinMax": "Jonction {label} · Personnes max : au moins {min}",
-        "joinDuplicate": "Jonction {label} : il existe déjà une jonction avec les mêmes tables",
-        "minFree": "Paramètres · Durée libre minimale : entre {min} et {max} minutes",
-        "maxParty": "Paramètres · Plus grand groupe : entre {min} et {max} personnes"
+        "joinDuplicate": "Jonction {label} : il existe déjà une jonction avec les mêmes tables"
       },
       "layoutCode": {
         "table_has_holds": "Une table que vous voulez supprimer, désactiver ou déplacer dans une autre zone a des réservations à venir : déplacez-les ou annulez-les d'abord, puis enregistrez.",
@@ -1585,9 +1596,7 @@
         "tableOff": "{name} : désactivée",
         "joinAdded": "Jonction ajoutée : {label} ({min}-{max})",
         "joinRemoved": "Jonction retirée : {label}",
-        "joinRange": "Jonction {label} : personnes {from} → {to}",
-        "minFree": "Durée libre minimale : {from} → {to} min",
-        "maxParty": "Plus grand groupe que l'assistant réserve : {from} → {to} personnes"
+        "joinRange": "Jonction {label} : personnes {from} → {to}"
       },
       "calls": {
         "title": "L'appel",
@@ -1670,7 +1679,140 @@
         "bad_value": "« {value} » n'est pas une valeur valide : vérifiez le champ en évidence."
       },
       "manifestMissing": "Les réglages de la fonction n'ont pas pu être lus : la page ne peut pas afficher ses valeurs par défaut.",
-      "retry": "Réessayer"
+      "retry": "Réessayer",
+      "pageOff": "La page du restaurant est désactivée dans les réglages de la skill : les réservations restent enregistrées, l'export et l'effacement restent disponibles. Activez-la pour utiliser la page.",
+      "tabRules": "Horaires et règles",
+      "rules": {
+        "intro": "Les horaires et les règles du restaurant, et ce que chaque réservation doit contenir, quel que soit celui qui la prend. La façon dont l'assistant réserve (le plus grand groupe, le délai, les jours à l'avance, ce qu'il dit) se règle dans les réglages de la skill.",
+        "toSkill": "Ouvrir les réglages de la skill",
+        "hours": "Horaires d'ouverture",
+        "tables": "Tables et rythme",
+        "reach": "Jusqu'où on réserve",
+        "field": {
+          "arrivalEveryMinutes": "Arrivée toutes les",
+          "tableMinutes2": "Durée de table, 1-2 personnes",
+          "tableMinutes4": "Durée de table, 3-4 personnes",
+          "tableMinutes6": "Durée de table, 5-6 personnes",
+          "tableMinutesLarger": "Durée de table, 7 ou plus",
+          "coversPerArrival": "Maximum de clients qui arrivent ensemble",
+          "minFreeMinutes": "Durée libre minimale",
+          "horizonDays": "Horizon du cahier",
+          "walkInMinutes": "Fenêtre pour les clients sans réservation"
+        },
+        "unit": {
+          "minutes": "minutes",
+          "people": "personnes",
+          "days": "jours"
+        },
+        "defaultIs": {
+          "minutes": "Par défaut : {n} minutes",
+          "people": "Par défaut : {n} personnes",
+          "days": "Par défaut : {n} jours"
+        },
+        "hint": {
+          "arrivalEveryMinutes": "Le pas des heures d'arrivée : 15 donne 19:00, 19:15, 19:30. De {min} à {max}.",
+          "tableMinutes2": "Combien de temps la table reste occupée. De {min} à {max}.",
+          "tableMinutes4": "Combien de temps la table reste occupée. De {min} à {max}.",
+          "tableMinutes6": "Combien de temps la table reste occupée. De {min} à {max}.",
+          "tableMinutesLarger": "Combien de temps la table reste occupée. De {min} à {max}.",
+          "coversPerArrival": "Combien de clients la cuisine accueille à une même heure d'arrivée, toutes les zones ensemble ; 0 veut dire sans limite.",
+          "minFreeMinutes": "Une table n'apparaît libre que si elle reste libre au moins aussi longtemps. De {min} à {max}.",
+          "horizonDays": "Jusqu'où le cahier et cette page sont ouverts, pour vous et l'équipe. L'assistant réserve jusqu'à ses propres jours à l'avance, réglés dans la skill, jamais au-delà. De {min} à {max}.",
+          "walkInMinutes": "Un client sans réservation arrive maintenant : aujourd'hui, à moins de ces minutes de l'heure. Il peut ne pas laisser nom ni téléphone ; hors de la fenêtre, c'est une réservation ordinaire. De {min} à {max}."
+        },
+        "changed": {
+          "hours": "{service} : heures d'arrivée modifiées",
+          "number": "{what}: {from} → {to}",
+          "ask": "{what}: {to}",
+          "closures": "Fermetures et ouvertures spéciales modifiées"
+        },
+        "outOfRange": "{what} : entre {min} et {max}.",
+        "code": {
+          "allergies_required_unavailable": "Les allergies ne peuvent pas encore être obligatoires ici : les demander à chaque appelant attend que le point juridique soit réglé. Choisissez facultatif ou non demandé.",
+          "pace_below_party": "Les clients qui arrivent ensemble ({coversPerArrival}) sont moins nombreux que le plus grand groupe que l'assistant réserve ({maxPartySize}) : un tel groupe ne pourrait jamais arriver.",
+          "days_ahead_beyond_horizon": "L'assistant réserve {daysAhead} jours à l'avance, au-delà de l'horizon du cahier de {horizonDays} jours : il réserve jusqu'à {horizonDays}.",
+          "out_of_range": "{what} : la valeur est hors de la plage admise."
+        },
+        "refusedField": "{what} : la valeur n'a pas été acceptée.",
+        "inSkill": "Le modifier dans les réglages de la skill",
+        "savedToast": "1 modification enregistrée | {n} modifications enregistrées"
+      },
+      "ask": {
+        "title": "Ce que nous demandons pour chaque réservation",
+        "intro": "Pour chaque réservation, quel que soit celui qui la prend (l'assistant, vous, l'équipe) : ce qui est obligatoire, ce qui n'est demandé que si le client le donne, et ce qui n'est pas demandé.",
+        "fixed": "Jour, heure et personnes",
+        "always": "Toujours obligatoires",
+        "field": {
+          "name": "Nom",
+          "phone": "Téléphone",
+          "allergies": "Allergies",
+          "notes": "Notes",
+          "zone": "Zone"
+        },
+        "rule": {
+          "required": "Obligatoire",
+          "optional": "Facultatif",
+          "not_asked": "Non demandé"
+        },
+        "phoneNotAsked": "Téléphone non demandé : aucune réservation n'exigera de numéro, ni de l'assistant ni de vous. Le numéro de l'appelant est quand même gardé quand il est visible.",
+        "phoneCaller": "Au téléphone, le numéro visible de l'appelant vaut comme téléphone : l'assistant en demande un seulement quand le numéro est masqué.",
+        "allergiesActsOptional": "Enregistré comme obligatoire, mais dans cet environnement il vaut comme facultatif : demander les allergies à chaque appelant attend que le point juridique soit réglé.",
+        "allergiesUnavailable": "Obligatoire n'est pas encore disponible dans cet environnement : demander les allergies à chaque appelant attend que le point juridique soit réglé.",
+        "walkIn": "Un client qui arrive maintenant sans réservation peut ne pas laisser nom ni téléphone."
+      },
+      "closures": {
+        "title": "Fermetures et ouvertures spéciales",
+        "intro": "Une seule liste pour chaque jour fermé, service fermé et ouverture spéciale, pour tout le restaurant ou une zone. Les réservations déjà prises un jour que vous fermez restent : la page les montre, pour que vous appeliez.",
+        "remove": "Retirer {what}",
+        "fromCalendar": "du calendrier",
+        "none": "Aucune fermeture.",
+        "whereCalendar": "Les fermetures du calendrier se modifient dans le calendrier connecté dans les réglages de la skill : un événement dont le titre commence par le mot de fermeture.",
+        "add": "Ajouter",
+        "from": "Du",
+        "to": "Au (facultatif)",
+        "kind": "Quoi",
+        "closed": "Fermé",
+        "special": "Ouverture spéciale",
+        "service": "Service",
+        "allDay": "toute la journée",
+        "where": "Où",
+        "wholeRestaurant": "tout le restaurant",
+        "windows": "Heures d'arrivée",
+        "addButton": "Ajouter à la liste",
+        "neverRead": "Le calendrier n'a pas encore été lu.",
+        "readAt": "Calendrier lu le {when}.",
+        "lastFailed": "La dernière lecture, le {when}, a échoué : les fermetures affichées sont celles de la lecture précédente.",
+        "describeOpen": "{days} · {service}: ouverture spéciale {windows}",
+        "describeClosed": "{days} · {service} · {where}: fermé",
+        "needFrom": "Choisissez le premier jour.",
+        "backwards": "Le dernier jour est avant le premier.",
+        "badWindows": "Une ouverture spéciale demande un service et des heures d'arrivée comme 19:30-21:30.",
+        "refused": "Les fermetures n'ont pas été enregistrées : réessayez."
+      },
+      "warning": {
+        "outside_hours": "En dehors des horaires du service.",
+        "off_grid": "Pas sur une heure d'arrivée (dans les horaires).",
+        "within_notice": "Plus tôt que le délai de réservation de l'assistant.",
+        "after_same_day_cutoff": "Après l'heure où l'assistant arrête de réserver pour le jour même.",
+        "beyond_days_ahead": "Plus loin que ce que réserve l'assistant.",
+        "above_max_party": "Plus grand que ce que l'assistant réserve seul.",
+        "over_pace": "Plus de clients qui arrivent ensemble que le rythme de la cuisine.",
+        "saidOnSave": "À savoir : {list}"
+      },
+      "change": {
+        "notFound": "La réservation de cette demande n'a pas été trouvée : ouvrez-la et modifiez-la à la main.",
+        "done": "{name} déplacée au {day} {time}, {people} ; la demande est fermée",
+        "asked": "Modification demandée au téléphone",
+        "make": "Faire la modification",
+        "close": "Fermer sans modifier",
+        "asks": "{name} demande de changer {from} en {to}",
+        "otherDay": "une réservation d'un autre jour"
+      },
+      "acceptFields": {
+        "title": "Accepter {name}",
+        "intro": "Pour l'accepter, cette réservation doit avoir : {fields}.",
+        "accept": "Accepter"
+      }
     }
   },
   "views": {

@@ -350,3 +350,63 @@ describe('a field the manifest keeps for the platform', () => {
     expect(open.text()).toContain('Duration')
   })
 })
+
+/* A skill with a page of its own (the restaurant, StarChat R8): the strip's switch is the page, the assistant's
+ * switch is inside the card, and the fields only the page edits are named with a link, never drawn.
+ *
+ * Seen failing first, 2026-10-13: with the strip drawing `enabled` whatever the skill (the card before R8), the
+ * coupled-write test failed on its first emit; with the assistant switch never disabled, the page-off test failed;
+ * with `visibleTo` letting `audience: page` through, the summary test failed on the drawn `Book horizon`. */
+describe('a skill with its own page', () => {
+  const restaurant = {
+    name: 'skill_restaurant_booking',
+    configSchema: {
+      fields: [
+        { key: 'enabled', type: 'boolean' },
+        { key: 'label', type: 'string', labels: { en: { label: 'Name' } } },
+        { key: 'page', type: 'boolean', widget: 'boolean', default: 'true', labels: { en: { label: 'Restaurant page' } } },
+        { key: 'maxPartySize', type: 'number', widget: 'number', labels: { en: { label: 'Largest party' } } },
+        { key: 'daysAhead', type: 'number', widget: 'number', labels: { en: { label: 'Days ahead' } } },
+        { key: 'horizonDays', type: 'number', widget: 'number', default: 365, audience: 'page', labels: { en: { label: 'Book horizon' } } },
+        { key: 'specialDays', type: 'string', widget: 'textarea', audience: 'page', labels: { en: { label: 'Special days' } } }
+      ]
+    }
+  }
+  const on = { skill: 'skill_restaurant_booking', instanceId: 'restaurant_booking_1', params: { enabled: 'true', horizonDays: '200' } }
+  const restaurantMessages = { page: { pageOn: 'Page on', pageOff: 'Page off', assistantOn: 'Assistant books', assistantOff: 'Assistant off',
+    assistantSwitch: 'The assistant takes bookings', assistantHint: 'Off: the page keeps working', assistantNeedsPage: 'Turn the page on first',
+    summaryTitle: 'Set in the restaurant page', open: 'Open the restaurant page', daysAheadNote: 'At most the horizon ({n} days)' } }
+  Object.assign(messages.en.widgets.agentSkills, restaurantMessages)
+
+  it('the strip switches the page; off, it turns the assistant off in the same edit', async () => {
+    const open = card({ skill: restaurant, entry: on })
+    expect(open.text()).toContain('Page on')
+    const strip = open.findAllComponents(ToggleSwitch).find(c => c.classes().includes('page-switch'))
+    await strip.vm.$emit('update:modelValue', false)
+    expect(open.emitted('update:field').map(e => e[0])).toEqual([{ key: 'page', value: 'false' }, { key: 'enabled', value: 'false' }])
+  })
+
+  it('the assistant switch sits inside, and cannot be turned on while the page is off', () => {
+    const offPage = card({ skill: restaurant, entry: { ...on, params: { enabled: 'false', page: 'false' } } })
+    const assistant = offPage.findAllComponents(ToggleSwitch).find(c => c.classes().includes('assistant-toggle'))
+    expect(assistant.props('disabled')).toBe(true)
+    expect(offPage.text()).toContain('Turn the page on first')
+    const onPage = card({ skill: restaurant, entry: on })
+    expect(onPage.findAllComponents(ToggleSwitch).find(c => c.classes().includes('assistant-toggle')).props('disabled')).toBe(false)
+  })
+
+  it('names the page\'s fields instead of drawing them, and says the assistant\'s days ahead stop at the horizon', () => {
+    const open = card({ skill: restaurant, entry: on })
+    expect(open.find('.entry-page-fields').text()).toContain('Book horizon')
+    expect(open.find('.entry-page-fields').text()).not.toContain('Special days')
+    expect(open.find('.entry-fields').text()).not.toContain('Book horizon')
+    expect(open.find('.entry-fields').text()).toContain('Largest party')
+    expect(open.find('.entry-fields').text()).toContain('At most the horizon (200 days)')
+  })
+
+  it('a skill without a page keeps its one switch, `enabled`', () => {
+    const open = card()
+    expect(open.find('.page-switch').exists()).toBe(false)
+    expect(open.find('.entry-assistant').exists()).toBe(false)
+  })
+})

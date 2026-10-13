@@ -154,6 +154,22 @@
         "summary": "{zones} aluetta, {tables} aktiivista pöytää. Niitä muokataan ravintolan sivulla.",
         "open": "Avaa Sali ja pöydät",
         "unknown": "Salia ei voitu lukea juuri nyt; sitä muokataan ravintolan sivulla."
+      },
+      "page": {
+        "pageOn": "Sivu päällä",
+        "pageOff": "Sivu pois",
+        "assistantOn": "Avustaja varaa",
+        "assistantOff": "Avustaja pois",
+        "assistantSwitch": "Avustaja ottaa varauksia",
+        "assistantHint": "Pois: sivu ja henkilökunta jatkavat, avustaja ei varaa.",
+        "assistantNeedsPage": "Kytke ensin sivu päälle: avustaja ei koskaan varaa kirjaan, jota kukaan ei näe.",
+        "summaryTitle": "Asetetaan ravintolasivulla",
+        "open": "Avaa ravintolasivu",
+        "daysAheadNote": "Enintään varauskirjan horisontti ({n} päivää), asetettu ravintolasivulla: sen yli avustaja varaa horisonttiin asti."
+      },
+      "code": {
+        "assistant_without_page": "Avustaja ei voi ottaa varauksia, kun ravintolasivu on pois päältä: kytke avustaja pois tai sivu päälle.",
+        "allergies_required_unavailable": "Allergiat eivät voi vielä olla pakollisia täällä: jokaiselta soittajalta kysyminen odottaa oikeudellisen kysymyksen ratkeamista."
       }
     }
   },
@@ -1224,7 +1240,12 @@
         "scope_missing": "Tämä käyttöoikeus ei salli sitä.",
         "error": "Jokin meni pieleen: yritä uudelleen.",
         "not_reversible": "Tätä varausta ei voi enää palauttaa.",
-        "table_taken": "Sen pöydät ovat varattuja."
+        "table_taken": "Sen pöydät ovat varattuja.",
+        "missingFields": "Jokainen varaus tarvitsee täällä: {fields}.",
+        "missing_fields": "Pakollinen kenttä puuttuu.",
+        "zone_closed": "Se alue on silloin suljettu.",
+        "tables_unsuitable": "Nuo pöydät eivät voi ottaa tätä seuruetta.",
+        "linked_request": "Tämä pyyntö haluaa muuttaa varausta: tee muutos tai sulje pyyntö."
       },
       "strip": {
         "label": "Tulevien päivien saatavuus",
@@ -1276,7 +1297,9 @@
         "floor": "Sali",
         "timeline": "Aikajana",
         "floorHint": "Vihreä = vapaa klo {time} vähintään {n} min; harmaa = vapautuu liian lyhyeksi ajaksi. Napauta vihreää pöytää varataksesi sen, varattua avataksesi sen. Siirrä vetämällä.",
-        "timelineHint": "Yksi rivi pöytää kohti. Napauta tyhjää kohtaa varataksesi sille ajalle, otsikkoa vaihtaaksesi aikaa."
+        "timelineHint": "Yksi rivi pöytää kohti. Napauta tyhjää kohtaa varataksesi sille ajalle, otsikkoa vaihtaaksesi aikaa.",
+        "toCall": "1 varaus tässä suljetussa kattauksessa: soita vieraalle | {n} varausta tässä suljetussa kattauksessa: soita vieraille",
+        "closedMark": "suljettu: soita"
       },
       "know": {
         "label": "Hyvä tietää:",
@@ -1358,7 +1381,8 @@
           "left": "Lähtenyt"
         },
         "empty": "Ei varauksia tässä.",
-        "gone": "Peruttu ja saapumatta jääneet ({n})"
+        "gone": "Peruttu ja saapumatta jääneet ({n})",
+        "intended": "tarkoitettu pöydille {tables}"
       },
       "panel": {
         "cancelled": "Varaus peruttu.",
@@ -1384,7 +1408,8 @@
         "assistantSaid": "Puhelimessa avustaja sanoi \"pöytä {n} hengelle\", ei koskaan pöydän nimeä.",
         "pastNoShows": "1 aiempi saapumatta jääminen tällä numerolla. | {n} aiempaa saapumatta jäämistä tällä numerolla.",
         "cancelledByCaller": "Asiakas perui puhelimessa: sitä ei voi palauttaa, tee uusi varaus.",
-        "reinstate": "Palauta"
+        "reinstate": "Palauta",
+        "closedDay": "Tämä varaus osuu päivälle, kattaukseen tai alueelle, joka suljettiin varauksen jälkeen: soita vieraalle."
       },
       "newb": {
         "title": "Uusi varaus",
@@ -1411,18 +1436,16 @@
         "freeFixed": "Vapaa: {tables} · {zone}. Sano vieraalle \"pöytä {n} hengelle\" mainitsematta pöydän nimeä.",
         "serverChooses": "Varausjärjestelmä valitsee pöydän, kun tallennat.",
         "alternatives": "Vapaana sen sijaan:",
-        "save": "Tallenna · {day} {time} · {people}"
+        "save": "Tallenna · {day} {time} · {people}",
+        "zone": "Alue",
+        "anyZone": "Mikä tahansa alue",
+        "fieldMissing": "{field}: pakollinen jokaisessa varauksessa."
       },
       "room": {
         "intro": "Koko sali muokataan täällä. Jokaista aluetta, pöytää ja yhdistelmää muutetaan omassa kentässään tai se poistetaan merkillä ✕. Muutokset tulevat avustajan käyttöön vasta, kun painat Tallenna muutokset; siihen asti voit hylätä ne kaikki.",
         "pending": "1 muutos tallennettavana | {n} muutosta tallennettavana",
         "errors": "1 virhe korjattavana ennen tallennusta | {n} virhettä korjattavana ennen tallennusta",
         "warnings": "Hyvä tietää (voit tallentaa silti)",
-        "settings": "Asetukset",
-        "minFree": "Vapaan ajan vähimmäispituus",
-        "minFreeLabel": "Vapaan ajan vähimmäispituus minuutteina",
-        "minutes": "minuuttia",
-        "minFreeHint": "Pöytä näkyy vapaana vain, jos se pysyy vapaana vähintään näin pitkään: 120 minuutilla pöytä, joka on vapaa klo 20:00 mutta varattu klo 21:00, ei näy vapaana. 1-{max} minuuttia.",
         "generator": "Lisää pöytiä kerralla",
         "genAdd": "Lisää",
         "genHowMany": "Kuinka monta pöytää",
@@ -1450,11 +1473,6 @@
         "noteHint": "Avustaja käyttää sitä kuvaillessaan aluetta soittajille.",
         "closures": "Sulkemiset",
         "alwaysOpen": "Aina auki.",
-        "closedFrom": "Kiinni alkaen",
-        "closedTo": "Kiinni asti",
-        "closureAdd": "Lisää sulkeminen",
-        "closureDelete": "Poista sulkeminen",
-        "closureDates": "Sulkeminen: valitse \"alkaen\"- ja \"asti\"-päivämäärät.",
         "tName": "Nimi",
         "tMin": "Min. paikat",
         "tMax": "Max. paikat",
@@ -1510,18 +1528,13 @@
         "stale": "Sali muuttui välillä: se on luettu uudelleen, tee muutokset vielä kerran.",
         "configChanged": "Asetukset muuttuivat välillä: ne on luettu uudelleen, yritä vielä kerran.",
         "needsHours": "Määritä ensin aukioloajat: ilman niitä salia ei voi tallentaa.",
-        "layoutSavedOnly": "Sali tallennettiin, asetuksia ei.",
         "andOthers": "{names} ja {n} muuta",
-        "maxParty": "Suurin seurue, jonka avustaja varaa itse",
-        "maxPartyHint": "Tätä suurempaa seuruetta avustaja ei varaa: se tallentaa pyynnön, jonka vahvistat itse. Yleensä enintään suurimman pöydän tai yhdistelmän koko.",
-        "goMaxParty": "Muuta suurinta seuruetta",
         "goTableMin": "Muuta pöytien vähimmäispaikkamäärää",
         "goJoins": "Siirry yhdistelmiin",
-        "settingsRefused": "Palvelin ei hyväksynyt asetuksia: tarkista vapaan ajan vähimmäispituus ja suurin seurue.",
-        "defaultMinutes": "Oletus: {n} minuuttia",
-        "defaultPeople": "Oletus: {n} henkeä",
         "byDefault": "oletus ({n})",
-        "defaultTag": "oletus"
+        "defaultTag": "oletus",
+        "closuresWhere": "Sulkemiset asetetaan kohdassa Ajat ja säännöt",
+        "goMaxPartySkill": "Muuta sitä skillin asetuksissa"
       },
       "check": {
         "zoneNameMissing": "Alue {n} · Nimi: pakollinen",
@@ -1537,9 +1550,7 @@
         "joinZones": "Yhdistelmä {label} · Pöydät: ne ovat eri alueilla; yhdistelmä pysyy yhdellä alueella",
         "joinMin": "Yhdistelmä {label} · Min. henkilöä: vähintään 1",
         "joinMax": "Yhdistelmä {label} · Max. henkilöä: vähintään {min}",
-        "joinDuplicate": "Yhdistelmä {label}: samoista pöydistä on jo yhdistelmä",
-        "minFree": "Asetukset · Vapaan ajan vähimmäispituus: {min}-{max} minuuttia",
-        "maxParty": "Asetukset · Suurin seurue: {min}-{max} henkeä"
+        "joinDuplicate": "Yhdistelmä {label}: samoista pöydistä on jo yhdistelmä"
       },
       "layoutCode": {
         "table_has_holds": "Pöydällä, jonka haluat poistaa, kytkeä pois päältä tai siirtää toiselle alueelle, on tulevia varauksia: siirrä tai peru ne ensin ja tallenna sitten.",
@@ -1583,9 +1594,7 @@
         "tableOff": "{name}: poistettu käytöstä",
         "joinAdded": "Yhdistelmä lisätty: {label} ({min}-{max})",
         "joinRemoved": "Yhdistelmä poistettu: {label}",
-        "joinRange": "Yhdistelmä {label}: henkilöt {from} → {to}",
-        "minFree": "Vapaan ajan vähimmäispituus: {from} → {to} min",
-        "maxParty": "Suurin seurue, jonka avustaja varaa: {from} → {to} henkeä"
+        "joinRange": "Yhdistelmä {label}: henkilöt {from} → {to}"
       },
       "calls": {
         "title": "Puhelu",
@@ -1668,7 +1677,140 @@
         "bad_value": "”{value}” ei ole kelvollinen arvo: tarkista korostettu kenttä."
       },
       "manifestMissing": "Toiminnon asetuksia ei voitu lukea, joten sivu ei voi näyttää oletusarvoja.",
-      "retry": "Yritä uudelleen"
+      "retry": "Yritä uudelleen",
+      "pageOff": "Ravintolasivu on pois päältä skillin asetuksissa: varaukset säilyvät, ja vienti ja poisto ovat yhä käytettävissä. Kytke se päälle käyttääksesi sivua.",
+      "tabRules": "Ajat ja säännöt",
+      "rules": {
+        "intro": "Ravintolan ajat ja säännöt sekä se, mitä jokaisessa varauksessa on oltava, otti sen kuka tahansa. Se, miten avustaja varaa (suurin seurue, ennakko, päivät eteenpäin, mitä se sanoo), asetetaan skillin asetuksissa.",
+        "toSkill": "Avaa skillin asetukset",
+        "hours": "Aukioloajat",
+        "tables": "Pöydät ja tahti",
+        "reach": "Kuinka pitkälle eteenpäin",
+        "field": {
+          "arrivalEveryMinutes": "Saapuminen joka",
+          "tableMinutes2": "Pöydän kesto, 1-2 henkeä",
+          "tableMinutes4": "Pöydän kesto, 3-4 henkeä",
+          "tableMinutes6": "Pöydän kesto, 5-6 henkeä",
+          "tableMinutesLarger": "Pöydän kesto, 7 tai enemmän",
+          "coversPerArrival": "Enintään yhtä aikaa saapuvia vieraita",
+          "minFreeMinutes": "Vapaan ajan vähimmäispituus",
+          "horizonDays": "Varauskirjan horisontti",
+          "walkInMinutes": "Ikkuna ilman varausta tuleville"
+        },
+        "unit": {
+          "minutes": "minuuttia",
+          "people": "henkeä",
+          "days": "päivää"
+        },
+        "defaultIs": {
+          "minutes": "Oletus: {n} minuuttia",
+          "people": "Oletus: {n} henkeä",
+          "days": "Oletus: {n} päivää"
+        },
+        "hint": {
+          "arrivalEveryMinutes": "Saapumisaikojen väli: 15 antaa 19:00, 19:15, 19:30. Välillä {min}–{max}.",
+          "tableMinutes2": "Kuinka kauan pöytä on varattuna. Välillä {min}–{max}.",
+          "tableMinutes4": "Kuinka kauan pöytä on varattuna. Välillä {min}–{max}.",
+          "tableMinutes6": "Kuinka kauan pöytä on varattuna. Välillä {min}–{max}.",
+          "tableMinutesLarger": "Kuinka kauan pöytä on varattuna. Välillä {min}–{max}.",
+          "coversPerArrival": "Kuinka monta vierasta keittiö ottaa vastaan samana saapumisaikana, kaikki alueet yhteensä; 0 tarkoittaa ei rajaa.",
+          "minFreeMinutes": "Pöytä näkyy vapaana vain, jos se pysyy vapaana vähintään näin kauan. Välillä {min}–{max}.",
+          "horizonDays": "Kuinka pitkälle eteenpäin varauskirja ja tämä sivu ovat auki sinulle ja henkilökunnalle. Avustaja varaa omiin päiviinsä eteenpäin asti, jotka asetetaan skillissä, ei koskaan pidemmälle. Välillä {min}–{max}.",
+          "walkInMinutes": "Ilman varausta tuleva vieras saapuu nyt: tänään, näin monen minuutin sisällä ajasta. Nimi ja puhelin voivat puuttua; ikkunan ulkopuolella se on tavallinen varaus. Välillä {min}–{max}."
+        },
+        "changed": {
+          "hours": "{service}: saapumisajat muutettu",
+          "number": "{what}: {from} → {to}",
+          "ask": "{what}: {to}",
+          "closures": "Sulkemiset ja erityisaukiolot muutettu"
+        },
+        "outOfRange": "{what}: välillä {min}–{max}.",
+        "code": {
+          "allergies_required_unavailable": "Allergiat eivät voi vielä olla pakollisia täällä: jokaiselta soittajalta kysyminen odottaa oikeudellisen kysymyksen ratkeamista. Valitse valinnainen tai ei kysytä.",
+          "pace_below_party": "Yhtä aikaa saapuvia vieraita ({coversPerArrival}) on vähemmän kuin avustajan varaama suurin seurue ({maxPartySize}): sellainen seurue ei voisi koskaan saapua.",
+          "days_ahead_beyond_horizon": "Avustaja varaa {daysAhead} päivää eteenpäin, yli varauskirjan {horizonDays} päivän horisontin: se varaa {horizonDays} päivään asti.",
+          "out_of_range": "{what}: arvo on sallitun välin ulkopuolella."
+        },
+        "refusedField": "{what}: arvoa ei hyväksytty.",
+        "inSkill": "Muuta sitä skillin asetuksissa",
+        "savedToast": "1 muutos tallennettu | {n} muutosta tallennettu"
+      },
+      "ask": {
+        "title": "Mitä kysymme jokaisessa varauksessa",
+        "intro": "Jokaisessa varauksessa, otti sen kuka tahansa (avustaja, sinä, henkilökunta): mikä on pakollista, mitä kysytään vain, jos vieras sen tarjoaa, ja mitä ei kysytä lainkaan.",
+        "fixed": "Päivä, aika ja henkilöt",
+        "always": "Aina pakollisia",
+        "field": {
+          "name": "Nimi",
+          "phone": "Puhelin",
+          "allergies": "Allergiat",
+          "notes": "Huomautukset",
+          "zone": "Alue"
+        },
+        "rule": {
+          "required": "Pakollinen",
+          "optional": "Valinnainen",
+          "not_asked": "Ei kysytä"
+        },
+        "phoneNotAsked": "Puhelinta ei kysytä: mikään varaus ei vaadi numeroa, ei avustajalta eikä sinulta. Soittajan numero säilytetään silti, kun se näkyy.",
+        "phoneCaller": "Puhelimessa soittajan näkyvä numero käy puhelimesta: avustaja kysyy numeroa vain, kun numero on piilotettu.",
+        "allergiesActsOptional": "Tallennettu pakollisena, mutta tässä ympäristössä se toimii valinnaisena: allergioiden kysyminen jokaiselta soittajalta odottaa oikeudellisen kysymyksen ratkeamista.",
+        "allergiesUnavailable": "Pakollinen ei ole vielä käytettävissä tässä ympäristössä: allergioiden kysyminen jokaiselta soittajalta odottaa oikeudellisen kysymyksen ratkeamista.",
+        "walkIn": "Nyt ilman varausta tuleva vieras voi jättää nimen ja puhelimen pois."
+      },
+      "closures": {
+        "title": "Sulkemiset ja erityisaukiolot",
+        "intro": "Yksi lista jokaiselle suljetulle päivälle, suljetulle kattaukselle ja erityisaukiololle, koko ravintolalle tai yhdelle alueelle. Jo otetut varaukset päivälle, jonka suljet, säilyvät: sivu näyttää ne, jotta voit soittaa.",
+        "remove": "Poista {what}",
+        "fromCalendar": "kalenterista",
+        "none": "Ei sulkemisia.",
+        "whereCalendar": "Kalenterin sulkemisia muutetaan kalenterissa, joka on yhdistetty skillin asetuksissa: tapahtuma, jonka otsikko alkaa sulkemissanalla.",
+        "add": "Lisää",
+        "from": "Alkaen",
+        "to": "Asti (valinnainen)",
+        "kind": "Mitä",
+        "closed": "Suljettu",
+        "special": "Erityisaukiolo",
+        "service": "Kattaus",
+        "allDay": "koko päivä",
+        "where": "Missä",
+        "wholeRestaurant": "koko ravintola",
+        "windows": "Saapumisajat",
+        "addButton": "Lisää listaan",
+        "neverRead": "Kalenteria ei ole vielä luettu.",
+        "readAt": "Kalenteri luettu {when}.",
+        "lastFailed": "Viimeisin luku, {when}, epäonnistui: näytetyt sulkemiset ovat edellisestä luvusta.",
+        "describeOpen": "{days} · {service}: erityisaukiolo {windows}",
+        "describeClosed": "{days} · {service} · {where}: suljettu",
+        "needFrom": "Valitse ensimmäinen päivä.",
+        "backwards": "Viimeinen päivä on ennen ensimmäistä.",
+        "badWindows": "Erityisaukiolo tarvitsee kattauksen ja saapumisajat, kuten 19:30-21:30.",
+        "refused": "Sulkemisia ei tallennettu: yritä uudelleen."
+      },
+      "warning": {
+        "outside_hours": "Kattauksen aukioloajan ulkopuolella.",
+        "off_grid": "Ei saapumisajoilla (aukioloajan sisällä).",
+        "within_notice": "Aiemmin kuin avustajan varausennakko.",
+        "after_same_day_cutoff": "Sen ajan jälkeen, jolloin avustaja lopettaa saman päivän varaukset.",
+        "beyond_days_ahead": "Pidemmälle kuin avustaja varaa.",
+        "above_max_party": "Suurempi kuin avustaja varaa itse.",
+        "over_pace": "Enemmän yhtä aikaa saapuvia vieraita kuin keittiön tahti.",
+        "saidOnSave": "Hyvä tietää: {list}"
+      },
+      "change": {
+        "notFound": "Varausta, jota pyyntö koskee, ei löytynyt: avaa se ja muuta sitä käsin.",
+        "done": "{name} siirretty: {day} {time}, {people}; pyyntö on suljettu",
+        "asked": "Muutosta pyydetty puhelimessa",
+        "make": "Tee muutos",
+        "close": "Sulje muuttamatta",
+        "asks": "{name} pyytää muuttamaan {from} → {to}",
+        "otherDay": "toisen päivän varaus"
+      },
+      "acceptFields": {
+        "title": "Hyväksy {name}",
+        "intro": "Hyväksymiseen varaus tarvitsee: {fields}.",
+        "accept": "Hyväksy"
+      }
     }
   },
   "views": {

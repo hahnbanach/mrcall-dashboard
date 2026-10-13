@@ -362,6 +362,28 @@
   .zchips button[aria-pressed="true"] { border-color: var(--blue); background: var(--blue-50); color: var(--blue); }
   .wz-zone { border: 1px solid var(--border); border-radius: var(--r-m); padding: var(--sp-3); margin-bottom: var(--sp-3); }
   .wz-zone h3 { font-size: 16px; margin-bottom: 8px; }
+
+  /* "Orari e regole": one column of cards, the save bar at the bottom */
+  .rules-editor { padding-bottom: 80px; max-width: 880px; }
+  .rules-editor h2 { font-size: 17px; margin-bottom: var(--sp-3); }
+  .rules-editor .setting input { width: 110px; }
+  .ask-editor { margin-bottom: var(--sp-4); }
+  .ask-table { width: 100%; border-collapse: collapse; }
+  .ask-table th { text-align: left; font-weight: 600; padding: 8px 12px 8px 0; vertical-align: top; white-space: nowrap; }
+  .ask-table td { padding: 6px 0; }
+  .ask-table .seg button[disabled] { opacity: .45; cursor: not-allowed; }
+  .ask-note { display: block; margin-top: 4px; font-size: 13px; }
+  .ask-note.warn { color: var(--wait-ink); }
+  .closure-list { list-style: none; margin: 0 0 var(--sp-3); padding: 0; }
+  .closure-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--border); }
+  .closure-row.from-calendar { color: var(--muted); }
+  .closure-add .tb-row { align-items: flex-end; }
+  .closure-add .field { margin-bottom: var(--sp-2); }
+  .req.linked { border-left: 3px solid var(--wait-ink); padding-left: 8px; }
+  .intended { font-size: 13px; color: var(--muted); }
+  .closed-bookings { margin-top: var(--sp-3); }
+  .closed-mark, .change-mark { margin-left: 6px; }
+  .staff-warnings div + div { margin-top: 2px; }
   .wz-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
   .wz-row input[type="number"] { width: 64px; text-align: center; border: 1px solid var(--grey-1); border-radius: var(--r-s); min-height: 40px; }
   .wz-nav { display: flex; gap: var(--sp-2); justify-content: flex-end; margin-top: var(--sp-4); flex-wrap: wrap; }
@@ -399,6 +421,8 @@
   .rb .search input { width: 100%; }
   .rb .day-title { min-width: 0; font-size: 20px; }
   .rb .zgrid { grid-template-columns: 1fr; }
+  .rb .ask-table th { white-space: normal; }
+  .rb .ask-table tr { display: flex; flex-direction: column; }
   .rb .strip-days { grid-template-columns: repeat(14, 70px); }
   .rb .strip-days.month { grid-template-columns: repeat(7, minmax(40px, 1fr)); }
 }

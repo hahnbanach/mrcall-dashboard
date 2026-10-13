@@ -29,7 +29,14 @@ const MANIFEST_MIN_FREE = 120
 const TOMORROW = addDays(TODAY, 1)
 const WEEK = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
 
-const annotations = [{ collection: { id: '__BUSINESS_DATA__', humanName: 'Business data', description: '' }, variables: [] }]
+/** The skills' variable as the server declares it (tests/e2e/auth/skills.spec.js): the section that holds it is where
+ *  the restaurant page links for what the skill form owns. */
+const skillVariable = name => ({ name, humanName: 'Agent skills', description: 'What the assistant can do during a call', class: 'variable',
+  templateName: 'generic_onboarding', type: 'apidomain_agent_skills', defaultValue: '[]', visible: true, mandatory: false, modifiable: true,
+  advanced: false, position: '1', dependsOn: [], valuesSelection: [] })
+const annotations = [{ collection: { id: '__BUSINESS_DATA__', humanName: 'Business data', description: '' }, variables: [] },
+  { collection: { id: '__SKILLS__', humanName: 'Skills', description: '' }, variables: [[skillVariable('SKILL_PREFETCH_CONFIGURATION'),
+    skillVariable('SKILL_RUNNINGLOOP_CONFIGURATION'), skillVariable('SKILL_FINAL_CONFIGURATION')]] }]
 
 /** The trattoria of the brief: a dining room of six tables, a terrace of two, T1 and T2 joinable. */
 function trattoria () {
@@ -90,6 +97,39 @@ const conversations = {
 const hours = JSON.stringify(Object.fromEntries(WEEK.map(d => [d, ['19:00-22:00']])))
 const lunch = JSON.stringify(Object.fromEntries(WEEK.map(d => [d, ['12:00-14:00']])))
 
+/** The restaurant_booking manifest's configuration as the skill catalogue carries it (StarChat 9.34 at cd286bfab,
+ *  the fields the page and the form read): defaults, limits and `x-audience` as `audience`. */
+const REQUIRED_DEFAULT = { name: 'required', phone: 'required', allergies: 'optional', notes: 'optional', zone: 'optional' }
+function catalogueFields () {
+  const page = (key, extra = {}) => Object.assign({ key, type: 'number', widget: 'number', audience: 'page', labels: { en: { label: key } } }, extra)
+  return [
+    { key: 'enabled', type: 'boolean' },
+    { key: 'label', type: 'string', labels: { en: { label: 'Name of this instance' } } },
+    { key: 'page', type: 'boolean', widget: 'boolean', default: 'true', labels: { en: { label: 'Restaurant page', hint: 'On: the restaurant\'s bookings page' } } },
+    { key: 'closureKeyword', type: 'string', widget: 'text', default: 'CLOSED', labels: { en: { label: 'Closure keyword in the calendar' } } },
+    { key: 'phoneChanges', type: 'enum', widget: 'select', default: 'moves_and_details', labels: { en: { label: 'Changes by phone' } },
+      options: [{ value: 'moves_and_details', label: 'Moves and details' }, { value: 'details_only', label: 'Details only' },
+        { value: 'nothing', label: 'Nothing: a call-back request' }, { value: 'not_offered', label: 'Not offered' }] },
+    { key: 'unverifiedCallers', type: 'enum', widget: 'select', default: 'no_bookings', labels: { en: { label: 'Hidden number, anonymous web chat or unverified voice user' } },
+      options: [{ value: 'no_bookings', label: 'No bookings: a call-back request' }, { value: 'bookings_allowed', label: 'Bookings allowed' }] },
+    page('lunch', { type: 'json', widget: 'weekly_hours', labels: { en: { label: 'Lunch: arrival times' } } }),
+    page('dinner', { type: 'json', widget: 'weekly_hours', labels: { en: { label: 'Dinner: arrival times' } } }),
+    page('arrivalEveryMinutes', { default: 15, min: 5, max: 60, labels: { en: { label: 'Arrival every (minutes)' } } }),
+    page('coversPerArrival', { default: 0, min: 0, max: 2000 }),
+    page('tableMinutes2', { default: 90, min: 15, max: 480 }), page('tableMinutes4', { default: 105, min: 15, max: 480 }),
+    page('tableMinutes6', { default: 120, min: 15, max: 480 }), page('tableMinutesLarger', { default: 150, min: 15, max: 480 }),
+    page('minFreeMinutes', { default: MANIFEST_MIN_FREE, min: 1, max: 480 }),
+    { key: 'maxPartySize', type: 'number', widget: 'number', default: 8, min: 1, max: 100, labels: { en: { label: 'Largest party booked by the assistant' } } },
+    { key: 'daysAhead', type: 'number', widget: 'number', default: 60, min: 1, max: 365, labels: { en: { label: 'Days ahead' } } },
+    page('horizonDays', { default: 365, min: 1, max: 1095, labels: { en: { label: 'Book horizon (days)' } } }),
+    page('walkInMinutes', { default: 60, min: 0, max: 240 }),
+    page('requiredFields', { type: 'json', widget: 'json', default: JSON.stringify(REQUIRED_DEFAULT), labels: { en: { label: 'What we ask for every booking' } } }),
+    page('specialDays', { type: 'string', widget: 'textarea', labels: { en: { label: 'Closures and special days' } } }),
+    page('layout', { type: 'json', widget: 'restaurant_layout', labels: { en: { label: 'Room: zones, tables and joins' } } }),
+    { key: 'trigger', type: 'string', widget: 'textarea', labels: { en: { label: 'Trigger (when to call)' } } }
+  ]
+}
+
 /**
  * Installs the book on `page`. Options:
  *   layout: false for a restaurant without tables (the wizard); hours: false for an instance with no hours;
@@ -105,18 +145,25 @@ async function mockRestaurant (page, opts = {}) {
   page.on('pageerror', e => console.log(`PAGEERROR ${e.message}\n${(e.stack || '').split('\n').slice(0, 6).join('\n')}`))
   const state = {
     layout: opts.layout === false ? null : trattoria(),
-    rows: tomorrowsDinner(),
+    rows: tomorrowsDinner().concat((opts.extraRows || []).map(r => Object.assign({ version: 1, date: TOMORROW, minutes: 90, zone: 'sala',
+      service: 'dinner', source: 'assistant', overbooked: false, tableIds: [], pinned: false, conversationId: null, callIds: [] }, r))),
     revision: 'rev-1',
     params: { enabled: 'true', dinner: opts.hours === false ? '{}' : hours, lunch: opts.hours === false ? '{}' : lunch,
       arrivalEveryMinutes: '15', tableMinutes2: '90', tableMinutes4: '105', tableMinutes6: '120', tableMinutesLarger: '150',
-      ...(opts.minFree === false ? {} : { minFreeMinutes: '90' }), daysAhead: '60' },
+      ...(opts.minFree === false ? {} : { minFreeMinutes: '90' }), daysAhead: '60', ...(opts.params || {}) },
     refuseBook: opts.refuseBook || null,
     nextId: 1
   }
   const entry = () => ({ skill: 'skill_restaurant_booking', instanceId: 'restaurant_booking_1',
     params: Object.assign({}, state.params, state.layout ? { layout: Object.assign({ revision: state.layout.revision }, layoutDoc()) } : {}) })
-  const layoutDoc = () => ({ zones: state.layout.zones, tables: state.layout.tables, joins: state.layout.joins })
-  const business = { ...mockBusiness, variables: { ...mockBusiness.variables, SKILL_RUNNINGLOOP_CONFIGURATION: JSON.stringify([{ skill: 'skill_restaurant_booking', instanceId: 'restaurant_booking_1', params: {} }]) } }
+  const layoutDoc = () => Object.assign({ zones: state.layout.zones, tables: state.layout.tables, joins: state.layout.joins },
+    state.layout.exceptions && state.layout.exceptions.length ? { exceptions: state.layout.exceptions } : {})
+  // What every reservation must carry (R8): the stored setting over the manifest's default.
+  const fieldRules = () => Object.assign({}, REQUIRED_DEFAULT, state.params.requiredFields ? JSON.parse(state.params.requiredFields) : {})
+  const missingOf = guest => Object.keys(fieldRules()).filter(k => fieldRules()[k] === 'required' && k !== 'zone' && !String(guest[k] || '').trim())
+  const pageOff = () => String(state.params.page) === 'false'
+  const business = { ...mockBusiness, variables: { ...mockBusiness.variables, SKILL_RUNNINGLOOP_CONFIGURATION: JSON.stringify([{ skill: 'skill_restaurant_booking', instanceId: 'restaurant_booking_1',
+    params: opts.businessPage ? { page: opts.businessPage } : opts.params && opts.params.page ? { page: opts.params.page } : {} }]) } }
   const json = (route, status, body) => route.fulfill({ status, contentType: 'application/json', body: JSON.stringify(body) })
   const diag = (route, status, code, extra = {}) => json(route, status, Object.assign({ diagnostics: [{ path: '/', code, detail: `server English for ${code}` }] }, extra))
 
@@ -176,12 +223,7 @@ async function mockRestaurant (page, opts = {}) {
     if (opts.manifest === 'once' && manifestReads === 1) return diag(route, 500, 'internal')
     return json(route, 200, [{
       name: 'skill_restaurant_booking',
-      configSchema: { fields: [
-        { key: 'minFreeMinutes', type: 'number', default: MANIFEST_MIN_FREE, min: 1, max: 480 },
-        { key: 'maxPartySize', type: 'number', default: 8, min: 1, max: 100 },
-        { key: 'arrivalEveryMinutes', type: 'number', default: 15 }, { key: 'daysAhead', type: 'number', default: 60 },
-        { key: 'tableMinutes2', type: 'number', default: 90 }, { key: 'tableMinutes4', type: 'number', default: 105 },
-        { key: 'tableMinutes6', type: 'number', default: 120 }, { key: 'tableMinutesLarger', type: 'number', default: 150 }] }
+      configSchema: { fields: catalogueFields() }
     }])
   })
   await page.route('**/apidomain/agent/skills/configuration/**', route => {
@@ -190,12 +232,27 @@ async function mockRestaurant (page, opts = {}) {
       const body = request.postDataJSON()
       calls.push({ method: 'PUT', path: new URL(request.url()).pathname, body })
       if (body.expectedRevision !== state.revision) return diag(route, 409, 'stale')
+      // StarChat's configuration checks (R8): never the assistant on with the page off; allergies newly made required
+      // where the server does not offer it is refused, a stored "required" kept is not.
+      const sent = body.params || {}
+      if (String(sent.enabled) === 'true' && String(sent.page) === 'false') {
+        return json(route, 422, { diagnostics: [{ severity: 'error', path: '/enabled', code: 'assistant_without_page', detail: 'server English' }] })
+      }
+      const asked = sent.requiredFields ? JSON.parse(sent.requiredFields).allergies : null
+      const stored = state.params.requiredFields ? JSON.parse(state.params.requiredFields).allergies : null
+      if (asked === 'required' && stored !== 'required' && (opts.allergiesRefused || !(opts.allergies && opts.allergies.requiredAvailable))) {
+        return json(route, 422, { diagnostics: [{ severity: 'error', path: '/requiredFields/allergies', code: 'allergies_required_unavailable',
+          detail: 'server English', values: { field: 'allergies' } }] })
+      }
       state.params = Object.assign({}, body.params)
       delete state.params.layout
       state.revision = `rev-${Number(state.revision.split('-')[1]) + 1}`
-      return json(route, 200, { saved: true, revision: state.revision, diagnostics: [] })
+      return json(route, 200, { saved: true, revision: state.revision, diagnostics: opts.configWarnings || [] })
     }
-    return json(route, 200, { prefetch: [], during: [entry()], final: [], revisions: { prefetch: 'p', during: state.revision, final: 'f' } })
+    // `restaurant.allergies`: the shape the page's adapter reads (Restaurant.allergiesSettingOf), sent only when a test
+    // says what the server answers; StarChat does not send it yet.
+    return json(route, 200, Object.assign({ prefetch: [], during: [entry()], final: [], revisions: { prefetch: 'p', during: state.revision, final: 'f' } },
+      opts.allergies ? { restaurant: { allergies: opts.allergies } } : {}))
   })
 
   await page.route('**/customer/conversation/search*', route => {
@@ -214,11 +271,16 @@ async function mockRestaurant (page, opts = {}) {
     if (opts.restaurant === false) return route.fulfill({ status: 404, contentType: 'text/plain', body: 'The requested resource could not be found.' })
     if (method !== 'GET') calls.push({ method, path, search: url.search, body })
     else calls.push({ method, path, search: url.search })
+    // The page off (R8): every staff route answers not_configured on /page, but the export and the erasure.
+    if (pageOff() && path !== '/export' && path !== '/erasure') {
+      return json(route, 409, { diagnostics: [{ path: '/page', code: 'not_configured', detail: 'server English' }] })
+    }
 
     if (method === 'GET' && path === '/reservations') {
       const date = url.searchParams.get('date')
       return json(route, 200, {
         date, configured: !!state.layout, held: 0, heldTables: [], covers: {}, zonesClosed: [],
+        closures: (opts.closures || {})[date] || [],
         minFreeMinutes: minFree(), freeTables: state.layout ? freeTablesOf(date) : undefined,
         layout: state.layout ? Object.assign({ revision: state.layout.revision, nextTableId: state.layout.nextTableId }, layoutDoc()) : null,
         reservations: state.rows.filter(r => r.date === date).map(wire)
@@ -227,8 +289,9 @@ async function mockRestaurant (page, opts = {}) {
     if (method === 'GET' && path === '/calendar') {
       const days = []
       for (let d = url.searchParams.get('from'); d <= url.searchParams.get('to'); d = addDays(d, 1)) {
-        const closed = d === addDays(TODAY, 5)
-        days.push({ date: d, services: ['lunch', 'dinner'].map(service => ({ service, open: !closed, coversTaken: d === TOMORROW && service === 'dinner' ? 12 : 0,
+        // a service closed for the whole restaurant that day (the page's or the calendar's) is closed in the period too
+        const closedBy = service => ((opts.closures || {})[d] || []).some(c => !c.zone && (!c.service || c.service === service))
+        days.push({ date: d, services: ['lunch', 'dinner'].map(service => ({ service, open: !(d === addDays(TODAY, 5) || closedBy(service)), coversTaken: d === TOMORROW && service === 'dinner' ? 12 : 0,
           largestParty: d === addDays(TODAY, 3) && service === 'dinner' ? 0 : 6, bookable: { 2: ['19:00-22:00'], 4: ['19:00-21:00'], 6: ['21:30'] } })) })
       }
       return json(route, 200, { from: url.searchParams.get('from'), to: url.searchParams.get('to'), by: 'staff', days })
@@ -246,20 +309,30 @@ async function mockRestaurant (page, opts = {}) {
       return json(route, 200, { date, time, covers, later,
         suggestions: fits.map(f => ({ zone: f.zone, zoneName: f.zone === 'sala' ? 'Dining room' : 'Terrace', tableIds: f.ids,
           tableNames: tableNames(f.ids), minutes: covers <= 2 ? 90 : covers <= 4 ? 105 : 120, moves: [] })),
-        refusal: fits.length ? undefined : 'full' })
+        refusal: fits.length ? undefined : 'full',
+        // a staff booking of this party then (R8): what it is warned of, or why the book refuses it
+        staff: opts.staffRefusal ? { refusal: opts.staffRefusal } : { warnings: (opts.staffWarnings || []).map(code => ({ code })) } })
     }
     if (method === 'POST' && path === '/reservations') {
+      // `serverRequires`: fields the server requires beyond what the page read (the setting changed in between)
+      const missing = body.walkIn ? [] : missingOf(body).concat((opts.serverRequires || []).filter(k => !String(body[k] || '').trim()))
+      if (missing.length) {
+        return json(route, 422, { diagnostics: [{ severity: 'error', path: '/', code: 'missing_fields', detail: 'server English', values: { fields: missing } }] })
+      }
       if (state.refuseBook && !body.overbook) {
         const code = state.refuseBook
         return diag(route, 409, code, { alternatives: [{ date: body.date, time: '21:15', zone: 'sala', why: 'full' }] })
       }
-      const ids = body.tableIds || (fitsAt(body.date, body.time, body.covers)[0] || { ids: [] }).ids
+      // Overbooked by staff over a taken table (R8): no table held, the tables they named kept as intended.
+      const overbooked = !!(body.overbook && state.refuseBook)
+      const ids = overbooked ? [] : body.tableIds || (fitsAt(body.date, body.time, body.covers)[0] || { ids: [] }).ids
       const row = { id: `n${state.nextId++}`, version: 1, date: body.date, time: body.time, minutes: body.covers <= 2 ? 90 : 105, covers: body.covers,
         zone: 'sala', service: toMin(body.time) < toMin('17:00') ? 'lunch' : 'dinner', status: 'confirmed', source: body.walkIn ? 'walk_in' : 'staff',
         name: body.name || null, phone: body.phone || null, notes: body.notes || null, allergies: body.allergies || null, overbooked: !!body.overbook,
-        tableIds: ids, pinned: false, serviceState: body.walkIn ? 'seated' : null, conversationId: null, callIds: [] }
+        tableIds: ids, pinned: false, serviceState: body.walkIn ? 'seated' : null, conversationId: null, callIds: [],
+        intendedTableIds: overbooked ? body.tableIds : undefined }
       state.rows.push(row)
-      return json(route, 201, wire(row))
+      return json(route, 201, Object.assign(wire(row), opts.writeWarnings ? { warnings: opts.writeWarnings.map(code => ({ code })) } : {}))
     }
     if (method === 'POST' && path === '/search') {
       const q = String(body.q || '').toLowerCase()
@@ -297,16 +370,27 @@ async function mockRestaurant (page, opts = {}) {
       else if (action === '/state') row.serviceState = body.state
       else if (action === '/pin') row.pinned = body.pinned
       else if (action === '/no-show') row.status = 'no_show'
-      else if (action === '/accept') { row.status = 'confirmed'; row.tableIds = [6] }
+      else if (action === '/accept') {
+        // a call-back request about a change is acted on through the booking it names (R8)
+        if (row.about) return diag(route, 409, 'linked_request', { reservation: row.about })
+        const guest = { name: body.name || row.name, phone: body.phone || row.phone, allergies: body.allergies || row.allergies, notes: body.notes || row.notes }
+        const missing = missingOf(guest)
+        if (missing.length) return json(route, 422, { diagnostics: [{ severity: 'error', path: '/', code: 'missing_fields', detail: 'server English', values: { fields: missing } }] })
+        Object.assign(row, guest)
+        row.status = 'confirmed'; row.tableIds = [6]
+      }
       else if (method === 'PATCH') {
         if (body.tableIds) row.tableIds = body.tableIds
         if (body.time) row.time = body.time
+        if (body.date) row.date = body.date
+        if (body.covers) row.covers = body.covers
       }
       row.version++
       return json(route, 200, wire(row))
     }
     if (method === 'GET' && path === '/layout') {
-      return json(route, 200, { layout: state.layout ? Object.assign({ revision: state.layout.revision, nextTableId: state.layout.nextTableId }, layoutDoc()) : null })
+      return json(route, 200, { layout: state.layout ? Object.assign({ revision: state.layout.revision, nextTableId: state.layout.nextTableId }, layoutDoc()) : null,
+        calendar: opts.calendar || {} })
     }
     if (method === 'PUT' && path === '/layout') {
       const current = state.layout ? state.layout.revision : null
@@ -325,7 +409,7 @@ async function mockRestaurant (page, opts = {}) {
       const tables = sent.tables.map(t => Object.assign({}, t, { id: t.id || next++, active: t.active !== false }))
       const byName = new Map(tables.map(t => [t.name, t.id]))
       const joins = (sent.joins || []).map(j => ({ tables: j.tables.map(x => (typeof x === 'number' ? x : byName.get(x))), min: j.min, max: j.max }))
-      state.layout = { revision: (current || 0) + 1, nextTableId: next, zones: sent.zones, tables, joins }
+      state.layout = { revision: (current || 0) + 1, nextTableId: next, zones: sent.zones, tables, joins, exceptions: sent.exceptions || [] }
       return json(route, 200, { layout: Object.assign({ revision: state.layout.revision, nextTableId: next }, layoutDoc()), warnings: [] })
     }
     if (method === 'POST' && path === '/layout/preview') {
@@ -357,4 +441,4 @@ async function tomorrowDinner (page) {
   await page.locator('.svc-tab', { hasText: 'Dinner' }).click()
 }
 
-module.exports = { mockRestaurant, openRestaurant, tomorrowDinner, TODAY, TOMORROW }
+module.exports = { mockRestaurant, openRestaurant, tomorrowDinner, catalogueFields, TODAY, TOMORROW }

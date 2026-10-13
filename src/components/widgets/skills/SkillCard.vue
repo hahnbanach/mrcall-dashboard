@@ -19,14 +19,16 @@
  * and that made it a component that could not be mounted without a Vuex store: its unit tests all
  * failed at mount. The configurator owns the screen and reads the role once; a card is told.
  */
-import { computed } from 'vue';
+import { computed, getCurrentInstance } from 'vue';
 import { useI18n } from 'vue-i18n';
+import { pageOf, pageTarget } from '@/components/widgets/skills/skillPages';
 import { componentFor } from '@/components/widgets/skills/fields';
 import SkillArguments from '@/components/widgets/skills/SkillArguments.vue';
 import {
   CALENDAR_FIELD_KEY, LABEL_FIELD_KEY,
   valueOf, labelOf, hintOf, placeholderOf, isEnabled, oauthFields, labelFieldOf,
-  visibleInPhase, visibleHere, configurableFields, hasTemplateFields, descriptionOf, errorDiagnostics, argumentsOf
+  visibleInPhase, visibleHere, configurableFields, hasTemplateFields, descriptionOf, errorDiagnostics, argumentsOf,
+  pageSwitchOf, isPageOn, pageSwitchWrites, pageFieldsOf
 } from '@/components/widgets/skills/manifestFields';
 
 const { t, locale } = useI18n();
@@ -79,6 +81,25 @@ const extrasField = computed(() =>
   configurableFields(props.skill, props.entry, props.phase, viewer.value).find(f => f.key === EXTRAS_FIELD_KEY) || null);
 const declaredArguments = computed(() => argumentsOf(props.skill, props.entry));
 const showsTemplates = computed(() => hasTemplateFields(props.skill, props.entry, props.phase, viewer.value));
+
+/** A skill with a page of its own (R8): the strip's switch is the page's, and the assistant's is inside the card. */
+const pageSwitch = computed(() => pageSwitchOf(props.skill));
+const pageOn = computed(() => isPageOn(props.skill, props.entry));
+const page = computed(() => (props.skill ? pageOf(props.skill.name) : null));
+/** The fields only the page edits, named here with a link there instead of being drawn (`x-audience: page`). */
+const pageFields = computed(() => {
+  if (!page.value) return [];
+  return pageFieldsOf(props.skill).filter(f => page.value.edits.includes(f.key));
+});
+const fieldNotes = computed(() => (page.value && page.value.notes ? page.value.notes(props.entry, props.skill) : {}));
+const router = getCurrentInstance()?.proxy?.$router || null;
+const pageLink = computed(() => (page.value ? pageTarget(page.value, router ? router.currentRoute.value : null) : null));
+
+/** One flick of the page switch: off also turns the assistant off, in the same edit, so the save carries both. */
+function writePage(on) {
+  if (props.disabled) return;
+  pageSwitchWrites(on).forEach(w => emit('update:field', w));
+}
 
 function value(key) {
   return valueOf(props.entry, key);
@@ -137,7 +158,16 @@ function fieldProps(field) {
       <!-- First on the strip, and there whether the card is open or shut: this is the switch that
            decides whether the instance runs, and it used to be one field among twenty inside the
            card. `.stop` so that flicking it does not also open or close what it sits on. -->
-      <ToggleSwitch :modelValue="enabled"
+      <ToggleSwitch v-if="pageSwitch"
+                    :modelValue="pageOn"
+                    @update:modelValue="writePage($event)"
+                    @click.stop
+                    :disabled="disabled"
+                    class="entry-switch page-switch"
+                    :aria-label="label(pageSwitch)"
+                    :title="hint(pageSwitch)" />
+      <ToggleSwitch v-else
+                    :modelValue="enabled"
                     @update:modelValue="write('enabled', $event ? 'true' : 'false')"
                     @click.stop
                     :disabled="disabled"
@@ -156,7 +186,16 @@ function fieldProps(field) {
            and a closed card that says nothing about it is how one stays off unnoticed; but a badge
            that appears only when something is wrong is also a badge whose absence has to be
            interpreted. Stating both means the strip can be read rather than inferred from. -->
-      <Tag :value="enabled ? t('widgets.agentSkills.entryOn') : t('widgets.agentSkills.entryOff')"
+      <Tag v-if="pageSwitch"
+           :value="pageOn ? t('widgets.agentSkills.page.pageOn') : t('widgets.agentSkills.page.pageOff')"
+           :severity="pageOn ? 'success' : 'warn'"
+           class="entry-state-badge" />
+      <Tag v-if="pageSwitch"
+           :value="enabled ? t('widgets.agentSkills.page.assistantOn') : t('widgets.agentSkills.page.assistantOff')"
+           :severity="enabled ? 'success' : 'secondary'"
+           class="entry-state-badge assistant-badge" />
+      <Tag v-else
+           :value="enabled ? t('widgets.agentSkills.entryOn') : t('widgets.agentSkills.entryOff')"
            :severity="enabled ? 'success' : 'warn'"
            class="entry-state-badge" />
       <Button icon="pi pi-copy" severity="secondary" text rounded size="small"
@@ -185,6 +224,28 @@ function fieldProps(field) {
         {{ t('widgets.agentSkills.labelClash') }}
       </small>
       <small v-else-if="hint(nameField)" class="config-hint">{{ hint(nameField) }}</small>
+    </div>
+
+    <!-- Inside the page switch: whether the assistant books (R8). Off with the page; turned on only with the page on,
+         which is the invariant StarChat enforces on every save. -->
+    <div v-if="open && pageSwitch" class="entry-assistant">
+      <label class="assistant-switch">
+        <ToggleSwitch :modelValue="enabled"
+                      @update:modelValue="write('enabled', $event ? 'true' : 'false')"
+                      :disabled="disabled || !pageOn"
+                      class="entry-switch assistant-toggle"
+                      :aria-label="t('widgets.agentSkills.page.assistantSwitch')" />
+        <span class="config-label">{{ t('widgets.agentSkills.page.assistantSwitch') }}</span>
+      </label>
+      <small class="config-hint">{{ pageOn ? t('widgets.agentSkills.page.assistantHint') : t('widgets.agentSkills.page.assistantNeedsPage') }}</small>
+    </div>
+
+    <!-- The fields only the skill's page edits: named, with the way there, never a second editor here. -->
+    <div v-if="open && pageFields.length" class="entry-page-fields">
+      <span class="config-label">{{ t('widgets.agentSkills.page.summaryTitle') }}</span>
+      <small class="config-hint page-field-names">{{ pageFields.map(f => label(f)).join(' · ') }}</small>
+      <router-link v-if="router" class="page-link" :to="pageLink">
+        <i class="pi pi-external-link" aria-hidden="true"></i> {{ t('widgets.agentSkills.page.open') }}</router-link>
     </div>
 
     <div v-if="open && authFields.length > 0" class="entry-oauth">
@@ -293,6 +354,7 @@ function fieldProps(field) {
         </small>
 
         <small v-if="hint(field)" class="config-hint">{{ hint(field) }}</small>
+        <small v-if="fieldNotes[field.key]" class="config-hint field-note">{{ t(fieldNotes[field.key].key, fieldNotes[field.key].args) }}</small>
       </div>
 
       <!-- Said once for the whole entry, not once per prompt field. -->
@@ -366,6 +428,22 @@ function fieldProps(field) {
   color: var(--p-text-muted-color);
   line-height: 1.3;
 }
+
+.entry-assistant, .entry-page-fields {
+  border-top: 1px solid @mrcall_borders;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.assistant-switch {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.page-link { font-weight: 600; font-size: 0.8rem; }
 
 .entry-name-field {
   padding: .75rem 1rem 0;

@@ -95,6 +95,8 @@ test.describe('the restaurant page', () => {
     const panel = page.locator('.panel')
     await expect(panel.getByRole('heading', { name: 'New booking' })).toBeVisible()
     await panel.getByLabel('Name').fill('Neri')
+    // the phone is required by the manifest's default (R8, "what we ask for every booking")
+    await panel.getByLabel('Phone').fill('393331234567')
     await panel.locator('.save-btn').click()
     await expect(page.locator('.toast')).toContainText('Saved: Neri')
     const post = calls.find(c => c.method === 'POST' && c.path === '/reservations')
@@ -171,6 +173,8 @@ test.describe('the restaurant page', () => {
     await tap(tile(page, 'T4'))
     const panel = page.locator('.panel')
     await panel.getByLabel('Name').fill('Neri')
+    // the phone is required by the manifest's default (R8, "what we ask for every booking")
+    await panel.getByLabel('Phone').fill('393331234567')
     await panel.locator('.save-btn').click()
     await expect(page.locator('.toast')).toContainText('Saved: Neri')
     // Rossi, among the cancelled, is taken back from its panel
@@ -417,6 +421,8 @@ test.describe('the restaurant page', () => {
     await page.locator('.new-booking').click()
     const panel = page.locator('.panel')
     await panel.getByLabel('Name').fill('Neri')
+    // the phone is required by the manifest's default (R8, "what we ask for every booking")
+    await panel.getByLabel('Phone').fill('393331234567')
     await panel.locator('.save-btn').click()
     await expect(panel.locator('.refusal')).toContainText('There is no room at that time.')
     await expect(panel.locator('.refusal').getByRole('button', { name: '21:15' })).toBeVisible()
@@ -480,7 +486,9 @@ test.describe('the restaurant page', () => {
     expect(calls.filter(c => c.path === '/export').map(c => c.search)).toEqual([`?from=${TODAY}&to=${addDays(TODAY, 13)}`])
   })
 
-  test('the room: generated tables and a join by name are saved as one layout at its revision, the minimum free time through the skill', async ({ authenticatedPage: page }) => {
+  // Since R8 the room editor writes the layout alone, the exceptions kept. Seen failing on 2026-10-13 against 3448f55
+  // (a minimum free time field there, and no `exceptions` on the wire).
+  test('the room: generated tables and a join by name are saved as one layout at its revision, and nothing of the skill', async ({ authenticatedPage: page }) => {
     const { calls } = await mockRestaurant(page)
     await openRestaurant(page)
     await ready(page)
@@ -494,17 +502,13 @@ test.describe('the restaurant page', () => {
     await tap(editor.locator('.pick').last().getByLabel('D3'))
     await tap(editor.locator('.pick').last().getByLabel('D4'))
     await editor.getByRole('button', { name: 'Create join' }).click()
-    // the limits are the skill's: 1 to the longest table time (150)
-    await editor.getByLabel('Minimum free time in minutes').fill('200')
-    await expect(editor.locator('.issues')).toContainText('between 1 and 150 minutes')
-    await expect(editor.locator('.save-room')).toBeDisabled()
-    await editor.getByLabel('Minimum free time in minutes').fill('60')
     const pending = editor.locator('.pending')
     await expect(pending).toContainText('Tables added: D3, D4')
     await expect(pending).toContainText('Join added: D3+D4 (5-8)')
-    await expect(pending).toContainText('Minimum free time: 90 → 60 min')
+    // the settings are in "Hours and rules" now (R8): the room editor has none
+    await expect(editor.getByLabel('Minimum free time', { exact: false })).toHaveCount(0)
     await editor.locator('.save-room').click()
-    await expect(page.locator('.toast')).toContainText('3 changes saved')
+    await expect(page.locator('.toast')).toContainText('2 changes saved')
     const put = calls.find(c => c.method === 'PUT' && c.path === '/layout')
     expect(put.body.expectedRevision).toBe(3)
     expect(put.body.layout.tables.filter(t => t.zone === 'dehors')).toEqual([
@@ -514,12 +518,8 @@ test.describe('the restaurant page', () => {
       { name: 'D4', zone: 'dehors', min: 2, max: 4, active: true }])
     expect(put.body.layout.joins).toContainEqual({ tables: ['D3', 'D4'], min: 5, max: 8 })
     expect(put.body.layout.nextTableId).toBeUndefined()
-    const skill = calls.find(c => c.method === 'PUT' && c.path.includes('/skills/configuration/'))
-    expect(skill.path).toContain('/during/restaurant_booking_1')
-    expect(skill.body.expectedRevision).toBe('rev-1')
-    expect(skill.body.params.minFreeMinutes).toBe('60')
-    expect(skill.body.params.layout).toBeUndefined()
-    expect(skill.body.params.dinner).toContain('19:00-22:00')
+    expect(put.body.layout.exceptions).toEqual([])
+    expect(calls.filter(c => c.method === 'PUT' && c.path.includes('/skills/configuration/'))).toHaveLength(0)
     // the server's ids are on the page now: nothing is left to save
     await expect(editor.locator('.savebar')).toContainText('No changes')
   })
@@ -706,15 +706,18 @@ test.describe('the restaurant page', () => {
 
   // A setting not stored is StarChat's default, the manifest's (120 for the minimum free time): the field is
   // empty, says it is the default and what it is. Seen failing on 2026-10-12 against e228974 (90, the table time).
+  // Since R8 the setting lives in "Hours and rules"; this and the next test were seen failing on 2026-10-13 against
+  // 3448f55, where it was in the room editor.
   test('an unset minimum free time shows the manifest\'s default, as the default', async ({ authenticatedPage: page }) => {
     await mockRestaurant(page, { minFree: false })
-    await openRestaurant(page, '&tab=room')
-    const input = page.getByLabel('Minimum free time in minutes')
+    await openRestaurant(page, '&tab=rules')
+    const field = page.locator('.rules-editor [data-setting="minFreeMinutes"]')
+    const input = field.getByRole('spinbutton')
     await expect(input).toHaveValue('', { timeout: 20000 })
     await expect(input).toHaveAttribute('placeholder', '120')
-    await expect(page.locator('.room-editor .min-free')).toContainText('Default: 120 minutes')
-    await expect(page.locator('.room-editor .min-free .default-tag')).toBeVisible()
-    await expect(page.locator('.room-editor .savebar')).toContainText('No changes')
+    await expect(field).toContainText('Default: 120 minutes')
+    await expect(field.locator('.default-tag')).toBeVisible()
+    await expect(page.locator('.rules-editor .savebar')).toContainText('No changes')
   })
 
   // A stored value different from the default shows that value, and emptying the field goes back to the default,
@@ -722,19 +725,26 @@ test.describe('the restaurant page', () => {
   // the emptied field was refused as not a number.
   test('a stored minimum free time shows as itself, and emptying it goes back to the default, written as unset', async ({ authenticatedPage: page }) => {
     const { calls } = await mockRestaurant(page)
-    await openRestaurant(page, '&tab=room')
-    const input = page.getByLabel('Minimum free time in minutes')
+    await openRestaurant(page, '&tab=rules')
+    const field = page.locator('.rules-editor [data-setting="minFreeMinutes"]')
+    const input = field.getByRole('spinbutton')
     await expect(input).toHaveValue('90', { timeout: 20000 })
-    await expect(page.locator('.room-editor .min-free')).toContainText('Default: 120 minutes')
-    await expect(page.locator('.room-editor .min-free .default-tag')).toHaveCount(0)
+    await expect(field).toContainText('Default: 120 minutes')
+    await expect(field.locator('.default-tag')).toHaveCount(0)
+    // the limits are the skill's: 1 to the longest table time (150)
+    await input.fill('200')
+    await expect(page.locator('.rules-editor .issues')).toContainText('Minimum free time: between 1 and 150')
+    await expect(page.locator('.rules-editor .save-rules')).toBeDisabled()
     await input.fill('')
-    await expect(page.locator('.room-editor .min-free .default-tag')).toBeVisible()
-    await expect(page.locator('.room-editor .pending')).toContainText('Minimum free time: 90 → default (120) min')
-    await expect(page.locator('.room-editor .save-room')).toBeEnabled()
-    await page.locator('.room-editor .save-room').click()
+    await expect(field.locator('.default-tag')).toBeVisible()
+    await expect(page.locator('.rules-editor .pending')).toContainText('Minimum free time: 90 → default (120)')
+    await page.locator('.rules-editor .save-rules').click()
     await expect(page.locator('.toast')).toContainText('1 change saved')
     const put = calls.find(c => c.method === 'PUT' && c.path.includes('/skills/configuration/'))
+    expect(put.path).toContain('/during/restaurant_booking_1')
+    expect(put.body.expectedRevision).toBe('rev-1')
     expect('minFreeMinutes' in put.body.params).toBe(false)
+    expect(put.body.params.layout).toBeUndefined()
     expect(put.body.params.dinner).toContain('19:00-22:00')
   })
 
@@ -752,31 +762,19 @@ test.describe('the restaurant page', () => {
     await expect(missing).toHaveCount(0)
   })
 
-  // The largest party the assistant books by itself is set here, written through the skill instance with its
-  // revision, and a warning that names it leads to it. Seen failing on 2026-10-12 against e228974: no such field.
-  test('the largest party is set in the room editor, and the warning about it leads there', async ({ authenticatedPage: page }) => {
-    const { calls } = await mockRestaurant(page)
+  // The largest party the assistant books by itself is the assistant's policy (R8): the page does not edit it, and the
+  // warning about it leads to the skill form. Seen failing on 2026-10-13 against 3448f55, where the room editor had
+  // the field and the warning focused it.
+  test('the largest party is not edited in the page: its warning leads to the skill form', async ({ authenticatedPage: page }) => {
+    await mockRestaurant(page)
     await openRestaurant(page, '&tab=room')
-    const field = page.getByLabel('Largest party the assistant books by itself')
-    // not stored: empty, the manifest's 8 shown as the default
-    await expect(field).toHaveValue('', { timeout: 20000 })
-    await expect(field).toHaveAttribute('placeholder', '8')
-    await expect(page.locator('.room-editor .max-party')).toContainText('Default: 8 people')
-    await page.locator('.room-editor .issues').getByRole('button', { name: 'Change the largest party' }).click()
-    await expect(field).toBeFocused()
-    await page.locator('.room-editor .issues').getByRole('button', { name: 'Go to the joins' }).click()
+    const issues = page.locator('.room-editor .issues')
+    await expect(issues).toContainText('Good to know (you can save anyway)', { timeout: 20000 })
+    await expect(page.getByLabel('Largest party the assistant books by itself')).toHaveCount(0)
+    const link = issues.getByRole('link', { name: 'Change it in the skill settings' })
+    await expect(link).toHaveAttribute('href', /section=__SKILLS__/)
+    await issues.getByRole('button', { name: 'Go to the joins' }).click()
     await expect(page.locator('.room-editor [data-ref="joins"]')).toBeFocused()
-    await field.fill('101')
-    await expect(page.locator('.room-editor .issues')).toContainText('Largest party: between 1 and 100 people')
-    await field.fill('6')
-    await expect(page.locator('.room-editor .pending')).toContainText('Largest party the assistant books: default (8) → 6 people')
-    await page.locator('.room-editor .save-room').click()
-    await expect(page.locator('.toast')).toContainText('1 change saved')
-    const put = calls.find(c => c.method === 'PUT' && c.path.includes('/skills/configuration/'))
-    expect(put.body.expectedRevision).toBe('rev-1')
-    expect(put.body.params.maxPartySize).toBe('6')
-    expect(put.body.params.layout).toBeUndefined()
-    expect(calls.filter(c => c.method === 'PUT' && c.path === '/layout')).toHaveLength(0)
   })
 })
 

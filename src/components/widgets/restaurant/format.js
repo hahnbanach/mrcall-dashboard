@@ -34,10 +34,24 @@ export function phoneOf(raw) {
 /** The refusals the page says in its own words; anything else is a generic failure. */
 export const KNOWN_CODES = ["full", "closed", "not_offered", "too_late", "beyond_horizon", "large_party", "bad_covers", "stale",
     "busy_retry", "idempotency_key_reused", "not_found", "not_configured", "unknown_zone", "unknown_table", "join_across_zones",
-    "person_required", "scope_missing", "not_reversible", "table_taken"];
+    "person_required", "scope_missing", "not_reversible", "table_taken", "missing_fields", "zone_closed", "tables_unsuitable",
+    "linked_request"];
 
-/** Refusals a person may override by booking anyway (the server's `overbook`). */
-export const OVERRIDABLE = ["full", "not_offered", "too_late", "large_party", "closed"];
+/**
+ * Refusals a person may override by booking anyway (the server's `overbook`): a taken table, and nothing else.
+ * Since StarChat R8 staff are bound by structure only: hours, the grid, notice, the assistant's largest party and
+ * pace are warnings, never refusals; a closed day or service, a past day, the horizon and a closed zone are refused
+ * and overbooking never lifts them.
+ */
+export const OVERRIDABLE = ["full"];
+
+/** The fields a `missing_fields` refusal names (R8: the diagnostic's `values.fields`), or none. */
+export function missingFieldsOf(error) {
+    const body = error && error.restaurant && error.restaurant.body;
+    const first = body && Array.isArray(body.diagnostics) ? body.diagnostics[0] : null;
+    const fields = first && first.code === "missing_fields" && first.values ? first.values.fields : null;
+    return Array.isArray(fields) ? fields.filter(f => typeof f === "string") : [];
+}
 
 export function refusalKey(code) {
     return `components.restaurant.answer.${KNOWN_CODES.includes(code) ? code : "error"}`;

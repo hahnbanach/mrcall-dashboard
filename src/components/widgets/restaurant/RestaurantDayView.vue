@@ -15,6 +15,17 @@
     <div v-if="closed" class="card closed-day">
       <h3>{{ $t("components.restaurant.day.closedTitle", { service: $t(`components.restaurant.service.${service}`) }) }}</h3>
       <p class="muted">{{ $t("components.restaurant.day.closedText") }}</p>
+      <!-- A closure written after bookings were taken (on the page or in the calendar) leaves them in place: they are
+           listed here, for staff to call (R8, criterion 11). -->
+      <div v-if="toCall.length" class="callout red closed-bookings" role="status">
+        <b>{{ $t("components.restaurant.day.toCall", { n: toCall.length }, toCall.length) }}</b>
+        <div v-for="b in toCall" :key="b.id" class="brow closed-day-row" role="button" tabindex="0" :data-booking="b.id"
+             @click="$emit('open', b.id)" @keydown.enter.prevent="$emit('open', b.id)">
+          <span class="t">{{ fmt(b.start) }}</span>
+          <span class="n"><b>{{ b.name || $t("components.restaurant.walkInName") }}</b>
+            <small>{{ $t("components.restaurant.peopleShort", { n: b.party }) }}<template v-if="b.phone"> · {{ b.phone }}</template></small></span>
+        </div>
+      </div>
     </div>
 
     <template v-else>
@@ -165,7 +176,7 @@
               </template>
               <template v-if="orphans.length">
                 <div class="tl-zone">{{ $t("components.restaurant.noTable") }}</div>
-                <div v-for="b in orphans" :key="b.id" class="tl-row"><div class="tl-label">?</div>
+                <div v-for="b in orphans" :key="b.id" class="tl-row"><div class="tl-label">{{ b.intendedTables.length ? intendedLabel(b) : "?" }}</div>
                   <div class="tl-track"><button class="tl-bar arrived" :style="{ left: pct(b.start), width: `calc(${pct(Math.min(b.end, win.close))} - ${pct(b.start)})` }"
                                                 @click="$emit('open', b.id)">{{ b.name }} · {{ b.party }}</button></div>
                 </div>
@@ -179,17 +190,33 @@
           <h3>{{ $t("components.restaurant.list.title", { service: $t(`components.restaurant.service.${service}`), n: active.length }) }}</h3>
           <div v-if="requests.length" class="requests">
             <h4>{{ $t("components.restaurant.list.requests", { n: requests.length }) }}</h4>
-            <div v-for="r in requests" :key="r.id" class="req">
+            <div v-for="r in requests" :key="r.id" class="req" :class="{ linked: !!r.about }" :data-request="r.id">
               <b>{{ fmt(r.start) }} · {{ r.name }} · {{ $t("components.restaurant.people", { n: r.party }) }}</b>
+              <span v-if="closedFor(r)" class="pill red closed-mark">{{ $t("components.restaurant.day.closedMark") }}</span>
+              <!-- a call-back request about a change of a booking (R8): what the caller asked, and two actions -->
+              <template v-if="r.about">
+                <br><span class="change-about">{{ aboutLine(r) }}</span><span v-if="r.notes"> · {{ r.notes }}</span>
+                <div class="acts">
+                  <button class="btn small make-change" :disabled="busy" @click="$emit('make-change', r)">{{ $t("components.restaurant.change.make") }}</button>
+                  <button class="btn ghost small close-request" :disabled="busy" @click="$emit('decline', r)">{{ $t("components.restaurant.change.close") }}</button>
+                  <button v-if="hasCalls(r)" class="btn ghost small" @click="$emit('call', r)">{{ $t("components.restaurant.readCall") }}</button>
+                </div>
+              </template>
+              <template v-else>
               <br><span v-if="r.requestReason">{{ $t(`components.restaurant.reason.${r.requestReason}`) }}</span><span v-if="r.notes"> · {{ r.notes }}</span>
               <div class="acts">
                 <button class="btn small" :disabled="busy" @click="$emit('accept', r)">{{ $t("components.restaurant.list.accept") }}</button>
                 <button class="btn ghost small" :disabled="busy" @click="$emit('decline', r)">{{ $t("components.restaurant.list.decline") }}</button>
                 <button v-if="hasCalls(r)" class="btn ghost small" @click="$emit('call', r)">{{ $t("components.restaurant.readCall") }}</button>
               </div>
+              </template>
             </div>
           </div>
-          <div v-if="orphans.length" class="unseated"><b>{{ $t("components.restaurant.list.noTable", { n: orphans.length }) }}</b>: {{ $t("components.restaurant.list.noTableHint") }}</div>
+          <div v-if="orphans.length" class="unseated"><b>{{ $t("components.restaurant.list.noTable", { n: orphans.length }) }}</b>: {{ $t("components.restaurant.list.noTableHint") }}
+            <!-- an overbooking keeps the tables staff meant (R8): said here, they are not held -->
+            <div v-for="b in orphans.filter(o => o.intendedTables.length)" :key="b.id" class="intended" :data-booking="b.id">
+              {{ b.name || $t("components.restaurant.walkInName") }} · {{ fmt(b.start) }}: {{ $t("components.restaurant.list.intended", { tables: intendedLabel(b) }) }}</div>
+          </div>
           <div class="filters" role="group" :aria-label="$t('components.restaurant.list.filter')">
             <button v-for="f in FILTERS" :key="f" :aria-pressed="filter === f" @click="filter = f">{{ $t(`components.restaurant.list.filters.${f}`) }} {{ groups[f].length }}</button>
           </div>
@@ -197,7 +224,9 @@
                @click="$emit('open', b.id)" @keydown.enter.prevent="$emit('open', b.id)" @keydown.space.prevent="$emit('open', b.id)">
             <span class="t">{{ fmt(b.start) }}</span>
             <span class="n"><b>{{ b.name || $t("components.restaurant.walkInName") }} <i v-if="b.pinned" class="pi pi-thumbtack" :aria-label="$t('components.restaurant.pinnedMark')"></i> <i v-if="b.allergies" class="pi pi-exclamation-triangle" :aria-label="$t('components.restaurant.allergies')"></i></b>
-              <small>{{ $t("components.restaurant.peopleShort", { n: b.party }) }} · {{ seatsOf(b) }} · {{ stateText(b) }}</small></span>
+              <small>{{ $t("components.restaurant.peopleShort", { n: b.party }) }} · {{ seatsOf(b) }} · {{ stateText(b) }}</small>
+              <small v-if="closedFor(b)" class="pill red closed-mark">{{ $t("components.restaurant.day.closedMark") }}</small>
+              <small v-if="changeFor(b)" class="pill amber change-mark">{{ $t("components.restaurant.change.asked") }}</small></span>
             <!-- a guest past their arrival time and not here: no-show in one tap, with Undo (the prototype's late row) -->
             <button v-if="isLate(b)" class="quick quick-noshow" :disabled="busy" @click.stop="$emit('no-show', b)">{{ $t("components.restaurant.panel.noShowAction") }}</button>
             <button v-if="b.state === 'booked' || b.state === 'arrived'" class="quick" :disabled="busy" @click.stop="$emit('state', b, 'seated')">{{ $t("components.restaurant.state.seatedShort") }}</button>
@@ -219,7 +248,7 @@
 <script>
 import {
   fmt, live, guests, usableTables, orderedZones, zoneOpen, tableAt, freeFrom, isFreeAt, tableById, seatLabel, occupiedTables,
-  knowCounts, matches, callsOf, dropTargets, serviceWindow, minuteOfDay, lateBy
+  knowCounts, matches, callsOf, dropTargets, serviceWindow, minuteOfDay, lateBy, onClosedDay
 } from "@/utils/RestaurantModel";
 import { refusalKey } from "@/components/widgets/restaurant/format";
 import RestaurantDayNav from "@/components/widgets/restaurant/RestaurantDayNav.vue";
@@ -255,9 +284,12 @@ export default {
     moving: { type: String, default: null },
     search: { type: String, default: "" },
     busy: { type: Boolean, default: false },
+    /** The day's closures (R8): {service, zone, source}; and the zones closed for the day. */
+    closures: { type: Array, default: () => [] },
+    zonesClosed: { type: Array, default: () => [] },
   },
   emits: ["go-day", "set-service", "set-time", "find", "open", "tile-free", "fit-book", "new-booking", "timeline-new", "state",
-    "move-cancel", "move-to", "drop", "accept", "decline", "call", "no-show"],
+    "move-cancel", "move-to", "drop", "accept", "decline", "call", "no-show", "make-change"],
   data() {
     return { KNOW_CLASS, FILTERS, mode: "floor", filter: "all", know: null };
   },
@@ -359,6 +391,10 @@ export default {
     requests() {
       return this.serviceGuests.filter(b => b.state === "requested");
     },
+    /** The bookings of a closed service still to come: the closure was written after them, and staff call them. */
+    toCall() {
+      return this.serviceGuests.filter(b => ["booked", "arrived"].includes(b.state));
+    },
     orphans() {
       return this.active.filter(b => !b.tables.length && b.state !== "left");
     },
@@ -414,6 +450,24 @@ export default {
     },
     hasCalls(b) {
       return callsOf(b).length > 0;
+    },
+    closedFor(b) {
+      return ["booked", "arrived", "seated", "requested"].includes(b.state) && onClosedDay(b, this.closures, this.zonesClosed);
+    },
+    /** The open call-back request about a change of this booking, when the day holds one. */
+    changeFor(b) {
+      return this.list.find(r => r.state === "requested" && r.about === b.id) || null;
+    },
+    /** What a call-back request asks: the booking it names, and the day, time and people the caller wants. */
+    aboutLine(r) {
+      const original = this.list.find(b => b.id === r.about);
+      return this.$t("components.restaurant.change.asks", {
+        name: original ? original.name || this.$t("components.restaurant.walkInName") : r.name,
+        from: original ? `${fmt(original.start)} · ${this.$t("components.restaurant.people", { n: original.party })}` : this.$t("components.restaurant.change.otherDay"),
+        to: `${fmt(r.start)} · ${this.$t("components.restaurant.people", { n: r.party })}` });
+    },
+    intendedLabel(b) {
+      return seatLabel(this.layout, b.intendedTables);
     },
     knowDetail(b) {
       if (this.know === "allergies") return b.allergies;

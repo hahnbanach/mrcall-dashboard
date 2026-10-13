@@ -154,6 +154,22 @@
         "summary": "{zones} ala, {tables} aktiivset lauda. Neid muudetakse restorani lehel.",
         "open": "Ava Saal ja lauad",
         "unknown": "Saali ei õnnestunud praegu lugeda; seda muudetakse restorani lehel."
+      },
+      "page": {
+        "pageOn": "Leht sees",
+        "pageOff": "Leht väljas",
+        "assistantOn": "Assistent broneerib",
+        "assistantOff": "Assistent väljas",
+        "assistantSwitch": "Assistent võtab broneeringuid",
+        "assistantHint": "Väljas: leht ja töötajad töötavad edasi, assistent ei broneeri.",
+        "assistantNeedsPage": "Lülita esmalt leht sisse: assistent ei broneeri kunagi raamatusse, mida keegi ei näe.",
+        "summaryTitle": "Määratakse restorani lehel",
+        "open": "Ava restorani leht",
+        "daysAheadNote": "Kõige rohkem raamatu horisont ({n} päeva), määratud restorani lehel: sellest üle broneerib assistent kuni horisondini."
+      },
+      "code": {
+        "assistant_without_page": "Assistent ei saa broneeringuid võtta, kuni restorani leht on väljas: lülita assistent välja või leht sisse.",
+        "allergies_required_unavailable": "Allergiad ei saa siin veel kohustuslikud olla: igalt helistajalt küsimine ootab õigusliku küsimuse lahendamist."
       }
     }
   },
@@ -1224,7 +1240,12 @@
         "scope_missing": "See juurdepääs seda ei võimalda.",
         "error": "Midagi läks valesti: proovi uuesti.",
         "not_reversible": "Seda broneeringut ei saa enam taastada.",
-        "table_taken": "Selle lauad on hõivatud."
+        "table_taken": "Selle lauad on hõivatud.",
+        "missingFields": "Iga broneering vajab siin: {fields}.",
+        "missing_fields": "Kohustuslik väli puudub.",
+        "zone_closed": "See ala on siis suletud.",
+        "tables_unsuitable": "Need lauad ei mahuta seda seltskonda.",
+        "linked_request": "See taotlus soovib broneeringut muuta: tee muudatus või sulge see."
       },
       "strip": {
         "label": "Eelseisvate päevade vabad kohad",
@@ -1276,7 +1297,9 @@
         "floor": "Saal",
         "timeline": "Ajajoon",
         "floorHint": "Roheline = vaba kell {time} vähemalt {n} min; hall = vabaneb liiga lühikeseks ajaks. Puuduta rohelist lauda, et seda broneerida, hõivatud lauda, et seda avada. Liigutamiseks lohista.",
-        "timelineHint": "Üks rida laua kohta. Puuduta tühja kohta, et sellele ajale broneerida, päist, et aega muuta."
+        "timelineHint": "Üks rida laua kohta. Puuduta tühja kohta, et sellele ajale broneerida, päist, et aega muuta.",
+        "toCall": "1 broneering selles suletud teenuses: helista külalisele | {n} broneeringut selles suletud teenuses: helista külalistele",
+        "closedMark": "suletud: helista"
       },
       "know": {
         "label": "Hea teada:",
@@ -1358,7 +1381,8 @@
           "left": "Lahkunud"
         },
         "empty": "Siin pole broneeringuid.",
-        "gone": "Tühistatud ja mitteilmunud ({n})"
+        "gone": "Tühistatud ja mitteilmunud ({n})",
+        "intended": "mõeldud laudadele {tables}"
       },
       "panel": {
         "cancelled": "Broneering tühistatud.",
@@ -1384,7 +1408,8 @@
         "assistantSaid": "Telefonis ütles assistent \"laud {n} inimesele\", mitte kunagi laua nime.",
         "pastNoShows": "1 varasem mitteilmumine selle numbriga. | {n} varasemat mitteilmumist selle numbriga.",
         "cancelledByCaller": "Külaline tühistas telefonis: seda ei saa taastada, tee uus broneering.",
-        "reinstate": "Taasta"
+        "reinstate": "Taasta",
+        "closedDay": "See broneering on päeval, teenuses või alal, mis suleti pärast selle võtmist: helista külalisele."
       },
       "newb": {
         "title": "Uus broneering",
@@ -1411,18 +1436,16 @@
         "freeFixed": "Vaba: {tables} · {zone}. Ütle külalisele \"laud {n} inimesele\", laua nime nimetamata.",
         "serverChooses": "Broneeringusüsteem valib laua, kui salvestad.",
         "alternatives": "Selle asemel vaba:",
-        "save": "Salvesta · {day} {time} · {people}"
+        "save": "Salvesta · {day} {time} · {people}",
+        "zone": "Ala",
+        "anyZone": "Ükskõik milline ala",
+        "fieldMissing": "{field}: iga broneeringu puhul kohustuslik."
       },
       "room": {
         "intro": "Kogu saali muudetakse siin. Iga ala, lauda ja ühendust muudetakse selle enda väljal või eemaldatakse märgiga ✕. Muudatused jõuavad assistendini alles siis, kui vajutad Salvesta muudatused; seni saab need kõik tagasi lükata.",
         "pending": "1 muudatus salvestamiseks | {n} muudatust salvestamiseks",
         "errors": "1 viga parandada enne salvestamist | {n} viga parandada enne salvestamist",
         "warnings": "Hea teada (salvestada saab ikkagi)",
-        "settings": "Seaded",
-        "minFree": "Vaba aja miinimum",
-        "minFreeLabel": "Vaba aja miinimum minutites",
-        "minutes": "minutit",
-        "minFreeHint": "Laud kuvatakse vabana ainult siis, kui see jääb vabaks vähemalt nii kauaks: 120 minuti korral ei loeta lauda, mis on kell 20:00 vaba, kuid kell 21:00 broneeritud, vabaks. 1 kuni {max} minutit.",
         "generator": "Lisa lauad korraga",
         "genAdd": "Lisa",
         "genHowMany": "Mitu lauda",
@@ -1450,11 +1473,6 @@
         "noteHint": "Assistent kasutab seda ala helistajatele kirjeldamiseks.",
         "closures": "Sulgemised",
         "alwaysOpen": "Alati avatud.",
-        "closedFrom": "Suletud alates",
-        "closedTo": "Suletud kuni",
-        "closureAdd": "Lisa sulgemine",
-        "closureDelete": "Eemalda sulgemine",
-        "closureDates": "Sulgemine: vali kuupäevad \"alates\" ja \"kuni\".",
         "tName": "Nimi",
         "tMin": "Min. kohti",
         "tMax": "Max. kohti",
@@ -1510,18 +1528,13 @@
         "stale": "Saal muutus vahepeal: see loeti uuesti, tee oma muudatused veel kord.",
         "configChanged": "Seadistus muutus vahepeal: see loeti uuesti, proovi veel kord.",
         "needsHours": "Määra esmalt lahtiolekuajad: ilma nendeta ei saa saali salvestada.",
-        "layoutSavedOnly": "Saal salvestati, seadeid mitte.",
         "andOthers": "{names} ja veel {n}",
-        "maxParty": "Suurim seltskond, mille assistent ise broneerib",
-        "maxPartyHint": "Üle selle inimeste arvu assistent ei broneeri: ta salvestab taotluse, mille sa kinnitad. Tavaliselt mitte rohkem kui suurim laud või ühendus.",
-        "goMaxParty": "Muuda suurimat seltskonda",
         "goTableMin": "Muuda laudade minimaalset kohtade arvu",
         "goJoins": "Mine ühenduste juurde",
-        "settingsRefused": "Server ei võtnud seadeid vastu: kontrolli vaba aja miinimumi ja suurimat seltskonda.",
-        "defaultMinutes": "Vaikimisi: {n} minutit",
-        "defaultPeople": "Vaikimisi: {n} inimest",
         "byDefault": "vaikimisi ({n})",
-        "defaultTag": "vaikimisi"
+        "defaultTag": "vaikimisi",
+        "closuresWhere": "Sulgemised määratakse jaotises Ajad ja reeglid",
+        "goMaxPartySkill": "Muuda seda skilli seadetes"
       },
       "check": {
         "zoneNameMissing": "Ala {n} · Nimi: kohustuslik",
@@ -1537,9 +1550,7 @@
         "joinZones": "Ühendus {label} · Lauad: need on eri aladel; ühendus jääb ühele alale",
         "joinMin": "Ühendus {label} · Min. inimesi: vähemalt 1",
         "joinMax": "Ühendus {label} · Max. inimesi: vähemalt {min}",
-        "joinDuplicate": "Ühendus {label}: samade laudadega ühendus on juba olemas",
-        "minFree": "Seaded · Vaba aja miinimum: {min} kuni {max} minutit",
-        "maxParty": "Seaded · Suurim seltskond: {min} kuni {max} inimest"
+        "joinDuplicate": "Ühendus {label}: samade laudadega ühendus on juba olemas"
       },
       "layoutCode": {
         "table_has_holds": "Laual, mida tahad eemaldada, välja lülitada või teise alasse viia, on tulevasi broneeringuid: tõsta või tühista need kõigepealt ja salvesta siis.",
@@ -1583,9 +1594,7 @@
         "tableOff": "{name}: deaktiveeritud",
         "joinAdded": "Ühendus lisatud: {label} ({min}-{max})",
         "joinRemoved": "Ühendus eemaldatud: {label}",
-        "joinRange": "Ühendus {label}: inimesi {from} → {to}",
-        "minFree": "Vaba aja miinimum: {from} → {to} min",
-        "maxParty": "Suurim seltskond, mille assistent broneerib: {from} → {to} inimest"
+        "joinRange": "Ühendus {label}: inimesi {from} → {to}"
       },
       "calls": {
         "title": "Kõne",
@@ -1668,7 +1677,140 @@
         "bad_value": "„{value}“ ei ole kehtiv väärtus: kontrolli esiletõstetud välja."
       },
       "manifestMissing": "Funktsiooni seadeid ei õnnestunud lugeda, seega ei saa leht näidata vaikeväärtusi.",
-      "retry": "Proovi uuesti"
+      "retry": "Proovi uuesti",
+      "pageOff": "Restorani leht on skilli seadetes välja lülitatud: broneeringud jäävad alles ning eksport ja kustutamine on endiselt saadaval. Lülita see sisse, et lehte kasutada.",
+      "tabRules": "Ajad ja reeglid",
+      "rules": {
+        "intro": "Restorani ajad ja reeglid ning see, mida iga broneering peab sisaldama, kes iganes selle võtab. Kuidas assistent broneerib (suurim seltskond, etteteatamine, päevad ette, mida ta ütleb), määratakse skilli seadetes.",
+        "toSkill": "Ava skilli seaded",
+        "hours": "Lahtiolekuajad",
+        "tables": "Lauad ja tempo",
+        "reach": "Kui kaugele ette",
+        "field": {
+          "arrivalEveryMinutes": "Saabumine iga",
+          "tableMinutes2": "Laua kestus, 1-2 inimest",
+          "tableMinutes4": "Laua kestus, 3-4 inimest",
+          "tableMinutes6": "Laua kestus, 5-6 inimest",
+          "tableMinutesLarger": "Laua kestus, 7 või rohkem",
+          "coversPerArrival": "Korraga saabuvaid külalisi kõige rohkem",
+          "minFreeMinutes": "Vaba aja miinimum",
+          "horizonDays": "Broneeringuraamatu horisont",
+          "walkInMinutes": "Aken broneeringuta tulijatele"
+        },
+        "unit": {
+          "minutes": "minutit",
+          "people": "inimest",
+          "days": "päeva"
+        },
+        "defaultIs": {
+          "minutes": "Vaikimisi: {n} minutit",
+          "people": "Vaikimisi: {n} inimest",
+          "days": "Vaikimisi: {n} päeva"
+        },
+        "hint": {
+          "arrivalEveryMinutes": "Saabumisaegade samm: 15 annab 19:00, 19:15, 19:30. Vahemikus {min} kuni {max}.",
+          "tableMinutes2": "Kui kaua laud on hõivatud. Vahemikus {min} kuni {max}.",
+          "tableMinutes4": "Kui kaua laud on hõivatud. Vahemikus {min} kuni {max}.",
+          "tableMinutes6": "Kui kaua laud on hõivatud. Vahemikus {min} kuni {max}.",
+          "tableMinutesLarger": "Kui kaua laud on hõivatud. Vahemikus {min} kuni {max}.",
+          "coversPerArrival": "Mitu külalist köök samal saabumisajal vastu võtab, kõik alad kokku; 0 tähendab piirangut pole.",
+          "minFreeMinutes": "Laud on vaba ainult siis, kui see jääb vabaks vähemalt nii kauaks. Vahemikus {min} kuni {max}.",
+          "horizonDays": "Kui kaugele ette on raamat ja see leht avatud sinule ja töötajatele. Assistent broneerib kuni oma päevadeni ette, mis on skillis määratud, mitte kunagi kaugemale. Vahemikus {min} kuni {max}.",
+          "walkInMinutes": "Broneeringuta külaline saabub nüüd: täna, nii mitme minuti jooksul kellaajast. Nimi ja telefon võivad puududa; väljaspool akent on see tavaline broneering. Vahemikus {min} kuni {max}."
+        },
+        "changed": {
+          "hours": "{service}: saabumisajad muudetud",
+          "number": "{what}: {from} → {to}",
+          "ask": "{what}: {to}",
+          "closures": "Sulgemised ja eriavamised muudetud"
+        },
+        "outOfRange": "{what}: vahemikus {min} kuni {max}.",
+        "code": {
+          "allergies_required_unavailable": "Allergiad ei saa siin veel kohustuslikud olla: igalt helistajalt küsimine ootab õigusliku küsimuse lahendamist. Vali valikuline või ei küsita.",
+          "pace_below_party": "Korraga saabuvaid külalisi ({coversPerArrival}) on vähem kui suurim seltskond, mida assistent broneerib ({maxPartySize}): selline seltskond ei saaks kunagi saabuda.",
+          "days_ahead_beyond_horizon": "Assistent broneerib {daysAhead} päeva ette, üle raamatu {horizonDays} päeva horisondi: ta broneerib kuni {horizonDays} päevani.",
+          "out_of_range": "{what}: väärtus on lubatud vahemikust väljas."
+        },
+        "refusedField": "{what}: väärtust ei aktsepteeritud.",
+        "inSkill": "Muuda seda skilli seadetes",
+        "savedToast": "1 muudatus salvestatud | {n} muudatust salvestatud"
+      },
+      "ask": {
+        "title": "Mida me iga broneeringu puhul küsime",
+        "intro": "Iga broneeringu puhul, kes iganes selle võtab (assistent, sina, töötajad): mis on kohustuslik, mida küsitakse ainult siis, kui külaline seda pakub, ja mida ei küsita üldse.",
+        "fixed": "Päev, kellaaeg ja inimesed",
+        "always": "Alati kohustuslikud",
+        "field": {
+          "name": "Nimi",
+          "phone": "Telefon",
+          "allergies": "Allergiad",
+          "notes": "Märkused",
+          "zone": "Ala"
+        },
+        "rule": {
+          "required": "Kohustuslik",
+          "optional": "Valikuline",
+          "not_asked": "Ei küsita"
+        },
+        "phoneNotAsked": "Telefoni ei küsita: ükski broneering ei nõua numbrit, ei assistendilt ega sinult. Helistaja number säilitatakse siiski, kui see on nähtav.",
+        "phoneCaller": "Telefonis loeb helistaja nähtav number telefoniks: assistent küsib numbrit ainult siis, kui number on peidetud.",
+        "allergiesActsOptional": "Salvestatud kohustuslikuna, kuid selles keskkonnas kehtib see valikulisena: igalt helistajalt allergiate küsimine ootab õigusliku küsimuse lahendamist.",
+        "allergiesUnavailable": "Kohustuslik pole selles keskkonnas veel saadaval: igalt helistajalt allergiate küsimine ootab õigusliku küsimuse lahendamist.",
+        "walkIn": "Praegu broneeringuta saabuv külaline võib nime ja telefoni välja jätta."
+      },
+      "closures": {
+        "title": "Sulgemised ja eriavamised",
+        "intro": "Üks loend iga suletud päeva, suletud teenuse ja eriavamise kohta, kogu restoranile või ühele alale. Juba võetud broneeringud päeval, mille sulged, jäävad alles: leht näitab neid, et saaksid helistada.",
+        "remove": "Eemalda {what}",
+        "fromCalendar": "kalendrist",
+        "none": "Sulgemisi pole.",
+        "whereCalendar": "Kalendri sulgemisi muudetakse skilli seadetes ühendatud kalendris: sündmus, mille pealkiri algab sulgemissõnaga.",
+        "add": "Lisa",
+        "from": "Alates",
+        "to": "Kuni (valikuline)",
+        "kind": "Mis",
+        "closed": "Suletud",
+        "special": "Eriavamine",
+        "service": "Teenus",
+        "allDay": "kogu päev",
+        "where": "Kus",
+        "wholeRestaurant": "kogu restoran",
+        "windows": "Saabumisajad",
+        "addButton": "Lisa loendisse",
+        "neverRead": "Kalendrit pole veel loetud.",
+        "readAt": "Kalender loetud {when}.",
+        "lastFailed": "Viimane lugemine, {when}, ebaõnnestus: näidatud sulgemised on eelmisest lugemisest.",
+        "describeOpen": "{days} · {service}: eriavamine {windows}",
+        "describeClosed": "{days} · {service} · {where}: suletud",
+        "needFrom": "Vali esimene päev.",
+        "backwards": "Viimane päev on enne esimest.",
+        "badWindows": "Eriavamine vajab teenust ja saabumisaegu nagu 19:30-21:30.",
+        "refused": "Sulgemisi ei salvestatud: proovi uuesti."
+      },
+      "warning": {
+        "outside_hours": "Väljaspool teenuse lahtiolekuaega.",
+        "off_grid": "Mitte saabumisaegadel (lahtiolekuaja sees).",
+        "within_notice": "Varem kui assistendi etteteatamisaeg.",
+        "after_same_day_cutoff": "Pärast kellaaega, mil assistent lõpetab tänaste broneeringute võtmise.",
+        "beyond_days_ahead": "Kaugemal kui assistent broneerib.",
+        "above_max_party": "Suurem, kui assistent ise broneerib.",
+        "over_pace": "Rohkem korraga saabuvaid külalisi kui köögi tempo.",
+        "saidOnSave": "Hea teada: {list}"
+      },
+      "change": {
+        "notFound": "Broneeringut, mida taotlus puudutab, ei leitud: ava see ja muuda käsitsi.",
+        "done": "{name} viidud: {day} {time}, {people}; taotlus on suletud",
+        "asked": "Muudatust küsiti telefonis",
+        "make": "Tee muudatus",
+        "close": "Sulge muutmata",
+        "asks": "{name} soovib muuta {from} → {to}",
+        "otherDay": "teise päeva broneering"
+      },
+      "acceptFields": {
+        "title": "Kinnita {name}",
+        "intro": "Kinnitamiseks vajab see broneering: {fields}.",
+        "accept": "Kinnita"
+      }
     }
   },
   "views": {

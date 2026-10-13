@@ -90,7 +90,6 @@ export function rulesOf (params, manifest) {
   // StarChat's rule for an unset minimum free time: the manifest's default, capped at the longest table time; a
   // manifest without one (9.34.65's) means the shortest table time, as that server computed it.
   const minFreeDefault = Math.max(1, Math.min(larger, def('minFreeMinutes') !== undefined ? def('minFreeMinutes') : t2))
-  const range = key => ({ min: m[key] ? m[key].min : undefined, max: m[key] ? m[key].max : undefined })
   return {
     lunch: weekly(p.lunch),
     dinner: weekly(p.dinner),
@@ -100,11 +99,41 @@ export function rulesOf (params, manifest) {
     minFreeDefault,
     minFreeSet: isSet('minFreeMinutes'),
     daysAhead: value('daysAhead'),
+    // How far ahead the book and the page open (R8): the staff's horizon; `daysAhead` is the assistant's.
+    horizonDays: value('horizonDays'),
     maxPartySize: value('maxPartySize'),
-    maxPartyDefault: def('maxPartySize'),
-    maxPartySet: isSet('maxPartySize'),
-    maxPartyRange: range('maxPartySize')
+    requiredFields: fieldRulesOf(p, m)
   }
+}
+
+/** A JSON object as the variables store it: text, or already parsed; {} for anything else. */
+function objectOf (v) {
+  if (v && typeof v === 'object' && !Array.isArray(v)) return v
+  try {
+    const parsed = JSON.parse(v || '{}')
+    return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {}
+  } catch { return {} }
+}
+
+/** The rule per asked field (name, phone, allergies, notes, zone: required, optional or not_asked): the stored
+ *  value, else the manifest's default, field by field, as StarChat reads it. */
+export function fieldRulesOf (params, manifest) {
+  const stored = objectOf((params || {}).requiredFields)
+  const d = (manifest || {}).requiredFields
+  const defaults = objectOf(d ? d.default : null)
+  const out = {}
+  ;['name', 'phone', 'allergies', 'notes', 'zone'].forEach(k => {
+    const v = stored[k] || defaults[k]
+    out[k] = ['required', 'optional', 'not_asked'].includes(v) ? v : 'optional'
+  })
+  return out
+}
+
+/** The required fields a booking lacks, staff's view (name, phone, allergies, notes, zone; a walk-in inside its
+ *  window may leave out name and phone, which the server judges). Day, time and covers are always given here. */
+export function missingRequired (fieldRules, guest, keys = ['name', 'phone', 'allergies', 'notes', 'zone']) {
+  const blank = v => !String(v || '').trim()
+  return keys.filter(k => fieldRules[k] === 'required' && blank((guest || {})[k]))
 }
 
 /** Whether the instance has any arrival window: without one the server cannot read its rules, and
@@ -254,6 +283,48 @@ export function freeFrom (windows, t, minFree) {
 
 export function isFreeAt (windows, t, minFree) {
   return freeFrom(windows, t, minFree) === t
+}
+
+// ---------------------------------------------------------------- closures and special openings
+
+/**
+ * The page's own closures and special openings as ONE list (brief, addendum 2026-10-12 (2)): each row
+ * `{from, to, service, zone, windows}`, a closure without `windows`, a special opening of `service` with them. They
+ * are stored in two places of the layout, because the previous image reads only one of them: a zone closed for
+ * whole days stays in that zone's `closures`, everything else goes in `exceptions` (StarChat LayoutDraft). This
+ * reads both into the list; `withClosures` writes the list back into both.
+ */
+export function closuresOf (layout) {
+  if (!layout) return []
+  const zoneDays = (layout.zones || []).flatMap(z => (z.closures || []).map(c => ({ from: c.from, to: c.to || c.from, service: null, zone: z.id, windows: [] })))
+  const others = (layout.exceptions || []).map(e => ({ from: e.from, to: e.to || e.from, service: e.service || null, zone: e.zone || null, windows: (e.windows || []).slice() }))
+  return zoneDays.concat(others).sort((a, b) => (a.from < b.from ? -1 : a.from > b.from ? 1 : 0))
+}
+
+/** A whole-day closure of one zone: the kind the previous image reads from the zone's own `closures`. */
+const zoneDay = r => !!r.zone && !r.service && !(r.windows && r.windows.length)
+
+export function withClosures (layout, rows) {
+  const out = clone(layout)
+  out.zones = out.zones.map(z => Object.assign({}, z, {
+    closures: rows.filter(r => zoneDay(r) && r.zone === z.id).map(r => ({ from: r.from, to: r.to || r.from }))
+  }))
+  out.exceptions = rows.filter(r => !zoneDay(r)).map(r => ({ from: r.from, to: r.to || r.from, service: r.service || null,
+    zone: r.zone || null, windows: (r.windows || []).slice() }))
+  return out
+}
+
+/** Whether two lists hold the same closures, order aside. */
+export function sameClosures (a, b) {
+  const key = r => JSON.stringify([r.from, r.to || r.from, r.service || null, r.zone || null, (r.windows || []).join(',')])
+  return a.map(key).sort().join('|') === b.map(key).sort().join('|')
+}
+
+/** Whether a booking falls under one of the day's closures (the day read's `closures`, from the page or the
+ *  calendar, and `zonesClosed`): it stays booked, and the page shows it for staff to call. */
+export function onClosedDay (b, closures, zonesClosed) {
+  if ((zonesClosed || []).includes(b.zone)) return true
+  return (closures || []).some(c => (!c.service || c.service === b.service) && (!c.zone || c.zone === b.zone))
 }
 
 // ---------------------------------------------------------------- the layout

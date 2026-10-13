@@ -154,6 +154,22 @@
         "summary": "{zones} områder, {tables} aktive bord. De redigeres på restaurantsiden.",
         "open": "Åpne Sal og bord",
         "unknown": "Salen kunne ikke leses akkurat nå; den redigeres på restaurantsiden."
+      },
+      "page": {
+        "pageOn": "Side på",
+        "pageOff": "Side av",
+        "assistantOn": "Assistenten bestiller",
+        "assistantOff": "Assistent av",
+        "assistantSwitch": "Assistenten tar imot bestillinger",
+        "assistantHint": "Av: siden og personalet jobber videre, assistenten bestiller ikke.",
+        "assistantNeedsPage": "Slå på siden først: assistenten bestiller aldri i en bok som ingen ser.",
+        "summaryTitle": "Stilles inn på restaurantsiden",
+        "open": "Åpne restaurantsiden",
+        "daysAheadNote": "Høyst bokens horisont ({n} dager), innstilt på restaurantsiden: over den bestiller assistenten opp til horisonten."
+      },
+      "code": {
+        "assistant_without_page": "Assistenten kan ikke ta imot bestillinger mens restaurantsiden er slått av: slå av assistenten, eller slå på siden.",
+        "allergies_required_unavailable": "Allergier kan ikke være obligatoriske her ennå: å spørre alle som ringer venter på at det juridiske spørsmålet blir avklart."
       }
     }
   },
@@ -1224,7 +1240,12 @@
         "scope_missing": "Denne tilgangen tillater det ikke.",
         "error": "Noe gikk galt: prøv igjen.",
         "not_reversible": "Denne reservasjonen kan ikke lenger gjenopprettes.",
-        "table_taken": "Bordene er opptatt."
+        "table_taken": "Bordene er opptatt.",
+        "missingFields": "Hver bestilling her trenger: {fields}.",
+        "missing_fields": "Et obligatorisk felt mangler.",
+        "zone_closed": "Det området er stengt da.",
+        "tables_unsuitable": "De bordene kan ikke ta imot dette selskapet.",
+        "linked_request": "Denne forespørselen vil endre en bestilling: gjør endringen eller lukk den."
       },
       "strip": {
         "label": "Ledighet de kommende dagene",
@@ -1276,7 +1297,9 @@
         "floor": "Sal",
         "timeline": "Tidslinje",
         "floorHint": "Grønt = ledig kl. {time} i minst {n} min; grått = blir ledig for kort tid. Trykk på et grønt bord for å reservere det, på et opptatt for å åpne det. Dra for å flytte.",
-        "timelineHint": "Én rad per bord. Trykk på et tomt felt for å reservere på det tidspunktet, på overskriften for å endre tidspunktet."
+        "timelineHint": "Én rad per bord. Trykk på et tomt felt for å reservere på det tidspunktet, på overskriften for å endre tidspunktet.",
+        "toCall": "1 bestilling i denne stengte serveringen: ring gjesten | {n} bestillinger i denne stengte serveringen: ring gjestene",
+        "closedMark": "stengt: ring"
       },
       "know": {
         "label": "Greit å vite:",
@@ -1358,7 +1381,8 @@
           "left": "Gått"
         },
         "empty": "Ingen reservasjon her.",
-        "gone": "Avbestilte og uteblitte ({n})"
+        "gone": "Avbestilte og uteblitte ({n})",
+        "intended": "tenkt til {tables}"
       },
       "panel": {
         "cancelled": "Reservasjonen er avbestilt.",
@@ -1384,7 +1408,8 @@
         "assistantSaid": "På telefonen sa assistenten \"et bord til {n}\", aldri bordets navn.",
         "pastNoShows": "1 tidligere uteblivelse med dette nummeret. | {n} tidligere uteblivelser med dette nummeret.",
         "cancelledByCaller": "Avbestilt av gjesten på telefon: den kan ikke gjenopprettes, book på nytt.",
-        "reinstate": "Gjenopprett"
+        "reinstate": "Gjenopprett",
+        "closedDay": "Denne bestillingen ligger på en dag, servering eller i et område som ble stengt etter at den ble tatt: ring gjesten."
       },
       "newb": {
         "title": "Ny reservasjon",
@@ -1411,18 +1436,16 @@
         "freeFixed": "Ledig: {tables} · {zone}. Si til gjesten \"et bord til {n}\", uten bordets navn.",
         "serverChooses": "Boken velger bord når du lagrer.",
         "alternatives": "Ledig i stedet:",
-        "save": "Lagre · {day} {time} · {people}"
+        "save": "Lagre · {day} {time} · {people}",
+        "zone": "Område",
+        "anyZone": "Hvilket som helst område",
+        "fieldMissing": "{field}: obligatorisk for hver bestilling."
       },
       "room": {
         "intro": "Hele salen redigeres her. Hvert område, bord og hver sammenslåing endres i sitt eget felt eller fjernes med ✕. Endringer når assistenten først når du trykker på Lagre endringer; frem til da kan du forkaste alle.",
         "pending": "1 endring å lagre | {n} endringer å lagre",
         "errors": "1 feil å rette før lagring | {n} feil å rette før lagring",
         "warnings": "Greit å vite (dere kan lagre likevel)",
-        "settings": "Innstillinger",
-        "minFree": "Minste ledige tid",
-        "minFreeLabel": "Minste ledige tid i minutter",
-        "minutes": "minutter",
-        "minFreeHint": "Et bord vises som ledig bare hvis det forblir ledig minst så lenge: med 120 minutter regnes et bord som er ledig kl. 20:00 men booket kl. 21:00, ikke som ledig. Fra 1 til {max} minutter.",
         "generator": "Legg til bord på én gang",
         "genAdd": "Legg til",
         "genHowMany": "Hvor mange bord",
@@ -1450,11 +1473,6 @@
         "noteHint": "Assistenten bruker det til å beskrive området for de som ringer.",
         "closures": "Stengninger",
         "alwaysOpen": "Alltid åpent.",
-        "closedFrom": "Stengt fra",
-        "closedTo": "Stengt til",
-        "closureAdd": "Legg til stenging",
-        "closureDelete": "Fjern stenging",
-        "closureDates": "Stenging: velg datoene \"fra\" og \"til\".",
         "tName": "Navn",
         "tMin": "Min plasser",
         "tMax": "Maks plasser",
@@ -1510,18 +1528,13 @@
         "stale": "Salen ble endret i mellomtiden: den er lest på nytt, gjør endringene dine en gang til.",
         "configChanged": "Konfigurasjonen ble endret i mellomtiden: den er lest på nytt, prøv en gang til.",
         "needsHours": "Angi åpningstidene først: uten dem kan ikke salen lagres.",
-        "layoutSavedOnly": "Salen ble lagret, men innstillingene ble ikke lagret.",
         "andOthers": "{names} og {n} til",
-        "maxParty": "Største selskap assistenten reserverer selv",
-        "maxPartyHint": "Over dette antallet personer reserverer assistenten ikke: den registrerer en forespørsel som dere bekrefter. Vanligvis ikke mer enn det største bordet eller den største sammenslåingen.",
-        "goMaxParty": "Endre største selskap",
         "goTableMin": "Endre bordenes minste antall plasser",
         "goJoins": "Gå til sammenslåingene",
-        "settingsRefused": "Serveren godtok ikke innstillingene: sjekk minste ledige tid og største selskap.",
-        "defaultMinutes": "Standard: {n} minutter",
-        "defaultPeople": "Standard: {n} personer",
         "byDefault": "standard ({n})",
-        "defaultTag": "standard"
+        "defaultTag": "standard",
+        "closuresWhere": "Stengninger stilles inn under Tider og regler",
+        "goMaxPartySkill": "Endre det i skillens innstillinger"
       },
       "check": {
         "zoneNameMissing": "Område {n} · Navn: påkrevd",
@@ -1537,9 +1550,7 @@
         "joinZones": "Sammenslåing {label} · Bord: de ligger i ulike områder; en sammenslåing holder seg innenfor ett område",
         "joinMin": "Sammenslåing {label} · Min personer: minst 1",
         "joinMax": "Sammenslåing {label} · Maks personer: minst {min}",
-        "joinDuplicate": "Sammenslåing {label}: det finnes allerede en sammenslåing med de samme bordene",
-        "minFree": "Innstillinger · Minste ledige tid: mellom {min} og {max} minutter",
-        "maxParty": "Innstillinger · Største selskap: mellom {min} og {max} personer"
+        "joinDuplicate": "Sammenslåing {label}: det finnes allerede en sammenslåing med de samme bordene"
       },
       "layoutCode": {
         "table_has_holds": "Et bord som dere vil fjerne, slå av eller flytte til et annet område, har framtidige reservasjoner: flytt eller avlys dem først, og lagre deretter.",
@@ -1583,9 +1594,7 @@
         "tableOff": "{name}: deaktivert",
         "joinAdded": "Sammenslåing lagt til: {label} ({min}-{max})",
         "joinRemoved": "Sammenslåing fjernet: {label}",
-        "joinRange": "Sammenslåing {label}: personer {from} → {to}",
-        "minFree": "Minste ledige tid: {from} → {to} min",
-        "maxParty": "Største selskap assistenten reserverer: {from} → {to} personer"
+        "joinRange": "Sammenslåing {label}: personer {from} → {to}"
       },
       "calls": {
         "title": "Samtalen",
@@ -1668,7 +1677,140 @@
         "bad_value": "«{value}» er ikke en gyldig verdi: kontroller det markerte feltet."
       },
       "manifestMissing": "Funksjonens innstillinger kunne ikke leses, så siden kan ikke vise standardverdiene.",
-      "retry": "Prøv igjen"
+      "retry": "Prøv igjen",
+      "pageOff": "Restaurantsiden er slått av i skillens innstillinger: bestillingene blir lagret, og eksport og sletting er fortsatt tilgjengelig. Slå den på for å bruke siden.",
+      "tabRules": "Tider og regler",
+      "rules": {
+        "intro": "Restaurantens tider og regler, og hva hver bestilling må inneholde, uansett hvem som tar den. Hvordan assistenten bestiller (største selskap, varsel, dager fram, hva den sier) stilles inn i skillens innstillinger.",
+        "toSkill": "Åpne skillens innstillinger",
+        "hours": "Åpningstider",
+        "tables": "Bord og tempo",
+        "reach": "Hvor langt fram",
+        "field": {
+          "arrivalEveryMinutes": "Ankomst hvert",
+          "tableMinutes2": "Bordtid, 1-2 personer",
+          "tableMinutes4": "Bordtid, 3-4 personer",
+          "tableMinutes6": "Bordtid, 5-6 personer",
+          "tableMinutesLarger": "Bordtid, 7 eller flere",
+          "coversPerArrival": "Flest gjester som kommer samtidig",
+          "minFreeMinutes": "Minste ledige tid",
+          "horizonDays": "Bokens horisont",
+          "walkInMinutes": "Vindu for gjester uten bestilling"
+        },
+        "unit": {
+          "minutes": "minutter",
+          "people": "personer",
+          "days": "dager"
+        },
+        "defaultIs": {
+          "minutes": "Standard: {n} minutter",
+          "people": "Standard: {n} personer",
+          "days": "Standard: {n} dager"
+        },
+        "hint": {
+          "arrivalEveryMinutes": "Steget mellom ankomsttider: 15 gir 19:00, 19:15, 19:30. Fra {min} til {max}.",
+          "tableMinutes2": "Hvor lenge bordet er opptatt. Fra {min} til {max}.",
+          "tableMinutes4": "Hvor lenge bordet er opptatt. Fra {min} til {max}.",
+          "tableMinutes6": "Hvor lenge bordet er opptatt. Fra {min} til {max}.",
+          "tableMinutesLarger": "Hvor lenge bordet er opptatt. Fra {min} til {max}.",
+          "coversPerArrival": "Hvor mange gjester kjøkkenet tar imot på samme ankomsttid, alle områder samlet; 0 betyr ingen grense.",
+          "minFreeMinutes": "Et bord vises som ledig bare hvis det forblir ledig minst så lenge. Fra {min} til {max}.",
+          "horizonDays": "Hvor langt fram boken og denne siden er åpne, for deg og personalet. Assistenten bestiller opp til sine egne dager fram, innstilt i skillen, aldri lenger. Fra {min} til {max}.",
+          "walkInMinutes": "En gjest uten bestilling kommer nå: i dag, innen så mange minutter fra tiden. Navn og telefon kan mangle; utenfor vinduet er det en vanlig bestilling. Fra {min} til {max}."
+        },
+        "changed": {
+          "hours": "{service}: ankomsttider endret",
+          "number": "{what}: {from} → {to}",
+          "ask": "{what}: {to}",
+          "closures": "Stengninger og spesielle åpninger endret"
+        },
+        "outOfRange": "{what}: mellom {min} og {max}.",
+        "code": {
+          "allergies_required_unavailable": "Allergier kan ikke være obligatoriske her ennå: å spørre alle som ringer venter på at det juridiske spørsmålet blir avklart. Velg valgfritt eller spørres ikke.",
+          "pace_below_party": "Gjestene som kommer samtidig ({coversPerArrival}) er færre enn det største selskapet assistenten bestiller ({maxPartySize}): et slikt selskap kunne aldri komme.",
+          "days_ahead_beyond_horizon": "Assistenten bestiller {daysAhead} dager fram, forbi bokens horisont på {horizonDays} dager: den bestiller opp til {horizonDays}.",
+          "out_of_range": "{what}: verdien er utenfor det tillatte området."
+        },
+        "refusedField": "{what}: verdien ble ikke godtatt.",
+        "inSkill": "Endre det i skillens innstillinger",
+        "savedToast": "1 endring lagret | {n} endringer lagret"
+      },
+      "ask": {
+        "title": "Hva vi spør om ved hver bestilling",
+        "intro": "For hver bestilling, uansett hvem som tar den (assistenten, du, personalet): hva som er obligatorisk, hva som bare spørres om hvis gjesten tilbyr det, og hva som ikke spørres om i det hele tatt.",
+        "fixed": "Dag, tid og personer",
+        "always": "Alltid obligatorisk",
+        "field": {
+          "name": "Navn",
+          "phone": "Telefon",
+          "allergies": "Allergier",
+          "notes": "Notater",
+          "zone": "Område"
+        },
+        "rule": {
+          "required": "Obligatorisk",
+          "optional": "Valgfritt",
+          "not_asked": "Spørres ikke"
+        },
+        "phoneNotAsked": "Telefon spørres ikke: ingen bestilling krever et nummer, verken fra assistenten eller fra deg. Innringerens nummer lagres likevel når det er synlig.",
+        "phoneCaller": "I telefonen teller innringerens synlige nummer som telefon: assistenten spør bare etter et når nummeret er skjult.",
+        "allergiesActsOptional": "Lagret som obligatorisk, men i dette miljøet gjelder det som valgfritt: å spørre alle som ringer om allergier venter på at det juridiske spørsmålet blir avklart.",
+        "allergiesUnavailable": "Obligatorisk er ikke tilgjengelig i dette miljøet ennå: å spørre alle som ringer om allergier venter på at det juridiske spørsmålet blir avklart.",
+        "walkIn": "En gjest som kommer nå uten bestilling kan utelate navn og telefon."
+      },
+      "closures": {
+        "title": "Stengninger og spesielle åpninger",
+        "intro": "Én liste for hver stengt dag, stengt servering og spesiell åpning, for hele restauranten eller ett område. Bestillinger som allerede er tatt en dag du stenger, blir stående: siden viser dem, så du kan ringe.",
+        "remove": "Fjern {what}",
+        "fromCalendar": "fra kalenderen",
+        "none": "Ingen stengninger.",
+        "whereCalendar": "Stengninger fra kalenderen endres i kalenderen som er koblet til i skillens innstillinger: en hendelse der tittelen begynner med stengeordet.",
+        "add": "Legg til",
+        "from": "Fra",
+        "to": "Til (valgfritt)",
+        "kind": "Hva",
+        "closed": "Stengt",
+        "special": "Spesiell åpning",
+        "service": "Servering",
+        "allDay": "hele dagen",
+        "where": "Hvor",
+        "wholeRestaurant": "hele restauranten",
+        "windows": "Ankomsttider",
+        "addButton": "Legg til i listen",
+        "neverRead": "Kalenderen er ikke lest ennå.",
+        "readAt": "Kalenderen lest {when}.",
+        "lastFailed": "Den siste lesingen, {when}, mislyktes: stengningene som vises er fra lesingen før.",
+        "describeOpen": "{days} · {service}: spesiell åpning {windows}",
+        "describeClosed": "{days} · {service} · {where}: stengt",
+        "needFrom": "Velg den første dagen.",
+        "backwards": "Den siste dagen kommer før den første.",
+        "badWindows": "En spesiell åpning trenger en servering og ankomsttider som 19:30-21:30.",
+        "refused": "Stengningene ble ikke lagret: prøv igjen."
+      },
+      "warning": {
+        "outside_hours": "Utenfor serveringens åpningstider.",
+        "off_grid": "Ikke på ankomsttidene (innenfor åpningstidene).",
+        "within_notice": "Tidligere enn assistentens varsel.",
+        "after_same_day_cutoff": "Etter tidspunktet da assistenten slutter å bestille for i dag.",
+        "beyond_days_ahead": "Lenger fram enn assistenten bestiller.",
+        "above_max_party": "Større enn assistenten bestiller selv.",
+        "over_pace": "Flere gjester som kommer samtidig enn kjøkkenets tempo.",
+        "saidOnSave": "Greit å vite: {list}"
+      },
+      "change": {
+        "notFound": "Bestillingen forespørselen gjelder ble ikke funnet: åpne den og endre den for hånd.",
+        "done": "{name} flyttet til {day} {time}, {people}; forespørselen er lukket",
+        "asked": "Endring ønsket på telefon",
+        "make": "Gjør endringen",
+        "close": "Lukk uten endring",
+        "asks": "{name} ønsker å endre {from} til {to}",
+        "otherDay": "en bestilling en annen dag"
+      },
+      "acceptFields": {
+        "title": "Godta {name}",
+        "intro": "For å godtas trenger bestillingen: {fields}.",
+        "accept": "Godta"
+      }
     }
   },
   "views": {
