@@ -1818,8 +1818,7 @@
           "details": "tiedot",
           "cancellation": "peruutus"
         },
-        "filedAt": "pyydetty {when}",
-        "requestNotFound": "Pyyntöä ei löytynyt: se on ehkä jo käsitelty. Lue päivä uudelleen."
+        "filedAt": "pyydetty {when}"
       },
       "acceptFields": {
         "title": "Hyväksy {name}",

@@ -1818,8 +1818,7 @@
           "details": "uppgifter",
           "cancellation": "avbokning"
         },
-        "filedAt": "begärd {when}",
-        "requestNotFound": "Förfrågan hittades inte: den kan redan vara besvarad. Läs dagen igen."
+        "filedAt": "begärd {when}"
       },
       "acceptFields": {
         "title": "Godta {name}",

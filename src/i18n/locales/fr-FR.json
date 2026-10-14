@@ -1820,8 +1820,7 @@
           "details": "coordonnées",
           "cancellation": "annulation"
         },
-        "filedAt": "demandé le {when}",
-        "requestNotFound": "La demande n'a pas été trouvée : elle a peut-être déjà été traitée. Relisez la journée."
+        "filedAt": "demandé le {when}"
       },
       "acceptFields": {
         "title": "Accepter {name}",

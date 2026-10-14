@@ -24,8 +24,8 @@
     <div v-if="onClosedDay" class="callout red closed-day-note">{{ $t("components.restaurant.panel.closedDay") }}</div>
     <!-- the caller asked to change this booking by phone and the assistant could not (R8): what they asked, and the two actions -->
     <div v-if="changeRequest" class="callout amber change-request">
-      <!-- filed for another day (`openRequest`): its kind and when, read in full when staff act on it -->
-      <b>{{ $t("components.restaurant.change.asked") }}:</b> <template v-if="changeRequest.remote">{{ changeRequest.change ? $t(`components.restaurant.change.kindShort.${changeRequest.change.kind}`) : "" }}<template v-if="changeRequest.at"> · {{ $t("components.restaurant.change.filedAt", { when: when(changeRequest.at) }) }}</template></template>
+      <!-- filed for another day (`openRequest`): its kind, what it asks and when -->
+      <b>{{ $t("components.restaurant.change.asked") }}:</b> <template v-if="changeRequest.remote">{{ changeRequest.change ? $t(`components.restaurant.change.kindShort.${changeRequest.change.kind}`) : "" }}<template v-if="changeRequest.date && changeRequest.change && changeRequest.change.kind === 'move'"> · {{ shortDay(changeRequest.date) }} {{ fmt(changeRequest.start) }} · {{ $t("components.restaurant.people", { n: changeRequest.party }) }}</template><template v-if="changeRequest.at"> · {{ $t("components.restaurant.change.filedAt", { when: when(changeRequest.at) }) }}</template></template>
       <template v-else>{{ fmt(changeRequest.start) }} · {{ $t("components.restaurant.people", { n: changeRequest.party }) }}<template v-if="changeRequest.notes"> · {{ changeRequest.notes }}</template></template>
       <div class="tb-row">
         <button class="btn small make-change" :disabled="busy || editing" @click="$emit('make-change', changeRequest)">{{ $t(changeRequest.change && changeRequest.change.kind === 'cancellation' ? "components.restaurant.change.cancelBooking" : "components.restaurant.change.make") }}</button>
@@ -69,7 +69,7 @@
 
 <script>
 import { fmt, seatLabel, callsOf } from "@/utils/RestaurantModel";
-import { longDate, phoneOf } from "@/components/widgets/restaurant/format";
+import { longDate, shortDate, phoneOf } from "@/components/widgets/restaurant/format";
 import RestaurantDetailsEditor from "@/components/widgets/restaurant/RestaurantDetailsEditor.vue";
 
 /** One booking: when, who, where, the call that made it, its state in the evening and what can be done. */
@@ -122,6 +122,9 @@ export default {
   },
   methods: {
     fmt,
+    shortDay(key) {
+      return shortDate(key, this.$i18n.locale);
+    },
     when(at) {
       return new Date(at).toLocaleString(this.$i18n.locale, { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
     },

@@ -1818,8 +1818,7 @@
           "details": "andmed",
           "cancellation": "tühistamine"
         },
-        "filedAt": "küsitud {when}",
-        "requestNotFound": "Taotlust ei leitud: see võib olla juba käsitletud. Loe päev uuesti."
+        "filedAt": "küsitud {when}"
       },
       "acceptFields": {
         "title": "Kinnita {name}",

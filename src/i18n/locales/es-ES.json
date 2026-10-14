@@ -1832,8 +1832,7 @@
           "details": "datos",
           "cancellation": "cancelación"
         },
-        "filedAt": "pedido el {when}",
-        "requestNotFound": "No se encontró la solicitud: quizá ya se atendió. Vuelve a leer el día."
+        "filedAt": "pedido el {when}"
       },
       "acceptFields": {
         "title": "Aceptar {name}",

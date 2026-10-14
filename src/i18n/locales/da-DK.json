@@ -1818,8 +1818,7 @@
           "details": "oplysninger",
           "cancellation": "aflysning"
         },
-        "filedAt": "ønsket {when}",
-        "requestNotFound": "Anmodningen blev ikke fundet: den er måske allerede besvaret. Læs dagen igen."
+        "filedAt": "ønsket {when}"
       },
       "acceptFields": {
         "title": "Godkend {name}",

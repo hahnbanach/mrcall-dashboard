@@ -1818,8 +1818,7 @@
           "details": "στοιχεία",
           "cancellation": "ακύρωση"
         },
-        "filedAt": "ζητήθηκε στις {when}",
-        "requestNotFound": "Το αίτημα δεν βρέθηκε: ίσως έχει ήδη απαντηθεί. Διαβάστε ξανά την ημέρα."
+        "filedAt": "ζητήθηκε στις {when}"
       },
       "acceptFields": {
         "title": "Αποδοχή {name}",

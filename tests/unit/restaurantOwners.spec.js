@@ -238,7 +238,8 @@ describe('what a call-back request asks of its booking', () => {
     expect(row.aboutReservation).toEqual({ id: 'b1', date: '2026-10-21', start: 1200, party: 2, name: 'Verdi' })
     expect(row.recognised).toBe(true)
     expect(bookingFromWire({ id: 'b2', time: '20:00', covers: 2 })).toMatchObject({ recognised: false, change: null, aboutReservation: null, openRequest: null })
-    expect(bookingFromWire({ id: 'b3', time: '20:00', covers: 2, openRequest: { id: 'r9', kind: 'move', at: '2026-10-13T17:55:00Z' } }).openRequest)
-      .toEqual({ id: 'r9', kind: 'move', at: '2026-10-13T17:55:00Z' })
+    expect(bookingFromWire({ id: 'b3', time: '20:00', covers: 2, openRequest: { id: 'r9', version: 4, date: '2026-10-22', kind: 'move',
+      at: '2026-10-13T17:55:00Z', change: { kind: 'move', date: '2026-10-22', time: '21:00', covers: 3 } } }).openRequest)
+      .toEqual({ id: 'r9', version: 4, date: '2026-10-22', kind: 'move', at: '2026-10-13T17:55:00Z', change: { kind: 'move', date: '2026-10-22', start: 1260, party: 3 } })
   })
 })

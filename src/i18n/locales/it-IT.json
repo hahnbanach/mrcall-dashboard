@@ -1824,8 +1824,7 @@
           "details": "dati",
           "cancellation": "cancellazione"
         },
-        "filedAt": "chiesto il {when}",
-        "requestNotFound": "La richiesta non è stata trovata: forse è già stata gestita. Rileggi la giornata."
+        "filedAt": "chiesto il {when}"
       },
       "acceptFields": {
         "title": "Accetta {name}",

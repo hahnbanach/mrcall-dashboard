@@ -1820,8 +1820,7 @@
           "details": "Angaben",
           "cancellation": "Stornierung"
         },
-        "filedAt": "gewünscht am {when}",
-        "requestNotFound": "Die Anfrage wurde nicht gefunden: vielleicht wurde sie inzwischen bearbeitet. Lesen Sie den Tag neu."
+        "filedAt": "gewünscht am {when}"
       },
       "acceptFields": {
         "title": "{name} annehmen",

@@ -1823,8 +1823,7 @@
           "details": "details",
           "cancellation": "cancellation"
         },
-        "filedAt": "asked on {when}",
-        "requestNotFound": "The request was not found: it may have been answered in the meantime. Read the day again."
+        "filedAt": "asked on {when}"
       },
       "acceptFields": {
         "title": "Accept {name}",

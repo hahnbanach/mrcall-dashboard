@@ -21,8 +21,8 @@ const { mockRestaurant, openRestaurant, tomorrowDinner, TODAY, TOMORROW } = requ
  * DELETE (the call-back test); the request's details not pre-filled (the call-back test); a late arrival treated as
  * a move (the late-arrival test); the kind not read (the late-arrival test: no "will arrive late"); the page not going
  * to the day the request names (the other-day test); a cancellation pre-filling the editor (the
- * cancellation test); `recognised` not read (the recognised test); `openRequest` not read, or the request
- * not resolved by its id (the other-day-request test); the editor drawing a not-asked field, or its Undo at the version read rather than
+ * cancellation test); `recognised` not read (the recognised test); `openRequest` not read, or acted on without
+ * its own version (the other-day-request tests); the editor drawing a not-asked field, or its Undo at the version read rather than
  * the one answered (the details test); a not-asked allergy hidden although stored (the stored-allergy test); `intendedTableIds` not read (the overbooking test); the menu ignoring the page
  * switch (the menu test); the instance's page switch not read (the page-off test: the day was asked).
  */
@@ -373,15 +373,32 @@ test.describe('the restaurant page, one owner per setting', () => {
     await expect(page.locator('.brow', { hasText: 'Rossi' }).locator('.change-mark')).toBeVisible()
     await tap(page.locator('.brow', { hasText: 'Rossi' }))
     const card = page.locator('.panel .change-request')
-    await expect(card).toContainText('Change asked by phone: move · asked on')
+    await expect(card).toContainText('Change asked by phone: move ·')
+    await expect(card).toContainText('21:00 · 4 people · asked on')
     await card.locator('.make-change').click()
     const editor = page.locator('.panel .details-editor')
     await expect(editor.locator('.apply-move')).toContainText('21:00')
-    expect(calls.find(c => c.path === '/search').body.q).toBe('393331112233')
+    // everything the action needs comes with the booking's row (StarChat c790d9d11): nothing is searched
+    expect(calls.filter(c => c.path === '/search')).toHaveLength(0)
     await editor.locator('.save-details').click()
     await expect(page.locator('.toast')).toContainText('the request is closed')
     expect(calls.find(c => c.method === 'PATCH').body).toMatchObject({ expectedVersion: 1, date: filedFor, time: '21:00', covers: 4 })
     expect(calls.filter(c => c.method === 'DELETE').map(c => c.path + c.search)).toEqual(['/reservations/b-far-day?expectedVersion=1'])
+  })
+
+  test('a request filed for another day is closed from the booking\'s card at its version', async ({ authenticatedPage: page }) => {
+    test.setTimeout(60000)
+    const filedFor = addDays(TODAY, 3)
+    const { calls } = await mockRestaurant(page, { extraRows: [{ id: 'b-far-day', version: 3, date: filedFor, time: '21:00', covers: 4,
+      name: 'Rossi', status: 'requested', requestReason: 'callback', about: 'b-rossi', change: { kind: 'details', date: filedFor, time: '20:00', covers: 4, zone: 'sala', notes: 'Window' } }] })
+    await openRestaurant(page)
+    await ready(page)
+    await tomorrowDinner(page)
+    await tap(page.locator('.brow', { hasText: 'Rossi' }))
+    await page.locator('.panel .change-request .close-request').click()
+    await page.waitForRequest(r => r.method() === 'DELETE', { timeout: 15000 })
+    await expect.poll(() => calls.filter(c => c.method === 'DELETE').map(c => c.path + c.search)).toEqual(['/reservations/b-far-day?expectedVersion=3'])
+    expect(calls.filter(c => c.path === '/search' || c.method === 'PATCH')).toHaveLength(0)
   })
 
   test('"close without changing" closes a call-back request and leaves the booking as it is', async ({ authenticatedPage: page }) => {

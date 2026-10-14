@@ -1818,8 +1818,7 @@
           "details": "opplysninger",
           "cancellation": "avbestilling"
         },
-        "filedAt": "ønsket {when}",
-        "requestNotFound": "Forespørselen ble ikke funnet: den kan allerede være besvart. Les dagen på nytt."
+        "filedAt": "ønsket {when}"
       },
       "acceptFields": {
         "title": "Godta {name}",

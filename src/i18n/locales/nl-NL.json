@@ -1818,8 +1818,7 @@
           "details": "gegevens",
           "cancellation": "annulering"
         },
-        "filedAt": "gevraagd op {when}",
-        "requestNotFound": "Het verzoek is niet gevonden: misschien is het intussen afgehandeld. Lees de dag opnieuw."
+        "filedAt": "gevraagd op {when}"
       },
       "acceptFields": {
         "title": "{name} accepteren",
