@@ -477,6 +477,7 @@ import Tr from "@/i18n/translation"
 import parsePhoneNumber from "libphonenumber-js";
 import phoneOperators from "@/utils/PhoneOperators";
 import axios from "axios";
+import { isSessionEnded } from "@/firebase/axiosConfig";
 import TupleVariable from "../../components/widgets/TupleVariable.vue";
 import TemplatedVariable from "../../components/widgets/TemplatedVariable.vue";
 import MultiselectVariable from "../../components/widgets/MultiselectVariable.vue";
@@ -834,12 +835,10 @@ export default {
         //this.selectVariables()
       }).catch((error) => {
         this.showProgressBar = false
-        this.setMessage("error", this.t('components.business.errorSavingSettings') + "(" + error.message + ")")
         console.error(error)
-        if(error.response.status === 401) {
-          this.store.dispatch('logout')
-          router.replace('/login')
-        }
+        // The session ended: the interceptor has already sent the person to sign in.
+        if (isSessionEnded(error)) return false
+        this.setMessage("error", this.t('components.business.errorSavingSettings') + "(" + error.message + ")")
         return false
       })
     },
@@ -1070,12 +1069,9 @@ export default {
         console.debug("VariablesAnnotations: ", this.variablesAnnotations)
       }).catch((error) => {
         this.showProgressBar = false
-        this.setMessage("error", `${this.t("components.business.configuration.errorRetrievingDataMessage")} : ${error.message}`)
         console.error(error)
-        if(error.response.status === 401) {
-          this.store.dispatch('logout')
-          //router.push('/login')
-        }
+        if (isSessionEnded(error)) return false
+        this.setMessage("error", `${this.t("components.business.configuration.errorRetrievingDataMessage")} : ${error.message}`)
         return false
       })
     },

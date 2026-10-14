@@ -66,104 +66,79 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home,
+    meta: { public: true }
   },
   {
     path: '/account',
     name: 'Account',
-    component: Account,
-    meta: {
-      requiresAuth: true
-    }
+    component: Account
   },
   {
     path: '/callbooking',
     name: 'CallBooking',
-    component: CallBooking,
-    meta: {
-      requiresAuth: true
-    }
+    component: CallBooking
   },
   {
     path: '/magiclink',
     name: 'MagicLink',
-    component: MagicLink
+    component: MagicLink,
+    meta: { public: true }
   },
   {
     path: '/customtokenlogin',
     name: 'CustomTokenSignin',
-    component: CustomTokenSignin
+    component: CustomTokenSignin,
+    meta: { public: true }
   },
   {
     path: '/businesses',
     name: 'Businesses',
     component: Businesses,
-    props: true,
-    meta: {
-      requiresAuth: true
-    }
+    props: true
 
   },
   {
     path: '/onboardinglang',
     name: 'OnboardingLanguage',
     component: OnboardingLanguage,
-    props: true,
-    meta: {
-      requiresAuth: true
-    }
+    props: true
   },
   {
     path: '/onboardingnamephone',
     name: 'OnboardingNamePhone',
     component: OnboardingNamePhone,
-    props: true,
-    meta: {
-      requiresAuth: true
-    }
+    props: true
   },
   {
     path: '/onboardingsearchbusiness',
     name: 'OnboardingSearchBusiness',
     component: OnboardingSearchBusiness,
-    props: true,
-    meta: {
-      requiresAuth: true
-    }
+    props: true
   },
   {
     path: '/onboardingprepayment',
     name: 'OnboardingPrePayment',
     component: OnboardingPrePayment,
-    props: { },
-    meta: {
-      requiresAuth: true
-    }
+    props: { }
   },
   {
     path: '/onboardingmakeatestcall',
     name: 'OnboardingMakeATestCall',
     component: OnboardingMakeATestCall,
-    props: { },
-    meta: {
-      requiresAuth: true
-    }
+    props: { }
   },
   {
     path: '/onboardingassistantcreated',
     name: 'OnboardingAssistantCreated',
     component: OnboardingAssistantCreated,
-    props: { },
-    meta: {
-      requiresAuth: true
-    }
+    props: { }
   },
   {
     path: '/wizard',
     name: 'WizardConfiguration',
     component: WizardConfiguration,
     meta: {
-      requiresAuth: true,
       bare: true
     }
   },
@@ -171,91 +146,61 @@ const routes = [
     path: '/onboardingchooseplan',
     name: 'OnboardingChoosePlan',
     component: OnboardingChoosePlan,
-    props: { },
-    meta: {
-      requiresAuth: true
-    }
+    props: { }
   },
   {
     path: '/activate',
     name: 'ActivateAssistant',
     component: ActivateAssistant,
-    props: true,
-    meta: {
-      requiresAuth: true
-    }
+    props: true
   },
   {
     path: '/onboardingnotificationpreview',
     name: 'OnboardingNotificationPreview',
     component: OnboardingNotificationPreview,
-    props: { },
-    meta: {
-      requiresAuth: true
-    }
+    props: { }
   },
   {
     path: '/onboardingchoosedevice',
     name: 'OnboardingChooseDevice',
     component: OnboardingChooseDevice,
-    props: { },
-    meta: {
-      requiresAuth: true
-    }
+    props: { }
   },
   {
     path: '/onboardingprebookappointment',
     name: 'OnboardingPreBookAppointment',
     component: OnboardingPreBookAppointment,
-    props: true,
-    meta: {
-      requiresAuth: true
-    }
+    props: true
   },
   {
     path: '/onboardingthisorotherdevice',
     name: 'OnboardingThisOrOtherDevice',
     component: OnboardingThisOrOtherDevice,
-    props: true,
-    meta: {
-      requiresAuth: true
-    }
+    props: true
   },
   {
     path: '/onboardingforwardingonthisdevice',
     name: 'OnboardingForwardingOnThisDevice',
     component: OnboardingForwardingOnThisDevice,
-    props: true,
-    meta: {
-      requiresAuth: true
-    }
+    props: true
   },
   {
     path: '/onboardingforwardingonotherdevice',
     name: 'OnboardingForwardingOnOtherDevice',
     component: OnboardingForwardingOnOtherDevice,
-    props: true,
-    meta: {
-      requiresAuth: true
-    }
+    props: true
   },
   {
     path: '/onboardingforwardingonlandline',
     name: 'OnboardingForwardingOnLandline',
     component: OnboardingForwardingOnLandline,
-    props: true,
-    meta: {
-      requiresAuth: true
-    }
+    props: true
   },
   {
     path: '/onboardingswitchboardconfiguration',
     name: 'OnboardingSwitchboardConfiguration',
     component: OnboardingSwitchboardConfiguration,
-    props: true,
-    meta: {
-      requiresAuth: true
-    }
+    props: true
   },
   {
     path: '/payment',
@@ -279,94 +224,87 @@ const routes = [
     path: '/aladmin-configurator',
     name: 'AladminConfigurator',
     component: AladdinConfigurator,
-    props: true,
-    meta: {
-      requiresAuth: true
-    }
+    props: true
   },
   {
     path: '/mcp-connectors',
     name: 'McpConnectors',
     component: McpConnectors,
-    props: true,
-    meta: {
-      requiresAuth: true
-    }
+    props: true
   },
   {
     path: '/plan',
     name: 'Plan',
     component: Plan,
-    props: { },
-    meta: {
-      requiresAuth: true
-    }
+    props: { }
   },
   {
     path: '/planandproducts',
     name: 'PlanAndProducts',
     component: PlanAndProducts,
-    props: { },
-    meta: {
-      requiresAuth: true
-    }
+    props: { }
   },
   {
     path: '/success_payment',
     name: 'SuccessPayment',
     component: SuccessPayment,
-    props: true
+    props: true,
+    meta: { public: true }
   },
   {
     path: '/success_payment_product',
     name: 'SuccessPaymentProduct',
     component: SuccessPaymentProduct,
-    props: true
+    props: true,
+    meta: { public: true }
   },
   {
     path: '/failed_payment',
     name: 'FailedPayment',
     component: FailedPayment,
-    props: true
+    props: true,
+    meta: { public: true }
   },
   {
     path: '/failed_payment_product',
     name: 'FailedPaymentProduct',
     component: FailedPaymentProduct,
-    props: true
+    props: true,
+    meta: { public: true }
   },
   {
     path: '/privacypolicy',
     name: 'PrivacyPolicy',
     component: PrivacyPolicy,
-    props: true
+    props: true,
+    meta: { public: true }
   },
   {
     path: '/termsandconditions',
     name: 'TermsAndConditions',
     component: TermsAndConditions,
-    props: true
+    props: true,
+    meta: { public: true }
   },
   {
     path: '/callforwardingguide',
     name: 'CallForwardingGuide',
     component: CallForwardingGuide,
-    props: true
+    props: true,
+    meta: { public: true }
   },
   {
     path: '/partnerprogram',
     name: 'PartnerProgram',
     component: PartnerProgram,
-    props: true
+    props: true,
+    meta: { public: true }
   },
   {
     path: '/conversations',
     name: 'Conversations',
     component: Conversations,
-    props: true,
-    meta: {
-      requiresAuth: true
-    }
+    props: true
   },
   {
     path: '/whatsappweb',
@@ -378,28 +316,19 @@ const routes = [
     path: '/analytics',
     name: 'Analytics',
     component: Analytics,
-    props: true,
-    meta: {
-      requiresAuth: true
-    }
+    props: true
   },
   {
     path: '/analytics-admin',
     name: 'AnalyticsAdmin',
     component: AnalyticsAdmin,
-    props: true,
-    meta: {
-      requiresAuth: true
-    }
+    props: true
   },
   {
     path: '/contacts',
     name: 'Contacts',
     component: Contacts,
-    props: true,
-    meta: {
-      requiresAuth: true
-    }
+    props: true
   },
   {
     path: '/outboundcalls',
@@ -410,50 +339,48 @@ const routes = [
   {
     path: '/signup',
     name: 'Signup',
-    component: Signup
+    component: Signup,
+    meta: { public: true }
   },
   {
     path: '/signin',
     name: 'SigninNew',
     component: Signin,
+    meta: { public: true }
   },
   {
     path: '/login',
     name: 'Signin',
-    component: Signin
+    component: Signin,
+    meta: { public: true }
   },
   {
     path: '/callback',
     name: 'google-callback',
-    component: GoogleCallback
+    component: GoogleCallback,
+    meta: { public: true }
   },
   {
     path: '/oauth/authorize',
     name: 'OAuthConsent',
-    component: OAuthConsent
+    component: OAuthConsent,
+    meta: { public: true }
   },
   {
     path: '/testchat',
     name: 'TestChat',
-    component: TestChat,
-    meta: {
-      requiresAuth: true
-    }
+    component: TestChat
   },
   {
     path: '/testreadwebdata',
     name: 'TestReadWebData',
-    component: TestReadWebData,
-    meta: {
-      requiresAuth: true
-    }
+    component: TestReadWebData
   },
   {
     path: '/reseller',
     name: 'ResellerDashboard',
     component: ResellerDashboardView,
     meta: {
-      requiresAuth: true,
       requiresRole: 'reseller'
     }
   },
@@ -462,7 +389,6 @@ const routes = [
     name: 'ResellerInvitationCodes',
     component: ResellerInvitationCodes,
     meta: {
-      requiresAuth: true,
       requiresRole: 'reseller'
     }
   },
@@ -471,7 +397,6 @@ const routes = [
     name: 'ResellerProfile',
     component: ResellerProfileView,
     meta: {
-      requiresAuth: true,
       requiresRole: 'reseller'
     }
   },
@@ -480,7 +405,6 @@ const routes = [
     name: 'ResellerManagement',
     component: ResellerManagement,
     meta: {
-      requiresAuth: true,
       requiresRole: 'admin'
     }
   },
@@ -489,7 +413,6 @@ const routes = [
     name: 'ProvisionReseller',
     component: ProvisionReseller,
     meta: {
-      requiresAuth: true,
       requiresRole: 'admin'
     }
   },
@@ -499,7 +422,6 @@ const routes = [
     component: ResellerDetail,
     props: true,
     meta: {
-      requiresAuth: true,
       requiresRole: 'admin'
     }
   },
@@ -508,7 +430,6 @@ const routes = [
     name: 'UserRoleManagement',
     component: UserRoleManagement,
     meta: {
-      requiresAuth: true,
       requiresRole: 'admin'
     }
   },
@@ -517,7 +438,6 @@ const routes = [
     name: 'AgentTemplates',
     component: AgentTemplates,
     meta: {
-      requiresAuth: true,
       requiresRole: 'admin'
     }
   },
@@ -526,13 +446,13 @@ const routes = [
     name: 'AgentTemplateEditor',
     component: AgentTemplateEditor,
     meta: {
-      requiresAuth: true,
       requiresRole: 'admin'
     }
   },
   {
     path: '/:pathMatch(.*)*',
-    redirect: '/'
+    redirect: '/',
+    meta: { public: true }
   }
 ]
 
@@ -582,7 +502,10 @@ router.beforeEach(async (to, from, next) => {
     })
   }
 
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  // A page needs a session unless its route says `public`. The rule used to be the other way round,
+  // and a route that forgot to ask (`/businessconfiguration`, from the first commit) opened without
+  // a session and drew an empty shell. tests/unit/publicRoutes.spec.js lists the public ones.
+  const requiresAuth = !to.matched.some(record => record.meta.public);
   // Sign-in comes back to the page that asked for it, with its query: a call email links to
   // /conversations?id=<business>&conversation=<call>, and an owner without a session must land on
   // that call, not on the list of businesses. Signin reads `redirect` as {path, query}.

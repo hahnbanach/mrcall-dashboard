@@ -71,6 +71,7 @@ import {useStore} from 'vuex'
 import {useConfirm} from "primevue/useconfirm"
 import {useToast} from "primevue/usetoast"
 import axios from "axios"
+import { isSessionEnded } from "@/firebase/axiosConfig"
 import router from "@/router"
 import {useI18n} from "vue-i18n";
 import Tr from "@/i18n/translation"
@@ -146,18 +147,16 @@ export default {
         this.productSubscriptionStatus[productName] = response.data
       }).catch((error) => {
         this.showProgressBar = false;
-        if(error.response.status === 404) {
+        if(error.response?.status === 404) {
           console.info(`Product not found, businessId(${businessId}), name(productName)`)
-        } else if(error.response.status === 401) {
-          console.error(error)
-          this.store.dispatch('logout')
-          router.push('/signin')
-        } else {
-          this.toast.add({severity:'error',
-            summary: `Topup (${productName}): ${operation}`,
-            detail: this.t('components.products.toastErrorSummary'), life: 10000})
-          console.error(error)
+          return
         }
+        console.error(error)
+        // The session ended: the interceptor has already sent the person to sign in.
+        if (isSessionEnded(error)) return
+        this.toast.add({severity:'error',
+          summary: `Topup (${productName}): ${operation}`,
+          detail: this.t('components.products.toastErrorSummary'), life: 10000})
       })
     },
     async createSession(product, businessId) {
@@ -191,15 +190,11 @@ export default {
       }).catch((error) => {
         console.error(error)
         this.showProgressBar = false
-        if(error.response.status === 401) {
-          this.store.dispatch('logout')
-          router.push('/signin')
-        } else {
-          this.toast.add({severity:'error',
-            summary: this.t('components.products.toastPaymentSubscriptionSummary'),
-            detail: this.t('components.products.errorCreatingPaymentData'), life: 10000})
-          this.setMessage("error", this.t('components.products.errorCreatingPaymentData'))
-        }
+        if (isSessionEnded(error)) return
+        this.toast.add({severity:'error',
+          summary: this.t('components.products.toastPaymentSubscriptionSummary'),
+          detail: this.t('components.products.errorCreatingPaymentData'), life: 10000})
+        this.setMessage("error", this.t('components.products.errorCreatingPaymentData'))
       })
     },
     async checkSubscription(businessId, productName, productType) {
@@ -221,12 +216,8 @@ export default {
           console.error("Product Subscription data was empty:", response)
         }
       }).catch((error) => {
-        if(error.response.status === 404) {
+        if(error.response?.status === 404) {
           console.info(`Subscription not found, businessId(${businessId}), name(productName)`)
-        } else if(error.response.status === 401) {
-          console.error(error)
-          this.store.dispatch('logout')
-          router.push('/signin')
         } else {
           console.error(error)
         }
@@ -283,12 +274,9 @@ export default {
         });
       }).catch((error) => {
         this.showProgressBar = false;
+        if (isSessionEnded(error)) return
         this.toast.add({severity:'error', summary: this.t('components.products.toastCancelSubscriptionSummary'),
           detail: this.t('components.products.toastErrorSummary') + ": " + error, life: 10000})
-        if(error.response.status === 401) {
-          this.store.dispatch('logout')
-          this.router.replace('/signin')
-        }
       })
     },
     reactivateSubscriptionDialog(product) {
@@ -328,12 +316,9 @@ export default {
         });
       }).catch((error) => {
         this.showProgressBar = false;
+        if (isSessionEnded(error)) return
         this.toast.add({severity:'error', summary: this.t('components.products.toastReactivateSubscriptionSummary'),
           detail: this.t('components.products.toastErrorSummary') + ": " + error, life: 10000})
-        if(error.response.status === 401) {
-          this.store.dispatch('logout')
-          this.router.replace('/signin')
-        }
       })
     },
     async selectProduct(product, businessId) {
@@ -376,10 +361,6 @@ export default {
       }).catch((error) => {
         console.error(error)
         this.showProgressBar = false
-        if(error.response.status === 401) {
-          this.store.dispatch('logout')
-          router.push('/signin')
-        }
       })
     }
   },

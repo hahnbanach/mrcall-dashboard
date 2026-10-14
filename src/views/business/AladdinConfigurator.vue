@@ -70,7 +70,6 @@ import { useI18n } from "vue-i18n"
 import { onAuthStateChanged } from "firebase/auth"
 import { auth } from "@/firebase/config"
 import AiConfigureApi from "@/utils/AiConfigure"
-import router from "@/router"
 
 export default {
   components: { BusinessFrame, AiConfigureForm, AiConfigureChanges },
@@ -162,10 +161,6 @@ export default {
         const errorMsg = error.response?.data?.error || error.response?.data?.message || error.message
         this.setMessage('error', this.t('views.aladminConfigurator.errorApplying') + ' (' + errorMsg + ')')
         this.messages.pop()
-        if (error.response?.status === 401) {
-          this.store.dispatch('logout')
-          router.replace('/login')
-        }
       } finally {
         this.abortController = null
         this.loading = false

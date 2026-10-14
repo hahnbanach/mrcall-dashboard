@@ -18,7 +18,6 @@ import Subscription from "@/components/Subscription";
 import Products from "@/components/Products";
 import PreFooterRequireAssistance from "@/components/PreFooterRequireAssistance";
 import businessUtils from "@/utils/Business";
-import router from "@/router";
 
 export default {
   components: {Subscription, Products, PreFooterRequireAssistance},
@@ -50,10 +49,6 @@ export default {
         .catch(error => {
           console.error('Failed to load business:', error)
           this.loading = false
-          if (error.response?.status === 401) {
-            this.store.dispatch('logout')
-            router.push('/login')
-          }
         })
     }
   },

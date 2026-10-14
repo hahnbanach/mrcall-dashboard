@@ -799,10 +799,6 @@ export default {
           console.error(error);
           self.queryConvResultReady = true;
           self.showProgressBar = false;
-          if (error.response && error.response.status === 401) {
-            self.store.dispatch("logout");
-            router.replace("/login");
-          }
         });
     },
     pollForNewConversations() {
@@ -873,10 +869,6 @@ export default {
         .catch((error) => {
           console.debug("Poll error:", error);
           self.showProgressBar = false;
-          if (error.response && error.response.status === 401) {
-            self.store.dispatch("logout");
-            router.replace("/login");
-          }
         });
     },
     onPage(event) {

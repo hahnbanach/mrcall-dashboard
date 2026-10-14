@@ -269,6 +269,7 @@ import { useToast } from "primevue/usetoast";
 import router from "@/router";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/firebase/config";
+import { isSessionEnded } from "@/firebase/axiosConfig";
 import AnalyticsApi from "@/utils/Analytics";
 import TemplatesApi from "@/utils/Templates";
 
@@ -591,11 +592,8 @@ export default {
       return body;
     },
     handleApiError(error, section) {
-      if (error.response && error.response.status === 401) {
-        this.store.dispatch('logout');
-        router.push('/login');
-        return;
-      }
+      // The session ended: the interceptor has already sent the person to sign in.
+      if (isSessionEnded(error)) return;
       console.error(`Analytics ${section} error:`, error);
       this.toast.add({
         severity: 'error',

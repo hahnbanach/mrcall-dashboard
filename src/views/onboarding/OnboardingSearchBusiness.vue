@@ -444,10 +444,6 @@ export default {
         self.items = ref()
         this.showSpinner = false
         console.error(error);
-        if(error.response?.status === 401) {
-          self.store.dispatch('logout')
-          router.replace('/login')
-        }
       })
     }
   },

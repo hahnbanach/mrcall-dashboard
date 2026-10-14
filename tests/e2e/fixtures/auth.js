@@ -162,6 +162,30 @@ async function interceptFirebaseEndpoints(page, user) {
 }
 
 /**
+ * The AI backend, mrcall-agent, answered with nothing: an empty chat history, and `{}` for the rest.
+ * Without it, a page that opens the configuration chat called the real test backend with the mock
+ * token and got a 401, harmless while every 401 was swallowed and the end of the session since the
+ * interceptor ends it on a 401 that a fresh token does not cure.
+ *
+ * Registered once, by setupAuthPage, before anything else: routes are checked last-registered first,
+ * and a spec that drives the chat registers its own afterwards (some call setupApiMocks again after
+ * theirs, which is why these are not in setupApiMocks).
+ */
+async function mockAiBackend(page) {
+  const zylch = new URL(process.env.VUE_APP_ZYLCH_URL).origin
+  await page.route(`${zylch}/**`, (route) => {
+    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({}) })
+  })
+  await page.route(`${zylch}/api/chat/history*`, (route) => {
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ success: true, messages: [], pending_changes: [] }),
+    })
+  })
+}
+
+/**
  * Sets up API route mocking for all StarChat endpoints.
  * Route order matters: more specific routes must be registered first.
  * The actual API returns data directly (not wrapped in { result: [...] }).
@@ -379,6 +403,7 @@ async function setupAuthPage(page, user, role) {
   await page.unroute('**/localhost:8080/__e2e_seed__')
 
   // Set up all network interceptions
+  await mockAiBackend(page)
   await interceptFirebaseEndpoints(page, user)
   await setupApiMocks(page)
 }

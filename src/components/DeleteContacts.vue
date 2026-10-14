@@ -17,6 +17,7 @@
 import {useRouter} from 'vue-router'
 import {useStore} from 'vuex'
 import axios from "axios";
+import { isSessionEnded } from "@/firebase/axiosConfig";
 import router from "@/router";
 import store from "@/store";
 import {useConfirm} from "primevue/useconfirm";
@@ -103,13 +104,10 @@ export default {
         });
       }).catch((error) => {
         this.showProgressBar = false;
+        console.error(error)
+        if (isSessionEnded(error)) return
         this.toast.add({severity:'error', summary: this.t('components.deletecontacts.toastCancelContactsSummary'),
           detail: this.t('components.deletecontacts.toastErrorSummary') + ": " + error, life: 5000})
-        if(error.response.status === 401) {
-          console.error(error.response)
-          store.dispatch('logout')
-          router.replace('/')
-        }
       })
     },
     deleteContactsDialog() {

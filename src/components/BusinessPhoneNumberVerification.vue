@@ -56,6 +56,7 @@
 <script>
 import {computed, ref} from "vue";
 import axios from "axios";
+import { isSessionEnded } from "@/firebase/axiosConfig";
 import router from "@/router";
 import {useStore} from "vuex";
 import parsePhoneNumber from "libphonenumber-js";
@@ -224,12 +225,10 @@ export default {
         }
       }).catch((error) => {
         this.showProgressBar = false
-        this.setMessage("error", this.t('components.businessphonenumberverification.errorSavingSettings') + "(" + error.message + ")")
         console.error(error)
-        if(error.response.status === 401) {
-          this.store.dispatch('logout')
-          router.replace('/signin')
-        }
+        // The session ended: the interceptor has already sent the person to sign in.
+        if (isSessionEnded(error)) return
+        this.setMessage("error", this.t('components.businessphonenumberverification.errorSavingSettings') + "(" + error.message + ")")
       })
     },
     justTested() {
@@ -269,10 +268,6 @@ export default {
       }).catch((error) => {
         console.error("Getting business: ", error)
         this.showProgressBar = false
-        if(error.response.status === 401) {
-          this.store.dispatch('logout')
-          router.replace('/signin')
-        }
       })
     },
     mounted () {

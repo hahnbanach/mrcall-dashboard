@@ -770,10 +770,6 @@ export default {
       }).catch((error) => {
         console.error(error)
         this.showProgressBar = false
-        if(error.response.status === 401) {
-          this.store.dispatch('logout')
-          router.replace('/login')
-        }
       })
     },
     async templateList() {
@@ -801,10 +797,6 @@ export default {
       }).catch((error) => {
         console.error("Fetching TemplateList: ", error);
         this.showProgressBar = false
-        if(error.response?.status && error.response.status === 401) {
-          this.store.dispatch('logout')
-          router.push('/login')
-        }
       })
     }
   },

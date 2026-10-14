@@ -17,6 +17,7 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { getAuth, signInWithCredential, GoogleAuthProvider, getAdditionalUserInfo } from 'firebase/auth'
 import axios from 'axios'
+import { isSessionEnded } from '@/firebase/axiosConfig'
 import { OAuthHelper, GoogleAuthFlow, assertScopesAllowed } from '@/utils/OAuth'
 import store from '@/store'
 import businessUtils from '@/utils/Business'
@@ -253,12 +254,10 @@ export default {
         await router.replace(hasBusinesses ? '/businesses' : '/onboardinglang')
       } catch (error) {
         console.error('Error checking user status:', error)
-        if (error.response?.status === 401) {
-          await store.dispatch('logout')
-          router.replace('/signin')
-        } else {
-          router.replace('/onboardinglang')
-        }
+        // The session ended: the interceptor has already sent the person to sign in, and a second
+        // navigation here would race it.
+        if (isSessionEnded(error)) return
+        router.replace('/onboardinglang')
       }
     }
 

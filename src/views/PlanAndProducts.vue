@@ -55,10 +55,6 @@ export default {
       }).catch((error) => {
         console.error("Getting business: ", error)
         this.showProgressBar = false
-        if(error.response.status === 401) {
-          this.store.dispatch('logout')
-          router.replace('/signin')
-        }
       })
     }
   }

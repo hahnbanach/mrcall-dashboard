@@ -23,7 +23,7 @@ import {useRouter} from 'vue-router'
 import {useStore} from 'vuex'
 import {useToast} from "primevue/usetoast"
 import axios from "axios";
-import router from "@/router";
+import { isSessionEnded } from "@/firebase/axiosConfig";
 import {computed} from "vue";
 
 export default {
@@ -79,15 +79,11 @@ export default {
             self.outboundPhoneNumber = ''
           }).catch((error) => {
             self.showProgressBar = false;
-            if(error.response.status === 401) {
-              this.store.dispatch('logout')
-              router.push('/signin')
-            } else {
-              self.toast.add({severity:'error',
-                summary: `Failed to submit number: ${self.outboundPhoneNumber}`,
-                detail: `${error.message}`, life: 5000})
-              console.error(error)
-            }
+            console.error(error)
+            if (isSessionEnded(error)) return
+            self.toast.add({severity:'error',
+              summary: `Failed to submit number: ${self.outboundPhoneNumber}`,
+              detail: `${error.message}`, life: 5000})
           })
         } else {
           self.toast.add({severity: 'error', summary: `Number submitted is not valid: ${this.outboundPhoneNumber}`, life: 2000})

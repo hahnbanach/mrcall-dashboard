@@ -60,6 +60,7 @@ import {useStore} from 'vuex'
 import {useConfirm} from "primevue/useconfirm"
 import {useToast} from "primevue/usetoast"
 import axios from "axios"
+import { isSessionEnded } from "@/firebase/axiosConfig"
 import router from "@/router"
 import {useI18n} from "vue-i18n";
 import Tr from "@/i18n/translation"
@@ -147,14 +148,10 @@ export default {
       }).catch((error) => {
         console.error(error)
         this.showProgressBar = false
-        if(error.response.status === 401) {
-          this.store.dispatch('logout')
-          router.push('/login')
-        } else {
-          this.toast.add({severity:'error', summary: this.t('components.subscription.toastPaymentSubscriptionSummary'),
-            detail: this.t('components.subscription.errorCreatingPaymentData'), life: 10000})
-          this.setMessage("error", this.t('components.subscription.errorCreatingPaymentData'))
-        }
+        if (isSessionEnded(error)) return
+        this.toast.add({severity:'error', summary: this.t('components.subscription.toastPaymentSubscriptionSummary'),
+          detail: this.t('components.subscription.errorCreatingPaymentData'), life: 10000})
+        this.setMessage("error", this.t('components.subscription.errorCreatingPaymentData'))
       })
     },
     async selectPlan(businessId, template) {
@@ -201,12 +198,9 @@ export default {
         });
       }).catch((error) => {
         this.showProgressBar = false;
+        if (isSessionEnded(error)) return
         this.toast.add({severity:'error', summary: this.t('components.subscription.toastReactivateSubscriptionSummary'),
           detail: this.t('components.subscription.toastErrorSummary') + ": " + error, life: 10000})
-        if(error.response.status === 401) {
-          this.store.dispatch('logout')
-          this.router.replace('/login')
-        }
       })
     },
     setMessage(severity, content) {
@@ -267,12 +261,9 @@ export default {
         });
       }).catch((error) => {
         this.showProgressBar = false;
+        if (isSessionEnded(error)) return
         this.toast.add({severity:'error', summary: this.t('components.subscription.toastCancelSubscriptionSummary'),
           detail: this.t('components.subscription.toastErrorSummary') + ": " + error, life: 10000})
-        if(error.response.status === 401) {
-          this.store.dispatch('logout')
-          this.router.replace('/login')
-        }
       })
     },
     templateList() {
@@ -294,10 +285,6 @@ export default {
       }).catch((error) => {
         console.error(error)
         this.showProgressBar = false
-        if(error.response.status === 401) {
-          this.store.dispatch('logout')
-          router.push('/login')
-        }
       })
     }
   },

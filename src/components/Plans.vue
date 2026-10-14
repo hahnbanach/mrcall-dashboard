@@ -73,10 +73,6 @@ export default {
         this.showProgressBar = false
       }).catch((error) => {
         this.showProgressBar = false
-        if(error.response.status === 401) {
-          this.store.dispatch('logout')
-          router.push('/login')
-        }
         console.error(error)
       })
     }

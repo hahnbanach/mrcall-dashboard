@@ -34,11 +34,16 @@ function property(obj, name) {
     (p.key.name === name || p.key.value === name))
 }
 
-/** Every path declared in the routes array, children joined to their parent. */
-function declaredPaths(source) {
+/**
+ * Every route declared in the routes array, as {path, isPublic}: children joined to their parent,
+ * and public when the route or one of its parents says `meta: { public: true }`, which is what the
+ * router's guard reads (it looks at every matched record). A `meta` that is not written as a
+ * literal is read as not public, the safe answer for a guard that asks for a session by default.
+ */
+function declaredRoutes(source) {
   const ast = parse(source, { sourceType: 'module', plugins: ['dynamicImport'] })
   const out = []
-  const walk = (array, prefix) => {
+  const walk = (array, prefix, parentPublic) => {
     for (const el of array.elements) {
       if (!el || el.type !== 'ObjectExpression') {
         throw new Error(`${ROUTER}: a route that is not an object literal cannot be read statically`)
@@ -48,13 +53,26 @@ function declaredPaths(source) {
         throw new Error(`${ROUTER}: a route whose path is not a string literal cannot be read statically`)
       }
       const full = p.value.value.startsWith('/') ? p.value.value : `${prefix.replace(/\/$/, '')}/${p.value.value}`
-      out.push(full)
+      const meta = property(el, 'meta')
+      const flag = meta && meta.value.type === 'ObjectExpression' && property(meta.value, 'public')
+      const isPublic = parentPublic || Boolean(flag && flag.value.type === 'BooleanLiteral' && flag.value.value)
+      out.push({ path: full, isPublic })
       const children = property(el, 'children')
-      if (children && children.value.type === 'ArrayExpression') walk(children.value, full)
+      if (children && children.value.type === 'ArrayExpression') walk(children.value, full, isPublic)
     }
   }
-  walk(routesArray(ast), '')
+  walk(routesArray(ast), '', false)
   return out
+}
+
+/** Every path declared in the routes array, children joined to their parent. */
+function declaredPaths(source) {
+  return declaredRoutes(source).map(r => r.path)
+}
+
+/** The paths a visitor without a session may open. */
+function publicPaths(source = fs.readFileSync(ROUTER, 'utf8')) {
+  return declaredRoutes(source).filter(r => r.isPublic).map(r => r.path)
 }
 
 function isStatic(p) {
@@ -65,7 +83,7 @@ function staticRoutes(source = fs.readFileSync(ROUTER, 'utf8')) {
   return [...new Set(declaredPaths(source).filter(isStatic))].sort()
 }
 
-module.exports = { declaredPaths, staticRoutes, isStatic }
+module.exports = { declaredPaths, publicPaths, staticRoutes, isStatic }
 
 if (require.main === module) {
   const routes = staticRoutes()

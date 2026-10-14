@@ -39,8 +39,8 @@
 <script>
 import { computed, ref } from "vue";
 import { useStore } from "vuex";
-import router from "@/router";
 import axios from "axios";
+import { isSessionEnded } from "@/firebase/axiosConfig";
 
 export default {
   name: "FetchWebDataPerplexity",
@@ -63,8 +63,7 @@ export default {
     const user = computed(() => store.state.user);
     return {
       store,
-      user,
-      router
+      user
     };
   },
   data: function () {
@@ -109,12 +108,9 @@ export default {
       }).catch((error) => {
         this.showSpinner = false;
         console.error("FetchWebDataPerplexity Error:", error);
-        if (error.response && error.response.status === 401) {
-          this.store.dispatch('logout');
-          router.replace('/login');
-        } else {
-          self.errorMessage = error.message || "An error occurred while fetching data";
-        }
+        // The session ended: the interceptor has already sent the person to sign in.
+        if (isSessionEnded(error)) return;
+        self.errorMessage = error.message || "An error occurred while fetching data";
       });
     }
   }
