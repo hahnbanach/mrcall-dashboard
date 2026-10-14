@@ -149,12 +149,6 @@
         "connecting": "Yhdistetään tallennettua palvelua…",
         "callbackFailed": "Valtuutusta ei voitu suorittaa. Palaa määrityksiin ja aloita uudelleen."
       },
-      "restaurantLayout": {
-        "empty": "Ei vielä salia: alueet ja pöydät määritetään ravintolan sivulla.",
-        "summary": "{zones} aluetta, {tables} aktiivista pöytää. Niitä muokataan ravintolan sivulla.",
-        "open": "Avaa Sali ja pöydät",
-        "unknown": "Salia ei voitu lukea juuri nyt; sitä muokataan ravintolan sivulla."
-      },
       "page": {
         "pageOn": "Sivu päällä",
         "pageOff": "Sivu pois",
@@ -1335,7 +1329,9 @@
       },
       "move": {
         "banner": "Siirrä {name} ({party}, {time}): napauta haluamaasi vapaata pöytää; korostetut sopivat.",
-        "cancel": "Peruuta siirto"
+        "cancel": "Peruuta siirto",
+        "warnTitle": "Siirretäänkö {name} silti?",
+        "anyway": "Siirrä silti"
       },
       "floor": {
         "zoneFree": "1 vapaa {total}:sta | {n} vapaata {total}:sta",
@@ -1439,7 +1435,8 @@
         "save": "Tallenna · {day} {time} · {people}",
         "zone": "Alue",
         "anyZone": "Mikä tahansa alue",
-        "fieldMissing": "{field}: pakollinen jokaisessa varauksessa."
+        "fieldMissing": "{field}: pakollinen jokaisessa varauksessa.",
+        "walkInField": "Ilman varausta: {field}"
       },
       "room": {
         "intro": "Koko sali muokataan täällä. Jokaista aluetta, pöytää ja yhdistelmää muutetaan omassa kentässään tai se poistetaan merkillä ✕. Muutokset tulevat avustajan käyttöön vasta, kun painat Tallenna muutokset; siihen asti voit hylätä ne kaikki.",
@@ -1678,7 +1675,7 @@
       },
       "manifestMissing": "Toiminnon asetuksia ei voitu lukea, joten sivu ei voi näyttää oletusarvoja.",
       "retry": "Yritä uudelleen",
-      "pageOff": "Ravintolasivu on pois päältä skillin asetuksissa: varaukset säilyvät, ja vienti ja poisto ovat yhä käytettävissä. Kytke se päälle käyttääksesi sivua.",
+      "pageOff": "Ravintolasivu on pois päältä skillin asetuksissa: varaukset säilyvät, ja niiden vienti ja vieraan tietojen poisto ovat siellä, kytkimen alla. Kytke sivu päälle käyttääksesi sitä.",
       "tabRules": "Ajat ja säännöt",
       "rules": {
         "intro": "Ravintolan ajat ja säännöt sekä se, mitä jokaisessa varauksessa on oltava, otti sen kuka tahansa. Se, miten avustaja varaa (suurin seurue, ennakko, päivät eteenpäin, mitä se sanoo), asetetaan skillin asetuksissa.",
@@ -1733,7 +1730,8 @@
         },
         "refusedField": "{what}: arvoa ei hyväksytty.",
         "inSkill": "Muuta sitä skillin asetuksissa",
-        "savedToast": "1 muutos tallennettu | {n} muutosta tallennettu"
+        "savedToast": "1 muutos tallennettu | {n} muutosta tallennettu",
+        "aSetting": "Skillin asetus"
       },
       "ask": {
         "title": "Mitä kysymme jokaisessa varauksessa",
@@ -1841,6 +1839,20 @@
       "recognised": {
         "mark": "tunnistettu numero",
         "note": "Tunnistettu numero: vieraan numero ei tehnyt tätä varausta. Puhelimessa vieras voi kuulla sen, lisätä huomautuksen tai myöhästymisen ja jättää pyynnön, mutta ei siirtää tai perua sitä."
+      },
+      "data": {
+        "title": "Vieraiden tiedot",
+        "intro": "Kun sivu on pois päältä, varaukset säilyvät: vie ne, tai poista vieraan tiedot numeron perusteella.",
+        "from": "Alkaen",
+        "to": "Asti",
+        "phone": "Vieraan numero",
+        "erase": "Poista vieraan tiedot",
+        "eraseConfirm": "Poista nyt: ei voi perua",
+        "eraseWarning": "Nimi, numero, allergiat ja huomautukset poistetaan jokaisesta varauksesta, eikä niitä voi palauttaa.",
+        "erased": "Tiedot poistettu 1 varauksesta | Tiedot poistettu {n} varauksesta",
+        "exported": "Varaukset viety",
+        "personRequired": "Vain kirjautunut henkilö voi tehdä tämän.",
+        "badRange": "Viimeinen päivä on ennen ensimmäistä."
       }
     }
   },

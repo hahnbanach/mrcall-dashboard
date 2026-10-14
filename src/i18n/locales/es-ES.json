@@ -149,12 +149,6 @@
         "connecting": "Conectando el servicio guardado…",
         "callbackFailed": "No se completó la autorización. Vuelve a la configuración y empieza de nuevo."
       },
-      "restaurantLayout": {
-        "empty": "Todavía no hay sala: las zonas y las mesas se configuran en la página del restaurante.",
-        "summary": "{zones} zonas, {tables} mesas activas. Se editan en la página del restaurante.",
-        "open": "Abrir Sala y mesas",
-        "unknown": "No se ha podido leer la sala ahora; se edita en la página del restaurante."
-      },
       "page": {
         "pageOn": "Página activa",
         "pageOff": "Página apagada",
@@ -1349,7 +1343,9 @@
       },
       "move": {
         "banner": "Mover {name} ({party}, {time}): toca la mesa libre que quieras; las marcadas con borde son aptas.",
-        "cancel": "Cancelar el cambio"
+        "cancel": "Cancelar el cambio",
+        "warnTitle": "¿Mover a {name} de todos modos?",
+        "anyway": "Mover de todos modos"
       },
       "floor": {
         "zoneFree": "1 libre de {total} | {n} libres de {total}",
@@ -1453,7 +1449,8 @@
         "save": "Guardar · {day} {time} · {people}",
         "zone": "Zona",
         "anyZone": "Cualquier zona",
-        "fieldMissing": "{field}: obligatorio en cada reserva."
+        "fieldMissing": "{field}: obligatorio en cada reserva.",
+        "walkInField": "Sin reserva: {field}"
       },
       "room": {
         "intro": "Aquí se edita toda la sala. Cada zona, mesa y unión se cambia en su propio campo o se quita con ✕. Los cambios llegan al asistente solo cuando pulsas Guardar cambios; hasta entonces puedes descartarlos todos.",
@@ -1692,7 +1689,7 @@
       },
       "manifestMissing": "No se han podido leer los ajustes de la función, así que la página no puede mostrar sus valores predeterminados.",
       "retry": "Reintentar",
-      "pageOff": "La página del restaurante está apagada en los ajustes de la skill: las reservas siguen guardadas, y la exportación y el borrado siguen disponibles. Actívala para usar la página.",
+      "pageOff": "La página del restaurante está apagada en los ajustes de la skill: las reservas siguen guardadas, y su exportación y el borrado de los datos de un cliente están allí, bajo el interruptor. Activa la página para usarla.",
       "tabRules": "Horarios y reglas",
       "rules": {
         "intro": "Los horarios y las reglas del restaurante, y lo que debe tener cada reserva, la tome quien la tome. Cómo reserva el asistente (el grupo más grande, la antelación, los días por delante, lo que dice) se fija en los ajustes de la skill.",
@@ -1747,7 +1744,8 @@
         },
         "refusedField": "{what}: el valor no fue aceptado.",
         "inSkill": "Cambiarlo en los ajustes de la skill",
-        "savedToast": "1 cambio guardado | {n} cambios guardados"
+        "savedToast": "1 cambio guardado | {n} cambios guardados",
+        "aSetting": "Un ajuste de la skill"
       },
       "ask": {
         "title": "Qué pedimos en cada reserva",
@@ -1855,6 +1853,20 @@
       "recognised": {
         "mark": "número reconocido",
         "note": "Número reconocido: el número del cliente no es el que hizo la reserva. Por teléfono puede escucharla, añadir una nota o un retraso y dejar una solicitud, pero no moverla ni cancelarla."
+      },
+      "data": {
+        "title": "Los datos de los clientes",
+        "intro": "Con la página apagada las reservas siguen guardadas: expórtalas, o borra los datos de un cliente por su número.",
+        "from": "Desde",
+        "to": "Hasta",
+        "phone": "Número del cliente",
+        "erase": "Borrar los datos de este cliente",
+        "eraseConfirm": "Borrar ahora: no se puede deshacer",
+        "eraseWarning": "Su nombre, número, alergias y notas se quitan de cada reserva y no se pueden recuperar.",
+        "erased": "Datos borrados de 1 reserva | Datos borrados de {n} reservas",
+        "exported": "Reservas exportadas",
+        "personRequired": "Solo una persona que ha iniciado sesión puede hacerlo.",
+        "badRange": "El último día va antes del primero."
       }
     }
   },

@@ -149,12 +149,6 @@
         "connecting": "Forbinder den gemte tjeneste…",
         "callbackFailed": "Autorisationen kunne ikke fuldføres. Gå tilbage til konfigurationen og start igen."
       },
-      "restaurantLayout": {
-        "empty": "Intet lokale endnu: områder og borde indstilles på restaurantsiden.",
-        "summary": "{zones} områder, {tables} aktive borde. De redigeres på restaurantsiden.",
-        "open": "Åbn Sal og borde",
-        "unknown": "Lokalet kunne ikke læses lige nu; det redigeres på restaurantsiden."
-      },
       "page": {
         "pageOn": "Side til",
         "pageOff": "Side fra",
@@ -1335,7 +1329,9 @@
       },
       "move": {
         "banner": "Flyt {name} ({party}, {time}): tryk på det ledige bord, du vil have; de markerede passer.",
-        "cancel": "Annullér flytning"
+        "cancel": "Annullér flytning",
+        "warnTitle": "Flyt {name} alligevel?",
+        "anyway": "Flyt alligevel"
       },
       "floor": {
         "zoneFree": "1 ledigt af {total} | {n} ledige af {total}",
@@ -1439,7 +1435,8 @@
         "save": "Gem · {day} {time} · {people}",
         "zone": "Område",
         "anyZone": "Ethvert område",
-        "fieldMissing": "{field}: obligatorisk for hver booking."
+        "fieldMissing": "{field}: obligatorisk for hver booking.",
+        "walkInField": "Uden booking: {field}"
       },
       "room": {
         "intro": "Hele salen redigeres her. Hvert område, bord og hver sammenlægning ændres i sit eget felt eller fjernes med ✕. Ændringer når først assistenten, når du trykker på Gem ændringer; indtil da kan du kassere dem alle.",
@@ -1678,7 +1675,7 @@
       },
       "manifestMissing": "Funktionens indstillinger kunne ikke læses, så siden kan ikke vise standardværdierne.",
       "retry": "Prøv igen",
-      "pageOff": "Restaurantsiden er slået fra i skillens indstillinger: bookingerne forbliver gemt, og eksport og sletning er stadig tilgængelige. Slå den til for at bruge siden.",
+      "pageOff": "Restaurantsiden er slået fra i skillens indstillinger: bookingerne forbliver gemt, og eksporten af dem og sletningen af en gæsts oplysninger findes der, under kontakten. Slå siden til for at bruge den.",
       "tabRules": "Tider og regler",
       "rules": {
         "intro": "Restaurantens tider og regler, og hvad hver booking skal indeholde, uanset hvem der tager den. Hvordan assistenten booker (største selskab, varsel, dage frem, hvad den siger) indstilles i skillens indstillinger.",
@@ -1733,7 +1730,8 @@
         },
         "refusedField": "{what}: værdien blev ikke godkendt.",
         "inSkill": "Ændr det i skillens indstillinger",
-        "savedToast": "1 ændring gemt | {n} ændringer gemt"
+        "savedToast": "1 ændring gemt | {n} ændringer gemt",
+        "aSetting": "En indstilling i skillen"
       },
       "ask": {
         "title": "Hvad vi spørger om ved hver booking",
@@ -1841,6 +1839,20 @@
       "recognised": {
         "mark": "genkendt nummer",
         "note": "Genkendt nummer: gæstens nummer foretog ikke denne booking. I telefonen kan gæsten høre den, tilføje en note eller en forsinkelse og efterlade en anmodning, men ikke flytte eller aflyse den."
+      },
+      "data": {
+        "title": "Gæsternes oplysninger",
+        "intro": "Med siden slået fra forbliver bookingerne gemt: eksporter dem, eller slet en gæsts oplysninger via nummeret.",
+        "from": "Fra",
+        "to": "Til",
+        "phone": "Gæstens nummer",
+        "erase": "Slet gæstens oplysninger",
+        "eraseConfirm": "Slet nu: kan ikke fortrydes",
+        "eraseWarning": "Navn, nummer, allergier og noter fjernes fra hver booking og kan ikke gendannes.",
+        "erased": "Oplysninger slettet fra 1 booking | Oplysninger slettet fra {n} bookinger",
+        "exported": "Bookinger eksporteret",
+        "personRequired": "Kun en person, der er logget ind, kan gøre dette.",
+        "badRange": "Den sidste dag ligger før den første."
       }
     }
   },

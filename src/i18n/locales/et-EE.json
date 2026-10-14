@@ -149,12 +149,6 @@
         "connecting": "Salvestatud teenuse ühendamine…",
         "callbackFailed": "Volitamist ei saanud lõpetada. Naase seadistusse ja alusta uuesti."
       },
-      "restaurantLayout": {
-        "empty": "Saali veel pole: alad ja lauad seadistatakse restorani lehel.",
-        "summary": "{zones} ala, {tables} aktiivset lauda. Neid muudetakse restorani lehel.",
-        "open": "Ava Saal ja lauad",
-        "unknown": "Saali ei õnnestunud praegu lugeda; seda muudetakse restorani lehel."
-      },
       "page": {
         "pageOn": "Leht sees",
         "pageOff": "Leht väljas",
@@ -1335,7 +1329,9 @@
       },
       "move": {
         "banner": "Vii {name} ({party}, {time}): puuduta soovitud vaba lauda; ääristatud lauad sobivad.",
-        "cancel": "Tühista liigutus"
+        "cancel": "Tühista liigutus",
+        "warnTitle": "Kas viia {name} siiski üle?",
+        "anyway": "Vii siiski üle"
       },
       "floor": {
         "zoneFree": "1 vaba {total}-st | {n} vaba {total}-st",
@@ -1439,7 +1435,8 @@
         "save": "Salvesta · {day} {time} · {people}",
         "zone": "Ala",
         "anyZone": "Ükskõik milline ala",
-        "fieldMissing": "{field}: iga broneeringu puhul kohustuslik."
+        "fieldMissing": "{field}: iga broneeringu puhul kohustuslik.",
+        "walkInField": "Broneeringuta: {field}"
       },
       "room": {
         "intro": "Kogu saali muudetakse siin. Iga ala, lauda ja ühendust muudetakse selle enda väljal või eemaldatakse märgiga ✕. Muudatused jõuavad assistendini alles siis, kui vajutad Salvesta muudatused; seni saab need kõik tagasi lükata.",
@@ -1678,7 +1675,7 @@
       },
       "manifestMissing": "Funktsiooni seadeid ei õnnestunud lugeda, seega ei saa leht näidata vaikeväärtusi.",
       "retry": "Proovi uuesti",
-      "pageOff": "Restorani leht on skilli seadetes välja lülitatud: broneeringud jäävad alles ning eksport ja kustutamine on endiselt saadaval. Lülita see sisse, et lehte kasutada.",
+      "pageOff": "Restorani leht on skilli seadetes välja lülitatud: broneeringud jäävad alles ning nende eksport ja külalise andmete kustutamine on seal, lüliti all. Lülita leht sisse, et seda kasutada.",
       "tabRules": "Ajad ja reeglid",
       "rules": {
         "intro": "Restorani ajad ja reeglid ning see, mida iga broneering peab sisaldama, kes iganes selle võtab. Kuidas assistent broneerib (suurim seltskond, etteteatamine, päevad ette, mida ta ütleb), määratakse skilli seadetes.",
@@ -1733,7 +1730,8 @@
         },
         "refusedField": "{what}: väärtust ei aktsepteeritud.",
         "inSkill": "Muuda seda skilli seadetes",
-        "savedToast": "1 muudatus salvestatud | {n} muudatust salvestatud"
+        "savedToast": "1 muudatus salvestatud | {n} muudatust salvestatud",
+        "aSetting": "Skilli seade"
       },
       "ask": {
         "title": "Mida me iga broneeringu puhul küsime",
@@ -1841,6 +1839,20 @@
       "recognised": {
         "mark": "tuvastatud number",
         "note": "Tuvastatud number: külalise number ei teinud seda broneeringut. Telefonis saab külaline seda kuulata, lisada märkuse või hilinemise ja jätta taotluse, kuid mitte seda muuta ega tühistada."
+      },
+      "data": {
+        "title": "Külaliste andmed",
+        "intro": "Kui leht on väljas, jäävad broneeringud alles: ekspordi need või kustuta külalise andmed tema numbri järgi.",
+        "from": "Alates",
+        "to": "Kuni",
+        "phone": "Külalise number",
+        "erase": "Kustuta selle külalise andmed",
+        "eraseConfirm": "Kustuta kohe: seda ei saa tagasi võtta",
+        "eraseWarning": "Nimi, number, allergiad ja märkused eemaldatakse igast broneeringust ja neid ei saa taastada.",
+        "erased": "Andmed kustutatud 1 broneeringust | Andmed kustutatud {n} broneeringust",
+        "exported": "Broneeringud eksporditud",
+        "personRequired": "Seda saab teha ainult sisse loginud inimene.",
+        "badRange": "Viimane päev on enne esimest."
       }
     }
   },

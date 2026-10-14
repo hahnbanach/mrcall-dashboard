@@ -15,7 +15,8 @@ const { mockRestaurant, openRestaurant, tomorrowDinner, TODAY, TOMORROW } = requ
  * form drawing every field whatever the setting (the required-fields test); the allergies option never disabled
  * (the allergies test); the calendar's closures drawn with a remove button (the closures test); the closed
  * service's bookings not listed (the closed-day test); the closed mark never drawn (the closed-area test); a request
- * not marked (the inbox test); the staff
+ * not marked (the inbox test); the walk-in sending only its table and party (both walk-in tests, against the
+ * mock applying the server's walk-in rule); the staff
  * warnings not drawn (the warnings test); the missing-fields refusal said without its fields (the refusal test); a
  * request accepted without asking its missing field (the accept test); "make the change" without the closing
  * DELETE (the call-back test); the request's details not pre-filled (the call-back test); a late arrival treated as
@@ -86,12 +87,13 @@ test.describe('the restaurant page, one owner per setting', () => {
     await expect(page.locator('.toast')).toContainText('Saved: Neri')
   })
 
-  test('allergies "required" is offered only where the server says so; a stored "required" is kept and said to act as optional', async ({ authenticatedPage: page }) => {
-    // the server does not say (StarChat does not send it yet): not offered, with the reason
-    await openRules(page)
-    await expect(choice(page, 'allergies', 'Required')).toBeDisabled()
-    await expect(page.locator('.ask-editor [data-ask="allergies"]')).toContainText('not available in this environment')
-  })
+  for (const [what, opts] of [['as production answers', {}], ['when the server says nothing', { allergiesAbsent: true }]]) {
+    test(`allergies "required" is not offered ${what}, with the reason`, async ({ authenticatedPage: page }) => {
+      await openRules(page, opts)
+      await expect(choice(page, 'allergies', 'Required')).toBeDisabled()
+      await expect(page.locator('.ask-editor [data-ask="allergies"]')).toContainText('not available in this environment')
+    })
+  }
 
   test('allergies "required" where it is available is saved; refused by the server, the refusal is said readably', async ({ authenticatedPage: page }) => {
     const { calls } = await openRules(page, { allergies: { stored: 'optional', effective: 'optional', requiredAvailable: true }, allergiesRefused: true })
@@ -171,6 +173,43 @@ test.describe('the restaurant page, one owner per setting', () => {
     await ready(page)
     await tomorrowDinner(page)
     await expect(page.locator('.req', { hasText: 'Galli' }).locator('.closed-mark')).toBeVisible()
+  })
+
+  // A walk-in may omit name and phone only (StarChat NativeReservationBook.staffBook, RestaurantRules.missingFields).
+  test('a walk-in with notes required asks for them and sends them, on the table chosen', async ({ authenticatedPage: page }) => {
+    const { calls } = await mockRestaurant(page, { params: { requiredFields: JSON.stringify({ notes: 'required' }) } })
+    await openRestaurant(page)
+    await ready(page)
+    await tap(page.locator('.tile[data-table="D2"]'))
+    const walkin = page.locator('.panel .walkin')
+    await expect(walkin.locator('[data-walkin-field="notes"]')).toBeVisible()
+    await expect(walkin.locator('[data-walkin-field="name"], [data-walkin-field="phone"], [data-walkin-field="zone"]')).toHaveCount(0)
+    await walkin.getByRole('button', { name: '2', exact: true }).click()
+    await expect(walkin).toContainText('Every booking here needs: Notes.')
+    expect(calls.filter(c => c.method === 'POST' && c.path === '/reservations')).toHaveLength(0)
+    await walkin.getByLabel('Walk-in: Notes').fill('Pram')
+    await walkin.getByRole('button', { name: '2', exact: true }).click()
+    await expect(page.locator('.toast')).toContainText('Walk-in of 2 seated')
+    const post = calls.find(c => c.method === 'POST' && c.path === '/reservations')
+    expect(post.body).toMatchObject({ date: TODAY, covers: 2, walkIn: true, tableIds: [8], notes: 'Pram' })
+    expect(post.body.name).toBeUndefined()
+  })
+
+  test('a walk-in with the area required and no table chosen asks for the area and sends it', async ({ authenticatedPage: page }) => {
+    const { calls } = await mockRestaurant(page, { params: { requiredFields: JSON.stringify({ zone: 'required' }) } })
+    await openRestaurant(page)
+    await ready(page)
+    await page.locator('.new-booking').click()
+    const walkin = page.locator('.panel .walkin')
+    await walkin.getByRole('button', { name: '3', exact: true }).click()
+    await expect(walkin).toContainText('Every booking here needs: Area.')
+    expect(calls.filter(c => c.method === 'POST' && c.path === '/reservations')).toHaveLength(0)
+    await walkin.getByLabel('Walk-in: Area').selectOption('dehors')
+    await walkin.getByRole('button', { name: '3', exact: true }).click()
+    await expect(page.locator('.toast')).toContainText('Walk-in of 3 seated')
+    const post = calls.find(c => c.method === 'POST' && c.path === '/reservations')
+    expect(post.body).toMatchObject({ covers: 3, walkIn: true, zone: 'dehors' })
+    expect(post.body.tableIds).toBeUndefined()
   })
 
   test('staff are warned, not refused, before they confirm: outside the hours and off the grid told apart', async ({ authenticatedPage: page }) => {
@@ -293,6 +332,65 @@ test.describe('the restaurant page, one owner per setting', () => {
     await expect(panel.getByRole('heading', { name: 'Bianchi Neri' })).toBeVisible()
     await page.locator('.toast').getByRole('button', { name: 'Undo' }).click()
     await expect.poll(() => calls.filter(c => c.method === 'PATCH').map(c => c.body)[1]).toEqual({ expectedVersion: 2, name: 'Bianchi' })
+  })
+
+  // Undo of a details edit puts back an empty field as empty, and leaves a required one as the edit set it (the book
+  // refuses to clear it). The first test guards behaviour that was already right (it passes on 2622e5d); the second
+  // was seen failing on 2026-10-14 against 2622e5d, where Undo was offered and sent "" for a now-required field.
+  test('Undo of a details edit clears a field that was empty, and is not offered for a required one the book cannot clear', async ({ authenticatedPage: page }) => {
+    const { calls } = await mockRestaurant(page)
+    await openRestaurant(page)
+    await ready(page)
+    await tomorrowDinner(page)
+    await tap(page.locator('.brow', { hasText: 'Verdi' }))
+    const panel = page.locator('.panel')
+    await panel.locator('.edit-details').click()
+    await panel.locator('.details-editor').getByLabel('Notes').fill('Window')
+    await panel.locator('.save-details').click()
+    await page.locator('.toast').getByRole('button', { name: 'Undo' }).click()
+    await expect.poll(() => calls.filter(c => c.method === 'PATCH').map(c => c.body)).toEqual([{ expectedVersion: 1, notes: 'Window' }, { expectedVersion: 2, notes: '' }])
+  })
+
+  test('a details edit that fills a now-required field offers no Undo the book would refuse', async ({ authenticatedPage: page }) => {
+    await mockRestaurant(page, { params: { requiredFields: JSON.stringify({ notes: 'required' }) } })
+    await openRestaurant(page)
+    await ready(page)
+    await tomorrowDinner(page)
+    await tap(page.locator('.brow', { hasText: 'Verdi' }))
+    const panel = page.locator('.panel')
+    await panel.locator('.edit-details').click()
+    await panel.locator('.details-editor').getByLabel('Notes').fill('Window')
+    await panel.locator('.save-details').click()
+    await expect(page.locator('.toast')).toContainText('Details saved: Verdi')
+    await expect(page.locator('.toast').getByRole('button', { name: 'Undo' })).toHaveCount(0)
+  })
+
+  // A move by a tap or a drag is told the staff warnings before it is made. Seen failing on 2026-10-14 against 2622e5d.
+  test('a move to another table says what staff are warned of before it is made, and is made on "move anyway"', async ({ authenticatedPage: page }) => {
+    const { calls } = await mockRestaurant(page, { staffWarnings: ['off_grid'] })
+    await openRestaurant(page)
+    await ready(page)
+    await tomorrowDinner(page)
+    await page.locator('.brow', { hasText: 'Rossi' }).click()
+    await page.locator('.panel').getByRole('button', { name: 'Move' }).click()
+    await tap(page.locator('.tile[data-table="T5"]'))
+    const dialog = page.locator('.mrcall-confirm-dialog')
+    await expect(dialog).toContainText('Move Rossi anyway?')
+    await expect(dialog).toContainText('Not on the arrival times')
+    expect(calls.filter(c => c.method === 'PATCH')).toHaveLength(0)
+    await dialog.getByRole('button', { name: 'Move anyway' }).click()
+    await expect(page.locator('.toast')).toContainText('Rossi moved to T5')
+    expect(calls.filter(c => c.method === 'PATCH').map(c => c.body)).toEqual([{ expectedVersion: 1, tableIds: [5] }])
+  })
+
+  // A server error on a setting the skill form owns is named by that setting's label. Seen failing on 2026-10-14 against
+  // 2622e5d: "maxPartySize: the value is outside the allowed range."
+  test('a refusal naming a setting of the skill form says its label, not its key', async ({ authenticatedPage: page }) => {
+    await openRules(page, { configRefusal: [{ severity: 'error', path: '/maxPartySize', code: 'out_of_range', detail: 'server English' }] })
+    await tap(choice(page, 'notes', 'Required'))
+    await tap(page.locator('.rules-editor .save-rules'))
+    await expect(page.locator('.rules-editor .issues')).toContainText('Largest party booked by the assistant: the value is outside the allowed range.')
+    await expect(page.locator('.rules-editor .issues')).not.toContainText('maxPartySize')
   })
 
   test('with allergies not asked, a booking that holds one shows it with the hint, and staff can clear it', async ({ authenticatedPage: page }) => {

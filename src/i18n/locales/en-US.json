@@ -151,12 +151,6 @@
         "connecting": "Connecting the saved service…",
         "callbackFailed": "Authorization could not be completed. Return to configuration and start again."
       },
-      "restaurantLayout": {
-        "empty": "No room yet: the areas and tables are set on the restaurant page.",
-        "summary": "{zones} areas, {tables} active tables. They are edited on the restaurant page.",
-        "open": "Open Room and tables",
-        "unknown": "The room could not be read now; it is edited on the restaurant page."
-      },
       "page": {
         "pageOn": "Page on",
         "pageOff": "Page off",
@@ -1340,7 +1334,9 @@
       },
       "move": {
         "banner": "Move {name} ({party}, {time}): tap the free table you want; the outlined ones fit.",
-        "cancel": "Cancel move"
+        "cancel": "Cancel move",
+        "warnTitle": "Move {name} anyway?",
+        "anyway": "Move anyway"
       },
       "floor": {
         "zoneFree": "1 free of {total} | {n} free of {total}",
@@ -1444,7 +1440,8 @@
         "save": "Save · {day} {time} · {people}",
         "zone": "Area",
         "anyZone": "Any area",
-        "fieldMissing": "{field}: required for every booking."
+        "fieldMissing": "{field}: required for every booking.",
+        "walkInField": "Walk-in: {field}"
       },
       "room": {
         "intro": "The whole room is edited here. Every area, table and join is changed in its own field or removed with ✕. Changes reach the assistant only when you press Save changes; until then you can discard them all.",
@@ -1683,7 +1680,7 @@
       },
       "manifestMissing": "The skill's settings could not be read, so the page cannot show its defaults.",
       "retry": "Try again",
-      "pageOff": "The restaurant page is switched off in the skill settings: the bookings stay stored, and the export and erasure are still available. Turn it on to use the page.",
+      "pageOff": "The restaurant page is switched off in the skill settings: the bookings stay stored, and their export and the erasure of a guest's data are there, under the switch. Turn the page on to use it.",
       "tabRules": "Hours and rules",
       "rules": {
         "intro": "The restaurant's hours and rules, and what every booking must carry, whoever takes it. How the assistant books (the largest party, notice, days ahead, what it says) is set in the skill settings.",
@@ -1738,7 +1735,8 @@
         },
         "refusedField": "{what}: the value was not accepted.",
         "inSkill": "Change it in the skill settings",
-        "savedToast": "1 change saved | {n} changes saved"
+        "savedToast": "1 change saved | {n} changes saved",
+        "aSetting": "A setting of the skill"
       },
       "ask": {
         "title": "What we ask for every booking",
@@ -1846,6 +1844,20 @@
       "recognised": {
         "mark": "recognised number",
         "note": "Recognised number: the guest's number did not place this booking. On the phone they can hear it, add a note or a late arrival and leave a request, but not move or cancel it."
+      },
+      "data": {
+        "title": "The guests' data",
+        "intro": "With the page off the bookings stay stored: export them, or erase one guest's data by their number.",
+        "from": "From",
+        "to": "To",
+        "phone": "Guest's number",
+        "erase": "Erase this guest's data",
+        "eraseConfirm": "Erase now: it cannot be undone",
+        "eraseWarning": "Their name, number, allergies and notes are removed from every booking, and cannot be brought back.",
+        "erased": "Data erased from 1 booking | Data erased from {n} bookings",
+        "exported": "Bookings exported",
+        "personRequired": "Only a signed-in person can do this.",
+        "badRange": "The last day comes before the first."
       }
     }
   },

@@ -10,11 +10,14 @@
  */
 import { PAGE_EDITS, SKILL_NAMES as RESTAURANT_SKILLS } from '@/utils/Restaurant'
 import { valueOf } from '@/components/widgets/skills/manifestFields'
+import RestaurantDataPanel from '@/components/widgets/restaurant/RestaurantDataPanel.vue'
 
 const RESTAURANT = {
   section: '__RESTAURANT_BOOKING__',
   tab: 'rules',
   edits: PAGE_EDITS,
+  /** Drawn in the card while the page is off: what the server keeps open then (the export and the erasure). */
+  offPanel: RestaurantDataPanel,
   /**
    * A note under a form field whose limit is a page setting: the assistant's `daysAhead` is at most the book's
    * horizon, which the page edits. StarChat warns on a save above it and does not refuse it (brief, addendum

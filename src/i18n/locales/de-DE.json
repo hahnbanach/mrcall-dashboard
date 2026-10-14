@@ -150,12 +150,6 @@
         "connecting": "Gespeicherter Dienst wird verbunden…",
         "callbackFailed": "Autorisierung fehlgeschlagen. Kehren Sie zur Konfiguration zurück und beginnen Sie erneut."
       },
-      "restaurantLayout": {
-        "empty": "Noch kein Raum: Bereiche und Tische werden auf der Restaurantseite festgelegt.",
-        "summary": "{zones} Bereiche, {tables} aktive Tische. Sie werden auf der Restaurantseite bearbeitet.",
-        "open": "Raum und Tische öffnen",
-        "unknown": "Der Raum konnte gerade nicht gelesen werden; er wird auf der Restaurantseite bearbeitet."
-      },
       "page": {
         "pageOn": "Seite an",
         "pageOff": "Seite aus",
@@ -1337,7 +1331,9 @@
       },
       "move": {
         "banner": "{name} verschieben ({party}, {time}): den gewünschten freien Tisch antippen; die umrandeten passen.",
-        "cancel": "Verschieben abbrechen"
+        "cancel": "Verschieben abbrechen",
+        "warnTitle": "{name} trotzdem verschieben?",
+        "anyway": "Trotzdem verschieben"
       },
       "floor": {
         "zoneFree": "1 frei von {total} | {n} frei von {total}",
@@ -1441,7 +1437,8 @@
         "save": "Speichern · {day} {time} · {people}",
         "zone": "Bereich",
         "anyZone": "Beliebiger Bereich",
-        "fieldMissing": "{field}: Pflicht für jede Reservierung."
+        "fieldMissing": "{field}: Pflicht für jede Reservierung.",
+        "walkInField": "Ohne Reservierung: {field}"
       },
       "room": {
         "intro": "Hier wird der ganze Raum bearbeitet. Jeder Bereich, Tisch und jede Verbindung wird im eigenen Feld geändert oder mit ✕ entfernt. Änderungen erreichen den Assistenten erst, wenn Änderungen speichern gedrückt wird; bis dahin lassen sich alle verwerfen.",
@@ -1680,7 +1677,7 @@
       },
       "manifestMissing": "Die Einstellungen der Funktion konnten nicht gelesen werden, daher kann die Seite die Standardwerte nicht anzeigen.",
       "retry": "Erneut versuchen",
-      "pageOff": "Die Restaurantseite ist in den Skill-Einstellungen ausgeschaltet: die Reservierungen bleiben gespeichert, Export und Löschung bleiben verfügbar. Schalten Sie sie ein, um die Seite zu nutzen.",
+      "pageOff": "Die Restaurantseite ist in den Skill-Einstellungen ausgeschaltet: die Reservierungen bleiben gespeichert, und ihr Export und die Löschung der Daten eines Gastes sind dort, unter dem Schalter. Schalten Sie die Seite ein, um sie zu nutzen.",
       "tabRules": "Zeiten und Regeln",
       "rules": {
         "intro": "Die Zeiten und Regeln des Restaurants und was jede Reservierung enthalten muss, wer sie auch aufnimmt. Wie der Assistent reserviert (größte Gruppe, Vorlauf, Tage im Voraus, was er sagt) wird in den Skill-Einstellungen festgelegt.",
@@ -1735,7 +1732,8 @@
         },
         "refusedField": "{what}: der Wert wurde nicht angenommen.",
         "inSkill": "In den Skill-Einstellungen ändern",
-        "savedToast": "1 Änderung gespeichert | {n} Änderungen gespeichert"
+        "savedToast": "1 Änderung gespeichert | {n} Änderungen gespeichert",
+        "aSetting": "Eine Einstellung des Skills"
       },
       "ask": {
         "title": "Was wir bei jeder Reservierung erfragen",
@@ -1843,6 +1841,20 @@
       "recognised": {
         "mark": "erkannte Nummer",
         "note": "Erkannte Nummer: die Nummer des Gastes hat diese Reservierung nicht aufgegeben. Am Telefon kann er sie hören, eine Notiz oder eine Verspätung hinzufügen und eine Anfrage hinterlassen, sie aber nicht verschieben oder stornieren."
+      },
+      "data": {
+        "title": "Die Daten der Gäste",
+        "intro": "Bei ausgeschalteter Seite bleiben die Reservierungen gespeichert: exportieren Sie sie oder löschen Sie die Daten eines Gastes über seine Nummer.",
+        "from": "Von",
+        "to": "Bis",
+        "phone": "Nummer des Gastes",
+        "erase": "Daten dieses Gastes löschen",
+        "eraseConfirm": "Jetzt löschen: nicht rückgängig zu machen",
+        "eraseWarning": "Name, Nummer, Allergien und Notizen werden aus jeder Reservierung entfernt und können nicht wiederhergestellt werden.",
+        "erased": "Daten aus 1 Reservierung gelöscht | Daten aus {n} Reservierungen gelöscht",
+        "exported": "Reservierungen exportiert",
+        "personRequired": "Nur eine angemeldete Person kann das tun.",
+        "badRange": "Der letzte Tag liegt vor dem ersten."
       }
     }
   },

@@ -149,12 +149,6 @@
         "connecting": "Kobler til den lagrede tjenesten…",
         "callbackFailed": "Autorisasjonen kunne ikke fullføres. Gå tilbake til konfigurasjonen og start på nytt."
       },
-      "restaurantLayout": {
-        "empty": "Ingen sal ennå: områder og bord settes opp på restaurantsiden.",
-        "summary": "{zones} områder, {tables} aktive bord. De redigeres på restaurantsiden.",
-        "open": "Åpne Sal og bord",
-        "unknown": "Salen kunne ikke leses akkurat nå; den redigeres på restaurantsiden."
-      },
       "page": {
         "pageOn": "Side på",
         "pageOff": "Side av",
@@ -1335,7 +1329,9 @@
       },
       "move": {
         "banner": "Flytt {name} ({party}, {time}): trykk på det ledige bordet du vil ha; de uthevede passer.",
-        "cancel": "Avbryt flytting"
+        "cancel": "Avbryt flytting",
+        "warnTitle": "Flytte {name} likevel?",
+        "anyway": "Flytt likevel"
       },
       "floor": {
         "zoneFree": "1 ledig av {total} | {n} ledige av {total}",
@@ -1439,7 +1435,8 @@
         "save": "Lagre · {day} {time} · {people}",
         "zone": "Område",
         "anyZone": "Hvilket som helst område",
-        "fieldMissing": "{field}: obligatorisk for hver bestilling."
+        "fieldMissing": "{field}: obligatorisk for hver bestilling.",
+        "walkInField": "Uten bestilling: {field}"
       },
       "room": {
         "intro": "Hele salen redigeres her. Hvert område, bord og hver sammenslåing endres i sitt eget felt eller fjernes med ✕. Endringer når assistenten først når du trykker på Lagre endringer; frem til da kan du forkaste alle.",
@@ -1678,7 +1675,7 @@
       },
       "manifestMissing": "Funksjonens innstillinger kunne ikke leses, så siden kan ikke vise standardverdiene.",
       "retry": "Prøv igjen",
-      "pageOff": "Restaurantsiden er slått av i skillens innstillinger: bestillingene blir lagret, og eksport og sletting er fortsatt tilgjengelig. Slå den på for å bruke siden.",
+      "pageOff": "Restaurantsiden er slått av i skillens innstillinger: bestillingene blir lagret, og eksporten av dem og slettingen av en gjests opplysninger finnes der, under bryteren. Slå på siden for å bruke den.",
       "tabRules": "Tider og regler",
       "rules": {
         "intro": "Restaurantens tider og regler, og hva hver bestilling må inneholde, uansett hvem som tar den. Hvordan assistenten bestiller (største selskap, varsel, dager fram, hva den sier) stilles inn i skillens innstillinger.",
@@ -1733,7 +1730,8 @@
         },
         "refusedField": "{what}: verdien ble ikke godtatt.",
         "inSkill": "Endre det i skillens innstillinger",
-        "savedToast": "1 endring lagret | {n} endringer lagret"
+        "savedToast": "1 endring lagret | {n} endringer lagret",
+        "aSetting": "En innstilling i skillen"
       },
       "ask": {
         "title": "Hva vi spør om ved hver bestilling",
@@ -1841,6 +1839,20 @@
       "recognised": {
         "mark": "gjenkjent nummer",
         "note": "Gjenkjent nummer: gjestens nummer gjorde ikke denne bestillingen. På telefon kan gjesten høre den, legge til et notat eller en forsinkelse og legge igjen en forespørsel, men ikke flytte eller avbestille den."
+      },
+      "data": {
+        "title": "Gjestenes opplysninger",
+        "intro": "Med siden slått av blir bestillingene lagret: eksporter dem, eller slett en gjests opplysninger via nummeret.",
+        "from": "Fra",
+        "to": "Til",
+        "phone": "Gjestens nummer",
+        "erase": "Slett gjestens opplysninger",
+        "eraseConfirm": "Slett nå: kan ikke angres",
+        "eraseWarning": "Navn, nummer, allergier og notater fjernes fra hver bestilling og kan ikke gjenopprettes.",
+        "erased": "Opplysninger slettet fra 1 bestilling | Opplysninger slettet fra {n} bestillinger",
+        "exported": "Bestillinger eksportert",
+        "personRequired": "Bare en innlogget person kan gjøre dette.",
+        "badRange": "Den siste dagen kommer før den første."
       }
     }
   },

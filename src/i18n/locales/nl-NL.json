@@ -149,12 +149,6 @@
         "connecting": "Opgeslagen dienst verbinden…",
         "callbackFailed": "Autorisatie mislukt. Ga terug naar de configuratie en begin opnieuw."
       },
-      "restaurantLayout": {
-        "empty": "Nog geen zaal: zones en tafels stel je in op de restaurantpagina.",
-        "summary": "{zones} zones, {tables} actieve tafels. Ze worden bewerkt op de restaurantpagina.",
-        "open": "Zaal en tafels openen",
-        "unknown": "De zaal kon nu niet worden gelezen; je bewerkt hem op de restaurantpagina."
-      },
       "page": {
         "pageOn": "Pagina aan",
         "pageOff": "Pagina uit",
@@ -1335,7 +1329,9 @@
       },
       "move": {
         "banner": "{name} verplaatsen ({party}, {time}): tik op de vrije tafel die je wilt; de omlijnde passen.",
-        "cancel": "Verplaatsing annuleren"
+        "cancel": "Verplaatsing annuleren",
+        "warnTitle": "{name} toch verplaatsen?",
+        "anyway": "Toch verplaatsen"
       },
       "floor": {
         "zoneFree": "1 vrij van {total} | {n} vrij van {total}",
@@ -1439,7 +1435,8 @@
         "save": "Opslaan · {day} {time} · {people}",
         "zone": "Gedeelte",
         "anyZone": "Elk gedeelte",
-        "fieldMissing": "{field}: verplicht bij elke reservering."
+        "fieldMissing": "{field}: verplicht bij elke reservering.",
+        "walkInField": "Zonder reservering: {field}"
       },
       "room": {
         "intro": "Hier bewerk je de hele zaal. Elk gedeelte, elke tafel en elke koppeling wijzig je in het eigen veld of verwijder je met ✕. Wijzigingen bereiken de assistent pas als je op Wijzigingen opslaan drukt; tot dan kun je ze allemaal verwerpen.",
@@ -1678,7 +1675,7 @@
       },
       "manifestMissing": "De instellingen van de functie konden niet worden gelezen, dus de pagina kan de standaardwaarden niet tonen.",
       "retry": "Opnieuw proberen",
-      "pageOff": "De restaurantpagina staat uit in de instellingen van de skill: de reserveringen blijven bewaard, en export en wissen blijven beschikbaar. Zet haar aan om de pagina te gebruiken.",
+      "pageOff": "De restaurantpagina staat uit in de instellingen van de skill: de reserveringen blijven bewaard, en hun export en het wissen van de gegevens van een gast staan daar, onder de schakelaar. Zet de pagina aan om haar te gebruiken.",
       "tabRules": "Tijden en regels",
       "rules": {
         "intro": "De tijden en regels van het restaurant, en wat elke reservering moet bevatten, wie haar ook aanneemt. Hoe de assistent reserveert (de grootste groep, de voorbereidingstijd, de dagen vooruit, wat hij zegt) stel je in bij de instellingen van de skill.",
@@ -1733,7 +1730,8 @@
         },
         "refusedField": "{what}: de waarde is niet geaccepteerd.",
         "inSkill": "Wijzig het in de instellingen van de skill",
-        "savedToast": "1 wijziging opgeslagen | {n} wijzigingen opgeslagen"
+        "savedToast": "1 wijziging opgeslagen | {n} wijzigingen opgeslagen",
+        "aSetting": "Een instelling van de skill"
       },
       "ask": {
         "title": "Wat we bij elke reservering vragen",
@@ -1841,6 +1839,20 @@
       "recognised": {
         "mark": "herkend nummer",
         "note": "Herkend nummer: het nummer van de gast heeft deze reservering niet geplaatst. Aan de telefoon kan de gast haar horen, een opmerking of een vertraging toevoegen en een verzoek achterlaten, maar haar niet verplaatsen of annuleren."
+      },
+      "data": {
+        "title": "De gegevens van de gasten",
+        "intro": "Met de pagina uit blijven de reserveringen bewaard: exporteer ze, of wis de gegevens van een gast op zijn nummer.",
+        "from": "Van",
+        "to": "Tot",
+        "phone": "Nummer van de gast",
+        "erase": "Gegevens van deze gast wissen",
+        "eraseConfirm": "Nu wissen: kan niet ongedaan worden",
+        "eraseWarning": "Naam, nummer, allergieën en opmerkingen worden uit elke reservering verwijderd en kunnen niet terug.",
+        "erased": "Gegevens gewist uit 1 reservering | Gegevens gewist uit {n} reserveringen",
+        "exported": "Reserveringen geëxporteerd",
+        "personRequired": "Alleen een aangemelde persoon kan dit doen.",
+        "badRange": "De laatste dag ligt voor de eerste."
       }
     }
   },

@@ -101,6 +101,10 @@ import WeeklyHoursField from "@/components/widgets/skills/fields/WeeklyHoursFiel
 import RestaurantAskEditor from "@/components/widgets/restaurant/RestaurantAskEditor.vue";
 import { clone, closuresOf, withClosures, sameClosures, fieldRulesOf, minFreeLimits } from "@/utils/RestaurantModel";
 import { shortDate } from "@/components/widgets/restaurant/format";
+import { labelOf } from "@/components/widgets/skills/manifestFields";
+
+/** A catalogue field's label in a language, or "" for a field the catalogue does not carry. */
+const labelOfField = (field, lang) => (field && field.labels ? labelOf(field, lang) : "");
 
 /** The numbers of the restaurant this tab edits, grouped as the owner thinks of them. */
 const GROUPS = [
@@ -319,7 +323,8 @@ export default {
       if (this.$te(`components.restaurant.rules.field.${k}`)) return this.$t(`components.restaurant.rules.field.${k}`);
       if (k === "requiredFields") return this.$t("components.restaurant.ask.title");
       if (k === "lunch" || k === "dinner") return this.$t(`components.restaurant.service.${k}`);
-      return k;
+      // a setting of the skill form (the assistant's largest party, days ahead): its label, as the form shows it
+      return labelOfField(this.manifest[k], (this.$i18n.locale || "en").split("-")[0]) || this.$t("components.restaurant.rules.aSetting");
     },
     async save() {
       if (this.errors.length || this.saving) return;

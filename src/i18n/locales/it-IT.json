@@ -151,12 +151,6 @@
         "connecting": "Collegamento del servizio salvato…",
         "callbackFailed": "Autorizzazione non completata. Torna alla configurazione e riparti."
       },
-      "restaurantLayout": {
-        "empty": "Nessuna sala ancora: zone e tavoli si impostano nella pagina del ristorante.",
-        "summary": "{zones} zone, {tables} tavoli attivi. Si modificano nella pagina del ristorante.",
-        "open": "Apri Sala e tavoli",
-        "unknown": "Non è stato possibile leggere la sala ora; si modifica nella pagina del ristorante."
-      },
       "page": {
         "pageOn": "Pagina attiva",
         "pageOff": "Pagina spenta",
@@ -1338,7 +1332,9 @@
       },
       "move": {
         "banner": "Sposta {name} ({party}, {time}): tocca il tavolo libero che vuoi, evidenziati quelli dove entrano.",
-        "cancel": "Annulla spostamento"
+        "cancel": "Annulla spostamento",
+        "warnTitle": "Spostare comunque {name}?",
+        "anyway": "Sposta comunque"
       },
       "floor": {
         "zoneFree": "1 libero su {total} | {n} liberi su {total}",
@@ -1442,7 +1438,8 @@
         "save": "Salva · {day} {time} · {people}",
         "zone": "Zona",
         "anyZone": "Qualsiasi zona",
-        "fieldMissing": "{field}: obbligatorio per ogni prenotazione."
+        "fieldMissing": "{field}: obbligatorio per ogni prenotazione.",
+        "walkInField": "Senza prenotazione: {field}"
       },
       "room": {
         "intro": "Qui si modifica tutta la sala. Ogni zona, tavolo e unione si cambia direttamente nel suo campo o si elimina con ✕. Le modifiche valgono per l'assistente solo quando premi Salva modifiche; fino ad allora puoi annullarle tutte.",
@@ -1684,7 +1681,7 @@
       },
       "manifestMissing": "Non è stato possibile leggere le impostazioni della funzione, perciò la pagina non può mostrare i valori predefiniti.",
       "retry": "Riprova",
-      "pageOff": "La pagina del ristorante è spenta nelle impostazioni della skill: le prenotazioni restano salvate, e l'esportazione e la cancellazione restano disponibili. Accendila per usare la pagina.",
+      "pageOff": "La pagina del ristorante è spenta nelle impostazioni della skill: le prenotazioni restano salvate, e la loro esportazione e la cancellazione dei dati di un ospite sono lì, sotto l'interruttore. Accendi la pagina per usarla.",
       "tabRules": "Orari e regole",
       "rules": {
         "intro": "Orari e regole del ristorante, e cosa deve avere ogni prenotazione, chiunque la prenda. Come prenota l'assistente (il gruppo più grande, il preavviso, i giorni in avanti, cosa dice) si imposta nelle impostazioni della skill.",
@@ -1739,7 +1736,8 @@
         },
         "refusedField": "{what}: il valore non è stato accettato.",
         "inSkill": "Cambialo nelle impostazioni della skill",
-        "savedToast": "1 modifica salvata | {n} modifiche salvate"
+        "savedToast": "1 modifica salvata | {n} modifiche salvate",
+        "aSetting": "Un'impostazione della skill"
       },
       "ask": {
         "title": "Cosa chiediamo per ogni prenotazione",
@@ -1847,6 +1845,20 @@
       "recognised": {
         "mark": "numero riconosciuto",
         "note": "Numero riconosciuto: il numero dell'ospite non è quello che ha fatto la prenotazione. Al telefono può sentirla, aggiungere una nota o un ritardo e lasciare una richiesta, ma non spostarla né cancellarla."
+      },
+      "data": {
+        "title": "I dati degli ospiti",
+        "intro": "Con la pagina spenta le prenotazioni restano salvate: esportale, o cancella i dati di un ospite dal suo numero.",
+        "from": "Dal",
+        "to": "Al",
+        "phone": "Numero dell'ospite",
+        "erase": "Cancella i dati di questo ospite",
+        "eraseConfirm": "Cancella ora: non si può annullare",
+        "eraseWarning": "Nome, numero, allergie e note vengono tolti da ogni prenotazione, e non si possono recuperare.",
+        "erased": "Dati cancellati da 1 prenotazione | Dati cancellati da {n} prenotazioni",
+        "exported": "Prenotazioni esportate",
+        "personRequired": "Solo una persona che ha fatto l'accesso può farlo.",
+        "badRange": "L'ultimo giorno viene prima del primo."
       }
     }
   },

@@ -194,7 +194,7 @@
       S.layout = demoLayout();
       for (let i = -7; i <= 60; i++) ensureDay(addDays(TODAY, i));
       S.requests = [{ id: uid('r'), date: TODAY, service: 'cena', start: toMin('21:30'), party: 7, name: 'Fontana', phone: '+39 347 000 1122',
-        reason: 'Vogliono portare un cane: l\'assistente ha lasciato decidere a voi', convId: 'CON-7f3a90c1' }];
+        reason: 'Vogliono portare un cane: l\'assistente ha lasciato decidere a voi', convId: 'CON-00000000' }];
     } else {
       S.layout = { zones: [], tables: [], joins: [], settings: { minFree: durFor(1) } };
       S.wizard = { step: 1, zones: ['Sala'], custom: '', rows: { Sala: [{ n: 6, size: 2 }, { n: 4, size: 4 }] }, pairs: {} };

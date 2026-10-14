@@ -150,12 +150,6 @@
         "connecting": "Connexion au service enregistré…",
         "callbackFailed": "L’autorisation a échoué. Revenez à la configuration et recommencez."
       },
-      "restaurantLayout": {
-        "empty": "Pas encore de salle : les zones et les tables se définissent sur la page du restaurant.",
-        "summary": "{zones} zones, {tables} tables actives. Elles se modifient sur la page du restaurant.",
-        "open": "Ouvrir Salle et tables",
-        "unknown": "La salle n'a pas pu être lue pour l'instant ; elle se modifie sur la page du restaurant."
-      },
       "page": {
         "pageOn": "Page activée",
         "pageOff": "Page désactivée",
@@ -1337,7 +1331,9 @@
       },
       "move": {
         "banner": "Déplacer {name} ({party}, {time}) : touchez la table libre souhaitée ; celles qui sont entourées conviennent.",
-        "cancel": "Annuler le déplacement"
+        "cancel": "Annuler le déplacement",
+        "warnTitle": "Déplacer {name} quand même ?",
+        "anyway": "Déplacer quand même"
       },
       "floor": {
         "zoneFree": "1 libre sur {total} | {n} libres sur {total}",
@@ -1441,7 +1437,8 @@
         "save": "Enregistrer · {day} {time} · {people}",
         "zone": "Zone",
         "anyZone": "N'importe quelle zone",
-        "fieldMissing": "{field} : obligatoire pour chaque réservation."
+        "fieldMissing": "{field} : obligatoire pour chaque réservation.",
+        "walkInField": "Sans réservation : {field}"
       },
       "room": {
         "intro": "Toute la salle se modifie ici. Chaque zone, table et jonction se change dans son propre champ ou se supprime avec ✕. Les modifications ne parviennent à l'assistant qu'une fois Enregistrer les modifications pressé ; d'ici là, vous pouvez toutes les annuler.",
@@ -1680,7 +1677,7 @@
       },
       "manifestMissing": "Les réglages de la fonction n'ont pas pu être lus : la page ne peut pas afficher ses valeurs par défaut.",
       "retry": "Réessayer",
-      "pageOff": "La page du restaurant est désactivée dans les réglages de la skill : les réservations restent enregistrées, l'export et l'effacement restent disponibles. Activez-la pour utiliser la page.",
+      "pageOff": "La page du restaurant est désactivée dans les réglages de la skill : les réservations restent enregistrées, et leur export et l'effacement des données d'un client s'y trouvent, sous l'interrupteur. Activez la page pour l'utiliser.",
       "tabRules": "Horaires et règles",
       "rules": {
         "intro": "Les horaires et les règles du restaurant, et ce que chaque réservation doit contenir, quel que soit celui qui la prend. La façon dont l'assistant réserve (le plus grand groupe, le délai, les jours à l'avance, ce qu'il dit) se règle dans les réglages de la skill.",
@@ -1735,7 +1732,8 @@
         },
         "refusedField": "{what} : la valeur n'a pas été acceptée.",
         "inSkill": "Le modifier dans les réglages de la skill",
-        "savedToast": "1 modification enregistrée | {n} modifications enregistrées"
+        "savedToast": "1 modification enregistrée | {n} modifications enregistrées",
+        "aSetting": "Un réglage de la skill"
       },
       "ask": {
         "title": "Ce que nous demandons pour chaque réservation",
@@ -1843,6 +1841,20 @@
       "recognised": {
         "mark": "numéro reconnu",
         "note": "Numéro reconnu : le numéro du client n'est pas celui qui a fait la réservation. Au téléphone, il peut l'entendre, ajouter une note ou un retard et laisser une demande, mais pas la déplacer ni l'annuler."
+      },
+      "data": {
+        "title": "Les données des clients",
+        "intro": "Page désactivée, les réservations restent enregistrées : exportez-les, ou effacez les données d'un client par son numéro.",
+        "from": "Du",
+        "to": "Au",
+        "phone": "Numéro du client",
+        "erase": "Effacer les données de ce client",
+        "eraseConfirm": "Effacer maintenant : irréversible",
+        "eraseWarning": "Son nom, son numéro, ses allergies et ses notes sont retirés de chaque réservation, sans retour possible.",
+        "erased": "Données effacées de 1 réservation | Données effacées de {n} réservations",
+        "exported": "Réservations exportées",
+        "personRequired": "Seule une personne connectée peut le faire.",
+        "badRange": "Le dernier jour est avant le premier."
       }
     }
   },

@@ -149,12 +149,6 @@
         "connecting": "Ansluter den sparade tjänsten…",
         "callbackFailed": "Auktoriseringen kunde inte slutföras. Gå tillbaka till konfigurationen och börja om."
       },
-      "restaurantLayout": {
-        "empty": "Ingen matsal ännu: områden och bord ställs in på restaurangsidan.",
-        "summary": "{zones} områden, {tables} aktiva bord. De redigeras på restaurangsidan.",
-        "open": "Öppna Sal och bord",
-        "unknown": "Matsalen kunde inte läsas just nu; den redigeras på restaurangsidan."
-      },
       "page": {
         "pageOn": "Sidan på",
         "pageOff": "Sidan av",
@@ -1335,7 +1329,9 @@
       },
       "move": {
         "banner": "Flytta {name} ({party}, {time}): tryck på det lediga bord du vill ha; de markerade passar.",
-        "cancel": "Avbryt flytt"
+        "cancel": "Avbryt flytt",
+        "warnTitle": "Flytta {name} ändå?",
+        "anyway": "Flytta ändå"
       },
       "floor": {
         "zoneFree": "1 ledigt av {total} | {n} lediga av {total}",
@@ -1439,7 +1435,8 @@
         "save": "Spara · {day} {time} · {people}",
         "zone": "Område",
         "anyZone": "Valfritt område",
-        "fieldMissing": "{field}: obligatoriskt för varje bokning."
+        "fieldMissing": "{field}: obligatoriskt för varje bokning.",
+        "walkInField": "Utan bokning: {field}"
       },
       "room": {
         "intro": "Hela salen redigeras här. Varje område, bord och hopslagning ändras i sitt eget fält eller tas bort med ✕. Ändringar når assistenten först när du trycker på Spara ändringar; till dess kan du förkasta alla.",
@@ -1678,7 +1675,7 @@
       },
       "manifestMissing": "Funktionens inställningar kunde inte läsas, så sidan kan inte visa standardvärdena.",
       "retry": "Försök igen",
-      "pageOff": "Restaurangsidan är avstängd i skillens inställningar: bokningarna finns kvar, och export och radering är fortfarande tillgängliga. Slå på den för att använda sidan.",
+      "pageOff": "Restaurangsidan är avstängd i skillens inställningar: bokningarna finns kvar, och exporten av dem och raderingen av en gästs uppgifter finns där, under reglaget. Slå på sidan för att använda den.",
       "tabRules": "Tider och regler",
       "rules": {
         "intro": "Restaurangens tider och regler, och vad varje bokning måste innehålla, vem som än tar den. Hur assistenten bokar (största sällskapet, framförhållning, dagar framåt, vad den säger) ställs in i skillens inställningar.",
@@ -1733,7 +1730,8 @@
         },
         "refusedField": "{what}: värdet godtogs inte.",
         "inSkill": "Ändra det i skillens inställningar",
-        "savedToast": "1 ändring sparad | {n} ändringar sparade"
+        "savedToast": "1 ändring sparad | {n} ändringar sparade",
+        "aSetting": "En inställning i skillen"
       },
       "ask": {
         "title": "Vad vi frågar efter vid varje bokning",
@@ -1841,6 +1839,20 @@
       "recognised": {
         "mark": "känt nummer",
         "note": "Känt nummer: gästens nummer gjorde inte den här bokningen. I telefon kan gästen höra den, lägga till en anteckning eller en försening och lämna en förfrågan, men inte flytta eller avboka den."
+      },
+      "data": {
+        "title": "Gästernas uppgifter",
+        "intro": "Med sidan avstängd finns bokningarna kvar: exportera dem, eller radera en gästs uppgifter via numret.",
+        "from": "Från",
+        "to": "Till",
+        "phone": "Gästens nummer",
+        "erase": "Radera gästens uppgifter",
+        "eraseConfirm": "Radera nu: kan inte ångras",
+        "eraseWarning": "Namn, nummer, allergier och anteckningar tas bort från varje bokning och kan inte återställas.",
+        "erased": "Uppgifter raderade från 1 bokning | Uppgifter raderade från {n} bokningar",
+        "exported": "Bokningar exporterade",
+        "personRequired": "Bara en inloggad person kan göra detta.",
+        "badRange": "Sista dagen kommer före den första."
       }
     }
   },

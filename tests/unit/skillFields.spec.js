@@ -1,5 +1,5 @@
-import { describe, it, expect, vi } from 'vitest'
-import { mount, flushPromises } from '@vue/test-utils'
+import { describe, it, expect } from 'vitest'
+import { mount } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
 import PrimeVue from 'primevue/config'
 import { componentFor, fieldComponents, drawnWidgets } from '@/components/widgets/skills/fields'
@@ -103,50 +103,5 @@ describe('a calendar field', () => {
       global
     })
     expect(wrapper.findComponent({ name: 'Dropdown' }).props('options')).toHaveLength(1)
-  })
-})
-
-describe('the restaurant room field', () => {
-  // What production gives this field: the card reads the instance out of the business variables, where
-  // StarChat never stores `layout`, so the value is undefined for every restaurant, rooms included.
-  // Seen failing on 2026-10-12 against the field that summarised its value: "No room yet" for a room of
-  // two zones.
-  const room = { revision: 3, zones: [{ id: 'sala' }, { id: 'dehors' }],
-    tables: [{ id: 1, active: true }, { id: 2, active: false }, { id: 3, active: true }], joins: [] }
-
-  async function draw (layout) {
-    const { createRouter, createMemoryHistory } = await import('vue-router')
-    const { createStore } = await import('vuex')
-    const enUS = (await import('@/i18n/locales/en-US.json')).default
-    const RestaurantApi = (await import('@/utils/Restaurant')).default
-    const spy = vi.spyOn(RestaurantApi, 'layout').mockImplementation(layout)
-    const router = createRouter({ history: createMemoryHistory(), routes: [{ path: '/businessconfiguration', component: { template: '<div/>' } }] })
-    router.push('/businessconfiguration?id=biz-1')
-    await router.isReady()
-    const store = createStore({ state: { user: { accessToken: 't' } } })
-    const realI18n = createI18n({ legacy: false, locale: 'en-US', messages: { 'en-US': enUS } })
-    const wrapper = mount(fieldComponents.restaurant_layout, {
-      props: { field: { key: 'layout', widget: 'restaurant_layout' }, modelValue: undefined },
-      global: { plugins: [realI18n, PrimeVue, router, store] }
-    })
-    await flushPromises()
-    return { wrapper, spy }
-  }
-
-  it('summarises the room the restaurant\'s layout route answers, not the empty value the card hands it', async () => {
-    const { wrapper, spy } = await draw(async () => room)
-    expect(spy).toHaveBeenCalledWith({ accessToken: 't' }, 'biz-1')
-    expect(wrapper.text()).toContain('2 areas, 2 active tables')
-    expect(wrapper.text()).not.toContain('No room yet')
-    expect(wrapper.find('a').attributes('href')).toContain('section=__RESTAURANT_BOOKING__')
-    expect(wrapper.find('a').attributes('href')).toContain('tab=room')
-    spy.mockRestore()
-  })
-
-  it('says there is no room yet only when the route answers none, and never writes a value', async () => {
-    const { wrapper, spy } = await draw(async () => null)
-    expect(wrapper.text()).toContain('No room yet')
-    expect(wrapper.emitted('update:modelValue')).toBeUndefined()
-    spy.mockRestore()
   })
 })

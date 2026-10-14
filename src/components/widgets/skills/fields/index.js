@@ -9,7 +9,6 @@ import KeyValueField from './KeyValueField.vue'
 import ListField from './ListField.vue'
 import WeeklyHoursField from './WeeklyHoursField.vue'
 import CalendarField from './CalendarField.vue'
-import RestaurantLayoutField from './RestaurantLayoutField.vue'
 
 /**
  * Which component draws which widget.
@@ -39,9 +38,6 @@ export const fieldComponents = {
   list: ListField,
   weekly_hours: WeeklyHoursField,
   calendar: CalendarField,
-  // A section stored by the restaurant book rather than in the variables: a link to its own editor.
-  // The value is the one StarChat's manifest declares for the `layout` section (R4).
-  restaurant_layout: RestaurantLayoutField,
 
   // version 1, for a row that has no manifest of its own
   string: TextField,

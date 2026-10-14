@@ -111,7 +111,7 @@ import RestaurantApi, { isMissingRoute, isPageOff, pageOffIn } from "@/utils/Res
 import DeferredCommit from "@/utils/DeferredCommit";
 import {
   rulesOf, missingRequired, onClosedDay, changeOf, serviceWindow, serviceAt, defaultTime, arrivalTimes, keyOf, addDays, dateOf, fmt, toMin, minuteOfDay,
-  stripStatus, seatLabel, dropTargets, tableById, freeFrom, live, occupiedTables, callsOf, SERVICES, GUEST_STATES
+  stripStatus, seatLabel, dropTargets, tableById, freeFrom, callsOf, SERVICES, GUEST_STATES
 } from "@/utils/RestaurantModel";
 import { shortDate, monthTitle, refusalKey, missingFieldsOf, OVERRIDABLE } from "@/components/widgets/restaurant/format";
 import RestaurantStrip from "@/components/widgets/restaurant/RestaurantStrip.vue";
@@ -688,7 +688,14 @@ export default {
       const request = this.panel.change;
       const body = Object.assign({ expectedVersion: b.version }, guest,
         move ? Object.assign({ date: move.date, time: fmt(move.start), covers: move.party }, move.zone ? { zone: move.zone } : {}) : {});
-      const back = Object.fromEntries(Object.keys(guest).map(k => [k, b[k] || ""]));
+      // What Undo writes back: a field's previous value; a field that was empty goes back to empty (sent as "", which the
+      // book reads as cleared) unless the restaurant now requires it, which the book would refuse to clear: then it is
+      // left as the edit set it, the one state the book accepts.
+      const back = {};
+      Object.keys(guest).forEach(k => {
+        if (String(b[k] || "").trim()) back[k] = b[k];
+        else if (this.rules.requiredFields[k] !== "required") back[k] = "";
+      });
       if (move) Object.assign(back, { date: b.date || this.date, time: fmt(b.start), covers: b.party }, move.zone ? { zone: b.zone } : {});
       const ok = await this.act(async () => {
         const changed = await RestaurantApi.change(this.user, this.businessId, b.id, body);
@@ -699,7 +706,7 @@ export default {
         done: answer => (request
           ? this.$t("components.restaurant.change.applied", { name: b.name || this.$t("components.restaurant.walkInName") })
           : this.$t("components.restaurant.details.saved", { name: guest.name || b.name || this.$t("components.restaurant.walkInName") })) + this.warningsText(answer),
-        undo: answer => RestaurantApi.change(this.user, this.businessId, b.id, Object.assign({ expectedVersion: answer.version }, back)),
+        undo: Object.keys(back).length ? answer => RestaurantApi.change(this.user, this.businessId, b.id, Object.assign({ expectedVersion: answer.version }, back)) : null,
       });
       if (ok && this.panel) this.panel = { type: "booking", id: b.id };
     },
@@ -834,11 +841,30 @@ export default {
       const to = options[0].ids;
       const from = b.tables.slice();
       this.moving = null;
-      return this.act(() => RestaurantApi.change(this.user, this.businessId, b.id, { expectedVersion: b.version, tableIds: to }), {
-        done: () => this.$t("components.restaurant.movedTo", { name: b.name, tables: seatLabel(this.layout, to) }),
+      return this.moveWarned(b, () => this.act(() => RestaurantApi.change(this.user, this.businessId, b.id, { expectedVersion: b.version, tableIds: to }), {
+        done: answer => this.$t("components.restaurant.movedTo", { name: b.name, tables: seatLabel(this.layout, to) }) + this.warningsText(answer),
         undo: answer => RestaurantApi.change(this.user, this.businessId, b.id,
           { expectedVersion: answer.version, tableIds: from.length ? from : undefined, time: fmt(b.start) }),
+      }));
+    },
+    /**
+     * A move staff make by dragging or tapping a table: what the book warns staff of for that party then (R8: hours,
+     * grid, notice, the assistant's largest party, pace) is asked first, as the booking form asks it, and said before
+     * the move is made, with "move anyway"; with nothing to say the move is made at once.
+     */
+    async moveWarned(b, run) {
+      const pre = await this.askWhere(this.date, b.start, b.party);
+      const warnings = pre && pre.staff && !pre.staff.refusal ? pre.staff.warnings || [] : [];
+      if (!warnings.length) return run();
+      this.confirm.require({
+        header: this.$t("components.restaurant.move.warnTitle", { name: b.name || this.$t("components.restaurant.walkInName") }),
+        message: warnings.map(w => this.$t(`components.restaurant.warning.${w}`)).join(" "),
+        acceptLabel: this.$t("components.restaurant.move.anyway"),
+        rejectLabel: this.$t("components.restaurant.confirm.keep"),
+        defaultFocus: "reject",
+        accept: () => run(),
       });
+      return null;
     },
     newBody(p, overbook) {
       return {
@@ -860,22 +886,17 @@ export default {
       });
       if (ok) this.panel = null;
     },
+    /** A walk-in, now: the tables staff chose stay chosen (the server judges them), the area when there is no table, and
+     *  the fields this restaurant requires of a walk-in (allergies, notes; never name or phone, R8). */
     async walkIn({ form, party }) {
       const p = form;
       const now = minuteOfDay(new Date());
-      let tables = p.tables;
-      if (tables) {
-        const seat = live(this.list, this.service);
-        const t = tables.map(id => tableById(this.layout, id));
-        const fits = t.reduce((a, x) => a + x.max, 0) >= party && party >= Math.min(...t.map(x => x.min));
-        const clash = seat.some(b => occupiedTables(b).some(id => tables.includes(id)) && b.start < now + this.rules.tableMinutes.upTo2 && b.end > now);
-        if (!fits || clash) tables = null;
-      }
-      const ok = await this.act(() => RestaurantApi.book(this.user, this.businessId,
-        { date: this.date, time: fmt(now), covers: party, walkIn: true, tableIds: tables || undefined }), {
+      const body = { date: this.date, time: fmt(now), covers: party, walkIn: true, tableIds: p.tables || undefined,
+        zone: (!p.tables && p.zone) || undefined, allergies: (p.allergies || "").trim() || undefined, notes: (p.notes || "").trim() || undefined };
+      const ok = await this.act(() => RestaurantApi.book(this.user, this.businessId, body), {
         inPanel: true,
         done: answer => this.$t("components.restaurant.walkInDone", { party,
-          tables: answer && answer.tableNames && answer.tableNames.length ? answer.tableNames.join("+") : "" }),
+          tables: answer && answer.tableNames && answer.tableNames.length ? answer.tableNames.join("+") : "" }) + this.warningsText(answer),
         undo: answer => RestaurantApi.cancel(this.user, this.businessId, answer.id, answer.version),
       });
       if (ok) this.panel = null;

@@ -26,10 +26,11 @@ const catalogue = [{ name: 'skill_restaurant_booking', description: 'Tables and 
   configSchema: { phases: ['during'], outputPrefix: 'restaurant_booking', instances: { max: 1, maxPerPhase: 1 }, fields: catalogueFields() } }]
 const configured = [{ skill: 'skill_restaurant_booking', instanceId: 'restaurant_booking_1',
   params: { enabled: 'true', page: 'true', horizonDays: '200', daysAhead: '60', dinner: '{"friday":["19:00-22:00"]}' } }]
-const business = { ...mockBusiness, variables: { SKILL_RUNNINGLOOP_CONFIGURATION: JSON.stringify(configured) } }
-
-async function mockScreen (page, { role = 'owner', saveStatus = 200, saveBody = null } = {}) {
+async function mockScreen (page, { role = 'owner', saveStatus = 200, saveBody = null, params = null } = {}) {
   const writes = []
+  const restaurantCalls = []
+  const instances = params ? [{ ...configured[0], params: { ...configured[0].params, ...params } }] : configured
+  const business = { ...mockBusiness, variables: { SKILL_RUNNINGLOOP_CONFIGURATION: JSON.stringify(instances) } }
   await page.route('**/*clarity.ms/**', route => route.abort())
   await page.route('**/crm/variables*', route => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(annotations) }))
   await page.route('**/crm/business*', route => {
@@ -42,18 +43,27 @@ async function mockScreen (page, { role = 'owner', saveStatus = 200, saveBody = 
   await page.route('**/apidomain/agent/skills*', route => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(catalogue) }))
   await page.route('**/apidomain/agent/skills/configuration/**', route => {
     if (route.request().method() === 'GET') {
-      return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ prefetch: [], during: configured, final: [] }) })
+      return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ prefetch: [], during: instances, final: [] }) })
     }
     writes.push(route.request().postDataJSON())
     return route.fulfill({ status: saveStatus, contentType: 'application/json', body: JSON.stringify(saveBody || { saved: true, diagnostics: [] }) })
   })
-  await page.route('**/apidomain/restaurant/**', route => route.fulfill({ status: 200, contentType: 'application/json',
-    body: JSON.stringify({ layout: null, calendar: {} }) }))
+  // the restaurant book: with the page off it answers only the export and the erasure, as StarChat does (R8)
+  await page.route('**/apidomain/restaurant/**', route => {
+    const request = route.request()
+    const url = new URL(request.url())
+    const path = url.pathname.replace(/^.*\/apidomain\/restaurant\/[^/]+/, '')
+    restaurantCalls.push({ method: request.method(), path, search: url.search, body: request.postData() ? request.postDataJSON() : null })
+    if (path === '/export') return route.fulfill({ status: 200, contentType: 'text/csv', body: 'id,date\r\n' })
+    if (path === '/erasure') return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ cleared: 2 }) })
+    return route.fulfill({ status: 409, contentType: 'application/json', body: JSON.stringify({ diagnostics: [{ path: '/page', code: 'not_configured', detail: 'off' }] }) })
+  })
+  writes.restaurant = restaurantCalls
   return writes
 }
 
 async function openCard (page) {
-  await page.goto(`/businessconfiguration?id=${business.businessId}&section=${SECTION}`)
+  await page.goto(`/businessconfiguration?id=${mockBusiness.businessId}&section=${SECTION}`)
   await expect(page.locator('.agent-skills-configurator')).toBeVisible({ timeout: 20000 })
   await page.locator('.phase-has-entries .phase-header').click()
   await page.locator('.entry-header-toggle').click()
@@ -98,6 +108,33 @@ test.describe('the restaurant skill in the skill form', () => {
     expect(params.enabled).toBe('false')
     // what the form does not draw travels back as it was read
     expect(params.horizonDays).toBe('200')
+  })
+
+  // StarChat keeps the export and the erasure open with the page off (R8); the page is not reachable then, so the card
+  // offers them. The first test was seen failing on 2026-10-14 against 2622e5d (no such panel); the second guards that
+  // the panel stays out of a card whose page is on.
+  test('with the page off the card offers the export and the erasure, the erasure asked twice', async ({ authenticatedPage: page }) => {
+    const writes = await mockScreen(page, { params: { page: 'false', enabled: 'false' } })
+    await openCard(page)
+    const panel = page.locator('.restaurant-data-panel')
+    await expect(panel).toContainText('The guests\' data')
+    const download = page.waitForEvent('download')
+    await panel.getByRole('button', { name: 'Export' }).click()
+    await download
+    expect(writes.restaurant.filter(c => c.path === '/export')).toHaveLength(1)
+    await panel.getByLabel('Guest\'s number').fill('+39 333 111 2233')
+    await panel.getByRole('button', { name: 'Erase this guest\'s data' }).click()
+    await expect(panel).toContainText('cannot be brought back')
+    expect(writes.restaurant.filter(c => c.path === '/erasure')).toHaveLength(0)
+    await panel.getByRole('button', { name: 'Erase now: it cannot be undone' }).click()
+    await expect(panel).toContainText('Data erased from 2 bookings')
+    expect(writes.restaurant.filter(c => c.path === '/erasure').map(c => c.body)).toEqual([{ phone: '+39 333 111 2233' }])
+  })
+
+  test('with the page on the card offers neither: they are in the page', async ({ authenticatedPage: page }) => {
+    await mockScreen(page)
+    await openCard(page)
+    await expect(page.locator('.restaurant-data-panel')).toHaveCount(0)
   })
 
   test('the server\'s refusal of the assistant without its page is said readably', async ({ authenticatedPage: page }) => {

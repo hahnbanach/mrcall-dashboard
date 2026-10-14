@@ -391,6 +391,12 @@ export default {
             { headers: headers(user) }));
     },
 
+    /** Clears one guest's data, by their number, from every booking of the business (a person only; cannot be undone):
+     *  `{cleared}`, how many bookings it touched. Kept by the server with the page off, like the export. */
+    erase: function(user, businessId, phone) {
+        return call(() => axios.post(base(businessId) + "/erasure", { phone }, { headers: headers(user) }));
+    },
+
     /** The book from `from` to `to` as a CSV file the server writes (a person only). */
     exportCsv: function(user, businessId, from, to) {
         return call(() => axios.get(base(businessId) + "/export?from=" + encodeURIComponent(from) + "&to=" + encodeURIComponent(to),
@@ -410,7 +416,8 @@ export default {
             const skill = (Array.isArray(skills) ? skills : []).find(s => s && SKILL_NAMES.includes(s.name));
             const fields = skill && skill.configSchema && skill.configSchema.fields;
             if (!Array.isArray(fields) || !fields.length) return null;
-            return Object.fromEntries(fields.map(f => [f.key, { default: f.default, min: f.min, max: f.max, audience: f.audience || null }]));
+            return Object.fromEntries(fields.map(f => [f.key, { key: f.key, default: f.default, min: f.min, max: f.max, audience: f.audience || null,
+                labels: f.labels || null }]));
         } catch (e) {
             console.warn("Restaurant skill manifest not read:", e.restaurant ? e.restaurant.status : e);
             return null;

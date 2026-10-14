@@ -11,8 +11,23 @@
 
     <div v-if="isToday" class="walkin">
       <b>{{ $t("components.restaurant.newb.walkIn") }}</b> · {{ fixed ? $t("components.restaurant.newb.walkInAt", { tables: fixed.label }) : $t("components.restaurant.newb.walkInNow") }}
+      <!-- A walk-in may leave out name and phone, and nothing else this restaurant requires (R8, "Cosa chiediamo"):
+           the required allergies and notes are asked here, and the area when no table is chosen. -->
+      <div v-if="walkInAsks.length" class="walkin-fields">
+        <label v-for="k in walkInAsks" :key="k" class="field" :data-walkin-field="k">
+          <span>{{ $t(`components.restaurant.ask.field.${k}`) }} *</span>
+          <select v-if="k === 'zone'" v-model="walkInForm.zone" :aria-label="$t('components.restaurant.newb.walkInField', { field: $t('components.restaurant.ask.field.zone') })"
+                  :class="{ invalid: walkInTried && walkInMissing.includes('zone') }">
+            <option value="">{{ $t("components.restaurant.newb.anyZone") }}</option>
+            <option v-for="z in layout.zones" :key="z.id" :value="z.id">{{ z.name }}</option>
+          </select>
+          <input v-else v-model="walkInForm[k]" autocomplete="off" :aria-label="$t('components.restaurant.newb.walkInField', { field: $t(`components.restaurant.ask.field.${k}`) })"
+                 :class="{ invalid: walkInTried && walkInMissing.includes(k) }">
+        </label>
+        <p v-if="walkInTried && walkInMissing.length" class="err" role="alert">{{ $t("components.restaurant.answer.missingFields", { fields: walkInMissing.map(k => $t(`components.restaurant.ask.field.${k}`)).join(", ") }) }}</p>
+      </div>
       <div class="row" role="group" :aria-label="$t('components.restaurant.newb.walkInParty')">
-        <button v-for="n in walkInSizes" :key="n" class="btn walkin-party" :disabled="busy" @click="$emit('walk-in', { form, party: n })">{{ n }}</button>
+        <button v-for="n in walkInSizes" :key="n" class="btn walkin-party" :disabled="busy" @click="walkIn(n)">{{ n }}</button>
       </div>
     </div>
 
@@ -108,6 +123,8 @@ export default {
       form: { tables: d.tables, start: d.start, party: d.party, name: d.name || "", phone: d.phone || "", notes: d.notes || "",
         allergies: d.allergies || "", zone: d.zone || "" },
       touched: false,
+      walkInForm: { allergies: "", notes: "", zone: "" },
+      walkInTried: false,
     };
   },
   computed: {
@@ -174,6 +191,15 @@ export default {
     missing() {
       return missingRequired(this.rules.requiredFields, Object.assign({}, this.form, { zone: this.fixed ? this.fixed.zone : this.form.zone }));
     },
+    /** What a walk-in is asked: the required allergies and notes, and the area when it is required and no table is
+     *  chosen (a chosen table decides the area). Name and phone never: a walk-in inside its window may omit them. */
+    walkInAsks() {
+      const r = this.rules.requiredFields;
+      return ["allergies", "notes", "zone"].filter(k => r[k] === "required" && !(k === "zone" && this.fixed));
+    },
+    walkInMissing() {
+      return missingRequired(this.rules.requiredFields, this.walkInForm, this.walkInAsks);
+    },
     staffWarnings() {
       const a = this.findAnswer;
       return a && a.staff && !a.staff.refusal ? a.staff.warnings || [] : [];
@@ -209,6 +235,12 @@ export default {
     seat(ids) {
       this.form.tables = ids;
       this.$emit("changed", this.form);
+    },
+    walkIn(party) {
+      this.walkInTried = true;
+      if (this.walkInMissing.length) return;
+      const extra = Object.fromEntries(this.walkInAsks.map(k => [k, this.walkInForm[k].trim()]));
+      this.$emit("walk-in", { form: Object.assign({}, this.form, extra), party });
     },
     asks(k) {
       return this.rules.requiredFields[k] !== "not_asked";

@@ -240,6 +240,11 @@ function fieldProps(field) {
       <small class="config-hint">{{ pageOn ? t('widgets.agentSkills.page.assistantHint') : t('widgets.agentSkills.page.assistantNeedsPage') }}</small>
     </div>
 
+    <!-- With the page off, what the server keeps open for the guests' data (the export, the erasure). -->
+    <div v-if="open && pageSwitch && !pageOn && page && page.offPanel" class="entry-page-off">
+      <component :is="page.offPanel" />
+    </div>
+
     <!-- The fields only the skill's page edits: named, with the way there, never a second editor here. -->
     <div v-if="open && pageFields.length" class="entry-page-fields">
       <span class="config-label">{{ t('widgets.agentSkills.page.summaryTitle') }}</span>
@@ -429,7 +434,7 @@ function fieldProps(field) {
   line-height: 1.3;
 }
 
-.entry-assistant, .entry-page-fields {
+.entry-assistant, .entry-page-fields, .entry-page-off {
   border-top: 1px solid @mrcall_borders;
   padding: 10px 12px;
   display: flex;

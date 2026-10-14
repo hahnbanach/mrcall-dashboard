@@ -3,9 +3,10 @@ const { mockBusiness } = require('./mock-data')
 
 /**
  * A StarChat restaurant book in memory, for the restaurant page's browser tests: the routes the page calls,
- * answering in the shapes StarChat answers (R8's fields as in 9.34 at 7bf981c51's openapi.yaml: `recognised`, `about`,
- * `aboutReservation`, `change`, the configuration read's `restaurant.allergies`; `openRequest` as at c790d9d11; earlier ones as 9.34.65) (ApiDomainRestaurantResource, LayoutDraft,
- * RestaurantLayoutSection, NativeReservationBook in /Users/angelo/data/WORK/elegans.io/starchat at that tag): tables without an id get one from the server, a join may name a table by name,
+ * answering in the shapes StarChat answers (R8's fields as in hahnbanach/starchat 9.34 at 7bf981c51's openapi.yaml:
+ * `recognised`, `about`, `aboutReservation`, `change`, the configuration read's `restaurant.allergies`; `openRequest` as
+ * at c790d9d11; earlier ones as 9.34.65) (ApiDomainRestaurantResource, LayoutDraft,
+ * RestaurantLayoutSection, NativeReservationBook in hahnbanach/starchat at those commits): tables without an id get one from the server, a join may name a table by name,
  * bookings carry `callIds`, the day read carries `minFreeMinutes` and each table's free windows
  * (`freeTables`), the skill read carries the store-backed `layout` section, and the finder is
  * GET /suggestions.
@@ -161,7 +162,15 @@ async function mockRestaurant (page, opts = {}) {
     state.layout.exceptions && state.layout.exceptions.length ? { exceptions: state.layout.exceptions } : {})
   // What every reservation must carry (R8): the stored setting over the manifest's default.
   const fieldRules = () => Object.assign({}, REQUIRED_DEFAULT, state.params.requiredFields ? JSON.parse(state.params.requiredFields) : {})
-  const missingOf = guest => Object.keys(fieldRules()).filter(k => fieldRules()[k] === 'required' && k !== 'zone' && !String(guest[k] || '').trim())
+  // StarChat's RestaurantRules.missingFields: a walk-in (inside its window, always here) may omit name and phone only;
+  // zone is missing when required and the write names neither a zone nor tables (`zoneAsked` false); an accept asks
+  // nothing of the zone (`zoneAsked` null), as NativeReservationBook.accept passes None.
+  const missingOf = (guest, { walkIn = false, zoneAsked = null } = {}) => Object.keys(fieldRules()).filter(k => {
+    if (fieldRules()[k] !== 'required') return false
+    if (walkIn && (k === 'name' || k === 'phone')) return false
+    if (k === 'zone') return zoneAsked === false
+    return !String(guest[k] || '').trim()
+  })
   const pageOff = () => String(state.params.page) === 'false'
   const business = { ...mockBusiness, variables: { ...mockBusiness.variables, SKILL_RUNNINGLOOP_CONFIGURATION: JSON.stringify([{ skill: 'skill_restaurant_booking', instanceId: 'restaurant_booking_1',
     params: opts.businessPage ? { page: opts.businessPage } : opts.params && opts.params.page ? { page: opts.params.page } : {} }]) } }
@@ -243,6 +252,7 @@ async function mockRestaurant (page, opts = {}) {
       // StarChat's configuration checks (R8): never the assistant on with the page off; allergies newly made required
       // where the server does not offer it is refused, a stored "required" kept is not.
       const sent = body.params || {}
+      if (opts.configRefusal) return json(route, 422, { saved: false, diagnostics: opts.configRefusal })
       if (String(sent.enabled) === 'true' && String(sent.page) === 'false') {
         return json(route, 422, { diagnostics: [{ severity: 'error', path: '/enabled', code: 'assistant_without_page', detail: 'server English' }] })
       }
@@ -257,10 +267,13 @@ async function mockRestaurant (page, opts = {}) {
       state.revision = `rev-${Number(state.revision.split('-')[1]) + 1}`
       return json(route, 200, { saved: true, revision: state.revision, diagnostics: opts.configWarnings || [] })
     }
-    // `restaurant.allergies`: the shape the page's adapter reads (Restaurant.allergiesSettingOf), sent only when a test
-    // says what the server answers; StarChat does not send it yet.
+    // `restaurant.allergies`, as StarChat sends it for a business with a restaurant_booking instance (SkillEditorFacts):
+    // by default as production answers (stored from the params, "required" not available here); `opts.allergies`
+    // says otherwise, and `allergiesAbsent` leaves it out (the page's "the server did not say" fallback).
+    const storedAllergies = state.params.requiredFields ? JSON.parse(state.params.requiredFields).allergies || 'optional' : 'optional'
+    const allergies = opts.allergies || { stored: storedAllergies, effective: storedAllergies === 'required' ? 'optional' : storedAllergies, requiredAvailable: false }
     return json(route, 200, Object.assign({ prefetch: [], during: [entry()], final: [], revisions: { prefetch: 'p', during: state.revision, final: 'f' } },
-      opts.allergies ? { restaurant: { allergies: opts.allergies } } : {}))
+      opts.allergiesAbsent ? {} : { restaurant: { allergies } }))
   })
 
   await page.route('**/customer/conversation/search*', route => {
@@ -323,7 +336,8 @@ async function mockRestaurant (page, opts = {}) {
     }
     if (method === 'POST' && path === '/reservations') {
       // `serverRequires`: fields the server requires beyond what the page read (the setting changed in between)
-      const missing = body.walkIn ? [] : missingOf(body).concat((opts.serverRequires || []).filter(k => !String(body[k] || '').trim()))
+      const missing = missingOf(body, { walkIn: !!body.walkIn, zoneAsked: !!(body.zone || (body.tableIds && body.tableIds.length)) })
+        .concat((opts.serverRequires || []).filter(k => !String(body[k] || '').trim()))
       if (missing.length) {
         return json(route, 422, { diagnostics: [{ severity: 'error', path: '/', code: 'missing_fields', detail: 'server English', values: { fields: missing } }] })
       }
