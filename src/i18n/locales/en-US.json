@@ -1244,7 +1244,11 @@
         "missing_fields": "A required field is missing.",
         "zone_closed": "That area is closed then.",
         "tables_unsuitable": "Those tables cannot take this party.",
-        "linked_request": "This request asks to change a booking: make the change or close it."
+        "linked_request": "This request asks to change a booking: make the change or close it.",
+        "staleBooking": "The booking this request is about changed in the meantime: both have been read again, try once more.",
+        "not_linked": "This request is about no booking: accept it, or close it.",
+        "no_change": "This request records no change to make: change the booking yourself, then close the request.",
+        "booking_not_confirmed": "The booking this request is about is no longer confirmed: close the request."
       },
       "strip": {
         "label": "Availability of the coming days",
@@ -1831,9 +1835,8 @@
       "details": {
         "title": "Guest details",
         "fromRequest": "What the guest asked by phone",
-        "applyMove": "Also move it to {day} {time}, {people}",
-        "late": "Late arrival at {time}: the table stays, it is written in the notes.",
-        "lateNote": "Arrives at {time}",
+        "applyMove": "The request moves it to {day} {time}, {people}.",
+        "late": "Late arrival at {time}: the table stays, the time is noted on the booking.",
         "saveChange": "Save the change and close the request",
         "save": "Save details",
         "cancel": "Cancel",

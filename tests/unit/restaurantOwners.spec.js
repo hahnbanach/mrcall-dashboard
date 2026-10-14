@@ -210,24 +210,23 @@ describe('one list of closures', () => {
 // name dropped (the details test); `change` or `openRequest` not read from the wire (the wire test).
 describe('what a call-back request asks of its booking', () => {
   const booking = { date: '2026-10-20', start: 1200, end: 1290, party: 2, zone: 'sala', name: 'Verdi', allergies: '', notes: 'Window' }
-  const late = m => `Arrives at ${m}`
 
-  it('a late arrival keeps the table and is written in the notes at the time announced', () => {
-    const c = changeOf(booking, { change: { kind: 'late_arrival', date: '2026-10-20', start: 1200, party: 2, eta: 1230 } }, late)
-    expect(c).toEqual({ kind: 'late_arrival', details: { notes: 'Arrives at 1230 · Window' }, move: null, late: 1230 })
+  it('a late arrival keeps the table at the time announced; the book notes it, the page adds nothing', () => {
+    const c = changeOf(booking, { change: { kind: 'late_arrival', date: '2026-10-20', start: 1200, party: 2, eta: 1230 } })
+    expect(c).toEqual({ kind: 'late_arrival', details: {}, move: null, late: 1230 })
   })
 
   it('a move is what the book says is a move, whatever the page would have guessed', () => {
-    const c = changeOf(booking, { change: { kind: 'move', date: '2026-10-20', start: 1245, party: 2, zone: 'dehors' } }, late)
+    const c = changeOf(booking, { change: { kind: 'move', date: '2026-10-20', start: 1245, party: 2, zone: 'dehors' } })
     expect(c.move).toEqual({ date: '2026-10-20', start: 1245, party: 2, zone: 'dehors' })
     expect(c.late).toBeNull()
   })
 
   it('details carry the asked name, allergies and words; a cancellation pre-fills nothing; no change, nothing', () => {
-    const c = changeOf(booking, { change: { kind: 'details', name: 'Verdi Neri', allergies: 'Celiac', notes: 'Celiac, two' } }, late)
+    const c = changeOf(booking, { change: { kind: 'details', name: 'Verdi Neri', allergies: 'Celiac', notes: 'Celiac, two' } })
     expect(c).toEqual({ kind: 'details', details: { name: 'Verdi Neri', allergies: 'Celiac', notes: 'Window · Celiac, two' }, move: null, late: null })
-    expect(changeOf(booking, { change: { kind: 'cancellation' } }, late)).toEqual({ kind: 'cancellation', details: {}, move: null, late: null })
-    expect(changeOf(booking, {}, late)).toEqual({ kind: null, details: {}, move: null, late: null })
+    expect(changeOf(booking, { change: { kind: 'cancellation' } })).toEqual({ kind: 'cancellation', details: {}, move: null, late: null })
+    expect(changeOf(booking, {})).toEqual({ kind: null, details: {}, move: null, late: null })
   })
 
   it('reads StarChat\'s request row: the change, the booking it is about wherever it is, the recognised number', () => {

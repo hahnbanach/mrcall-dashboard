@@ -1239,7 +1239,11 @@
         "missing_fields": "Et obligatorisk felt mangler.",
         "zone_closed": "Det området er stengt da.",
         "tables_unsuitable": "De bordene kan ikke ta imot dette selskapet.",
-        "linked_request": "Denne forespørselen vil endre en bestilling: gjør endringen eller lukk den."
+        "linked_request": "Denne forespørselen vil endre en bestilling: gjør endringen eller lukk den.",
+        "staleBooking": "Bestillingen forespørselen gjelder er endret i mellomtiden: begge er lest på nytt, prøv en gang til.",
+        "not_linked": "Forespørselen gjelder ingen bestilling: godta eller lukk den.",
+        "no_change": "Forespørselen inneholder ingen endring: endre bestillingen selv, og lukk så forespørselen.",
+        "booking_not_confirmed": "Bestillingen forespørselen gjelder er ikke lenger bekreftet: lukk forespørselen."
       },
       "strip": {
         "label": "Ledighet de kommende dagene",
@@ -1826,9 +1830,8 @@
       "details": {
         "title": "Gjestens opplysninger",
         "fromRequest": "Hva gjesten ba om på telefon",
-        "applyMove": "Flytt den også til {day} {time}, {people}",
-        "late": "Kommer senere, kl. {time}: bordet blir stående, det står i notatene.",
-        "lateNote": "Kommer kl. {time}",
+        "applyMove": "Forespørselen flytter den til {day} {time}, {people}.",
+        "late": "Kommer senere, kl. {time}: bordet blir stående, tiden noteres på bestillingen.",
         "saveChange": "Lagre endringen og lukk forespørselen",
         "save": "Lagre opplysninger",
         "cancel": "Avbryt",

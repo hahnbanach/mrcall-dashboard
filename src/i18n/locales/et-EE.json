@@ -1239,7 +1239,11 @@
         "missing_fields": "Kohustuslik väli puudub.",
         "zone_closed": "See ala on siis suletud.",
         "tables_unsuitable": "Need lauad ei mahuta seda seltskonda.",
-        "linked_request": "See taotlus soovib broneeringut muuta: tee muudatus või sulge see."
+        "linked_request": "See taotlus soovib broneeringut muuta: tee muudatus või sulge see.",
+        "staleBooking": "Selle taotluse broneering muutus vahepeal: mõlemad loeti uuesti, proovi veel kord.",
+        "not_linked": "See taotlus ei puuduta ühtki broneeringut: kinnita või sulge see.",
+        "no_change": "Selles taotluses pole muudatust: muuda broneeringut ise ja sulge siis taotlus.",
+        "booking_not_confirmed": "Selle taotluse broneering pole enam kinnitatud: sulge taotlus."
       },
       "strip": {
         "label": "Eelseisvate päevade vabad kohad",
@@ -1826,9 +1830,8 @@
       "details": {
         "title": "Külalise andmed",
         "fromRequest": "Mida külaline telefonis palus",
-        "applyMove": "Vii see ka: {day} {time}, {people}",
-        "late": "Saabub hiljem, kell {time}: laud jääb, see on märkustes.",
-        "lateNote": "Saabub kell {time}",
+        "applyMove": "Taotlus viib selle: {day} {time}, {people}.",
+        "late": "Saabub hiljem, kell {time}: laud jääb, aeg märgitakse broneeringule.",
         "saveChange": "Salvesta muudatus ja sulge taotlus",
         "save": "Salvesta andmed",
         "cancel": "Tühista",

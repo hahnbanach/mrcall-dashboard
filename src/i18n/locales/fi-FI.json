@@ -1239,7 +1239,11 @@
         "missing_fields": "Pakollinen kenttä puuttuu.",
         "zone_closed": "Se alue on silloin suljettu.",
         "tables_unsuitable": "Nuo pöydät eivät voi ottaa tätä seuruetta.",
-        "linked_request": "Tämä pyyntö haluaa muuttaa varausta: tee muutos tai sulje pyyntö."
+        "linked_request": "Tämä pyyntö haluaa muuttaa varausta: tee muutos tai sulje pyyntö.",
+        "staleBooking": "Pyynnön varaus muuttui sillä välin: molemmat luettiin uudelleen, yritä vielä kerran.",
+        "not_linked": "Tämä pyyntö ei koske mitään varausta: hyväksy tai sulje se.",
+        "no_change": "Tässä pyynnössä ei ole muutosta: muuta varausta itse ja sulje sitten pyyntö.",
+        "booking_not_confirmed": "Pyynnön varaus ei ole enää vahvistettu: sulje pyyntö."
       },
       "strip": {
         "label": "Tulevien päivien saatavuus",
@@ -1826,9 +1830,8 @@
       "details": {
         "title": "Vieraan tiedot",
         "fromRequest": "Mitä vieras pyysi puhelimessa",
-        "applyMove": "Siirrä se myös: {day} {time}, {people}",
-        "late": "Saapuu myöhemmin klo {time}: pöytä pysyy, se kirjataan huomautuksiin.",
-        "lateNote": "Saapuu klo {time}",
+        "applyMove": "Pyyntö siirtää sen: {day} {time}, {people}.",
+        "late": "Saapuu myöhemmin klo {time}: pöytä pysyy, aika kirjataan varaukseen.",
         "saveChange": "Tallenna muutos ja sulje pyyntö",
         "save": "Tallenna tiedot",
         "cancel": "Peruuta",

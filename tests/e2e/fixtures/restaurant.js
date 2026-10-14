@@ -5,7 +5,7 @@ const { mockBusiness } = require('./mock-data')
  * A StarChat restaurant book in memory, for the restaurant page's browser tests: the routes the page calls,
  * answering in the shapes StarChat answers (R8's fields as in hahnbanach/starchat 9.34 at 7bf981c51's openapi.yaml:
  * `recognised`, `about`, `aboutReservation`, `change`, the configuration read's `restaurant.allergies`; `openRequest` as
- * at c790d9d11; earlier ones as 9.34.65) (ApiDomainRestaurantResource, LayoutDraft,
+ * at c790d9d11; POST .../apply as at 2d055d7e6; earlier ones as 9.34.65) (ApiDomainRestaurantResource, LayoutDraft,
  * RestaurantLayoutSection, NativeReservationBook in hahnbanach/starchat at those commits): tables without an id get one from the server, a join may name a table by name,
  * bookings carry `callIds`, the day read carries `minFreeMinutes` and each table's free windows
  * (`freeTables`), the skill read carries the store-backed `layout` section, and the finder is
@@ -374,6 +374,41 @@ async function mockRestaurant (page, opts = {}) {
       // a request already handled or a row already cancelled is answered as it is, nothing written, no new version.
       if (method === 'DELETE' && row.status === 'held') return diag(route, 404, 'not_found')
       if (method === 'DELETE' && (row.status === 'handled' || row.status === 'cancelled')) return json(route, 200, wire(row))
+      // POST .../reservations/{requestId}/apply (StarChat 2d055d7e6): the request applied to its booking by its kind and
+      // closed, in one transaction; a refusal changes neither row. `opts.applyRefusal: {code, path}` answers one.
+      if (action === '/apply') {
+        const booking = row.about ? state.rows.find(o => o.id === row.about) : null
+        if (!booking) return diag(route, 409, 'not_linked')
+        if (body.bookingVersion !== booking.version) {
+          return json(route, 409, { diagnostics: [{ path: '/bookingVersion', code: 'stale', detail: 'server English' }], currentVersion: booking.version })
+        }
+        if (booking.status !== 'confirmed') return diag(route, 409, 'booking_not_confirmed')
+        if (opts.applyRefusal) {
+          return json(route, 409, { diagnostics: [{ path: opts.applyRefusal.path || '/id', code: opts.applyRefusal.code, detail: 'server English' }] })
+        }
+        const c = row.change || {}
+        if (!c.kind) return diag(route, 409, 'no_change')
+        if (c.kind === 'cancellation') { booking.status = 'cancelled'; booking.cancelledBy = 'staff' }
+        if (c.kind === 'move') {
+          booking.date = body.date || c.date || booking.date
+          booking.time = body.time || c.time || booking.time
+          booking.covers = body.covers || c.covers || booking.covers
+          if (body.zone || c.zone) booking.zone = body.zone || c.zone
+        }
+        if (c.kind === 'late_arrival') {
+          const eta = body.eta || c.eta
+          booking.notes = [`Arriva alle ${eta}`, booking.notes].filter(Boolean).join(' · ')
+        }
+        ;['name', 'phone', 'allergies', 'notes'].forEach(k => {
+          if (k in body) booking[k] = String(body[k] || '').trim() || null
+          else if (c.kind === 'details' && c[k]) booking[k] = c[k]
+        })
+        booking.version++
+        row.status = 'handled'
+        row.version++
+        return json(route, 200, { booking: Object.assign(wire(booking), opts.writeWarnings ? { warnings: opts.writeWarnings.map(code => ({ code })) } : {}),
+          request: wire(row) })
+      }
       if (action === '/reinstate') {
         if (!reinstatable(row)) return diag(route, 409, 'not_reversible', { reason: row.status === 'cancelled' ? 'cancelled_by_caller' : 'not_cancelled_or_no_show' })
         const conflicts = state.rows.filter(o => o.id !== row.id && o.date === row.date && takes(o) && o.tableIds.some(t => row.tableIds.includes(t)) &&

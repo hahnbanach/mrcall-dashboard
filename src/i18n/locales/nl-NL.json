@@ -1239,7 +1239,11 @@
         "missing_fields": "Er ontbreekt een verplicht veld.",
         "zone_closed": "Dat gedeelte is dan gesloten.",
         "tables_unsuitable": "Die tafels kunnen deze groep niet ontvangen.",
-        "linked_request": "Dit verzoek wil een reservering wijzigen: voer de wijziging uit of sluit het."
+        "linked_request": "Dit verzoek wil een reservering wijzigen: voer de wijziging uit of sluit het.",
+        "staleBooking": "De reservering van dit verzoek is intussen gewijzigd: beide zijn opnieuw gelezen, probeer het nog eens.",
+        "not_linked": "Dit verzoek gaat over geen enkele reservering: accepteer of sluit het.",
+        "no_change": "Dit verzoek bevat geen wijziging: wijzig de reservering zelf en sluit dan het verzoek.",
+        "booking_not_confirmed": "De reservering van dit verzoek is niet meer bevestigd: sluit het verzoek."
       },
       "strip": {
         "label": "Beschikbaarheid van de komende dagen",
@@ -1826,9 +1830,8 @@
       "details": {
         "title": "Gegevens van de gast",
         "fromRequest": "Wat de gast per telefoon vroeg",
-        "applyMove": "Ook verplaatsen naar {day} {time}, {people}",
-        "late": "Komt later, om {time}: de tafel blijft, het staat in de opmerkingen.",
-        "lateNote": "Komt om {time}",
+        "applyMove": "Het verzoek verplaatst haar naar {day} {time}, {people}.",
+        "late": "Komt later, om {time}: de tafel blijft, de tijd wordt bij de reservering genoteerd.",
         "saveChange": "Wijziging opslaan en verzoek sluiten",
         "save": "Gegevens opslaan",
         "cancel": "Annuleren",

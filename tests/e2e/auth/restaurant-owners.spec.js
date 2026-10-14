@@ -19,7 +19,8 @@ const { mockRestaurant, openRestaurant, tomorrowDinner, TODAY, TOMORROW } = requ
  * mock applying the server's walk-in rule); the staff
  * warnings not drawn (the warnings test); the missing-fields refusal said without its fields (the refusal test); a
  * request accepted without asking its missing field (the accept test); "make the change" without the closing
- * DELETE (the call-back test); the request's details not pre-filled (the call-back test); a late arrival treated as
+ * DELETE (the call-back test, before the apply route); the two-call path back in place of POST .../apply (every
+ * call-back test asserting one apply call); the request's details not pre-filled (the call-back test); a late arrival treated as
  * a move (the late-arrival test); the kind not read (the late-arrival test: no "will arrive late"); the page not going
  * to the day the request names (the other-day test); a cancellation pre-filling the editor (the
  * cancellation test); `recognised` not read (the recognised test); `openRequest` not read, or acted on without
@@ -52,6 +53,9 @@ async function openRules (page, opts) {
   return book
 }
 
+const applies = c => c.method === 'POST' && c.path.endsWith('/apply')
+/** No booking write and no request close outside the one apply call (StarChat 2d055d7e6). */
+const twoCalls = c => c.method === 'PATCH' || c.method === 'DELETE'
 const choice = (page, field, name) => page.locator(`.ask-editor [data-ask="${field}"]`).getByRole('radio', { name, exact: true })
 
 test.describe('the restaurant page, one owner per setting', () => {
@@ -265,7 +269,8 @@ test.describe('the restaurant page, one owner per setting', () => {
   test('a call-back request about a change is shown on the booking and in the inbox; "make the change" pre-fills it, and one save moves it and closes the request', async ({ authenticatedPage: page }) => {
     const { calls } = await mockRestaurant(page, { extraRows: [{ id: 'b-chg', time: '22:30', covers: 3, name: 'Verdi', phone: '393330001111',
       status: 'requested', requestReason: 'callback', about: 'b-verdi', allergies: 'Celiac', notes: 'Asks for later',
-      change: { kind: 'move', date: TOMORROW, time: '22:30', covers: 3, zone: 'sala', allergies: 'Celiac', notes: 'Asks for later' } }] })
+      change: { kind: 'move', date: TOMORROW, time: '22:30', covers: 3, zone: 'sala', allergies: 'Celiac', notes: 'Asks for later' } }],
+      writeWarnings: ['outside_hours'] })
     await openRestaurant(page)
     await ready(page)
     await tomorrowDinner(page)
@@ -280,18 +285,17 @@ test.describe('the restaurant page, one owner per setting', () => {
     await expect(editor).toContainText('What the guest asked by phone')
     await expect(editor.getByLabel('Allergies')).toHaveValue('Celiac')
     await expect(editor.getByLabel('Notes')).toHaveValue('Asks for later')
-    await expect(editor.locator('.apply-move input')).toBeChecked()
-    expect(calls.filter(c => c.method === 'PATCH')).toHaveLength(0)
+    await expect(editor.locator('.apply-move')).toContainText('The request moves it to')
     await editor.locator('.save-details').click()
     await expect(page.locator('.toast')).toContainText('the request is closed')
-    const patch = calls.find(c => c.method === 'PATCH')
-    expect(patch.path).toBe('/reservations/b-verdi')
-    expect(patch.body).toEqual({ expectedVersion: 1, allergies: 'Celiac', notes: 'Asks for later', date: TOMORROW, time: '22:30', covers: 3 })
-    expect(calls.filter(c => c.method === 'DELETE').map(c => c.path + c.search)).toEqual(['/reservations/b-chg?expectedVersion=1'])
+    await expect(page.locator('.toast')).toContainText('Noted: Outside the opening hours of the service.')
+    // the asked values are the book's to apply: nothing staff left as it was travels (an override would win)
+    expect(calls.filter(applies).map(c => [c.path, c.body])).toEqual([['/reservations/b-chg/apply', { expectedVersion: 1, bookingVersion: 1 }]])
+    expect(calls.filter(twoCalls)).toHaveLength(0)
     expect(calls.filter(c => c.path.endsWith('/accept'))).toHaveLength(0)
   })
 
-  test('a late arrival asked by phone is written in the notes and the table stays', async ({ authenticatedPage: page }) => {
+  test('a late arrival asked by phone is applied by the book, the table kept, in one call', async ({ authenticatedPage: page }) => {
     const { calls } = await mockRestaurant(page, { extraRows: [{ id: 'b-late-req', time: '21:00', covers: 4, name: 'Rossi', phone: '393331112233',
       status: 'requested', requestReason: 'callback', about: 'b-rossi',
       change: { kind: 'late_arrival', date: TOMORROW, time: '20:00', covers: 4, zone: 'sala', eta: '21:00' } }] })
@@ -303,11 +307,11 @@ test.describe('the restaurant page, one owner per setting', () => {
     await expect(page.locator('.req[data-request="b-late-req"]')).toContainText('Rossi (20:00 · 4 people) will arrive late, at 21:00')
     await expect(editor.locator('.late-arrival')).toContainText('Late arrival at 21:00')
     await expect(editor.locator('.apply-move')).toHaveCount(0)
-    await expect(editor.getByLabel('Notes')).toHaveValue('Arrives at 21:00')
+    await expect(editor.getByLabel('Notes')).toHaveValue('')
     await editor.locator('.save-details').click()
     await expect(page.locator('.toast')).toContainText('the request is closed')
-    const patch = calls.find(c => c.method === 'PATCH')
-    expect(patch.body).toEqual({ expectedVersion: 1, notes: 'Arrives at 21:00' })
+    expect(calls.filter(applies).map(c => [c.path, c.body])).toEqual([['/reservations/b-late-req/apply', { expectedVersion: 1, bookingVersion: 1 }]])
+    expect(calls.filter(twoCalls)).toHaveLength(0)
   })
 
   test('staff correct a booking\'s details; allergies not asked is not drawn; emptying a required field is refused, named', async ({ authenticatedPage: page }) => {
@@ -426,7 +430,8 @@ test.describe('the restaurant page, one owner per setting', () => {
     expect(calls.filter(c => c.path === '/search')).toHaveLength(0)
     await editor.locator('.save-details').click()
     await expect(page.locator('.toast')).toContainText('the request is closed')
-    expect(calls.find(c => c.method === 'PATCH').body).toEqual({ expectedVersion: 1, name: 'Moretti Bis' })
+    expect(calls.filter(applies).map(c => c.body)).toEqual([{ expectedVersion: 1, bookingVersion: 1 }])
+    expect(calls.filter(twoCalls)).toHaveLength(0)
   })
 
   test('a cancellation asked by phone: one action cancels the booking and closes the request, with Undo', async ({ authenticatedPage: page }) => {
@@ -439,10 +444,10 @@ test.describe('the restaurant page, one owner per setting', () => {
     await expect(request).toContainText('Bianchi asks to cancel 19:30 · 6 people')
     await tap(request.getByRole('button', { name: 'Cancel the booking' }))
     await expect(page.locator('.toast')).toContainText('Cancelled as asked: Bianchi')
-    expect(calls.filter(c => c.method === 'DELETE').map(c => c.path + c.search))
-      .toEqual(['/reservations/b-bianchi?expectedVersion=1', '/reservations/b-cancel-req?expectedVersion=1'])
+    expect(calls.filter(applies).map(c => [c.path, c.body])).toEqual([['/reservations/b-cancel-req/apply', { expectedVersion: 1, bookingVersion: 1 }]])
+    expect(calls.filter(twoCalls)).toHaveLength(0)
     await page.locator('.toast').getByRole('button', { name: 'Undo' }).click()
-    await expect.poll(() => calls.filter(c => c.path.endsWith('/reinstate')).map(c => c.path)).toEqual(['/reservations/b-bianchi/reinstate'])
+    await expect.poll(() => calls.filter(c => c.path.endsWith('/reinstate')).map(c => c.path + c.search)).toEqual(['/reservations/b-bianchi/reinstate?expectedVersion=2'])
   })
 
   test('a booking whose number did not place it is marked as reached by a recognised number', async ({ authenticatedPage: page }) => {
@@ -480,8 +485,8 @@ test.describe('the restaurant page, one owner per setting', () => {
     expect(calls.filter(c => c.path === '/search')).toHaveLength(0)
     await editor.locator('.save-details').click()
     await expect(page.locator('.toast')).toContainText('the request is closed')
-    expect(calls.find(c => c.method === 'PATCH').body).toMatchObject({ expectedVersion: 1, date: filedFor, time: '21:00', covers: 4 })
-    expect(calls.filter(c => c.method === 'DELETE').map(c => c.path + c.search)).toEqual(['/reservations/b-far-day?expectedVersion=1'])
+    expect(calls.filter(applies).map(c => [c.path, c.body])).toEqual([['/reservations/b-far-day/apply', { expectedVersion: 1, bookingVersion: 1 }]])
+    expect(calls.filter(twoCalls)).toHaveLength(0)
   })
 
   test('a request filed for another day is closed from the booking\'s card at its version', async ({ authenticatedPage: page }) => {
@@ -498,6 +503,59 @@ test.describe('the restaurant page, one owner per setting', () => {
     await expect.poll(() => calls.filter(c => c.method === 'DELETE').map(c => c.path + c.search)).toEqual(['/reservations/b-far-day?expectedVersion=3'])
     expect(calls.filter(c => c.path === '/search' || c.method === 'PATCH')).toHaveLength(0)
   })
+
+  // The apply body's optional fields are staff's overrides and win over the asked values: a date or a time sent for a
+  // details request would move the booking. Only what staff changed in the editor travels. Seen failing on 2026-10-14
+  // with the editor comparing with the booking (the asked name and allergies echoed back).
+  test('a details request applied without edits sends no field of its own, and an edit travels as the override', async ({ authenticatedPage: page }) => {
+    const { calls } = await mockRestaurant(page, { extraRows: [{ id: 'b-det', time: '20:30', covers: 2, name: 'Verdi Neri', status: 'requested',
+      requestReason: 'callback', about: 'b-verdi', change: { kind: 'details', date: TOMORROW, time: '20:30', covers: 2, zone: 'sala', name: 'Verdi Neri', allergies: 'Nuts' } }] })
+    await openRestaurant(page)
+    await ready(page)
+    await tomorrowDinner(page)
+    await tap(page.locator('.req[data-request="b-det"] .make-change'))
+    const editor = page.locator('.panel .details-editor')
+    await expect(editor.getByLabel('Name')).toHaveValue('Verdi Neri')
+    await expect(editor.getByLabel('Allergies')).toHaveValue('Nuts')
+    await editor.locator('.save-details').click()
+    await expect(page.locator('.toast')).toContainText('the request is closed')
+    const body = calls.find(applies).body
+    expect(body).toEqual({ expectedVersion: 1, bookingVersion: 1 })
+    expect('date' in body || 'time' in body || 'covers' in body).toBe(false)
+  })
+
+  test('a details request with staff\'s edit sends that field alone, as the override', async ({ authenticatedPage: page }) => {
+    const { calls } = await mockRestaurant(page, { extraRows: [{ id: 'b-det', time: '20:30', covers: 2, name: 'Verdi Neri', status: 'requested',
+      requestReason: 'callback', about: 'b-verdi', change: { kind: 'details', date: TOMORROW, time: '20:30', covers: 2, zone: 'sala', name: 'Verdi Neri', allergies: 'Nuts' } }] })
+    await openRestaurant(page)
+    await ready(page)
+    await tomorrowDinner(page)
+    await tap(page.locator('.req[data-request="b-det"] .make-change'))
+    const editor = page.locator('.panel .details-editor')
+    await editor.getByLabel('Allergies').fill('Nuts, peanuts')
+    await editor.locator('.save-details').click()
+    await expect(page.locator('.toast')).toContainText('the request is closed')
+    expect(calls.find(applies).body).toEqual({ expectedVersion: 1, bookingVersion: 1, allergies: 'Nuts, peanuts' })
+  })
+
+  // A refusal of the apply changes nothing and is said in the owner's words, by its code. Seen failing on 2026-10-14
+  // against 2a0bdb1 (the two-call path never called /apply).
+  for (const [code, path, said] of [['no_change', '/id', 'records no change to make'], ['booking_not_confirmed', '/id', 'no longer confirmed'],
+    ['stale', '/bookingVersion', 'The booking this request is about changed in the meantime'], ['full', '/', 'There is no room at that time.']]) {
+    test(`applying a request refused ${code} at ${path} says so and changes nothing`, async ({ authenticatedPage: page }) => {
+      const { calls } = await mockRestaurant(page, { applyRefusal: { code, path }, extraRows: [{ id: 'b-chg', time: '22:30', covers: 3, name: 'Verdi',
+        status: 'requested', requestReason: 'callback', about: 'b-verdi', change: { kind: 'move', date: TOMORROW, time: '22:30', covers: 3, zone: 'sala' } }] })
+      await openRestaurant(page)
+      await ready(page)
+      await tomorrowDinner(page)
+      await tap(page.locator('.req[data-request="b-chg"] .make-change'))
+      await page.locator('.panel .details-editor .save-details').click()
+      await expect(page.locator('.panel .details-editor')).toContainText(said)
+      await expect(page.getByText(/server English/)).toHaveCount(0)
+      expect(calls.filter(applies)).toHaveLength(1)
+      expect(calls.filter(twoCalls)).toHaveLength(0)
+    })
+  }
 
   test('"close without changing" closes a call-back request and leaves the booking as it is', async ({ authenticatedPage: page }) => {
     test.setTimeout(60000)

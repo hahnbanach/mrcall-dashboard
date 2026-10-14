@@ -292,18 +292,17 @@ export function isFreeAt (windows, t, minFree) {
  * in one step: `{kind, details, move, late}`. The kind is the book's (`change.kind`: late_arrival, move, details,
  * cancellation, StarChat `RequestedChange.kindOf`); the page reads it and no longer derives it.
  *
- * - late_arrival: the table stays, the arrival time is written in the notes (`lateNote(minute)`), as the book records
- *   one the assistant takes.
+ * - late_arrival: the table stays; the book notes the arrival time on the booking when the request is applied.
  * - move: the day, time, people and area the caller asked.
  * - details and every kind: the name, allergies and notes the caller gave (the caller's words added to the notes).
  * - cancellation: nothing to pre-fill; the page cancels the booking and closes the request.
  * A request without `change` (written before the book kept it) pre-fills nothing.
  */
-export function changeOf (booking, request, lateNote) {
+export function changeOf (booking, request) {
   const c = request.change
   if (!c) return { kind: null, details: {}, move: null, late: null }
   const late = c.kind === 'late_arrival' ? (c.eta !== undefined ? c.eta : c.start) : null
-  const notes = [late !== null && late !== undefined ? lateNote(late) : null, booking.notes || null, c.notes || null].filter(Boolean).join(' · ')
+  const notes = [booking.notes || null, c.notes || null].filter(Boolean).join(' · ')
   const details = {}
   if (notes !== (booking.notes || '')) details.notes = notes
   if (c.allergies && c.allergies !== booking.allergies) details.allergies = c.allergies

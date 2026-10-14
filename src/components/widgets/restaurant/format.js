@@ -35,7 +35,7 @@ export function phoneOf(raw) {
 export const KNOWN_CODES = ["full", "closed", "not_offered", "too_late", "beyond_horizon", "large_party", "bad_covers", "stale",
     "busy_retry", "idempotency_key_reused", "not_found", "not_configured", "unknown_zone", "unknown_table", "join_across_zones",
     "person_required", "scope_missing", "not_reversible", "table_taken", "missing_fields", "zone_closed", "tables_unsuitable",
-    "linked_request"];
+    "linked_request", "not_linked", "no_change", "booking_not_confirmed"];
 
 /**
  * Refusals a person may override by booking anyway (the server's `overbook`): a taken table, and nothing else.
@@ -53,6 +53,16 @@ export function missingFieldsOf(error) {
     return Array.isArray(fields) ? fields.filter(f => typeof f === "string") : [];
 }
 
-export function refusalKey(code) {
+export function refusalKey(code, path = null) {
+    // `stale` names which row changed when a request is applied to its booking: the booking's own version (StarChat
+    // 2d055d7e6, /bookingVersion) or the request's.
+    if (code === "stale" && path === "/bookingVersion") return "components.restaurant.answer.staleBooking";
     return `components.restaurant.answer.${KNOWN_CODES.includes(code) ? code : "error"}`;
+}
+
+/** The path of the server's first diagnostic, or null. */
+export function refusalPathOf(error) {
+    const body = error && error.restaurant && error.restaurant.body;
+    const first = body && Array.isArray(body.diagnostics) ? body.diagnostics[0] : null;
+    return first && first.path ? first.path : null;
 }

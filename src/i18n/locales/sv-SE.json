@@ -1239,7 +1239,11 @@
         "missing_fields": "Ett obligatoriskt fält saknas.",
         "zone_closed": "Det området är stängt då.",
         "tables_unsuitable": "De borden kan inte ta emot det här sällskapet.",
-        "linked_request": "Den här förfrågan vill ändra en bokning: gör ändringen eller stäng den."
+        "linked_request": "Den här förfrågan vill ändra en bokning: gör ändringen eller stäng den.",
+        "staleBooking": "Bokningen som förfrågan gäller har ändrats under tiden: båda har lästs igen, försök en gång till.",
+        "not_linked": "Förfrågan gäller ingen bokning: godta eller stäng den.",
+        "no_change": "Förfrågan innehåller ingen ändring: ändra bokningen själv och stäng sedan förfrågan.",
+        "booking_not_confirmed": "Bokningen som förfrågan gäller är inte längre bekräftad: stäng förfrågan."
       },
       "strip": {
         "label": "Tillgänglighet kommande dagar",
@@ -1826,9 +1830,8 @@
       "details": {
         "title": "Gästens uppgifter",
         "fromRequest": "Vad gästen bad om i telefon",
-        "applyMove": "Flytta den också till {day} {time}, {people}",
-        "late": "Kommer senare, kl. {time}: bordet ligger kvar, det står i anteckningarna.",
-        "lateNote": "Kommer kl. {time}",
+        "applyMove": "Förfrågan flyttar den till {day} {time}, {people}.",
+        "late": "Kommer senare, kl. {time}: bordet ligger kvar, tiden noteras på bokningen.",
         "saveChange": "Spara ändringen och stäng förfrågan",
         "save": "Spara uppgifter",
         "cancel": "Avbryt",

@@ -8,11 +8,11 @@
              :class="{ invalid: tried && missing.includes(k) }">
       <small v-if="fieldRules[k] === 'not_asked'" class="muted not-asked-hint">{{ $t("components.restaurant.details.notAsked") }}</small>
     </label>
-    <!-- From a call-back request: the move it asks for, or the late arrival it announces (the table stays) -->
-    <label v-if="change && change.move" class="check-row apply-move">
-      <input v-model="applyMove" type="checkbox">
+    <!-- From a call-back request: the move it asks for, or the late arrival it announces (the table stays); the book
+         makes them when the request is applied. Not wanted, "close without changing" closes the request alone. -->
+    <p v-if="change && change.move" class="apply-move">
       {{ $t("components.restaurant.details.applyMove", { day: changeDay, time: fmt(change.move.start), people: $t("components.restaurant.people", { n: change.move.party }) }) }}
-    </label>
+    </p>
     <p v-if="change && change.late !== null" class="muted late-arrival">{{ $t("components.restaurant.details.late", { time: fmt(change.late) }) }}</p>
     <p v-if="tried && missing.length" class="err" role="alert">{{ $t("components.restaurant.answer.missingFields", { fields: missing.map(k => $t(`components.restaurant.ask.field.${k}`)).join(", ") }) }}</p>
     <p v-if="message" class="callout red" role="alert">{{ message.text }}</p>
@@ -37,8 +37,8 @@ const DETAILS = ASKED_FIELDS.filter(k => k !== "zone");
  * clears a required field, `missing_fields`).
  *
  * Opened from a call-back request about this booking (`change`, see `RestaurantModel.changeOf`), it is pre-filled
- * with what the caller asked: the details, the move as an option ticked by default, a late arrival as a note (the
- * table stays, as the book records one), so staff never type a request again.
+ * with what the caller asked and says the move or the late arrival the request makes; saving applies the request
+ * (the book's one transaction), what staff changed going as their values over the asked ones.
  */
 export default {
   props: {
@@ -54,9 +54,11 @@ export default {
     const b = this.booking;
     const from = this.change ? this.change.details : {};
     const pick = k => (from[k] !== undefined ? from[k] : b[k] || "");
+    const form = Object.fromEntries(DETAILS.map(k => [k, pick(k)]));
     return {
-      form: Object.fromEntries(DETAILS.map(k => [k, pick(k)])),
-      applyMove: !!(this.change && this.change.move),
+      form,
+      // what the editor opened with: the booking's values, or from a request what the caller asked
+      initial: Object.assign({}, form),
       tried: false,
     };
   },
@@ -72,7 +74,7 @@ export default {
       return missingRequired(this.fieldRules, this.form, this.shown).filter(k => String(this.booking[k] || "").trim());
     },
     dirty() {
-      return this.shown.some(k => this.form[k].trim() !== (this.booking[k] || "").trim());
+      return this.shown.some(k => this.form[k].trim() !== String(this.initial[k] || "").trim());
     },
     changeDay() {
       return this.change && this.change.move ? shortDate(this.change.move.date, this.$i18n.locale) : "";
@@ -91,10 +93,12 @@ export default {
     send() {
       this.tried = true;
       if (this.missing.length) return;
-      // Only what changed travels; an emptied field travels as "", which the book reads as cleared.
+      // Only what staff changed travels; an emptied field travels as "", which the book reads as cleared. From a
+      // request the comparison is with what the editor opened with, the caller's asked values: the book applies those
+      // itself, and anything sent beside them is staff's override, which wins (StarChat .../apply).
       const guest = {};
-      this.shown.forEach(k => { if (this.form[k].trim() !== (this.booking[k] || "").trim()) guest[k] = this.form[k].trim(); });
-      this.$emit("save", { guest, move: this.applyMove && this.change ? this.change.move : null });
+      this.shown.forEach(k => { if (this.form[k].trim() !== String(this.initial[k] || "").trim()) guest[k] = this.form[k].trim(); });
+      this.$emit("save", { guest });
     },
   },
 };

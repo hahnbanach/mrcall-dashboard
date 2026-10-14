@@ -10,7 +10,7 @@ import RestaurantDetailsEditor from '@/components/widgets/restaurant/RestaurantD
  *
  * Seen failing first, 2026-10-13, one fault at a time: every field drawn whatever the setting (the not-asked test);
  * the required check removed (the required test: the save went out with the name emptied); every field sent, not
- * only the changed ones (the changed-only test); the move not ticked by default (the request test); the required
+ * only the changed ones (the changed-only test); the move not said, or the pre-filled values echoed back as overrides (the request test); the required
  * check applied to a field the booking never had (the older-booking test: seen failing in the e2e first, a staff
  * booking without a phone could not take a change); a not-asked field hidden even with a value (the value test).
  */
@@ -35,14 +35,14 @@ describe('the details editor', () => {
     expect(w.find('[data-detail="allergies"]').text()).toContain('Not asked in this restaurant')
     await w.find('[data-detail="allergies"] input').setValue('')
     await w.find('.save-details').trigger('click')
-    expect(w.emitted('save')[0][0]).toEqual({ guest: { allergies: '' }, move: null })
+    expect(w.emitted('save')[0][0]).toEqual({ guest: { allergies: '' } })
   })
 
   it('a booking that lacks a required field it never had can still be corrected', async () => {
     const w = draw({ booking: { ...booking, phone: '' }, fieldRules: { ...RULES, phone: 'required' } })
     await w.find('[data-detail="notes"] input').setValue('Terrace')
     await w.find('.save-details').trigger('click')
-    expect(w.emitted('save')[0][0]).toEqual({ guest: { notes: 'Terrace' }, move: null })
+    expect(w.emitted('save')[0][0]).toEqual({ guest: { notes: 'Terrace' } })
   })
 
   it('a required field cannot be emptied', async () => {
@@ -58,15 +58,19 @@ describe('the details editor', () => {
     await w.find('[data-detail="name"] input').setValue('Verdi Rossi')
     await w.find('[data-detail="notes"] input').setValue('')
     await w.find('.save-details').trigger('click')
-    expect(w.emitted('save')[0][0]).toEqual({ guest: { name: 'Verdi Rossi', notes: '' }, move: null })
+    expect(w.emitted('save')[0][0]).toEqual({ guest: { name: 'Verdi Rossi', notes: '' } })
   })
 
-  it('from a request: pre-filled, the move ticked, saved in one step', async () => {
-    const change = { details: { notes: 'Window · Celiac' }, move: { date: '2026-10-21', start: 1230, party: 3 }, late: null }
+  it('from a request: pre-filled, says the move the request makes, saved in one step', async () => {
+    const change = { kind: 'move', details: { notes: 'Window · Celiac' }, move: { date: '2026-10-21', start: 1230, party: 3 }, late: null }
     const w = draw({ change, fieldRules: { ...RULES, allergies: 'optional' } })
     expect(w.find('[data-detail="notes"] input').element.value).toBe('Window · Celiac')
-    expect(w.find('.apply-move input').element.checked).toBe(true)
+    expect(w.find('.apply-move').text()).toContain('The request moves it to')
     await w.find('.save-details').trigger('click')
-    expect(w.emitted('save')[0][0]).toEqual({ guest: { notes: 'Window · Celiac' }, move: change.move })
+    // the asked values are the book's to apply: left as pre-filled, nothing travels (an override would win)
+    expect(w.emitted('save')[0][0]).toEqual({ guest: {} })
+    await w.find('[data-detail="notes"] input').setValue('Window · Celiac, two')
+    await w.find('.save-details').trigger('click')
+    expect(w.emitted('save')[1][0]).toEqual({ guest: { notes: 'Window · Celiac, two' } })
   })
 })

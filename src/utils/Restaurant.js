@@ -358,6 +358,19 @@ export default {
             { headers: headers(user) }));
     },
 
+    /**
+     * Applies the call-back request `requestId` to the booking it is about and closes it, in one transaction (StarChat
+     * 2d055d7e6): by the request's kind, a move, the details, a late arrival noted with the table kept, a cancellation.
+     * `overrides` are staff's values over the asked ones (date, time, covers, zone, tableIds, eta, overbook, name,
+     * phone, notes, allergies). Answers `{booking, request}`, the booking with its tables and `warnings`. A refusal
+     * changes neither row: `stale` at /expectedVersion (the request) or /bookingVersion (the booking), `not_linked`,
+     * `no_change`, `booking_not_confirmed`, or the booking write's own refusal.
+     */
+    applyRequest: function(user, businessId, requestId, expectedVersion, bookingVersion, overrides) {
+        return call(() => axios.post(base(businessId) + "/reservations/" + encodeURIComponent(requestId) + "/apply",
+            Object.assign({ expectedVersion, bookingVersion }, overrides || {}), { headers: headers(user) }));
+    },
+
     noShow: function(user, businessId, id, expectedVersion) {
         return call(() => axios.post(base(businessId) + "/reservations/" + encodeURIComponent(id) +
             "/no-show?expectedVersion=" + encodeURIComponent(expectedVersion), {}, { headers: headers(user) }));

@@ -113,7 +113,7 @@ import {
   rulesOf, missingRequired, onClosedDay, changeOf, serviceWindow, serviceAt, defaultTime, arrivalTimes, keyOf, addDays, dateOf, fmt, toMin, minuteOfDay,
   stripStatus, seatLabel, dropTargets, tableById, freeFrom, callsOf, SERVICES, GUEST_STATES
 } from "@/utils/RestaurantModel";
-import { shortDate, monthTitle, refusalKey, missingFieldsOf, OVERRIDABLE } from "@/components/widgets/restaurant/format";
+import { shortDate, monthTitle, refusalKey, refusalPathOf, missingFieldsOf, OVERRIDABLE } from "@/components/widgets/restaurant/format";
 import RestaurantStrip from "@/components/widgets/restaurant/RestaurantStrip.vue";
 import RestaurantDayView from "@/components/widgets/restaurant/RestaurantDayView.vue";
 import RestaurantBookingPanel from "@/components/widgets/restaurant/RestaurantBookingPanel.vue";
@@ -224,7 +224,7 @@ export default {
     /** What the call-back request the panel was opened from asks of its booking, pre-filling the details editor. */
     panelChange() {
       if (!this.panel || !this.panel.change || !this.panelBooking) return null;
-      return changeOf(this.panelBooking, this.panel.change, m => this.$t("components.restaurant.details.lateNote", { time: fmt(m) }));
+      return changeOf(this.panelBooking, this.panel.change);
     },
     panelRequest() {
       return this.panel && this.panel.type === "accept" ? this.list.find(b => b.id === this.panel.id) || null : null;
@@ -522,7 +522,7 @@ export default {
         if (inPanel && this.panel) {
           this.panel = Object.assign({}, this.panel, { message: this.lastRefusal });
         } else {
-          this.showToast(this.$t(refusalKey(code)), null, true);
+          this.showToast(this.lastRefusal.text, null, true);
         }
         return null;
       } finally {
@@ -538,7 +538,7 @@ export default {
         // A missing-fields refusal names each field from the server's `values` (R8), in the owner's words.
         text: code === "missing_fields" && missing.length
           ? this.$t("components.restaurant.answer.missingFields", { fields: missing.map(f => this.$t(`components.restaurant.ask.field.${f}`)).join(", ") })
-          : this.$t(refusalKey(code)),
+          : this.$t(refusalKey(code, refusalPathOf(e))),
         overridable: OVERRIDABLE.includes(code),
         alternatives: (body.alternatives || []).filter(a => a.date === this.date).map(a => toMin(a.time)).filter(t => t !== null),
       };
@@ -665,42 +665,44 @@ export default {
       if (asked.change && asked.change.kind === "cancellation") return this.cancelAsked(original, asked);
       this.panel = { type: "booking", id: original.id, editing: true, change: asked, message: null };
     },
-    /** A cancellation asked by phone of a booking the caller could not cancel themselves: staff cancel it and close the
-     *  request; Undo takes the booking back (the request stays closed). */
+    /** A cancellation asked by phone of a booking the caller could not cancel themselves: the request is applied (the
+     *  booking cancelled and the request closed in one transaction); Undo takes the booking back (the request stays
+     *  closed). */
     cancelAsked(original, request) {
-      return this.act(async () => {
-        const cancelled = await RestaurantApi.cancel(this.user, this.businessId, original.id, original.version);
-        await RestaurantApi.cancel(this.user, this.businessId, request.id, request.version);
-        return cancelled;
-      }, {
+      return this.act(() => RestaurantApi.applyRequest(this.user, this.businessId, request.id, request.version, original.version, {}), {
         done: () => this.$t("components.restaurant.change.cancelled", { name: original.name || this.$t("components.restaurant.walkInName") }),
-        undo: answer => this.reinstateRun(original, answer.version, false, "cancelled"),
+        undo: answer => this.reinstateRun(original, answer.booking.version, false, "cancelled"),
       });
     },
     /**
-     * Saves the details editor: one change of the booking at the version read (the details that changed, an emptied
-     * one as "", which the book reads as cleared; with a move, the day, time and people), then, when it came from a
-     * call-back request, that request is closed. Undo puts back what was there.
+     * Saves the details editor. Staff's own edit is one change of the booking at the version read (the details that
+     * changed, an emptied one as "", which the book reads as cleared). From a call-back request it is the request
+     * applied (`applyRequest`): the book does what the request asks by its kind and closes it in the same transaction;
+     * what staff changed in the editor goes as their values over the asked ones. Undo puts back what was there.
      */
-    async saveDetails({ guest, move }) {
+    async saveDetails({ guest }) {
       const b = this.panelBooking;
       if (!b) return;
       const request = this.panel.change;
-      const body = Object.assign({ expectedVersion: b.version }, guest,
-        move ? Object.assign({ date: move.date, time: fmt(move.start), covers: move.party }, move.zone ? { zone: move.zone } : {}) : {});
+      const c = request ? this.panelChange : null;
       // What Undo writes back: a field's previous value; a field that was empty goes back to empty (sent as "", which the
       // book reads as cleared) unless the restaurant now requires it, which the book would refuse to clear: then it is
       // left as the edit set it, the one state the book accepts.
       const back = {};
-      Object.keys(guest).forEach(k => {
+      const restore = k => {
         if (String(b[k] || "").trim()) back[k] = b[k];
         else if (this.rules.requiredFields[k] !== "required") back[k] = "";
-      });
-      if (move) Object.assign(back, { date: b.date || this.date, time: fmt(b.start), covers: b.party }, move.zone ? { zone: b.zone } : {});
+      };
+      Object.keys(guest).forEach(restore);
+      // what the book applies of the request itself: the asked details, put back by Undo as they were
+      if (c) ["name", "allergies", "notes"].filter(k => k in c.details && !(k in back)).forEach(restore);
+      // a late arrival is noted on the booking by the book: Undo puts the notes back as they were
+      if (c && c.kind === "late_arrival") restore("notes");
+      if (c && c.move) Object.assign(back, { date: b.date || this.date, time: fmt(b.start), covers: b.party }, c.move.zone ? { zone: b.zone } : {});
       const ok = await this.act(async () => {
-        const changed = await RestaurantApi.change(this.user, this.businessId, b.id, body);
-        if (request) await RestaurantApi.cancel(this.user, this.businessId, request.id, request.version);
-        return changed;
+        if (!request) return RestaurantApi.change(this.user, this.businessId, b.id, Object.assign({ expectedVersion: b.version }, guest));
+        const answer = await RestaurantApi.applyRequest(this.user, this.businessId, request.id, request.version, b.version, guest);
+        return answer.booking;
       }, {
         inPanel: true,
         done: answer => (request

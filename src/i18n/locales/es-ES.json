@@ -1253,7 +1253,11 @@
         "missing_fields": "Falta un campo obligatorio.",
         "zone_closed": "Esa zona está cerrada en ese momento.",
         "tables_unsuitable": "Esas mesas no pueden acoger a este grupo.",
-        "linked_request": "Esta solicitud pide cambiar una reserva: haz el cambio o ciérrala."
+        "linked_request": "Esta solicitud pide cambiar una reserva: haz el cambio o ciérrala.",
+        "staleBooking": "La reserva de esta solicitud cambió mientras tanto: se han vuelto a leer ambas, inténtalo otra vez.",
+        "not_linked": "Esta solicitud no se refiere a ninguna reserva: acéptala o ciérrala.",
+        "no_change": "Esta solicitud no registra ningún cambio: cambia tú la reserva y luego cierra la solicitud.",
+        "booking_not_confirmed": "La reserva de esta solicitud ya no está confirmada: cierra la solicitud."
       },
       "strip": {
         "label": "Disponibilidad de los próximos días",
@@ -1840,9 +1844,8 @@
       "details": {
         "title": "Datos del cliente",
         "fromRequest": "Lo que pidió el cliente por teléfono",
-        "applyMove": "Moverla también al {day} {time}, {people}",
-        "late": "Llega tarde a las {time}: la mesa se mantiene, queda en las notas.",
-        "lateNote": "Llega a las {time}",
+        "applyMove": "La solicitud la mueve al {day} {time}, {people}.",
+        "late": "Llega tarde a las {time}: la mesa se mantiene, la hora queda anotada en la reserva.",
         "saveChange": "Guardar el cambio y cerrar la solicitud",
         "save": "Guardar datos",
         "cancel": "Cancelar",

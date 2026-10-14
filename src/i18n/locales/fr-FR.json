@@ -1241,7 +1241,11 @@
         "missing_fields": "Un champ obligatoire manque.",
         "zone_closed": "Cette zone est fermée à ce moment-là.",
         "tables_unsuitable": "Ces tables ne peuvent pas accueillir ce groupe.",
-        "linked_request": "Cette demande veut modifier une réservation : faites la modification ou fermez-la."
+        "linked_request": "Cette demande veut modifier une réservation : faites la modification ou fermez-la.",
+        "staleBooking": "La réservation de cette demande a changé entre-temps : les deux ont été relues, réessayez.",
+        "not_linked": "Cette demande ne concerne aucune réservation : acceptez-la ou fermez-la.",
+        "no_change": "Cette demande ne contient aucune modification : modifiez la réservation vous-même, puis fermez la demande.",
+        "booking_not_confirmed": "La réservation de cette demande n'est plus confirmée : fermez la demande."
       },
       "strip": {
         "label": "Disponibilité des prochains jours",
@@ -1828,9 +1832,8 @@
       "details": {
         "title": "Coordonnées du client",
         "fromRequest": "Ce que le client a demandé au téléphone",
-        "applyMove": "La déplacer aussi au {day} {time}, {people}",
-        "late": "Arrivée tardive à {time} : la table reste, c'est noté dans les notes.",
-        "lateNote": "Arrive à {time}",
+        "applyMove": "La demande la déplace au {day} {time}, {people}.",
+        "late": "Arrivée tardive à {time} : la table reste, l'heure est notée sur la réservation.",
         "saveChange": "Enregistrer la modification et fermer la demande",
         "save": "Enregistrer",
         "cancel": "Annuler",

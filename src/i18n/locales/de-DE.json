@@ -1241,7 +1241,11 @@
         "missing_fields": "Ein Pflichtfeld fehlt.",
         "zone_closed": "Dieser Bereich ist dann geschlossen.",
         "tables_unsuitable": "Diese Tische können diese Gruppe nicht aufnehmen.",
-        "linked_request": "Diese Anfrage will eine Reservierung ändern: nehmen Sie die Änderung vor oder schließen Sie sie."
+        "linked_request": "Diese Anfrage will eine Reservierung ändern: nehmen Sie die Änderung vor oder schließen Sie sie.",
+        "staleBooking": "Die Reservierung dieser Anfrage hat sich inzwischen geändert: beide wurden neu gelesen, versuchen Sie es noch einmal.",
+        "not_linked": "Diese Anfrage betrifft keine Reservierung: nehmen Sie sie an oder schließen Sie sie.",
+        "no_change": "Diese Anfrage enthält keine Änderung: ändern Sie die Reservierung selbst und schließen Sie dann die Anfrage.",
+        "booking_not_confirmed": "Die Reservierung dieser Anfrage ist nicht mehr bestätigt: schließen Sie die Anfrage."
       },
       "strip": {
         "label": "Verfügbarkeit der kommenden Tage",
@@ -1828,9 +1832,8 @@
       "details": {
         "title": "Angaben des Gastes",
         "fromRequest": "Was der Gast am Telefon gewünscht hat",
-        "applyMove": "Auch verschieben auf {day} {time}, {people}",
-        "late": "Spätere Ankunft um {time}: der Tisch bleibt, es steht in den Notizen.",
-        "lateNote": "Kommt um {time}",
+        "applyMove": "Die Anfrage verschiebt sie auf {day} {time}, {people}.",
+        "late": "Spätere Ankunft um {time}: der Tisch bleibt, die Uhrzeit wird an der Reservierung vermerkt.",
         "saveChange": "Änderung speichern und Anfrage schließen",
         "save": "Angaben speichern",
         "cancel": "Abbrechen",
