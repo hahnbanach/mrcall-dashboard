@@ -11,7 +11,9 @@ The page is the restaurant's book on StarChat's named tables: the evening by ser
 StarChat decides everything (whether a party fits, where it sits, what a write may change); the page asks, shows the
 answer in the owner's language, and never the server's English. The wire contract is StarChat's
 `src/main/resources/apidoc/openapi.yaml` (repository `hahnbanach/starchat`, line 9.34), generated from the routes
-that serve it; the paths below are under `/mrcall/v1/{realm}/apidomain/`.
+that serve it; the paths below are under `/mrcall/v1/{realm}/apidomain/`. The work's brief and plan are StarChat's
+`docs/briefs/2026-10-10-restaurant-named-tables-and-host-page.md` and
+`docs/execution-plans/2026-10-10-restaurant-named-tables-and-host-page.md`.
 
 ## Where it lives
 
@@ -24,8 +26,9 @@ that serve it; the paths below are under `/mrcall/v1/{realm}/apidomain/`.
 | The skill card: hidden page fields, the page switch, the page-off data panel | `src/components/widgets/skills/SkillCard.vue`, `manifestFields.js`, `skillPages.js` |
 | The menu entry and the section | `src/views/business/BusinessConfiguration.vue` |
 
-The menu entry is the synthetic section `__RESTAURANT_BOOKING__`, shown when the business has a
-`skill_restaurant_booking` instance in the `during` phase with its page on.
+The menu entry is the synthetic section `__RESTAURANT_BOOKING__`, shown when the business has an instance of the
+skill under either of the names StarChat reads it under (`skill_restaurant_booking` or `restaurant_booking`,
+`SKILL_NAMES` in `Restaurant.js`) in the `during` phase, with its page on.
 
 ## The page and the skill form: one editor per setting
 
@@ -76,7 +79,8 @@ Day, time and people are always required. Name, phone, allergies, notes and area
 asked (`requiredFields`, the manifest's defaults when unset). StarChat's book enforces it from every source; the page
 follows it:
 
-- the booking form draws a field not asked, marks a required one, and refuses an empty required one before sending;
+- the booking form does not draw a field not asked, marks a required one, and refuses an empty required one before
+  sending;
 - a walk-in may leave out name and phone only: the walk-in panel asks for the required allergies and notes, and for
   the area when it is required and no table is chosen;
 - accepting a request that lacks a required field asks for it, and the accept carries it in the same call;
@@ -133,10 +137,11 @@ and its row show the request on any day.
 - Refusals of an apply, all said in the owner's words: `stale` at `/expectedVersion` (the request) or
   `/bookingVersion` (the booking), `not_linked`, `no_change`, `booking_not_confirmed`, and the booking write's own.
 
-**The panel follows the booking.** After a write that answers a booking (an apply, a details save, an Undo), the page
-goes to that booking's day when it is not the one shown and opens its panel there. Before an Undo is sent, the page
-opens the booking it acts on, on its day, so a refusal and "restore anyway" are said in its panel even when the
-person has moved to another day.
+**The panel follows the booking.** After a details save, or a request applied through the details editor, the page
+goes to the booking's day when it is not the one shown and opens its panel there. The Undo of a details save or of an
+applied request (a cancellation included) first opens the booking it acts on, on its day, so a refusal and "restore
+anyway" are said in its panel even when the person has moved to another day, and then follows the booking put back.
+The Undo of a state, a pin, a cancellation or a no-show does not: those do not change the day.
 
 ## Session rules
 

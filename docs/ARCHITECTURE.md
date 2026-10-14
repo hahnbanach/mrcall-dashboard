@@ -160,8 +160,8 @@ fallback of 25. All 12 locale files contain these keys. The `/plan` route render
 
 ### Restaurant bookings (`RestaurantBook.vue`)
 
-A business with a `skill_restaurant_booking` instance in the `during` phase, its page on, gets a "Restaurant
-bookings" entry in the configuration menu: the synthetic section `__RESTAURANT_BOOKING__`, built by the page rather
+A business with an instance of the restaurant skill (`skill_restaurant_booking` or `restaurant_booking`, the two
+names StarChat reads it under) in the `during` phase, its page on, gets a "Restaurant bookings" entry in the configuration menu: the synthetic section `__RESTAURANT_BOOKING__`, built by the page rather
 than declared by the template, as `__DATA_RETENTION__` is. The page (tabs Evening, Room and tables, Hours and rules)
 reads and writes the book through StarChat's `/apidomain/restaurant/{businessId}` and edits only the restaurant's own
 settings of the skill instance (`x-audience: page`); the skill form edits the rest. Every request and the
