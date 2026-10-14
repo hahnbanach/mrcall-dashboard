@@ -157,6 +157,7 @@
 
 <script>
 import { useConfirm } from "primevue/useconfirm";
+import { isSessionEnded } from "@/firebase/session";
 import RestaurantApi from "@/utils/Restaurant";
 import {
   clone, diffLayout, draftProblems, addTables, genNames, minFor, newTableId, zoneIdFor, joinRange, seatLabel, tableById,
@@ -456,6 +457,7 @@ export default {
         const data = await RestaurantApi.previewLayout(this.user, this.businessId, this.preview.date, asked);
         this.preview.data = data;
       } catch (e) {
+        if (isSessionEnded(e)) return;
         console.warn("Restaurant layout preview not answered:", e.restaurant ? e.restaurant.code || e.restaurant.status : e);
         this.preview.error = true;
         this.preview.data = null;
@@ -482,6 +484,8 @@ export default {
       }
     },
     refused(e, what) {
+      // the session ended: the interceptor is already taking the person to sign-in, so nothing is said here
+      if (isSessionEnded(e)) return;
       const r = e.restaurant || {};
       const diagnostics = (r.body && Array.isArray(r.body.diagnostics)) ? r.body.diagnostics : [];
       if (what === "layout" && r.status === 422 && diagnostics.length) {

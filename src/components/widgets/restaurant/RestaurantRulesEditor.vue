@@ -96,6 +96,7 @@
 
 <script>
 import RestaurantApi from "@/utils/Restaurant";
+import { isSessionEnded } from "@/firebase/session";
 import WeeklyHoursField from "@/components/widgets/skills/fields/WeeklyHoursField.vue";
 import RestaurantAskEditor from "@/components/widgets/restaurant/RestaurantAskEditor.vue";
 import { clone, closuresOf, withClosures, sameClosures, fieldRulesOf, minFreeLimits } from "@/utils/RestaurantModel";
@@ -337,6 +338,8 @@ export default {
               to: ["pace_below_party", "days_ahead_beyond_horizon"].includes(d.code) ? this.skillsLink : null,
               label: this.$t("components.restaurant.rules.inSkill") }));
           } catch (e) {
+            // the session ended: the interceptor is already taking the person to sign-in, so nothing is said here
+            if (isSessionEnded(e)) return;
             const r = e.restaurant || {};
             const diagnostics = r.body && Array.isArray(r.body.diagnostics) ? r.body.diagnostics.filter(d => (d.severity || "error") === "error") : [];
             if (r.status === 422 && diagnostics.length) this.serverErrors = diagnostics.map(d => this.diagnosticText(d));
@@ -350,6 +353,7 @@ export default {
           try {
             await RestaurantApi.saveLayout(this.user, this.businessId, this.layout.revision, withClosures(clone(this.layout), this.closureRows));
           } catch (e) {
+            if (isSessionEnded(e)) return;
             const r = e.restaurant || {};
             this.saveMessage = { ok: false, text: this.$t(r.code === "stale" ? "components.restaurant.room.stale" : "components.restaurant.closures.refused") };
             if (r.code === "stale") this.$emit("saved");

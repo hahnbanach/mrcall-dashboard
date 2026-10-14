@@ -46,9 +46,8 @@ function withToken (config, token) {
   return config
 }
 
-export function isSessionEnded (error) {
-  return error?.sessionEnded === true
-}
+// The predicate lives in a module with no imports, so a component can ask it without loading this one (./session.js).
+export { isSessionEnded } from './session'
 
 /*
  * Whether this session has already been ended. Several requests fail together when a session dies,

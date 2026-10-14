@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
 import RestaurantApi from '@/utils/Restaurant'
+import { isSessionEnded } from '@/firebase/session'
 
 /** The restaurant's room (zones, tables, joins) inside a skill's configuration: a summary and a link to the
   * page that edits it, never an editor here.
@@ -39,6 +40,8 @@ onMounted(async () => {
     room.value = await RestaurantApi.layout(user, String(businessId))
     state.value = 'shown'
   } catch (e) {
+    // the session ended: the interceptor is already taking the person to sign-in, so nothing is said here
+    if (isSessionEnded(e)) return
     console.warn('Restaurant room not read:', e.restaurant ? e.restaurant.code || e.restaurant.status : e)
     state.value = 'unknown'
   }

@@ -78,6 +78,7 @@
 </template>
 
 <script>
+import { isSessionEnded } from "@/firebase/session";
 import RestaurantApi from "@/utils/Restaurant";
 import WeeklyHoursField from "@/components/widgets/skills/fields/WeeklyHoursField.vue";
 import { hasHours, wizardLayout, seatLabel } from "@/utils/RestaurantModel";
@@ -176,6 +177,8 @@ export default {
           await RestaurantApi.saveInstance(this.user, this.businessId, this.instance, { lunch: this.hours.lunch, dinner: this.hours.dinner });
           this.$emit("instance-saved");
         } catch (e) {
+          // the session ended: the interceptor is already taking the person to sign-in, so nothing is said here
+          if (isSessionEnded(e)) return;
           const r = e.restaurant || {};
           this.message = this.$t(r.status === 409 ? "components.restaurant.room.configChanged" : "components.restaurant.wizard.hoursRefused");
           if (r.status === 409) this.$emit("instance-saved");
@@ -194,6 +197,7 @@ export default {
         await RestaurantApi.saveLayout(this.user, this.businessId, null, layout);
         this.$emit("done");
       } catch (e) {
+        if (isSessionEnded(e)) return;
         const r = e.restaurant || {};
         if (r.status === 409 && r.code === "not_configured") {
           this.message = this.$t("components.restaurant.room.needsHours");

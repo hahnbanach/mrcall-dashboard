@@ -17,6 +17,7 @@
 </template>
 
 <script>
+import { isSessionEnded } from "@/firebase/session";
 import ConversationApi from "@/utils/Conversation";
 import CallDetailsPanel from "@/components/conversations/CallDetailsPanel.vue";
 
@@ -60,6 +61,7 @@ export default {
         this.conversation = found;
         this.state = found ? "shown" : "missing";
       } catch (e) {
+        if (isSessionEnded(e)) return;
         console.error("Call not read:", e && e.response ? e.response.status : e);
         if (this.current === id) this.state = "error";
       }

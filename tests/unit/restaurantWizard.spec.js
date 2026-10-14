@@ -58,4 +58,20 @@ describe('the first-run wizard', () => {
     expect(wrapper.text()).toContain('When do guests arrive?')
     expect(wrapper.text()).toContain('Set the opening hours first')
   })
+
+  // Only the Axios interceptor ends a session (v2.2, 8fe2152): a failure it marked says nothing here, the person is
+  // already on the way to sign-in. Seen failing on 2026-10-14 with the guard removed: the refusal was said.
+  it('says nothing for a failure the interceptor ended the session for', async () => {
+    const e = new Error('401')
+    e.sessionEnded = true
+    e.restaurant = { status: 401, code: null }
+    vi.spyOn(RestaurantApi, 'saveLayout').mockRejectedValue(e)
+    const wrapper = draw({ dinner: JSON.stringify({ friday: ['19:00-22:00'] }) })
+    wrapper.vm.step = 'joins'
+    await flushPromises()
+    await wrapper.find('.wizard-done').trigger('click')
+    await flushPromises()
+    expect(wrapper.find('.err').exists()).toBe(false)
+    expect(wrapper.vm.message).toBe('')
+  })
 })

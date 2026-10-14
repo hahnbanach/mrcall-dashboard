@@ -106,6 +106,7 @@
 
 <script>
 import { useConfirm } from "primevue/useconfirm";
+import { isSessionEnded } from "@/firebase/session";
 import RestaurantApi, { isMissingRoute, isPageOff, pageOffIn } from "@/utils/Restaurant";
 import DeferredCommit from "@/utils/DeferredCommit";
 import {
@@ -293,6 +294,8 @@ export default {
         this.ready = !this.unavailable;
         this.loadPeriod();
       } catch (e) {
+        // the session ended: the interceptor is already taking the person to sign-in, so nothing is said here
+        if (isSessionEnded(e)) return;
         console.error("Restaurant page not loaded:", e.restaurant ? e.restaurant.status : e);
         this.loadError = true;
       }
@@ -324,6 +327,7 @@ export default {
         this.days = Object.assign({}, this.days, { [date]: day });
         return day;
       } catch (e) {
+        if (isSessionEnded(e)) return null;
         if (isMissingRoute(e)) this.unavailable = true;
         else if (isPageOff(e)) this.pageOff = true;
         else throw e;
@@ -431,6 +435,7 @@ export default {
         const fits = answer.fits.map(f => ({ ...f, joined: f.ids.length > 1, label: seatLabel(this.layout, f.ids) }));
         return { fits, refusal: answer.refusal, later: fits.length ? [] : answer.later, staff: answer.staff };
       } catch (e) {
+        if (isSessionEnded(e)) return null;
         console.warn("Restaurant finder not answered:", e.restaurant ? e.restaurant.code || e.restaurant.status : e);
         return { error: true };
       }
@@ -503,6 +508,7 @@ export default {
         this.showToast(done ? done(answer) : this.$t("components.restaurant.saved"), undo ? () => undo(answer) : null);
         return answer || true;
       } catch (e) {
+        if (isSessionEnded(e)) return null;
         const code = e.restaurant ? e.restaurant.code : null;
         this.lastRefusal = this.refusalOf(e);
         if (code === "stale") await this.reload();
@@ -713,6 +719,7 @@ export default {
      *  an accept refused for room offers to accept it anyway. */
     async deferredSettled(id, error) {
       const held = this.deferred[id];
+      if (error && isSessionEnded(error)) return;
       if (error) {
         console.warn("Restaurant request answer refused:", error.restaurant ? error.restaurant.code || error.restaurant.status : error);
       }
@@ -913,6 +920,7 @@ export default {
           this.searchResults = found.results.filter(r => GUEST_STATES.has(r.b.state));
           this.searchTruncated = found.truncated;
         } catch (e) {
+          if (isSessionEnded(e)) return;
           console.warn("Restaurant search not answered:", e.restaurant ? e.restaurant.code || e.restaurant.status : e);
           this.searchResults = [];
         } finally {
@@ -941,6 +949,7 @@ export default {
         a.remove();
         this.showToast(this.$t("components.restaurant.exported", { from: this.shortDate(from), to: this.shortDate(to) }));
       } catch (e) {
+        if (isSessionEnded(e)) return;
         this.showToast(this.$t(refusalKey(e.restaurant ? e.restaurant.code : null)), null, true);
       }
     },
