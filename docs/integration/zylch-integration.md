@@ -56,7 +56,8 @@ in the current client.
 
 Axios requests use the global response interceptor installed by `src/main.js`
 from `src/firebase/axiosConfig.js`, which refreshes Firebase tokens and retries
-401 responses. The SSE method uses native `fetch` and does not receive that
+401 responses, and ends the session when a retry is refused again (see
+[architecture](../ARCHITECTURE.md#authenticated-axios-request)). The SSE method uses native `fetch` and does not receive that
 interceptor; streaming HTTP failures go to the chat error callback. The project
 rule remains to use the configured Axios instance for authenticated requests;
 the existing SSE path is a discrepancy requiring a separate application fix.
@@ -142,9 +143,10 @@ requires an explicit configuration proposal and Save before it is used.
 
 ## Credits display
 
-`Businesses.vue` reads `CALLCREDIT` directly from StarChat's
-`/mrcall/v1/mrcall0/crm/business/resources/count` and displays euros by dividing
-credits by 100. It fetches `CALLCREDIT`, `CALL`, and `SMS` separately. The dashboard
+`Businesses.vue` reads `CALLCREDIT` from StarChat's
+`/mrcall/v1/mrcall0/crm/business/resources/balance` (net of debt; `count` only when
+that endpoint answers 404) and displays euros by dividing credits by 100. `CALL`
+and `SMS` come from `.../resources/count`. The dashboard
 has no call to `/api/desktop/llm/balance`. Tooltip keys are
 `mrcallCredits.title` and `mrcallCredits.tooltip`, present in all 12 locales;
 `creditTooltipFactor` selects the template's `CALLCREDIT_FACTOR`, defaulting to 25.
@@ -154,8 +156,9 @@ See [architecture](../ARCHITECTURE.md#per-business-credits-tile-businessesvue).
 
 - Missing business data: verify that the dashboard's StarChat target matches
   the AI backend's StarChat target; backend configuration belongs to mrcall-agent.
-- 401: verify token validity and the shared Firebase configuration. Axios can
-  retry after refresh; streaming requests require a fresh attempt.
+- 401: verify token validity and the shared Firebase configuration. Axios
+  retries once after refresh and then ends the session (sign-in with the
+  session-expired dialog); streaming requests require a fresh attempt.
 - Empty or failed chat: check `VUE_APP_ZYLCH_URL`, browser network responses and
   AI backend availability. The client has no health-check helper.
 - Pending changes after Discard: active or uncertain attempts are retained for

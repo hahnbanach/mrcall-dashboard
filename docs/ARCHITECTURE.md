@@ -8,7 +8,7 @@ Browser
   ▼
 Vue 3 SPA (App.vue)
   │
-  ├── Vue Router ─── Auth Guard (requiresAuth, role check, email verification)
+  ├── Vue Router ─── Auth Guard (session unless meta.public, role check, email verification)
   │                      │
   │                      ▼
   │                 Views / Components
@@ -77,10 +77,10 @@ API clients and business logic:
 ### Firebase (`src/firebase/`)
 - `config.js` — Firebase app initialization (indexedDB + browser persistence)
 - `authUtils.js` — Auth state listener, proactive token refresh (50-min interval), cross-domain cookie
-- `axiosConfig.js` — Axios 401 interceptor, request queue during token refresh
+- `axiosConfig.js` — Axios 401 interceptor, the only owner of a 401: token refresh with request queue, end of session, `isSessionEnded(error)`
 
 ### Router (`src/router/`)
-- `index.js` — Route definitions with auth guards, role-based access control
+- `index.js` — Route definitions and the guard. Every route needs a session unless it declares `meta: { public: true }`; `tests/unit/publicRoutes.spec.js` lists the public ones, read from the source by `publicPaths()` in `scripts/static-routes.js`. Role-based access control via `meta.requiresRole`
 
 ### i18n (`src/i18n/`)
 - `index.js` — i18n configuration
@@ -91,8 +91,17 @@ API clients and business logic:
 
 ### Authenticated Axios request
 
-This flow covers Axios requests. AI chat SSE uses native fetch and does not
-receive the interceptor; see [the integration contract](integration/zylch-integration.md).
+This flow covers Axios requests. AI chat SSE (native fetch) and the WebSocket
+connections (Whatsappweb, the Aladdin configurator, TestChat, the webcall text
+chat and voice button) do not receive the interceptor; see
+[the integration contract](integration/zylch-integration.md).
+
+The interceptor considers a 401 only on a request sent to `VUE_APP_STARCHAT_URL` or
+`VUE_APP_ZYLCH_URL` that carried a token header (`auth` or `Authorization: Bearer`).
+Any other 401 passes through unchanged: a StarChat call made without a token (OAuth
+consent, code exchange) or Google refusing its own token says nothing about the
+session. Components do not handle 401: for an error where `isSessionEnded(error)` is
+true they show nothing and navigate nowhere.
 
 ```
 User Action → Component → Axios Request
@@ -111,7 +120,10 @@ User Action → Component → Axios Request
                     → Refresh Firebase token
                     → Queue concurrent requests
                     → Retry all queued requests
-                    → If refresh fails → logout
+                    → Retry answered 401, refresh failed, or no user
+                      → end the session (once until somebody signs in):
+                        logout, then /signin?redirect=<page>&session_expired=1
+                      → reject with error.sessionEnded = true
 ```
 
 ### Business Configuration Flow
@@ -132,13 +144,32 @@ enum, multiselect, tuples, verbatim, templated
 
 Each business card displays the `CALLCREDIT` balance as euros using
 `creditsToEuro`: credits divided by 100, formatted as EUR for the current locale.
-`fetchBusinessResources` posts directly to StarChat's
-`/mrcall/v1/mrcall0/crm/business/resources/count`; it separately fetches
-`CALLCREDIT`, `CALL`, and `SMS`. The dashboard does not call the desktop balance
-endpoint. The tooltip uses `mrcallCredits.title` and `mrcallCredits.tooltip`;
+The credit comes from StarChat's `.../crm/business/resources/balance`
+(`{available, debt, net}`, through `fetchCreditBalance` in `src/utils/CreditBalance.js`).
+The card shows `net`, which is negative while the business is in debt, together with a
+debt notice. A StarChat without that endpoint answers 404, and the balance falls back to
+`.../resources/count` with no debt. An answer that is not a valid balance leaves the
+credit unknown: the card shows a dash and no credit pill, never zero. `CALL` and `SMS`
+are fetched from `.../resources/count`. The tooltip uses `mrcallCredits.title` and `mrcallCredits.tooltip`;
 `creditTooltipFactor(business)` parses `CALLCREDIT_FACTOR` by template with a
 fallback of 25. All 12 locale files contain these keys. The `/plan` route renders
 `src/views/Plan.vue` for plan and payment selection.
+
+### Restaurant bookings (`RestaurantBook.vue`)
+
+A business that runs the `skill_restaurant_booking` skill (the only name the platform
+runs it under; `SKILL` in `src/utils/Restaurant.js`) gets a "Restaurant bookings" entry
+in the configuration menu. The entry is a synthetic section, `__RESTAURANT_BOOKING__`,
+built by the page rather than declared by the template, as `__DATA_RETENTION__` is.
+
+The page reads and writes the book through StarChat's
+`/apidomain/restaurant/{businessId}`: the day, bookings, moves, cancellations,
+accepting requests, no-shows, blocks and stopping a service. It edits the skill
+instance's capacity and tables through the per-instance skill configuration route,
+with the revision it read. A refusal carries StarChat's diagnostic code (`full`,
+`stale`, `large_party`, and so on), and the page shows the translated sentence for it.
+Cancelling or declining asks for confirmation first. A refused move or accept stays
+in its dialog, and a phone number is a `tel:` link.
 
 ### Onboarding and plan selection
 ```
@@ -185,8 +216,8 @@ specified in [development.md](development.md#environment-routing).
 ### Authentication
 - Firebase Auth handles all auth methods (email/password, Google OAuth, magic links, custom tokens)
 - Proactive token refresh every 50 minutes (`authUtils.js`)
-- Axios interceptor catches 401 and refreshes token with request queue (`axiosConfig.js`)
-- Router guard enforces auth + email verification (`router/index.js`)
+- Axios interceptor catches 401 and refreshes token with request queue, and is the only code that ends a session on a 401 (`axiosConfig.js`)
+- Router guard asks for a session on every route not declared public, and enforces email verification (`router/index.js`)
 - Cross-domain cookie (`mrcall_uid`) for shared mrcall.ai domains
 
 ### Google authorization

@@ -8,6 +8,7 @@ The entry point is `src/main.js`. Package scripts use Vue CLI for both developme
 npm run serve                    # Vue CLI development server, default port 8080
 npm run build                    # Production build with Webpack
 npm run lint                     # ESLint with automatic fixes
+npm run test:unit                 # ESLint check, then vitest component and unit tests
 npm run test:e2e                  # Playwright browser tests
 npm run test:e2e:ui               # Interactive Playwright UI
 npm run test:e2e:update-snapshots  # Update visual snapshots

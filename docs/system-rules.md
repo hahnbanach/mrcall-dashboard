@@ -49,12 +49,14 @@
 - Token passed as `Authorization: Bearer <token>` or custom `auth` header
 - StarChat endpoint pattern: `/mrcall/v1/mrcall0/crm/*`
 - Zylch endpoint pattern: `/api/chat/*` and `/api/mrcall/*`
-- 401 responses trigger automatic token refresh via Axios interceptor
+- 401 responses trigger automatic token refresh via Axios interceptor; only a 401 from StarChat or mrcall-agent on a request that carried the Firebase token is considered
 
 ### Error Handling
 - Axios interceptor queues requests during token refresh
-- Auth failures trigger automatic logout after refresh failure
+- The interceptor alone ends a session: a retry answered 401, a failed refresh or a missing user logs out and sends to `/signin` with `redirect` and `session_expired`
+- Components never handle 401. They skip their failure message, toast and navigation when `isSessionEnded(error)` is true, and never assume that `error.response` exists
 - API errors bubble up to components for user-facing messages
+- Routes need a session unless they declare `meta: { public: true }`; a new public route is also added to `tests/unit/publicRoutes.spec.js`
 
 ### Internationalization
 - 12 supported languages: en-US, it-IT, es-ES, fr-FR, de-DE, nl-NL, sv-SE, da-DK, nb-NO, fi-FI, et-EE, el-GR

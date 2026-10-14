@@ -11,42 +11,50 @@ Scope: Current dashboard operating state, unresolved verification limits, and im
 
 ## State now
 
-Configure via chat supports ordinary and installed-skill proposals with readable
-before/after preview, explicit Save, persisted discard and uncertain-write
-reconciliation. Saved instances can open the existing supported Google Calendar
-authorization editor with bound business/grant/owner/state and safe return.
-The manual skill editor remains a separate flow. See the
-[integration contract](integration/zylch-integration.md) and
-[workstream plan](execution-plans/2026-10-08-agent-skills-chat-configuration.md).
+Production and beta run `v2.2.21` (`6d3b5dd`, a commit on `v2.2.19`). It carries the
+restaurant booking page, the hiding of platform-only skill fields from owners, and
+the credit balance shown net of debt. A balance that StarChat does not give is shown
+as a dash, not as zero. Each deployment was checked on its live domain: served
+bundle, 57 static routes and the Businesses page.
 
-Test runs `v2.2.15-test`, source `d52785ef`, deployed by successful GitHub
-run `37785829478`. The integration preserves the v2.2 modular manual editor,
-retention behavior, provider account identity and existing translations. Lint,
-97 unit tests, 72 desktop/mobile browser checks and the optimized test-mode
-build pass. Chat authorization uses the exact saved grant and excludes manual
-inferred-grant calendar checks.
+Test runs `v2.2.22`, which is `60c1522`, the tip of branch `v2.2`. It adds the
+Configure-via-chat skill work, which needs the mrcall-agent deployed on test: the
+agent on beta and production lacks the pending and reconcile endpoints, and the
+skill fields of apply-changes. See the
+[integration contract](integration/zylch-integration.md).
 
-Live dashboard HTML and referenced assets return 200; the served app includes
-ID-only Save/discard/reconcile and `https://zylch-test.mrcall.ai`. The backend
-runs `dev-9acb567d`: authenticated history/schema checks and deployed catalogue/
-configuration reads pass. Its six GenColor instances remain unchanged.
-The [release plan](../../mrcall-agent/docs/execution-plans/2026-10-08-agent-skills-test-release.md)
-records routing and rollback. Production tags remain unchanged.
+The session guard and the single owner of 401 are implemented, uncommitted, in
+worktree `shell-auth-guard` onto `60c1522`
+([brief](briefs/2026-10-13-shell-session-guard.md),
+[plan](execution-plans/2026-10-13-shell-session-guard.md)). The changes:
 
-Prior actual local browser/backend GenColor Save/readback/restoration remains
-valid acceptance evidence. Model replies are scripted and focused OAuth
-exchanges mocked; the release smoke performs read-only configuration checks.
+- Every route needs a session unless it declares `meta.public`.
+- The Axios interceptor alone ends a session. Components skip their failure UI
+  for `isSessionEnded(error)`.
+- The browser-test fixture mocks mrcall-agent, as it already mocked StarChat.
+
+Verified locally: vitest 120 of 120; Playwright 733 passed and 3 skipped on desktop,
+tablet and mobile; the test-mode build. Not yet released or checked on a live
+environment.
 
 ## Unresolved
 
-The existing AI chat SSE client uses native fetch and bypasses the required
-Axios 401 interceptor; see [harness-backlog](harness-backlog.md). Real model
-quality and actual Google consent/provider grants remain unverified. Live
-release smoke covers served assets and authenticated backend contracts; it does
-not establish a real-model browser Save or provider authorization.
+- The AI chat SSE client uses native fetch and bypasses the Axios interceptor;
+  see [harness-backlog](harness-backlog.md).
+- WebSocket connections (Whatsappweb, the Aladdin configurator, TestChat, the
+  webcall text chat and voice button) do not pass through the interceptor either.
+- Real model quality, and actual Google consent and provider grants, remain
+  unverified.
+- `tests/unit/skillsOwnerSave.spec.js` takes 3.5 to 5.3 s against a 5 s timeout
+  in a fresh worktree, and can time out there.
 
 ## Next
 
-Production promotion requires separate authorization. Preserve uncertain
-pending attempts on rollback. Resolve the SSE interceptor discrepancy in its
-separately scoped application task.
+- Commit the session-guard work onto `v2.2` and deploy it to test, which needs
+  separate authorization. Then check on the test domain that a deep link without a
+  session reaches sign-in and returns, and that an expired session shows the
+  session-expired dialog.
+- Integrate `restaurant-tables-page` when its session delivers it, rebased on the
+  `v2.2` tip. It needs the StarChat named-tables release on the same environment.
+- Promoting the chat skill work beyond test requires promoting mrcall-agent first,
+  plus authorization.

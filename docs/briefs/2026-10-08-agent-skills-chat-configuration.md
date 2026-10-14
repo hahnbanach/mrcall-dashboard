@@ -3,8 +3,8 @@
 ## Intent and authority
 
 This is the dashboard portion of the approved cross-repository workstream in
-[mrcall-agent's brief](../../../mrcall-agent/docs/briefs/2026-10-08-agent-skills-chat-configuration.md)
-and [execution plan](../../../mrcall-agent/docs/execution-plans/2026-10-08-agent-skills-chat-configuration.md).
+mrcall-agent's brief (mrcall-agent `docs/briefs/2026-10-08-agent-skills-chat-configuration.md`)
+and execution plan (mrcall-agent `docs/execution-plans/2026-10-08-agent-skills-chat-configuration.md`).
 Operators install skills in StarChat; business users configure instances through
 chat, review proposed changes and explicitly Save. The dashboard represents the
 backend's authoritative pending state and truthful operation outcomes.
