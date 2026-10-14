@@ -5,7 +5,7 @@ const { mockBusiness } = require('./mock-data')
  * A StarChat restaurant book in memory, for the restaurant page's browser tests: the routes the page calls,
  * answering in the shapes StarChat answers (R8's fields as in hahnbanach/starchat 9.34 at 7bf981c51's openapi.yaml:
  * `recognised`, `about`, `aboutReservation`, `change`, the configuration read's `restaurant.allergies`; `openRequest` as
- * at c790d9d11; POST .../apply as at 2d055d7e6; earlier ones as 9.34.65) (ApiDomainRestaurantResource, LayoutDraft,
+ * at c790d9d11; POST .../apply as at 2d055d7e6 (notes added, as announced), POST .../unapply as at 9c02e69d7; earlier ones as 9.34.65) (ApiDomainRestaurantResource, LayoutDraft,
  * RestaurantLayoutSection, NativeReservationBook in hahnbanach/starchat at those commits): tables without an id get one from the server, a join may name a table by name,
  * bookings carry `callIds`, the day read carries `minFreeMinutes` and each table's free windows
  * (`freeTables`), the skill read carries the store-backed `layout` section, and the finder is
@@ -283,6 +283,82 @@ async function mockRestaurant (page, opts = {}) {
     return json(route, 200, { hits: doc ? [{ document: doc }] : [], totalHits: doc ? 1 : 0 })
   })
 
+  const DETAIL_KEYS = ['name', 'phone', 'allergies', 'notes']
+  const snapshot = r => ({ date: r.date, time: r.time, covers: r.covers, zone: r.zone, status: r.status, cancelledBy: r.cancelledBy,
+    tableIds: r.tableIds.slice(), overbooked: r.overbooked, name: r.name, phone: r.phone, allergies: r.allergies, notes: r.notes })
+  // the booking's notes with the caller's added, as "existing · asked", once (StarChat's apply at 9c02e69d7); a late
+  // arrival's note first
+  const joinNotes = (existing, asked) => {
+    if (!asked) return existing || null
+    if (!existing) return asked
+    return existing.split(' · ').includes(asked) ? existing : `${existing} · ${asked}`
+  }
+  const applied = (route, booking, request) => json(route, 200, {
+    booking: Object.assign(wire(booking), opts.writeWarnings ? { warnings: opts.writeWarnings.map(code => ({ code })) } : {}), request: wire(request) })
+  function applyRequest (route, row, body) {
+    if (row.status !== 'requested') return diag(route, 404, 'not_found')
+    if (body.expectedVersion !== row.version) {
+      return json(route, 409, { diagnostics: [{ path: '/expectedVersion', code: 'stale', detail: 'server English' }], currentVersion: row.version })
+    }
+    if (!row.about) return diag(route, 409, 'not_linked')
+    const c = row.change || {}
+    if (!c.kind) return diag(route, 409, 'no_change')
+    const booking = state.rows.find(o => o.id === row.about)
+    if (!booking) return diag(route, 404, 'not_found')
+    if (body.bookingVersion !== booking.version) {
+      return json(route, 409, { diagnostics: [{ path: '/bookingVersion', code: 'stale', detail: 'server English' }], currentVersion: booking.version })
+    }
+    if (booking.status !== 'confirmed') return diag(route, 409, 'booking_not_confirmed')
+    if (opts.applyRefusal && !(opts.applyRefusal.code === 'full' && body.overbook)) {
+      return json(route, 409, { diagnostics: [{ path: opts.applyRefusal.path || '/id', code: opts.applyRefusal.code, detail: 'server English' }] })
+    }
+    row.before = snapshot(booking)
+    if (c.kind === 'cancellation') {
+      booking.status = 'cancelled'; booking.cancelledBy = 'staff'
+    } else {
+      if (c.kind === 'move') {
+        booking.date = body.date || c.date || booking.date
+        booking.time = body.time || c.time || booking.time
+        booking.covers = body.covers || c.covers || booking.covers
+        if (body.zone || c.zone) booking.zone = body.zone || c.zone
+        if (body.overbook) { booking.overbooked = true; booking.tableIds = [] }
+      }
+      // every kind but a cancellation: the asked details, staff's override first; notes added, an override replacing
+      DETAIL_KEYS.forEach(k => {
+        if (k in body) booking[k] = String(body[k] || '').trim() || null
+        else if (k === 'notes') booking.notes = joinNotes(booking.notes, c.notes)
+        else if (c[k]) booking[k] = c[k]
+      })
+      if (c.kind === 'late_arrival') booking.notes = joinNotes(`Arriva alle ${body.eta || c.eta}`, booking.notes)
+    }
+    booking.version++
+    row.status = 'handled'
+    row.version++
+    return applied(route, booking, row)
+  }
+  function unapplyRequest (route, row, body) {
+    const booking = row.about ? state.rows.find(o => o.id === row.about) : null
+    if (row.status !== 'handled' || !row.before || !booking) return diag(route, 409, 'not_applied')
+    if (body.requestVersion !== row.version) {
+      return json(route, 409, { diagnostics: [{ path: '/requestVersion', code: 'stale', detail: 'server English' }], currentVersion: row.version })
+    }
+    if (body.bookingVersion !== booking.version) {
+      return json(route, 409, { diagnostics: [{ path: '/bookingVersion', code: 'stale', detail: 'server English' }], currentVersion: booking.version })
+    }
+    // `opts.unapplyRefusal: code`: superseded, or the booking write's full / table_taken, which `overbook` lifts by
+    // putting the booking back with no table (StarChat 9c02e69d7)
+    const refusal = opts.unapplyRefusal
+    const lifted = body.overbook && (refusal === 'full' || refusal === 'table_taken')
+    if (refusal && !lifted) return json(route, 409, { diagnostics: [{ path: '/id', code: refusal, detail: 'server English' }] })
+    Object.assign(booking, row.before)
+    if (lifted) { booking.tableIds = []; booking.overbooked = true }
+    delete row.before
+    booking.version++
+    row.status = 'requested'
+    row.version++
+    return applied(route, booking, row)
+  }
+
   await page.route('**/apidomain/restaurant/**', route => {
     const request = route.request()
     const url = new URL(request.url())
@@ -367,6 +443,12 @@ async function mockRestaurant (page, opts = {}) {
     if (one) {
       const row = state.rows.find(r => r.id === one[1])
       if (!row) return diag(route, 404, 'not_found')
+      const action0 = one[2] || ''
+      // POST .../reservations/{requestId}/apply (StarChat 2d055d7e6) and its reverse .../unapply (9c02e69d7): the
+      // request applied to its booking by its kind and closed, or the booking put back and the request reopened, each
+      // in one transaction; a refusal changes neither row. `opts.applyRefusal: {code, path}` answers one.
+      if (method === 'POST' && action0 === '/apply') return applyRequest(route, row, body)
+      if (method === 'POST' && action0 === '/unapply') return unapplyRequest(route, row, body)
       const version = body && body.expectedVersion !== undefined ? body.expectedVersion : Number(url.searchParams.get('expectedVersion'))
       if (version !== row.version) return diag(route, 409, 'stale', { currentVersion: row.version })
       const action = one[2] || ''
@@ -374,42 +456,6 @@ async function mockRestaurant (page, opts = {}) {
       // a request already handled or a row already cancelled is answered as it is, nothing written, no new version.
       if (method === 'DELETE' && row.status === 'held') return diag(route, 404, 'not_found')
       if (method === 'DELETE' && (row.status === 'handled' || row.status === 'cancelled')) return json(route, 200, wire(row))
-      // POST .../reservations/{requestId}/apply (StarChat 2d055d7e6): the request applied to its booking by its kind and
-      // closed, in one transaction; a refusal changes neither row. `opts.applyRefusal: {code, path}` answers one.
-      if (action === '/apply') {
-        const booking = row.about ? state.rows.find(o => o.id === row.about) : null
-        if (!booking) return diag(route, 409, 'not_linked')
-        if (body.bookingVersion !== booking.version) {
-          return json(route, 409, { diagnostics: [{ path: '/bookingVersion', code: 'stale', detail: 'server English' }], currentVersion: booking.version })
-        }
-        if (booking.status !== 'confirmed') return diag(route, 409, 'booking_not_confirmed')
-        if (opts.applyRefusal && !(opts.applyRefusal.code === 'full' && body.overbook)) {
-          return json(route, 409, { diagnostics: [{ path: opts.applyRefusal.path || '/id', code: opts.applyRefusal.code, detail: 'server English' }] })
-        }
-        const c = row.change || {}
-        if (!c.kind) return diag(route, 409, 'no_change')
-        if (c.kind === 'cancellation') { booking.status = 'cancelled'; booking.cancelledBy = 'staff' }
-        if (c.kind === 'move' && body.overbook) { booking.overbooked = true; booking.tableIds = [] }
-        if (c.kind === 'move') {
-          booking.date = body.date || c.date || booking.date
-          booking.time = body.time || c.time || booking.time
-          booking.covers = body.covers || c.covers || booking.covers
-          if (body.zone || c.zone) booking.zone = body.zone || c.zone
-        }
-        if (c.kind === 'late_arrival') {
-          const eta = body.eta || c.eta
-          booking.notes = [`Arriva alle ${eta}`, booking.notes].filter(Boolean).join(' · ')
-        }
-        ;['name', 'phone', 'allergies', 'notes'].forEach(k => {
-          if (k in body) booking[k] = String(body[k] || '').trim() || null
-          else if (c.kind === 'details' && c[k]) booking[k] = c[k]
-        })
-        booking.version++
-        row.status = 'handled'
-        row.version++
-        return json(route, 200, { booking: Object.assign(wire(booking), opts.writeWarnings ? { warnings: opts.writeWarnings.map(code => ({ code })) } : {}),
-          request: wire(row) })
-      }
       if (action === '/reinstate') {
         if (!reinstatable(row)) return diag(route, 409, 'not_reversible', { reason: row.status === 'cancelled' ? 'cancelled_by_caller' : 'not_cancelled_or_no_show' })
         const conflicts = state.rows.filter(o => o.id !== row.id && o.date === row.date && takes(o) && o.tableIds.some(t => row.tableIds.includes(t)) &&

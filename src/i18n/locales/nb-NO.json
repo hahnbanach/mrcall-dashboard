@@ -1243,7 +1243,10 @@
         "staleBooking": "Bestillingen forespørselen gjelder er endret i mellomtiden: begge er lest på nytt, prøv en gang til.",
         "not_linked": "Forespørselen gjelder ingen bestilling: godta eller lukk den.",
         "no_change": "Forespørselen inneholder ingen endring: endre bestillingen selv, og lukk så forespørselen.",
-        "booking_not_confirmed": "Bestillingen forespørselen gjelder er ikke lenger bekreftet: lukk forespørselen."
+        "booking_not_confirmed": "Bestillingen forespørselen gjelder er ikke lenger bekreftet: lukk forespørselen.",
+        "staleRequest": "Forespørselen er endret i mellomtiden: den er lest på nytt, prøv en gang til.",
+        "not_applied": "Det kan ikke lenger angres: endringen er allerede angret, eller forespørselen er ikke lenger den som gjorde den.",
+        "superseded": "Det kan ikke angres: gjesten har siden bedt om en annen endring av bestillingen. Se den nye forespørselen."
       },
       "strip": {
         "label": "Ledighet de kommende dagene",
@@ -1820,7 +1823,8 @@
           "details": "opplysninger",
           "cancellation": "avbestilling"
         },
-        "filedAt": "ønsket {when}"
+        "filedAt": "ønsket {when}",
+        "restoreAnyway": "Gjenopprett likevel"
       },
       "acceptFields": {
         "title": "Godta {name}",

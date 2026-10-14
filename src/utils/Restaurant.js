@@ -371,6 +371,18 @@ export default {
             Object.assign({ expectedVersion, bookingVersion }, overrides || {}), { headers: headers(user) }));
     },
 
+    /**
+     * The reverse of `applyRequest` (StarChat 9c02e69d7): the booking put back as it was before the apply (its day, time,
+     * covers, zone, tables and guest's fields) or reinstated on its tables, and the request open again, in one
+     * transaction, at the versions the apply answered. `overbook` puts it back with no table when its tables are taken.
+     * Answers `{booking, request}`; a refusal changes neither row: `stale` at /requestVersion or /bookingVersion,
+     * `not_applied`, `superseded` (a newer request about the booking is open), or `full` / `table_taken`.
+     */
+    unapplyRequest: function(user, businessId, requestId, requestVersion, bookingVersion, overbook) {
+        return call(() => axios.post(base(businessId) + "/reservations/" + encodeURIComponent(requestId) + "/unapply",
+            Object.assign({ requestVersion, bookingVersion }, overbook ? { overbook: true } : {}), { headers: headers(user) }));
+    },
+
     noShow: function(user, businessId, id, expectedVersion) {
         return call(() => axios.post(base(businessId) + "/reservations/" + encodeURIComponent(id) +
             "/no-show?expectedVersion=" + encodeURIComponent(expectedVersion), {}, { headers: headers(user) }));

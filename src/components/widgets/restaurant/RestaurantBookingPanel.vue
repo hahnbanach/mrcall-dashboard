@@ -32,6 +32,9 @@
         <button class="btn ghost small close-request" :disabled="busy" @click="$emit('close-request', changeRequest)">{{ $t("components.restaurant.change.close") }}</button>
       </div>
     </div>
+    <div v-if="message && !editing" class="callout red panel-refusal" role="alert">{{ message.text }}
+      <button v-if="message.retry" class="btn danger small restore-anyway" :disabled="busy" @click="message.retry()">{{ message.retryLabel }}</button>
+    </div>
     <RestaurantDetailsEditor v-if="editing" :key="change ? 'change' : 'edit'" :booking="booking" :field-rules="fieldRules" :change="change"
                              :busy="busy" :message="message" @save="e => $emit('save-details', e)" @cancel="$emit('cancel-edit')" />
     <dl class="kv">

@@ -1246,7 +1246,10 @@
         "staleBooking": "La prenotazione di questa richiesta è cambiata nel frattempo: sono state rilette entrambe, riprova.",
         "not_linked": "Questa richiesta non riguarda nessuna prenotazione: accettala o chiudila.",
         "no_change": "Questa richiesta non registra nessuna modifica da fare: cambia tu la prenotazione, poi chiudi la richiesta.",
-        "booking_not_confirmed": "La prenotazione di questa richiesta non è più confermata: chiudi la richiesta."
+        "booking_not_confirmed": "La prenotazione di questa richiesta non è più confermata: chiudi la richiesta.",
+        "staleRequest": "La richiesta è cambiata nel frattempo: è stata riletta, riprova.",
+        "not_applied": "Non si può più annullare: la modifica è già stata annullata, o la richiesta non è più quella che l'ha fatta.",
+        "superseded": "Non si può annullare: l'ospite ha chiesto nel frattempo un'altra modifica di questa prenotazione. Guarda la nuova richiesta."
       },
       "strip": {
         "label": "Disponibilità dei prossimi giorni",
@@ -1826,7 +1829,8 @@
           "details": "dati",
           "cancellation": "cancellazione"
         },
-        "filedAt": "chiesto il {when}"
+        "filedAt": "chiesto il {when}",
+        "restoreAnyway": "Ripristina comunque"
       },
       "acceptFields": {
         "title": "Accetta {name}",

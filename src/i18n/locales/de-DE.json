@@ -1245,7 +1245,10 @@
         "staleBooking": "Die Reservierung dieser Anfrage hat sich inzwischen geändert: beide wurden neu gelesen, versuchen Sie es noch einmal.",
         "not_linked": "Diese Anfrage betrifft keine Reservierung: nehmen Sie sie an oder schließen Sie sie.",
         "no_change": "Diese Anfrage enthält keine Änderung: ändern Sie die Reservierung selbst und schließen Sie dann die Anfrage.",
-        "booking_not_confirmed": "Die Reservierung dieser Anfrage ist nicht mehr bestätigt: schließen Sie die Anfrage."
+        "booking_not_confirmed": "Die Reservierung dieser Anfrage ist nicht mehr bestätigt: schließen Sie die Anfrage.",
+        "staleRequest": "Die Anfrage hat sich inzwischen geändert: sie wurde neu gelesen, versuchen Sie es noch einmal.",
+        "not_applied": "Das lässt sich nicht mehr rückgängig machen: die Änderung wurde schon zurückgenommen, oder die Anfrage ist nicht mehr die, die sie gemacht hat.",
+        "superseded": "Das lässt sich nicht rückgängig machen: der Gast hat inzwischen eine andere Änderung dieser Reservierung gewünscht. Sehen Sie sich die neue Anfrage an."
       },
       "strip": {
         "label": "Verfügbarkeit der kommenden Tage",
@@ -1822,7 +1825,8 @@
           "details": "Angaben",
           "cancellation": "Stornierung"
         },
-        "filedAt": "gewünscht am {when}"
+        "filedAt": "gewünscht am {when}",
+        "restoreAnyway": "Trotzdem wiederherstellen"
       },
       "acceptFields": {
         "title": "{name} annehmen",

@@ -1243,7 +1243,10 @@
         "staleBooking": "Pyynnön varaus muuttui sillä välin: molemmat luettiin uudelleen, yritä vielä kerran.",
         "not_linked": "Tämä pyyntö ei koske mitään varausta: hyväksy tai sulje se.",
         "no_change": "Tässä pyynnössä ei ole muutosta: muuta varausta itse ja sulje sitten pyyntö.",
-        "booking_not_confirmed": "Pyynnön varaus ei ole enää vahvistettu: sulje pyyntö."
+        "booking_not_confirmed": "Pyynnön varaus ei ole enää vahvistettu: sulje pyyntö.",
+        "staleRequest": "Pyyntö muuttui sillä välin: se luettiin uudelleen, yritä vielä kerran.",
+        "not_applied": "Sitä ei voi enää perua: muutos on jo peruttu, tai pyyntö ei ole enää se, joka sen teki.",
+        "superseded": "Sitä ei voi perua: vieras on sittemmin pyytänyt varaukseen toista muutosta. Katso uusi pyyntö."
       },
       "strip": {
         "label": "Tulevien päivien saatavuus",
@@ -1820,7 +1823,8 @@
           "details": "tiedot",
           "cancellation": "peruutus"
         },
-        "filedAt": "pyydetty {when}"
+        "filedAt": "pyydetty {when}",
+        "restoreAnyway": "Palauta silti"
       },
       "acceptFields": {
         "title": "Hyväksy {name}",

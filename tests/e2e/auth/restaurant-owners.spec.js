@@ -20,7 +20,8 @@ const { mockRestaurant, openRestaurant, tomorrowDinner, TODAY, TOMORROW } = requ
  * warnings not drawn (the warnings test); the missing-fields refusal said without its fields (the refusal test); a
  * request accepted without asking its missing field (the accept test); "make the change" without the closing
  * DELETE (the call-back test, before the apply route); the two-call path back in place of POST .../apply (every
- * call-back test asserting one apply call); the request's details not pre-filled (the call-back test); a late arrival treated as
+ * call-back test asserting one apply call); Undo of an apply reinstating or rewriting the booking instead of the
+ * book's reverse (the cancellation and Undo tests); the request's details not pre-filled (the call-back test); a late arrival treated as
  * a move (the late-arrival test); the kind not read (the late-arrival test: no "will arrive late"); the page not going
  * to the day the request names (the other-day test); a cancellation pre-filling the editor (the
  * cancellation test); `recognised` not read (the recognised test); `openRequest` not read, or acted on without
@@ -446,8 +447,14 @@ test.describe('the restaurant page, one owner per setting', () => {
     await expect(page.locator('.toast')).toContainText('Cancelled as asked: Bianchi')
     expect(calls.filter(applies).map(c => [c.path, c.body])).toEqual([['/reservations/b-cancel-req/apply', { expectedVersion: 1, bookingVersion: 1 }]])
     expect(calls.filter(twoCalls)).toHaveLength(0)
+    await expect(page.locator('.req[data-request="b-cancel-req"]')).toHaveCount(0)
+    // Undo is the book's reverse: the booking reinstated and the guest's request back in the inbox, in one call
     await page.locator('.toast').getByRole('button', { name: 'Undo' }).click()
-    await expect.poll(() => calls.filter(c => c.path.endsWith('/reinstate')).map(c => c.path + c.search)).toEqual(['/reservations/b-bianchi/reinstate?expectedVersion=2'])
+    await expect(page.locator('.toast')).toContainText('action undone')
+    expect(calls.filter(c => c.path.endsWith('/unapply')).map(c => [c.path, c.body])).toEqual([['/reservations/b-cancel-req/unapply', { requestVersion: 2, bookingVersion: 2 }]])
+    expect(calls.filter(c => c.path.endsWith('/reinstate'))).toHaveLength(0)
+    await expect(page.locator('.req[data-request="b-cancel-req"]')).toHaveCount(1)
+    await expect(page.locator('.brow', { hasText: 'Bianchi' })).toBeVisible()
   })
 
   test('a booking whose number did not place it is marked as reached by a recognised number', async ({ authenticatedPage: page }) => {
@@ -502,6 +509,95 @@ test.describe('the restaurant page, one owner per setting', () => {
     await page.waitForRequest(r => r.method() === 'DELETE', { timeout: 15000 })
     await expect.poll(() => calls.filter(c => c.method === 'DELETE').map(c => c.path + c.search)).toEqual(['/reservations/b-far-day?expectedVersion=3'])
     expect(calls.filter(c => c.path === '/search' || c.method === 'PATCH')).toHaveLength(0)
+  })
+
+  // Notes asked by phone are added to the booking's ("existing · asked") by the book; the editor shows that, sends no
+  // notes when they are left so, and the whole edited text when staff edit them (an override replaces). The three
+  // unedited cases were seen failing on 2026-10-14 against 2cd167a's mock, which replaced the booking's notes and
+  // applied the asked details for `details` only; the edited ones guard the override.
+  for (const kind of ['details', 'move', 'late_arrival']) {
+    for (const edit of [false, true]) {
+      test(`a ${kind} request with notes on a booking with notes, ${edit ? 'edited: the whole text replaces' : 'unedited: kept and added, no notes sent'}`, async ({ authenticatedPage: page }) => {
+        const change = { kind, date: TOMORROW, time: kind === 'move' ? '21:30' : '19:30', covers: 6, zone: 'sala', notes: 'Window' }
+        if (kind === 'late_arrival') change.eta = '20:00'
+        const { calls, state } = await mockRestaurant(page, { extraRows: [{ id: 'b-n', time: '19:30', covers: 6, name: 'Bianchi', status: 'requested',
+          requestReason: 'callback', about: 'b-bianchi', notes: 'Window', change }] })
+        await openRestaurant(page)
+        await ready(page)
+        await tomorrowDinner(page)
+        await tap(page.locator('.req[data-request="b-n"] .make-change'))
+        const notes = page.locator('.panel .details-editor').getByLabel('Notes')
+        await expect(notes).toHaveValue('Birthday cake at 22:00 · Window')
+        if (edit) await notes.fill('Birthday cake at 22:00 · Window seat, please')
+        await page.locator('.panel .details-editor .save-details').click()
+        await expect(page.locator('.toast')).toContainText('the request is closed')
+        const body = calls.find(applies).body
+        const bianchi = state.rows.find(r => r.id === 'b-bianchi')
+        if (edit) {
+          expect(body.notes).toBe('Birthday cake at 22:00 · Window seat, please')
+          expect(bianchi.notes).toContain('Birthday cake at 22:00 · Window seat, please')
+        } else {
+          expect('notes' in body).toBe(false)
+          expect(bianchi.notes).toContain('Birthday cake at 22:00 · Window')
+        }
+      })
+    }
+  }
+
+  test('Undo of an applied move puts the booking back and the request in the inbox, in one call', async ({ authenticatedPage: page }) => {
+    const { calls, state } = await mockRestaurant(page, { extraRows: [{ id: 'b-chg', time: '22:30', covers: 3, name: 'Verdi', status: 'requested',
+      requestReason: 'callback', about: 'b-verdi', change: { kind: 'move', date: TOMORROW, time: '22:30', covers: 3, zone: 'sala' } }] })
+    await openRestaurant(page)
+    await ready(page)
+    await tomorrowDinner(page)
+    await tap(page.locator('.req[data-request="b-chg"] .make-change'))
+    await page.locator('.panel .details-editor .save-details').click()
+    await expect(page.locator('.toast')).toContainText('the request is closed')
+    expect(state.rows.find(r => r.id === 'b-verdi').time).toBe('22:30')
+    await page.locator('.toast').getByRole('button', { name: 'Undo' }).click()
+    await expect(page.locator('.toast')).toContainText('action undone')
+    expect(calls.filter(c => c.path.endsWith('/unapply')).map(c => c.body)).toEqual([{ requestVersion: 2, bookingVersion: 2 }])
+    expect(calls.filter(twoCalls)).toHaveLength(0)
+    expect(state.rows.find(r => r.id === 'b-verdi').time).toBe('20:30')
+    await expect(page.locator('.req[data-request="b-chg"]')).toHaveCount(1)
+  })
+
+  test('a refused Undo of an applied request is said in the open panel', async ({ authenticatedPage: page }) => {
+    await mockRestaurant(page, { unapplyRefusal: 'superseded', extraRows: [{ id: 'b-chg', time: '22:30', covers: 3, name: 'Verdi', status: 'requested',
+      requestReason: 'callback', about: 'b-verdi', change: { kind: 'move', date: TOMORROW, time: '22:30', covers: 3, zone: 'sala' } }] })
+    await openRestaurant(page)
+    await ready(page)
+    await tomorrowDinner(page)
+    await tap(page.locator('.req[data-request="b-chg"] .make-change'))
+    await page.locator('.panel .details-editor .save-details').click()
+    await expect(page.locator('.toast')).toContainText('the request is closed')
+    await page.locator('.toast').getByRole('button', { name: 'Undo' }).click()
+    await expect(page.locator('.panel .panel-refusal')).toContainText('the guest has asked for another change of this booking since')
+    await expect(page.locator('.panel .restore-anyway')).toHaveCount(0)
+    await expect(page.getByText(/server English/)).toHaveCount(0)
+  })
+
+  // Undo of an apply whose tables were taken since: said on the booking, with "restore anyway", which puts it back with
+  // no table (overbook), as "book anyway" books one. Seen failing on 2026-10-14 without the retry, and with the retry
+  // sent without overbook; the superseded test failed with the retry offered for superseded too.
+  test('an Undo refused because the tables are taken offers "restore anyway", which puts the booking back with no table', async ({ authenticatedPage: page }) => {
+    const { calls, state } = await mockRestaurant(page, { unapplyRefusal: 'table_taken', extraRows: [{ id: 'b-cancel-req', time: '19:30', covers: 6, name: 'Bianchi',
+      status: 'requested', requestReason: 'callback', about: 'b-bianchi', change: { kind: 'cancellation', date: TOMORROW, time: '19:30', covers: 6, zone: 'sala' } }] })
+    await openRestaurant(page)
+    await ready(page)
+    await tomorrowDinner(page)
+    await tap(page.locator('.req[data-request="b-cancel-req"]').getByRole('button', { name: 'Cancel the booking' }))
+    await expect(page.locator('.toast')).toContainText('Cancelled as asked: Bianchi')
+    await page.locator('.toast').getByRole('button', { name: 'Undo' }).click()
+    const refusal = page.locator('.panel .panel-refusal')
+    await expect(refusal).toContainText('Its tables are taken.')
+    await refusal.getByRole('button', { name: 'Restore anyway' }).click()
+    await expect(page.locator('.toast')).toContainText('action undone')
+    expect(calls.filter(c => c.path.endsWith('/unapply')).map(c => c.body)).toEqual([
+      { requestVersion: 2, bookingVersion: 2 }, { requestVersion: 2, bookingVersion: 2, overbook: true }])
+    const bianchi = state.rows.find(r => r.id === 'b-bianchi')
+    expect([bianchi.status, bianchi.tableIds, bianchi.overbooked]).toEqual(['confirmed', [], true])
+    await expect(page.locator('.req[data-request="b-cancel-req"]')).toHaveCount(1)
   })
 
   // The apply body's optional fields are staff's overrides and win over the asked values: a date or a time sent for a

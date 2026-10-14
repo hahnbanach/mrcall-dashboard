@@ -1248,7 +1248,10 @@
         "staleBooking": "The booking this request is about changed in the meantime: both have been read again, try once more.",
         "not_linked": "This request is about no booking: accept it, or close it.",
         "no_change": "This request records no change to make: change the booking yourself, then close the request.",
-        "booking_not_confirmed": "The booking this request is about is no longer confirmed: close the request."
+        "booking_not_confirmed": "The booking this request is about is no longer confirmed: close the request.",
+        "staleRequest": "The request changed in the meantime: it has been read again, try once more.",
+        "not_applied": "It can no longer be undone: the change was already reversed, or the request is no longer the one that made it.",
+        "superseded": "It cannot be undone: the guest has asked for another change of this booking since. Look at the new request."
       },
       "strip": {
         "label": "Availability of the coming days",
@@ -1825,7 +1828,8 @@
           "details": "details",
           "cancellation": "cancellation"
         },
-        "filedAt": "asked on {when}"
+        "filedAt": "asked on {when}",
+        "restoreAnyway": "Restore anyway"
       },
       "acceptFields": {
         "title": "Accept {name}",

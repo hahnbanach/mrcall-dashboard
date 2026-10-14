@@ -1243,7 +1243,10 @@
         "staleBooking": "Bookingen, som anmodningen gælder, er ændret i mellemtiden: begge er læst igen, prøv en gang til.",
         "not_linked": "Anmodningen gælder ingen booking: godkend eller luk den.",
         "no_change": "Anmodningen indeholder ingen ændring: ændr selv bookingen, og luk så anmodningen.",
-        "booking_not_confirmed": "Bookingen, som anmodningen gælder, er ikke længere bekræftet: luk anmodningen."
+        "booking_not_confirmed": "Bookingen, som anmodningen gælder, er ikke længere bekræftet: luk anmodningen.",
+        "staleRequest": "Anmodningen er ændret i mellemtiden: den er læst igen, prøv en gang til.",
+        "not_applied": "Det kan ikke længere fortrydes: ændringen er allerede fortrudt, eller anmodningen er ikke længere den, der lavede den.",
+        "superseded": "Det kan ikke fortrydes: gæsten har siden bedt om en anden ændring af bookingen. Se den nye anmodning."
       },
       "strip": {
         "label": "Ledighed de kommende dage",
@@ -1820,7 +1823,8 @@
           "details": "oplysninger",
           "cancellation": "aflysning"
         },
-        "filedAt": "ønsket {when}"
+        "filedAt": "ønsket {when}",
+        "restoreAnyway": "Gendan alligevel"
       },
       "acceptFields": {
         "title": "Godkend {name}",

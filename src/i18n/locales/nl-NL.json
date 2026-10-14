@@ -1243,7 +1243,10 @@
         "staleBooking": "De reservering van dit verzoek is intussen gewijzigd: beide zijn opnieuw gelezen, probeer het nog eens.",
         "not_linked": "Dit verzoek gaat over geen enkele reservering: accepteer of sluit het.",
         "no_change": "Dit verzoek bevat geen wijziging: wijzig de reservering zelf en sluit dan het verzoek.",
-        "booking_not_confirmed": "De reservering van dit verzoek is niet meer bevestigd: sluit het verzoek."
+        "booking_not_confirmed": "De reservering van dit verzoek is niet meer bevestigd: sluit het verzoek.",
+        "staleRequest": "Het verzoek is intussen gewijzigd: het is opnieuw gelezen, probeer het nog eens.",
+        "not_applied": "Dit kan niet meer ongedaan worden: de wijziging is al teruggedraaid, of het verzoek is niet meer het verzoek dat haar deed.",
+        "superseded": "Dit kan niet ongedaan worden: de gast heeft intussen een andere wijziging van deze reservering gevraagd. Bekijk het nieuwe verzoek."
       },
       "strip": {
         "label": "Beschikbaarheid van de komende dagen",
@@ -1820,7 +1823,8 @@
           "details": "gegevens",
           "cancellation": "annulering"
         },
-        "filedAt": "gevraagd op {when}"
+        "filedAt": "gevraagd op {when}",
+        "restoreAnyway": "Toch herstellen"
       },
       "acceptFields": {
         "title": "{name} accepteren",

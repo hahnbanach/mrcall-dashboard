@@ -1243,7 +1243,10 @@
         "staleBooking": "Selle taotluse broneering muutus vahepeal: mõlemad loeti uuesti, proovi veel kord.",
         "not_linked": "See taotlus ei puuduta ühtki broneeringut: kinnita või sulge see.",
         "no_change": "Selles taotluses pole muudatust: muuda broneeringut ise ja sulge siis taotlus.",
-        "booking_not_confirmed": "Selle taotluse broneering pole enam kinnitatud: sulge taotlus."
+        "booking_not_confirmed": "Selle taotluse broneering pole enam kinnitatud: sulge taotlus.",
+        "staleRequest": "Taotlus muutus vahepeal: see loeti uuesti, proovi veel kord.",
+        "not_applied": "Seda ei saa enam tagasi võtta: muudatus on juba tagasi võetud või taotlus pole enam see, mis selle tegi.",
+        "superseded": "Seda ei saa tagasi võtta: külaline on vahepeal palunud selle broneeringu teist muudatust. Vaata uut taotlust."
       },
       "strip": {
         "label": "Eelseisvate päevade vabad kohad",
@@ -1820,7 +1823,8 @@
           "details": "andmed",
           "cancellation": "tühistamine"
         },
-        "filedAt": "küsitud {when}"
+        "filedAt": "küsitud {when}",
+        "restoreAnyway": "Taasta siiski"
       },
       "acceptFields": {
         "title": "Kinnita {name}",

@@ -1243,7 +1243,10 @@
         "staleBooking": "Bokningen som förfrågan gäller har ändrats under tiden: båda har lästs igen, försök en gång till.",
         "not_linked": "Förfrågan gäller ingen bokning: godta eller stäng den.",
         "no_change": "Förfrågan innehåller ingen ändring: ändra bokningen själv och stäng sedan förfrågan.",
-        "booking_not_confirmed": "Bokningen som förfrågan gäller är inte längre bekräftad: stäng förfrågan."
+        "booking_not_confirmed": "Bokningen som förfrågan gäller är inte längre bekräftad: stäng förfrågan.",
+        "staleRequest": "Förfrågan har ändrats under tiden: den har lästs igen, försök en gång till.",
+        "not_applied": "Det går inte längre att ångra: ändringen är redan återställd, eller förfrågan är inte längre den som gjorde den.",
+        "superseded": "Det går inte att ångra: gästen har sedan dess bett om en annan ändring av bokningen. Se den nya förfrågan."
       },
       "strip": {
         "label": "Tillgänglighet kommande dagar",
@@ -1820,7 +1823,8 @@
           "details": "uppgifter",
           "cancellation": "avbokning"
         },
-        "filedAt": "begärd {when}"
+        "filedAt": "begärd {when}",
+        "restoreAnyway": "Återställ ändå"
       },
       "acceptFields": {
         "title": "Godta {name}",

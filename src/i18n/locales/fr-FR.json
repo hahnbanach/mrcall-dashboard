@@ -1245,7 +1245,10 @@
         "staleBooking": "La réservation de cette demande a changé entre-temps : les deux ont été relues, réessayez.",
         "not_linked": "Cette demande ne concerne aucune réservation : acceptez-la ou fermez-la.",
         "no_change": "Cette demande ne contient aucune modification : modifiez la réservation vous-même, puis fermez la demande.",
-        "booking_not_confirmed": "La réservation de cette demande n'est plus confirmée : fermez la demande."
+        "booking_not_confirmed": "La réservation de cette demande n'est plus confirmée : fermez la demande.",
+        "staleRequest": "La demande a changé entre-temps : elle a été relue, réessayez.",
+        "not_applied": "Ce n'est plus annulable : la modification a déjà été annulée, ou la demande n'est plus celle qui l'a faite.",
+        "superseded": "Ce n'est pas annulable : le client a demandé entre-temps une autre modification de cette réservation. Voyez la nouvelle demande."
       },
       "strip": {
         "label": "Disponibilité des prochains jours",
@@ -1822,7 +1825,8 @@
           "details": "coordonnées",
           "cancellation": "annulation"
         },
-        "filedAt": "demandé le {when}"
+        "filedAt": "demandé le {when}",
+        "restoreAnyway": "Rétablir quand même"
       },
       "acceptFields": {
         "title": "Accepter {name}",

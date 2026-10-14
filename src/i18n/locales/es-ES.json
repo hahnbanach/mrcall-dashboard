@@ -1257,7 +1257,10 @@
         "staleBooking": "La reserva de esta solicitud cambió mientras tanto: se han vuelto a leer ambas, inténtalo otra vez.",
         "not_linked": "Esta solicitud no se refiere a ninguna reserva: acéptala o ciérrala.",
         "no_change": "Esta solicitud no registra ningún cambio: cambia tú la reserva y luego cierra la solicitud.",
-        "booking_not_confirmed": "La reserva de esta solicitud ya no está confirmada: cierra la solicitud."
+        "booking_not_confirmed": "La reserva de esta solicitud ya no está confirmada: cierra la solicitud.",
+        "staleRequest": "La solicitud cambió mientras tanto: se ha vuelto a leer, inténtalo otra vez.",
+        "not_applied": "Ya no se puede deshacer: el cambio ya se deshizo, o la solicitud ya no es la que lo hizo.",
+        "superseded": "No se puede deshacer: el cliente ha pedido mientras tanto otro cambio de esta reserva. Mira la nueva solicitud."
       },
       "strip": {
         "label": "Disponibilidad de los próximos días",
@@ -1834,7 +1837,8 @@
           "details": "datos",
           "cancellation": "cancelación"
         },
-        "filedAt": "pedido el {when}"
+        "filedAt": "pedido el {when}",
+        "restoreAnyway": "Restaurar de todos modos"
       },
       "acceptFields": {
         "title": "Aceptar {name}",

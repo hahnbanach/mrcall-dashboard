@@ -512,6 +512,10 @@ export default {
         const code = e.restaurant ? e.restaurant.code : null;
         this.lastRefusal = this.refusalOf(e);
         if (code === "stale") await this.reload();
+        if (e.restoringAnyway) {
+          this.askRestoreAnyway(e.restoringAnyway, e);
+          return null;
+        }
         if (code === "table_taken" && e.reinstating) {
           this.askReinstateWithoutTable(e.reinstating, e.restaurant.body || {});
           return null;
@@ -561,7 +565,8 @@ export default {
       if (!toast || !toast.undo) return;
       this.toast = null;
       if (!toast.server) return toast.undo();
-      await this.act(toast.undo, { done: () => this.$t("components.restaurant.undone") });
+      // a refused Undo is said where the person is: in the open panel, or in a toast
+      await this.act(toast.undo, { done: () => this.$t("components.restaurant.undone"), inPanel: !!this.panel });
     },
     stateWord(st) {
       return this.$t(`components.restaurant.stateDone.${st}`);
@@ -671,8 +676,28 @@ export default {
     cancelAsked(original, request) {
       return this.act(() => RestaurantApi.applyRequest(this.user, this.businessId, request.id, request.version, original.version, {}), {
         done: () => this.$t("components.restaurant.change.cancelled", { name: original.name || this.$t("components.restaurant.walkInName") }),
-        undo: answer => this.reinstateRun(original, answer.booking.version, false, "cancelled"),
+        undo: answer => this.unapply(answer),
       });
+    },
+    /** Undo of an applied request: the book puts the booking back (or reinstates it) and reopens the request, in one
+     *  transaction, so the caller's request is back in the inbox for staff to act on. */
+    async unapply(answer, overbook = false) {
+      try {
+        return await RestaurantApi.unapplyRequest(this.user, this.businessId, answer.request.id, answer.request.version,
+          answer.booking.version, overbook);
+      } catch (e) {
+        // its tables taken, or no room: "restore anyway" puts it back with no table, as "book anyway" books one
+        if (!overbook && e.restaurant && ["full", "table_taken"].includes(e.restaurant.code)) e.restoringAnyway = answer;
+        throw e;
+      }
+    },
+    /** A refused Undo of an apply that may be put back with no table: said on the booking's card, with "restore anyway". */
+    askRestoreAnyway(answer, e) {
+      const refusal = this.refusalOf(e);
+      this.panel = { type: "booking", id: answer.booking.id, message: Object.assign(refusal, {
+        retryLabel: this.$t("components.restaurant.change.restoreAnyway"),
+        retry: () => this.act(() => this.unapply(answer, true), { done: () => this.$t("components.restaurant.undone"), inPanel: true }),
+      }) };
     },
     /**
      * Saves the details editor. Staff's own edit is one change of the booking at the version read (the details that
@@ -684,33 +709,26 @@ export default {
       const b = this.panelBooking;
       if (!b) return;
       const request = this.panel.change;
-      const c = request ? this.panelChange : null;
-      // What Undo writes back: a field's previous value; a field that was empty goes back to empty (sent as "", which the
-      // book reads as cleared) unless the restaurant now requires it, which the book would refuse to clear: then it is
-      // left as the edit set it, the one state the book accepts.
+      // Undo of staff's own edit writes back the previous values: a field that was empty goes back to empty (sent as "",
+      // which the book reads as cleared) unless the restaurant now requires it, which the book would refuse to clear.
+      // Undo of an applied request is the book's own reverse (`unapply`).
       const back = {};
-      const restore = k => {
+      Object.keys(guest).forEach(k => {
         if (String(b[k] || "").trim()) back[k] = b[k];
         else if (this.rules.requiredFields[k] !== "required") back[k] = "";
-      };
-      Object.keys(guest).forEach(restore);
-      // what the book applies of the request itself: the asked details, put back by Undo as they were
-      if (c) ["name", "allergies", "notes"].filter(k => k in c.details && !(k in back)).forEach(restore);
-      // a late arrival is noted on the booking by the book: Undo puts the notes back as they were
-      if (c && c.kind === "late_arrival") restore("notes");
-      if (c && c.move) Object.assign(back, { date: b.date || this.date, time: fmt(b.start), covers: b.party }, c.move.zone ? { zone: b.zone } : {});
+      });
       const ok = await this.act(async () => {
         if (!request) return RestaurantApi.change(this.user, this.businessId, b.id, Object.assign({ expectedVersion: b.version }, guest));
         // "book anyway" after `full`: the same overrides again, overbooked (the booking keeps no table yet)
-        const answer = await RestaurantApi.applyRequest(this.user, this.businessId, request.id, request.version, b.version,
+        return RestaurantApi.applyRequest(this.user, this.businessId, request.id, request.version, b.version,
           overbook ? Object.assign({}, guest, { overbook: true }) : guest);
-        return answer.booking;
       }, {
         inPanel: true,
         done: answer => (request
-          ? this.$t("components.restaurant.change.applied", { name: b.name || this.$t("components.restaurant.walkInName") })
-          : this.$t("components.restaurant.details.saved", { name: guest.name || b.name || this.$t("components.restaurant.walkInName") })) + this.warningsText(answer),
-        undo: Object.keys(back).length ? answer => RestaurantApi.change(this.user, this.businessId, b.id, Object.assign({ expectedVersion: answer.version }, back)) : null,
+          ? this.$t("components.restaurant.change.applied", { name: b.name || this.$t("components.restaurant.walkInName") }) + this.warningsText(answer.booking)
+          : this.$t("components.restaurant.details.saved", { name: guest.name || b.name || this.$t("components.restaurant.walkInName") }) + this.warningsText(answer)),
+        undo: request ? answer => this.unapply(answer)
+          : Object.keys(back).length ? answer => RestaurantApi.change(this.user, this.businessId, b.id, Object.assign({ expectedVersion: answer.version }, back)) : null,
       });
       if (ok && this.panel) this.panel = { type: "booking", id: b.id };
     },
