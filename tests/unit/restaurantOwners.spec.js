@@ -216,6 +216,12 @@ describe('what a call-back request asks of its booking', () => {
     expect(c).toEqual({ kind: 'late_arrival', details: {}, move: null, late: 1230 })
   })
 
+  // Seen failing on 2026-10-14 with the plain join: "Window · Window".
+  it('adds the caller\'s notes as the book does: once, compared by whole " · " segments', () => {
+    expect(changeOf(booking, { change: { kind: 'details', notes: 'Window' } }).details.notes).toBeUndefined()
+    expect(changeOf({ ...booking, notes: 'Window seat · Cake' }, { change: { kind: 'details', notes: 'Window' } }).details.notes).toBe('Window seat · Cake · Window')
+  })
+
   it('a move is what the book says is a move, whatever the page would have guessed', () => {
     const c = changeOf(booking, { change: { kind: 'move', date: '2026-10-20', start: 1245, party: 2, zone: 'dehors' } })
     expect(c.move).toEqual({ date: '2026-10-20', start: 1245, party: 2, zone: 'dehors' })

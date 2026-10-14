@@ -562,6 +562,32 @@ test.describe('the restaurant page, one owner per setting', () => {
     await expect(page.locator('.req[data-request="b-chg"]')).toHaveCount(1)
   })
 
+  // An overbooked booking (no table, its intended tables kept) that a move seats is put back overbooked by Undo, with its
+  // intended tables and no table (StarChat 3c2a6b31d). Seen failing on 2026-10-14 with the mock's apply snapshot
+  // leaving out the intended tables (the unapply 9c02e69d7 answered).
+  test('Undo of an apply on an overbooked booking puts it back overbooked, with its intended tables', async ({ authenticatedPage: page }) => {
+    const { state } = await mockRestaurant(page, { extraRows: [
+      { id: 'b-over', time: '20:00', covers: 2, name: 'Conti', phone: '393339998877', status: 'confirmed', source: 'staff', tableIds: [],
+        overbooked: true, intendedTableIds: [5] },
+      { id: 'b-over-req', time: '22:00', covers: 2, name: 'Conti', status: 'requested', requestReason: 'callback', about: 'b-over',
+        change: { kind: 'move', date: TOMORROW, time: '22:00', covers: 2, zone: 'sala' } }] })
+    await openRestaurant(page)
+    await ready(page)
+    await tomorrowDinner(page)
+    await expect(page.locator('.unseated .intended', { hasText: 'Conti' })).toContainText('meant for T5')
+    await tap(page.locator('.req[data-request="b-over-req"] .make-change'))
+    await page.locator('.panel .details-editor .save-details').click()
+    await expect(page.locator('.toast')).toContainText('the request is closed')
+    const conti = () => state.rows.find(r => r.id === 'b-over')
+    expect(conti().tableIds.length).toBeGreaterThan(0)
+    await expect(page.locator('.unseated .intended', { hasText: 'Conti' })).toHaveCount(0)
+    await page.locator('.toast').getByRole('button', { name: 'Undo' }).click()
+    await expect(page.locator('.toast')).toContainText('action undone')
+    expect([conti().time, conti().tableIds, conti().overbooked, conti().intendedTableIds]).toEqual(['20:00', [], true, [5]])
+    await expect(page.locator('.unseated .intended', { hasText: 'Conti' })).toContainText('meant for T5')
+    await expect(page.locator('.req[data-request="b-over-req"]')).toHaveCount(1)
+  })
+
   test('a refused Undo of an applied request is said in the open panel', async ({ authenticatedPage: page }) => {
     await mockRestaurant(page, { unapplyRefusal: 'superseded', extraRows: [{ id: 'b-chg', time: '22:30', covers: 3, name: 'Verdi', status: 'requested',
       requestReason: 'callback', about: 'b-verdi', change: { kind: 'move', date: TOMORROW, time: '22:30', covers: 3, zone: 'sala' } }] })

@@ -5,7 +5,7 @@ const { mockBusiness } = require('./mock-data')
  * A StarChat restaurant book in memory, for the restaurant page's browser tests: the routes the page calls,
  * answering in the shapes StarChat answers (R8's fields as in hahnbanach/starchat 9.34 at 7bf981c51's openapi.yaml:
  * `recognised`, `about`, `aboutReservation`, `change`, the configuration read's `restaurant.allergies`; `openRequest` as
- * at c790d9d11; POST .../apply as at 2d055d7e6 (notes added, as announced), POST .../unapply as at 9c02e69d7; earlier ones as 9.34.65) (ApiDomainRestaurantResource, LayoutDraft,
+ * at c790d9d11; POST .../apply as at 2d055d7e6 (notes added, as announced), POST .../unapply as at 3c2a6b31d (an overbooked booking restored overbooked, with its intended tables); earlier ones as 9.34.65) (ApiDomainRestaurantResource, LayoutDraft,
  * RestaurantLayoutSection, NativeReservationBook in hahnbanach/starchat at those commits): tables without an id get one from the server, a join may name a table by name,
  * bookings carry `callIds`, the day read carries `minFreeMinutes` and each table's free windows
  * (`freeTables`), the skill read carries the store-backed `layout` section, and the finder is
@@ -285,7 +285,8 @@ async function mockRestaurant (page, opts = {}) {
 
   const DETAIL_KEYS = ['name', 'phone', 'allergies', 'notes']
   const snapshot = r => ({ date: r.date, time: r.time, covers: r.covers, zone: r.zone, status: r.status, cancelledBy: r.cancelledBy,
-    tableIds: r.tableIds.slice(), overbooked: r.overbooked, name: r.name, phone: r.phone, allergies: r.allergies, notes: r.notes })
+    tableIds: r.tableIds.slice(), overbooked: r.overbooked, intendedTableIds: r.intendedTableIds ? r.intendedTableIds.slice() : undefined,
+    service: r.service, minutes: r.minutes, name: r.name, phone: r.phone, allergies: r.allergies, notes: r.notes })
   // the booking's notes with the caller's added, as "existing · asked", once (StarChat's apply at 9c02e69d7); a late
   // arrival's note first
   const joinNotes = (existing, asked) => {
@@ -321,7 +322,11 @@ async function mockRestaurant (page, opts = {}) {
         booking.time = body.time || c.time || booking.time
         booking.covers = body.covers || c.covers || booking.covers
         if (body.zone || c.zone) booking.zone = body.zone || c.zone
-        if (body.overbook) { booking.overbooked = true; booking.tableIds = [] }
+        if (body.overbook) { booking.overbooked = true; booking.tableIds = [] } else {
+          // the move seats the booking where it fits; a write that seats a row clears its intended tables (StarChat R8)
+          const fit = fitsAt(booking.date, booking.time, booking.covers)[0]
+          if (fit) { booking.tableIds = fit.ids; booking.overbooked = false; booking.intendedTableIds = undefined }
+        }
       }
       // every kind but a cancellation: the asked details, staff's override first; notes added, an override replacing
       DETAIL_KEYS.forEach(k => {
