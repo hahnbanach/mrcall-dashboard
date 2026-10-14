@@ -60,11 +60,22 @@ test.describe('Authenticated Pages - Responsive', () => {
     const card = authenticatedPage.locator(selectors.businessCard).first()
     await expect(card).toBeVisible({ timeout: 10000 })
 
-    const box = await card.boundingBox()
-    if (box) {
-      // Card should take most of viewport width on mobile
-      expect(box.width).toBeGreaterThan(375 * 0.8)
-    }
+    // Measured once the layout has settled. Right after the viewport shrinks and the page loads, the card is a few
+    // pixels narrower for a moment (292-295 px read under a full parallel run, 300.33 px once settled, the same on
+    // v2.2 and on the restaurant branch), and a single read raced it. Fonts loaded, then two consecutive frames that
+    // agree on the width; the threshold is unchanged.
+    await authenticatedPage.evaluate(() => document.fonts.ready)
+    let last = -1
+    await expect.poll(async () => {
+      const box = await card.boundingBox()
+      const width = box ? box.width : 0
+      const settled = width === last
+      last = width
+      return settled
+    }, { timeout: 10000, intervals: [100] }).toBe(true)
+
+    // Card should take most of viewport width on mobile
+    expect(last).toBeGreaterThan(375 * 0.8)
   })
 
   test('onboarding: support sections responsive visibility', async ({ authenticatedPage }) => {
