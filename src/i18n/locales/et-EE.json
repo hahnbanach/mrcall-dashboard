@@ -1860,6 +1860,18 @@
         "exported": "Broneeringud eksporditud",
         "personRequired": "Seda saab teha ainult sisse loginud inimene.",
         "badRange": "Viimane päev on enne esimest."
+      },
+      "undoAnswer": {
+        "closed": "Seda ei saa taastada: restoran on varasemal kellaajal suletud.",
+        "too_late": "Seda kellaaega on liiga hilja taastada.",
+        "beyond_horizon": "Varasem päev on kaugemal, kui raamat praegu avatud on.",
+        "zone_closed": "Seda ei saa taastada: varasem ala on siis suletud.",
+        "full": "Varasemal kellaajal pole enam ruumi.",
+        "table_taken": "Varasemad lauad on nüüd hõivatud.",
+        "not_offered": "Varasemat kellaaega enam ei pakuta.",
+        "tables_unsuitable": "Varasemad lauad ei mahuta enam seda seltskonda.",
+        "bad_covers": "Selle inimeste arvuga ei saa seda taastada.",
+        "large_party": "Seda ei saa taastada: seltskond on suurem, kui raamat praegu vastu võtab."
       }
     }
   },

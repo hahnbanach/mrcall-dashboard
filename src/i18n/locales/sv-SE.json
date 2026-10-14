@@ -1860,6 +1860,18 @@
         "exported": "Bokningar exporterade",
         "personRequired": "Bara en inloggad person kan göra detta.",
         "badRange": "Sista dagen kommer före den första."
+      },
+      "undoAnswer": {
+        "closed": "Det går inte att återställa: restaurangen är stängd vid den tidigare tiden.",
+        "too_late": "Det är för sent att återställa den tiden.",
+        "beyond_horizon": "Den tidigare dagen ligger längre fram än boken nu är öppen.",
+        "zone_closed": "Det går inte att återställa: det tidigare området är stängt då.",
+        "full": "Det finns inte längre plats vid den tidigare tiden.",
+        "table_taken": "De tidigare borden är upptagna nu.",
+        "not_offered": "Den tidigare tiden erbjuds inte längre.",
+        "tables_unsuitable": "De tidigare borden kan inte längre ta emot sällskapet.",
+        "bad_covers": "Det går inte att återställa med det antalet personer.",
+        "large_party": "Det går inte att återställa: sällskapet är större än boken nu tar emot."
       }
     }
   },

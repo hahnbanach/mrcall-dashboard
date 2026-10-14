@@ -298,14 +298,23 @@ export function isFreeAt (windows, t, minFree) {
  * - cancellation: nothing to pre-fill; the page cancels the booking and closes the request.
  * A request without `change` (written before the book kept it) pre-fills nothing.
  */
+/**
+ * The booking's notes with the caller's added, as the book joins them (StarChat NativeReservationBook.joinNotes): both
+ * split into whole " · " segments, trimmed, empty ones dropped; the caller's segments the booking does not already
+ * have are added after its own, each once. Whole segments are compared, never substrings.
+ */
+export function joinNotes (existing, asked) {
+  const segments = t => String(t || '').split(' · ').map(x => x.trim()).filter(Boolean)
+  const kept = segments(existing)
+  const added = segments(asked).filter((x, i, all) => !kept.includes(x) && all.indexOf(x) === i)
+  return kept.concat(added).join(' · ')
+}
+
 export function changeOf (booking, request) {
   const c = request.change
   if (!c) return { kind: null, details: {}, move: null, late: null }
   const late = c.kind === 'late_arrival' ? (c.eta !== undefined ? c.eta : c.start) : null
-  // as the book joins them (StarChat 3c2a6b31d): the caller's words added after the booking's, unless already one of its
-  // " · " segments
-  const segments = String(booking.notes || '').split(' · ').filter(Boolean)
-  const notes = segments.concat(c.notes && !segments.includes(c.notes) ? [c.notes] : []).join(' · ')
+  const notes = joinNotes(booking.notes, c.notes)
   const details = {}
   if (notes !== (booking.notes || '')) details.notes = notes
   if (c.allergies && c.allergies !== booking.allergies) details.allergies = c.allergies

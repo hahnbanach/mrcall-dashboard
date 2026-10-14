@@ -124,6 +124,12 @@ import RestaurantCallModal from "@/components/widgets/restaurant/RestaurantCallM
 import RestaurantRulesEditor from "@/components/widgets/restaurant/RestaurantRulesEditor.vue";
 import RestaurantAcceptPanel from "@/components/widgets/restaurant/RestaurantAcceptPanel.vue";
 
+/** The booking a write answered, as the page goes to it: `{id, date, service}` (an apply answers `{booking, request}`). */
+function bookingRowOf(answer) {
+  const b = answer && answer.booking ? answer.booking : null;
+  return b && b.id ? { id: b.id, date: b.date, service: b.service } : null;
+}
+
 /** How long an Undo is offered, and a held decline waits before it is sent. */
 const UNDO_MS = 8000;
 
@@ -498,19 +504,30 @@ export default {
     // ------------------------------------------------------------ writing
 
     /** Runs one change, reloads the day, and says what happened with Undo when the server can reverse it. */
-    async act(run, { done, undo, inPanel } = {}) {
+    /**
+     * Runs one change, reloads the day, and says what happened with Undo when the server can reverse it.
+     *
+     * `follow(answer)` names the booking the change is about, `{id, date, service}`: when its day is not the one shown
+     * (a move to another day), the page goes to that day and opens its panel there, so the booking, and any refusal of
+     * its Undo, are where the person looks. `undoAt(answer)` names the booking an Undo acts on, opened the same way
+     * before the Undo is sent. `context: "undo"` says a refusal in the words of putting something back.
+     */
+    async act(run, { done, undo, inPanel, follow, undoAt, context } = {}) {
       if (this.busy) return null;
       this.busy = true;
       this.lastRefusal = null;
       try {
         const answer = await run();
         await this.reload();
-        this.showToast(done ? done(answer) : this.$t("components.restaurant.saved"), undo ? () => undo(answer) : null);
+        const target = follow ? follow(answer) : null;
+        if (target) await this.openBookingOn(target);
+        this.showToast(done ? done(answer) : this.$t("components.restaurant.saved"), undo ? () => undo(answer) : null, false, null, null,
+          undo && undoAt ? undoAt(answer) : null);
         return answer || true;
       } catch (e) {
         if (isSessionEnded(e)) return null;
         const code = e.restaurant ? e.restaurant.code : null;
-        this.lastRefusal = this.refusalOf(e);
+        this.lastRefusal = this.refusalOf(e, context);
         if (code === "stale") await this.reload();
         if (e.restoringAnyway) {
           this.askRestoreAnyway(e.restoringAnyway, e);
@@ -533,10 +550,15 @@ export default {
         this.busy = false;
       }
     },
-    refusalOf(e) {
+    refusalOf(e, context = null) {
       const body = (e.restaurant && e.restaurant.body) || {};
       const code = e.restaurant ? e.restaurant.code : null;
       const missing = missingFieldsOf(e);
+      // an Undo refused: said as putting something back, where a sentence of its own exists
+      const undoKey = context === "undo" && code ? `components.restaurant.undoAnswer.${code}` : null;
+      if (undoKey && this.$te(undoKey)) {
+        return { code, missing, text: this.$t(undoKey), overridable: false, alternatives: [] };
+      }
       return {
         code, missing,
         // A missing-fields refusal names each field from the server's `values` (R8), in the owner's words.
@@ -555,9 +577,9 @@ export default {
     /** A toast; with `undo` (a request to the server) or `localUndo` (a held write dropped) it offers Undo. */
     /** A toast; with `undo` (a request to the server) or `localUndo` (a held write dropped) it offers Undo. A
      *  toast for a held write (`key`) has no timer of its own: it goes when the write is sent. */
-    showToast(text, undo = null, error = false, localUndo = null, key = null) {
+    showToast(text, undo = null, error = false, localUndo = null, key = null, undoAt = null) {
       clearTimeout(this.toastTimer);
-      this.toast = { text, undo: undo || localUndo, server: !!undo, error, key };
+      this.toast = { text, undo: undo || localUndo, server: !!undo, error, key, undoAt };
       if (!key) this.toastTimer = setTimeout(() => { this.toast = null; }, this.toast.undo ? UNDO_MS : 5000);
     },
     async undo() {
@@ -565,8 +587,22 @@ export default {
       if (!toast || !toast.undo) return;
       this.toast = null;
       if (!toast.server) return toast.undo();
-      // a refused Undo is said where the person is: in the open panel, or in a toast
-      await this.act(toast.undo, { done: () => this.$t("components.restaurant.undone"), inPanel: !!this.panel });
+      // An Undo about a booking acts with that booking's panel open on its day: a refusal (and "restore anyway") is said
+      // there, and the booking put back is shown where it went back to.
+      if (toast.undoAt) await this.openBookingOn(toast.undoAt);
+      await this.act(toast.undo, { done: () => this.$t("components.restaurant.undone"), inPanel: !!this.panel, context: "undo",
+        follow: toast.undoAt ? answer => bookingRowOf(answer) : null });
+    },
+    /** Goes to a booking's day when it is not the one shown, and opens its panel there. */
+    async openBookingOn(row) {
+      if (!row || !row.id) return;
+      if (row.date && row.date !== this.date) {
+        if (row.service) this.service = row.service;
+        await this.setDate(row.date);
+      } else if (row.service && row.service !== this.service) {
+        this.service = row.service;
+      }
+      this.panel = { type: "booking", id: row.id };
     },
     stateWord(st) {
       return this.$t(`components.restaurant.stateDone.${st}`);
@@ -677,6 +713,7 @@ export default {
       return this.act(() => RestaurantApi.applyRequest(this.user, this.businessId, request.id, request.version, original.version, {}), {
         done: () => this.$t("components.restaurant.change.cancelled", { name: original.name || this.$t("components.restaurant.walkInName") }),
         undo: answer => this.unapply(answer),
+        undoAt: answer => bookingRowOf(answer),
       });
     },
     /** Undo of an applied request: the book puts the booking back (or reinstates it) and reopens the request, in one
@@ -693,10 +730,11 @@ export default {
     },
     /** A refused Undo of an apply that may be put back with no table: said on the booking's card, with "restore anyway". */
     askRestoreAnyway(answer, e) {
-      const refusal = this.refusalOf(e);
+      const refusal = this.refusalOf(e, "undo");
       this.panel = { type: "booking", id: answer.booking.id, message: Object.assign(refusal, {
         retryLabel: this.$t("components.restaurant.change.restoreAnyway"),
-        retry: () => this.act(() => this.unapply(answer, true), { done: () => this.$t("components.restaurant.undone"), inPanel: true }),
+        retry: () => this.act(() => this.unapply(answer, true), { done: () => this.$t("components.restaurant.undone"), inPanel: true,
+          context: "undo", follow: a => bookingRowOf(a) }),
       }) };
     },
     /**
@@ -727,10 +765,13 @@ export default {
         done: answer => (request
           ? this.$t("components.restaurant.change.applied", { name: b.name || this.$t("components.restaurant.walkInName") }) + this.warningsText(answer.booking)
           : this.$t("components.restaurant.details.saved", { name: guest.name || b.name || this.$t("components.restaurant.walkInName") }) + this.warningsText(answer)),
+        // the booking where it now is: a move to another day goes there, its panel open
+        follow: answer => (request ? bookingRowOf(answer) : bookingRowOf({ booking: answer })),
+        undoAt: answer => (request ? bookingRowOf(answer) : bookingRowOf({ booking: answer })),
         undo: request ? answer => this.unapply(answer)
           : Object.keys(back).length ? answer => RestaurantApi.change(this.user, this.businessId, b.id, Object.assign({ expectedVersion: answer.version }, back)) : null,
       });
-      if (ok && this.panel) this.panel = { type: "booking", id: b.id };
+      if (ok && this.panel && this.panel.type === "booking") this.panel = Object.assign({}, this.panel, { editing: false, change: null, message: null });
     },
     forgetDeferred(id) {
       const next = Object.assign({}, this.deferred);

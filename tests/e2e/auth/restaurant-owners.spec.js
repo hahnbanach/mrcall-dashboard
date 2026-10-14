@@ -588,6 +588,51 @@ test.describe('the restaurant page, one owner per setting', () => {
     await expect(page.locator('.req[data-request="b-over-req"]')).toHaveCount(1)
   })
 
+  // A move to another day takes the page there with the booking's panel open, and a refused Undo is said in that panel.
+  // Seen failing on 2026-10-14 against f57b46c (an empty panel on the old day, the refusal shown nowhere), with the page
+  // not following the booking after the apply, and (the closed case, the person having moved away) with the Undo not
+  // opening the booking on its day first.
+  for (const [refusal, said] of [['closed', 'the restaurant is closed at its former time'], ['full', 'There is no room at its former time any more.']]) {
+    test(`a move to another day, then an Undo refused ${refusal}: the booking's panel on its new day says why`, async ({ authenticatedPage: page }) => {
+      const moveTo = addDays(TODAY, 3)
+      const { calls, state } = await mockRestaurant(page, { unapplyRefusal: refusal, extraRows: [{ id: 'b-x', time: '20:00', covers: 4, name: 'Rossi',
+        status: 'requested', requestReason: 'callback', about: 'b-rossi', change: { kind: 'move', date: moveTo, time: '20:30', covers: 4, zone: 'sala' } }] })
+      await openRestaurant(page)
+      await ready(page)
+      await tomorrowDinner(page)
+      await tap(page.locator('.req[data-request="b-x"] .make-change'))
+      await page.locator('.panel .details-editor .save-details').click()
+      await expect(page.locator('.toast')).toContainText('the request is closed')
+      // the page went to the booking's new day, its panel open
+      await expect(page.locator('.panel h2')).toContainText('Rossi')
+      await expect(page.locator('.panel .when')).toContainText('20:30')
+      expect(calls.filter(c => c.path === '/reservations' && c.search === `?date=${moveTo}`).length).toBeGreaterThan(0)
+      if (refusal === 'closed') {
+        // the person walks away from that day before pressing Undo: the Undo goes back to the booking first
+        await page.locator('.panel').getByRole('button', { name: 'Close' }).first().click()
+        await page.getByRole('button', { name: 'Previous day' }).first().click()
+        await expect(page.locator('.panel')).toHaveCount(0)
+      }
+      await page.locator('.toast').getByRole('button', { name: 'Undo' }).click()
+      const shown = page.locator('.panel .panel-refusal')
+      await expect(shown).toContainText(said)
+      await expect(page.getByText(/server English/)).toHaveCount(0)
+      if (refusal === 'closed') {
+        await expect(shown.getByRole('button', { name: 'Restore anyway' })).toHaveCount(0)
+        return
+      }
+      await shown.getByRole('button', { name: 'Restore anyway' }).click()
+      await expect(page.locator('.toast')).toContainText('action undone')
+      expect(calls.filter(c => c.path.endsWith('/unapply')).map(c => c.body.overbook || false)).toEqual([false, true])
+      expect(state.rows.find(r => r.id === 'b-rossi').date).toBe(TOMORROW)
+      // back on the booking's own day, its panel open, the request in the inbox
+      await expect(page.locator('.panel h2')).toContainText('Rossi')
+      await expect(page.locator('.panel .when')).toContainText('20:00')
+      await page.locator('.panel').getByRole('button', { name: 'Close' }).first().click()
+      await expect(page.locator('.req[data-request="b-x"]')).toHaveCount(1)
+    })
+  }
+
   test('a refused Undo of an applied request is said in the open panel', async ({ authenticatedPage: page }) => {
     await mockRestaurant(page, { unapplyRefusal: 'superseded', extraRows: [{ id: 'b-chg', time: '22:30', covers: 3, name: 'Verdi', status: 'requested',
       requestReason: 'callback', about: 'b-verdi', change: { kind: 'move', date: TOMORROW, time: '22:30', covers: 3, zone: 'sala' } }] })
@@ -599,6 +644,7 @@ test.describe('the restaurant page, one owner per setting', () => {
     await expect(page.locator('.toast')).toContainText('the request is closed')
     await page.locator('.toast').getByRole('button', { name: 'Undo' }).click()
     await expect(page.locator('.panel .panel-refusal')).toContainText('the guest has asked for another change of this booking since')
+    await expect(page.locator('.panel h2')).toContainText('Verdi')
     await expect(page.locator('.panel .restore-anyway')).toHaveCount(0)
     await expect(page.getByText(/server English/)).toHaveCount(0)
   })
@@ -616,7 +662,7 @@ test.describe('the restaurant page, one owner per setting', () => {
     await expect(page.locator('.toast')).toContainText('Cancelled as asked: Bianchi')
     await page.locator('.toast').getByRole('button', { name: 'Undo' }).click()
     const refusal = page.locator('.panel .panel-refusal')
-    await expect(refusal).toContainText('Its tables are taken.')
+    await expect(refusal).toContainText('Its former tables are taken now.')
     await refusal.getByRole('button', { name: 'Restore anyway' }).click()
     await expect(page.locator('.toast')).toContainText('action undone')
     expect(calls.filter(c => c.path.endsWith('/unapply')).map(c => c.body)).toEqual([

@@ -1862,6 +1862,18 @@
         "exported": "Réservations exportées",
         "personRequired": "Seule une personne connectée peut le faire.",
         "badRange": "Le dernier jour est avant le premier."
+      },
+      "undoAnswer": {
+        "closed": "Impossible de la rétablir : le restaurant est fermé à son ancienne heure.",
+        "too_late": "Il est trop tard pour rétablir cette heure.",
+        "beyond_horizon": "Son ancien jour est au-delà de l'horizon actuel du cahier.",
+        "zone_closed": "Impossible de la rétablir : son ancienne zone est fermée à ce moment-là.",
+        "full": "Il n'y a plus de place à son ancienne heure.",
+        "table_taken": "Ses anciennes tables sont prises maintenant.",
+        "not_offered": "Son ancienne heure n'est plus proposée.",
+        "tables_unsuitable": "Ses anciennes tables ne peuvent plus accueillir ce groupe.",
+        "bad_covers": "Impossible de la rétablir avec ce nombre de personnes.",
+        "large_party": "Impossible de la rétablir : le groupe est plus grand que ce que le cahier accepte maintenant."
       }
     }
   },

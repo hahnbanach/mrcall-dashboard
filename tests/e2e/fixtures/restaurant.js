@@ -290,9 +290,10 @@ async function mockRestaurant (page, opts = {}) {
   // the booking's notes with the caller's added, as "existing · asked", once (StarChat's apply at 9c02e69d7); a late
   // arrival's note first
   const joinNotes = (existing, asked) => {
-    if (!asked) return existing || null
-    if (!existing) return asked
-    return existing.split(' · ').includes(asked) ? existing : `${existing} · ${asked}`
+    const segments = t => String(t || '').split(' · ').map(x => x.trim()).filter(Boolean)
+    const kept = segments(existing)
+    const joined = kept.concat(segments(asked).filter((x, i, all) => !kept.includes(x) && all.indexOf(x) === i)).join(' · ')
+    return joined || null
   }
   const applied = (route, booking, request) => json(route, 200, {
     booking: Object.assign(wire(booking), opts.writeWarnings ? { warnings: opts.writeWarnings.map(code => ({ code })) } : {}), request: wire(request) })
@@ -342,11 +343,12 @@ async function mockRestaurant (page, opts = {}) {
     return applied(route, booking, row)
   }
   function unapplyRequest (route, row, body) {
+    // in the server's order: the request's version, then whether it was applied, then the booking's version
     const booking = row.about ? state.rows.find(o => o.id === row.about) : null
-    if (row.status !== 'handled' || !row.before || !booking) return diag(route, 409, 'not_applied')
     if (body.requestVersion !== row.version) {
       return json(route, 409, { diagnostics: [{ path: '/requestVersion', code: 'stale', detail: 'server English' }], currentVersion: row.version })
     }
+    if (row.status !== 'handled' || !row.before || !booking) return diag(route, 409, 'not_applied')
     if (body.bookingVersion !== booking.version) {
       return json(route, 409, { diagnostics: [{ path: '/bookingVersion', code: 'stale', detail: 'server English' }], currentVersion: booking.version })
     }
@@ -354,7 +356,8 @@ async function mockRestaurant (page, opts = {}) {
     // putting the booking back with no table (StarChat 9c02e69d7)
     const refusal = opts.unapplyRefusal
     const lifted = body.overbook && (refusal === 'full' || refusal === 'table_taken')
-    if (refusal && !lifted) return json(route, 409, { diagnostics: [{ path: '/id', code: refusal, detail: 'server English' }] })
+    const refusalPath = { full: '/', table_taken: '/tableIds' }[refusal] || '/id'
+    if (refusal && !lifted) return json(route, 409, { diagnostics: [{ path: refusalPath, code: refusal, detail: 'server English' }] })
     Object.assign(booking, row.before)
     if (lifted) { booking.tableIds = []; booking.overbooked = true }
     delete row.before

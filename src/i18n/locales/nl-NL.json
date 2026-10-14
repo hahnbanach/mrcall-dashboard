@@ -1860,6 +1860,18 @@
         "exported": "Reserveringen geëxporteerd",
         "personRequired": "Alleen een aangemelde persoon kan dit doen.",
         "badRange": "De laatste dag ligt voor de eerste."
+      },
+      "undoAnswer": {
+        "closed": "Dit kan niet worden hersteld: het restaurant is op de vorige tijd gesloten.",
+        "too_late": "Het is te laat om die tijd te herstellen.",
+        "beyond_horizon": "De vorige dag ligt verder dan het boek nu open is.",
+        "zone_closed": "Dit kan niet worden hersteld: het vorige gedeelte is dan gesloten.",
+        "full": "Op de vorige tijd is geen plaats meer.",
+        "table_taken": "De vorige tafels zijn nu bezet.",
+        "not_offered": "De vorige tijd wordt niet meer aangeboden.",
+        "tables_unsuitable": "De vorige tafels kunnen deze groep niet meer ontvangen.",
+        "bad_covers": "Met dat aantal personen kan het niet worden hersteld.",
+        "large_party": "Dit kan niet worden hersteld: de groep is groter dan het boek nu aanneemt."
       }
     }
   },

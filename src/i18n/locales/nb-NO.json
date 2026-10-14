@@ -1860,6 +1860,18 @@
         "exported": "Bestillinger eksportert",
         "personRequired": "Bare en innlogget person kan gjøre dette.",
         "badRange": "Den siste dagen kommer før den første."
+      },
+      "undoAnswer": {
+        "closed": "Det kan ikke gjenopprettes: restauranten er stengt på det tidligere tidspunktet.",
+        "too_late": "Det er for sent å gjenopprette det tidspunktet.",
+        "beyond_horizon": "Den tidligere dagen ligger lenger fram enn boken nå er åpen.",
+        "zone_closed": "Det kan ikke gjenopprettes: det tidligere området er stengt da.",
+        "full": "Det er ikke lenger plass på det tidligere tidspunktet.",
+        "table_taken": "De tidligere bordene er opptatt nå.",
+        "not_offered": "Det tidligere tidspunktet tilbys ikke lenger.",
+        "tables_unsuitable": "De tidligere bordene kan ikke lenger ta imot selskapet.",
+        "bad_covers": "Det kan ikke gjenopprettes med det antallet personer.",
+        "large_party": "Det kan ikke gjenopprettes: selskapet er større enn boken nå tar imot."
       }
     }
   },

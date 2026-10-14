@@ -1874,6 +1874,18 @@
         "exported": "Reservas exportadas",
         "personRequired": "Solo una persona que ha iniciado sesión puede hacerlo.",
         "badRange": "El último día va antes del primero."
+      },
+      "undoAnswer": {
+        "closed": "No se puede restaurar: el restaurante está cerrado a su hora anterior.",
+        "too_late": "Es demasiado tarde para restaurar esa hora.",
+        "beyond_horizon": "Su día anterior está más allá de hasta donde se abre ahora el libro.",
+        "zone_closed": "No se puede restaurar: su zona anterior está cerrada en ese momento.",
+        "full": "Ya no hay sitio a su hora anterior.",
+        "table_taken": "Sus mesas anteriores están ocupadas ahora.",
+        "not_offered": "Su hora anterior ya no se ofrece.",
+        "tables_unsuitable": "Sus mesas anteriores ya no pueden acoger a este grupo.",
+        "bad_covers": "No se puede restaurar con ese número de personas.",
+        "large_party": "No se puede restaurar: el grupo es mayor de lo que acepta ahora el libro."
       }
     }
   },

@@ -1866,6 +1866,18 @@
         "exported": "Prenotazioni esportate",
         "personRequired": "Solo una persona che ha fatto l'accesso può farlo.",
         "badRange": "L'ultimo giorno viene prima del primo."
+      },
+      "undoAnswer": {
+        "closed": "Non si può ripristinare: il ristorante è chiuso al suo orario di prima.",
+        "too_late": "È troppo tardi per ripristinare quell'orario.",
+        "beyond_horizon": "Il suo giorno di prima è oltre fin dove il libro si apre ora.",
+        "zone_closed": "Non si può ripristinare: la sua zona di prima è chiusa in quel momento.",
+        "full": "Al suo orario di prima non c'è più posto.",
+        "table_taken": "I suoi tavoli di prima ora sono occupati.",
+        "not_offered": "Il suo orario di prima non è più offerto.",
+        "tables_unsuitable": "I suoi tavoli di prima non possono più accogliere questo gruppo.",
+        "bad_covers": "Non si può ripristinare con quel numero di persone.",
+        "large_party": "Non si può ripristinare: il gruppo è più grande di quanto il libro accetta ora."
       }
     }
   },

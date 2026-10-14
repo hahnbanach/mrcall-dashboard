@@ -1860,6 +1860,18 @@
         "exported": "Varaukset viety",
         "personRequired": "Vain kirjautunut henkilö voi tehdä tämän.",
         "badRange": "Viimeinen päivä on ennen ensimmäistä."
+      },
+      "undoAnswer": {
+        "closed": "Sitä ei voi palauttaa: ravintola on suljettu aiempana aikana.",
+        "too_late": "On liian myöhäistä palauttaa se aika.",
+        "beyond_horizon": "Aiempi päivä on pidemmällä kuin varauskirja nyt aukeaa.",
+        "zone_closed": "Sitä ei voi palauttaa: aiempi alue on silloin suljettu.",
+        "full": "Aiempana aikana ei ole enää tilaa.",
+        "table_taken": "Aiemmat pöydät ovat nyt varattuja.",
+        "not_offered": "Aiempaa aikaa ei enää tarjota.",
+        "tables_unsuitable": "Aiemmat pöydät eivät enää voi ottaa tätä seuruetta.",
+        "bad_covers": "Sitä ei voi palauttaa tällä henkilömäärällä.",
+        "large_party": "Sitä ei voi palauttaa: seurue on suurempi kuin varauskirja nyt ottaa."
       }
     }
   },

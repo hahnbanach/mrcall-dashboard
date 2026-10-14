@@ -1865,6 +1865,18 @@
         "exported": "Bookings exported",
         "personRequired": "Only a signed-in person can do this.",
         "badRange": "The last day comes before the first."
+      },
+      "undoAnswer": {
+        "closed": "It cannot be put back: the restaurant is closed at its former time.",
+        "too_late": "It is too late to restore that time.",
+        "beyond_horizon": "Its former day is beyond how far ahead the book opens now.",
+        "zone_closed": "It cannot be put back: its former area is closed then.",
+        "full": "There is no room at its former time any more.",
+        "table_taken": "Its former tables are taken now.",
+        "not_offered": "Its former time is not offered any more.",
+        "tables_unsuitable": "Its former tables can no longer take this party.",
+        "bad_covers": "It cannot be put back with that number of people.",
+        "large_party": "It cannot be put back: the party is larger than the book takes now."
       }
     }
   },

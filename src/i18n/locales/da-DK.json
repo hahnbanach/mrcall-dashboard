@@ -1860,6 +1860,18 @@
         "exported": "Bookinger eksporteret",
         "personRequired": "Kun en person, der er logget ind, kan gøre dette.",
         "badRange": "Den sidste dag ligger før den første."
+      },
+      "undoAnswer": {
+        "closed": "Det kan ikke gendannes: restauranten er lukket på det tidligere tidspunkt.",
+        "too_late": "Det er for sent at gendanne det tidspunkt.",
+        "beyond_horizon": "Den tidligere dag ligger længere fremme, end bogen nu er åben.",
+        "zone_closed": "Det kan ikke gendannes: det tidligere område er lukket på det tidspunkt.",
+        "full": "Der er ikke længere plads på det tidligere tidspunkt.",
+        "table_taken": "De tidligere borde er optaget nu.",
+        "not_offered": "Det tidligere tidspunkt tilbydes ikke længere.",
+        "tables_unsuitable": "De tidligere borde kan ikke længere tage imod selskabet.",
+        "bad_covers": "Det kan ikke gendannes med det antal personer.",
+        "large_party": "Det kan ikke gendannes: selskabet er større, end bogen nu tager imod."
       }
     }
   },

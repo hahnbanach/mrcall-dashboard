@@ -11,7 +11,7 @@ const axios = (await import('axios')).default
 const Restaurant = await import('@/utils/Restaurant')
 const RestaurantApi = Restaurant.default
 const { PAGE_FIELDS, PAGE_EDITS, pageOffIn, isPageOff, allergiesSettingOf, layoutToWire, layoutFromWire, bookingFromWire } = Restaurant
-const { fieldRulesOf, missingRequired, closuresOf, withClosures, sameClosures, onClosedDay, changeOf } = await import('@/utils/RestaurantModel')
+const { fieldRulesOf, missingRequired, closuresOf, withClosures, sameClosures, onClosedDay, changeOf, joinNotes } = await import('@/utils/RestaurantModel')
 
 /**
  * One editor per field (brief, addendum 2026-10-12 (2)): what the restaurant page writes, what the skill form draws,
@@ -214,6 +214,16 @@ describe('what a call-back request asks of its booking', () => {
   it('a late arrival keeps the table at the time announced; the book notes it, the page adds nothing', () => {
     const c = changeOf(booking, { change: { kind: 'late_arrival', date: '2026-10-20', start: 1200, party: 2, eta: 1230 } })
     expect(c).toEqual({ kind: 'late_arrival', details: {}, move: null, late: 1230 })
+  })
+
+  // As StarChat's joinNotes: trimmed, split into segments, each added once. Seen failing on 2026-10-14 with the asked
+  // notes compared as one untrimmed string ("Cake · Cake · Dog").
+  it('joins notes segment by segment, trimmed, as the book does', () => {
+    expect(joinNotes('Cake', ' Cake · Dog ')).toBe('Cake · Dog')
+    expect(joinNotes(' Window seat ', 'Window · Window')).toBe('Window seat · Window')
+    expect(joinNotes('hotdog stand', 'dog')).toBe('hotdog stand · dog')
+    expect(joinNotes('', '  ')).toBe('')
+    expect(joinNotes(null, 'A · B')).toBe('A · B')
   })
 
   // Seen failing on 2026-10-14 with the plain join: "Window · Window".

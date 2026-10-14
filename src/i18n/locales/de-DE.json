@@ -1862,6 +1862,18 @@
         "exported": "Reservierungen exportiert",
         "personRequired": "Nur eine angemeldete Person kann das tun.",
         "badRange": "Der letzte Tag liegt vor dem ersten."
+      },
+      "undoAnswer": {
+        "closed": "Das lässt sich nicht wiederherstellen: das Restaurant ist zur früheren Uhrzeit geschlossen.",
+        "too_late": "Es ist zu spät, diese Uhrzeit wiederherzustellen.",
+        "beyond_horizon": "Der frühere Tag liegt jenseits dessen, wie weit das Buch jetzt geöffnet ist.",
+        "zone_closed": "Das lässt sich nicht wiederherstellen: der frühere Bereich ist dann geschlossen.",
+        "full": "Zur früheren Uhrzeit ist kein Platz mehr.",
+        "table_taken": "Die früheren Tische sind jetzt belegt.",
+        "not_offered": "Die frühere Uhrzeit wird nicht mehr angeboten.",
+        "tables_unsuitable": "Die früheren Tische können diese Gruppe nicht mehr aufnehmen.",
+        "bad_covers": "Mit dieser Personenzahl lässt es sich nicht wiederherstellen.",
+        "large_party": "Das lässt sich nicht wiederherstellen: die Gruppe ist größer, als das Buch jetzt annimmt."
       }
     }
   },
