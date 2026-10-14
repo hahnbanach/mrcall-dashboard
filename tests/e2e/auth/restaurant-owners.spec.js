@@ -557,6 +557,27 @@ test.describe('the restaurant page, one owner per setting', () => {
     })
   }
 
+  // A move refused `full` may be booked anyway, as every staff booking: the same overrides again with overbook. Seen
+  // failing on 2026-10-14 against 8710563 (no "Book anyway" in the apply editor), and with `overbook` left out of the retry.
+  test('a move refused for room is booked anyway on request, with the same overrides and overbook', async ({ authenticatedPage: page }) => {
+    const { calls } = await mockRestaurant(page, { applyRefusal: { code: 'full', path: '/' }, extraRows: [{ id: 'b-chg', time: '22:30', covers: 3,
+      name: 'Verdi', status: 'requested', requestReason: 'callback', about: 'b-verdi', change: { kind: 'move', date: TOMORROW, time: '22:30', covers: 3, zone: 'sala' } }] })
+    await openRestaurant(page)
+    await ready(page)
+    await tomorrowDinner(page)
+    await tap(page.locator('.req[data-request="b-chg"] .make-change'))
+    const editor = page.locator('.panel .details-editor')
+    await editor.getByLabel('Notes').fill('By the window')
+    await editor.locator('.save-details').click()
+    await expect(editor.locator('.refusal')).toContainText('There is no room at that time.')
+    await editor.getByRole('button', { name: 'Book anyway' }).click()
+    await expect(page.locator('.toast')).toContainText('the request is closed')
+    expect(calls.filter(applies).map(c => c.body)).toEqual([
+      { expectedVersion: 1, bookingVersion: 1, notes: 'By the window' },
+      { expectedVersion: 1, bookingVersion: 1, notes: 'By the window', overbook: true }])
+    expect(calls.filter(twoCalls)).toHaveLength(0)
+  })
+
   test('"close without changing" closes a call-back request and leaves the booking as it is', async ({ authenticatedPage: page }) => {
     test.setTimeout(60000)
     const { calls } = await mockRestaurant(page, { extraRows: [{ id: 'b-chg', time: '21:30', covers: 3, name: 'Verdi', status: 'requested',

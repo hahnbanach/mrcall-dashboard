@@ -383,12 +383,13 @@ async function mockRestaurant (page, opts = {}) {
           return json(route, 409, { diagnostics: [{ path: '/bookingVersion', code: 'stale', detail: 'server English' }], currentVersion: booking.version })
         }
         if (booking.status !== 'confirmed') return diag(route, 409, 'booking_not_confirmed')
-        if (opts.applyRefusal) {
+        if (opts.applyRefusal && !(opts.applyRefusal.code === 'full' && body.overbook)) {
           return json(route, 409, { diagnostics: [{ path: opts.applyRefusal.path || '/id', code: opts.applyRefusal.code, detail: 'server English' }] })
         }
         const c = row.change || {}
         if (!c.kind) return diag(route, 409, 'no_change')
         if (c.kind === 'cancellation') { booking.status = 'cancelled'; booking.cancelledBy = 'staff' }
+        if (c.kind === 'move' && body.overbook) { booking.overbooked = true; booking.tableIds = [] }
         if (c.kind === 'move') {
           booking.date = body.date || c.date || booking.date
           booking.time = body.time || c.time || booking.time

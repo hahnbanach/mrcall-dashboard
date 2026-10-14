@@ -15,7 +15,10 @@
     </p>
     <p v-if="change && change.late !== null" class="muted late-arrival">{{ $t("components.restaurant.details.late", { time: fmt(change.late) }) }}</p>
     <p v-if="tried && missing.length" class="err" role="alert">{{ $t("components.restaurant.answer.missingFields", { fields: missing.map(k => $t(`components.restaurant.ask.field.${k}`)).join(", ") }) }}</p>
-    <p v-if="message" class="callout red" role="alert">{{ message.text }}</p>
+    <!-- a refusal; "full" may be overridden as in every staff booking: the same values again, overbooked -->
+    <div v-if="message" class="callout red refusal" role="alert">{{ message.text }}
+      <button v-if="message.overridable" class="btn danger small book-anyway" :disabled="busy" @click="send(true)">{{ $t("components.restaurant.bookAnyway") }}</button>
+    </div>
     <div class="tb-row">
       <button class="btn save-details" :disabled="busy || (!dirty && !change)" @click="send">{{ $t(change ? "components.restaurant.details.saveChange" : "components.restaurant.details.save") }}</button>
       <button class="btn ghost" :disabled="busy" @click="$emit('cancel')">{{ $t("components.restaurant.details.cancel") }}</button>
@@ -90,7 +93,7 @@ export default {
     required(k) {
       return this.fieldRules[k] === "required";
     },
-    send() {
+    send(overbook = false) {
       this.tried = true;
       if (this.missing.length) return;
       // Only what staff changed travels; an emptied field travels as "", which the book reads as cleared. From a
@@ -98,7 +101,7 @@ export default {
       // itself, and anything sent beside them is staff's override, which wins (StarChat .../apply).
       const guest = {};
       this.shown.forEach(k => { if (this.form[k].trim() !== String(this.initial[k] || "").trim()) guest[k] = this.form[k].trim(); });
-      this.$emit("save", { guest });
+      this.$emit("save", { guest, overbook: overbook === true });
     },
   },
 };

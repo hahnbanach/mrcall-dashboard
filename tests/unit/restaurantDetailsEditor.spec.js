@@ -35,14 +35,14 @@ describe('the details editor', () => {
     expect(w.find('[data-detail="allergies"]').text()).toContain('Not asked in this restaurant')
     await w.find('[data-detail="allergies"] input').setValue('')
     await w.find('.save-details').trigger('click')
-    expect(w.emitted('save')[0][0]).toEqual({ guest: { allergies: '' } })
+    expect(w.emitted('save')[0][0]).toEqual({ guest: { allergies: '' }, overbook: false })
   })
 
   it('a booking that lacks a required field it never had can still be corrected', async () => {
     const w = draw({ booking: { ...booking, phone: '' }, fieldRules: { ...RULES, phone: 'required' } })
     await w.find('[data-detail="notes"] input').setValue('Terrace')
     await w.find('.save-details').trigger('click')
-    expect(w.emitted('save')[0][0]).toEqual({ guest: { notes: 'Terrace' } })
+    expect(w.emitted('save')[0][0]).toEqual({ guest: { notes: 'Terrace' }, overbook: false })
   })
 
   it('a required field cannot be emptied', async () => {
@@ -58,7 +58,7 @@ describe('the details editor', () => {
     await w.find('[data-detail="name"] input').setValue('Verdi Rossi')
     await w.find('[data-detail="notes"] input').setValue('')
     await w.find('.save-details').trigger('click')
-    expect(w.emitted('save')[0][0]).toEqual({ guest: { name: 'Verdi Rossi', notes: '' } })
+    expect(w.emitted('save')[0][0]).toEqual({ guest: { name: 'Verdi Rossi', notes: '' }, overbook: false })
   })
 
   it('from a request: pre-filled, says the move the request makes, saved in one step', async () => {
@@ -68,9 +68,9 @@ describe('the details editor', () => {
     expect(w.find('.apply-move').text()).toContain('The request moves it to')
     await w.find('.save-details').trigger('click')
     // the asked values are the book's to apply: left as pre-filled, nothing travels (an override would win)
-    expect(w.emitted('save')[0][0]).toEqual({ guest: {} })
+    expect(w.emitted('save')[0][0]).toEqual({ guest: {}, overbook: false })
     await w.find('[data-detail="notes"] input').setValue('Window · Celiac, two')
     await w.find('.save-details').trigger('click')
-    expect(w.emitted('save')[1][0]).toEqual({ guest: { notes: 'Window · Celiac, two' } })
+    expect(w.emitted('save')[1][0]).toEqual({ guest: { notes: 'Window · Celiac, two' }, overbook: false })
   })
 })

@@ -680,7 +680,7 @@ export default {
      * applied (`applyRequest`): the book does what the request asks by its kind and closes it in the same transaction;
      * what staff changed in the editor goes as their values over the asked ones. Undo puts back what was there.
      */
-    async saveDetails({ guest }) {
+    async saveDetails({ guest, overbook }) {
       const b = this.panelBooking;
       if (!b) return;
       const request = this.panel.change;
@@ -701,7 +701,9 @@ export default {
       if (c && c.move) Object.assign(back, { date: b.date || this.date, time: fmt(b.start), covers: b.party }, c.move.zone ? { zone: b.zone } : {});
       const ok = await this.act(async () => {
         if (!request) return RestaurantApi.change(this.user, this.businessId, b.id, Object.assign({ expectedVersion: b.version }, guest));
-        const answer = await RestaurantApi.applyRequest(this.user, this.businessId, request.id, request.version, b.version, guest);
+        // "book anyway" after `full`: the same overrides again, overbooked (the booking keeps no table yet)
+        const answer = await RestaurantApi.applyRequest(this.user, this.businessId, request.id, request.version, b.version,
+          overbook ? Object.assign({}, guest, { overbook: true }) : guest);
         return answer.booking;
       }, {
         inPanel: true,
