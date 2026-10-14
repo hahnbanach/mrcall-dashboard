@@ -49,6 +49,7 @@ Reusable UI building blocks:
 - `templates/` — Sub-templates for business, sign, onboarding, support
 - `webcall/` — DirectVoiceButton, TextChatWidget, WebcallButton
 - `widgets/` — Variable editors (MultiselectVariable, TemplatedVariable, TupleVariable, TimeSlotsEditor, FetchWebData)
+- `widgets/restaurant/` — the restaurant page's panels and editors; `widgets/skills/` — the skill card and its field widgets
 - Root: Navbar, Businesses, Conversations, Contacts, Analytics, ZylchChat, Plans, Subscription, etc.
 
 ### Utilities (`src/utils/`)
@@ -63,6 +64,7 @@ API clients and business logic:
 - `Conversation.js` — Conversation utilities
 - `OAuth.js` — Google Calendar OAuth helpers and single-use skill authorization context
 - `AgentSkills.js` — skill catalogue, saved configuration and scoped effective availability
+- `Restaurant.js` — StarChat restaurant book client and answer shapes; `RestaurantModel.js` — what the restaurant page computes from them
 - `PKCE.js` — PKCE flow for OAuth 2.0
 - `Stripe.js` — Stripe billing integration
 - `UtmTracking.js` — UTM parameter tracking
@@ -78,6 +80,7 @@ API clients and business logic:
 - `config.js` — Firebase app initialization (indexedDB + browser persistence)
 - `authUtils.js` — Auth state listener, proactive token refresh (50-min interval), cross-domain cookie
 - `axiosConfig.js` — Axios 401 interceptor, the only owner of a 401: token refresh with request queue, end of session, `isSessionEnded(error)`
+- `session.js` — `isSessionEnded(error)` with no imports, re-exported by `axiosConfig.js`
 
 ### Router (`src/router/`)
 - `index.js` — Route definitions and the guard. Every route needs a session unless it declares `meta: { public: true }`; `tests/unit/publicRoutes.spec.js` lists the public ones, read from the source by `publicPaths()` in `scripts/static-routes.js`. Role-based access control via `meta.requiresRole`
@@ -157,19 +160,13 @@ fallback of 25. All 12 locale files contain these keys. The `/plan` route render
 
 ### Restaurant bookings (`RestaurantBook.vue`)
 
-A business that runs the `skill_restaurant_booking` skill (the only name the platform
-runs it under; `SKILL` in `src/utils/Restaurant.js`) gets a "Restaurant bookings" entry
-in the configuration menu. The entry is a synthetic section, `__RESTAURANT_BOOKING__`,
-built by the page rather than declared by the template, as `__DATA_RETENTION__` is.
-
-The page reads and writes the book through StarChat's
-`/apidomain/restaurant/{businessId}`: the day, bookings, moves, cancellations,
-accepting requests, no-shows, blocks and stopping a service. It edits the skill
-instance's capacity and tables through the per-instance skill configuration route,
-with the revision it read. A refusal carries StarChat's diagnostic code (`full`,
-`stale`, `large_party`, and so on), and the page shows the translated sentence for it.
-Cancelling or declining asks for confirmation first. A refused move or accept stays
-in its dialog, and a phone number is a `tel:` link.
+A business with a `skill_restaurant_booking` instance in the `during` phase, its page on, gets a "Restaurant
+bookings" entry in the configuration menu: the synthetic section `__RESTAURANT_BOOKING__`, built by the page rather
+than declared by the template, as `__DATA_RETENTION__` is. The page (tabs Evening, Room and tables, Hours and rules)
+reads and writes the book through StarChat's `/apidomain/restaurant/{businessId}` and edits only the restaurant's own
+settings of the skill instance (`x-audience: page`); the skill form edits the rest. Every request and the
+translation of every answer live in `src/utils/Restaurant.js`. The integration guide is
+[integration/restaurant-booking.md](integration/restaurant-booking.md).
 
 ### Onboarding and plan selection
 ```
