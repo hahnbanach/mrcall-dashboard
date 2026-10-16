@@ -14,8 +14,9 @@ onMounted(() => {
 })
 
 // Computed, not read once: the values offered depend on other variables of the business, the
-// engine above all, and have to follow them while the page is open.
-const dropdownValues = computed(() => businessVariablesUtils.templatedOptions(props.business, props.variable))
+// engine above all, and have to follow them while the page is open. The held value is listed too
+// while it is valid, so a voice in another language than the business still shows as chosen.
+const dropdownValues = computed(() => businessVariablesUtils.templatedChoices(props.business, props.variable))
 
 const unavailable = computed(() => businessVariablesUtils.unavailableTemplatedValue(props.business, props.variable))
 

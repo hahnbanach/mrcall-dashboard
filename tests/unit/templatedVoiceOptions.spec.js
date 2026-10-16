@@ -51,3 +51,29 @@ describe('a voice chosen under the other engine', () => {
     expect(businessVariablesUtils.unavailableTemplatedValue(business('realtime', ''), variable)).toBeUndefined()
   })
 })
+
+/** Which voices a business is SHOWN depends on its language; whether the one it holds is valid does
+  * not. StarChat judges a voice by its engine only (VoiceEngines, "the language of a value is not
+  * read"), and a GPT-Live voice is marked "en" because that is where its accent belongs, not because
+  * it cannot speak Italian. Judging the held value by the shown list refused every Save of an Italian
+  * business with a GPT-Live voice, for owners and admins alike, with a value StarChat accepts.
+  * Seen failing on 2026-10-16 at d2b96fc: voice55 under live on it_IT was reported. */
+describe('a voice in another language than the business', () => {
+  it('is not reported while its engine has it', () => {
+    expect(businessVariablesUtils.unavailableTemplatedValue(business('live', 'voice55', 'it_IT'), variable)).toBeUndefined()
+    expect(businessVariablesUtils.unavailableTemplatedValue(business('realtime', 'voice10', 'en_US'), variable)).toBeUndefined()
+  })
+
+  it('is still reported when its engine does not have it', () => {
+    expect(businessVariablesUtils.unavailableTemplatedValue(business('realtime', 'voice55', 'it_IT'), variable))
+      .toEqual({ value: 'voice55', label: 'willow (OpenAI Live)' })
+  })
+
+  it('is still not offered to choose, but the field lists it while the business holds it', () => {
+    expect(offered(business('live', undefined, 'it_IT'))).not.toContain('voice55')
+    // without it the field shows its placeholder, as if no voice were set
+    const choices = (b) => businessVariablesUtils.templatedChoices(b, variable).map(o => o.value).sort()
+    expect(choices(business('live', 'voice55', 'it_IT'))).toEqual(['voice37', 'voice50', 'voice55'])
+    expect(choices(business('realtime', 'voice55', 'it_IT'))).toEqual(['voice10', 'voice37', 'voice50'])
+  })
+})

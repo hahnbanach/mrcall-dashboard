@@ -119,18 +119,35 @@ export default {
             .map(([key, item]) => ({ label: item.label || key, value: key, description: item.description, language: item.language }))
     },
     /**
-     * The value a templated variable holds when the business may no longer choose it, as when the
-     * engine was changed after the voice: undefined when the value is empty or still offered.
-     * It is kept rather than cleared, since an empty value would reach the server as "null", and
-     * saving is refused until another one is chosen.
+     * The value a templated variable holds when the business can no longer have it, as when the
+     * engine was changed after the voice: undefined when the value is empty, or its own dependsOn
+     * holds for the business as it is now. It is kept rather than cleared, since an empty value
+     * would reach the server as "null", and saving is refused until another one is chosen.
+     *
+     * The language of a value is not read here. It decides which values a business is offered
+     * (templatedOptions), not whether the one it holds is valid, which is also how StarChat judges
+     * it: a GPT-Live voice is marked "en" for its accent, and judging the held value by the offered
+     * list refused every Save of an Italian business with one (test, 2026-10-16).
      */
     unavailableTemplatedValue(business, variable) {
         const value = business.variables[variable.name]
         if (value === undefined || value === null || value === "" || Array.isArray(value)) return undefined
-        const offered = this.templatedOptions(business, variable).some(o => o.value === value)
-        if (offered) return undefined
         const item = ((variable.templatedVariable && variable.templatedVariable.values) || {})[value]
+        if (item && !this.checkIfDisabledByParents(business, variable, item.dependsOn || [])) return undefined
         return { value: value, label: (item && item.label) || value }
+    },
+    /**
+     * What the field lists: the values offered, and the one the business holds while it is still
+     * valid, even when it is in another language. Without it the field would show its placeholder,
+     * as if nothing were set.
+     */
+    templatedChoices(business, variable) {
+        const offered = this.templatedOptions(business, variable)
+        const value = business.variables[variable.name]
+        if (offered.some(o => o.value === value) || this.unavailableTemplatedValue(business, variable) ||
+            value === undefined || value === null || value === "" || Array.isArray(value)) return offered
+        const item = variable.templatedVariable.values[value]
+        return offered.concat([{ label: item.label || value, value: value, description: item.description, language: item.language }])
     },
     businessVariablesToSerializable(inBusiness) {
         let business = {}
