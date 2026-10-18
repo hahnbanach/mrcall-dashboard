@@ -9,6 +9,7 @@ import KeyValueField from './KeyValueField.vue'
 import ListField from './ListField.vue'
 import WeeklyHoursField from './WeeklyHoursField.vue'
 import CalendarField from './CalendarField.vue'
+import ChecklistField from './ChecklistField.vue'
 
 /**
  * Which component draws which widget.
@@ -38,6 +39,7 @@ export const fieldComponents = {
   list: ListField,
   weekly_hours: WeeklyHoursField,
   calendar: CalendarField,
+  checklist: ChecklistField,
 
   // version 1, for a row that has no manifest of its own
   string: TextField,

@@ -60,6 +60,13 @@ export function hintOf(field, lang) {
   return localised(field, lang).hint || '';
 }
 
+/** An option's title and explanation in `lang` (`options[].labels`, StarChat 2026-10-18), falling back to the English
+  * `label` every server has sent, then to the value itself. */
+export function optionTextOf(option, lang) {
+  const text = (option && option.labels && (option.labels[lang] || option.labels['*'] || option.labels['en'])) || {};
+  return { label: text.label || (option && option.label) || (option && option.value) || '', hint: text.hint || '' };
+}
+
 /**
  * What goes INSIDE an empty box, which is not the hint.
  *
