@@ -118,9 +118,7 @@ test.describe('Analytics filters (Admin Role)', () => {
     const requests = await recordAnalytics(adminPage)
     await adminPage.goto('/analytics-admin')
 
-    // Any cell selects the row. The row's centre, not the business ID cell, because on mobile
-    // the fixed assistance button sits over the bottom-left corner and this is the last row.
-    await adminPage.getByRole('row', { name: /biz-b/ }).click()
+    await adminPage.getByRole('cell', { name: 'biz-b' }).click()
     await expect(adminPage).toHaveURL(/[?&]businessId=biz-b(&|$)/)
     await expect(adminPage.getByRole('textbox', { name: 'Business ID' })).toHaveValue('biz-b')
 

@@ -25,7 +25,7 @@
         </div>
       </div>
     </div>
-    <div v-show="isFooterClosed">
+    <div v-show="isFooterClosed" class="assistance-spacer">
       <button class="pointer fixed bottom-0 pl-5 pb-5 bg-transparent border-none" @click="toggleFooter(false)">
         <img class="w-5rem" src="@/assets/images/mrcall/littleman/assistance.svg"/>
       </button>
@@ -74,6 +74,17 @@ export default {
 
 .pointer {
   cursor: pointer;
+}
+
+// The button above is `position: fixed; bottom: 0`, so it never contributes to the page's own
+// scroll height: without this, the page's last element, wherever it falls on a page too tall to
+// scroll further, renders under it and cannot be clicked — on a phone, by a real caller, not only
+// in a test (seen: the call reports' "Show earlier reports", the admin's business-breakdown
+// table). Reserves the button's own rendered height (measured via getBoundingClientRect(), the
+// same on the 375px and the 1440px viewport the mobile and desktop Playwright projects use: 116px)
+// as real, in-flow, invisible space, only on the pages that render this component.
+.assistance-spacer {
+  min-height: 116px;
 }
 
 #footer-large-container {
