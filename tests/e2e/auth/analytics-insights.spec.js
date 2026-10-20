@@ -121,8 +121,14 @@ test.describe('Analytics: call reports (owner, business page)', () => {
       .toHaveAttribute('href', `/conversations?id=${BUSINESS_ID}&conversation=CON-2`)
     await expect(reports.getByText('Turn on multilingual.')).toHaveCount(0)
 
-    // paging to the end: the second page answers fewer than the page size (10), so there is no third
-    await reports.getByRole('button', { name: 'Show earlier reports' }).click()
+    // paging to the end: the second page answers fewer than the page size (10), so there is no third.
+    // On mobile, the last button on the page scrolls in under the fixed assistance button
+    // (bottom-left, every authenticated page, `PreFooterRequireAssistance.vue`) rather than on
+    // top of it, same as the breakdown row in tests/e2e/admin/analytics-filters.spec.js; scrolling
+    // it a little higher first, rather than clicking through the overlay, keeps the click real.
+    const loadMoreButton = reports.getByRole('button', { name: 'Show earlier reports' })
+    const loadMoreBox = await loadMoreButton.boundingBox()
+    await loadMoreButton.click({ position: { x: loadMoreBox.width - 4, y: 4 } })
     await expect.poll(() => beforeCalls).toBe(1)
     await expect(reports.getByRole('button', { name: 'Show earlier reports' })).toHaveCount(0)
   })
