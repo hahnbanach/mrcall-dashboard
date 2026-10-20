@@ -1,6 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { mount, flushPromises } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
+import PrimeVue from 'primevue/config'
+import Tag from 'primevue/tag'
 import enUS from '@/i18n/locales/en-US.json'
 import CallDetailsPanel from '@/components/conversations/CallDetailsPanel.vue'
 import ConversationApi from '@/utils/Conversation'
@@ -42,7 +44,7 @@ const call = {
 function draw (conversation = call, props = {}) {
   return mount(CallDetailsPanel, {
     props: { conversation, businessId: 'b', user: { accessToken: 't' }, ...props },
-    global: { plugins: [i18n] }
+    global: { plugins: [i18n, PrimeVue], components: { Tag } }
   })
 }
 
@@ -104,5 +106,74 @@ describe('CallDetailsPanel', () => {
     const old = { id: 'CON-0', contactNumber: '+390000000', data: call.data }
     const panel = draw(old)
     expect(panel.findAll('a').map(a => a.attributes('href'))).toContain('tel:+390000000')
+  })
+})
+
+/** StarChat's call insights (`details.outcome`, `topics`, `unanswered`, `checks`): the dashboard's
+  * one outcome rule (`src/utils/CallInsights.js`) says which outcome is a recorded fact and which
+  * is the assistant's own assessment, and every place an outcome is shown, including here, marks
+  * an assessed one as such. A call with none of the four fields draws exactly as it did before the
+  * feature (the cases above), which is why this block tests each kind on its own. */
+describe('CallDetailsPanel: what the call said', () => {
+  beforeEach(() => vi.restoreAllMocks())
+
+  it('shows no insights section when the call carries none of the four fields', () => {
+    const panel = draw()
+    expect(panel.find('.call-insights-box').exists()).toBe(false)
+  })
+
+  it('shows the topics as tags', () => {
+    const withTopics = { ...call, details: { ...call.details, topics: ['billing', 'cancellation'] } }
+    const panel = draw(withTopics)
+    expect(panel.find('.call-insights-box').exists()).toBe(true)
+    const tags = panel.findAll('.insight-topic-tag').map(t => t.text())
+    expect(tags).toEqual(['billing', 'cancellation'])
+  })
+
+  it('shows each unanswered question with its reason and suggestion, the question as plain text even when it carries markup', () => {
+    const withUnanswered = {
+      ...call,
+      details: {
+        ...call.details,
+        unanswered: [{
+          question: 'Do you open on <b>Sundays</b>?',
+          gap: 'missing_info',
+          suggestion: 'Tell the assistant your Sunday hours.'
+        }]
+      }
+    }
+    const panel = draw(withUnanswered)
+    expect(panel.text()).toContain('Missing information')
+    expect(panel.text()).toContain('Do you open on <b>Sundays</b>?')
+    expect(panel.text()).toContain('Tell the assistant your Sunday hours.')
+    // rendered through {{ }}, never v-html: no real <b> element reaches the DOM
+    expect(panel.find('.insight-question-text b').exists()).toBe(false)
+  })
+
+  it('shows the checks that fired, and none that did not', () => {
+    const withChecks = {
+      ...call,
+      details: { ...call.details, checks: { caller_repeated: true, caller_unsatisfied: false } }
+    }
+    const panel = draw(withChecks)
+    const text = panel.find('.insight-checks').text()
+    expect(text).toContain('The caller had to repeat themselves')
+    expect(text).not.toContain('unsatisfied')
+    expect(text).not.toContain('promise')
+  })
+
+  it('shows a recorded outcome with no marking', () => {
+    const booked = { ...call, details: { ...call.details, outcome: 'booked' } }
+    const panel = draw(booked)
+    expect(panel.find('.insight-outcome').text()).toContain('Booked')
+    expect(panel.find('.insight-assessed-tag').exists()).toBe(false)
+  })
+
+  it('shows an assessed outcome marked as the assistant\'s own assessment', () => {
+    const unresolved = { ...call, details: { ...call.details, outcome: 'unresolved' } }
+    const panel = draw(unresolved)
+    expect(panel.find('.insight-outcome').text()).toContain('Unresolved')
+    expect(panel.find('.insight-assessed-tag').exists()).toBe(true)
+    expect(panel.find('.insight-assessed-tag').text()).toBe('Assessed by the assistant')
   })
 })

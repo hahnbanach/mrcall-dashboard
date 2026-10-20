@@ -37,6 +37,48 @@
       </dl>
     </section>
 
+    <!-- What the call said: StarChat's call insights (topics, the outcome under the dashboard's
+         one outcome rule, the questions the assistant could not answer, the checks that fired).
+         Absent on a call from before the feature, exactly like today. -->
+    <section v-if="hasInsights" class="call-box call-insights-box">
+      <h3 class="call-box-title">{{ $t("components.callInsights.panel.title") }}</h3>
+
+      <dl v-if="outcomeLabel" class="call-facts insight-outcome">
+        <dt>{{ $t("components.callInsights.panel.outcome") }}</dt>
+        <dd>
+          {{ outcomeLabel }}
+          <Tag
+            v-if="outcomeAssessed"
+            severity="secondary"
+            :value="$t('components.callInsights.assessedMarking')"
+            class="insight-assessed-tag"
+          />
+        </dd>
+      </dl>
+
+      <div v-if="topics.length > 0" class="insight-topics">
+        <Tag v-for="topic in topics" :key="topic" :value="topic" class="insight-topic-tag" />
+      </div>
+
+      <div v-if="unanswered.length > 0" class="insight-unanswered">
+        <h4 class="insight-subtitle">{{ $t("components.callInsights.panel.unansweredTitle") }}</h4>
+        <div v-for="(item, idx) in unanswered" :key="idx" class="insight-question">
+          <span class="insight-question-reason">{{ gapLabel(item.gap) }}</span>
+          <p class="insight-question-text">{{ item.question }}</p>
+          <p v-if="item.suggestion" class="insight-question-suggestion">
+            {{ $t("components.callInsights.panel.suggestion", { suggestion: item.suggestion }) }}
+          </p>
+        </div>
+      </div>
+
+      <div v-if="checksFired.length > 0" class="insight-checks-wrapper">
+        <h4 class="insight-subtitle">{{ $t("components.callInsights.panel.checksTitle") }}</h4>
+        <ul class="insight-checks">
+          <li v-for="key in checksFired" :key="key">{{ checkLabel(key) }}</li>
+        </ul>
+      </div>
+    </section>
+
     <section v-if="previousCalls.length > 0" class="call-section">
       <button
         type="button"
@@ -100,6 +142,7 @@
 
 <script>
 import ConversationApi from "@/utils/Conversation";
+import CallInsights from "@/utils/CallInsights";
 
 /**
  * The body of a call on the conversations page: what the business has to do about it, what the
@@ -167,6 +210,30 @@ export default {
     previousCalls() {
       return this.details.previousCalls || [];
     },
+    topics() {
+      return this.details.topics || [];
+    },
+    unanswered() {
+      return this.details.unanswered || [];
+    },
+    checksFired() {
+      const checks = this.details.checks || {};
+      return CallInsights.CHECK_KEYS.filter((key) => checks[key] === true);
+    },
+    outcome() {
+      return this.details.outcome || null;
+    },
+    outcomeAssessed() {
+      return !!this.outcome && CallInsights.outcomeKind(this.outcome) === "assessed";
+    },
+    outcomeLabel() {
+      if (!this.outcome) return null;
+      return this.$t("components.callInsights.outcomes." + this.outcome);
+    },
+    hasInsights() {
+      return this.topics.length > 0 || this.unanswered.length > 0 ||
+        this.checksFired.length > 0 || !!this.outcome;
+    },
     turns() {
       const data = this.conversation.data;
       const turns = data && Array.isArray(data.conversation_transcription) ? data.conversation_transcription : [];
@@ -179,6 +246,12 @@ export default {
     },
   },
   methods: {
+    gapLabel(gap) {
+      return this.$t("components.callInsights.gaps." + gap);
+    },
+    checkLabel(key) {
+      return this.$t("components.callInsights.checks." + key);
+    },
     async loadRecording() {
       this.recordingState = "loading";
       try {
@@ -392,5 +465,77 @@ export default {
 .call-note {
   font-size: 13px;
   color: @mrcall_grey_text2;
+}
+
+.insight-outcome {
+  margin-bottom: 10px;
+
+  dd {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+}
+
+.insight-assessed-tag {
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.insight-topics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.insight-subtitle {
+  margin: 10px 0 6px 0;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: @mrcall_grey_text2;
+}
+
+.insight-unanswered {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.insight-question {
+  border-left: 3px solid @mrcall_salmon;
+  padding-left: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.insight-question-reason {
+  font-size: 12px;
+  font-weight: 600;
+  color: @mrcall_grey_text2;
+}
+
+.insight-question-text {
+  margin: 0;
+  font-size: 15px;
+  color: @mrcall_dark_grey_text;
+}
+
+.insight-question-suggestion {
+  margin: 0;
+  font-size: 13px;
+  color: @mrcall_grey_text;
+}
+
+.insight-checks {
+  list-style: disc;
+  margin: 0;
+  padding-left: 18px;
+  font-size: 14px;
+  color: @mrcall_dark_grey_text;
 }
 </style>

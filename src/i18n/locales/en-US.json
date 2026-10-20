@@ -1878,6 +1878,36 @@
         "bad_covers": "It cannot be put back with that number of people.",
         "large_party": "It cannot be put back: the party is larger than the book takes now."
       }
+    },
+    "callInsights": {
+      "assessedMarking": "Assessed by the assistant",
+      "outcomes": {
+        "booked": "Booked",
+        "transferred": "Transferred",
+        "resolved": "Resolved",
+        "message_taken": "Message taken",
+        "unresolved": "Unresolved",
+        "caller_left": "Caller left",
+        "spam_wrong_number": "Spam or wrong number"
+      },
+      "gaps": {
+        "missing_info": "Missing information",
+        "needs_integration": "Needs an integration",
+        "out_of_scope": "Out of scope",
+        "assistant_error": "Assistant error"
+      },
+      "checks": {
+        "caller_repeated": "The caller had to repeat themselves",
+        "caller_unsatisfied": "The caller seemed unsatisfied",
+        "promise_not_kept_in_call": "A promise made in the call was not kept"
+      },
+      "panel": {
+        "title": "What the call was about",
+        "outcome": "Outcome",
+        "unansweredTitle": "Questions left unanswered",
+        "checksTitle": "Checks",
+        "suggestion": "What you could give your assistant: {suggestion}"
+      }
     }
   },
   "views": {
