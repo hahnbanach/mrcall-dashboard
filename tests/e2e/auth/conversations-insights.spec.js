@@ -88,3 +88,120 @@ test.describe('Conversations: what the opened call said', () => {
     await expect(opened.locator('.call-insights-box')).toHaveCount(0)
   })
 })
+
+/**
+ * The list's outcome and "unanswered questions" filters (brief outcome 2): one body
+ * (`searchBody` in `Conversations.vue`) feeds the list search, its poll, both exports and the two
+ * bulk actions alike, so an export or a bulk action acts on exactly the calls the list shows.
+ * `totalHits` is answered as 25 regardless of the filters (this stub does not implement StarChat's
+ * filtering), on purpose: the point here is the request each of the six call sites sends, not the
+ * result StarChat would compute from it.
+ */
+async function mockConversationFiltering (page, { totalHits = 25 } = {}) {
+  const searchRequests = []
+  const exportRequests = { tsv: [], json: [] }
+  const actionRequests = { archive: [], delete: [] }
+
+  await page.route('**/customer/conversation/search*', (route) => {
+    const body = route.request().postDataJSON() || {}
+    searchRequests.push(body)
+    const hits = [callWithInsights]
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        totalHits,
+        hitsCount: hits.length,
+        maxScore: 1,
+        hits: hits.map(document => ({ score: 1, document }))
+      })
+    })
+  })
+  await page.route('**/customer/conversation/stream/tsv/**', (route) => {
+    exportRequests.tsv.push(route.request().postDataJSON() || {})
+    route.fulfill({ status: 200, contentType: 'text/csv', body: 'id\n' })
+  })
+  await page.route('**/customer/conversation/stream/json/**', (route) => {
+    exportRequests.json.push(route.request().postDataJSON() || {})
+    route.fulfill({ status: 200, contentType: 'application/json', body: '[]' })
+  })
+  await page.route('**/customer/conversation/archive*', (route) => {
+    actionRequests.archive.push(route.request().postDataJSON() || {})
+    route.fulfill({ status: 200, contentType: 'application/json', body: '3' })
+  })
+  await page.route('**/customer/conversation/delete*', (route) => {
+    actionRequests.delete.push(route.request().postDataJSON() || {})
+    route.fulfill({ status: 200, contentType: 'application/json', body: '3' })
+  })
+
+  return { searchRequests, exportRequests, actionRequests }
+}
+
+test.describe('Conversations: filtering on what the call said', () => {
+  test('the outcome filter and the unanswered toggle reach the list, both exports and the bulk actions alike, and a change starts over from the first page', async ({ authenticatedPage: page }) => {
+    const { searchRequests, exportRequests, actionRequests } = await mockConversationFiltering(page)
+    await page.goto('/conversations?id=test-biz-001')
+    await expect(page.locator('.conversation-card').first()).toBeVisible({ timeout: 15000 })
+
+    await page.getByRole('button', { name: 'Next Page' }).first().click()
+    await expect.poll(() => searchRequests.at(-1).from).toBe(10)
+
+    await page.getByRole('combobox', { name: 'Outcome' }).click()
+    await page.getByRole('option', { name: 'Unresolved' }).click()
+    await expect.poll(() => searchRequests.at(-1).outcome).toBe('unresolved')
+    expect(searchRequests.at(-1).from).toBe(0)
+
+    await page.getByRole('button', { name: 'Unanswered questions' }).click()
+    await expect.poll(() => searchRequests.at(-1).hasUnanswered).toBe(true)
+    expect(searchRequests.at(-1).outcome).toBe('unresolved')
+    expect(searchRequests.at(-1).from).toBe(0)
+
+    await page.getByRole('button', { name: 'TSV' }).click()
+    await expect.poll(() => exportRequests.tsv.length).toBeGreaterThan(0)
+    expect(exportRequests.tsv.at(-1)).toMatchObject({ outcome: 'unresolved', hasUnanswered: true })
+
+    await page.getByRole('button', { name: 'JSON' }).click()
+    await expect.poll(() => exportRequests.json.length).toBeGreaterThan(0)
+    expect(exportRequests.json.at(-1)).toMatchObject({ outcome: 'unresolved', hasUnanswered: true })
+
+    await page.getByRole('button', { name: 'Archive All' }).click()
+    await page.getByRole('button', { name: 'Yes' }).click()
+    await expect.poll(() => actionRequests.archive.length).toBeGreaterThan(0)
+    expect(actionRequests.archive.at(-1)).toMatchObject({ outcome: 'unresolved', hasUnanswered: true })
+
+    await page.getByRole('button', { name: 'Delete All' }).click()
+    await page.getByRole('button', { name: 'Yes' }).click()
+    await expect.poll(() => actionRequests.delete.length).toBeGreaterThan(0)
+    expect(actionRequests.delete.at(-1)).toMatchObject({ outcome: 'unresolved', hasUnanswered: true })
+  })
+
+  test('the poll carries the filters set on the list', async ({ authenticatedPage: page }) => {
+    const { searchRequests } = await mockConversationFiltering(page)
+    await page.clock.install()
+    await page.goto('/conversations?id=test-biz-001')
+    await expect(page.locator('.conversation-card').first()).toBeVisible({ timeout: 15000 })
+
+    await page.getByRole('combobox', { name: 'Outcome' }).click()
+    await page.getByRole('option', { name: 'Booked' }).click()
+    await expect.poll(() => searchRequests.at(-1).outcome).toBe('booked')
+
+    const before = searchRequests.length
+    await page.clock.fastForward(11000)
+    await expect.poll(() => searchRequests.length).toBeGreaterThan(before)
+    expect(searchRequests.at(-1).outcome).toBe('booked')
+  })
+
+  test('the outcome dropdown groups booked and transferred as recorded, the rest as the assistant\'s own assessment', async ({ authenticatedPage: page }) => {
+    await mockConversationFiltering(page)
+    await page.goto('/conversations?id=test-biz-001')
+    await expect(page.locator('.conversation-card').first()).toBeVisible({ timeout: 15000 })
+
+    await page.getByRole('combobox', { name: 'Outcome' }).click()
+    const text = await page.getByRole('listbox').innerText()
+    expect(text.indexOf('Recorded')).toBeGreaterThanOrEqual(0)
+    expect(text.indexOf('Recorded')).toBeLessThan(text.indexOf('Booked'))
+    expect(text.indexOf('Booked')).toBeLessThan(text.indexOf('Transferred'))
+    expect(text.indexOf('Transferred')).toBeLessThan(text.indexOf('Assessed by the assistant'))
+    expect(text.indexOf('Assessed by the assistant')).toBeLessThan(text.indexOf('Resolved'))
+  })
+})

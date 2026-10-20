@@ -1907,6 +1907,15 @@
         "unansweredTitle": "Questions left unanswered",
         "checksTitle": "Checks",
         "suggestion": "What you could give your assistant: {suggestion}"
+      },
+      "filters": {
+        "outcomeLabel": "Outcome",
+        "outcomePlaceholder": "Any outcome",
+        "outcomeGroupRecorded": "Recorded",
+        "outcomeGroupAssessed": "Assessed by the assistant",
+        "unansweredLabel": "Unanswered questions",
+        "unansweredOn": "With an unanswered question",
+        "unansweredOff": "All calls"
       }
     }
   },

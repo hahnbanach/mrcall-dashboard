@@ -116,6 +116,43 @@
               </div>
             </div>
 
+            <!-- Outcome Row (brief outcome 2: what the call said) -->
+            <div class="filter-row">
+              <label class="filter-label">
+                <i class="pi pi-comment"></i>
+                {{ $t("components.callInsights.filters.outcomeLabel") }}
+              </label>
+              <div class="filter-control">
+                <Dropdown
+                  v-model="outcomeFilter"
+                  :options="outcomeFilterGroups"
+                  optionLabel="label"
+                  optionValue="value"
+                  optionGroupLabel="label"
+                  optionGroupChildren="items"
+                  :showClear="true"
+                  :ariaLabel="$t('components.callInsights.filters.outcomeLabel')"
+                  :placeholder="$t('components.callInsights.filters.outcomePlaceholder')"
+                />
+              </div>
+            </div>
+
+            <!-- Unanswered Questions Row -->
+            <div class="filter-row">
+              <label class="filter-label">
+                <i class="pi pi-question-circle"></i>
+                {{ $t("components.callInsights.filters.unansweredLabel") }}
+              </label>
+              <div class="toggle-control">
+                <ToggleButton
+                  v-model="unansweredFilter"
+                  :onLabel="$t('components.callInsights.filters.unansweredOn')"
+                  :offLabel="$t('components.callInsights.filters.unansweredOff')"
+                  :ariaLabel="$t('components.callInsights.filters.unansweredLabel')"
+                />
+              </div>
+            </div>
+
             <!-- View Mode Row -->
             <div class="filter-row">
               <label class="filter-label">
@@ -447,6 +484,7 @@ import { interval } from "rxjs";
 import Tr from "@/i18n/translation";
 import ConversationApi from "@/utils/Conversation";
 import CallDetailsPanel from "@/components/conversations/CallDetailsPanel";
+import CallInsights from "@/utils/CallInsights";
 
 export default {
   components: { CallDetailsPanel },
@@ -493,9 +531,30 @@ export default {
       mobileMenuItems: [],
       hideRead: false,
       newestTimestamp: null,
+      // What the call said (brief outcome 2): null/false means no filter.
+      outcomeFilter: null,
+      unansweredFilter: false,
     };
   },
   computed: {
+    outcomeFilterGroups() {
+      return [
+        {
+          label: this.$t("components.callInsights.filters.outcomeGroupRecorded"),
+          items: CallInsights.FACT_OUTCOMES.map((key) => ({
+            label: this.$t("components.callInsights.outcomes." + key),
+            value: key,
+          })),
+        },
+        {
+          label: this.$t("components.callInsights.filters.outcomeGroupAssessed"),
+          items: CallInsights.ASSESSED_OUTCOMES.map((key) => ({
+            label: this.$t("components.callInsights.outcomes." + key),
+            value: key,
+          })),
+        },
+      ];
+    },
     filteredItems() {
       if (!this.hideRead) return this.items;
       const filtered = new Map();
@@ -651,6 +710,31 @@ export default {
       // inbox
       return { archived: false, deleted: false };
     },
+    // The one body the list, its poll, both exports and the two bulk actions build from: the
+    // view, the date range and what the call said (outcome, unanswered questions), so an export or
+    // a bulk action always acts on exactly the calls the list shows. `extra` carries what is
+    // specific to one caller (pagination, `lightweight`, the poll's own `timestampGte`), applied
+    // after the shared fields so it can override them.
+    searchBody(extra = {}) {
+      const body = {
+        businessId: this.businessId,
+        ...this.getViewFilters(),
+      };
+      if (this.timestampGte != null) body.timestampGte = this.timestampGte;
+      if (this.timestampLte != null) body.timestampLte = this.timestampLte;
+      if (this.outcomeFilter) body.outcome = this.outcomeFilter;
+      if (this.unansweredFilter) body.hasUnanswered = true;
+      return { ...body, ...extra };
+    },
+    // A changed view or filter invalidates the page shown: start over from the first one, as
+    // (before this) only a changed view already did.
+    resetAndReload() {
+      this.first = 0;
+      this.items = new Map();
+      this.totalHits = 0;
+      this.newestTimestamp = null;
+      this.conversationList();
+    },
     downloadItemsTsv() {
       if (!this.user || !this.user.accessToken) return;
       const self = this;
@@ -658,13 +742,7 @@ export default {
         "Content-type": "application/json; charset=UTF-8",
         auth: this.user.accessToken,
       };
-      const request = {
-        businessId: this.businessId,
-        lightweight: true,
-        ...this.getViewFilters(),
-      };
-      if (this.timestampGte != null) request.timestampGte = this.timestampGte;
-      if (this.timestampLte != null) request.timestampLte = this.timestampLte;
+      const request = this.searchBody({ lightweight: true });
       console.debug(request);
       self.showProgressBar = true;
       axios
@@ -698,13 +776,7 @@ export default {
         "Content-type": "application/json; charset=UTF-8",
         auth: this.user.accessToken,
       };
-      const request = {
-        businessId: this.businessId,
-        lightweight: true,
-        ...this.getViewFilters(),
-      };
-      if (this.timestampGte != null) request.timestampGte = this.timestampGte;
-      if (this.timestampLte != null) request.timestampLte = this.timestampLte;
+      const request = this.searchBody({ lightweight: true });
       console.debug(request);
       self.showProgressBar = true;
       axios
@@ -742,16 +814,8 @@ export default {
         "Content-type": "application/json; charset=UTF-8",
         auth: this.user.accessToken,
       };
-      const request = {
-        businessId: self.businessId,
-        // the recordings stay out of the list: CallDetailsPanel reads one when it is played
-        lightweight: true,
-        from: self.first,
-        size: self.size,
-        ...self.getViewFilters(),
-      };
-      if (self.timestampGte != null) request.timestampGte = self.timestampGte;
-      if (self.timestampLte != null) request.timestampLte = self.timestampLte;
+      // the recordings stay out of the list: CallDetailsPanel reads one when it is played
+      const request = self.searchBody({ lightweight: true, from: self.first, size: self.size });
       self.showProgressBar = true;
       axios
         .post(
@@ -814,16 +878,13 @@ export default {
         "Content-type": "application/json; charset=UTF-8",
         auth: this.user.accessToken,
       };
-      const request = {
-        businessId: self.businessId,
-        // the recordings stay out of the list: CallDetailsPanel reads one when it is played
+      // the recordings stay out of the list: CallDetailsPanel reads one when it is played
+      const request = self.searchBody({
         lightweight: true,
         from: 0,
         size: self.size,
         timestampGte: self.newestTimestamp + 1,
-        ...self.getViewFilters(),
-      };
-      if (self.timestampLte != null) request.timestampLte = self.timestampLte;
+      });
       self.showProgressBar = true;
       axios
         .post(
@@ -1101,13 +1162,7 @@ export default {
       });
     },
     buildSearchFilter() {
-      const filter = {
-        businessId: this.businessId,
-        ...this.getViewFilters(),
-      };
-      if (this.timestampGte != null) filter.timestampGte = this.timestampGte;
-      if (this.timestampLte != null) filter.timestampLte = this.timestampLte;
-      return filter;
+      return this.searchBody();
     },
     bulkArchiveAll() {
       this.confirm.require({
@@ -1240,11 +1295,13 @@ export default {
   },
   watch: {
     activeView() {
-      this.first = 0;
-      this.items = new Map();
-      this.totalHits = 0;
-      this.newestTimestamp = null;
-      this.conversationList();
+      this.resetAndReload();
+    },
+    outcomeFilter() {
+      this.resetAndReload();
+    },
+    unansweredFilter() {
+      this.resetAndReload();
     },
     rangeValue: function (value) {
       if (!this.user || !this.user.accessToken) return;
