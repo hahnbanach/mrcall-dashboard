@@ -1873,6 +1873,99 @@
         "bad_covers": "Selle inimeste arvuga ei saa seda taastada.",
         "large_party": "Seda ei saa taastada: seltskond on suurem, kui raamat praegu vastu võtab."
       }
+    },
+    "callInsights": {
+      "assessedMarking": "Assistendi hinnang",
+      "outcomes": {
+        "booked": "Broneeritud",
+        "transferred": "Suunatud",
+        "resolved": "Lahendatud",
+        "message_taken": "Sõnum vastu võetud",
+        "unresolved": "Lahendamata",
+        "caller_left": "Helistaja lahkus",
+        "spam_wrong_number": "Rämpspost või vale number"
+      },
+      "gaps": {
+        "missing_info": "Puuduv teave",
+        "needs_integration": "Vajab integratsiooni",
+        "out_of_scope": "Väljaspool ulatust",
+        "assistant_error": "Assistendi viga"
+      },
+      "checks": {
+        "caller_repeated": "Helistaja pidi ennast kordama",
+        "caller_unsatisfied": "Helistaja tundus rahulolematu",
+        "promise_not_kept_in_call": "Kõne ajal antud lubadust ei peetud"
+      },
+      "panel": {
+        "title": "Mille kohta kõne käis",
+        "outcome": "Tulemus",
+        "unansweredTitle": "Vastuseta jäänud küsimused",
+        "checksTitle": "Kontrollid",
+        "suggestion": "Mida saaksid oma assistendile anda: {suggestion}"
+      },
+      "filters": {
+        "outcomeLabel": "Tulemus",
+        "outcomePlaceholder": "Iga tulemus",
+        "outcomeGroupRecorded": "Salvestatud",
+        "outcomeGroupAssessed": "Assistendi hinnatud",
+        "unansweredLabel": "Vastuseta küsimused",
+        "unansweredOn": "Vastuseta küsimusega",
+        "unansweredOff": "Kõik kõned"
+      },
+      "notAvailableYet": "Pole veel saadaval.",
+      "whatCallsSaid": {
+        "title": "Mille kohta kõned käisid",
+        "coverage": "{withOutcome} kõnel {total}-st on salvestatud tulemus."
+      },
+      "quality": {
+        "title": "Kvaliteet",
+        "unansweredTitle": "Vastuseta küsimused",
+        "checksTitle": "Kontrollid",
+        "skillErrorsTitle": "Funktsioonivead",
+        "extractionTitle": "Väljavõtteprobleemid",
+        "countOfTotal": "{count} kõnet {total}-st"
+      },
+      "reports": {
+        "title": "Kõnearuanded",
+        "none": "Ühtegi aruannet veel pole.",
+        "topicsTitle": "Teemad",
+        "newTopic": "Uus",
+        "topicShare": "{calls} kõnet ({percent}%)",
+        "gapsTitle": "Vastuseta jäänud küsimused",
+        "suggestionsTitle": "Soovitused",
+        "businessInfoTitle": "Mida ainult sina saad oma assistendile öelda",
+        "integrationTitle": "Ühendatav süsteem",
+        "mrcallConfigTitle": "MrCalli seadistussoovitused",
+        "flaggedTitle": "Lugemist väärivad kõned",
+        "loadMore": "Näita varasemaid aruandeid"
+      },
+      "assistants": {
+        "title": "Ülevaatamist vajavad assistendid",
+        "sortLabel": "Sorteeri",
+        "businessId": "Ettevõte",
+        "calls": "Kõned",
+        "notSolved": "Lahendamata",
+        "unanswered": "Vastuseta",
+        "checks": "Kontrollid",
+        "skillErrors": "Funktsioonivead",
+        "extractionIssues": "Väljavõtteprobleemid",
+        "shareOfTotal": "{percent}% ({count} / {total})",
+        "sortOptions": {
+          "calls": "Kõned",
+          "notSolved": "Lahendamata (assistendi hinnang)",
+          "unanswered": "Vastuseta küsimused",
+          "checks": "Kontrollid",
+          "skillErrors": "Funktsioonivead",
+          "extractionFailures": "Väljavõtteprobleemid"
+        }
+      },
+      "scope": {
+        "title": "Integratsioonid ja küsitud teave",
+        "allBusinesses": "Kõigis ettevõtetes, mida näed, viimase 30 päeva jooksul.",
+        "none": "Veel pole midagi näidata.",
+        "saidBy": "{businesses} ettevõtet, {reports} aruannet",
+        "configSuggestionsTitle": "MrCalli seadistussoovitused"
+      }
     }
   },
   "views": {

@@ -1879,6 +1879,99 @@
         "bad_covers": "Non si può ripristinare con quel numero di persone.",
         "large_party": "Non si può ripristinare: il gruppo è più grande di quanto il libro accetta ora."
       }
+    },
+    "callInsights": {
+      "assessedMarking": "Valutato dall'assistente",
+      "outcomes": {
+        "booked": "Prenotato",
+        "transferred": "Trasferito",
+        "resolved": "Risolto",
+        "message_taken": "Messaggio preso",
+        "unresolved": "Non risolto",
+        "caller_left": "Chiamante uscito",
+        "spam_wrong_number": "Spam o numero sbagliato"
+      },
+      "gaps": {
+        "missing_info": "Informazioni mancanti",
+        "needs_integration": "Serve un'integrazione",
+        "out_of_scope": "Fuori portata",
+        "assistant_error": "Errore dell'assistente"
+      },
+      "checks": {
+        "caller_repeated": "Il chiamante ha dovuto ripetersi",
+        "caller_unsatisfied": "Il chiamante sembrava insoddisfatto",
+        "promise_not_kept_in_call": "Una promessa fatta durante la chiamata non è stata mantenuta"
+      },
+      "panel": {
+        "title": "Di cosa parlava la chiamata",
+        "outcome": "Esito",
+        "unansweredTitle": "Domande rimaste senza risposta",
+        "checksTitle": "Controlli",
+        "suggestion": "Cosa potresti dare al tuo assistente: {suggestion}"
+      },
+      "filters": {
+        "outcomeLabel": "Esito",
+        "outcomePlaceholder": "Qualsiasi esito",
+        "outcomeGroupRecorded": "Registrati",
+        "outcomeGroupAssessed": "Valutati dall'assistente",
+        "unansweredLabel": "Domande senza risposta",
+        "unansweredOn": "Con una domanda senza risposta",
+        "unansweredOff": "Tutte le chiamate"
+      },
+      "notAvailableYet": "Non ancora disponibile.",
+      "whatCallsSaid": {
+        "title": "Di cosa hanno parlato le chiamate",
+        "coverage": "{withOutcome} di {total} chiamate hanno un esito registrato."
+      },
+      "quality": {
+        "title": "Qualità",
+        "unansweredTitle": "Domande senza risposta",
+        "checksTitle": "Controlli",
+        "skillErrorsTitle": "Errori delle funzioni",
+        "extractionTitle": "Problemi di estrazione",
+        "countOfTotal": "{count} di {total} chiamate"
+      },
+      "reports": {
+        "title": "Report delle chiamate",
+        "none": "Ancora nessun report.",
+        "topicsTitle": "Argomenti",
+        "newTopic": "Nuovo",
+        "topicShare": "{calls} chiamate ({percent}%)",
+        "gapsTitle": "Domande rimaste senza risposta",
+        "suggestionsTitle": "Suggerimenti",
+        "businessInfoTitle": "Cosa solo tu puoi dire al tuo assistente",
+        "integrationTitle": "Un sistema da collegare",
+        "mrcallConfigTitle": "Suggerimenti di configurazione MrCall",
+        "flaggedTitle": "Chiamate da rileggere",
+        "loadMore": "Mostra report precedenti"
+      },
+      "assistants": {
+        "title": "Assistenti da rivedere",
+        "sortLabel": "Ordina per",
+        "businessId": "Attività",
+        "calls": "Chiamate",
+        "notSolved": "Non risolte",
+        "unanswered": "Senza risposta",
+        "checks": "Controlli",
+        "skillErrors": "Errori delle funzioni",
+        "extractionIssues": "Problemi di estrazione",
+        "shareOfTotal": "{percent}% ({count} di {total})",
+        "sortOptions": {
+          "calls": "Chiamate",
+          "notSolved": "Non risolte (valutato dall'assistente)",
+          "unanswered": "Domande senza risposta",
+          "checks": "Controlli",
+          "skillErrors": "Errori delle funzioni",
+          "extractionFailures": "Problemi di estrazione"
+        }
+      },
+      "scope": {
+        "title": "Integrazioni e informazioni richieste",
+        "allBusinesses": "In tutte le attività che puoi vedere, negli ultimi 30 giorni.",
+        "none": "Niente da mostrare per ora.",
+        "saidBy": "{businesses} attività, {reports} report",
+        "configSuggestionsTitle": "Suggerimenti di configurazione MrCall"
+      }
     }
   },
   "views": {

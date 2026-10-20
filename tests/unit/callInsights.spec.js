@@ -2,8 +2,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 /**
  * `src/utils/CallInsights.js`: the outcome rule, and the clients for StarChat's call-insights
- * routes (`docs/analytics-api-guide.md` §7-10 and `docs/customer-conversation-api-guide.md` of the
- * StarChat repository, read 2026-10-20). Each client is checked for the path and body it sends,
+ * routes (its own conversation-analytics API reference, §7-10, and its customer conversation API
+ * guide, read 2026-10-20). Each client is checked for the path and body it sends,
  * and for the three answers every route can give beyond 200: 404 (no access, or out of scope) as
  * an absent section, 503 (reports, migration not run) as "not available yet", and a session-ended
  * error passed through untouched for the axios interceptor's own navigation.

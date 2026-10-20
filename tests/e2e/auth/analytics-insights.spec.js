@@ -7,10 +7,10 @@ const { mockBusiness } = require('../fixtures/mock-data')
  * Call insights on the analytics page (brief `docs/briefs/2026-10-20-call-insights.md`, plan
  * `docs/execution-plans/2026-10-20-call-insights.md`, D4): "What calls said", "Quality" and "Call
  * reports" on the owner's business page (`/analytics?id=<business>`), and the reseller's scope page
- * (`/analytics` with no business). Mocked at the real StarChat paths
- * (`docs/analytics-api-guide.md` §7-10 of the StarChat repository); `setupApiMocks` in
- * `tests/e2e/fixtures/auth.js` already answers the four routes with a shape-correct, empty
- * default, so a test only overrides what it reads.
+ * (`/analytics` with no business). Mocked at the real StarChat paths (StarChat's own
+ * conversation-analytics API reference, §7-10); `setupApiMocks` in `tests/e2e/fixtures/auth.js`
+ * already answers the four routes with a shape-correct, empty default, so a test only overrides
+ * what it reads.
  */
 const BUSINESS_ID = mockBusiness.businessId
 

@@ -1873,6 +1873,99 @@
         "bad_covers": "Met dat aantal personen kan het niet worden hersteld.",
         "large_party": "Dit kan niet worden hersteld: de groep is groter dan het boek nu aanneemt."
       }
+    },
+    "callInsights": {
+      "assessedMarking": "Door de assistent beoordeeld",
+      "outcomes": {
+        "booked": "Geboekt",
+        "transferred": "Doorverbonden",
+        "resolved": "Opgelost",
+        "message_taken": "Bericht genoteerd",
+        "unresolved": "Niet opgelost",
+        "caller_left": "Beller heeft opgehangen",
+        "spam_wrong_number": "Spam of verkeerd nummer"
+      },
+      "gaps": {
+        "missing_info": "Ontbrekende informatie",
+        "needs_integration": "Heeft een integratie nodig",
+        "out_of_scope": "Buiten bereik",
+        "assistant_error": "Fout van de assistent"
+      },
+      "checks": {
+        "caller_repeated": "De beller moest zichzelf herhalen",
+        "caller_unsatisfied": "De beller leek ontevreden",
+        "promise_not_kept_in_call": "Een belofte uit het gesprek is niet nagekomen"
+      },
+      "panel": {
+        "title": "Waar het gesprek over ging",
+        "outcome": "Resultaat",
+        "unansweredTitle": "Onbeantwoorde vragen",
+        "checksTitle": "Controles",
+        "suggestion": "Wat u uw assistent zou kunnen geven: {suggestion}"
+      },
+      "filters": {
+        "outcomeLabel": "Resultaat",
+        "outcomePlaceholder": "Elk resultaat",
+        "outcomeGroupRecorded": "Geregistreerd",
+        "outcomeGroupAssessed": "Door de assistent beoordeeld",
+        "unansweredLabel": "Onbeantwoorde vragen",
+        "unansweredOn": "Met een onbeantwoorde vraag",
+        "unansweredOff": "Alle gesprekken"
+      },
+      "notAvailableYet": "Nog niet beschikbaar.",
+      "whatCallsSaid": {
+        "title": "Waar de gesprekken over gingen",
+        "coverage": "{withOutcome} van de {total} gesprekken hebben een geregistreerd resultaat."
+      },
+      "quality": {
+        "title": "Kwaliteit",
+        "unansweredTitle": "Onbeantwoorde vragen",
+        "checksTitle": "Controles",
+        "skillErrorsTitle": "Functiefouten",
+        "extractionTitle": "Extractieproblemen",
+        "countOfTotal": "{count} van de {total} gesprekken"
+      },
+      "reports": {
+        "title": "Gespreksrapporten",
+        "none": "Nog geen rapport.",
+        "topicsTitle": "Onderwerpen",
+        "newTopic": "Nieuw",
+        "topicShare": "{calls} gesprekken ({percent}%)",
+        "gapsTitle": "Onbeantwoorde vragen",
+        "suggestionsTitle": "Suggesties",
+        "businessInfoTitle": "Wat alleen u uw assistent kunt vertellen",
+        "integrationTitle": "Een systeem om te koppelen",
+        "mrcallConfigTitle": "MrCall-configuratiesuggesties",
+        "flaggedTitle": "Gesprekken die het lezen waard zijn",
+        "loadMore": "Eerdere rapporten tonen"
+      },
+      "assistants": {
+        "title": "Te controleren assistenten",
+        "sortLabel": "Sorteren op",
+        "businessId": "Bedrijf",
+        "calls": "Gesprekken",
+        "notSolved": "Niet opgelost",
+        "unanswered": "Onbeantwoord",
+        "checks": "Controles",
+        "skillErrors": "Functiefouten",
+        "extractionIssues": "Extractieproblemen",
+        "shareOfTotal": "{percent}% ({count} van de {total})",
+        "sortOptions": {
+          "calls": "Gesprekken",
+          "notSolved": "Niet opgelost (door de assistent beoordeeld)",
+          "unanswered": "Onbeantwoorde vragen",
+          "checks": "Controles",
+          "skillErrors": "Functiefouten",
+          "extractionFailures": "Extractieproblemen"
+        }
+      },
+      "scope": {
+        "title": "Integraties en gevraagde informatie",
+        "allBusinesses": "Over alle bedrijven die u kunt zien, van de afgelopen 30 dagen.",
+        "none": "Nog niets om te tonen.",
+        "saidBy": "{businesses} bedrijven, {reports} rapporten",
+        "configSuggestionsTitle": "MrCall-configuratiesuggesties"
+      }
     }
   },
   "views": {

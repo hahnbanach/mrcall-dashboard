@@ -1873,6 +1873,99 @@
         "bad_covers": "Det kan ikke gendannes med det antal personer.",
         "large_party": "Det kan ikke gendannes: selskabet er større, end bogen nu tager imod."
       }
+    },
+    "callInsights": {
+      "assessedMarking": "Vurderet af assistenten",
+      "outcomes": {
+        "booked": "Booket",
+        "transferred": "Viderestillet",
+        "resolved": "Løst",
+        "message_taken": "Besked noteret",
+        "unresolved": "Uløst",
+        "caller_left": "Den der ringede, lagde på",
+        "spam_wrong_number": "Spam eller forkert nummer"
+      },
+      "gaps": {
+        "missing_info": "Manglende information",
+        "needs_integration": "Kræver en integration",
+        "out_of_scope": "Uden for omfang",
+        "assistant_error": "Fejl hos assistenten"
+      },
+      "checks": {
+        "caller_repeated": "Den der ringede, måtte gentage sig",
+        "caller_unsatisfied": "Den der ringede, virkede utilfreds",
+        "promise_not_kept_in_call": "Et løfte givet under opkaldet blev ikke holdt"
+      },
+      "panel": {
+        "title": "Hvad opkaldet handlede om",
+        "outcome": "Udfald",
+        "unansweredTitle": "Spørgsmål uden svar",
+        "checksTitle": "Kontroller",
+        "suggestion": "Hvad du kunne give din assistent: {suggestion}"
+      },
+      "filters": {
+        "outcomeLabel": "Udfald",
+        "outcomePlaceholder": "Ethvert udfald",
+        "outcomeGroupRecorded": "Registreret",
+        "outcomeGroupAssessed": "Vurderet af assistenten",
+        "unansweredLabel": "Ubesvarede spørgsmål",
+        "unansweredOn": "Med et ubesvaret spørgsmål",
+        "unansweredOff": "Alle opkald"
+      },
+      "notAvailableYet": "Endnu ikke tilgængelig.",
+      "whatCallsSaid": {
+        "title": "Hvad opkaldene handlede om",
+        "coverage": "{withOutcome} ud af {total} opkald har et registreret udfald."
+      },
+      "quality": {
+        "title": "Kvalitet",
+        "unansweredTitle": "Ubesvarede spørgsmål",
+        "checksTitle": "Kontroller",
+        "skillErrorsTitle": "Funktionsfejl",
+        "extractionTitle": "Udtræksproblemer",
+        "countOfTotal": "{count} ud af {total} opkald"
+      },
+      "reports": {
+        "title": "Opkaldsrapporter",
+        "none": "Ingen rapport endnu.",
+        "topicsTitle": "Emner",
+        "newTopic": "Nyt",
+        "topicShare": "{calls} opkald ({percent} %)",
+        "gapsTitle": "Spørgsmål uden svar",
+        "suggestionsTitle": "Forslag",
+        "businessInfoTitle": "Hvad kun du kan fortælle din assistent",
+        "integrationTitle": "Et system at forbinde",
+        "mrcallConfigTitle": "MrCalls konfigurationsforslag",
+        "flaggedTitle": "Opkald, det er værd at læse",
+        "loadMore": "Vis tidligere rapporter"
+      },
+      "assistants": {
+        "title": "Assistenter, der skal gennemgås",
+        "sortLabel": "Sortér efter",
+        "businessId": "Virksomhed",
+        "calls": "Opkald",
+        "notSolved": "Uløste",
+        "unanswered": "Ubesvarede",
+        "checks": "Kontroller",
+        "skillErrors": "Funktionsfejl",
+        "extractionIssues": "Udtræksproblemer",
+        "shareOfTotal": "{percent} % ({count} ud af {total})",
+        "sortOptions": {
+          "calls": "Opkald",
+          "notSolved": "Uløste (vurderet af assistenten)",
+          "unanswered": "Ubesvarede spørgsmål",
+          "checks": "Kontroller",
+          "skillErrors": "Funktionsfejl",
+          "extractionFailures": "Udtræksproblemer"
+        }
+      },
+      "scope": {
+        "title": "Integrationer og efterspurgt information",
+        "allBusinesses": "På tværs af alle virksomheder, du kan se, de seneste 30 dage.",
+        "none": "Intet at vise endnu.",
+        "saidBy": "{businesses} virksomheder, {reports} rapporter",
+        "configSuggestionsTitle": "MrCalls konfigurationsforslag"
+      }
     }
   },
   "views": {

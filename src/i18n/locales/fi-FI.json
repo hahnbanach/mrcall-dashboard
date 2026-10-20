@@ -1873,6 +1873,99 @@
         "bad_covers": "Sitä ei voi palauttaa tällä henkilömäärällä.",
         "large_party": "Sitä ei voi palauttaa: seurue on suurempi kuin varauskirja nyt ottaa."
       }
+    },
+    "callInsights": {
+      "assessedMarking": "Avustajan arvioima",
+      "outcomes": {
+        "booked": "Varattu",
+        "transferred": "Yhdistetty",
+        "resolved": "Ratkaistu",
+        "message_taken": "Viesti vastaanotettu",
+        "unresolved": "Ratkaisematta",
+        "caller_left": "Soittaja lopetti puhelun",
+        "spam_wrong_number": "Roskapostia tai väärä numero"
+      },
+      "gaps": {
+        "missing_info": "Puuttuvat tiedot",
+        "needs_integration": "Vaatii integraation",
+        "out_of_scope": "Ei kuulu laajuuteen",
+        "assistant_error": "Avustajan virhe"
+      },
+      "checks": {
+        "caller_repeated": "Soittajan piti toistaa itseään",
+        "caller_unsatisfied": "Soittaja vaikutti tyytymättömältä",
+        "promise_not_kept_in_call": "Puhelussa annettua lupausta ei pidetty"
+      },
+      "panel": {
+        "title": "Mistä puhelu kertoi",
+        "outcome": "Lopputulos",
+        "unansweredTitle": "Kysymykset, joihin ei vastattu",
+        "checksTitle": "Tarkistukset",
+        "suggestion": "Mitä voisit antaa avustajallesi: {suggestion}"
+      },
+      "filters": {
+        "outcomeLabel": "Lopputulos",
+        "outcomePlaceholder": "Mikä tahansa lopputulos",
+        "outcomeGroupRecorded": "Kirjatut",
+        "outcomeGroupAssessed": "Avustajan arvioimat",
+        "unansweredLabel": "Vastaamattomat kysymykset",
+        "unansweredOn": "Vastaamaton kysymys mukana",
+        "unansweredOff": "Kaikki puhelut"
+      },
+      "notAvailableYet": "Ei vielä saatavilla.",
+      "whatCallsSaid": {
+        "title": "Mistä puhelut kertoivat",
+        "coverage": "{withOutcome} / {total} puhelulla on kirjattu lopputulos."
+      },
+      "quality": {
+        "title": "Laatu",
+        "unansweredTitle": "Vastaamattomat kysymykset",
+        "checksTitle": "Tarkistukset",
+        "skillErrorsTitle": "Toimintovirheet",
+        "extractionTitle": "Poiminnan ongelmat",
+        "countOfTotal": "{count} / {total} puhelua"
+      },
+      "reports": {
+        "title": "Puheluraportit",
+        "none": "Ei vielä raporttia.",
+        "topicsTitle": "Aiheet",
+        "newTopic": "Uusi",
+        "topicShare": "{calls} puhelua ({percent} %)",
+        "gapsTitle": "Kysymykset, joihin ei vastattu",
+        "suggestionsTitle": "Ehdotukset",
+        "businessInfoTitle": "Mitä vain sinä voit kertoa avustajallesi",
+        "integrationTitle": "Järjestelmä yhdistettäväksi",
+        "mrcallConfigTitle": "MrCallin asetusehdotukset",
+        "flaggedTitle": "Puhelut, jotka kannattaa lukea",
+        "loadMore": "Näytä aiemmat raportit"
+      },
+      "assistants": {
+        "title": "Tarkistettavat avustajat",
+        "sortLabel": "Järjestä",
+        "businessId": "Yritys",
+        "calls": "Puhelut",
+        "notSolved": "Ratkaisematta",
+        "unanswered": "Vastaamatta",
+        "checks": "Tarkistukset",
+        "skillErrors": "Toimintovirheet",
+        "extractionIssues": "Poiminnan ongelmat",
+        "shareOfTotal": "{percent} % ({count} / {total})",
+        "sortOptions": {
+          "calls": "Puhelut",
+          "notSolved": "Ratkaisematta (avustajan arvioima)",
+          "unanswered": "Vastaamattomat kysymykset",
+          "checks": "Tarkistukset",
+          "skillErrors": "Toimintovirheet",
+          "extractionFailures": "Poiminnan ongelmat"
+        }
+      },
+      "scope": {
+        "title": "Integraatiot ja kysytyt tiedot",
+        "allBusinesses": "Kaikissa yrityksissä, jotka voit nähdä, viimeisten 30 päivän ajalta.",
+        "none": "Ei vielä mitään näytettävää.",
+        "saidBy": "{businesses} yritystä, {reports} raporttia",
+        "configSuggestionsTitle": "MrCallin asetusehdotukset"
+      }
     }
   },
   "views": {

@@ -4,8 +4,8 @@ import { isSessionEnded } from "@/firebase/session";
 /**
  * What a call said, read from StarChat's call insights (brief and plan
  * `docs/briefs/2026-10-20-call-insights.md`, `docs/execution-plans/2026-10-20-call-insights.md`;
- * the contract is StarChat's `docs/analytics-api-guide.md` §7-10 and
- * `docs/customer-conversation-api-guide.md`).
+ * the contract is StarChat's own conversation-analytics API reference, §7-10, and its customer
+ * conversation API guide).
  *
  * THE OUTCOME RULE, in one place. `booked` and `transferred` are recorded facts: the server itself
  * saw a booking or calendar skill create or move an event, or a transfer connect. Every other
@@ -18,8 +18,8 @@ const FACT_OUTCOMES = ["booked", "transferred"];
 const ASSESSED_OUTCOMES = ["resolved", "message_taken", "unresolved", "caller_left", "spam_wrong_number"];
 const OUTCOME_KEYS = [...FACT_OUTCOMES, ...ASSESSED_OUTCOMES];
 
-// `unanswered[].gap` (customer-conversation-api-guide.md) and `quality.gaps` / report `gap_calls`
-// (analytics-api-guide.md §8, §10) share this one set of reasons.
+// `unanswered[].gap` (the conversation API guide) and `quality.gaps` / report `gap_calls`
+// (the analytics reference, §8, §10) share this one set of reasons.
 const GAP_KEYS = ["missing_info", "needs_integration", "out_of_scope", "assistant_error"];
 
 // `details.checks` and `quality.checks`: true is a bad sign in all three.

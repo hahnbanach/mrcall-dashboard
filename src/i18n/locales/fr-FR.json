@@ -1875,6 +1875,99 @@
         "bad_covers": "Impossible de la rétablir avec ce nombre de personnes.",
         "large_party": "Impossible de la rétablir : le groupe est plus grand que ce que le cahier accepte maintenant."
       }
+    },
+    "callInsights": {
+      "assessedMarking": "Évalué par l'assistant",
+      "outcomes": {
+        "booked": "Réservé",
+        "transferred": "Transféré",
+        "resolved": "Résolu",
+        "message_taken": "Message pris",
+        "unresolved": "Non résolu",
+        "caller_left": "L'appelant a raccroché",
+        "spam_wrong_number": "Spam ou faux numéro"
+      },
+      "gaps": {
+        "missing_info": "Information manquante",
+        "needs_integration": "Nécessite une intégration",
+        "out_of_scope": "Hors de portée",
+        "assistant_error": "Erreur de l'assistant"
+      },
+      "checks": {
+        "caller_repeated": "L'appelant a dû se répéter",
+        "caller_unsatisfied": "L'appelant semblait insatisfait",
+        "promise_not_kept_in_call": "Une promesse faite pendant l'appel n'a pas été tenue"
+      },
+      "panel": {
+        "title": "De quoi parlait l'appel",
+        "outcome": "Issue",
+        "unansweredTitle": "Questions restées sans réponse",
+        "checksTitle": "Vérifications",
+        "suggestion": "Ce que vous pourriez donner à votre assistant : {suggestion}"
+      },
+      "filters": {
+        "outcomeLabel": "Issue",
+        "outcomePlaceholder": "Toute issue",
+        "outcomeGroupRecorded": "Enregistrées",
+        "outcomeGroupAssessed": "Évaluées par l'assistant",
+        "unansweredLabel": "Questions sans réponse",
+        "unansweredOn": "Avec une question sans réponse",
+        "unansweredOff": "Tous les appels"
+      },
+      "notAvailableYet": "Pas encore disponible.",
+      "whatCallsSaid": {
+        "title": "De quoi parlaient les appels",
+        "coverage": "{withOutcome} appels sur {total} ont une issue enregistrée."
+      },
+      "quality": {
+        "title": "Qualité",
+        "unansweredTitle": "Questions sans réponse",
+        "checksTitle": "Vérifications",
+        "skillErrorsTitle": "Erreurs de fonctions",
+        "extractionTitle": "Problèmes d'extraction",
+        "countOfTotal": "{count} appels sur {total}"
+      },
+      "reports": {
+        "title": "Rapports d'appels",
+        "none": "Pas encore de rapport.",
+        "topicsTitle": "Sujets",
+        "newTopic": "Nouveau",
+        "topicShare": "{calls} appels ({percent} %)",
+        "gapsTitle": "Questions restées sans réponse",
+        "suggestionsTitle": "Suggestions",
+        "businessInfoTitle": "Ce que vous seul pouvez dire à votre assistant",
+        "integrationTitle": "Un système à connecter",
+        "mrcallConfigTitle": "Suggestions de configuration MrCall",
+        "flaggedTitle": "Appels à relire",
+        "loadMore": "Afficher les rapports précédents"
+      },
+      "assistants": {
+        "title": "Assistants à revoir",
+        "sortLabel": "Trier par",
+        "businessId": "Établissement",
+        "calls": "Appels",
+        "notSolved": "Non résolus",
+        "unanswered": "Sans réponse",
+        "checks": "Vérifications",
+        "skillErrors": "Erreurs de fonctions",
+        "extractionIssues": "Problèmes d'extraction",
+        "shareOfTotal": "{percent} % ({count} sur {total})",
+        "sortOptions": {
+          "calls": "Appels",
+          "notSolved": "Non résolus (évalué par l'assistant)",
+          "unanswered": "Questions sans réponse",
+          "checks": "Vérifications",
+          "skillErrors": "Erreurs de fonctions",
+          "extractionFailures": "Problèmes d'extraction"
+        }
+      },
+      "scope": {
+        "title": "Intégrations et informations demandées",
+        "allBusinesses": "Sur tous les établissements que vous pouvez voir, au cours des 30 derniers jours.",
+        "none": "Rien à montrer pour l'instant.",
+        "saidBy": "{businesses} établissements, {reports} rapports",
+        "configSuggestionsTitle": "Suggestions de configuration MrCall"
+      }
     }
   },
   "views": {

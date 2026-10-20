@@ -381,7 +381,7 @@ async function setupApiMocks(page, overrides = {}) {
     })
   })
 
-  // Call insights (`docs/analytics-api-guide.md` §7-10 of the StarChat repository): object-shaped
+  // Call insights (StarChat's own conversation-analytics API reference, §7-10): object-shaped
   // answers, unlike most of this file's `[]` fallback, which a component reading `.totals`/
   // `.businesses` off an empty array would crash on (seen failing on 2026-10-20: "Cannot read
   // properties of undefined (reading 'booked')", WhatCallsSaid.vue against this fixture before

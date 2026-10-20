@@ -1873,6 +1873,99 @@
         "bad_covers": "Det kan ikke gjenopprettes med det antallet personer.",
         "large_party": "Det kan ikke gjenopprettes: selskapet er større enn boken nå tar imot."
       }
+    },
+    "callInsights": {
+      "assessedMarking": "Vurdert av assistenten",
+      "outcomes": {
+        "booked": "Booket",
+        "transferred": "Viderekoblet",
+        "resolved": "Løst",
+        "message_taken": "Melding notert",
+        "unresolved": "Uløst",
+        "caller_left": "Den som ringte, la på",
+        "spam_wrong_number": "Spam eller feil nummer"
+      },
+      "gaps": {
+        "missing_info": "Manglende informasjon",
+        "needs_integration": "Trenger en integrasjon",
+        "out_of_scope": "Utenfor omfanget",
+        "assistant_error": "Feil hos assistenten"
+      },
+      "checks": {
+        "caller_repeated": "Den som ringte, måtte gjenta seg",
+        "caller_unsatisfied": "Den som ringte, virket misfornøyd",
+        "promise_not_kept_in_call": "Et løfte gitt under samtalen ble ikke holdt"
+      },
+      "panel": {
+        "title": "Hva samtalen handlet om",
+        "outcome": "Utfall",
+        "unansweredTitle": "Spørsmål uten svar",
+        "checksTitle": "Kontroller",
+        "suggestion": "Hva du kunne gi assistenten din: {suggestion}"
+      },
+      "filters": {
+        "outcomeLabel": "Utfall",
+        "outcomePlaceholder": "Ethvert utfall",
+        "outcomeGroupRecorded": "Registrert",
+        "outcomeGroupAssessed": "Vurdert av assistenten",
+        "unansweredLabel": "Ubesvarte spørsmål",
+        "unansweredOn": "Med et ubesvart spørsmål",
+        "unansweredOff": "Alle samtaler"
+      },
+      "notAvailableYet": "Ikke tilgjengelig ennå.",
+      "whatCallsSaid": {
+        "title": "Hva samtalene handlet om",
+        "coverage": "{withOutcome} av {total} samtaler har et registrert utfall."
+      },
+      "quality": {
+        "title": "Kvalitet",
+        "unansweredTitle": "Ubesvarte spørsmål",
+        "checksTitle": "Kontroller",
+        "skillErrorsTitle": "Funksjonsfeil",
+        "extractionTitle": "Uttrekksproblemer",
+        "countOfTotal": "{count} av {total} samtaler"
+      },
+      "reports": {
+        "title": "Samtalerapporter",
+        "none": "Ingen rapport ennå.",
+        "topicsTitle": "Emner",
+        "newTopic": "Nytt",
+        "topicShare": "{calls} samtaler ({percent} %)",
+        "gapsTitle": "Spørsmål uten svar",
+        "suggestionsTitle": "Forslag",
+        "businessInfoTitle": "Hva bare du kan fortelle assistenten din",
+        "integrationTitle": "Et system å koble til",
+        "mrcallConfigTitle": "MrCalls konfigurasjonsforslag",
+        "flaggedTitle": "Samtaler verdt å lese",
+        "loadMore": "Vis tidligere rapporter"
+      },
+      "assistants": {
+        "title": "Assistenter å gjennomgå",
+        "sortLabel": "Sorter etter",
+        "businessId": "Virksomhet",
+        "calls": "Samtaler",
+        "notSolved": "Uløste",
+        "unanswered": "Ubesvarte",
+        "checks": "Kontroller",
+        "skillErrors": "Funksjonsfeil",
+        "extractionIssues": "Uttrekksproblemer",
+        "shareOfTotal": "{percent} % ({count} av {total})",
+        "sortOptions": {
+          "calls": "Samtaler",
+          "notSolved": "Uløste (vurdert av assistenten)",
+          "unanswered": "Ubesvarte spørsmål",
+          "checks": "Kontroller",
+          "skillErrors": "Funksjonsfeil",
+          "extractionFailures": "Uttrekksproblemer"
+        }
+      },
+      "scope": {
+        "title": "Integrasjoner og etterspurt informasjon",
+        "allBusinesses": "På tvers av alle virksomheter du kan se, de siste 30 dagene.",
+        "none": "Ingenting å vise ennå.",
+        "saidBy": "{businesses} virksomheter, {reports} rapporter",
+        "configSuggestionsTitle": "MrCalls konfigurasjonsforslag"
+      }
     }
   },
   "views": {

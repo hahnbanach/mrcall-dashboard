@@ -32,6 +32,11 @@ Entry point for this repository's documentation. Start here.
 | [integration/zylch-integration.md](integration/zylch-integration.md) | mrcall-agent integration: chat, installed-skill preview/Save/recovery and supported OAuth handoff |
 | [integration/restaurant-booking.md](integration/restaurant-booking.md) | Restaurant bookings page: what it owns versus the skill form, the page switch, what every booking carries, staff warnings, call-back requests (apply, Undo), the StarChat routes it uses |
 
+The call insights contract (what calls said: outcomes, quality signals, assistants to review,
+call reports, and the conversation list's own outcome/unanswered filters) is StarChat's own,
+read by `src/utils/CallInsights.js`: its conversation-analytics API reference, §7-10, and its
+customer conversation API guide, both in the StarChat repository. No copy of either lives here.
+
 ## Quick context
 
 - **Stack**: Vue 3, PrimeVue 4, Vuex, Firebase Auth, Axios, vue-i18n (12 locales)

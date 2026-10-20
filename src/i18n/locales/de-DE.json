@@ -1875,6 +1875,99 @@
         "bad_covers": "Mit dieser Personenzahl lässt es sich nicht wiederherstellen.",
         "large_party": "Das lässt sich nicht wiederherstellen: die Gruppe ist größer, als das Buch jetzt annimmt."
       }
+    },
+    "callInsights": {
+      "assessedMarking": "Vom Assistenten eingeschätzt",
+      "outcomes": {
+        "booked": "Gebucht",
+        "transferred": "Weitergeleitet",
+        "resolved": "Gelöst",
+        "message_taken": "Nachricht aufgenommen",
+        "unresolved": "Nicht gelöst",
+        "caller_left": "Anrufer hat aufgelegt",
+        "spam_wrong_number": "Spam oder falsche Nummer"
+      },
+      "gaps": {
+        "missing_info": "Fehlende Informationen",
+        "needs_integration": "Braucht eine Integration",
+        "out_of_scope": "Außerhalb des Umfangs",
+        "assistant_error": "Fehler des Assistenten"
+      },
+      "checks": {
+        "caller_repeated": "Der Anrufer musste sich wiederholen",
+        "caller_unsatisfied": "Der Anrufer wirkte unzufrieden",
+        "promise_not_kept_in_call": "Ein im Anruf gegebenes Versprechen wurde nicht eingehalten"
+      },
+      "panel": {
+        "title": "Worum es in dem Anruf ging",
+        "outcome": "Ergebnis",
+        "unansweredTitle": "Offen gebliebene Fragen",
+        "checksTitle": "Prüfungen",
+        "suggestion": "Was Sie Ihrem Assistenten geben könnten: {suggestion}"
+      },
+      "filters": {
+        "outcomeLabel": "Ergebnis",
+        "outcomePlaceholder": "Beliebiges Ergebnis",
+        "outcomeGroupRecorded": "Erfasst",
+        "outcomeGroupAssessed": "Vom Assistenten eingeschätzt",
+        "unansweredLabel": "Offene Fragen",
+        "unansweredOn": "Mit einer offenen Frage",
+        "unansweredOff": "Alle Anrufe"
+      },
+      "notAvailableYet": "Noch nicht verfügbar.",
+      "whatCallsSaid": {
+        "title": "Worum es in den Anrufen ging",
+        "coverage": "{withOutcome} von {total} Anrufen haben ein erfasstes Ergebnis."
+      },
+      "quality": {
+        "title": "Qualität",
+        "unansweredTitle": "Offene Fragen",
+        "checksTitle": "Prüfungen",
+        "skillErrorsTitle": "Funktionsfehler",
+        "extractionTitle": "Extraktionsprobleme",
+        "countOfTotal": "{count} von {total} Anrufen"
+      },
+      "reports": {
+        "title": "Anrufberichte",
+        "none": "Noch kein Bericht.",
+        "topicsTitle": "Themen",
+        "newTopic": "Neu",
+        "topicShare": "{calls} Anrufe ({percent} %)",
+        "gapsTitle": "Offen gebliebene Fragen",
+        "suggestionsTitle": "Vorschläge",
+        "businessInfoTitle": "Was nur Sie Ihrem Assistenten sagen können",
+        "integrationTitle": "Ein System zum Verbinden",
+        "mrcallConfigTitle": "MrCall-Konfigurationsvorschläge",
+        "flaggedTitle": "Anrufe, die sich zu lesen lohnen",
+        "loadMore": "Frühere Berichte anzeigen"
+      },
+      "assistants": {
+        "title": "Zu überprüfende Assistenten",
+        "sortLabel": "Sortieren nach",
+        "businessId": "Unternehmen",
+        "calls": "Anrufe",
+        "notSolved": "Nicht gelöst",
+        "unanswered": "Unbeantwortet",
+        "checks": "Prüfungen",
+        "skillErrors": "Funktionsfehler",
+        "extractionIssues": "Extraktionsprobleme",
+        "shareOfTotal": "{percent} % ({count} von {total})",
+        "sortOptions": {
+          "calls": "Anrufe",
+          "notSolved": "Nicht gelöst (vom Assistenten eingeschätzt)",
+          "unanswered": "Offene Fragen",
+          "checks": "Prüfungen",
+          "skillErrors": "Funktionsfehler",
+          "extractionFailures": "Extraktionsprobleme"
+        }
+      },
+      "scope": {
+        "title": "Integrationen und angefragte Informationen",
+        "allBusinesses": "Über alle Unternehmen, die Sie sehen können, in den letzten 30 Tagen.",
+        "none": "Noch nichts anzuzeigen.",
+        "saidBy": "{businesses} Unternehmen, {reports} Berichte",
+        "configSuggestionsTitle": "MrCall-Konfigurationsvorschläge"
+      }
     }
   },
   "views": {

@@ -1887,6 +1887,99 @@
         "bad_covers": "No se puede restaurar con ese número de personas.",
         "large_party": "No se puede restaurar: el grupo es mayor de lo que acepta ahora el libro."
       }
+    },
+    "callInsights": {
+      "assessedMarking": "Evaluado por el asistente",
+      "outcomes": {
+        "booked": "Reservado",
+        "transferred": "Transferido",
+        "resolved": "Resuelto",
+        "message_taken": "Mensaje tomado",
+        "unresolved": "Sin resolver",
+        "caller_left": "Quien llamó colgó",
+        "spam_wrong_number": "Spam o número equivocado"
+      },
+      "gaps": {
+        "missing_info": "Información faltante",
+        "needs_integration": "Necesita una integración",
+        "out_of_scope": "Fuera de alcance",
+        "assistant_error": "Error del asistente"
+      },
+      "checks": {
+        "caller_repeated": "Quien llamó tuvo que repetirse",
+        "caller_unsatisfied": "Quien llamó pareció insatisfecho",
+        "promise_not_kept_in_call": "Una promesa hecha en la llamada no se cumplió"
+      },
+      "panel": {
+        "title": "De qué trataba la llamada",
+        "outcome": "Resultado",
+        "unansweredTitle": "Preguntas que quedaron sin responder",
+        "checksTitle": "Controles",
+        "suggestion": "Qué podrías darle a tu asistente: {suggestion}"
+      },
+      "filters": {
+        "outcomeLabel": "Resultado",
+        "outcomePlaceholder": "Cualquier resultado",
+        "outcomeGroupRecorded": "Registrados",
+        "outcomeGroupAssessed": "Evaluados por el asistente",
+        "unansweredLabel": "Preguntas sin responder",
+        "unansweredOn": "Con una pregunta sin responder",
+        "unansweredOff": "Todas las llamadas"
+      },
+      "notAvailableYet": "Aún no disponible.",
+      "whatCallsSaid": {
+        "title": "De qué trataron las llamadas",
+        "coverage": "{withOutcome} de {total} llamadas tienen un resultado registrado."
+      },
+      "quality": {
+        "title": "Calidad",
+        "unansweredTitle": "Preguntas sin responder",
+        "checksTitle": "Controles",
+        "skillErrorsTitle": "Errores de funciones",
+        "extractionTitle": "Problemas de extracción",
+        "countOfTotal": "{count} de {total} llamadas"
+      },
+      "reports": {
+        "title": "Informes de llamadas",
+        "none": "Todavía no hay ningún informe.",
+        "topicsTitle": "Temas",
+        "newTopic": "Nuevo",
+        "topicShare": "{calls} llamadas ({percent}%)",
+        "gapsTitle": "Preguntas que quedaron sin responder",
+        "suggestionsTitle": "Sugerencias",
+        "businessInfoTitle": "Lo que solo tú puedes decirle a tu asistente",
+        "integrationTitle": "Un sistema para conectar",
+        "mrcallConfigTitle": "Sugerencias de configuración de MrCall",
+        "flaggedTitle": "Llamadas que vale la pena revisar",
+        "loadMore": "Mostrar informes anteriores"
+      },
+      "assistants": {
+        "title": "Asistentes para revisar",
+        "sortLabel": "Ordenar por",
+        "businessId": "Negocio",
+        "calls": "Llamadas",
+        "notSolved": "Sin resolver",
+        "unanswered": "Sin responder",
+        "checks": "Controles",
+        "skillErrors": "Errores de funciones",
+        "extractionIssues": "Problemas de extracción",
+        "shareOfTotal": "{percent}% ({count} de {total})",
+        "sortOptions": {
+          "calls": "Llamadas",
+          "notSolved": "Sin resolver (evaluado por el asistente)",
+          "unanswered": "Preguntas sin responder",
+          "checks": "Controles",
+          "skillErrors": "Errores de funciones",
+          "extractionFailures": "Problemas de extracción"
+        }
+      },
+      "scope": {
+        "title": "Integraciones e información solicitada",
+        "allBusinesses": "En todos los negocios que puedes ver, en los últimos 30 días.",
+        "none": "Nada que mostrar todavía.",
+        "saidBy": "{businesses} negocios, {reports} informes",
+        "configSuggestionsTitle": "Sugerencias de configuración de MrCall"
+      }
     }
   },
   "views": {

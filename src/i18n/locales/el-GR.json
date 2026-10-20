@@ -1873,6 +1873,99 @@
         "bad_covers": "Δεν μπορεί να επανέλθει με αυτόν τον αριθμό ατόμων.",
         "large_party": "Δεν μπορεί να επανέλθει: η παρέα είναι μεγαλύτερη από όσο δέχεται τώρα το βιβλίο."
       }
+    },
+    "callInsights": {
+      "assessedMarking": "Αξιολογήθηκε από τον βοηθό",
+      "outcomes": {
+        "booked": "Κράτηση",
+        "transferred": "Μεταφέρθηκε",
+        "resolved": "Επιλύθηκε",
+        "message_taken": "Μήνυμα καταγράφηκε",
+        "unresolved": "Δεν επιλύθηκε",
+        "caller_left": "Ο καλών έκλεισε",
+        "spam_wrong_number": "Ανεπιθύμητη κλήση ή λάθος αριθμός"
+      },
+      "gaps": {
+        "missing_info": "Λείπουν πληροφορίες",
+        "needs_integration": "Χρειάζεται ενσωμάτωση",
+        "out_of_scope": "Εκτός πεδίου",
+        "assistant_error": "Σφάλμα βοηθού"
+      },
+      "checks": {
+        "caller_repeated": "Ο καλών χρειάστηκε να επαναλάβει",
+        "caller_unsatisfied": "Ο καλών φάνηκε δυσαρεστημένος",
+        "promise_not_kept_in_call": "Μια υπόσχεση που δόθηκε στην κλήση δεν τηρήθηκε"
+      },
+      "panel": {
+        "title": "Για τι μιλούσε η κλήση",
+        "outcome": "Αποτέλεσμα",
+        "unansweredTitle": "Ερωτήσεις που έμειναν αναπάντητες",
+        "checksTitle": "Έλεγχοι",
+        "suggestion": "Τι θα μπορούσες να δώσεις στον βοηθό σου: {suggestion}"
+      },
+      "filters": {
+        "outcomeLabel": "Αποτέλεσμα",
+        "outcomePlaceholder": "Οποιοδήποτε αποτέλεσμα",
+        "outcomeGroupRecorded": "Καταγεγραμμένα",
+        "outcomeGroupAssessed": "Αξιολογημένα από τον βοηθό",
+        "unansweredLabel": "Αναπάντητες ερωτήσεις",
+        "unansweredOn": "Με μια αναπάντητη ερώτηση",
+        "unansweredOff": "Όλες οι κλήσεις"
+      },
+      "notAvailableYet": "Δεν είναι ακόμη διαθέσιμο.",
+      "whatCallsSaid": {
+        "title": "Για τι μιλούσαν οι κλήσεις",
+        "coverage": "{withOutcome} από {total} κλήσεις έχουν καταγεγραμμένο αποτέλεσμα."
+      },
+      "quality": {
+        "title": "Ποιότητα",
+        "unansweredTitle": "Αναπάντητες ερωτήσεις",
+        "checksTitle": "Έλεγχοι",
+        "skillErrorsTitle": "Σφάλματα λειτουργιών",
+        "extractionTitle": "Προβλήματα εξαγωγής",
+        "countOfTotal": "{count} από {total} κλήσεις"
+      },
+      "reports": {
+        "title": "Αναφορές κλήσεων",
+        "none": "Καμία αναφορά ακόμη.",
+        "topicsTitle": "Θέματα",
+        "newTopic": "Νέο",
+        "topicShare": "{calls} κλήσεις ({percent}%)",
+        "gapsTitle": "Ερωτήσεις που έμειναν αναπάντητες",
+        "suggestionsTitle": "Προτάσεις",
+        "businessInfoTitle": "Τι μπορείς μόνο εσύ να πεις στον βοηθό σου",
+        "integrationTitle": "Ένα σύστημα προς σύνδεση",
+        "mrcallConfigTitle": "Προτάσεις ρύθμισης MrCall",
+        "flaggedTitle": "Κλήσεις που αξίζει να διαβάσεις",
+        "loadMore": "Εμφάνιση παλαιότερων αναφορών"
+      },
+      "assistants": {
+        "title": "Βοηθοί προς επανεξέταση",
+        "sortLabel": "Ταξινόμηση κατά",
+        "businessId": "Επιχείρηση",
+        "calls": "Κλήσεις",
+        "notSolved": "Δεν επιλύθηκαν",
+        "unanswered": "Αναπάντητες",
+        "checks": "Έλεγχοι",
+        "skillErrors": "Σφάλματα λειτουργιών",
+        "extractionIssues": "Προβλήματα εξαγωγής",
+        "shareOfTotal": "{percent}% ({count} από {total})",
+        "sortOptions": {
+          "calls": "Κλήσεις",
+          "notSolved": "Δεν επιλύθηκαν (αξιολογήθηκε από τον βοηθό)",
+          "unanswered": "Αναπάντητες ερωτήσεις",
+          "checks": "Έλεγχοι",
+          "skillErrors": "Σφάλματα λειτουργιών",
+          "extractionFailures": "Προβλήματα εξαγωγής"
+        }
+      },
+      "scope": {
+        "title": "Ενσωματώσεις και ζητούμενες πληροφορίες",
+        "allBusinesses": "Σε όλες τις επιχειρήσεις που μπορείς να δεις, τις τελευταίες 30 ημέρες.",
+        "none": "Τίποτα για εμφάνιση ακόμη.",
+        "saidBy": "{businesses} επιχειρήσεις, {reports} αναφορές",
+        "configSuggestionsTitle": "Προτάσεις ρύθμισης MrCall"
+      }
     }
   },
   "views": {

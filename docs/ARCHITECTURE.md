@@ -58,6 +58,10 @@ API clients and business logic:
 - `BusinessVariables.js` — Variable visibility, dependency resolution, modifiability
 - `Zylch.js` — Zylch AI API client (chat, training, sessions)
 - `Analytics.js` — Analytics API client
+- `CallInsights.js` — what calls said: the outcome rule (`outcomeKind`, fact vs. the assistant's own
+  assessment) and the clients for StarChat's outcomes, quality, assistants, reports, integrations
+  and configuration-suggestions routes; a 404 resolves to `null` (absent section), a 503 to
+  `{unavailable: true}`
 - `Admin.js` — Admin API endpoints
 - `Reseller.js` — Reseller API endpoints
 - `Contact.js` — Contact management API
@@ -157,6 +161,38 @@ are fetched from `.../resources/count`. The tooltip uses `mrcallCredits.title` a
 `creditTooltipFactor(business)` parses `CALLCREDIT_FACTOR` by template with a
 fallback of 25. All 12 locale files contain these keys. The `/plan` route renders
 `src/views/Plan.vue` for plan and payment selection.
+
+### Call insights: what calls said
+
+StarChat records, for every managed call, what it was about and what it left open (topics, an
+outcome, the questions the assistant could not answer, three quality checks); the dashboard's one
+rule for showing an outcome (`booked`/`transferred` are a recorded fact, every other outcome is the
+assistant's own assessment, marked as such) lives in `src/utils/CallInsights.js`.
+
+- **The call's panel** (`CallDetailsPanel.vue`, in `Conversations.vue`'s list and its deep-linked
+  opened call): after the summary, the topics as tags, the outcome under the marking rule, the
+  unanswered questions with their reason and suggestion, the checks that fired. A call from before
+  the feature draws with none of this.
+- **The list's filters** (`Conversations.vue`): an outcome `Dropdown` (grouped "Recorded" and
+  "Assessed by the assistant") and an "unanswered questions" `ToggleButton`, both folded into the
+  one `searchBody(extra)` the list, its poll, both exports and the two bulk actions all build from.
+- **The analytics pages** (`src/components/analytics/`: `WhatCallsSaid.vue`, `CallQuality.vue`,
+  `CallReports.vue`, `AssistantsToReview.vue`, `ScopeInformation.vue`, `OutcomeLabel.vue`), all
+  presentational — `Analytics.vue` and `AnalyticsAdmin.vue` own every fetch, the same way they
+  already do for the older KPI/chart sections:
+  - `Analytics.vue` with a business (`?id=`, any role): outcomes, quality, and the business's call
+    reports (topics with their share and whether they are new, gaps with example calls linked for
+    the owner only, suggestions, `mrcall_config` for an admin only).
+  - `Analytics.vue` with no business, role `reseller` (its scope page, reached directly or from
+    `ResellerDashboard.vue`): outcomes and quality over its scope (the existing `OwnerSelector`
+    narrows it to one owner), the assistants-to-review table (a row opens that business, i.e. sets
+    `?id=`), and the integrations/information section, which ignores every filter.
+  - `AnalyticsAdmin.vue`: the same outcomes/quality/assistants reacting to its own filters, plus the
+    integrations section and MrCall's own configuration suggestions (admin only), neither reacting
+    to a filter; an assistants row sets this page's own business filter instead of navigating.
+  - Both pages establish the role on mount (the same business search that already sets it,
+    `Business.js`'s `checkUserHasBusinesses`) before choosing which of these sections to show; the
+    server remains the actual gate (a 404 hides a section with no toast, a 503 shows a short note).
 
 ### Restaurant bookings (`RestaurantBook.vue`)
 
