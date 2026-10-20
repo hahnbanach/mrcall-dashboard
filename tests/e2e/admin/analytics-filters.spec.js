@@ -12,7 +12,11 @@ const { test } = require('../fixtures/auth')
 // Seen failing on 2026-10-04 with the plan line removed from buildRequestBody: the plan test
 // reports "expected professional, received undefined".
 
-const ENDPOINTS = ['dashboard', 'timeseries', 'duration-distribution', 'hourly-heatmap', 'callers', 'business-breakdown']
+const ENDPOINTS = [
+  'dashboard', 'timeseries', 'duration-distribution', 'hourly-heatmap', 'callers', 'business-breakdown',
+  // What calls said (brief outcome 3, 5): the admin page reacts to the same filters as the rest.
+  'outcomes', 'quality', 'assistants',
+]
 
 const RESPONSES = {
   dashboard: { totalCalls: 5, avgCallDurationMs: 60000, totalCallDurationMs: 300000, uniqueCallers: 4 },
@@ -26,9 +30,15 @@ const RESPONSES = {
       { businessId: 'biz-b', totalCalls: 2, avgCallDurationMs: 60000, totalCallDurationMs: 120000, uniqueCallers: 2 },
     ],
   },
+  outcomes: { totalCalls: 0, callsWithOutcome: 0, totals: {}, previousTotals: {}, buckets: [] },
+  quality: {
+    extractions: {}, callsWithChecks: 0, checks: {}, callsWithUnansweredRecorded: 0,
+    callsWithUnanswered: 0, gaps: {}, callsWithSkillErrors: 0,
+  },
+  assistants: { sort: 'not_solved', businesses: [] },
 }
 
-/** Answers the six analytics endpoints and records every body sent to them, in order. */
+/** Answers the nine analytics endpoints and records every body sent to them, in order. */
 async function recordAnalytics(page) {
   const requests = []
   // Registered after the fixture's catch-all, so Playwright checks it first.

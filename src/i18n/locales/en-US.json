@@ -1916,6 +1916,60 @@
         "unansweredLabel": "Unanswered questions",
         "unansweredOn": "With an unanswered question",
         "unansweredOff": "All calls"
+      },
+      "notAvailableYet": "Not available yet.",
+      "whatCallsSaid": {
+        "title": "What calls said",
+        "coverage": "{withOutcome} of {total} calls have a recorded outcome."
+      },
+      "quality": {
+        "title": "Quality",
+        "unansweredTitle": "Unanswered questions",
+        "checksTitle": "Checks",
+        "skillErrorsTitle": "Skill errors",
+        "extractionTitle": "Extraction issues",
+        "countOfTotal": "{count} of {total} calls"
+      },
+      "reports": {
+        "title": "Call reports",
+        "none": "No report yet.",
+        "topicsTitle": "Topics",
+        "newTopic": "New",
+        "topicShare": "{calls} calls ({percent}%)",
+        "gapsTitle": "Questions left unanswered",
+        "suggestionsTitle": "Suggestions",
+        "businessInfoTitle": "What only you can tell your assistant",
+        "integrationTitle": "A system to connect",
+        "mrcallConfigTitle": "MrCall configuration suggestions",
+        "flaggedTitle": "Calls worth reading",
+        "loadMore": "Show earlier reports"
+      },
+      "assistants": {
+        "title": "Assistants to review",
+        "sortLabel": "Sort by",
+        "businessId": "Business",
+        "calls": "Calls",
+        "notSolved": "Not solved",
+        "unanswered": "Unanswered",
+        "checks": "Checks",
+        "skillErrors": "Skill errors",
+        "extractionIssues": "Extraction issues",
+        "shareOfTotal": "{percent}% ({count} of {total})",
+        "sortOptions": {
+          "calls": "Calls",
+          "notSolved": "Not solved (assessed by the assistant)",
+          "unanswered": "Unanswered questions",
+          "checks": "Checks",
+          "skillErrors": "Skill errors",
+          "extractionFailures": "Extraction failures"
+        }
+      },
+      "scope": {
+        "title": "Integrations and information asked",
+        "allBusinesses": "Across every business you can see, over the last 30 days.",
+        "none": "Nothing to show yet.",
+        "saidBy": "{businesses} businesses, {reports} reports",
+        "configSuggestionsTitle": "MrCall configuration suggestions"
       }
     }
   },

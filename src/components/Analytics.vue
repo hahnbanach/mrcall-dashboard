@@ -171,6 +171,45 @@
         </div>
       </div>
 
+      <!-- What calls said (brief outcome 3): the business page (any role, via its id) or, for a
+           reseller with no business chosen, its whole scope -->
+      <WhatCallsSaid v-if="businessId || showScopePage" :status="outcomesStatus" :data="outcomesData" />
+      <CallQuality
+        v-if="businessId || showScopePage"
+        :status="qualityStatus"
+        :data="qualityData"
+        :total-calls="outcomesData && outcomesData.totalCalls"
+      />
+
+      <!-- Call reports (brief outcome 4): the business page only -->
+      <CallReports
+        v-if="businessId"
+        :status="reportsStatus"
+        :reports="reportsData"
+        :has-more="reportsHasMore"
+        :loading-more="reportsLoadingMore"
+        :is-owner="isOwnerRole"
+        :is-admin="isAdminRole"
+        :business-id="businessId"
+        @load-more="loadMoreReports"
+      />
+
+      <!-- Assistants to review and scope-wide information (brief outcome 5): the reseller's scope
+           page only; they ignore the page's date range and owner selector -->
+      <AssistantsToReview
+        v-if="showScopePage"
+        :status="assistantsStatus"
+        :data="assistantsData"
+        :sort="assistantsSort"
+        @sort-change="onAssistantsSortChange"
+        @select-business="onAssistantsSelectBusiness"
+      />
+      <ScopeInformation
+        v-if="showScopePage"
+        :integrations-status="integrationsStatus"
+        :integrations="integrationsData"
+      />
+
       <!-- Empty state -->
       <div v-if="allDataReady && noData" class="analytics-section">
         <div class="empty-state">
@@ -193,10 +232,17 @@ import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/firebase/config";
 import { isSessionEnded } from "@/firebase/axiosConfig";
 import AnalyticsApi from "@/utils/Analytics";
+import CallInsights from "@/utils/CallInsights";
+import businessUtils from "@/utils/Business";
 import OwnerSelector from "@/components/reseller/OwnerSelector.vue";
+import WhatCallsSaid from "@/components/analytics/WhatCallsSaid.vue";
+import CallQuality from "@/components/analytics/CallQuality.vue";
+import CallReports from "@/components/analytics/CallReports.vue";
+import AssistantsToReview from "@/components/analytics/AssistantsToReview.vue";
+import ScopeInformation from "@/components/analytics/ScopeInformation.vue";
 
 export default {
-  components: { OwnerSelector },
+  components: { OwnerSelector, WhatCallsSaid, CallQuality, CallReports, AssistantsToReview, ScopeInformation },
   setup() {
     const store = useStore();
     const toast = useToast();
@@ -231,9 +277,36 @@ export default {
       loadingDuration: false,
       loadingHeatmap: false,
       loadingCallers: false,
+
+      // What calls said (brief outcome 3-5): status is 'loading' | 'ok' | 'absent' | 'unavailable'
+      outcomesStatus: "loading",
+      outcomesData: null,
+      qualityStatus: "loading",
+      qualityData: null,
+      reportsStatus: "loading",
+      reportsData: [],
+      reportsHasMore: false,
+      reportsLoadingMore: false,
+      assistantsStatus: "loading",
+      assistantsData: null,
+      assistantsSort: "not_solved",
+      integrationsStatus: "loading",
+      integrationsData: [],
+      integrationsFetched: false,
     };
   },
   computed: {
+    // A reseller with no business chosen (the entry a bookmark or the reseller dashboard takes,
+    // `ResellerDashboard.vue:87`) reads its whole scope instead of one business.
+    showScopePage() {
+      return !this.businessId && this.isReseller;
+    },
+    isOwnerRole() {
+      return this.store.state.role === "owner";
+    },
+    isAdminRole() {
+      return this.store.state.role === "admin";
+    },
     anyLoading() {
       return this.loadingDashboard || this.loadingTimeseries || this.loadingDuration ||
         this.loadingHeatmap || this.loadingCallers;
@@ -371,6 +444,15 @@ export default {
         this.fetchAllData();
       }
     },
+    // Moving from the scope page to a business, or back, has no other reactive trigger
+    // (`<router-view/>` has no key, `App.vue:14`), so a route change loads the one the link asks for.
+    '$route.query'() {
+      if (this.$route.name !== 'Analytics') return;
+      const id = this.$route.query.id || null;
+      if (id === this.businessId) return;
+      this.businessId = id;
+      this.fetchAllData();
+    },
   },
   mounted() {
     this.businessId = this.$route.query.id;
@@ -378,17 +460,33 @@ export default {
       return;
     }
     this.setPresetRange('30d');
+    const proceed = async () => {
+      // The role on the server is the gate; this is only what decides which sections to ask for,
+      // before any of them is asked (Business.js:262-275, the same search that already sets it
+      // elsewhere in this dashboard).
+      await this.establishRole();
+      this.fetchAllData();
+    };
     if (!this.store.state.user) {
       onAuthStateChanged(auth, (user) => {
         if (user && user.emailVerified && !user.isAnonymous) {
-          this.fetchAllData();
+          proceed();
         }
       });
     } else if (this.store.state.user.accessToken) {
-      this.fetchAllData();
+      proceed();
     }
   },
   methods: {
+    async establishRole() {
+      const user = this.store.state.user;
+      if (!user || !user.accessToken) return;
+      try {
+        await businessUtils.checkUserHasBusinesses(user, this.store);
+      } catch (error) {
+        this.handleApiError(error, 'role');
+      }
+    },
     setPresetRange(preset) {
       const now = new Date();
       let start;
@@ -440,19 +538,141 @@ export default {
       });
     },
     fetchAllData() {
-      if (!this.businessId || !this.timestampGte || !this.timestampLte) return;
+      if (!this.timestampGte || !this.timestampLte) return;
       const user = this.store.state.user;
       if (!user || !user.accessToken) return;
-
-      const request = this.buildRequestBody();
       const granularity = this.getGranularity();
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
+      if (this.showScopePage) this.fetchIntegrationsIfNeeded(user);
+
+      if (!this.businessId) {
+        this.fetchScopeInsights(user, granularity, timezone);
+        return;
+      }
+
+      const request = this.buildRequestBody();
       this.fetchDashboard(user, request);
       this.fetchTimeseries(user, request, granularity, timezone);
       this.fetchDurationDistribution(user, request);
       this.fetchHourlyHeatmap(user, request, timezone);
       this.fetchCallers(user, request);
+
+      this.fetchOutcomes(user, request, granularity, timezone);
+      this.fetchQuality(user, request);
+      this.reportsData = [];
+      this.fetchReports(user, this.businessId, null);
+    },
+    // Across the reseller's scope (its own calls and all its managed owners', or one of them
+    // through the owner selector): no businessId key, which is StarChat's "every business" the
+    // scope allows (`AnalyticsDateRange.businessId` absent) — not the explicit `null` a route
+    // without `?id=` would otherwise leave in `this.businessId`.
+    buildScopeRequestBody() {
+      const body = { timestampGte: this.timestampGte, timestampLte: this.timestampLte };
+      if (this.isReseller && this.selectedOwnerId) body.ownerId = this.selectedOwnerId;
+      return body;
+    },
+    fetchScopeInsights(user, granularity, timezone) {
+      if (!this.isReseller) return;
+      const request = this.buildScopeRequestBody();
+      this.fetchOutcomes(user, request, granularity, timezone);
+      this.fetchQuality(user, request);
+      this.fetchAssistants(user, request);
+    },
+    fetchOutcomes(user, request, granularity, timezone) {
+      this.outcomesStatus = 'loading';
+      CallInsights.outcomes(user, request, granularity, timezone)
+        .then((result) => {
+          if (result === null) { this.outcomesStatus = 'absent'; this.outcomesData = null; }
+          else if (result.unavailable) { this.outcomesStatus = 'unavailable'; this.outcomesData = null; }
+          else { this.outcomesStatus = 'ok'; this.outcomesData = result; }
+        })
+        .catch((error) => {
+          if (isSessionEnded(error)) return;
+          this.outcomesStatus = 'absent';
+          this.handleApiError(error, 'outcomes');
+        });
+    },
+    fetchQuality(user, request) {
+      this.qualityStatus = 'loading';
+      CallInsights.quality(user, request)
+        .then((result) => {
+          if (result === null) { this.qualityStatus = 'absent'; this.qualityData = null; }
+          else if (result.unavailable) { this.qualityStatus = 'unavailable'; this.qualityData = null; }
+          else { this.qualityStatus = 'ok'; this.qualityData = result; }
+        })
+        .catch((error) => {
+          if (isSessionEnded(error)) return;
+          this.qualityStatus = 'absent';
+          this.handleApiError(error, 'quality');
+        });
+    },
+    fetchReports(user, businessId, before) {
+      this.reportsStatus = before == null ? 'loading' : this.reportsStatus;
+      return CallInsights.reports(user, businessId, before, 10)
+        .then((result) => {
+          if (result === null) { this.reportsStatus = 'absent'; this.reportsData = []; this.reportsHasMore = false; }
+          else if (result.unavailable) { this.reportsStatus = 'unavailable'; this.reportsData = []; this.reportsHasMore = false; }
+          else {
+            this.reportsStatus = 'ok';
+            this.reportsData = before == null ? result : this.reportsData.concat(result);
+            this.reportsHasMore = result.length >= 10;
+          }
+        })
+        .catch((error) => {
+          if (isSessionEnded(error)) return;
+          this.reportsStatus = 'absent';
+          this.handleApiError(error, 'reports');
+        });
+    },
+    loadMoreReports() {
+      if (this.reportsLoadingMore || this.reportsData.length === 0) return;
+      const user = this.store.state.user;
+      if (!user) return;
+      this.reportsLoadingMore = true;
+      const last = this.reportsData[this.reportsData.length - 1];
+      this.fetchReports(user, this.businessId, last.periodEnd).finally(() => { this.reportsLoadingMore = false; });
+    },
+    fetchAssistants(user, request) {
+      this.assistantsStatus = 'loading';
+      CallInsights.assistants(user, request, this.assistantsSort, 50)
+        .then((result) => {
+          if (result === null) { this.assistantsStatus = 'absent'; this.assistantsData = null; }
+          else if (result.unavailable) { this.assistantsStatus = 'unavailable'; this.assistantsData = null; }
+          else { this.assistantsStatus = 'ok'; this.assistantsData = result; }
+        })
+        .catch((error) => {
+          if (isSessionEnded(error)) return;
+          this.assistantsStatus = 'absent';
+          this.handleApiError(error, 'assistants');
+        });
+    },
+    onAssistantsSortChange(sort) {
+      this.assistantsSort = sort;
+      const user = this.store.state.user;
+      if (user) this.fetchAssistants(user, this.buildScopeRequestBody());
+    },
+    onAssistantsSelectBusiness(businessId) {
+      // A reseller's row opens the business page, the same way a link from the clinic's own email would.
+      this.router.push({ path: '/analytics', query: { id: businessId } });
+    },
+    // The caller's whole scope, since a start StarChat itself defaults (30 days): fetched once,
+    // never refetched on a date-range, business or owner change.
+    fetchIntegrationsIfNeeded(user) {
+      if (this.integrationsFetched) return;
+      this.integrationsFetched = true;
+      this.integrationsStatus = 'loading';
+      CallInsights.integrations(user)
+        .then((result) => {
+          if (result === null) { this.integrationsStatus = 'absent'; this.integrationsData = []; }
+          else if (result.unavailable) { this.integrationsStatus = 'unavailable'; this.integrationsData = []; }
+          else { this.integrationsStatus = 'ok'; this.integrationsData = result; }
+        })
+        .catch((error) => {
+          if (isSessionEnded(error)) return;
+          this.integrationsStatus = 'absent';
+          this.handleApiError(error, 'integrations');
+        });
     },
     fetchDashboard(user, request) {
       this.loadingDashboard = true;

@@ -249,6 +249,27 @@
         </div>
       </div>
 
+      <!-- What calls said, across the platform or narrowed by the filters above (brief outcome 3) -->
+      <WhatCallsSaid :status="outcomesStatus" :data="outcomesData" />
+      <CallQuality :status="qualityStatus" :data="qualityData" :total-calls="outcomesData && outcomesData.totalCalls" />
+
+      <!-- Assistants to review and scope-wide information (brief outcome 5): the whole platform,
+           the integrations and MrCall's own configuration suggestions ignore the filters above -->
+      <AssistantsToReview
+        :status="assistantsStatus"
+        :data="assistantsData"
+        :sort="assistantsSort"
+        @sort-change="onAssistantsSortChange"
+        @select-business="onAssistantsSelectBusiness"
+      />
+      <ScopeInformation
+        :integrations-status="integrationsStatus"
+        :integrations="integrationsData"
+        :show-config-suggestions="isAdminRole"
+        :config-suggestions-status="configSuggestionsStatus"
+        :config-suggestions="configSuggestionsData"
+      />
+
       <!-- Empty state -->
       <div v-if="allDataReady && noData" class="analytics-section">
         <div class="empty-state">
@@ -272,9 +293,15 @@ import { auth } from "@/firebase/config";
 import { isSessionEnded } from "@/firebase/axiosConfig";
 import AnalyticsApi from "@/utils/Analytics";
 import TemplatesApi from "@/utils/Templates";
+import CallInsights from "@/utils/CallInsights";
+import businessUtils from "@/utils/Business";
+import WhatCallsSaid from "@/components/analytics/WhatCallsSaid.vue";
+import CallQuality from "@/components/analytics/CallQuality.vue";
+import AssistantsToReview from "@/components/analytics/AssistantsToReview.vue";
+import ScopeInformation from "@/components/analytics/ScopeInformation.vue";
 
 export default {
-  components: {},
+  components: { WhatCallsSaid, CallQuality, AssistantsToReview, ScopeInformation },
   setup() {
     const store = useStore();
     const toast = useToast();
@@ -314,6 +341,21 @@ export default {
       loadingHeatmap: false,
       loadingCallers: false,
       loadingBreakdown: false,
+
+      // What calls said, across the platform (brief outcome 3, 5): status is
+      // 'loading' | 'ok' | 'absent' | 'unavailable'
+      outcomesStatus: "loading",
+      outcomesData: null,
+      qualityStatus: "loading",
+      qualityData: null,
+      assistantsStatus: "loading",
+      assistantsData: null,
+      assistantsSort: "not_solved",
+      integrationsStatus: "loading",
+      integrationsData: [],
+      integrationsFetched: false,
+      configSuggestionsStatus: "loading",
+      configSuggestionsData: [],
     };
   },
   computed: {
@@ -342,6 +384,9 @@ export default {
     noData() {
       return !this.dashboardData && !this.timeseriesData && !this.durationData &&
         !this.heatmapData && !this.callersData && !this.breakdownData;
+    },
+    isAdminRole() {
+      return this.store.state.role === "admin";
     },
     presetOptions() {
       return [
@@ -514,19 +559,38 @@ export default {
     this.ownerIdInput = this.ownerId;
     this.planInput = this.plan;
     this.setPresetRange('30d');
+    const proceed = async () => {
+      // The role on the server is the gate (admin-only routes answer 404 to anyone else); this is
+      // only what decides whether to ask for MrCall's own configuration suggestions at all.
+      // Fetched here, once, strictly after the role resolves: `fetchAllData` itself also runs from
+      // the `rangeValue` watcher that `setPresetRange` above triggers, which can fire before this
+      // await returns, and `fetchIntegrationsIfNeeded`'s own one-shot guard would otherwise consume
+      // itself on that early, still-role-less call and never ask for the suggestions at all.
+      await this.establishRole();
+      if (this.store.state.user) this.fetchIntegrationsIfNeeded(this.store.state.user);
+      this.fetchAllData();
+      this.fetchTemplates();
+    };
     if (!this.store.state.user) {
       onAuthStateChanged(auth, (user) => {
         if (user && user.emailVerified && !user.isAnonymous) {
-          this.fetchAllData();
-          this.fetchTemplates();
+          proceed();
         }
       });
     } else if (this.store.state.user.accessToken) {
-      this.fetchAllData();
-      this.fetchTemplates();
+      proceed();
     }
   },
   methods: {
+    async establishRole() {
+      const user = this.store.state.user;
+      if (!user || !user.accessToken) return;
+      try {
+        await businessUtils.checkUserHasBusinesses(user, this.store);
+      } catch (error) {
+        this.handleApiError(error, 'role');
+      }
+    },
     setPresetRange(preset) {
       const now = new Date();
       let start;
@@ -617,6 +681,98 @@ export default {
       this.fetchHourlyHeatmap(user, request, timezone);
       this.fetchCallers(user, request);
       this.fetchBusinessBreakdown(user, request);
+
+      this.fetchOutcomes(user, request, granularity, timezone);
+      this.fetchQuality(user, request);
+      this.fetchAssistants(user, request);
+      // Integrations and MrCall's own suggestions are fetched once, from `mounted`'s `proceed`,
+      // strictly after the role resolves (see the comment there): not here, where a watcher could
+      // call this before that role is known.
+    },
+    fetchOutcomes(user, request, granularity, timezone) {
+      this.outcomesStatus = 'loading';
+      CallInsights.outcomes(user, request, granularity, timezone)
+        .then((result) => {
+          if (result === null) { this.outcomesStatus = 'absent'; this.outcomesData = null; }
+          else if (result.unavailable) { this.outcomesStatus = 'unavailable'; this.outcomesData = null; }
+          else { this.outcomesStatus = 'ok'; this.outcomesData = result; }
+        })
+        .catch((error) => {
+          if (isSessionEnded(error)) return;
+          this.outcomesStatus = 'absent';
+          this.handleApiError(error, 'outcomes');
+        });
+    },
+    fetchQuality(user, request) {
+      this.qualityStatus = 'loading';
+      CallInsights.quality(user, request)
+        .then((result) => {
+          if (result === null) { this.qualityStatus = 'absent'; this.qualityData = null; }
+          else if (result.unavailable) { this.qualityStatus = 'unavailable'; this.qualityData = null; }
+          else { this.qualityStatus = 'ok'; this.qualityData = result; }
+        })
+        .catch((error) => {
+          if (isSessionEnded(error)) return;
+          this.qualityStatus = 'absent';
+          this.handleApiError(error, 'quality');
+        });
+    },
+    fetchAssistants(user, request) {
+      this.assistantsStatus = 'loading';
+      CallInsights.assistants(user, request, this.assistantsSort, 50)
+        .then((result) => {
+          if (result === null) { this.assistantsStatus = 'absent'; this.assistantsData = null; }
+          else if (result.unavailable) { this.assistantsStatus = 'unavailable'; this.assistantsData = null; }
+          else { this.assistantsStatus = 'ok'; this.assistantsData = result; }
+        })
+        .catch((error) => {
+          if (isSessionEnded(error)) return;
+          this.assistantsStatus = 'absent';
+          this.handleApiError(error, 'assistants');
+        });
+    },
+    onAssistantsSortChange(sort) {
+      this.assistantsSort = sort;
+      const user = this.store.state.user;
+      if (user) this.fetchAssistants(user, this.buildRequestBody());
+    },
+    onAssistantsSelectBusiness(businessId) {
+      // As a breakdown row already does (`onBreakdownRowSelect`): narrow this page's own filter,
+      // never navigate away from the admin's whole-platform page.
+      this.businessIdInput = businessId;
+      this.applyFilters();
+    },
+    // The caller's whole scope, since a start StarChat itself defaults (30 days): fetched once,
+    // never refetched on a date-range, business, owner or plan change.
+    fetchIntegrationsIfNeeded(user) {
+      if (this.integrationsFetched) return;
+      this.integrationsFetched = true;
+      this.integrationsStatus = 'loading';
+      CallInsights.integrations(user)
+        .then((result) => {
+          if (result === null) { this.integrationsStatus = 'absent'; this.integrationsData = []; }
+          else if (result.unavailable) { this.integrationsStatus = 'unavailable'; this.integrationsData = []; }
+          else { this.integrationsStatus = 'ok'; this.integrationsData = result; }
+        })
+        .catch((error) => {
+          if (isSessionEnded(error)) return;
+          this.integrationsStatus = 'absent';
+          this.handleApiError(error, 'integrations');
+        });
+      if (this.isAdminRole) {
+        this.configSuggestionsStatus = 'loading';
+        CallInsights.configSuggestions(user)
+          .then((result) => {
+            if (result === null) { this.configSuggestionsStatus = 'absent'; this.configSuggestionsData = []; }
+            else if (result.unavailable) { this.configSuggestionsStatus = 'unavailable'; this.configSuggestionsData = []; }
+            else { this.configSuggestionsStatus = 'ok'; this.configSuggestionsData = result; }
+          })
+          .catch((error) => {
+            if (isSessionEnded(error)) return;
+            this.configSuggestionsStatus = 'absent';
+            this.handleApiError(error, 'config-suggestions');
+          });
+      }
     },
     fetchTemplates() {
       const user = this.store.state.user;

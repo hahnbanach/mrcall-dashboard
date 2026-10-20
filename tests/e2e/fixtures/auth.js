@@ -336,14 +336,17 @@ async function setupApiMocks(page, overrides = {}) {
   })
 
   // Business search - POST /business/search (specific, checked before generic)
-  // Returns array of business objects, each with totalHits
+  // Returns array of business objects, each with totalHits. Also the route Business.js's
+  // checkUserHasBusinesses posts to, which is how Analytics.vue and AnalyticsAdmin.vue establish
+  // the role before choosing their call-insights sections: the header must carry the fixture's own
+  // `role` (default 'owner'), and be exposed, since the request is cross-origin for a real browser.
   await page.route('**/crm/business/search*', (route) => {
     const businesses = overrides.businesses || [{ ...mockBusiness, totalHits: 1 }]
     route.fulfill({
       status: 200,
       contentType: 'application/json',
       body: JSON.stringify(businesses),
-      headers: { 'x-mrcall-role': 'owner' },
+      headers: { 'x-mrcall-role': overrides.role || 'owner', 'access-control-expose-headers': 'x-mrcall-role' },
     })
   })
 
@@ -377,6 +380,47 @@ async function setupApiMocks(page, overrides = {}) {
       body: JSON.stringify(overrides.subscription || mockSubscription),
     })
   })
+
+  // Call insights (`docs/analytics-api-guide.md` §7-10 of the StarChat repository): object-shaped
+  // answers, unlike most of this file's `[]` fallback, which a component reading `.totals`/
+  // `.businesses` off an empty array would crash on (seen failing on 2026-10-20: "Cannot read
+  // properties of undefined (reading 'booked')", WhatCallsSaid.vue against this fixture before
+  // these three routes existed).
+  await page.route('**/customer/analytics/outcomes*', (route) => {
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify(overrides.outcomes || {
+        granularity: 'daily', period: { from: 0, to: 0 }, totalCalls: 0, callsWithOutcome: 0,
+        totals: {}, previousTotals: {}, buckets: [],
+      }),
+    })
+  })
+  await page.route('**/customer/analytics/quality*', (route) => {
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify(overrides.quality || {
+        period: { from: 0, to: 0 }, extractions: {}, callsWithChecks: 0, checks: {},
+        callsWithUnansweredRecorded: 0, callsWithUnanswered: 0, gaps: {}, callsWithSkillErrors: 0,
+      }),
+    })
+  })
+  await page.route('**/customer/analytics/assistants*', (route) => {
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify(overrides.assistants || { period: { from: 0, to: 0 }, sort: 'not_solved', businesses: [] }),
+    })
+  })
+  // The list (`reports?businessId=...`), registered before the single report so the single
+  // report's own route, more specific, is the one Playwright checks first.
+  await page.route('**/customer/insights/reports*', (route) => {
+    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(overrides.reports || []) })
+  })
+  await page.route('**/customer/insights/reports/*', (route) => {
+    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(overrides.report || null) })
+  })
 }
 
 /**
@@ -389,7 +433,7 @@ async function setupApiMocks(page, overrides = {}) {
  * 4. When the app loads, Firebase reads IndexedDB, finds the user,
  *    fires onAuthStateChanged(user), and authIsReady becomes true
  */
-async function setupAuthPage(page, user, role) {
+async function setupAuthPage(page, user, role, overrides = {}) {
   // Serve a minimal HTML page on the app origin to seed IndexedDB
   await page.route('**/localhost:8080/__e2e_seed__', route => {
     route.fulfill({ status: 200, contentType: 'text/html', body: '<html><body></body></html>' })
@@ -405,7 +449,7 @@ async function setupAuthPage(page, user, role) {
   // Set up all network interceptions
   await mockAiBackend(page)
   await interceptFirebaseEndpoints(page, user)
-  await setupApiMocks(page)
+  await setupApiMocks(page, { role, ...overrides })
 }
 
 const test = base.extend({
