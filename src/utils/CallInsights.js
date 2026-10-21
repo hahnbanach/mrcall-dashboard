@@ -73,8 +73,25 @@ function unwrap(promise) {
     });
 }
 
+/**
+ * The answer to keep when one section of a page asks again before its previous answer came back
+ * (a new period, business or sort): only the latest. `begin()` marks a new request and returns a
+ * check that stays true only while no later one has begun, so a slower earlier answer, or its
+ * error, is dropped instead of replacing the newer numbers.
+ */
+function latestOnly() {
+    let latest = 0;
+    return {
+        begin() {
+            const mine = ++latest;
+            return () => mine === latest;
+        },
+    };
+}
+
 export default {
     insightRows,
+    latestOnly,
     isAssessed,
     RESOLUTION_KEYS,
     MESSAGE_KEYS,

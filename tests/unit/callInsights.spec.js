@@ -208,3 +208,17 @@ describe('what every route answers beyond 200', () => {
     await expect(CallInsights.quality(user, {})).rejects.toBe(error)
   })
 })
+
+describe('CallInsights.latestOnly', () => {
+  it('keeps only the latest request of a section current, and sections apart', () => {
+    const outcomes = CallInsights.latestOnly()
+    const quality = CallInsights.latestOnly()
+    const first = outcomes.begin()
+    expect(first()).toBe(true)
+    const second = outcomes.begin()
+    const other = quality.begin()
+    expect(first()).toBe(false)
+    expect(second()).toBe(true)
+    expect(other()).toBe(true)
+  })
+})

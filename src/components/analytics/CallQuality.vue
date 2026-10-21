@@ -35,7 +35,7 @@
 
       <div class="quality-group">
         <h4 class="quality-group-title">{{ $t("components.callInsights.quality.extractionTitle") }}</h4>
-        <p class="quality-row">{{ countOfTotal(extractionFailures, totalCalls) }}</p>
+        <p class="quality-row">{{ countOfTotal(extractionIssues.notOk, extractionIssues.recorded) }}</p>
       </div>
     </template>
   </div>
@@ -49,7 +49,7 @@ import CallInsights from "@/utils/CallInsights";
  * calls it is counted on: unanswered questions by reason, the checks that fired, skill errors and
  * extraction failures. No score: StarChat has not calibrated their weights (Mycelium 5e6dbb40).
  * `totalCalls` is the outcomes answer's own `totalCalls`, the counting base the quality answer
- * itself does not carry for skill errors and extraction failures.
+ * itself does not carry for skill errors; extraction failures are counted over its own `extractions`.
  */
 export default {
   props: {
@@ -71,11 +71,17 @@ export default {
     checks() {
       return (this.data && this.data.checks) || {};
     },
-    extractionFailures() {
-      if (!this.data) return null;
-      if (this.totalCalls == null) return null;
-      const ok = (this.data.extractions && this.data.extractions.ok) || 0;
-      return Math.max(0, this.totalCalls - ok);
+    // Counted over the calls that carry an extraction outcome, which is what StarChat's `extractions`
+    // counts: a call from before the outcome was recorded is no issue, so the period's total is not the base.
+    extractionIssues() {
+      const outcomes = (this.data && this.data.extractions) || {};
+      let recorded = 0;
+      let notOk = 0;
+      for (const [outcome, count] of Object.entries(outcomes)) {
+        recorded += count || 0;
+        if (outcome !== "ok") notOk += count || 0;
+      }
+      return { recorded, notOk };
     },
   },
   methods: {

@@ -119,6 +119,42 @@ test.describe('Analytics: what calls said (owner, business page)', () => {
     await expect(what.locator('.legend-count').filter({ hasText: /^5$/ })).toHaveCount(0)
   })
 
+  test('owner: an earlier period\'s answer arriving after a later one does not replace it', async ({ authenticatedPage: page }) => {
+    const answer = (resolved) => ({
+      granularity: 'daily', period: { from: 1, to: 2 }, totalCalls: 20,
+      resolution: { callsWithValue: resolved, totals: { resolved }, previousTotals: {}, buckets: [] },
+      message: { callsWithValue: 0, totals: {}, previousTotals: {}, buckets: [] },
+      callsWithBooked: 0, booked: 0, transferred: 0,
+    })
+    // phase 0: the first period; 1: the 90 days, held until released; 2: the 7 days, answered at once
+    let phase = 0
+    let release
+    const gate = new Promise((resolve) => { release = resolve })
+    await page.route('**/customer/analytics/outcomes*', async (route) => {
+      const asked = phase
+      if (asked === 1) await gate
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(answer(asked === 0 ? 5 : asked === 1 ? 9 : 3)) })
+    })
+    await page.goto(`/analytics?id=${BUSINESS_ID}`)
+    const what = section(page, 'What calls said')
+    const resolved = what.locator('.insight-dimension').filter({ hasText: 'Resolution' }).locator('li').filter({ hasText: /^\s*Resolved/ }).locator('.legend-count')
+    await expect(resolved).toHaveText('5', { timeout: 15000 })
+
+    phase = 1
+    await page.getByRole('button', { name: '90 days' }).click()
+    await expect(what).toHaveAttribute('aria-busy', 'true')
+    phase = 2
+    await page.getByRole('button', { name: '7 days' }).click()
+    await expect(resolved).toHaveText('3')
+    await expect(what).not.toHaveAttribute('aria-busy', 'true')
+
+    release()
+    // the held answer has been delivered once the route handler returns; give the page a moment to (wrongly) apply it
+    await page.waitForTimeout(500)
+    await expect(resolved).toHaveText('3')
+    await expect(what).not.toHaveAttribute('aria-busy', 'true')
+  })
+
   test('a 404 from quality hides the section, with no toast', async ({ authenticatedPage: page }) => {
     await page.route('**/customer/analytics/quality*', (route) => route.fulfill({
       status: 404, contentType: 'application/json', body: JSON.stringify({ message: 'not for you' }),
@@ -210,6 +246,22 @@ test.describe('Analytics: call reports (owner, business page)', () => {
     await reports.getByRole('button', { name: 'Show earlier reports' }).click()
     await expect.poll(() => beforeCalls).toBe(1)
     await expect(reports.getByRole('button', { name: 'Show earlier reports' })).toHaveCount(0)
+  })
+})
+
+test.describe('Analytics: call reports, an earlier page that fails', () => {
+  test('keeps the reports already shown and the button to try again', async ({ authenticatedPage: page }) => {
+    await page.route('**/customer/insights/reports*', (route) => {
+      const before = new URL(route.request().url()).searchParams.get('before')
+      if (before) return route.fulfill({ status: 500, contentType: 'application/json', body: JSON.stringify({ message: 'boom' }) })
+      return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(reportPage(10, { withContent: true })) })
+    })
+    await page.goto(`/analytics?id=${BUSINESS_ID}`)
+    const reports = section(page, 'Call reports')
+    await expect(reports.getByText('Opening hours')).toBeVisible({ timeout: 15000 })
+    await reports.getByRole('button', { name: 'Show earlier reports' }).click()
+    await expect(reports.getByText('Opening hours')).toBeVisible()
+    await expect(reports.getByRole('button', { name: 'Show earlier reports' })).toBeEnabled()
   })
 })
 

@@ -690,15 +690,24 @@ export default {
       // strictly after the role resolves (see the comment there): not here, where a watcher could
       // call this before that role is known.
     },
+    // One `CallInsights.latestOnly()` per section, created on first use: plain, not reactive state.
+    insightGate(section) {
+      if (!this.insightGates) this.insightGates = {};
+      if (!this.insightGates[section]) this.insightGates[section] = CallInsights.latestOnly();
+      return this.insightGates[section].begin();
+    },
     fetchOutcomes(user, request, granularity, timezone) {
       this.outcomesStatus = 'loading';
+      const isCurrent = this.insightGate('outcomes');
       CallInsights.outcomes(user, request, granularity, timezone)
         .then((result) => {
+          if (!isCurrent()) return;
           if (result === null) { this.outcomesStatus = 'absent'; this.outcomesData = null; }
           else if (result.unavailable) { this.outcomesStatus = 'unavailable'; this.outcomesData = null; }
           else { this.outcomesStatus = 'ok'; this.outcomesData = result; }
         })
         .catch((error) => {
+          if (!isCurrent()) return;
           if (isSessionEnded(error)) return;
           this.outcomesStatus = 'absent';
           this.handleApiError(error, 'outcomes');
@@ -706,13 +715,16 @@ export default {
     },
     fetchQuality(user, request) {
       this.qualityStatus = 'loading';
+      const isCurrent = this.insightGate('quality');
       CallInsights.quality(user, request)
         .then((result) => {
+          if (!isCurrent()) return;
           if (result === null) { this.qualityStatus = 'absent'; this.qualityData = null; }
           else if (result.unavailable) { this.qualityStatus = 'unavailable'; this.qualityData = null; }
           else { this.qualityStatus = 'ok'; this.qualityData = result; }
         })
         .catch((error) => {
+          if (!isCurrent()) return;
           if (isSessionEnded(error)) return;
           this.qualityStatus = 'absent';
           this.handleApiError(error, 'quality');
@@ -720,13 +732,16 @@ export default {
     },
     fetchAssistants(user, request) {
       this.assistantsStatus = 'loading';
+      const isCurrent = this.insightGate('assistants');
       CallInsights.assistants(user, request, this.assistantsSort, 50)
         .then((result) => {
+          if (!isCurrent()) return;
           if (result === null) { this.assistantsStatus = 'absent'; this.assistantsData = null; }
           else if (result.unavailable) { this.assistantsStatus = 'unavailable'; this.assistantsData = null; }
           else { this.assistantsStatus = 'ok'; this.assistantsData = result; }
         })
         .catch((error) => {
+          if (!isCurrent()) return;
           if (isSessionEnded(error)) return;
           this.assistantsStatus = 'absent';
           this.handleApiError(error, 'assistants');
