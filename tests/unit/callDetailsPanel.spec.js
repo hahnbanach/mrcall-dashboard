@@ -245,3 +245,87 @@ describe('CallDetailsPanel: what the call said', () => {
     expect(panel.text()).toContain('Missing information')
   })
 })
+
+/** `details.unkept` (StarChat M13, GPT-Live calls): what the assistant told the caller it had done
+  * and the record does not show done. Each entry is the action in the viewer's language and the
+  * words as said, tagged as the assistant's reading; the check line that states the same fact is
+  * hidden while entries show, and shows as before otherwise. */
+describe('CallDetailsPanel: told to the caller and not recorded as done', () => {
+  beforeEach(() => vi.restoreAllMocks())
+
+  const unkept = [
+    { action: 'book', said: 'I have booked you for Monday at 10.' },
+    { action: 'transfer', said: 'I am putting you through to the doctor.' }
+  ]
+  const checks = { caller_repeated: false, caller_unsatisfied: false, promise_not_kept_in_call: true }
+  const withUnkept = (extra) => ({ ...call, details: { ...call.details, ...extra } })
+  const entries = (panel) => panel.findAll('.insight-unkept-entry')
+
+  it('shows each entry with its action in the viewer\'s language, the words quoted and the assessed tag', () => {
+    const panel = draw(withUnkept({ unkept, checks }))
+    expect(panel.find('.call-insights-box').exists()).toBe(true)
+    expect(panel.text()).toContain('Told to the caller, not recorded as done')
+    const rows = entries(panel)
+    expect(rows).toHaveLength(2)
+    expect(rows[0].text()).toContain('Booking')
+    expect(rows[0].text()).toContain('\u201cI have booked you for Monday at 10.\u201d')
+    expect(rows[0].find('.insight-assessed-tag').text()).toBe('Assessed by the assistant')
+    expect(rows[1].text()).toContain('Transfer')
+    expect(rows[1].find('.insight-assessed-tag').exists()).toBe(true)
+    expect(panel.text()).not.toContain('components.callInsights')
+  })
+
+  it('shows the entries above the unanswered questions', () => {
+    const panel = draw(withUnkept({
+      unkept,
+      unanswered: [{ question: 'Do you open on Sundays?', gap: 'missing_info' }]
+    }))
+    const html = panel.html()
+    expect(html.indexOf('insight-unkept')).toBeGreaterThan(-1)
+    expect(html.indexOf('insight-unkept')).toBeLessThan(html.indexOf('insight-unanswered'))
+  })
+
+  it('hides the promise_not_kept_in_call check line while entries show, and keeps the other checks', () => {
+    const panel = draw(withUnkept({ unkept, checks: { ...checks, caller_repeated: true } }))
+    const list = panel.find('.insight-checks')
+    expect(list.text()).toContain('The caller had to repeat themselves')
+    expect(panel.text()).not.toContain('A promise made in the call was not kept')
+  })
+
+  it('shows no checks block when the hidden line was the only one that fired', () => {
+    const panel = draw(withUnkept({ unkept, checks }))
+    expect(panel.find('.insight-checks').exists()).toBe(false)
+  })
+
+  it('shows the check line once on the same call without unkept', () => {
+    const panel = draw(withUnkept({ unkept: [], checks }))
+    expect(panel.text().split('A promise made in the call was not kept')).toHaveLength(2)
+    expect(entries(panel)).toHaveLength(0)
+    expect(panel.text()).not.toContain('not recorded as done')
+    const absent = draw(withUnkept({ checks }))
+    expect(absent.text().split('A promise made in the call was not kept')).toHaveLength(2)
+  })
+
+  it('names an action the dashboard does not know by the neutral label, never by its key', () => {
+    const panel = draw(withUnkept({ unkept: [{ action: 'refund', said: 'Refunded.' }] }))
+    const text = entries(panel)[0].text()
+    expect(text).toContain('Another action')
+    expect(text).toContain('Refunded.')
+    expect(text).not.toContain('refund')
+  })
+
+  it('shows nothing for an empty or malformed list, and no insights box where nothing else is carried', () => {
+    for (const bad of [[], 'book', { action: 'book' }, [null, { action: 'book' }]]) {
+      const panel = draw(withUnkept({ unkept: bad }))
+      expect(entries(panel)).toHaveLength(0)
+      expect(panel.find('.call-insights-box').exists()).toBe(false)
+      expect(panel.text()).not.toContain('not recorded as done')
+    }
+  })
+
+  it('draws the words as text, never as markup', () => {
+    const panel = draw(withUnkept({ unkept: [{ action: 'cancel', said: 'Done, <b>cancelled</b>.' }] }))
+    expect(panel.text()).toContain('Done, <b>cancelled</b>.')
+    expect(panel.find('.insight-unkept-said b').exists()).toBe(false)
+  })
+})

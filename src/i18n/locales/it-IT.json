@@ -1920,6 +1920,16 @@
         "caller_unsatisfied": "Il chiamante sembrava insoddisfatto",
         "promise_not_kept_in_call": "Una promessa fatta durante la chiamata non è stata mantenuta"
       },
+      "unkept": {
+        "title": "Detto al chiamante, non risulta fatto",
+        "actions": {
+          "book": "Prenotazione",
+          "move": "Spostamento",
+          "cancel": "Cancellazione",
+          "transfer": "Trasferimento",
+          "other": "Altra azione"
+        }
+      },
       "panel": {
         "title": "Di cosa parlava la chiamata",
         "unansweredTitle": "Domande rimaste senza risposta",

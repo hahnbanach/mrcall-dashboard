@@ -1914,6 +1914,16 @@
         "caller_unsatisfied": "Helistaja tundus rahulolematu",
         "promise_not_kept_in_call": "Kõne ajal antud lubadust ei peetud"
       },
+      "unkept": {
+        "title": "Helistajale öeldud, kuid tegemisena registreerimata",
+        "actions": {
+          "book": "Broneering",
+          "move": "Ümberbroneerimine",
+          "cancel": "Tühistamine",
+          "transfer": "Edasisuunamine",
+          "other": "Muu toiming"
+        }
+      },
       "panel": {
         "title": "Mille kohta kõne käis",
         "unansweredTitle": "Vastuseta jäänud küsimused",

@@ -1914,6 +1914,16 @@
         "caller_unsatisfied": "Soittaja vaikutti tyytymättömältä",
         "promise_not_kept_in_call": "Puhelussa annettua lupausta ei pidetty"
       },
+      "unkept": {
+        "title": "Soittajalle kerrottu, ei kirjattu tehdyksi",
+        "actions": {
+          "book": "Varaus",
+          "move": "Ajan siirtäminen",
+          "cancel": "Peruutus",
+          "transfer": "Puhelun yhdistäminen",
+          "other": "Muu toiminto"
+        }
+      },
       "panel": {
         "title": "Mistä puhelu kertoi",
         "unansweredTitle": "Kysymykset, joihin ei vastattu",

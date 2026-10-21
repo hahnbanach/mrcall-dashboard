@@ -1916,6 +1916,16 @@
         "caller_unsatisfied": "Der Anrufer wirkte unzufrieden",
         "promise_not_kept_in_call": "Ein im Anruf gegebenes Versprechen wurde nicht eingehalten"
       },
+      "unkept": {
+        "title": "Dem Anrufer gesagt, nicht als erledigt verzeichnet",
+        "actions": {
+          "book": "Buchung",
+          "move": "Verschiebung",
+          "cancel": "Stornierung",
+          "transfer": "Weiterleitung",
+          "other": "Andere Aktion"
+        }
+      },
       "panel": {
         "title": "Worum es in dem Anruf ging",
         "unansweredTitle": "Offen gebliebene Fragen",

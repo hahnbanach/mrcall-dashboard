@@ -98,6 +98,48 @@ describe('insightRows: the one value table for a call\'s four dimensions', () =>
   })
 })
 
+describe('unkeptRows and firedChecks: what the caller was told and the record does not show done', () => {
+  it('reads each {action, said} entry of `unkept`, in order, naming a known action by its key', () => {
+    expect(CallInsights.UNKEPT_ACTIONS).toEqual(['book', 'move', 'cancel', 'transfer'])
+    expect(CallInsights.unkeptRows({ unkept: [
+      { action: 'book', said: 'I have booked you for Monday at 10.' },
+      { action: 'transfer', said: 'I am putting you through now.' },
+    ] })).toEqual([
+      { action: 'book', said: 'I have booked you for Monday at 10.' },
+      { action: 'transfer', said: 'I am putting you through now.' },
+    ])
+  })
+
+  it('keeps an action it does not know with no key, so the panel shows the neutral label and never the raw key', () => {
+    expect(CallInsights.unkeptRows({ unkept: [{ action: 'refund', said: 'Refunded.' }] })).toEqual([{ action: null, said: 'Refunded.' }])
+  })
+
+  it('shows nothing for an empty, malformed or absent list, and drops an entry with no words', () => {
+    expect(CallInsights.unkeptRows({ unkept: [] })).toEqual([])
+    expect(CallInsights.unkeptRows({})).toEqual([])
+    expect(CallInsights.unkeptRows(undefined)).toEqual([])
+    expect(CallInsights.unkeptRows(null)).toEqual([])
+    expect(CallInsights.unkeptRows({ unkept: 'book' })).toEqual([])
+    expect(CallInsights.unkeptRows({ unkept: { action: 'book', said: 'x' } })).toEqual([])
+    expect(CallInsights.unkeptRows({ unkept: [null, 3, 'x', { action: 'book' }, { action: 'book', said: '   ' }, { action: 'book', said: 7 }] })).toEqual([])
+    expect(CallInsights.unkeptRows({ unkept: [null, { action: 'move', said: 'Moved.' }] })).toEqual([{ action: 'move', said: 'Moved.' }])
+  })
+
+  it('does not translate or alter the words', () => {
+    expect(CallInsights.unkeptRows({ unkept: [{ action: 'cancel', said: 'Ho <b>cancellato</b> tutto.' }] })[0].said).toBe('Ho <b>cancellato</b> tutto.')
+  })
+
+  it('fires the checks that are true, and hides promise_not_kept_in_call only while unkept entries show the same fact', () => {
+    const checks = { caller_repeated: true, caller_unsatisfied: false, promise_not_kept_in_call: true }
+    expect(CallInsights.firedChecks({ checks })).toEqual(['caller_repeated', 'promise_not_kept_in_call'])
+    expect(CallInsights.firedChecks({ checks, unkept: [] })).toEqual(['caller_repeated', 'promise_not_kept_in_call'])
+    expect(CallInsights.firedChecks({ checks, unkept: 'garbage' })).toEqual(['caller_repeated', 'promise_not_kept_in_call'])
+    expect(CallInsights.firedChecks({ checks, unkept: [{ action: 'book', said: 'Booked.' }] })).toEqual(['caller_repeated'])
+    expect(CallInsights.firedChecks({})).toEqual([])
+    expect(CallInsights.firedChecks(undefined)).toEqual([])
+  })
+})
+
 describe('outcomes: refuses a call with no time zone', () => {
   it('rejects before sending anything, as Analytics.js does for the time series', async () => {
     await expect(CallInsights.outcomes(user, {}, 'daily')).rejects.toThrow(/timezone/)

@@ -183,6 +183,65 @@ test.describe('Conversations: what the opened call said', () => {
 })
 
 /**
+ * `details.unkept` (StarChat M13): what the assistant told the caller and the record does not show
+ * done, in the panel of the opened call, above the unanswered questions; the check line that states
+ * the same fact is hidden while entries show.
+ */
+test.describe('Conversations: told to the caller and not recorded as done', () => {
+  const unkept = [
+    { action: 'book', said: 'I have booked you for Monday at 10.' },
+    { action: 'refund', said: 'Your money is on its way back.' }
+  ]
+  const checks = { caller_repeated: false, caller_unsatisfied: false, promise_not_kept_in_call: true }
+  const entries = (page) => page.locator('.opened-card .insight-unkept-entry')
+  const promiseLine = (page) => page.locator('.opened-card .insight-checks').getByText('A promise made in the call was not kept')
+
+  test('the entries show above the unanswered questions with their label and quoted words, and the check line is hidden', async ({ authenticatedPage: page }) => {
+    await mockConversationSearch(page, { byId: withInsights({
+      booked: false,
+      unkept,
+      checks,
+      unanswered: [{ question: 'Do you open on Sundays?', gap: 'missing_info' }]
+    }) })
+    await open(page)
+    await expect(page.locator('.opened-card').getByText('Told to the caller, not recorded as done')).toBeVisible({ timeout: 15000 })
+    await expect(entries(page)).toHaveCount(2)
+    await expect(entries(page).first()).toContainText('Booking')
+    await expect(entries(page).first()).toContainText('\u201cI have booked you for Monday at 10.\u201d')
+    await expect(entries(page).first().locator('.insight-assessed-tag')).toHaveText('Assessed by the assistant')
+    await expect(promiseLine(page)).toHaveCount(0)
+    const unkeptBox = await page.locator('.opened-card .insight-unkept').boundingBox()
+    const unansweredBox = await page.locator('.opened-card .insight-unanswered').boundingBox()
+    expect(unkeptBox.y + unkeptBox.height).toBeLessThanOrEqual(unansweredBox.y)
+  })
+
+  test('an action the dashboard does not know shows the neutral label, never its key', async ({ authenticatedPage: page }) => {
+    await mockConversationSearch(page, { byId: withInsights({ booked: false, unkept, checks }) })
+    await open(page)
+    await expect(entries(page)).toHaveCount(2, { timeout: 15000 })
+    await expect(entries(page).nth(1)).toContainText('Another action')
+    await expect(entries(page).nth(1)).toContainText('Your money is on its way back.')
+    await expect(entries(page).nth(1)).not.toContainText('refund')
+  })
+
+  test('the same call without unkept shows the check line once', async ({ authenticatedPage: page }) => {
+    await mockConversationSearch(page, { byId: withInsights({ booked: false, unkept: [], checks }) })
+    await open(page)
+    await expect(promiseLine(page)).toHaveCount(1, { timeout: 15000 })
+    await expect(entries(page)).toHaveCount(0)
+    await expect(page.locator('.opened-card').getByText('not recorded as done')).toHaveCount(0)
+  })
+
+  test('an empty list shows nothing and the panel is as before', async ({ authenticatedPage: page }) => {
+    await mockConversationSearch(page, { byId: withInsights({ unkept: [] }) })
+    await open(page)
+    await expect(page.locator('.opened-card').getByText('A call.')).toBeVisible({ timeout: 15000 })
+    await expect(page.locator('.opened-card .call-insights-box')).toHaveCount(0)
+    await expect(page.locator('.opened-card .insight-unkept')).toHaveCount(0)
+  })
+})
+
+/**
  * The list's outcome and "unanswered questions" filters (brief outcome 2): one body
  * (`searchBody` in `Conversations.vue`) feeds the list search, its poll, both exports and the two
  * bulk actions alike, so an export or a bulk action acts on exactly the calls the list shows.

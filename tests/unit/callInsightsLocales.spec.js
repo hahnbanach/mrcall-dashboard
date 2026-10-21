@@ -60,7 +60,7 @@ describe('callInsights: every new key in all 12 locales', () => {
  * another file passes the parity test above, so the labels of the value table are compared with
  * en-US one by one: a locale may keep an English word only where the exception list says so.
  */
-const VALUE_TABLE_PREFIXES = ['resolution.', 'message.', 'booked.', 'transferred.', 'dimensions.']
+const VALUE_TABLE_PREFIXES = ['resolution.', 'message.', 'booked.', 'transferred.', 'dimensions.', 'unkept.']
 // The same spelling in the other language, checked: French "Message", Danish and Norwegian "Booking".
 const ENGLISH_ALLOWED = {
   'fr-FR': ['dimensions.message'],
@@ -77,6 +77,8 @@ describe('callInsights: the value table is translated, not copied from English',
       'resolution.spam_wrong_number', 'message.complete', 'message.incomplete', 'message.unintelligible',
       'message.none', 'booked.true', 'booked.false', 'transferred.true', 'transferred.unknown',
       'dimensions.resolution', 'dimensions.message', 'dimensions.booked', 'dimensions.transferred',
+      'unkept.title', 'unkept.actions.book', 'unkept.actions.move', 'unkept.actions.cancel',
+      'unkept.actions.transfer', 'unkept.actions.other',
     ]))
     expect(referenceKeys.filter(k => k.startsWith('outcomes.'))).toEqual([])
   })

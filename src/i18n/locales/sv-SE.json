@@ -1914,6 +1914,16 @@
         "caller_unsatisfied": "Den som ringde verkade missnöjd",
         "promise_not_kept_in_call": "Ett löfte som gavs under samtalet hölls inte"
       },
+      "unkept": {
+        "title": "Sagt till den som ringde, inte registrerat som utfört",
+        "actions": {
+          "book": "Bokning",
+          "move": "Ombokning",
+          "cancel": "Avbokning",
+          "transfer": "Vidarekoppling",
+          "other": "Annan åtgärd"
+        }
+      },
       "panel": {
         "title": "Vad samtalet handlade om",
         "unansweredTitle": "Obesvarade frågor",

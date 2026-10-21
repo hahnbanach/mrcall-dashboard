@@ -16,6 +16,12 @@ import { isSessionEnded } from "@/firebase/session";
  *   version-2 call (one that carries `booked`, which version 2 always writes) is "not known",
  *   never "no": the carrier may report no transfer leg, or not yet.
  * - A call without version-2 insights shows none of the four.
+ * `unkept` (a list of `{action, said}`, GPT-Live calls) is what the assistant told the caller it had
+ * done and StarChat's record does not show done: `action` is the model's reading (book, move, cancel,
+ * transfer; anything else is shown under a neutral label, never as the raw key) and `said` its words,
+ * shown as text and never translated. `unkeptRows` reads it: an absent, empty or malformed list is
+ * nothing. While it has entries, the check `promise_not_kept_in_call` states the same fact, so
+ * `firedChecks` leaves that line out; on every other call it shows as any check does.
  * `insightRows` is the one function that applies the table; nothing else in the dashboard tests a
  * value of these four directly.
  */
@@ -29,6 +35,25 @@ const GAP_KEYS = ["missing_info", "needs_integration", "out_of_scope", "assistan
 
 // `details.checks` and `quality.checks`: true is a bad sign in all three.
 const CHECK_KEYS = ["caller_repeated", "caller_unsatisfied", "promise_not_kept_in_call"];
+
+const UNKEPT_ACTIONS = ["book", "move", "cancel", "transfer"];
+
+function unkeptRows(details) {
+    const list = details && details.unkept;
+    if (!Array.isArray(list)) return [];
+    return list
+        .filter((entry) => entry && typeof entry === "object" && typeof entry.said === "string" && entry.said.trim() !== "")
+        .map((entry) => ({
+            action: UNKEPT_ACTIONS.includes(entry.action) ? entry.action : null,
+            said: entry.said,
+        }));
+}
+
+function firedChecks(details) {
+    const checks = (details && details.checks) || {};
+    const hasUnkept = unkeptRows(details).length > 0;
+    return CHECK_KEYS.filter((key) => checks[key] === true && !(hasUnkept && key === "promise_not_kept_in_call"));
+}
 
 function isAssessed(dimension) {
     return ASSESSED_DIMENSIONS.includes(dimension);
@@ -91,12 +116,15 @@ function latestOnly() {
 
 export default {
     insightRows,
+    unkeptRows,
+    firedChecks,
     latestOnly,
     isAssessed,
     RESOLUTION_KEYS,
     MESSAGE_KEYS,
     GAP_KEYS,
     CHECK_KEYS,
+    UNKEPT_ACTIONS,
 
     // StarChat cuts the series in this IANA zone and answers 400 to a zone it does not know
     // (Analytics.js's own timeseries carries the same refusal): the call is refused here, before

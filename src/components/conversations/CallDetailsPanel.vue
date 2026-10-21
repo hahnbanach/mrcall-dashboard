@@ -60,6 +60,21 @@
         <Tag v-for="topic in topics" :key="topic" :value="topic" class="insight-topic-tag" />
       </div>
 
+      <div v-if="unkept.length > 0" class="insight-unkept">
+        <h4 class="insight-subtitle">{{ $t("components.callInsights.unkept.title") }}</h4>
+        <div v-for="(item, idx) in unkept" :key="idx" class="insight-unkept-entry">
+          <span class="insight-unkept-action">
+            {{ unkeptLabel(item.action) }}
+            <Tag
+              severity="secondary"
+              :value="$t('components.callInsights.assessedMarking')"
+              class="insight-assessed-tag"
+            />
+          </span>
+          <p class="insight-unkept-said">&ldquo;{{ item.said }}&rdquo;</p>
+        </div>
+      </div>
+
       <div v-if="unanswered.length > 0" class="insight-unanswered">
         <h4 class="insight-subtitle">{{ $t("components.callInsights.panel.unansweredTitle") }}</h4>
         <div v-for="(item, idx) in unanswered" :key="idx" class="insight-question">
@@ -216,15 +231,17 @@ export default {
     unanswered() {
       return this.details.unanswered || [];
     },
+    unkept() {
+      return CallInsights.unkeptRows(this.details);
+    },
     checksFired() {
-      const checks = this.details.checks || {};
-      return CallInsights.CHECK_KEYS.filter((key) => checks[key] === true);
+      return CallInsights.firedChecks(this.details);
     },
     insightRows() {
       return CallInsights.insightRows(this.details);
     },
     hasInsights() {
-      return this.topics.length > 0 || this.unanswered.length > 0 ||
+      return this.topics.length > 0 || this.unanswered.length > 0 || this.unkept.length > 0 ||
         this.checksFired.length > 0 || this.insightRows.length > 0;
     },
     turns() {
@@ -241,6 +258,9 @@ export default {
   methods: {
     gapLabel(gap) {
       return this.$t("components.callInsights.gaps." + gap);
+    },
+    unkeptLabel(action) {
+      return this.$t("components.callInsights.unkept.actions." + (action || "other"));
     },
     checkLabel(key) {
       return this.$t("components.callInsights.checks." + key);
@@ -522,6 +542,34 @@ export default {
   margin: 0;
   font-size: 13px;
   color: @mrcall_grey_text;
+}
+
+.insight-unkept {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.insight-unkept-entry {
+  border-left: 3px solid @mrcall_salmon;
+  padding-left: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.insight-unkept-action {
+  font-size: 12px;
+  font-weight: 600;
+  color: @mrcall_grey_text2;
+}
+
+.insight-unkept-said {
+  margin: 0;
+  font-size: 15px;
+  font-style: italic;
+  color: @mrcall_dark_grey_text;
+  overflow-wrap: anywhere;
 }
 
 .insight-checks {

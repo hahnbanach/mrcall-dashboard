@@ -1914,6 +1914,16 @@
         "caller_unsatisfied": "De beller leek ontevreden",
         "promise_not_kept_in_call": "Een belofte uit het gesprek is niet nagekomen"
       },
+      "unkept": {
+        "title": "Tegen de beller gezegd, niet als gedaan geregistreerd",
+        "actions": {
+          "book": "Reservering",
+          "move": "Verplaatsing",
+          "cancel": "Annulering",
+          "transfer": "Doorverbinding",
+          "other": "Andere actie"
+        }
+      },
       "panel": {
         "title": "Waar het gesprek over ging",
         "unansweredTitle": "Onbeantwoorde vragen",

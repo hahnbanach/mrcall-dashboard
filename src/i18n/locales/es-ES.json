@@ -1928,6 +1928,16 @@
         "caller_unsatisfied": "Quien llamó pareció insatisfecho",
         "promise_not_kept_in_call": "Una promesa hecha en la llamada no se cumplió"
       },
+      "unkept": {
+        "title": "Dicho a quien llamó, no consta como hecho",
+        "actions": {
+          "book": "Reserva",
+          "move": "Cambio de cita",
+          "cancel": "Cancelación",
+          "transfer": "Transferencia",
+          "other": "Otra acción"
+        }
+      },
       "panel": {
         "title": "De qué trataba la llamada",
         "unansweredTitle": "Preguntas que quedaron sin responder",

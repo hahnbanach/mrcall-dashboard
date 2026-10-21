@@ -1919,6 +1919,16 @@
         "caller_unsatisfied": "The caller seemed unsatisfied",
         "promise_not_kept_in_call": "A promise made in the call was not kept"
       },
+      "unkept": {
+        "title": "Told to the caller, not recorded as done",
+        "actions": {
+          "book": "Booking",
+          "move": "Rescheduling",
+          "cancel": "Cancellation",
+          "transfer": "Transfer",
+          "other": "Another action"
+        }
+      },
       "panel": {
         "title": "What the call was about",
         "unansweredTitle": "Questions left unanswered",

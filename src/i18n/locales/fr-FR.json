@@ -1916,6 +1916,16 @@
         "caller_unsatisfied": "L'appelant semblait insatisfait",
         "promise_not_kept_in_call": "Une promesse faite pendant l'appel n'a pas été tenue"
       },
+      "unkept": {
+        "title": "Dit à l'appelant, non enregistré comme fait",
+        "actions": {
+          "book": "Réservation",
+          "move": "Déplacement",
+          "cancel": "Annulation",
+          "transfer": "Transfert",
+          "other": "Autre action"
+        }
+      },
       "panel": {
         "title": "De quoi parlait l'appel",
         "unansweredTitle": "Questions restées sans réponse",
