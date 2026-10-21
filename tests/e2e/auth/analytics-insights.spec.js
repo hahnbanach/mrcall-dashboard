@@ -99,7 +99,7 @@ test.describe('Analytics: what calls said (owner, business page)', () => {
       if (changed) await gate
       await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(answer(changed ? 9 : 5)) })
     })
-    await page.goto('/analytics?id=${BUSINESS_ID}')
+    await page.goto(`/analytics?id=${BUSINESS_ID}`)
     const what = section(page, 'What calls said')
     const resolved = what.locator('.insight-dimension').filter({ hasText: 'Resolution' }).locator('li').filter({ hasText: /^\s*Resolved/ }).locator('.legend-count')
     await expect(resolved).toHaveText('5', { timeout: 15000 })
