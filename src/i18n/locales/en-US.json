@@ -1973,7 +1973,7 @@
         "sortLabel": "Sort by",
         "businessId": "Business",
         "calls": "Calls",
-        "notSolved": "Not solved",
+        "notSolved": "Unresolved or caller left",
         "unanswered": "Unanswered",
         "checks": "Checks",
         "skillErrors": "Skill errors",
@@ -1981,7 +1981,7 @@
         "shareOfTotal": "{percent}% ({count} of {total})",
         "sortOptions": {
           "calls": "Calls",
-          "notSolved": "Not solved (assessed by the assistant)",
+          "notSolved": "Unresolved or caller left (assessed by the assistant)",
           "unanswered": "Unanswered questions",
           "checks": "Checks",
           "skillErrors": "Skill errors",

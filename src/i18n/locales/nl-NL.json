@@ -1968,7 +1968,7 @@
         "sortLabel": "Sorteren op",
         "businessId": "Bedrijf",
         "calls": "Gesprekken",
-        "notSolved": "Niet opgelost",
+        "notSolved": "Niet opgelost of opgehangen",
         "unanswered": "Onbeantwoord",
         "checks": "Controles",
         "skillErrors": "Functiefouten",
@@ -1976,7 +1976,7 @@
         "shareOfTotal": "{percent}% ({count} van de {total})",
         "sortOptions": {
           "calls": "Gesprekken",
-          "notSolved": "Niet opgelost (door de assistent beoordeeld)",
+          "notSolved": "Niet opgelost of opgehangen (door de assistent beoordeeld)",
           "unanswered": "Onbeantwoorde vragen",
           "checks": "Controles",
           "skillErrors": "Functiefouten",

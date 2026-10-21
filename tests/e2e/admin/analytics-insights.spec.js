@@ -35,13 +35,13 @@ test.describe('AnalyticsAdmin: assistants to review, across the whole platform',
     const assistants = section(page, 'Assistants to review')
     await expect(assistants.getByText(BUSINESS_ID)).toBeVisible({ timeout: 15000 })
 
-    const notSolvedHeader = assistants.locator('th').filter({ hasText: 'Not solved' })
+    const notSolvedHeader = assistants.locator('th').filter({ hasText: 'Unresolved or caller left' })
     await expect(notSolvedHeader.getByText('Assessed by the assistant')).toBeVisible()
     // unresolved and caller_left over the calls with a resolution; handed_over is not "not solved"
     await expect(assistants.getByRole('row', { name: new RegExp(BUSINESS_ID) })).toContainText('30% (3 of 10)')
 
     await assistants.getByRole('combobox', { name: 'Sort by' }).click()
-    await expect(page.getByRole('option', { name: 'Not solved (assessed by the assistant)' })).toBeVisible()
+    await expect(page.getByRole('option', { name: 'Unresolved or caller left (assessed by the assistant)' })).toBeVisible()
     await page.keyboard.press('Escape')
 
     await assistants.getByRole('row', { name: new RegExp(BUSINESS_ID) }).click()

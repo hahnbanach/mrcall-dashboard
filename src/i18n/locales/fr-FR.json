@@ -1970,7 +1970,7 @@
         "sortLabel": "Trier par",
         "businessId": "Établissement",
         "calls": "Appels",
-        "notSolved": "Non résolus",
+        "notSolved": "Non résolu ou l'appelant a raccroché",
         "unanswered": "Sans réponse",
         "checks": "Vérifications",
         "skillErrors": "Erreurs de fonctions",
@@ -1978,7 +1978,7 @@
         "shareOfTotal": "{percent} % ({count} sur {total})",
         "sortOptions": {
           "calls": "Appels",
-          "notSolved": "Non résolus (évalué par l'assistant)",
+          "notSolved": "Non résolu ou l'appelant a raccroché (évalué par l'assistant)",
           "unanswered": "Questions sans réponse",
           "checks": "Vérifications",
           "skillErrors": "Erreurs de fonctions",

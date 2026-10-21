@@ -1982,7 +1982,7 @@
         "sortLabel": "Ordenar por",
         "businessId": "Negocio",
         "calls": "Llamadas",
-        "notSolved": "Sin resolver",
+        "notSolved": "Sin resolver o colgó",
         "unanswered": "Sin responder",
         "checks": "Controles",
         "skillErrors": "Errores de funciones",
@@ -1990,7 +1990,7 @@
         "shareOfTotal": "{percent}% ({count} de {total})",
         "sortOptions": {
           "calls": "Llamadas",
-          "notSolved": "Sin resolver (evaluado por el asistente)",
+          "notSolved": "Sin resolver o colgó (evaluado por el asistente)",
           "unanswered": "Preguntas sin responder",
           "checks": "Controles",
           "skillErrors": "Errores de funciones",

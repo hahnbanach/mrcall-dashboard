@@ -1970,7 +1970,7 @@
         "sortLabel": "Sortieren nach",
         "businessId": "Unternehmen",
         "calls": "Anrufe",
-        "notSolved": "Nicht gelöst",
+        "notSolved": "Nicht gelöst oder aufgelegt",
         "unanswered": "Unbeantwortet",
         "checks": "Prüfungen",
         "skillErrors": "Funktionsfehler",
@@ -1978,7 +1978,7 @@
         "shareOfTotal": "{percent} % ({count} von {total})",
         "sortOptions": {
           "calls": "Anrufe",
-          "notSolved": "Nicht gelöst (vom Assistenten eingeschätzt)",
+          "notSolved": "Nicht gelöst oder aufgelegt (vom Assistenten eingeschätzt)",
           "unanswered": "Offene Fragen",
           "checks": "Prüfungen",
           "skillErrors": "Funktionsfehler",

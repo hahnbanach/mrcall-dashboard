@@ -1968,7 +1968,7 @@
         "sortLabel": "Sorteeri",
         "businessId": "Ettevõte",
         "calls": "Kõned",
-        "notSolved": "Lahendamata",
+        "notSolved": "Lahendamata või helistaja lahkus",
         "unanswered": "Vastuseta",
         "checks": "Kontrollid",
         "skillErrors": "Funktsioonivead",
@@ -1976,7 +1976,7 @@
         "shareOfTotal": "{percent}% ({count} / {total})",
         "sortOptions": {
           "calls": "Kõned",
-          "notSolved": "Lahendamata (assistendi hinnang)",
+          "notSolved": "Lahendamata või helistaja lahkus (assistendi hinnang)",
           "unanswered": "Vastuseta küsimused",
           "checks": "Kontrollid",
           "skillErrors": "Funktsioonivead",

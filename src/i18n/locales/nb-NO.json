@@ -1968,7 +1968,7 @@
         "sortLabel": "Sorter etter",
         "businessId": "Virksomhet",
         "calls": "Samtaler",
-        "notSolved": "Uløste",
+        "notSolved": "Uløst eller la på",
         "unanswered": "Ubesvarte",
         "checks": "Kontroller",
         "skillErrors": "Funksjonsfeil",
@@ -1976,7 +1976,7 @@
         "shareOfTotal": "{percent} % ({count} av {total})",
         "sortOptions": {
           "calls": "Samtaler",
-          "notSolved": "Uløste (vurdert av assistenten)",
+          "notSolved": "Uløst eller la på (vurdert av assistenten)",
           "unanswered": "Ubesvarte spørsmål",
           "checks": "Kontroller",
           "skillErrors": "Funksjonsfeil",

@@ -1968,7 +1968,7 @@
         "sortLabel": "Sortera efter",
         "businessId": "Verksamhet",
         "calls": "Samtal",
-        "notSolved": "Olösta",
+        "notSolved": "Olöst eller la på",
         "unanswered": "Obesvarade",
         "checks": "Kontroller",
         "skillErrors": "Funktionsfel",
@@ -1976,7 +1976,7 @@
         "shareOfTotal": "{percent} % ({count} av {total})",
         "sortOptions": {
           "calls": "Samtal",
-          "notSolved": "Olösta (bedömt av assistenten)",
+          "notSolved": "Olöst eller la på (bedömt av assistenten)",
           "unanswered": "Obesvarade frågor",
           "checks": "Kontroller",
           "skillErrors": "Funktionsfel",

@@ -1974,7 +1974,7 @@
         "sortLabel": "Ordina per",
         "businessId": "Attività",
         "calls": "Chiamate",
-        "notSolved": "Non risolte",
+        "notSolved": "Non risolte o chiamante uscito",
         "unanswered": "Senza risposta",
         "checks": "Controlli",
         "skillErrors": "Errori delle funzioni",
@@ -1982,7 +1982,7 @@
         "shareOfTotal": "{percent}% ({count} di {total})",
         "sortOptions": {
           "calls": "Chiamate",
-          "notSolved": "Non risolte (valutato dall'assistente)",
+          "notSolved": "Non risolte o chiamante uscito (valutato dall'assistente)",
           "unanswered": "Domande senza risposta",
           "checks": "Controlli",
           "skillErrors": "Errori delle funzioni",

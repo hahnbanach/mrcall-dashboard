@@ -1968,7 +1968,7 @@
         "sortLabel": "Järjestä",
         "businessId": "Yritys",
         "calls": "Puhelut",
-        "notSolved": "Ratkaisematta",
+        "notSolved": "Ratkaisematta tai soittaja lopetti",
         "unanswered": "Vastaamatta",
         "checks": "Tarkistukset",
         "skillErrors": "Toimintovirheet",
@@ -1976,7 +1976,7 @@
         "shareOfTotal": "{percent} % ({count} / {total})",
         "sortOptions": {
           "calls": "Puhelut",
-          "notSolved": "Ratkaisematta (avustajan arvioima)",
+          "notSolved": "Ratkaisematta tai soittaja lopetti (avustajan arvioima)",
           "unanswered": "Vastaamattomat kysymykset",
           "checks": "Tarkistukset",
           "skillErrors": "Toimintovirheet",

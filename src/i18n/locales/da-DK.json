@@ -1968,7 +1968,7 @@
         "sortLabel": "Sortér efter",
         "businessId": "Virksomhed",
         "calls": "Opkald",
-        "notSolved": "Uløste",
+        "notSolved": "Uløst eller lagt på",
         "unanswered": "Ubesvarede",
         "checks": "Kontroller",
         "skillErrors": "Funktionsfejl",
@@ -1976,7 +1976,7 @@
         "shareOfTotal": "{percent} % ({count} ud af {total})",
         "sortOptions": {
           "calls": "Opkald",
-          "notSolved": "Uløste (vurderet af assistenten)",
+          "notSolved": "Uløst eller lagt på (vurderet af assistenten)",
           "unanswered": "Ubesvarede spørgsmål",
           "checks": "Kontroller",
           "skillErrors": "Funktionsfejl",
