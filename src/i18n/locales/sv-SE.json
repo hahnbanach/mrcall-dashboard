@@ -1876,14 +1876,32 @@
     },
     "callInsights": {
       "assessedMarking": "Bedömt av assistenten",
-      "outcomes": {
-        "booked": "Bokat",
-        "transferred": "Vidarekopplat",
+      "resolution": {
         "resolved": "Löst",
-        "message_taken": "Meddelande mottaget",
         "unresolved": "Olöst",
+        "handed_over": "Överlämnat till en person",
         "caller_left": "Den som ringde la på",
         "spam_wrong_number": "Skräppost eller fel nummer"
+      },
+      "message": {
+        "complete": "Fullständigt meddelande",
+        "incomplete": "Ofullständigt meddelande",
+        "unintelligible": "Obegripligt meddelande",
+        "none": "Inget meddelande"
+      },
+      "booked": {
+        "true": "Bokat",
+        "false": "Inte bokat"
+      },
+      "transferred": {
+        "true": "Vidarekopplat",
+        "unknown": "Okänt"
+      },
+      "dimensions": {
+        "resolution": "Lösning",
+        "message": "Meddelande",
+        "booked": "Bokning",
+        "transferred": "Vidarekoppling"
       },
       "gaps": {
         "missing_info": "Saknad information",
@@ -1898,16 +1916,16 @@
       },
       "panel": {
         "title": "Vad samtalet handlade om",
-        "outcome": "Utfall",
         "unansweredTitle": "Obesvarade frågor",
         "checksTitle": "Kontroller",
         "suggestion": "Vad du skulle kunna ge din assistent: {suggestion}"
       },
       "filters": {
-        "outcomeLabel": "Utfall",
-        "outcomePlaceholder": "Alla utfall",
-        "outcomeGroupRecorded": "Registrerade",
-        "outcomeGroupAssessed": "Bedömda av assistenten",
+        "resolutionPlaceholder": "Valfri lösning",
+        "messagePlaceholder": "Valfritt meddelande",
+        "bookedPlaceholder": "Bokat eller inte",
+        "transferredOn": "Endast vidarekopplade samtal",
+        "transferredOff": "Alla samtal",
         "unansweredLabel": "Obesvarade frågor",
         "unansweredOn": "Med en obesvarad fråga",
         "unansweredOff": "Alla samtal"
@@ -1915,7 +1933,9 @@
       "notAvailableYet": "Inte tillgängligt ännu.",
       "whatCallsSaid": {
         "title": "Vad samtalen handlade om",
-        "coverage": "{withOutcome} av {total} samtal har ett registrerat utfall."
+        "coverage": "{count} av {total} samtal har bedömts.",
+        "booked": "{booked} av {total} samtal med en registrerad bokningsuppgift blev bokade.",
+        "transferred": "{count} vidarekopplade samtal, enligt operatörerna."
       },
       "quality": {
         "title": "Kvalitet",
@@ -1928,6 +1948,9 @@
       "reports": {
         "title": "Samtalsrapporter",
         "none": "Ingen rapport än.",
+        "summaryTitle": "Perioden",
+        "booked": "Bokade samtal: {count}",
+        "transferred": "Vidarekopplade samtal, enligt operatörerna: {count}",
         "topicsTitle": "Ämnen",
         "newTopic": "Nytt",
         "topicShare": "{calls} samtal ({percent} %)",

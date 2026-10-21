@@ -1876,14 +1876,32 @@
     },
     "callInsights": {
       "assessedMarking": "Αξιολογήθηκε από τον βοηθό",
-      "outcomes": {
-        "booked": "Κράτηση",
-        "transferred": "Μεταφέρθηκε",
+      "resolution": {
         "resolved": "Επιλύθηκε",
-        "message_taken": "Μήνυμα καταγράφηκε",
         "unresolved": "Δεν επιλύθηκε",
+        "handed_over": "Παραδόθηκε σε άτομο",
         "caller_left": "Ο καλών έκλεισε",
         "spam_wrong_number": "Ανεπιθύμητη κλήση ή λάθος αριθμός"
+      },
+      "message": {
+        "complete": "Πλήρες μήνυμα",
+        "incomplete": "Ελλιπές μήνυμα",
+        "unintelligible": "Ακατανόητο μήνυμα",
+        "none": "Κανένα μήνυμα"
+      },
+      "booked": {
+        "true": "Έγινε κράτηση",
+        "false": "Δεν έγινε κράτηση"
+      },
+      "transferred": {
+        "true": "Μεταφέρθηκε",
+        "unknown": "Άγνωστο"
+      },
+      "dimensions": {
+        "resolution": "Επίλυση",
+        "message": "Μήνυμα",
+        "booked": "Κράτηση",
+        "transferred": "Μεταφορά"
       },
       "gaps": {
         "missing_info": "Λείπουν πληροφορίες",
@@ -1898,16 +1916,16 @@
       },
       "panel": {
         "title": "Για τι μιλούσε η κλήση",
-        "outcome": "Αποτέλεσμα",
         "unansweredTitle": "Ερωτήσεις που έμειναν αναπάντητες",
         "checksTitle": "Έλεγχοι",
         "suggestion": "Τι θα μπορούσες να δώσεις στον βοηθό σου: {suggestion}"
       },
       "filters": {
-        "outcomeLabel": "Αποτέλεσμα",
-        "outcomePlaceholder": "Οποιοδήποτε αποτέλεσμα",
-        "outcomeGroupRecorded": "Καταγεγραμμένα",
-        "outcomeGroupAssessed": "Αξιολογημένα από τον βοηθό",
+        "resolutionPlaceholder": "Οποιαδήποτε επίλυση",
+        "messagePlaceholder": "Οποιοδήποτε μήνυμα",
+        "bookedPlaceholder": "Με κράτηση ή όχι",
+        "transferredOn": "Μόνο μεταφερμένες κλήσεις",
+        "transferredOff": "Όλες οι κλήσεις",
         "unansweredLabel": "Αναπάντητες ερωτήσεις",
         "unansweredOn": "Με μια αναπάντητη ερώτηση",
         "unansweredOff": "Όλες οι κλήσεις"
@@ -1915,7 +1933,9 @@
       "notAvailableYet": "Δεν είναι ακόμη διαθέσιμο.",
       "whatCallsSaid": {
         "title": "Για τι μιλούσαν οι κλήσεις",
-        "coverage": "{withOutcome} από {total} κλήσεις έχουν καταγεγραμμένο αποτέλεσμα."
+        "coverage": "{count} από {total} κλήσεις έχουν αξιολογηθεί.",
+        "booked": "{booked} από {total} κλήσεις με καταγεγραμμένη πληροφορία κράτησης κατέληξαν σε κράτηση.",
+        "transferred": "{count} κλήσεις μεταφέρθηκαν, σύμφωνα με τους παρόχους."
       },
       "quality": {
         "title": "Ποιότητα",
@@ -1928,6 +1948,9 @@
       "reports": {
         "title": "Αναφορές κλήσεων",
         "none": "Καμία αναφορά ακόμη.",
+        "summaryTitle": "Η περίοδος",
+        "booked": "Κλήσεις με κράτηση: {count}",
+        "transferred": "Κλήσεις που μεταφέρθηκαν, σύμφωνα με τους παρόχους: {count}",
         "topicsTitle": "Θέματα",
         "newTopic": "Νέο",
         "topicShare": "{calls} κλήσεις ({percent}%)",

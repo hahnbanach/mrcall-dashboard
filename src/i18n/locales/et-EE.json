@@ -1876,14 +1876,32 @@
     },
     "callInsights": {
       "assessedMarking": "Assistendi hinnang",
-      "outcomes": {
-        "booked": "Broneeritud",
-        "transferred": "Suunatud",
+      "resolution": {
         "resolved": "Lahendatud",
-        "message_taken": "Sõnum vastu võetud",
         "unresolved": "Lahendamata",
+        "handed_over": "Edastatud inimesele",
         "caller_left": "Helistaja lahkus",
         "spam_wrong_number": "Rämpspost või vale number"
+      },
+      "message": {
+        "complete": "Täielik sõnum",
+        "incomplete": "Puudulik sõnum",
+        "unintelligible": "Arusaamatu sõnum",
+        "none": "Sõnumit pole"
+      },
+      "booked": {
+        "true": "Broneeritud",
+        "false": "Broneerimata"
+      },
+      "transferred": {
+        "true": "Suunatud",
+        "unknown": "Teadmata"
+      },
+      "dimensions": {
+        "resolution": "Lahendus",
+        "message": "Sõnum",
+        "booked": "Broneering",
+        "transferred": "Suunamine"
       },
       "gaps": {
         "missing_info": "Puuduv teave",
@@ -1898,16 +1916,16 @@
       },
       "panel": {
         "title": "Mille kohta kõne käis",
-        "outcome": "Tulemus",
         "unansweredTitle": "Vastuseta jäänud küsimused",
         "checksTitle": "Kontrollid",
         "suggestion": "Mida saaksid oma assistendile anda: {suggestion}"
       },
       "filters": {
-        "outcomeLabel": "Tulemus",
-        "outcomePlaceholder": "Iga tulemus",
-        "outcomeGroupRecorded": "Salvestatud",
-        "outcomeGroupAssessed": "Assistendi hinnatud",
+        "resolutionPlaceholder": "Mis tahes lahendus",
+        "messagePlaceholder": "Mis tahes sõnum",
+        "bookedPlaceholder": "Broneeritud või mitte",
+        "transferredOn": "Ainult suunatud kõned",
+        "transferredOff": "Kõik kõned",
         "unansweredLabel": "Vastuseta küsimused",
         "unansweredOn": "Vastuseta küsimusega",
         "unansweredOff": "Kõik kõned"
@@ -1915,7 +1933,9 @@
       "notAvailableYet": "Pole veel saadaval.",
       "whatCallsSaid": {
         "title": "Mille kohta kõned käisid",
-        "coverage": "{withOutcome} kõnel {total}-st on salvestatud tulemus."
+        "coverage": "{count} kõnel {total}-st on hinnang.",
+        "booked": "{total} kõnest, mille kohta on broneeringu andmed, broneeriti {booked}.",
+        "transferred": "{count} suunatud kõnet operaatorite teatel."
       },
       "quality": {
         "title": "Kvaliteet",
@@ -1928,6 +1948,9 @@
       "reports": {
         "title": "Kõnearuanded",
         "none": "Ühtegi aruannet veel pole.",
+        "summaryTitle": "Periood",
+        "booked": "Broneeritud kõned: {count}",
+        "transferred": "Suunatud kõned operaatorite teatel: {count}",
         "topicsTitle": "Teemad",
         "newTopic": "Uus",
         "topicShare": "{calls} kõnet ({percent}%)",

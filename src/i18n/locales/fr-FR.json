@@ -1878,14 +1878,32 @@
     },
     "callInsights": {
       "assessedMarking": "Évalué par l'assistant",
-      "outcomes": {
-        "booked": "Réservé",
-        "transferred": "Transféré",
+      "resolution": {
         "resolved": "Résolu",
-        "message_taken": "Message pris",
         "unresolved": "Non résolu",
+        "handed_over": "Passé à une personne",
         "caller_left": "L'appelant a raccroché",
         "spam_wrong_number": "Spam ou faux numéro"
+      },
+      "message": {
+        "complete": "Message complet",
+        "incomplete": "Message incomplet",
+        "unintelligible": "Message inintelligible",
+        "none": "Aucun message"
+      },
+      "booked": {
+        "true": "Réservé",
+        "false": "Non réservé"
+      },
+      "transferred": {
+        "true": "Transféré",
+        "unknown": "Inconnu"
+      },
+      "dimensions": {
+        "resolution": "Résolution",
+        "message": "Message",
+        "booked": "Réservation",
+        "transferred": "Transfert"
       },
       "gaps": {
         "missing_info": "Information manquante",
@@ -1900,16 +1918,16 @@
       },
       "panel": {
         "title": "De quoi parlait l'appel",
-        "outcome": "Issue",
         "unansweredTitle": "Questions restées sans réponse",
         "checksTitle": "Vérifications",
         "suggestion": "Ce que vous pourriez donner à votre assistant : {suggestion}"
       },
       "filters": {
-        "outcomeLabel": "Issue",
-        "outcomePlaceholder": "Toute issue",
-        "outcomeGroupRecorded": "Enregistrées",
-        "outcomeGroupAssessed": "Évaluées par l'assistant",
+        "resolutionPlaceholder": "Toute résolution",
+        "messagePlaceholder": "Tout message",
+        "bookedPlaceholder": "Réservé ou non",
+        "transferredOn": "Appels transférés uniquement",
+        "transferredOff": "Tous les appels",
         "unansweredLabel": "Questions sans réponse",
         "unansweredOn": "Avec une question sans réponse",
         "unansweredOff": "Tous les appels"
@@ -1917,7 +1935,9 @@
       "notAvailableYet": "Pas encore disponible.",
       "whatCallsSaid": {
         "title": "De quoi parlaient les appels",
-        "coverage": "{withOutcome} appels sur {total} ont une issue enregistrée."
+        "coverage": "{count} appels sur {total} ont été évalués.",
+        "booked": "{booked} appels sur {total} avec un état de réservation enregistré ont été réservés.",
+        "transferred": "{count} appels transférés, selon les opérateurs."
       },
       "quality": {
         "title": "Qualité",
@@ -1930,6 +1950,9 @@
       "reports": {
         "title": "Rapports d'appels",
         "none": "Pas encore de rapport.",
+        "summaryTitle": "La période",
+        "booked": "Appels réservés : {count}",
+        "transferred": "Appels transférés, selon les opérateurs : {count}",
         "topicsTitle": "Sujets",
         "newTopic": "Nouveau",
         "topicShare": "{calls} appels ({percent} %)",

@@ -15,6 +15,28 @@
         </button>
 
         <div v-if="isExpanded(item.periodStart) && item.content" class="report-body">
+          <section v-if="hasSummary(item.content)" class="report-summary report-section">
+            <h4 class="report-section-title">{{ $t("components.callInsights.reports.summaryTitle") }}</h4>
+            <div v-if="resolutionKeys(item.content).length > 0" class="report-topic-outcomes">
+              <span v-for="key in resolutionKeys(item.content)" :key="key" class="report-topic-outcome">
+                <InsightLabel dimension="resolution" :value="key" />
+                <span class="report-topic-outcome-count">{{ item.content.resolution[key] }}</span>
+              </span>
+            </div>
+            <div v-if="messageKeys(item.content).length > 0" class="report-topic-outcomes">
+              <span v-for="key in messageKeys(item.content)" :key="key" class="report-topic-outcome">
+                <InsightLabel dimension="message" :value="key" />
+                <span class="report-topic-outcome-count">{{ item.content.message[key] }}</span>
+              </span>
+            </div>
+            <p v-if="isCount(item.content.booked)" class="report-fact">
+              {{ $t("components.callInsights.reports.booked", { count: item.content.booked }) }}
+            </p>
+            <p v-if="isCount(item.content.transferred)" class="report-fact">
+              {{ $t("components.callInsights.reports.transferred", { count: item.content.transferred }) }}
+            </p>
+          </section>
+
           <section v-if="item.content.topics && item.content.topics.length > 0" class="report-section">
             <h4 class="report-section-title">{{ $t("components.callInsights.reports.topicsTitle") }}</h4>
             <div v-for="topic in item.content.topics" :key="topic.topic" class="report-topic">
@@ -24,9 +46,9 @@
                 <span class="report-topic-share">{{ topicShare(topic, item.content) }}</span>
               </div>
               <div class="report-topic-outcomes">
-                <span v-for="key in topicOutcomeKeys(topic)" :key="key" class="report-topic-outcome">
-                  <OutcomeLabel :outcome-key="key" />
-                  <span class="report-topic-outcome-count">{{ topic.outcomes[key] }}</span>
+                <span v-for="key in resolutionKeys(topic)" :key="key" class="report-topic-outcome">
+                  <InsightLabel dimension="resolution" :value="key" />
+                  <span class="report-topic-outcome-count">{{ topic.resolution[key] }}</span>
                 </span>
               </div>
             </div>
@@ -92,12 +114,13 @@
 
 <script>
 import CallInsights from "@/utils/CallInsights";
-import OutcomeLabel from "@/components/analytics/OutcomeLabel.vue";
+import InsightLabel from "@/components/analytics/InsightLabel.vue";
 
 /**
  * A business's call reports (brief outcome 4): the latest one open, earlier ones by `before`
  * paging (the parent reads it from the last loaded item's `periodEnd`); topics with their share
- * and whether they are new, each under the same outcome rule as the rest of the dashboard; the
+ * and whether they are new, and the period's resolution, message, booked and transferred counts,
+ * each under the same value table as the rest of the dashboard; the
  * unanswered questions grouped by reason; the suggestions, `mrcall_config` for an admin only
  * (the server already strips it for anyone else; this is the same rule kept on the client, since a
  * mocked or future answer could still carry it). A report's example calls and the flagged calls
@@ -105,7 +128,7 @@ import OutcomeLabel from "@/components/analytics/OutcomeLabel.vue";
  * of scope (StarChat, a Mycelium task).
  */
 export default {
-  components: { OutcomeLabel },
+  components: { InsightLabel },
   props: {
     status: { type: String, required: true },
     reports: { type: Array, default: () => [] },
@@ -149,9 +172,23 @@ export default {
       const pct = total > 0 ? Math.round((topic.calls / total) * 100) : 0;
       return this.$t("components.callInsights.reports.topicShare", { calls: topic.calls, percent: pct });
     },
-    topicOutcomeKeys(topic) {
-      const outcomes = topic.outcomes || {};
-      return CallInsights.OUTCOME_KEYS.filter((key) => outcomes[key]);
+    // A report's `resolution` and `message` are code -> count maps, in a topic and over the
+    // period. A report written before insights version 2 carries `outcomes` instead and shows none
+    // of the four.
+    resolutionKeys(holder) {
+      const counts = holder.resolution || {};
+      return CallInsights.RESOLUTION_KEYS.filter((key) => counts[key]);
+    },
+    messageKeys(holder) {
+      const counts = holder.message || {};
+      return CallInsights.MESSAGE_KEYS.filter((key) => counts[key]);
+    },
+    isCount(value) {
+      return typeof value === "number";
+    },
+    hasSummary(content) {
+      return this.resolutionKeys(content).length > 0 || this.messageKeys(content).length > 0 ||
+        this.isCount(content.booked) || this.isCount(content.transferred);
     },
     hasSuggestions(content) {
       const s = content.suggestions || {};
@@ -249,6 +286,12 @@ export default {
   gap: 4px;
   font-size: 13px;
   color: @mrcall_grey_text;
+}
+
+.report-fact {
+  margin: 6px 0 0 0;
+  font-size: 13px;
+  color: @mrcall_dark_grey_text;
 }
 
 .report-gap {

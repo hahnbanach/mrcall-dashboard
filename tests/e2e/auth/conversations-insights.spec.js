@@ -1,9 +1,33 @@
 // @ts-check
 const { expect } = require('@playwright/test')
-const { test } = require('../fixtures/auth')
+const { test: base, setupAuthPage } = require('../fixtures/auth')
+const { mockUser } = require('../fixtures/mock-data')
 
 /**
- * StarChat's call insights (`details.outcome`, `topics`, `unanswered`, `checks`), on the call
+ * The poll test needs a fake clock, and a clock installed after the page has navigated also fakes
+ * the timers of the dev server's client, which raised its error overlay over the page once. The
+ * clock is installed before the page's first navigation, the seed page `setupAuthPage` opens
+ * included, as Playwright prescribes; the other tests use the plain page. The third-party tag
+ * scripts (Google Tag Manager, Analytics, Clarity) really load in these tests, since the shared
+ * fixture's abort patterns (a glob starting at the slash before the bare domain) do not match their `www.` hosts, and
+ * Clarity throws a cross-origin SecurityError into the page, which the dev server shows as an
+ * "Uncaught runtime errors" overlay over the list. This test has no use for them, so the requests
+ * are refused here.
+ */
+const test = base.extend({
+  clockedPage: async ({ page }, use) => {
+    await page.clock.install()
+    for (const host of ['googletagmanager.com', 'google-analytics.com', 'doubleclick.net', 'clarity.ms', 'google.it']) {
+      await page.route(`**/*${host}/**`, (route) => route.abort())
+    }
+    await setupAuthPage(page, mockUser, 'owner')
+    await use(page)
+  }
+})
+
+/**
+ * StarChat's call insights, version 2 (`details.resolution`, `message`, `booked`, `transferred`,
+ * `topics`, `unanswered`, `checks`), on the call
  * opened by its deep link (`?conversation=<id>`, the path a call-report or a call-notification
  * email link takes) above the list, so the insights are visible without paging to find the call.
  * `tests/unit/callDetailsPanel.spec.js` already covers each insight kind in isolation; this is the
@@ -25,7 +49,9 @@ const callWithInsights = {
     callerNumber: '+41700000000',
     summary: 'Asks about Sunday opening hours.',
     topics: ['opening hours', 'billing'],
-    outcome: 'unresolved',
+    resolution: 'unresolved',
+    message: 'incomplete',
+    booked: false,
     unanswered: [{
       question: 'Do you open on Sundays?',
       gap: 'missing_info',
@@ -52,16 +78,27 @@ async function mockConversationSearch (page, { byId = callWithInsights } = {}) {
   })
 }
 
+const open = (page) => page.goto('/conversations?id=test-biz-001&conversation=CON-insights-1')
+const fact = (page, label) => page.locator('.opened-card .insight-fact').filter({ has: page.locator('dt', { hasText: new RegExp(`^${label}$`) }) })
+const withInsights = (insights, extra = {}) => ({ ...callWithInsights, details: { callerName: 'Elena Rossi', summary: 'A call.', ...insights }, ...extra })
+
 test.describe('Conversations: what the opened call said', () => {
-  test('the deep-linked call shows its topics, its unanswered question and the assessed outcome, marked as such', async ({ authenticatedPage: page }) => {
+  test('the deep-linked call shows its topics, its unanswered question, the judged resolution and message marked as the assistant\'s, the booking and the unknown transfer', async ({ authenticatedPage: page }) => {
     await mockConversationSearch(page)
-    await page.goto('/conversations?id=test-biz-001&conversation=CON-insights-1')
+    await open(page)
     const opened = page.locator('.opened-card')
     await expect(opened.getByText('Call opened from the link')).toBeVisible({ timeout: 15000 })
 
     const insights = opened.locator('.call-insights-box')
-    await expect(insights.getByText('Unresolved')).toBeVisible()
-    await expect(insights.getByText('Assessed by the assistant')).toBeVisible()
+    await expect(fact(page, 'Resolution')).toContainText('Unresolved')
+    await expect(fact(page, 'Resolution').getByText('Assessed by the assistant')).toBeVisible()
+    await expect(fact(page, 'Message')).toContainText('Incomplete message')
+    await expect(fact(page, 'Message').getByText('Assessed by the assistant')).toBeVisible()
+    await expect(fact(page, 'Booking')).toContainText('Not booked')
+    await expect(fact(page, 'Booking').locator('.insight-assessed-tag')).toHaveCount(0)
+    await expect(fact(page, 'Transfer')).toContainText('Not known')
+    await expect(fact(page, 'Transfer').locator('.insight-assessed-tag')).toHaveCount(0)
+    await expect(insights.locator('.insight-assessed-tag')).toHaveCount(2)
     await expect(insights.getByText('opening hours')).toBeVisible()
     await expect(insights.getByText('billing')).toBeVisible()
     await expect(insights.getByText('Missing information')).toBeVisible()
@@ -71,18 +108,74 @@ test.describe('Conversations: what the opened call said', () => {
     await expect(insights.getByText('unsatisfied')).toHaveCount(0)
   })
 
-  test('a recorded outcome (booked) shows with no assessed marking', async ({ authenticatedPage: page }) => {
-    await mockConversationSearch(page, { byId: { ...callWithInsights, details: { ...callWithInsights.details, outcome: 'booked' } } })
-    await page.goto('/conversations?id=test-biz-001&conversation=CON-insights-1')
-    const insights = page.locator('.opened-card .call-insights-box')
-    await expect(insights.getByText('Booked')).toBeVisible({ timeout: 15000 })
-    await expect(insights.locator('.insight-assessed-tag')).toHaveCount(0)
+  test('booked true and transferred true show as recorded facts with no marking', async ({ authenticatedPage: page }) => {
+    await mockConversationSearch(page, { byId: withInsights({ resolution: 'handed_over', booked: true, transferred: true }) })
+    await open(page)
+    await expect(fact(page, 'Booking')).toContainText('Booked', { timeout: 15000 })
+    await expect(fact(page, 'Booking')).not.toContainText('Not booked')
+    await expect(fact(page, 'Booking').locator('.insight-assessed-tag')).toHaveCount(0)
+    await expect(fact(page, 'Transfer')).toHaveText(/Transferred/)
+    await expect(fact(page, 'Transfer').locator('.insight-assessed-tag')).toHaveCount(0)
+    await expect(fact(page, 'Resolution')).toContainText('Handed over')
   })
 
-  test('a call with none of the four insight fields shows the panel as before the feature', async ({ authenticatedPage: page }) => {
+  test('a resolution, a message and a booked that are absent show nothing', async ({ authenticatedPage: page }) => {
+    await mockConversationSearch(page, { byId: withInsights({ topics: ['billing'], transferred: true }) })
+    await open(page)
+    await expect(page.locator('.opened-card .call-insights-box').getByText('billing')).toBeVisible({ timeout: 15000 })
+    await expect(fact(page, 'Resolution')).toHaveCount(0)
+    await expect(fact(page, 'Message')).toHaveCount(0)
+    await expect(fact(page, 'Booking')).toHaveCount(0)
+    await expect(fact(page, 'Transfer')).toContainText('Transferred')
+  })
+
+  test('a call without version-2 insights (version 1 on test) shows none of the four', async ({ authenticatedPage: page }) => {
+    await mockConversationSearch(page, { byId: withInsights({ outcome: 'unresolved', topics: ['billing'] }) })
+    await open(page)
+    const insights = page.locator('.opened-card .call-insights-box')
+    await expect(insights.getByText('billing')).toBeVisible({ timeout: 15000 })
+    await expect(page.locator('.opened-card .insight-fact')).toHaveCount(0)
+    await expect(insights.getByText('Unresolved')).toHaveCount(0)
+    await expect(insights.getByText('Not known')).toHaveCount(0)
+  })
+
+  test('a transfer the carrier reported after the call ended shows when the call is read again', async ({ authenticatedPage: page }) => {
+    await mockConversationSearch(page, { byId: withInsights({ resolution: 'handed_over', booked: false }) })
+    await open(page)
+    await expect(fact(page, 'Transfer')).toContainText('Not known', { timeout: 15000 })
+
+    await page.unroute('**/customer/conversation/search*')
+    await mockConversationSearch(page, { byId: withInsights({ resolution: 'handed_over', booked: false, transferred: true }) })
+    await page.reload()
+    await expect(fact(page, 'Transfer')).toHaveText(/Transferred/, { timeout: 15000 })
+  })
+
+  test('a German caller\'s call shows its labels in the viewer\'s language and its text as received, never translated', async ({ authenticatedPage: page }) => {
+    await mockConversationSearch(page, {
+      byId: withInsights({
+        resolution: 'resolved',
+        message: 'complete',
+        booked: true,
+        summary: 'Der Anrufer fragt nach den Öffnungszeiten am Sonntag.',
+        topics: ['Öffnungszeiten', 'Terminabsage'],
+        unanswered: [{ question: 'Haben Sie sonntags geöffnet?', gap: 'missing_info', suggestion: 'Nennen Sie dem Assistenten Ihre Sonntagszeiten.' }]
+      })
+    })
+    await open(page)
+    const opened = page.locator('.opened-card')
+    await expect(opened.getByText('Der Anrufer fragt nach den Öffnungszeiten am Sonntag.')).toBeVisible({ timeout: 15000 })
+    await expect(fact(page, 'Resolution')).toContainText('Resolved')
+    await expect(fact(page, 'Message')).toContainText('Complete message')
+    await expect(opened.locator('.insight-topic-tag')).toHaveText(['Öffnungszeiten', 'Terminabsage'])
+    await expect(opened.getByText('Haben Sie sonntags geöffnet?')).toBeVisible()
+    await expect(opened.getByText('Nennen Sie dem Assistenten Ihre Sonntagszeiten.')).toBeVisible()
+    await expect(opened.getByText('Missing information')).toBeVisible()
+  })
+
+  test('a call with none of the insight fields shows the panel as before the feature', async ({ authenticatedPage: page }) => {
     const plain = { ...callWithInsights, details: { callerName: 'Elena Rossi', summary: 'Plain call.' } }
     await mockConversationSearch(page, { byId: plain })
-    await page.goto('/conversations?id=test-biz-001&conversation=CON-insights-1')
+    await open(page)
     const opened = page.locator('.opened-card')
     await expect(opened.getByText('Plain call.')).toBeVisible({ timeout: 15000 })
     await expect(opened.locator('.call-insights-box')).toHaveCount(0)
@@ -137,8 +230,10 @@ async function mockConversationFiltering (page, { totalHits = 25 } = {}) {
   return { searchRequests, exportRequests, actionRequests }
 }
 
+const dropdown = (page, name) => page.getByRole('combobox', { name, exact: true })
+
 test.describe('Conversations: filtering on what the call said', () => {
-  test('the outcome filter and the unanswered toggle reach the list, both exports and the bulk actions alike, and a change starts over from the first page', async ({ authenticatedPage: page }) => {
+  test('resolution, message, booked, transferred and unanswered reach the list, both exports and the bulk actions alike, and a change starts over from the first page', async ({ authenticatedPage: page }) => {
     const { searchRequests, exportRequests, actionRequests } = await mockConversationFiltering(page)
     await page.goto('/conversations?id=test-biz-001')
     await expect(page.locator('.conversation-card').first()).toBeVisible({ timeout: 15000 })
@@ -146,62 +241,103 @@ test.describe('Conversations: filtering on what the call said', () => {
     await page.getByRole('button', { name: 'Next Page' }).first().click()
     await expect.poll(() => searchRequests.at(-1).from).toBe(10)
 
-    await page.getByRole('combobox', { name: 'Outcome' }).click()
+    await dropdown(page, 'Resolution').click()
     await page.getByRole('option', { name: 'Unresolved' }).click()
-    await expect.poll(() => searchRequests.at(-1).outcome).toBe('unresolved')
+    await expect.poll(() => searchRequests.at(-1).resolution).toBe('unresolved')
     expect(searchRequests.at(-1).from).toBe(0)
+
+    await dropdown(page, 'Message').click()
+    await page.getByRole('option', { name: 'Incomplete message' }).click()
+    await expect.poll(() => searchRequests.at(-1).message).toBe('incomplete')
+
+    await dropdown(page, 'Booking').click()
+    await page.getByRole('option', { name: 'Not booked' }).click()
+    await expect.poll(() => searchRequests.at(-1).booked).toBe(false)
+
+    await page.getByRole('button', { name: 'Transferred', exact: true }).click()
+    await expect.poll(() => searchRequests.at(-1).transferred).toBe(true)
 
     await page.getByRole('button', { name: 'Unanswered questions' }).click()
     await expect.poll(() => searchRequests.at(-1).hasUnanswered).toBe(true)
-    expect(searchRequests.at(-1).outcome).toBe('unresolved')
     expect(searchRequests.at(-1).from).toBe(0)
+
+    const filters = { resolution: 'unresolved', message: 'incomplete', booked: false, transferred: true, hasUnanswered: true }
+    expect(searchRequests.at(-1)).toMatchObject(filters)
 
     await page.getByRole('button', { name: 'TSV' }).click()
     await expect.poll(() => exportRequests.tsv.length).toBeGreaterThan(0)
-    expect(exportRequests.tsv.at(-1)).toMatchObject({ outcome: 'unresolved', hasUnanswered: true })
+    expect(exportRequests.tsv.at(-1)).toMatchObject(filters)
 
     await page.getByRole('button', { name: 'JSON' }).click()
     await expect.poll(() => exportRequests.json.length).toBeGreaterThan(0)
-    expect(exportRequests.json.at(-1)).toMatchObject({ outcome: 'unresolved', hasUnanswered: true })
+    expect(exportRequests.json.at(-1)).toMatchObject(filters)
 
     await page.getByRole('button', { name: 'Archive All' }).click()
     await page.getByRole('button', { name: 'Yes' }).click()
     await expect.poll(() => actionRequests.archive.length).toBeGreaterThan(0)
-    expect(actionRequests.archive.at(-1)).toMatchObject({ outcome: 'unresolved', hasUnanswered: true })
+    expect(actionRequests.archive.at(-1)).toMatchObject(filters)
 
     await page.getByRole('button', { name: 'Delete All' }).click()
     await page.getByRole('button', { name: 'Yes' }).click()
     await expect.poll(() => actionRequests.delete.length).toBeGreaterThan(0)
-    expect(actionRequests.delete.at(-1)).toMatchObject({ outcome: 'unresolved', hasUnanswered: true })
+    expect(actionRequests.delete.at(-1)).toMatchObject(filters)
+
+    // StarChat answers 400 to the version-1 `outcome` filter: no call site sends it any more
+    for (const body of [...searchRequests, ...exportRequests.tsv, ...exportRequests.json, ...actionRequests.archive, ...actionRequests.delete]) {
+      expect(body).not.toHaveProperty('outcome')
+    }
   })
 
-  test('the poll carries the filters set on the list', async ({ authenticatedPage: page }) => {
+  test('booked offers both answers, booked and not booked, and clearing it sends none', async ({ authenticatedPage: page }) => {
     const { searchRequests } = await mockConversationFiltering(page)
-    await page.clock.install()
+    await page.goto('/conversations?id=test-biz-001')
+    await expect(page.locator('.conversation-card').first()).toBeVisible({ timeout: 15000 })
+    expect(searchRequests.at(-1)).not.toHaveProperty('booked')
+
+    await dropdown(page, 'Booking').click()
+    await page.getByRole('option', { name: 'Booked', exact: true }).click()
+    await expect.poll(() => searchRequests.at(-1).booked).toBe(true)
+
+    await dropdown(page, 'Booking').click()
+    await page.getByRole('option', { name: 'Not booked' }).click()
+    await expect.poll(() => searchRequests.at(-1).booked).toBe(false)
+
+    await page.locator('.filter-row').filter({ hasText: 'Booking' }).locator('.p-select-clear-icon').click()
+    await expect.poll(() => 'booked' in searchRequests.at(-1)).toBe(false)
+  })
+
+  test('the poll carries the filters set on the list', async ({ clockedPage: page }) => {
+    const { searchRequests } = await mockConversationFiltering(page)
     await page.goto('/conversations?id=test-biz-001')
     await expect(page.locator('.conversation-card').first()).toBeVisible({ timeout: 15000 })
 
-    await page.getByRole('combobox', { name: 'Outcome' }).click()
-    await page.getByRole('option', { name: 'Booked' }).click()
-    await expect.poll(() => searchRequests.at(-1).outcome).toBe('booked')
+    await dropdown(page, 'Resolution').click()
+    await page.getByRole('option', { name: 'Handed over' }).click()
+    await expect.poll(() => searchRequests.at(-1).resolution).toBe('handed_over')
+    await page.getByRole('button', { name: 'Transferred', exact: true }).click()
+    await expect.poll(() => searchRequests.at(-1).transferred).toBe(true)
 
     const before = searchRequests.length
     await page.clock.fastForward(11000)
     await expect.poll(() => searchRequests.length).toBeGreaterThan(before)
-    expect(searchRequests.at(-1).outcome).toBe('booked')
+    expect(searchRequests.at(-1)).toMatchObject({ resolution: 'handed_over', transferred: true })
   })
 
-  test('the outcome dropdown groups booked and transferred as recorded, the rest as the assistant\'s own assessment', async ({ authenticatedPage: page }) => {
+  test('the resolution and message filters are marked as the assistant\'s own assessment, booked and transferred are not', async ({ authenticatedPage: page }) => {
     await mockConversationFiltering(page)
     await page.goto('/conversations?id=test-biz-001')
     await expect(page.locator('.conversation-card').first()).toBeVisible({ timeout: 15000 })
 
-    await page.getByRole('combobox', { name: 'Outcome' }).click()
-    const text = await page.getByRole('listbox').innerText()
-    expect(text.indexOf('Recorded')).toBeGreaterThanOrEqual(0)
-    expect(text.indexOf('Recorded')).toBeLessThan(text.indexOf('Booked'))
-    expect(text.indexOf('Booked')).toBeLessThan(text.indexOf('Transferred'))
-    expect(text.indexOf('Transferred')).toBeLessThan(text.indexOf('Assessed by the assistant'))
-    expect(text.indexOf('Assessed by the assistant')).toBeLessThan(text.indexOf('Resolved'))
+    const row = (label) => page.locator('.filter-row').filter({ has: page.locator('.filter-label', { hasText: label }) })
+    await expect(row('Resolution').getByText('Assessed by the assistant')).toBeVisible()
+    await expect(row('Message').getByText('Assessed by the assistant')).toBeVisible()
+    await expect(row('Booking').getByText('Assessed by the assistant')).toHaveCount(0)
+    await expect(row('Transfer').getByText('Assessed by the assistant')).toHaveCount(0)
+
+    await dropdown(page, 'Resolution').click()
+    await expect(page.getByRole('listbox').getByRole('option')).toHaveText(['Resolved', 'Unresolved', 'Handed over', 'Caller left', 'Spam or wrong number'])
+    await page.keyboard.press('Escape')
+    await dropdown(page, 'Message').click()
+    await expect(page.getByRole('listbox').getByRole('option')).toHaveText(['Complete message', 'Incomplete message', 'Unintelligible message', 'No message'])
   })
 })

@@ -19,7 +19,7 @@ function section (page, title) {
 const assistantsResponse = (overrides = {}) => ({
   sort: 'not_solved',
   businesses: [{
-    businessId: BUSINESS_ID, totalCalls: 10, callsWithOutcome: 8, outcomes: { unresolved: 3 },
+    businessId: BUSINESS_ID, totalCalls: 10, callsWithResolution: 10, resolution: { unresolved: 2, caller_left: 1, handed_over: 4, resolved: 3 },
     callsWithChecks: 8, checks: { caller_repeated: 1 }, callsWithUnansweredRecorded: 8, callsWithUnanswered: 1,
     gaps: {}, callsWithSkillErrors: 0, extractionsNotOk: 0,
   }],
@@ -37,6 +37,8 @@ test.describe('AnalyticsAdmin: assistants to review, across the whole platform',
 
     const notSolvedHeader = assistants.locator('th').filter({ hasText: 'Not solved' })
     await expect(notSolvedHeader.getByText('Assessed by the assistant')).toBeVisible()
+    // unresolved and caller_left over the calls with a resolution; handed_over is not "not solved"
+    await expect(assistants.getByRole('row', { name: new RegExp(BUSINESS_ID) })).toContainText('30% (3 of 10)')
 
     await assistants.getByRole('combobox', { name: 'Sort by' }).click()
     await expect(page.getByRole('option', { name: 'Not solved (assessed by the assistant)' })).toBeVisible()
@@ -103,7 +105,7 @@ test.describe('Analytics: an admin reading one business\'s report', () => {
         content: {
           version: 1,
           period: { from: '2026-10-01T00:00:00Z', to: '2026-10-08T00:00:00Z', cadence: 'weekly' },
-          calls: 5, outcomes: { booked: 2 }, topics: [],
+          calls: 5, resolution: { resolved: 4, unresolved: 1 }, message: { complete: 3, none: 2 }, booked: 2, transferred: 1, topics: [],
           gap_calls: {}, gaps: [{ group: 'missing_info', summary: 'Ask about parking.', examples: ['CON-9'] }],
           suggestions: { business_info: [], integration: [], mrcall_config: ['Turn on the restaurant skill.'] },
           flagged_calls: [], extractor_audit: { sampled_resolved: 0, disagreements: 0 },

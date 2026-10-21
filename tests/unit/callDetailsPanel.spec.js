@@ -109,11 +109,12 @@ describe('CallDetailsPanel', () => {
   })
 })
 
-/** StarChat's call insights (`details.outcome`, `topics`, `unanswered`, `checks`): the dashboard's
-  * one outcome rule (`src/utils/CallInsights.js`) says which outcome is a recorded fact and which
-  * is the assistant's own assessment, and every place an outcome is shown, including here, marks
-  * an assessed one as such. A call with none of the four fields draws exactly as it did before the
-  * feature (the cases above), which is why this block tests each kind on its own. */
+/** StarChat's call insights, version 2 (`details.resolution`, `message`, `booked`, `transferred`,
+  * `topics`, `unanswered`, `checks`): the dashboard's one value table (`insightRows` in
+  * `src/utils/CallInsights.js`) says what each dimension shows and which are the assistant's own
+  * assessment, marked as such wherever they are shown, including here. A call with none of them
+  * draws exactly as it did before the feature (the cases above), which is why this block tests each
+  * kind on its own. */
 describe('CallDetailsPanel: what the call said', () => {
   beforeEach(() => vi.restoreAllMocks())
 
@@ -162,18 +163,85 @@ describe('CallDetailsPanel: what the call said', () => {
     expect(text).not.toContain('promise')
   })
 
-  it('shows a recorded outcome with no marking', () => {
-    const booked = { ...call, details: { ...call.details, outcome: 'booked' } }
-    const panel = draw(booked)
-    expect(panel.find('.insight-outcome').text()).toContain('Booked')
-    expect(panel.find('.insight-assessed-tag').exists()).toBe(false)
+  const withInsights = (insights) => ({ ...call, details: { ...call.details, ...insights } })
+  const factRow = (panel, label) => panel.findAll('.insight-fact').find(r => r.find('dt').text() === label)
+
+  it('shows a judged resolution and message by their labels, each marked as the assistant\'s own assessment', () => {
+    const panel = draw(withInsights({ resolution: 'unresolved', message: 'incomplete', booked: false, transferred: true }))
+    const resolution = factRow(panel, 'Resolution')
+    expect(resolution.find('dd').text()).toContain('Unresolved')
+    expect(resolution.find('.insight-assessed-tag').text()).toBe('Assessed by the assistant')
+    const message = factRow(panel, 'Message')
+    expect(message.find('dd').text()).toContain('Incomplete message')
+    expect(message.find('.insight-assessed-tag').text()).toBe('Assessed by the assistant')
   })
 
-  it('shows an assessed outcome marked as the assistant\'s own assessment', () => {
-    const unresolved = { ...call, details: { ...call.details, outcome: 'unresolved' } }
-    const panel = draw(unresolved)
-    expect(panel.find('.insight-outcome').text()).toContain('Unresolved')
-    expect(panel.find('.insight-assessed-tag').exists()).toBe(true)
-    expect(panel.find('.insight-assessed-tag').text()).toBe('Assessed by the assistant')
+  it('shows nothing for a resolution and a message that are absent', () => {
+    const panel = draw(withInsights({ booked: true, transferred: true }))
+    expect(factRow(panel, 'Resolution')).toBeUndefined()
+    expect(factRow(panel, 'Message')).toBeUndefined()
+    expect(panel.text()).not.toContain('Assessed by the assistant')
+  })
+
+  it('shows booked true as Booked and booked false as Not booked, recorded facts with no marking', () => {
+    const booked = factRow(draw(withInsights({ booked: true })), 'Booking')
+    expect(booked.find('dd').text()).toBe('Booked')
+    expect(booked.find('.insight-assessed-tag').exists()).toBe(false)
+    const notBooked = factRow(draw(withInsights({ booked: false })), 'Booking')
+    expect(notBooked.find('dd').text()).toBe('Not booked')
+    expect(notBooked.find('.insight-assessed-tag').exists()).toBe(false)
+  })
+
+  it('shows nothing for a booked that is absent', () => {
+    const panel = draw(withInsights({ resolution: 'resolved' }))
+    expect(factRow(panel, 'Booking')).toBeUndefined()
+    expect(factRow(panel, 'Resolution')).toBeDefined()
+  })
+
+  it('shows transferred true as Transferred, a recorded fact with no marking', () => {
+    const transferred = factRow(draw(withInsights({ booked: false, transferred: true })), 'Transfer')
+    expect(transferred.find('dd').text()).toBe('Transferred')
+    expect(transferred.find('.insight-assessed-tag').exists()).toBe(false)
+  })
+
+  it('shows transferred absent on a version-2 call as Not known, never as a no', () => {
+    const transferred = factRow(draw(withInsights({ booked: true })), 'Transfer')
+    expect(transferred.find('dd').text()).toBe('Not known')
+    expect(transferred.text()).not.toMatch(/not transferred|^no$/i)
+  })
+
+  it('shows none of the four for a call without version-2 insights, and still draws what it has', () => {
+    const panel = draw(withInsights({ outcome: 'unresolved', topics: ['billing'] }))
+    expect(panel.findAll('.insight-fact')).toHaveLength(0)
+    expect(panel.text()).not.toContain('Unresolved')
+    expect(panel.text()).not.toContain('Not known')
+    expect(panel.findAll('.insight-topic-tag').map(t => t.text())).toEqual(['billing'])
+    expect(draw().find('.call-insights-box').exists()).toBe(false)
+  })
+
+  it('shows a transfer the carrier reported after the call ended, on the same open panel', async () => {
+    const panel = draw(withInsights({ booked: false, resolution: 'handed_over' }))
+    expect(factRow(panel, 'Transfer').find('dd').text()).toBe('Not known')
+    await panel.setProps({ conversation: withInsights({ booked: false, resolution: 'handed_over', transferred: true }) })
+    expect(factRow(panel, 'Transfer').find('dd').text()).toBe('Transferred')
+  })
+
+  it('shows a German caller\'s call with its labels in the viewer\'s language and its text as received, never translated', () => {
+    const german = withInsights({
+      resolution: 'resolved',
+      message: 'complete',
+      booked: false,
+      summary: 'Der Anrufer fragt nach den Öffnungszeiten am Sonntag.',
+      topics: ['Öffnungszeiten', 'Terminabsage'],
+      unanswered: [{ question: 'Haben Sie sonntags geöffnet?', gap: 'missing_info', suggestion: 'Nennen Sie dem Assistenten Ihre Sonntagszeiten.' }]
+    })
+    const panel = draw(german)
+    expect(factRow(panel, 'Resolution').find('dd').text()).toContain('Resolved')
+    expect(factRow(panel, 'Message').find('dd').text()).toContain('Complete message')
+    expect(panel.text()).toContain('Der Anrufer fragt nach den Öffnungszeiten am Sonntag.')
+    expect(panel.findAll('.insight-topic-tag').map(t => t.text())).toEqual(['Öffnungszeiten', 'Terminabsage'])
+    expect(panel.text()).toContain('Haben Sie sonntags geöffnet?')
+    expect(panel.text()).toContain('Nennen Sie dem Assistenten Ihre Sonntagszeiten.')
+    expect(panel.text()).toContain('Missing information')
   })
 })

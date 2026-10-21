@@ -1878,14 +1878,32 @@
     },
     "callInsights": {
       "assessedMarking": "Vom Assistenten eingeschätzt",
-      "outcomes": {
-        "booked": "Gebucht",
-        "transferred": "Weitergeleitet",
+      "resolution": {
         "resolved": "Gelöst",
-        "message_taken": "Nachricht aufgenommen",
         "unresolved": "Nicht gelöst",
+        "handed_over": "An eine Person übergeben",
         "caller_left": "Anrufer hat aufgelegt",
         "spam_wrong_number": "Spam oder falsche Nummer"
+      },
+      "message": {
+        "complete": "Vollständige Nachricht",
+        "incomplete": "Unvollständige Nachricht",
+        "unintelligible": "Unverständliche Nachricht",
+        "none": "Keine Nachricht"
+      },
+      "booked": {
+        "true": "Gebucht",
+        "false": "Nicht gebucht"
+      },
+      "transferred": {
+        "true": "Weitergeleitet",
+        "unknown": "Nicht bekannt"
+      },
+      "dimensions": {
+        "resolution": "Lösung",
+        "message": "Nachricht",
+        "booked": "Buchung",
+        "transferred": "Weiterleitung"
       },
       "gaps": {
         "missing_info": "Fehlende Informationen",
@@ -1900,16 +1918,16 @@
       },
       "panel": {
         "title": "Worum es in dem Anruf ging",
-        "outcome": "Ergebnis",
         "unansweredTitle": "Offen gebliebene Fragen",
         "checksTitle": "Prüfungen",
         "suggestion": "Was Sie Ihrem Assistenten geben könnten: {suggestion}"
       },
       "filters": {
-        "outcomeLabel": "Ergebnis",
-        "outcomePlaceholder": "Beliebiges Ergebnis",
-        "outcomeGroupRecorded": "Erfasst",
-        "outcomeGroupAssessed": "Vom Assistenten eingeschätzt",
+        "resolutionPlaceholder": "Beliebige Lösung",
+        "messagePlaceholder": "Beliebige Nachricht",
+        "bookedPlaceholder": "Gebucht oder nicht",
+        "transferredOn": "Nur weitergeleitete Anrufe",
+        "transferredOff": "Alle Anrufe",
         "unansweredLabel": "Offene Fragen",
         "unansweredOn": "Mit einer offenen Frage",
         "unansweredOff": "Alle Anrufe"
@@ -1917,7 +1935,9 @@
       "notAvailableYet": "Noch nicht verfügbar.",
       "whatCallsSaid": {
         "title": "Worum es in den Anrufen ging",
-        "coverage": "{withOutcome} von {total} Anrufen haben ein erfasstes Ergebnis."
+        "coverage": "{count} von {total} Anrufen wurden eingeschätzt.",
+        "booked": "{booked} von {total} Anrufen mit erfasster Buchungsangabe wurden gebucht.",
+        "transferred": "{count} weitergeleitete Anrufe, wie von den Netzbetreibern gemeldet."
       },
       "quality": {
         "title": "Qualität",
@@ -1930,6 +1950,9 @@
       "reports": {
         "title": "Anrufberichte",
         "none": "Noch kein Bericht.",
+        "summaryTitle": "Der Zeitraum",
+        "booked": "Gebuchte Anrufe: {count}",
+        "transferred": "Weitergeleitete Anrufe, wie von den Netzbetreibern gemeldet: {count}",
         "topicsTitle": "Themen",
         "newTopic": "Neu",
         "topicShare": "{calls} Anrufe ({percent} %)",

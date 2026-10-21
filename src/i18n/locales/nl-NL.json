@@ -1876,14 +1876,32 @@
     },
     "callInsights": {
       "assessedMarking": "Door de assistent beoordeeld",
-      "outcomes": {
-        "booked": "Geboekt",
-        "transferred": "Doorverbonden",
+      "resolution": {
         "resolved": "Opgelost",
-        "message_taken": "Bericht genoteerd",
         "unresolved": "Niet opgelost",
+        "handed_over": "Doorgegeven aan een persoon",
         "caller_left": "Beller heeft opgehangen",
         "spam_wrong_number": "Spam of verkeerd nummer"
+      },
+      "message": {
+        "complete": "Volledig bericht",
+        "incomplete": "Onvolledig bericht",
+        "unintelligible": "Onverstaanbaar bericht",
+        "none": "Geen bericht"
+      },
+      "booked": {
+        "true": "Geboekt",
+        "false": "Niet geboekt"
+      },
+      "transferred": {
+        "true": "Doorverbonden",
+        "unknown": "Niet bekend"
+      },
+      "dimensions": {
+        "resolution": "Oplossing",
+        "message": "Bericht",
+        "booked": "Boeking",
+        "transferred": "Doorverbinding"
       },
       "gaps": {
         "missing_info": "Ontbrekende informatie",
@@ -1898,16 +1916,16 @@
       },
       "panel": {
         "title": "Waar het gesprek over ging",
-        "outcome": "Resultaat",
         "unansweredTitle": "Onbeantwoorde vragen",
         "checksTitle": "Controles",
         "suggestion": "Wat u uw assistent zou kunnen geven: {suggestion}"
       },
       "filters": {
-        "outcomeLabel": "Resultaat",
-        "outcomePlaceholder": "Elk resultaat",
-        "outcomeGroupRecorded": "Geregistreerd",
-        "outcomeGroupAssessed": "Door de assistent beoordeeld",
+        "resolutionPlaceholder": "Elke oplossing",
+        "messagePlaceholder": "Elk bericht",
+        "bookedPlaceholder": "Geboekt of niet",
+        "transferredOn": "Alleen doorverbonden gesprekken",
+        "transferredOff": "Alle gesprekken",
         "unansweredLabel": "Onbeantwoorde vragen",
         "unansweredOn": "Met een onbeantwoorde vraag",
         "unansweredOff": "Alle gesprekken"
@@ -1915,7 +1933,9 @@
       "notAvailableYet": "Nog niet beschikbaar.",
       "whatCallsSaid": {
         "title": "Waar de gesprekken over gingen",
-        "coverage": "{withOutcome} van de {total} gesprekken hebben een geregistreerd resultaat."
+        "coverage": "{count} van de {total} gesprekken zijn beoordeeld.",
+        "booked": "{booked} van de {total} gesprekken met een geregistreerd boekingsgegeven zijn geboekt.",
+        "transferred": "{count} doorverbonden gesprekken, zoals gemeld door de providers."
       },
       "quality": {
         "title": "Kwaliteit",
@@ -1928,6 +1948,9 @@
       "reports": {
         "title": "Gespreksrapporten",
         "none": "Nog geen rapport.",
+        "summaryTitle": "De periode",
+        "booked": "Geboekte gesprekken: {count}",
+        "transferred": "Doorverbonden gesprekken, zoals gemeld door de providers: {count}",
         "topicsTitle": "Onderwerpen",
         "newTopic": "Nieuw",
         "topicShare": "{calls} gesprekken ({percent}%)",

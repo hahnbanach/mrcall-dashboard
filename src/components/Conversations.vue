@@ -116,23 +116,76 @@
               </div>
             </div>
 
-            <!-- Outcome Row (brief outcome 2: what the call said) -->
+            <!-- What the call said (brief outcome 2, insights version 2): resolution and message are
+                 the assistant's own judgement and carry the marking, booked and transferred are
+                 facts the server recorded. -->
             <div class="filter-row">
               <label class="filter-label">
-                <i class="pi pi-comment"></i>
-                {{ $t("components.callInsights.filters.outcomeLabel") }}
+                <i class="pi pi-check-circle"></i>
+                {{ $t("components.callInsights.dimensions.resolution") }}
+                <Tag severity="secondary" :value="$t('components.callInsights.assessedMarking')" class="insight-assessed-tag" />
               </label>
               <div class="filter-control">
                 <Dropdown
-                  v-model="outcomeFilter"
-                  :options="outcomeFilterGroups"
+                  v-model="resolutionFilter"
+                  :options="resolutionOptions"
                   optionLabel="label"
                   optionValue="value"
-                  optionGroupLabel="label"
-                  optionGroupChildren="items"
                   :showClear="true"
-                  :ariaLabel="$t('components.callInsights.filters.outcomeLabel')"
-                  :placeholder="$t('components.callInsights.filters.outcomePlaceholder')"
+                  :ariaLabel="$t('components.callInsights.dimensions.resolution')"
+                  :placeholder="$t('components.callInsights.filters.resolutionPlaceholder')"
+                />
+              </div>
+            </div>
+
+            <div class="filter-row">
+              <label class="filter-label">
+                <i class="pi pi-comment"></i>
+                {{ $t("components.callInsights.dimensions.message") }}
+                <Tag severity="secondary" :value="$t('components.callInsights.assessedMarking')" class="insight-assessed-tag" />
+              </label>
+              <div class="filter-control">
+                <Dropdown
+                  v-model="messageFilter"
+                  :options="messageOptions"
+                  optionLabel="label"
+                  optionValue="value"
+                  :showClear="true"
+                  :ariaLabel="$t('components.callInsights.dimensions.message')"
+                  :placeholder="$t('components.callInsights.filters.messagePlaceholder')"
+                />
+              </div>
+            </div>
+
+            <div class="filter-row">
+              <label class="filter-label">
+                <i class="pi pi-calendar-plus"></i>
+                {{ $t("components.callInsights.dimensions.booked") }}
+              </label>
+              <div class="filter-control">
+                <Dropdown
+                  v-model="bookedFilter"
+                  :options="bookedOptions"
+                  optionLabel="label"
+                  optionValue="value"
+                  :showClear="true"
+                  :ariaLabel="$t('components.callInsights.dimensions.booked')"
+                  :placeholder="$t('components.callInsights.filters.bookedPlaceholder')"
+                />
+              </div>
+            </div>
+
+            <div class="filter-row">
+              <label class="filter-label">
+                <i class="pi pi-phone"></i>
+                {{ $t("components.callInsights.dimensions.transferred") }}
+              </label>
+              <div class="toggle-control">
+                <ToggleButton
+                  v-model="transferredFilter"
+                  :onLabel="$t('components.callInsights.filters.transferredOn')"
+                  :offLabel="$t('components.callInsights.filters.transferredOff')"
+                  :ariaLabel="$t('components.callInsights.transferred.true')"
                 />
               </div>
             </div>
@@ -531,28 +584,33 @@ export default {
       mobileMenuItems: [],
       hideRead: false,
       newestTimestamp: null,
-      // What the call said (brief outcome 2): null/false means no filter.
-      outcomeFilter: null,
+      // What the call said (brief outcome 2): null/false means no filter. `bookedFilter` is
+      // "booked" or "not_booked"; `transferredFilter` has no "not transferred" (StarChat refuses it:
+      // the carrier writes only a true).
+      resolutionFilter: null,
+      messageFilter: null,
+      bookedFilter: null,
+      transferredFilter: false,
       unansweredFilter: false,
     };
   },
   computed: {
-    outcomeFilterGroups() {
+    resolutionOptions() {
+      return CallInsights.RESOLUTION_KEYS.map((key) => ({
+        label: this.$t("components.callInsights.resolution." + key),
+        value: key,
+      }));
+    },
+    messageOptions() {
+      return CallInsights.MESSAGE_KEYS.map((key) => ({
+        label: this.$t("components.callInsights.message." + key),
+        value: key,
+      }));
+    },
+    bookedOptions() {
       return [
-        {
-          label: this.$t("components.callInsights.filters.outcomeGroupRecorded"),
-          items: CallInsights.FACT_OUTCOMES.map((key) => ({
-            label: this.$t("components.callInsights.outcomes." + key),
-            value: key,
-          })),
-        },
-        {
-          label: this.$t("components.callInsights.filters.outcomeGroupAssessed"),
-          items: CallInsights.ASSESSED_OUTCOMES.map((key) => ({
-            label: this.$t("components.callInsights.outcomes." + key),
-            value: key,
-          })),
-        },
+        { label: this.$t("components.callInsights.booked.true"), value: "booked" },
+        { label: this.$t("components.callInsights.booked.false"), value: "not_booked" },
       ];
     },
     filteredItems() {
@@ -711,7 +769,8 @@ export default {
       return { archived: false, deleted: false };
     },
     // The one body the list, its poll, both exports and the two bulk actions build from: the
-    // view, the date range and what the call said (outcome, unanswered questions), so an export or
+    // view, the date range and what the call said (resolution, message, booked, transferred,
+    // unanswered questions), so an export or
     // a bulk action always acts on exactly the calls the list shows. `extra` carries what is
     // specific to one caller (pagination, `lightweight`, the poll's own `timestampGte`), applied
     // after the shared fields so it can override them.
@@ -722,7 +781,10 @@ export default {
       };
       if (this.timestampGte != null) body.timestampGte = this.timestampGte;
       if (this.timestampLte != null) body.timestampLte = this.timestampLte;
-      if (this.outcomeFilter) body.outcome = this.outcomeFilter;
+      if (this.resolutionFilter) body.resolution = this.resolutionFilter;
+      if (this.messageFilter) body.message = this.messageFilter;
+      if (this.bookedFilter) body.booked = this.bookedFilter === "booked";
+      if (this.transferredFilter) body.transferred = true;
       if (this.unansweredFilter) body.hasUnanswered = true;
       return { ...body, ...extra };
     },
@@ -1297,7 +1359,16 @@ export default {
     activeView() {
       this.resetAndReload();
     },
-    outcomeFilter() {
+    resolutionFilter() {
+      this.resetAndReload();
+    },
+    messageFilter() {
+      this.resetAndReload();
+    },
+    bookedFilter() {
+      this.resetAndReload();
+    },
+    transferredFilter() {
       this.resetAndReload();
     },
     unansweredFilter() {
@@ -1461,6 +1532,11 @@ export default {
     align-items: flex-start;
     gap: 8px;
   }
+}
+
+.insight-assessed-tag {
+  font-size: 10px;
+  font-weight: 600;
 }
 
 .filter-label {

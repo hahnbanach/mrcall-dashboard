@@ -58,8 +58,10 @@ API clients and business logic:
 - `BusinessVariables.js` — Variable visibility, dependency resolution, modifiability
 - `Zylch.js` — Zylch AI API client (chat, training, sessions)
 - `Analytics.js` — Analytics API client
-- `CallInsights.js` — what calls said: the outcome rule (`outcomeKind`, fact vs. the assistant's own
-  assessment) and the clients for StarChat's outcomes, quality, assistants, reports, integrations
+- `CallInsights.js` — what calls said: the value table of a call's four dimensions (`insightRows`:
+  `resolution` and `message` are the assistant's own assessment, marked as such; `booked` and
+  `transferred` are recorded facts, `transferred` absent on a version-2 call is "not known") and the
+  clients for StarChat's outcomes, quality, assistants, reports, integrations
   and configuration-suggestions routes; a 404 resolves to `null` (absent section), a 503 to
   `{unavailable: true}`
 - `Admin.js` — Admin API endpoints
@@ -164,20 +166,21 @@ fallback of 25. All 12 locale files contain these keys. The `/plan` route render
 
 ### Call insights: what calls said
 
-StarChat records, for every managed call, what it was about and what it left open (topics, an
-outcome, the questions the assistant could not answer, three quality checks); the dashboard's one
-rule for showing an outcome (`booked`/`transferred` are a recorded fact, every other outcome is the
-assistant's own assessment, marked as such) lives in `src/utils/CallInsights.js`.
+StarChat records, for every managed call, what it was about and what it left open (topics, a
+resolution and a message judged by the assistant, whether it booked and was transferred, the
+questions the assistant could not answer, three quality checks); the dashboard's one value table
+for the four dimensions lives in `src/utils/CallInsights.js`.
 
 - **The call's panel** (`CallDetailsPanel.vue`, in `Conversations.vue`'s list and its deep-linked
-  opened call): after the summary, the topics as tags, the outcome under the marking rule, the
+  opened call): after the summary, the topics as tags, the four dimensions under the value table, the
   unanswered questions with their reason and suggestion, the checks that fired. A call from before
   the feature draws with none of this.
-- **The list's filters** (`Conversations.vue`): an outcome `Dropdown` (grouped "Recorded" and
-  "Assessed by the assistant") and an "unanswered questions" `ToggleButton`, both folded into the
+- **The list's filters** (`Conversations.vue`): resolution and message `Dropdown`s (marked
+  "Assessed by the assistant"), a booked `Dropdown`, and "transferred" and "unanswered questions"
+  `ToggleButton`s, all folded into the
   one `searchBody(extra)` the list, its poll, both exports and the two bulk actions all build from.
 - **The analytics pages** (`src/components/analytics/`: `WhatCallsSaid.vue`, `CallQuality.vue`,
-  `CallReports.vue`, `AssistantsToReview.vue`, `ScopeInformation.vue`, `OutcomeLabel.vue`), all
+  `CallReports.vue`, `AssistantsToReview.vue`, `ScopeInformation.vue`, `InsightLabel.vue`), all
   presentational — `Analytics.vue` and `AnalyticsAdmin.vue` own every fetch, the same way they
   already do for the older KPI/chart sections:
   - `Analytics.vue` with a business (`?id=`, any role): outcomes, quality, and the business's call

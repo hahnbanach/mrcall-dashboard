@@ -1890,14 +1890,32 @@
     },
     "callInsights": {
       "assessedMarking": "Evaluado por el asistente",
-      "outcomes": {
-        "booked": "Reservado",
-        "transferred": "Transferido",
+      "resolution": {
         "resolved": "Resuelto",
-        "message_taken": "Mensaje tomado",
         "unresolved": "Sin resolver",
+        "handed_over": "Pasado a una persona",
         "caller_left": "Quien llamó colgó",
         "spam_wrong_number": "Spam o número equivocado"
+      },
+      "message": {
+        "complete": "Mensaje completo",
+        "incomplete": "Mensaje incompleto",
+        "unintelligible": "Mensaje ininteligible",
+        "none": "Sin mensaje"
+      },
+      "booked": {
+        "true": "Reservado",
+        "false": "No reservado"
+      },
+      "transferred": {
+        "true": "Transferido",
+        "unknown": "Se desconoce"
+      },
+      "dimensions": {
+        "resolution": "Resolución",
+        "message": "Mensaje",
+        "booked": "Reserva",
+        "transferred": "Transferencia"
       },
       "gaps": {
         "missing_info": "Información faltante",
@@ -1912,16 +1930,16 @@
       },
       "panel": {
         "title": "De qué trataba la llamada",
-        "outcome": "Resultado",
         "unansweredTitle": "Preguntas que quedaron sin responder",
         "checksTitle": "Controles",
         "suggestion": "Qué podrías darle a tu asistente: {suggestion}"
       },
       "filters": {
-        "outcomeLabel": "Resultado",
-        "outcomePlaceholder": "Cualquier resultado",
-        "outcomeGroupRecorded": "Registrados",
-        "outcomeGroupAssessed": "Evaluados por el asistente",
+        "resolutionPlaceholder": "Cualquier resolución",
+        "messagePlaceholder": "Cualquier mensaje",
+        "bookedPlaceholder": "Reservado o no",
+        "transferredOn": "Solo llamadas transferidas",
+        "transferredOff": "Todas las llamadas",
         "unansweredLabel": "Preguntas sin responder",
         "unansweredOn": "Con una pregunta sin responder",
         "unansweredOff": "Todas las llamadas"
@@ -1929,7 +1947,9 @@
       "notAvailableYet": "Aún no disponible.",
       "whatCallsSaid": {
         "title": "De qué trataron las llamadas",
-        "coverage": "{withOutcome} de {total} llamadas tienen un resultado registrado."
+        "coverage": "{count} de {total} llamadas fueron evaluadas.",
+        "booked": "{booked} de {total} llamadas con un dato de reserva registrado fueron reservadas.",
+        "transferred": "{count} llamadas transferidas, según los operadores."
       },
       "quality": {
         "title": "Calidad",
@@ -1942,6 +1962,9 @@
       "reports": {
         "title": "Informes de llamadas",
         "none": "Todavía no hay ningún informe.",
+        "summaryTitle": "El periodo",
+        "booked": "Llamadas reservadas: {count}",
+        "transferred": "Llamadas transferidas, según los operadores: {count}",
         "topicsTitle": "Temas",
         "newTopic": "Nuevo",
         "topicShare": "{calls} llamadas ({percent}%)",

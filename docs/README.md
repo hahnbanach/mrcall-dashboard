@@ -33,7 +33,7 @@ Entry point for this repository's documentation. Start here.
 | [integration/restaurant-booking.md](integration/restaurant-booking.md) | Restaurant bookings page: what it owns versus the skill form, the page switch, what every booking carries, staff warnings, call-back requests (apply, Undo), the StarChat routes it uses |
 
 The call insights contract (what calls said: outcomes, quality signals, assistants to review,
-call reports, and the conversation list's own outcome/unanswered filters) is StarChat's own,
+call reports, and the conversation list's own resolution, message, booked, transferred and unanswered filters) is StarChat's own,
 read by `src/utils/CallInsights.js`: its conversation-analytics API reference, §7-10, and its
 customer conversation API guide, both in the StarChat repository. No copy of either lives here.
 

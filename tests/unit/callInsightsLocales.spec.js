@@ -53,3 +53,43 @@ describe('callInsights: every new key in all 12 locales', () => {
     })
   }
 })
+
+/**
+ * Insights version 2 (brief amended 2026-10-20): `resolution`, `message`, `booked` and `transferred`
+ * are labelled in the viewer's language. A translation that is the English text copied into
+ * another file passes the parity test above, so the labels of the value table are compared with
+ * en-US one by one: a locale may keep an English word only where the exception list says so.
+ */
+const VALUE_TABLE_PREFIXES = ['resolution.', 'message.', 'booked.', 'transferred.', 'dimensions.']
+// The same spelling in the other language, checked: French "Message", Danish and Norwegian "Booking".
+const ENGLISH_ALLOWED = {
+  'fr-FR': ['dimensions.message'],
+  'da-DK': ['dimensions.booked'],
+  'nb-NO': ['dimensions.booked'],
+}
+
+describe('callInsights: the value table is translated, not copied from English', () => {
+  const valueKeys = referenceKeys.filter(k => VALUE_TABLE_PREFIXES.some(p => k.startsWith(p)) || k === 'assessedMarking')
+
+  it('names the four dimensions and their values, and no version-1 outcomes', () => {
+    expect(valueKeys).toEqual(expect.arrayContaining([
+      'resolution.resolved', 'resolution.unresolved', 'resolution.handed_over', 'resolution.caller_left',
+      'resolution.spam_wrong_number', 'message.complete', 'message.incomplete', 'message.unintelligible',
+      'message.none', 'booked.true', 'booked.false', 'transferred.true', 'transferred.unknown',
+      'dimensions.resolution', 'dimensions.message', 'dimensions.booked', 'dimensions.transferred',
+    ]))
+    expect(referenceKeys.filter(k => k.startsWith('outcomes.'))).toEqual([])
+  })
+
+  const get = (obj, path) => path.split('.').reduce((o, k) => (o ? o[k] : undefined), obj)
+
+  for (const [locale, messages] of Object.entries(LOCALES)) {
+    if (locale === 'en-US') continue
+    it(`${locale} words the value table in its own language`, () => {
+      const ci = messages.components.callInsights
+      const copied = valueKeys.filter(k => get(ci, k) === get(enUS.components.callInsights, k) &&
+        !(ENGLISH_ALLOWED[locale] || []).includes(k))
+      expect(copied, `${locale} carries English text for these keys`).toEqual([])
+    })
+  }
+})

@@ -30,7 +30,12 @@ const RESPONSES = {
       { businessId: 'biz-b', totalCalls: 2, avgCallDurationMs: 60000, totalCallDurationMs: 120000, uniqueCallers: 2 },
     ],
   },
-  outcomes: { totalCalls: 0, callsWithOutcome: 0, totals: {}, previousTotals: {}, buckets: [] },
+  outcomes: {
+    totalCalls: 0,
+    resolution: { callsWithValue: 0, totals: {}, previousTotals: {}, buckets: [] },
+    message: { callsWithValue: 0, totals: {}, previousTotals: {}, buckets: [] },
+    callsWithBooked: 0, booked: 0, transferred: 0,
+  },
   quality: {
     extractions: {}, callsWithChecks: 0, checks: {}, callsWithUnansweredRecorded: 0,
     callsWithUnanswered: 0, gaps: {}, callsWithSkillErrors: 0,

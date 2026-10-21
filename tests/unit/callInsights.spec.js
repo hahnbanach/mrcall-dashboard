@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 
 /**
- * `src/utils/CallInsights.js`: the outcome rule, and the clients for StarChat's call-insights
+ * `src/utils/CallInsights.js`: the value table of a call's four dimensions (insights version 2), and the clients for StarChat's call-insights
  * routes (its own conversation-analytics API reference, §7-10, and its customer conversation API
  * guide, read 2026-10-20). Each client is checked for the path and body it sends,
  * and for the three answers every route can give beyond 200: 404 (no access, or out of scope) as
@@ -21,16 +21,75 @@ beforeEach(() => {
   axios.post.mockReset()
 })
 
-describe('outcomeKind: the one rule for every outcome', () => {
-  it('reads booked and transferred as recorded facts', () => {
-    expect(CallInsights.outcomeKind('booked')).toBe('fact')
-    expect(CallInsights.outcomeKind('transferred')).toBe('fact')
+describe('insightRows: the one value table for a call\'s four dimensions', () => {
+  // A call of insights version 2 is one that carries `booked`: StarChat writes it whenever the
+  // extraction answered, so `transferred` absent on such a call means "not known", never "no".
+  const row = (dimension, value, assessed) => ({ dimension, value, assessed })
+
+  it('shows a judged resolution and message by their codes, marked as the assistant\'s own assessment', () => {
+    expect(CallInsights.insightRows({ resolution: 'handed_over', message: 'incomplete', booked: true, transferred: true })).toEqual([
+      row('resolution', 'handed_over', true),
+      row('message', 'incomplete', true),
+      row('booked', 'true', false),
+      row('transferred', 'true', false),
+    ])
   })
 
-  it('reads every other outcome, known or not, as the assistant\'s own assessment', () => {
-    for (const key of ['resolved', 'message_taken', 'unresolved', 'caller_left', 'spam_wrong_number', 'something_new']) {
-      expect(CallInsights.outcomeKind(key)).toBe('assessed')
+  it('knows every code StarChat writes for resolution and message, and drops one it does not know', () => {
+    expect(CallInsights.RESOLUTION_KEYS).toEqual(['resolved', 'unresolved', 'handed_over', 'caller_left', 'spam_wrong_number'])
+    expect(CallInsights.MESSAGE_KEYS).toEqual(['complete', 'incomplete', 'unintelligible', 'none'])
+    for (const code of CallInsights.RESOLUTION_KEYS) {
+      expect(CallInsights.insightRows({ resolution: code })).toEqual([row('resolution', code, true)])
     }
+    for (const code of CallInsights.MESSAGE_KEYS) {
+      expect(CallInsights.insightRows({ message: code })).toEqual([row('message', code, true)])
+    }
+    expect(CallInsights.insightRows({ resolution: 'something_new', message: 'something_new' })).toEqual([])
+    expect(CallInsights.insightRows({ resolution: 'booked' })).toEqual([])
+  })
+
+  it('shows nothing for a resolution or a message that is absent', () => {
+    expect(CallInsights.insightRows({ booked: true, transferred: true }).map(r => r.dimension)).toEqual(['booked', 'transferred'])
+  })
+
+  it('shows booked true and false as a recorded fact, with no marking', () => {
+    expect(CallInsights.insightRows({ booked: true, transferred: true })[0]).toEqual(row('booked', 'true', false))
+    expect(CallInsights.insightRows({ booked: false, transferred: true })[0]).toEqual(row('booked', 'false', false))
+  })
+
+  it('shows nothing for a booked that is absent', () => {
+    expect(CallInsights.insightRows({ resolution: 'resolved' }).map(r => r.dimension)).toEqual(['resolution'])
+    expect(CallInsights.insightRows({ resolution: 'resolved', transferred: true }).map(r => r.dimension)).toEqual(['resolution', 'transferred'])
+  })
+
+  it('shows transferred true as a recorded fact, with no marking', () => {
+    expect(CallInsights.insightRows({ booked: false, transferred: true }).at(-1)).toEqual(row('transferred', 'true', false))
+  })
+
+  it('shows transferred absent on a version-2 call as "unknown", never as "no", even when the server wrote a false', () => {
+    expect(CallInsights.insightRows({ booked: true }).at(-1)).toEqual(row('transferred', 'unknown', false))
+    expect(CallInsights.insightRows({ booked: false }).at(-1)).toEqual(row('transferred', 'unknown', false))
+    expect(CallInsights.insightRows({ booked: false, transferred: false }).at(-1)).toEqual(row('transferred', 'unknown', false))
+  })
+
+  it('shows none of the four for a call without version-2 insights', () => {
+    expect(CallInsights.insightRows({})).toEqual([])
+    expect(CallInsights.insightRows({ outcome: 'resolved', topics: ['x'] })).toEqual([])
+    expect(CallInsights.insightRows(undefined)).toEqual([])
+    expect(CallInsights.insightRows(null)).toEqual([])
+  })
+
+  it('reads a call the transfer leg answered after it ended: the same call, one more fact', () => {
+    const ended = { booked: false, resolution: 'unresolved' }
+    expect(CallInsights.insightRows(ended).at(-1)).toEqual(row('transferred', 'unknown', false))
+    expect(CallInsights.insightRows({ ...ended, transferred: true }).at(-1)).toEqual(row('transferred', 'true', false))
+  })
+
+  it('says which dimensions are the assistant\'s own judgement', () => {
+    expect(CallInsights.isAssessed('resolution')).toBe(true)
+    expect(CallInsights.isAssessed('message')).toBe(true)
+    expect(CallInsights.isAssessed('booked')).toBe(false)
+    expect(CallInsights.isAssessed('transferred')).toBe(false)
   })
 
   it('exports the gap and check keys the quality signals and the panel share', () => {
@@ -46,7 +105,7 @@ describe('outcomes: refuses a call with no time zone', () => {
   })
 
   it('sends granularity and timezone on the query string, and the body untouched', async () => {
-    axios.post.mockResolvedValue({ data: { totals: {} } })
+    axios.post.mockResolvedValue({ data: { resolution: { totals: {} } } })
     const body = { businessId: 'b-1', timestampGte: 1 }
     await CallInsights.outcomes(user, body, 'daily', 'Europe/Rome')
     const [url, sentBody, config] = axios.post.mock.calls[0]

@@ -1881,14 +1881,32 @@
     },
     "callInsights": {
       "assessedMarking": "Assessed by the assistant",
-      "outcomes": {
-        "booked": "Booked",
-        "transferred": "Transferred",
+      "resolution": {
         "resolved": "Resolved",
-        "message_taken": "Message taken",
         "unresolved": "Unresolved",
+        "handed_over": "Handed over",
         "caller_left": "Caller left",
         "spam_wrong_number": "Spam or wrong number"
+      },
+      "message": {
+        "complete": "Complete message",
+        "incomplete": "Incomplete message",
+        "unintelligible": "Unintelligible message",
+        "none": "No message"
+      },
+      "booked": {
+        "true": "Booked",
+        "false": "Not booked"
+      },
+      "transferred": {
+        "true": "Transferred",
+        "unknown": "Not known"
+      },
+      "dimensions": {
+        "resolution": "Resolution",
+        "message": "Message",
+        "booked": "Booking",
+        "transferred": "Transfer"
       },
       "gaps": {
         "missing_info": "Missing information",
@@ -1903,16 +1921,16 @@
       },
       "panel": {
         "title": "What the call was about",
-        "outcome": "Outcome",
         "unansweredTitle": "Questions left unanswered",
         "checksTitle": "Checks",
         "suggestion": "What you could give your assistant: {suggestion}"
       },
       "filters": {
-        "outcomeLabel": "Outcome",
-        "outcomePlaceholder": "Any outcome",
-        "outcomeGroupRecorded": "Recorded",
-        "outcomeGroupAssessed": "Assessed by the assistant",
+        "resolutionPlaceholder": "Any resolution",
+        "messagePlaceholder": "Any message",
+        "bookedPlaceholder": "Booked or not",
+        "transferredOn": "Transferred calls only",
+        "transferredOff": "All calls",
         "unansweredLabel": "Unanswered questions",
         "unansweredOn": "With an unanswered question",
         "unansweredOff": "All calls"
@@ -1920,7 +1938,9 @@
       "notAvailableYet": "Not available yet.",
       "whatCallsSaid": {
         "title": "What calls said",
-        "coverage": "{withOutcome} of {total} calls have a recorded outcome."
+        "coverage": "{count} of {total} calls were assessed.",
+        "booked": "{booked} of {total} calls with a booking record were booked.",
+        "transferred": "{count} calls transferred, as reported by the carriers."
       },
       "quality": {
         "title": "Quality",
@@ -1933,6 +1953,9 @@
       "reports": {
         "title": "Call reports",
         "none": "No report yet.",
+        "summaryTitle": "The period",
+        "booked": "Booked calls: {count}",
+        "transferred": "Transferred calls, as reported by the carriers: {count}",
         "topicsTitle": "Topics",
         "newTopic": "New",
         "topicShare": "{calls} calls ({percent}%)",

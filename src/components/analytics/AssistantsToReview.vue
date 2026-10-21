@@ -33,10 +33,10 @@
             <template #header>
               <span class="assessed-header">
                 {{ $t("components.callInsights.assistants.notSolved") }}
-                <Tag severity="secondary" :value="$t('components.callInsights.assessedMarking')" class="outcome-assessed-tag" />
+                <Tag severity="secondary" :value="$t('components.callInsights.assessedMarking')" class="insight-assessed-tag" />
               </span>
             </template>
-            <template #body="slotProps">{{ shareOf(notSolvedCount(slotProps.data), slotProps.data.callsWithOutcome) }}</template>
+            <template #body="slotProps">{{ shareOf(notSolvedCount(slotProps.data), slotProps.data.callsWithResolution) }}</template>
           </Column>
           <Column :header="$t('components.callInsights.assistants.unanswered')">
             <template #body="slotProps">{{ shareOf(slotProps.data.callsWithUnanswered, slotProps.data.callsWithUnansweredRecorded) }}</template>
@@ -65,8 +65,8 @@ import CallInsights from "@/utils/CallInsights";
  * section). Every share here is the exact formula StarChat sorts by
  * (`CallInsightsAnalytics.sorted` in the StarChat repository), so the column a business is sorted
  * on always matches what the column shows. "Not solved" (the share of `unresolved` and
- * `caller_left` among the calls with an outcome) is marked assessed, in its header and its sort
- * option, since both outcomes it combines are the assistant's own judgement.
+ * `caller_left` among the calls with a resolution, `callsWithResolution`) is marked assessed, in
+ * its header and its sort option, since the resolution is the assistant's own judgement.
  */
 const NOT_SOLVED_KEYS = ["unresolved", "caller_left"];
 
@@ -96,7 +96,7 @@ export default {
   },
   methods: {
     notSolvedCount(row) {
-      return NOT_SOLVED_KEYS.reduce((sum, key) => sum + ((row.outcomes && row.outcomes[key]) || 0), 0);
+      return NOT_SOLVED_KEYS.reduce((sum, key) => sum + ((row.resolution && row.resolution[key]) || 0), 0);
     },
     checksCount(row) {
       const checks = row.checks || {};
@@ -142,7 +142,7 @@ export default {
   gap: 6px;
 }
 
-.outcome-assessed-tag {
+.insight-assessed-tag {
   font-size: 10px;
   font-weight: 600;
 }

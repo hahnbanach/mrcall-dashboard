@@ -2,21 +2,26 @@ import axios from "axios";
 import { isSessionEnded } from "@/firebase/session";
 
 /**
- * What a call said, read from StarChat's call insights (brief and plan
+ * What a call said, read from StarChat's call insights, version 2 (brief and plan
  * `docs/briefs/2026-10-20-call-insights.md`, `docs/execution-plans/2026-10-20-call-insights.md`;
- * the contract is StarChat's own conversation-analytics API reference, §7-10, and its customer
- * conversation API guide).
+ * the contract is StarChat's code: `CallDetailsView`, `OutcomesResponse`, `QualityResponse`,
+ * `AssistantSignals`, `CustomerConversationSearch`).
  *
- * THE OUTCOME RULE, in one place. `booked` and `transferred` are recorded facts: the server itself
- * saw a booking or calendar skill create or move an event, or a transfer connect. Every other
- * outcome (`resolved`, `message_taken`, `unresolved`, `caller_left`, `spam_wrong_number`) is the
- * assistant's own judgement of how the call went, and every place an outcome is shown marks it as
- * such, until StarChat calibrates it (Mycelium 5e6dbb40). `outcomeKind` is the one function that
- * decides which is which; nothing else in the dashboard tests an outcome key directly.
+ * THE VALUE TABLE, in one place. A call carries four dimensions:
+ * - `resolution` and `message` are the assistant's own judgement, shown by their label and marked
+ *   "assessed by the assistant" until StarChat calibrates them (Mycelium 5e6dbb40); absent shows
+ *   nothing.
+ * - `booked` (true or false) is a fact the server recorded, shown as such; absent shows nothing.
+ * - `transferred` is a fact the carrier reported: StarChat writes only `true`. Absent on a
+ *   version-2 call (one that carries `booked`, which version 2 always writes) is "not known",
+ *   never "no": the carrier may report no transfer leg, or not yet.
+ * - A call without version-2 insights shows none of the four.
+ * `insightRows` is the one function that applies the table; nothing else in the dashboard tests a
+ * value of these four directly.
  */
-const FACT_OUTCOMES = ["booked", "transferred"];
-const ASSESSED_OUTCOMES = ["resolved", "message_taken", "unresolved", "caller_left", "spam_wrong_number"];
-const OUTCOME_KEYS = [...FACT_OUTCOMES, ...ASSESSED_OUTCOMES];
+const RESOLUTION_KEYS = ["resolved", "unresolved", "handed_over", "caller_left", "spam_wrong_number"];
+const MESSAGE_KEYS = ["complete", "incomplete", "unintelligible", "none"];
+const ASSESSED_DIMENSIONS = ["resolution", "message"];
 
 // `unanswered[].gap` (the conversation API guide) and `quality.gaps` / report `gap_calls`
 // (the analytics reference, §8, §10) share this one set of reasons.
@@ -25,8 +30,20 @@ const GAP_KEYS = ["missing_info", "needs_integration", "out_of_scope", "assistan
 // `details.checks` and `quality.checks`: true is a bad sign in all three.
 const CHECK_KEYS = ["caller_repeated", "caller_unsatisfied", "promise_not_kept_in_call"];
 
-function outcomeKind(key) {
-    return FACT_OUTCOMES.includes(key) ? "fact" : "assessed";
+function isAssessed(dimension) {
+    return ASSESSED_DIMENSIONS.includes(dimension);
+}
+
+function insightRows(details) {
+    const d = details || {};
+    const rows = [];
+    if (RESOLUTION_KEYS.includes(d.resolution)) rows.push({ dimension: "resolution", value: d.resolution, assessed: true });
+    if (MESSAGE_KEYS.includes(d.message)) rows.push({ dimension: "message", value: d.message, assessed: true });
+    const versionTwo = typeof d.booked === "boolean";
+    if (versionTwo) rows.push({ dimension: "booked", value: String(d.booked), assessed: false });
+    if (d.transferred === true) rows.push({ dimension: "transferred", value: "true", assessed: false });
+    else if (versionTwo) rows.push({ dimension: "transferred", value: "unknown", assessed: false });
+    return rows;
 }
 
 const ANALYTICS_BASE = process.env.VUE_APP_STARCHAT_URL + "/mrcall/v1/mrcall0/customer/analytics";
@@ -57,10 +74,10 @@ function unwrap(promise) {
 }
 
 export default {
-    outcomeKind,
-    FACT_OUTCOMES,
-    ASSESSED_OUTCOMES,
-    OUTCOME_KEYS,
+    insightRows,
+    isAssessed,
+    RESOLUTION_KEYS,
+    MESSAGE_KEYS,
     GAP_KEYS,
     CHECK_KEYS,
 

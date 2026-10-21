@@ -1876,14 +1876,32 @@
     },
     "callInsights": {
       "assessedMarking": "Vurdert av assistenten",
-      "outcomes": {
-        "booked": "Booket",
-        "transferred": "Viderekoblet",
+      "resolution": {
         "resolved": "Løst",
-        "message_taken": "Melding notert",
         "unresolved": "Uløst",
+        "handed_over": "Overlatt til en person",
         "caller_left": "Den som ringte, la på",
         "spam_wrong_number": "Spam eller feil nummer"
+      },
+      "message": {
+        "complete": "Fullstendig melding",
+        "incomplete": "Ufullstendig melding",
+        "unintelligible": "Uforståelig melding",
+        "none": "Ingen melding"
+      },
+      "booked": {
+        "true": "Booket",
+        "false": "Ikke booket"
+      },
+      "transferred": {
+        "true": "Viderekoblet",
+        "unknown": "Ukjent"
+      },
+      "dimensions": {
+        "resolution": "Løsning",
+        "message": "Melding",
+        "booked": "Booking",
+        "transferred": "Viderekobling"
       },
       "gaps": {
         "missing_info": "Manglende informasjon",
@@ -1898,16 +1916,16 @@
       },
       "panel": {
         "title": "Hva samtalen handlet om",
-        "outcome": "Utfall",
         "unansweredTitle": "Spørsmål uten svar",
         "checksTitle": "Kontroller",
         "suggestion": "Hva du kunne gi assistenten din: {suggestion}"
       },
       "filters": {
-        "outcomeLabel": "Utfall",
-        "outcomePlaceholder": "Ethvert utfall",
-        "outcomeGroupRecorded": "Registrert",
-        "outcomeGroupAssessed": "Vurdert av assistenten",
+        "resolutionPlaceholder": "Hvilken som helst løsning",
+        "messagePlaceholder": "Hvilken som helst melding",
+        "bookedPlaceholder": "Booket eller ikke",
+        "transferredOn": "Bare viderekoblede samtaler",
+        "transferredOff": "Alle samtaler",
         "unansweredLabel": "Ubesvarte spørsmål",
         "unansweredOn": "Med et ubesvart spørsmål",
         "unansweredOff": "Alle samtaler"
@@ -1915,7 +1933,9 @@
       "notAvailableYet": "Ikke tilgjengelig ennå.",
       "whatCallsSaid": {
         "title": "Hva samtalene handlet om",
-        "coverage": "{withOutcome} av {total} samtaler har et registrert utfall."
+        "coverage": "{count} av {total} samtaler er vurdert.",
+        "booked": "{booked} av {total} samtaler med en registrert bookingopplysning ble booket.",
+        "transferred": "{count} viderekoblede samtaler, ifølge operatørene."
       },
       "quality": {
         "title": "Kvalitet",
@@ -1928,6 +1948,9 @@
       "reports": {
         "title": "Samtalerapporter",
         "none": "Ingen rapport ennå.",
+        "summaryTitle": "Perioden",
+        "booked": "Bookede samtaler: {count}",
+        "transferred": "Viderekoblede samtaler, ifølge operatørene: {count}",
         "topicsTitle": "Emner",
         "newTopic": "Nytt",
         "topicShare": "{calls} samtaler ({percent} %)",

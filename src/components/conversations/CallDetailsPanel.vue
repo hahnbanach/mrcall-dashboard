@@ -37,18 +37,18 @@
       </dl>
     </section>
 
-    <!-- What the call said: StarChat's call insights (topics, the outcome under the dashboard's
-         one outcome rule, the questions the assistant could not answer, the checks that fired).
-         Absent on a call from before the feature, exactly like today. -->
+    <!-- What the call said: StarChat's call insights, version 2 (the four dimensions under the
+         dashboard's one value table, the topics, the questions the assistant could not answer, the
+         checks that fired). Absent on a call from before the feature, exactly like today. -->
     <section v-if="hasInsights" class="call-box call-insights-box">
       <h3 class="call-box-title">{{ $t("components.callInsights.panel.title") }}</h3>
 
-      <dl v-if="outcomeLabel" class="call-facts insight-outcome">
-        <dt>{{ $t("components.callInsights.panel.outcome") }}</dt>
+      <dl v-for="row in insightRows" :key="row.dimension" class="call-facts insight-fact">
+        <dt>{{ $t("components.callInsights.dimensions." + row.dimension) }}</dt>
         <dd>
-          {{ outcomeLabel }}
+          {{ $t("components.callInsights." + row.dimension + "." + row.value) }}
           <Tag
-            v-if="outcomeAssessed"
+            v-if="row.assessed"
             severity="secondary"
             :value="$t('components.callInsights.assessedMarking')"
             class="insight-assessed-tag"
@@ -220,19 +220,12 @@ export default {
       const checks = this.details.checks || {};
       return CallInsights.CHECK_KEYS.filter((key) => checks[key] === true);
     },
-    outcome() {
-      return this.details.outcome || null;
-    },
-    outcomeAssessed() {
-      return !!this.outcome && CallInsights.outcomeKind(this.outcome) === "assessed";
-    },
-    outcomeLabel() {
-      if (!this.outcome) return null;
-      return this.$t("components.callInsights.outcomes." + this.outcome);
+    insightRows() {
+      return CallInsights.insightRows(this.details);
     },
     hasInsights() {
       return this.topics.length > 0 || this.unanswered.length > 0 ||
-        this.checksFired.length > 0 || !!this.outcome;
+        this.checksFired.length > 0 || this.insightRows.length > 0;
     },
     turns() {
       const data = this.conversation.data;
@@ -467,7 +460,7 @@ export default {
   color: @mrcall_grey_text2;
 }
 
-.insight-outcome {
+.insight-fact {
   margin-bottom: 10px;
 
   dd {
