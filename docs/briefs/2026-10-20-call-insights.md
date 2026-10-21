@@ -7,7 +7,7 @@ StarChat records, for every managed call (version 2 of its insights, with the St
 was transferred, unanswered questions with the reason and what the business could
 add, three quality checks), and serves them through analytics routes, the conversation search, the
 call's `details` and a periodic call report per business. The contract is StarChat's: its brief
-(`docs/briefs/2026-10-20-call-insights.md` in the StarChat repository, intents 3, 6, 9 and 10) and its
+(`docs/briefs/2026-10-20-call-insights.md` in the StarChat repository, intents 3, 6, 9, 10 and 11) and its
 `docs/analytics-api-guide.md` §7-10 and `docs/customer-conversation-api-guide.md`.
 
 Angelo, 2026-10-20: the work must be production-ready "including the dashboard changes for the new
@@ -106,6 +106,19 @@ caller's language.
    others); checked on test.
 7. **One truth for the API.** The stale root `analytics-api-guide.md` is removed; the documentation points
    to StarChat's guide.
+8. **What the caller was told and is not recorded as done** (amendment of 2026-10-21, StarChat brief intent
+   11). A GPT-Live call whose details carry `unkept`, a list of `{action, said}` (a booking, move,
+   cancellation or transfer the assistant told the caller it had done, for which StarChat's record holds no
+   such call), shows each entry in the call's panel above the unanswered questions: the action named in the
+   viewer's language ("Prenotazione", "Spostamento", "Cancellazione", "Trasferimento"), an action the
+   dashboard does not know under a neutral label and never as a raw key, and the assistant's words quoted as
+   text, as said, untranslated. The wording is "not recorded as done", StarChat's own frame ("non risulta
+   fatto"), since detection is partial. The entries carry the "assessed by the assistant" tag: the action and
+   the words are the model's reading, only the missing record is StarChat's. On such a call the check
+   `promise_not_kept_in_call` states the same fact, so its line is hidden when `unkept` is not empty, and shown
+   as today on every other call. The rule lives in `CallInsights.js` beside `insightRows`, and `hasInsights`
+   counts `unkept`; an empty or malformed list shows nothing. A call without `unkept` shows the panel as before.
+   No new filter or count: the quality section's count of that check already includes these calls.
 
 ## Constraints
 
@@ -138,6 +151,12 @@ caller's language.
   test calls show their insights in the panel, the German caller's call (StarChat M12c) with its codes in
   the viewer's language and its text in Italian; the analytics match the counts of those calls; the report of the
   clinic is readable after the job's run; the cadence variable is editable.
+- Outcome 8: a call whose details carry `unkept` shows each entry above the unanswered questions, named in
+  the viewer's language with the words quoted as text, and the `promise_not_kept_in_call` line is not shown;
+  the same call without `unkept` shows that check line once, as today; an unknown action shows the neutral
+  label; an empty or malformed list shows nothing; a call without `unkept` renders the panel as before
+  (vitest, and a Playwright spec with the details intercepted); the four action labels and any new panel
+  string are in the 12 locales' parity test; on test, the panel of a GPT-Live call with an unkept claim.
 - The 12 locales hold every new key; `npm run lint`, vitest and Playwright green.
 
 ## Out of scope
