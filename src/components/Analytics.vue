@@ -309,7 +309,7 @@ export default {
     },
     anyLoading() {
       return this.loadingDashboard || this.loadingTimeseries || this.loadingDuration ||
-        this.loadingHeatmap || this.loadingCallers;
+        this.loadingHeatmap || this.loadingCallers || this.outcomesStatus === 'loading';
     },
     allDataReady() {
       return !this.anyLoading;

@@ -1935,7 +1935,8 @@
         "title": "Hva samtalene handlet om",
         "coverage": "{count} av {total} samtaler er vurdert.",
         "booked": "{booked} av {total} samtaler med en registrert bookingopplysning ble booket.",
-        "transferred": "{count} viderekoblede samtaler, ifølge operatørene."
+        "transferred": "{count} viderekoblede samtaler, ifølge operatørene.",
+        "updating": "Oppdaterer…"
       },
       "quality": {
         "title": "Kvalitet",

@@ -1,6 +1,14 @@
 <template>
-  <div v-if="status !== 'absent'" class="analytics-section call-insights-section">
+  <div
+    v-if="status !== 'absent'"
+    class="analytics-section call-insights-section"
+    :aria-busy="updating ? 'true' : 'false'"
+  >
     <h3 class="section-title">{{ $t("components.callInsights.whatCallsSaid.title") }}</h3>
+    <div v-if="updating" class="insights-updating" role="status">
+      <ProgressBar mode="indeterminate" class="insights-updating-bar" />
+      <span>{{ $t("components.callInsights.whatCallsSaid.updating") }}</span>
+    </div>
     <div v-if="status === 'unavailable'" class="insights-note">
       {{ $t("components.callInsights.notAvailableYet") }}
     </div>
@@ -9,7 +17,7 @@
          chart on a canvas that is already gone (a TypeError in `new Chart`, which the dev server's
          overlay shows over the page). -->
     <template v-else-if="data">
-      <div v-for="dim in dimensions" :key="dim.name" class="insight-dimension">
+      <div v-for="dim in dimensions" :key="dim.name" class="insight-dimension" :class="{ 'is-updating': updating }">
         <h4 class="insight-dimension-title">{{ $t("components.callInsights.dimensions." + dim.name) }}</h4>
         <p class="coverage-note">
           {{ $t("components.callInsights.whatCallsSaid.coverage", { count: dim.callsWithValue, total: data.totalCalls || 0 }) }}
@@ -29,7 +37,7 @@
         </ul>
       </div>
 
-      <div class="insight-facts">
+      <div class="insight-facts" :class="{ 'is-updating': updating }">
         <p class="insight-booked">
           {{ $t("components.callInsights.whatCallsSaid.booked", { booked: formatNumber(data.booked || 0), total: formatNumber(data.callsWithBooked || 0) }) }}
         </p>
@@ -76,6 +84,11 @@ export default {
     data: { type: Object, default: null },
   },
   computed: {
+    // The previous answer stays on screen while the next is fetched (see above), so it is marked
+    // as pending: dimmed, with a progress bar and a note, and `aria-busy` on the section.
+    updating() {
+      return this.status === "loading" && !!this.data;
+    },
     // A malformed or placeholder answer (an empty array, from a test's generic fallback) must not
     // crash the page: every real `OutcomesResponse` carries both dimensions with their maps, but
     // nothing here assumes it.
@@ -151,6 +164,25 @@ export default {
 
 .insight-dimension {
   margin-bottom: 24px;
+}
+
+.is-updating {
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+
+.insights-updating {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  color: @mrcall_grey_text;
+}
+
+.insights-updating-bar {
+  width: 120px;
+  height: 0.3em;
 }
 
 .insight-dimension-title {

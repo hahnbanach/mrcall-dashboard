@@ -1940,7 +1940,8 @@
         "title": "What calls said",
         "coverage": "{count} of {total} calls were assessed.",
         "booked": "{booked} of {total} calls with a booking record were booked.",
-        "transferred": "{count} calls transferred, as reported by the carriers."
+        "transferred": "{count} calls transferred, as reported by the carriers.",
+        "updating": "Updating…"
       },
       "quality": {
         "title": "Quality",

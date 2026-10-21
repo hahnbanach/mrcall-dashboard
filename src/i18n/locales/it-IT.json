@@ -1941,7 +1941,8 @@
         "title": "Di cosa hanno parlato le chiamate",
         "coverage": "{count} chiamate su {total} sono state valutate.",
         "booked": "{booked} su {total} chiamate con un dato di prenotazione registrato sono state prenotate.",
-        "transferred": "{count} chiamate trasferite, secondo gli operatori telefonici."
+        "transferred": "{count} chiamate trasferite, secondo gli operatori telefonici.",
+        "updating": "Aggiornamento in corso…"
       },
       "quality": {
         "title": "Qualità",

@@ -1949,7 +1949,8 @@
         "title": "De qué trataron las llamadas",
         "coverage": "{count} de {total} llamadas fueron evaluadas.",
         "booked": "{booked} de {total} llamadas con un dato de reserva registrado fueron reservadas.",
-        "transferred": "{count} llamadas transferidas, según los operadores."
+        "transferred": "{count} llamadas transferidas, según los operadores.",
+        "updating": "Actualizando…"
       },
       "quality": {
         "title": "Calidad",

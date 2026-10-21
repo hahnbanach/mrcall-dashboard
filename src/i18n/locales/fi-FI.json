@@ -1935,7 +1935,8 @@
         "title": "Mistä puhelut kertoivat",
         "coverage": "{count} / {total} puhelusta on arvioitu.",
         "booked": "{booked} / {total} puhelusta, joille on kirjattu varaustieto, johti varaukseen.",
-        "transferred": "{count} yhdistettyä puhelua operaattorien ilmoittamana."
+        "transferred": "{count} yhdistettyä puhelua operaattorien ilmoittamana.",
+        "updating": "Päivitetään…"
       },
       "quality": {
         "title": "Laatu",

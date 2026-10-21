@@ -1937,7 +1937,8 @@
         "title": "De quoi parlaient les appels",
         "coverage": "{count} appels sur {total} ont été évalués.",
         "booked": "{booked} appels sur {total} avec un état de réservation enregistré ont été réservés.",
-        "transferred": "{count} appels transférés, selon les opérateurs."
+        "transferred": "{count} appels transférés, selon les opérateurs.",
+        "updating": "Mise à jour en cours…"
       },
       "quality": {
         "title": "Qualité",

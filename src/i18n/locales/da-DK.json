@@ -1935,7 +1935,8 @@
         "title": "Hvad opkaldene handlede om",
         "coverage": "{count} ud af {total} opkald er vurderet.",
         "booked": "{booked} ud af {total} opkald med en registreret bookingoplysning blev booket.",
-        "transferred": "{count} viderestillede opkald, som meldt af operatørerne."
+        "transferred": "{count} viderestillede opkald, som meldt af operatørerne.",
+        "updating": "Opdaterer…"
       },
       "quality": {
         "title": "Kvalitet",

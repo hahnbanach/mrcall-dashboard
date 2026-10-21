@@ -1937,7 +1937,8 @@
         "title": "Worum es in den Anrufen ging",
         "coverage": "{count} von {total} Anrufen wurden eingeschätzt.",
         "booked": "{booked} von {total} Anrufen mit erfasster Buchungsangabe wurden gebucht.",
-        "transferred": "{count} weitergeleitete Anrufe, wie von den Netzbetreibern gemeldet."
+        "transferred": "{count} weitergeleitete Anrufe, wie von den Netzbetreibern gemeldet.",
+        "updating": "Wird aktualisiert…"
       },
       "quality": {
         "title": "Qualität",

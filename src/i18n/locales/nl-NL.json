@@ -1935,7 +1935,8 @@
         "title": "Waar de gesprekken over gingen",
         "coverage": "{count} van de {total} gesprekken zijn beoordeeld.",
         "booked": "{booked} van de {total} gesprekken met een geregistreerd boekingsgegeven zijn geboekt.",
-        "transferred": "{count} doorverbonden gesprekken, zoals gemeld door de providers."
+        "transferred": "{count} doorverbonden gesprekken, zoals gemeld door de providers.",
+        "updating": "Wordt bijgewerkt…"
       },
       "quality": {
         "title": "Kwaliteit",

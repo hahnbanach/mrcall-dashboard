@@ -85,6 +85,40 @@ test.describe('Analytics: what calls said (owner, business page)', () => {
     await expect(what.locator('.insight-transferred')).not.toContainText('of 20')
   })
 
+  test('owner: the section says it is updating while the new answer is pending, then shows only the new numbers', async ({ authenticatedPage: page }) => {
+    const answer = (resolved) => ({
+      granularity: 'daily', period: { from: 1, to: 2 }, totalCalls: 20,
+      resolution: { callsWithValue: resolved, totals: { resolved }, previousTotals: {}, buckets: [] },
+      message: { callsWithValue: 0, totals: {}, previousTotals: {}, buckets: [] },
+      callsWithBooked: 0, booked: 0, transferred: 0,
+    })
+    let changed = false
+    let release
+    const gate = new Promise((resolve) => { release = resolve })
+    await page.route('**/customer/analytics/outcomes*', async (route) => {
+      if (changed) await gate
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(answer(changed ? 9 : 5)) })
+    })
+    await page.goto('/analytics?id=${BUSINESS_ID}')
+    const what = section(page, 'What calls said')
+    const resolved = what.locator('.insight-dimension').filter({ hasText: 'Resolution' }).locator('li').filter({ hasText: /^\s*Resolved/ }).locator('.legend-count')
+    await expect(resolved).toHaveText('5', { timeout: 15000 })
+    await expect(what).not.toHaveAttribute('aria-busy', 'true')
+
+    changed = true
+    await page.getByRole('button', { name: '90 days' }).click()
+    await expect(what).toHaveAttribute('aria-busy', 'true')
+    await expect(what.getByText('Updating')).toBeVisible()
+    await expect(page.getByRole('progressbar').first()).toBeVisible()
+    await expect(resolved).toHaveText('5')
+
+    release()
+    await expect(resolved).toHaveText('9')
+    await expect(what).not.toHaveAttribute('aria-busy', 'true')
+    await expect(what.getByText('Updating')).toHaveCount(0)
+    await expect(what.locator('.legend-count').filter({ hasText: /^5$/ })).toHaveCount(0)
+  })
+
   test('a 404 from quality hides the section, with no toast', async ({ authenticatedPage: page }) => {
     await page.route('**/customer/analytics/quality*', (route) => route.fulfill({
       status: 404, contentType: 'application/json', body: JSON.stringify({ message: 'not for you' }),

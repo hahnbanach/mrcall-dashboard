@@ -376,7 +376,8 @@ export default {
     },
     anyLoading() {
       return this.loadingDashboard || this.loadingTimeseries || this.loadingDuration ||
-        this.loadingHeatmap || this.loadingCallers || this.loadingBreakdown;
+        this.loadingHeatmap || this.loadingCallers || this.loadingBreakdown ||
+        this.outcomesStatus === 'loading';
     },
     allDataReady() {
       return !this.anyLoading;
