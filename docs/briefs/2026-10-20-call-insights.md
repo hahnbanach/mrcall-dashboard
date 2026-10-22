@@ -7,7 +7,7 @@ StarChat records, for every managed call (version 2 of its insights, with the St
 was transferred, unanswered questions with the reason and what the business could
 add, three quality checks), and serves them through analytics routes, the conversation search, the
 call's `details` and a periodic call report per business. The contract is StarChat's: its brief
-(`docs/briefs/2026-10-20-call-insights.md` in the StarChat repository, intents 3, 6, 9, 10 and 11) and its
+(`docs/briefs/2026-10-20-call-insights.md` in the StarChat repository, intents 3, 6, 9, 10, 11 and 12) and its
 `docs/analytics-api-guide.md` §7-10 and `docs/customer-conversation-api-guide.md`.
 
 Angelo, 2026-10-20: the work must be production-ready "including the dashboard changes for the new
@@ -119,6 +119,29 @@ caller's language.
    as today on every other call. The rule lives in `CallInsights.js` beside `insightRows`, and `hasInsights`
    counts `unkept`; an empty or malformed list shows nothing. A call without `unkept` shows the panel as before.
    No new filter or count: the quality section's count of that check already includes these calls.
+9. **The analytics say what calls were about, and measure the assistant only where it could serve** (amendment
+   of 2026-10-21, Angelo: the section "Di cosa hanno parlato le chiamate" shows resolutions, not topics; a
+   caller who hangs up on hearing a synthetic voice gave the assistant no chance; "chiamante uscito" without
+   saying when is not a statistic; only data that are useful and faithful to the assistant's performance;
+   StarChat brief intent 12, which also holds the production measurement: 39% of GPT-Live calls end with the
+   caller hanging up without a word, median 9 s).
+   - The outcomes section is titled for what it shows (how the calls went). Under it, the calls without a
+     conversation from StarChat's outcomes, each reason under its own neutral label (the caller hung up without
+     speaking, refused for credit, message-and-hang-up, not answered by the assistant), said to be left out of
+     these statistics; never a rate, never a failure colour.
+   - Resolution is shown as a share only over the calls where the caller asked something (resolved,
+     unresolved, handed over); `caller_left` and `spam_wrong_number` are counted beside it, in neutral colours
+     distinct from each other. `caller_left` is labelled for its meaning (the caller spoke but never said what
+     they wanted), never "Chiamante uscito".
+   - The quality section's extraction problems count `http_error` and `failed` only; `not_managed` is not a
+     problem.
+   - The assistants table (resellers and admins) shows "Non risolte" as `unresolved` over resolved, unresolved
+     and handed over, as StarChat's `not_solved` does, and gains the `caller_silent`, `not_answered` and
+     `caller_left` shares, each with its base, as columns and sort options: the signals of
+     a greeting that loses callers or broken audio, for MrCall to read, not shown on an owner's page.
+   - A new section, "Di cosa hanno parlato le chiamate", shows the period's topics from StarChat's topics
+     route, each with its calls and the previous period's, beside the calls with topics as the base, only when
+     one business is selected; across several businesses it says to choose one, without calling the route.
 
 ## Constraints
 
@@ -157,6 +180,12 @@ caller's language.
   label; an empty or malformed list shows nothing; a call without `unkept` renders the panel as before
   (vitest, and a Playwright spec with the details intercepted); the four action labels and any new panel
   string are in the 12 locales' parity test; on test, the panel of a GPT-Live call with an unkept claim.
+- Outcome 9: Playwright, with StarChat mocked, shows the topics section for one business and the "choose a
+  business" note without a request for several; the outcomes section's new title and its neutral line of calls
+  without a conversation; `caller_left` and `spam_wrong_number` in neutral colours outside the resolution share;
+  extraction problems without `not_managed`; the assistants table's new columns and sorts. Vitest on the
+  resolution share's base and the "Non risolte" share's base. On test, the clinic's page against the StarChat release
+  that carries intent 12.
 - The 12 locales hold every new key; `npm run lint`, vitest and Playwright green.
 
 ## Out of scope
