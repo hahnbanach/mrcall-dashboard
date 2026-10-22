@@ -3,6 +3,11 @@ module.exports = {
     //productionSourceMap: process.env.NODE_ENV !== 'production',
     devServer: {
         historyApiFallback: true,
+        // No gzip on the dev server: it serves loopback, where compression only costs. The dev
+        // app.js is ~25 MB and was gzipped again on every full load (route interception in the
+        // e2e disables the browser cache): 3.4-5.6 s per request against 0.4-0.6 s uncompressed,
+        // measured with curl on 2026-10-22.
+        compress: false,
         allowedHosts: 'all',
         client: {
             webSocketURL: 'auto://0.0.0.0:0/ws',
