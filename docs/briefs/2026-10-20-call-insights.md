@@ -152,9 +152,12 @@ caller's language.
       for it (`said`, at most 5, by name, each opening that business's analytics at its latest report), "and N more"
       when `businesses` exceeds them; the MrCall configuration suggestions list each business by name with its
       suggestions. Both are paged from StarChat (`from`/`size`, `total`), a page at a time on demand, never the
-      whole list.
+      whole list; the first page's `asOf` (StarChat's paging snapshot, added to M16 in its review) is sent back on
+      every later page of the same list, so a report landing between two pages neither repeats nor skips an item.
     - The assistants table shows each business by name (the id as secondary text) and the selected business is
-      marked in the table, with a clear control on the table itself.
+      marked in the table, with a clear control on the table itself (the admin page, where a row narrows the page;
+      on the reseller's scope page a row opens the business's own page, as since outcome 5, and the filter bar's
+      business control leads back).
     - The page's filters live in a bar that stays visible while the page scrolls, showing the active business, owner
       and period, each with its own clear control, so a filter is undone where the user is.
     - Before the test tag, a fresh reviewer goes through the page on the dev server as owner, reseller and admin, on
