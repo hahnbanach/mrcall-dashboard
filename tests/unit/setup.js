@@ -34,3 +34,21 @@ if (typeof Range !== 'undefined') {
     Range.prototype.getBoundingClientRect = emptyRect
   }
 }
+
+/**
+ * Node 25 and later have a Web Storage of their own, a global `localStorage` that is undefined unless
+ * Node is started with `--localstorage-file`. Vitest copies jsdom's window onto the global object
+ * but leaves alone the keys the global already has, so on those versions a test that reads
+ * `localStorage` got Node's undefined instead of jsdom's storage, and the OAuth test failed with
+ * "Cannot read properties of undefined (reading 'setItem')". CI runs Node 18 and never saw it. The
+ * components run in a browser, so the storage the tests see is the DOM's: jsdom's, put back here
+ * whenever Node's has taken its place.
+ */
+if (globalThis.jsdom) {
+  for (const name of ['localStorage', 'sessionStorage']) {
+    const domStorage = globalThis.jsdom.window[name]
+    if (globalThis[name] !== domStorage) {
+      Object.defineProperty(globalThis, name, { value: domStorage, configurable: true, writable: true })
+    }
+  }
+}
