@@ -505,3 +505,145 @@ test.describe('Analytics: what the calls were about (outcome 9)', () => {
     await expect(topics.getByRole('table')).toHaveCount(0)
   })
 })
+
+/**
+ * Brief outcome 10 (amendment of 2026-10-22, StarChat intent 13, M16): every item says who, every list stays
+ * light, every filter can be undone where it is set. Fictional businesses only.
+ */
+const resellerAssistants = {
+  sort: 'not_solved',
+  businesses: [{
+    businessId: BUSINESS_ID, businessName: 'Studio Demo', totalCalls: 10, callsWithResolution: 8, resolution: { unresolved: 3 },
+    callsWithChecks: 8, checks: {}, callsWithUnansweredRecorded: 8, callsWithUnanswered: 1,
+    gaps: {}, callsWithSkillErrors: 0, extractionsNotOk: 0,
+  }],
+}
+
+test.describe('Analytics: the reseller\'s page says who (outcome 10)', () => {
+  test('the assistants table shows each business by name, and the business page\'s filter bar undoes the choice where it shows it', async ({ resellerPage: page }) => {
+    await page.route('**/customer/analytics/assistants*', (route) => route.fulfill({
+      status: 200, contentType: 'application/json', body: JSON.stringify(resellerAssistants),
+    }))
+    await page.goto('/analytics')
+    const assistants = section(page, 'Assistants to review')
+    await expect(assistants.getByRole('row', { name: /Studio Demo/ })).toBeVisible({ timeout: 15000 })
+    await assistants.getByRole('row', { name: /Studio Demo/ }).click()
+    await expect(page).toHaveURL(new RegExp(`[?&]id=${BUSINESS_ID}(&|$)`))
+    await expect(section(page, 'Call reports')).toBeVisible({ timeout: 15000 })
+
+    const bar = page.getByRole('region', { name: 'Active filters' })
+    await expect(bar.getByText('Studio Demo')).toBeVisible()
+    await section(page, 'Call reports').scrollIntoViewIfNeeded()
+    await expect(bar).toBeInViewport()
+    await bar.getByRole('button', { name: 'Clear the business filter' }).click()
+    await expect(page).not.toHaveURL(/[?&]id=/)
+    await expect(section(page, 'Assistants to review')).toBeVisible()
+  })
+
+  test('an owner chosen in the selector shows in the bar and is cleared from it', async ({ resellerPage: page }) => {
+    await page.route('**/reseller/managed-owners*', (route) => route.fulfill({
+      status: 200, contentType: 'application/json',
+      body: JSON.stringify([{ ownerId: 'owner-9', ownerDisplayName: 'Demo Owner', ownerEmail: 'demo-owner@example.com' }]),
+    }))
+    const bodies = []
+    await page.route('**/customer/analytics/outcomes*', (route) => {
+      bodies.push(route.request().postDataJSON())
+      route.fallback()
+    })
+    await page.goto('/analytics')
+    await expect(page.locator('.owner-selector')).toBeVisible({ timeout: 15000 })
+    await page.locator('.owner-selector').getByRole('combobox').click()
+    await page.getByRole('option', { name: /Demo Owner/ }).click()
+    const bar = page.getByRole('region', { name: 'Active filters' })
+    await expect(bar.getByText('Demo Owner')).toBeVisible()
+    await expect.poll(() => bodies.some((b) => b.ownerId === 'owner-9')).toBe(true)
+
+    const before = bodies.length
+    await bar.getByRole('button', { name: 'Clear the owner filter' }).click()
+    await expect(bar.getByRole('button', { name: 'Clear the owner filter' })).toHaveCount(0)
+    await expect.poll(() => bodies.length).toBeGreaterThan(before)
+    expect(bodies[bodies.length - 1].ownerId).toBeUndefined()
+    await expect(page.locator('.owner-selector')).not.toContainText('Demo Owner')
+  })
+
+  test('an integration\'s business opens that business\'s analytics with the report that said it open', async ({ resellerPage: page }) => {
+    await page.route('**/customer/insights/integrations*', (route) => route.fulfill({
+      status: 200, contentType: 'application/json',
+      body: JSON.stringify({
+        total: 1, asOf: 1761100000000,
+        items: [{ kind: 'business_info', text: 'Parking hours', businesses: 1, reports: 1,
+          said: [{ businessId: BUSINESS_ID, name: 'Studio Demo', reportPeriodStart: 1700000000000 }] }],
+      }),
+    }))
+    await page.route('**/customer/insights/reports*', (route) => route.fulfill({
+      status: 200, contentType: 'application/json',
+      body: JSON.stringify([1700604800000, 1700000000000].map((periodStart) => ({
+        businessId: BUSINESS_ID, periodStart, periodEnd: periodStart + 604800000, cadence: 'weekly',
+        content: { version: 2, calls: 1, topics: [], gap_calls: {}, gaps: [], suggestions: { business_info: [`Said in ${periodStart}`], integration: [] }, flagged_calls: [] },
+      }))),
+    }))
+    await page.goto('/analytics')
+    const scope = section(page, 'Integrations and information asked')
+    await scope.getByRole('link', { name: 'Studio Demo' }).click({ timeout: 15000 })
+    await expect(page).toHaveURL(new RegExp(`[?&]report=1700000000000(&|$)`))
+    const reports = section(page, 'Call reports')
+    await expect(reports.getByText('Said in 1700000000000')).toBeVisible({ timeout: 15000 })
+    await expect(reports.getByText('Said in 1700604800000')).toHaveCount(0)
+  })
+})
+
+test.describe('Analytics: the owner\'s business page names its business (outcome 10)', () => {
+  test('the filter bar shows the business by name, with no control to leave it, and the period', async ({ authenticatedPage: page }) => {
+    await page.goto(`/analytics?id=${BUSINESS_ID}`)
+    const bar = page.getByRole('region', { name: 'Active filters' })
+    await expect(bar.getByText('Test Restaurant')).toBeVisible({ timeout: 15000 })
+    await expect(bar.getByText('Last 30 days')).toBeVisible()
+    await expect(bar.getByRole('button', { name: 'Clear the business filter' })).toHaveCount(0)
+  })
+})
+
+test.describe('Analytics: the first load asks each section once (outcome 10, every list stays light)', () => {
+  test('owner, business page: one outcomes request and one dashboard request, not one per watcher', async ({ authenticatedPage: page }) => {
+    const counts = { outcomes: 0, dashboard: 0 }
+    await page.route('**/customer/analytics/outcomes*', (route) => { counts.outcomes += 1; route.fallback() })
+    await page.route('**/customer/analytics/dashboard*', (route) => { counts.dashboard += 1; route.fallback() })
+    await page.goto(`/analytics?id=${BUSINESS_ID}`)
+    await expect(section(page, 'How the calls went')).toBeVisible({ timeout: 15000 })
+    await page.waitForTimeout(1000)
+    expect(counts).toEqual({ outcomes: 1, dashboard: 1 })
+  })
+})
+
+test.describe('Analytics: the UX review of outcome 10, its findings pinned', () => {
+  test('the page is never wider than the screen: every wide block scrolls inside itself', async ({ resellerPage: page }) => {
+    await page.route('**/customer/analytics/assistants*', (route) => route.fulfill({
+      status: 200, contentType: 'application/json', body: JSON.stringify(resellerAssistants),
+    }))
+    await page.goto('/analytics')
+    await expect(section(page, 'Assistants to review').getByText('Studio Demo')).toBeVisible({ timeout: 15000 })
+    const widths = await page.locator('#app-central-content').evaluate((el) => ({ scroll: el.scrollWidth, client: el.clientWidth }))
+    expect(widths.scroll).toBeLessThanOrEqual(widths.client)
+  })
+
+  test('the reseller\'s scope page, full of sections, does not also say there is no data', async ({ resellerPage: page }) => {
+    await page.route('**/customer/analytics/assistants*', (route) => route.fulfill({
+      status: 200, contentType: 'application/json', body: JSON.stringify(resellerAssistants),
+    }))
+    await page.goto('/analytics')
+    await expect(section(page, 'Assistants to review').getByText('Studio Demo')).toBeVisible({ timeout: 15000 })
+    await page.waitForTimeout(500)
+    await expect(page.getByText('No data available')).toHaveCount(0)
+  })
+
+  test('an integration says one business and one report in the singular', async ({ resellerPage: page }) => {
+    await page.route('**/customer/insights/integrations*', (route) => route.fulfill({
+      status: 200, contentType: 'application/json',
+      body: JSON.stringify({ total: 1, items: [{ kind: 'integration', text: 'A booking calendar', businesses: 1, reports: 4,
+        said: [{ businessId: BUSINESS_ID, name: 'Studio Demo', reportPeriodStart: 1700000000000 }] }] }),
+    }))
+    await page.goto('/analytics')
+    const scope = section(page, 'Integrations and information asked')
+    await expect(scope.getByText('1 business, 4 reports')).toBeVisible({ timeout: 15000 })
+    await expect(scope.getByText('1 of 1 items shown')).toBeVisible()
+  })
+})

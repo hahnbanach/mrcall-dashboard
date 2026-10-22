@@ -1,4 +1,5 @@
 import axios from "axios";
+import { reactive } from "vue";
 import { isSessionEnded } from "@/firebase/session";
 
 /**
@@ -145,6 +146,7 @@ function insightRows(details) {
 
 const ANALYTICS_BASE = process.env.VUE_APP_STARCHAT_URL + "/mrcall/v1/mrcall0/customer/analytics";
 const INSIGHTS_BASE = process.env.VUE_APP_STARCHAT_URL + "/mrcall/v1/mrcall0/customer/insights";
+const BUSINESS_URL = process.env.VUE_APP_STARCHAT_URL + "/mrcall/v1/mrcall0/crm/business";
 
 function getHeaders(user) {
     return {
@@ -186,6 +188,129 @@ function latestOnly() {
     };
 }
 
+
+/*
+ * The two scope-wide lists (integrations and information asked, MrCall's configuration suggestions)
+ * are paged by StarChat (analytics guide §10, its intent 13): the page shows one page and asks for
+ * the next only when the user does, so a platform with thousands of reports never loads them all.
+ * 20 is StarChat's own default size, inside its 1-100 bound.
+ */
+const INSIGHTS_PAGE_SIZE = 20;
+
+function sinceBody(since) {
+    return since != null ? { timestampGte: since } : {};
+}
+
+function pageUrl(base, from, size, asOf) {
+    let url = base + "?from=" + encodeURIComponent(from != null ? from : 0) +
+        "&size=" + encodeURIComponent(size != null ? size : INSIGHTS_PAGE_SIZE);
+    if (asOf != null) url += "&asOf=" + encodeURIComponent(asOf);
+    return url;
+}
+
+// One page as StarChat answers it. Anything else (the bare list served before the paging, a test's
+// generic `[]`) is an empty page: never items read off a shape this code does not know.
+function pageOf(answer) {
+    if (!answer || typeof answer !== "object" || !Array.isArray(answer.items)) {
+        return { total: 0, items: [], asOf: undefined };
+    }
+    const total = typeof answer.total === "number" ? answer.total : 0;
+    return { total: Math.max(total, answer.items.length), items: answer.items, asOf: answer.asOf };
+}
+
+// A business is shown by its company name; StarChat omits the name when the business has none or
+// it could not be read, and then the id is all there is.
+function businessLabel(name, businessId) {
+    return typeof name === "string" && name.trim() !== "" ? name.trim() : businessId;
+}
+
+// The businesses StarChat names for an integrations item (`said`, at most 5) and how many of the
+// item's `businesses` it does not name.
+function saidBy(item) {
+    const said = item && Array.isArray(item.said) ? item.said : [];
+    const businesses = (item && item.businesses) || 0;
+    return { said, more: Math.max(0, businesses - said.length) };
+}
+
+/**
+ * A scope-wide list read one page at a time, on demand: the one mechanism both lists and both
+ * pages use, so loading, the end of the list, a 404 (absent), a 503 (not available yet) and a
+ * failure are handled once. `fetchPage(from, size, asOf)` is one of the two clients above.
+ *
+ * Paging is by offset, so a report landing between two reads could shift the list. StarChat's
+ * snapshot answers that: the first page's `asOf` is sent back on every later page of the same list,
+ * and a new first page (a refresh) starts without it. `keyOf` drops an item already shown, which
+ * only matters if a server without the snapshot shifts the list; a skipped item cannot be detected
+ * here, which is what the snapshot is for.
+ */
+function pagedList(fetchPage, { size = INSIGHTS_PAGE_SIZE, keyOf = null, onError = null } = {}) {
+    const gate = latestOnly();
+    const state = reactive({
+        status: "loading",
+        items: [],
+        total: 0,
+        asOf: undefined,
+        loadingMore: false,
+        // A page past the end (no items) ends the list even if `total` says otherwise.
+        exhausted: false,
+        get hasMore() {
+            return state.status === "ok" && !state.exhausted && state.items.length < state.total;
+        },
+        first() {
+            const isCurrent = gate.begin();
+            state.status = "loading";
+            state.loadingMore = false;
+            state.asOf = undefined;
+            return fetchPage(0, size, undefined).then((answer) => {
+                if (!isCurrent()) return;
+                if (answer === null) { reset("absent"); return; }
+                if (answer && answer.unavailable) { reset("unavailable"); return; }
+                const page = pageOf(answer);
+                state.items = page.items;
+                state.total = page.total;
+                state.asOf = page.asOf;
+                state.exhausted = page.items.length === 0;
+                state.status = "ok";
+            }).catch((error) => {
+                if (!isCurrent()) return;
+                reset("absent");
+                report(error);
+            });
+        },
+        more() {
+            if (state.loadingMore || !state.hasMore) return Promise.resolve();
+            const isCurrent = gate.begin();
+            state.loadingMore = true;
+            return fetchPage(state.items.length, size, state.asOf).then((answer) => {
+                if (!isCurrent()) return;
+                const page = pageOf(answer);
+                const seen = keyOf ? new Set(state.items.map(keyOf)) : null;
+                const fresh = seen ? page.items.filter((item) => !seen.has(keyOf(item))) : page.items;
+                if (fresh.length === 0) state.exhausted = true;
+                state.items = state.items.concat(fresh);
+                state.total = Math.max(page.total, state.items.length);
+            }).catch((error) => {
+                // the items already shown stay, and so does the button to try again
+                if (isCurrent()) report(error);
+            }).finally(() => {
+                if (isCurrent()) state.loadingMore = false;
+            });
+        },
+    });
+    function reset(status) {
+        state.status = status;
+        state.items = [];
+        state.total = 0;
+        state.asOf = undefined;
+        state.exhausted = false;
+    }
+    function report(error) {
+        if (isSessionEnded(error)) return;
+        if (onError) onError(error);
+    }
+    return state;
+}
+
 export default {
     insightRows,
     unkeptRows,
@@ -205,6 +330,11 @@ export default {
     noConversationRows,
     extractionProblems,
     assistantShare,
+    INSIGHTS_PAGE_SIZE,
+    pageOf,
+    businessLabel,
+    saidBy,
+    pagedList,
 
     // StarChat cuts the series in this IANA zone and answers 400 to a zone it does not know
     // (Analytics.js's own timeseries carries the same refusal): the call is refused here, before
@@ -235,6 +365,18 @@ export default {
         if (!body || !body.businessId) return Promise.reject(new Error("CallInsights.topics: businessId is required"));
         return unwrap(axios.post(ANALYTICS_BASE + "/topics", body, { headers: getHeaders(user) }));
     },
+    // The company name of one business, for a page that names it and has no answer that does (an
+    // owner's own business page): `crm/business?id=` answers a list. Not `Business.getBusiness`, which
+    // also rewrites the store's role from the answer's header and forces a token refresh. A 404 (out
+    // of scope) is no name.
+    businessName: function (user, businessId) {
+        return unwrap(axios.get(BUSINESS_URL + "?id=" + encodeURIComponent(businessId), { headers: getHeaders(user) }))
+            .then((answer) => {
+                const business = Array.isArray(answer) ? answer[0] : null;
+                const name = business && business.companyName;
+                return typeof name === "string" && name.trim() !== "" ? name.trim() : null;
+            });
+    },
     // `before` is the previous page's last `periodEnd`; omit it for the first page.
     reports: function (user, businessId, before, limit) {
         let url = INSIGHTS_BASE + "/reports?businessId=" + encodeURIComponent(businessId);
@@ -248,13 +390,13 @@ export default {
         return unwrap(axios.get(url, { headers: getHeaders(user) }));
     },
     // Across the caller's whole scope since `since` (StarChat defaults to 30 days when omitted):
-    // this does not read a business, an owner, a plan or an end date.
-    integrations: function (user, since) {
-        const body = since != null ? { timestampGte: since } : {};
-        return unwrap(axios.post(INSIGHTS_BASE + "/integrations", body, { headers: getHeaders(user) }));
+    // this does not read a business, an owner, a plan or an end date. One page of `{total, items}`
+    // (`asOf` too, from StarChat's paging snapshot), `from` and `size` in the query (StarChat's
+    // analytics guide §10); `asOf` only on a later page of the same list, never on a first one.
+    integrations: function (user, since, from, size, asOf) {
+        return unwrap(axios.post(pageUrl(INSIGHTS_BASE + "/integrations", from, size, asOf), sinceBody(since), { headers: getHeaders(user) }));
     },
-    configSuggestions: function (user, since) {
-        const body = since != null ? { timestampGte: since } : {};
-        return unwrap(axios.post(INSIGHTS_BASE + "/config-suggestions", body, { headers: getHeaders(user) }));
+    configSuggestions: function (user, since, from, size, asOf) {
+        return unwrap(axios.post(pageUrl(INSIGHTS_BASE + "/config-suggestions", from, size, asOf), sinceBody(since), { headers: getHeaders(user) }));
     },
 };

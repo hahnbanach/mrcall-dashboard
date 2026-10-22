@@ -2019,14 +2019,44 @@
           "checks": "Kontrollid",
           "skillErrors": "Funktsioonivead",
           "extractionFailures": "Väljavõtteprobleemid"
-        }
+        },
+        "showAll": "Näita kõiki ettevõtteid",
+        "noName": "Nimi puudub"
       },
       "scope": {
         "title": "Integratsioonid ja küsitud teave",
         "allBusinesses": "Kõigis ettevõtetes, mida näed, viimase 30 päeva jooksul.",
         "none": "Veel pole midagi näidata.",
-        "saidBy": "{businesses} ettevõtet, {reports} aruannet",
-        "configSuggestionsTitle": "MrCalli seadistussoovitused"
+        "saidBy": "{businesses}, {reports}",
+        "configSuggestionsTitle": "MrCalli seadistussoovitused",
+        "loading": "Laadimine…",
+        "saidByLabel": "Küsinud:",
+        "andMore": "ja veel {count}",
+        "loadMoreIntegrations": "Laadi rohkem integratsioone",
+        "loadMoreSuggestions": "Laadi rohkem soovitusi",
+        "template": "Pakett: {template}",
+        "reportEnding": "Aruanne kuni {date}",
+        "kinds": {
+          "integration": "Integratsioon",
+          "business_info": "Ettevõtte teave",
+          "needs_integration_gap": "Vastamata: vajab integratsiooni"
+        },
+        "businessesCount": "1 ettevõte | {n} ettevõtet",
+        "reportsCount": "1 aruanne | {n} aruannet",
+        "shownIntegrations": "Näidatud {shown}/{total} kirjet",
+        "shownSuggestions": "Näidatud {shown}/{total} ettevõtet"
+      },
+      "filterBar": {
+        "title": "Aktiivsed filtrid",
+        "business": "Ettevõte",
+        "owner": "Omanik",
+        "plan": "Pakett",
+        "period": "Periood",
+        "lastDays": "Viimased {days} päeva",
+        "clearBusiness": "Eemalda ettevõtte filter",
+        "clearOwner": "Eemalda omaniku filter",
+        "clearPlan": "Eemalda paketi filter",
+        "clearPeriod": "Tagasi viimase 30 päeva juurde"
       }
     }
   },

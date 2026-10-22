@@ -2019,14 +2019,44 @@
           "checks": "Kontroller",
           "skillErrors": "Funktionsfejl",
           "extractionFailures": "Udtræksproblemer"
-        }
+        },
+        "showAll": "Vis alle virksomheder",
+        "noName": "Intet navn registreret"
       },
       "scope": {
         "title": "Integrationer og efterspurgt information",
         "allBusinesses": "På tværs af alle virksomheder, du kan se, de seneste 30 dage.",
         "none": "Intet at vise endnu.",
-        "saidBy": "{businesses} virksomheder, {reports} rapporter",
-        "configSuggestionsTitle": "MrCalls konfigurationsforslag"
+        "saidBy": "{businesses}, {reports}",
+        "configSuggestionsTitle": "MrCalls konfigurationsforslag",
+        "loading": "Indlæser…",
+        "saidByLabel": "Efterspurgt af:",
+        "andMore": "og {count} mere",
+        "loadMoreIntegrations": "Indlæs flere integrationer",
+        "loadMoreSuggestions": "Indlæs flere forslag",
+        "template": "Abonnement: {template}",
+        "reportEnding": "Rapport til {date}",
+        "kinds": {
+          "integration": "Integration",
+          "business_info": "Oplysninger om virksomheden",
+          "needs_integration_gap": "Ubesvaret: kræver en integration"
+        },
+        "businessesCount": "1 virksomhed | {n} virksomheder",
+        "reportsCount": "1 rapport | {n} rapporter",
+        "shownIntegrations": "{shown} af {total} punkter vist",
+        "shownSuggestions": "{shown} af {total} virksomheder vist"
+      },
+      "filterBar": {
+        "title": "Aktive filtre",
+        "business": "Virksomhed",
+        "owner": "Ejer",
+        "plan": "Abonnement",
+        "period": "Periode",
+        "lastDays": "Seneste {days} dage",
+        "clearBusiness": "Fjern virksomhedsfilteret",
+        "clearOwner": "Fjern ejerfilteret",
+        "clearPlan": "Fjern abonnementsfilteret",
+        "clearPeriod": "Tilbage til de seneste 30 dage"
       }
     }
   },

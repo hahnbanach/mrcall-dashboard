@@ -47,6 +47,12 @@ export default {
       return options
     }
   },
+  watch: {
+    // The owner can also be cleared elsewhere (the analytics filter bar): the dropdown shows the store's.
+    '$store.state.selectedOwnerId'(value) {
+      this.selectedOwner = value
+    }
+  },
   mounted() {
     if (this.store.state.managedOwners.length === 0) {
       this.store.dispatch('loadResellerData')
@@ -66,6 +72,7 @@ export default {
 }
 
 .owner-selector-dropdown {
-  min-width: 280px;
+  min-width: min(280px, 100%);
+  max-width: 100%;
 }
 </style>

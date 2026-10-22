@@ -2033,14 +2033,44 @@
           "checks": "Controles",
           "skillErrors": "Errores de funciones",
           "extractionFailures": "Problemas de extracción"
-        }
+        },
+        "showAll": "Mostrar todos los negocios",
+        "noName": "Sin nombre registrado"
       },
       "scope": {
         "title": "Integraciones e información solicitada",
         "allBusinesses": "En todos los negocios que puedes ver, en los últimos 30 días.",
         "none": "Nada que mostrar todavía.",
-        "saidBy": "{businesses} negocios, {reports} informes",
-        "configSuggestionsTitle": "Sugerencias de configuración de MrCall"
+        "saidBy": "{businesses}, {reports}",
+        "configSuggestionsTitle": "Sugerencias de configuración de MrCall",
+        "loading": "Cargando…",
+        "saidByLabel": "Pedido por:",
+        "andMore": "y {count} más",
+        "loadMoreIntegrations": "Cargar más integraciones",
+        "loadMoreSuggestions": "Cargar más sugerencias",
+        "template": "Plan: {template}",
+        "reportEnding": "Informe hasta el {date}",
+        "kinds": {
+          "integration": "Integración",
+          "business_info": "Información del negocio",
+          "needs_integration_gap": "Sin respuesta: necesita una integración"
+        },
+        "businessesCount": "1 negocio | {n} negocios",
+        "reportsCount": "1 informe | {n} informes",
+        "shownIntegrations": "{shown} de {total} elementos mostrados",
+        "shownSuggestions": "{shown} de {total} negocios mostrados"
+      },
+      "filterBar": {
+        "title": "Filtros activos",
+        "business": "Negocio",
+        "owner": "Propietario",
+        "plan": "Plan",
+        "period": "Periodo",
+        "lastDays": "Últimos {days} días",
+        "clearBusiness": "Quitar el filtro de negocio",
+        "clearOwner": "Quitar el filtro de propietario",
+        "clearPlan": "Quitar el filtro de plan",
+        "clearPeriod": "Volver a los últimos 30 días"
       }
     }
   },

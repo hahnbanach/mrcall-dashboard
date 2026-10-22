@@ -10,6 +10,9 @@
       <!-- Reseller Owner Selector -->
       <OwnerSelector v-if="isReseller" />
 
+      <!-- The filters in force, each undone where it shows (brief outcome 10) -->
+      <AnalyticsFilterBar :chips="filterChips" @clear="onClearFilter" />
+
       <!-- Date Range Controls -->
       <div class="analytics-section">
         <div class="date-controls">
@@ -198,6 +201,8 @@
         :is-owner="isOwnerRole"
         :is-admin="isAdminRole"
         :business-id="businessId"
+        :focus-period="focusReport"
+        :focused-report="focusedReport"
         @load-more="loadMoreReports"
       />
 
@@ -210,15 +215,18 @@
         :sort="assistantsSort"
         @sort-change="onAssistantsSortChange"
         @select-business="onAssistantsSelectBusiness"
+        @names="rememberNames"
       />
       <ScopeInformation
         v-if="showScopePage"
-        :integrations-status="integrationsStatus"
-        :integrations="integrationsData"
+        :ready="roleReady"
+        :template-names="templateNames"
+        @names="rememberNames"
+        @error="handleApiError"
       />
 
       <!-- Empty state -->
-      <div v-if="allDataReady && noData" class="analytics-section">
+      <div v-if="allDataReady && noData && !showScopePage" class="analytics-section">
         <div class="empty-state">
           <i class="pi pi-chart-bar empty-state-icon"></i>
           <h3>{{ $t('components.analytics.emptyState.title') }}</h3>
@@ -240,6 +248,7 @@ import { auth } from "@/firebase/config";
 import { isSessionEnded } from "@/firebase/axiosConfig";
 import AnalyticsApi from "@/utils/Analytics";
 import CallInsights from "@/utils/CallInsights";
+import TemplatesApi from "@/utils/Templates";
 import businessUtils from "@/utils/Business";
 import OwnerSelector from "@/components/reseller/OwnerSelector.vue";
 import CallOutcomes from "@/components/analytics/CallOutcomes.vue";
@@ -248,9 +257,10 @@ import CallQuality from "@/components/analytics/CallQuality.vue";
 import CallReports from "@/components/analytics/CallReports.vue";
 import AssistantsToReview from "@/components/analytics/AssistantsToReview.vue";
 import ScopeInformation from "@/components/analytics/ScopeInformation.vue";
+import AnalyticsFilterBar from "@/components/analytics/AnalyticsFilterBar.vue";
 
 export default {
-  components: { OwnerSelector, CallOutcomes, CallTopics, CallQuality, CallReports, AssistantsToReview, ScopeInformation },
+  components: { OwnerSelector, CallOutcomes, CallTopics, CallQuality, CallReports, AssistantsToReview, ScopeInformation, AnalyticsFilterBar },
   setup() {
     const store = useStore();
     const toast = useToast();
@@ -300,9 +310,15 @@ export default {
       assistantsStatus: "loading",
       assistantsData: null,
       assistantsSort: "not_solved",
-      integrationsStatus: "loading",
-      integrationsData: [],
-      integrationsFetched: false,
+      // The role is known (see `establishRole`): the scope-wide lists wait for it.
+      roleReady: false,
+      // businessId -> company name, from every answer that names a business (brief outcome 10)
+      businessNames: {},
+      // A report a link asked to open (`?report=<periodStart>`), and that report when it is not on
+      // the first page of the business's reports.
+      focusReport: null,
+      focusedReport: null,
+      templateNames: {},
     };
   },
   computed: {
@@ -316,6 +332,32 @@ export default {
     },
     isAdminRole() {
       return this.store.state.role === "admin";
+    },
+    // Only a reseller or an admin can widen the page past one business; an owner's page is its business.
+    canLeaveBusiness() {
+      return this.isReseller || this.isAdminRole;
+    },
+    filterChips() {
+      const chips = [];
+      if (this.businessId) {
+        chips.push({
+          key: "business",
+          name: this.$t("components.callInsights.filterBar.business"),
+          value: CallInsights.businessLabel(this.businessNames[this.businessId], this.businessId),
+          title: this.businessId,
+          clearLabel: this.canLeaveBusiness ? this.$t("components.callInsights.filterBar.clearBusiness") : null,
+        });
+      }
+      if (this.isReseller && this.selectedOwnerId) {
+        chips.push({
+          key: "owner",
+          name: this.$t("components.callInsights.filterBar.owner"),
+          value: this.ownerLabel(this.selectedOwnerId),
+          clearLabel: this.$t("components.callInsights.filterBar.clearOwner"),
+        });
+      }
+      chips.push(this.periodChip());
+      return chips;
     },
     anyLoading() {
       return this.loadingDashboard || this.loadingTimeseries || this.loadingDuration ||
@@ -447,6 +489,9 @@ export default {
       this.fetchAllData();
     },
     rangeValue(val) {
+      // A preset sets the range itself and fetches once; only a range the user picks is handled here
+      // (before, every preset and the first load fetched every section twice).
+      if (val === this.presetRange) return;
       if (val && val[0] && val[1]) {
         this.selectedPreset = null;
         this.timestampGte = val[0].getTime();
@@ -459,13 +504,18 @@ export default {
     '$route.query'() {
       if (this.$route.name !== 'Analytics') return;
       const id = this.$route.query.id || null;
-      if (id === this.businessId) return;
+      const report = this.reportFromRoute();
+      if (id === this.businessId && report === this.focusReport) return;
+      this.focusReport = report;
+      this.focusedReport = null;
+      if (id === this.businessId) { this.focusOnReport(); return; }
       this.businessId = id;
       this.fetchAllData();
     },
   },
   mounted() {
-    this.businessId = this.$route.query.id;
+    this.businessId = this.$route.query.id || null;
+    this.focusReport = this.reportFromRoute();
     if (!this.store || !this.store.state) {
       return;
     }
@@ -475,7 +525,9 @@ export default {
       // before any of them is asked (Business.js:262-275, the same search that already sets it
       // elsewhere in this dashboard).
       await this.establishRole();
+      this.roleReady = true;
       this.fetchAllData();
+      if (this.showScopePage) this.fetchTemplateNames();
     };
     if (!this.store.state.user) {
       onAuthStateChanged(auth, (user) => {
@@ -509,7 +561,10 @@ export default {
       }
       this.timestampGte = start.getTime();
       this.timestampLte = now.getTime();
+      this.selectedPreset = preset;
       this.rangeValue = [start, now];
+      // the reactive array the watcher will receive, to tell this range from one the user picks
+      this.presetRange = this.rangeValue;
     },
     onPresetChange(event) {
       if (event.value) {
@@ -536,6 +591,74 @@ export default {
       }
       return body;
     },
+    // The plan of an integrations item by its name, not its key (the admin page reads the same list).
+    fetchTemplateNames() {
+      const user = this.store.state.user;
+      if (!user || !user.accessToken) return;
+      TemplatesApi.list(user, this.$i18n.locale)
+        .then((response) => {
+          const names = {};
+          (response.data || []).forEach((t) => { if (t.humanName) names[t.name] = t.humanName; });
+          this.templateNames = names;
+        })
+        .catch((error) => { if (!isSessionEnded(error)) console.warn('Analytics templates:', error); });
+    },
+    reportFromRoute() {
+      const value = Number(this.$route.query.report);
+      return Number.isFinite(value) && value > 0 ? value : null;
+    },
+    rememberNames(names) {
+      this.businessNames = { ...this.businessNames, ...names };
+    },
+    ownerLabel(uid) {
+      if (this.user && uid === this.user.uid) return this.$t("components.reseller.ownerSelector.myAccount");
+      const owner = (this.store.state.managedOwners || []).find((o) => o.uid === uid);
+      return owner ? (owner.displayName || owner.email || uid) : uid;
+    },
+    periodChip() {
+      const preset = this.selectedPreset;
+      const days = { '7d': 7, '30d': 30, '90d': 90 }[preset];
+      const value = days
+        ? this.$t("components.callInsights.filterBar.lastDays", { days })
+        : new Date(this.timestampGte).toLocaleDateString() + " – " + new Date(this.timestampLte).toLocaleDateString();
+      return {
+        key: "period",
+        name: this.$t("components.callInsights.filterBar.period"),
+        value,
+        clearLabel: preset === '30d' ? null : this.$t("components.callInsights.filterBar.clearPeriod"),
+      };
+    },
+    onClearFilter(key) {
+      if (key === "business") {
+        // Back to the page the business was chosen from: the reseller's scope page, the admin's own.
+        this.router.push(this.isReseller ? { path: '/analytics' } : { path: '/analytics-admin' });
+      } else if (key === "owner") {
+        this.store.commit('setSelectedOwnerId', null);
+      } else if (key === "period") {
+        this.setPresetRange('30d');
+        this.fetchAllData();
+      }
+    },
+    // A business's own page names it from what the page already read, else asks for the name once.
+    fetchBusinessName(user) {
+      const id = this.businessId;
+      if (!id || this.businessNames[id]) return;
+      CallInsights.businessName(user, id)
+        .then((name) => { if (name) this.rememberNames({ [id]: name }); })
+        .catch((error) => { if (!isSessionEnded(error)) console.warn('Analytics business name:', error); });
+    },
+    focusOnReport() {
+      const user = this.store.state.user;
+      if (!this.focusReport || !this.businessId || !user || this.reportsStatus !== 'ok') return;
+      if (this.reportsData.some((r) => r.periodStart === this.focusReport)) return;
+      const periodStart = this.focusReport;
+      CallInsights.report(user, this.businessId, periodStart)
+        .then((report) => {
+          if (periodStart !== this.focusReport) return;
+          if (report && !report.unavailable) this.focusedReport = report;
+        })
+        .catch((error) => this.handleApiError(error, 'reports'));
+    },
     handleApiError(error, section) {
       // The session ended: the interceptor has already sent the person to sign in.
       if (isSessionEnded(error)) return;
@@ -554,8 +677,6 @@ export default {
       const granularity = this.getGranularity();
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-      if (this.showScopePage) this.fetchIntegrationsIfNeeded(user);
-
       if (!this.businessId) {
         this.fetchScopeInsights(user, granularity, timezone);
         return;
@@ -572,7 +693,9 @@ export default {
       this.fetchTopics(user, request);
       this.fetchQuality(user, request);
       this.reportsData = [];
-      this.fetchReports(user, this.businessId, null);
+      this.focusedReport = null;
+      this.fetchReports(user, this.businessId, null).then(() => this.focusOnReport());
+      this.fetchBusinessName(user);
     },
     // Across the reseller's scope (its own calls and all its managed owners', or one of them
     // through the owner selector): no businessId key, which is StarChat's "every business" the
@@ -701,26 +824,9 @@ export default {
       if (user) this.fetchAssistants(user, this.buildScopeRequestBody());
     },
     onAssistantsSelectBusiness(businessId) {
-      // A reseller's row opens the business page, the same way a link from the clinic's own email would.
+      // A reseller's row opens the business page, the same way a link from the clinic's own email would;
+      // the filter bar there leads back.
       this.router.push({ path: '/analytics', query: { id: businessId } });
-    },
-    // The caller's whole scope, since a start StarChat itself defaults (30 days): fetched once,
-    // never refetched on a date-range, business or owner change.
-    fetchIntegrationsIfNeeded(user) {
-      if (this.integrationsFetched) return;
-      this.integrationsFetched = true;
-      this.integrationsStatus = 'loading';
-      CallInsights.integrations(user)
-        .then((result) => {
-          if (result === null) { this.integrationsStatus = 'absent'; this.integrationsData = []; }
-          else if (result.unavailable) { this.integrationsStatus = 'unavailable'; this.integrationsData = []; }
-          else { this.integrationsStatus = 'ok'; this.integrationsData = result; }
-        })
-        .catch((error) => {
-          if (isSessionEnded(error)) return;
-          this.integrationsStatus = 'absent';
-          this.handleApiError(error, 'integrations');
-        });
     },
     fetchDashboard(user, request) {
       this.loadingDashboard = true;

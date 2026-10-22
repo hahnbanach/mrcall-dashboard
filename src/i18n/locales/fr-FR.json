@@ -2021,14 +2021,44 @@
           "checks": "Vérifications",
           "skillErrors": "Erreurs de fonctions",
           "extractionFailures": "Problèmes d'extraction"
-        }
+        },
+        "showAll": "Afficher toutes les entreprises",
+        "noName": "Aucun nom enregistré"
       },
       "scope": {
         "title": "Intégrations et informations demandées",
         "allBusinesses": "Sur tous les établissements que vous pouvez voir, au cours des 30 derniers jours.",
         "none": "Rien à montrer pour l'instant.",
-        "saidBy": "{businesses} établissements, {reports} rapports",
-        "configSuggestionsTitle": "Suggestions de configuration MrCall"
+        "saidBy": "{businesses}, {reports}",
+        "configSuggestionsTitle": "Suggestions de configuration MrCall",
+        "loading": "Chargement…",
+        "saidByLabel": "Demandé par :",
+        "andMore": "et {count} de plus",
+        "loadMoreIntegrations": "Charger plus d'intégrations",
+        "loadMoreSuggestions": "Charger plus de suggestions",
+        "template": "Formule : {template}",
+        "reportEnding": "Rapport jusqu'au {date}",
+        "kinds": {
+          "integration": "Intégration",
+          "business_info": "Informations sur l'entreprise",
+          "needs_integration_gap": "Sans réponse : nécessite une intégration"
+        },
+        "businessesCount": "1 entreprise | {n} entreprises",
+        "reportsCount": "1 rapport | {n} rapports",
+        "shownIntegrations": "{shown} éléments affichés sur {total}",
+        "shownSuggestions": "{shown} entreprises affichées sur {total}"
+      },
+      "filterBar": {
+        "title": "Filtres actifs",
+        "business": "Entreprise",
+        "owner": "Propriétaire",
+        "plan": "Formule",
+        "period": "Période",
+        "lastDays": "{days} derniers jours",
+        "clearBusiness": "Retirer le filtre entreprise",
+        "clearOwner": "Retirer le filtre propriétaire",
+        "clearPlan": "Retirer le filtre formule",
+        "clearPeriod": "Revenir aux 30 derniers jours"
       }
     }
   },

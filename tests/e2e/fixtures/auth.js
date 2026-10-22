@@ -424,6 +424,13 @@ async function setupApiMocks(page, overrides = {}) {
       body: JSON.stringify(overrides.assistants || { period: { from: 0, to: 0 }, sort: 'not_solved', businesses: [] }),
     })
   })
+  // The scope-wide lists (StarChat's analytics guide §10, M16): one page of `{total, items, asOf}`.
+  await page.route('**/customer/insights/integrations*', (route) => {
+    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(overrides.integrations || { total: 0, items: [] }) })
+  })
+  await page.route('**/customer/insights/config-suggestions*', (route) => {
+    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(overrides.configSuggestions || { total: 0, items: [] }) })
+  })
   // The list (`reports?businessId=...`), registered before the single report so the single
   // report's own route, more specific, is the one Playwright checks first.
   await page.route('**/customer/insights/reports*', (route) => {

@@ -69,6 +69,9 @@
         </form>
       </div>
 
+      <!-- The filters in force, each undone where it shows (brief outcome 10) -->
+      <AnalyticsFilterBar :chips="filterChips" @clear="onClearFilter" />
+
       <!-- KPI Cards -->
       <div v-if="dashboardData" class="analytics-section">
         <h3 class="section-title">{{ $t('components.analytics.overview') }}</h3>
@@ -226,8 +229,17 @@
         <div v-if="breakdownData.businesses && breakdownData.businesses.length > 0" class="table-container" style="margin-top: 16px;">
           <p class="breakdown-hint">{{ $t('components.analytics.filters.breakdownHint') }}</p>
           <DataTable :value="breakdownData.businesses" :rows="10" :paginator="breakdownData.businesses.length > 10" stripedRows
-            sortField="totalCalls" :sortOrder="-1" selectionMode="single" @row-select="onBreakdownRowSelect">
-            <Column field="businessId" :header="$t('components.analytics.breakdown.businessId')" sortable />
+            sortField="totalCalls" :sortOrder="-1" selectionMode="single" dataKey="businessId"
+            :selection="breakdownSelectedRow" :metaKeySelection="false"
+            @row-select="onBreakdownRowSelect" @row-unselect="onBreakdownRowSelect">
+            <Column field="businessId" :header="$t('components.callInsights.assistants.businessId')" sortable>
+              <template #body="slotProps">
+                <span class="breakdown-business">
+                  <span>{{ businessLabel(slotProps.data.businessId) }}</span>
+                  <span v-if="businessNames[slotProps.data.businessId]" class="breakdown-business-id">{{ slotProps.data.businessId }}</span>
+                </span>
+              </template>
+            </Column>
             <Column field="totalCalls" :header="$t('components.analytics.breakdown.totalCalls')" sortable />
             <Column field="avgCallDurationMs" :header="$t('components.analytics.breakdown.avgDuration')" sortable>
               <template #body="slotProps">
@@ -264,14 +276,17 @@
         :data="assistantsData"
         :sort="assistantsSort"
         @sort-change="onAssistantsSortChange"
+        :selected-business-id="businessId || null"
         @select-business="onAssistantsSelectBusiness"
+        @clear-business="onClearFilter('business')"
+        @names="rememberNames"
       />
       <ScopeInformation
-        :integrations-status="integrationsStatus"
-        :integrations="integrationsData"
+        :ready="roleReady"
         :show-config-suggestions="isAdminRole"
-        :config-suggestions-status="configSuggestionsStatus"
-        :config-suggestions="configSuggestionsData"
+        :template-names="templateNames"
+        @names="rememberNames"
+        @error="handleApiError"
       />
 
       <!-- Empty state -->
@@ -304,9 +319,10 @@ import CallTopics from "@/components/analytics/CallTopics.vue";
 import CallQuality from "@/components/analytics/CallQuality.vue";
 import AssistantsToReview from "@/components/analytics/AssistantsToReview.vue";
 import ScopeInformation from "@/components/analytics/ScopeInformation.vue";
+import AnalyticsFilterBar from "@/components/analytics/AnalyticsFilterBar.vue";
 
 export default {
-  components: { CallOutcomes, CallTopics, CallQuality, AssistantsToReview, ScopeInformation },
+  components: { CallOutcomes, CallTopics, CallQuality, AssistantsToReview, ScopeInformation, AnalyticsFilterBar },
   setup() {
     const store = useStore();
     const toast = useToast();
@@ -358,11 +374,11 @@ export default {
       assistantsStatus: "loading",
       assistantsData: null,
       assistantsSort: "not_solved",
-      integrationsStatus: "loading",
-      integrationsData: [],
-      integrationsFetched: false,
-      configSuggestionsStatus: "loading",
-      configSuggestionsData: [],
+      // The role is known (see `mounted`): the scope-wide lists wait for it, since MrCall's own
+      // configuration suggestions are asked for by an admin only.
+      roleReady: false,
+      // businessId -> company name, from every answer that names a business (brief outcome 10)
+      businessNames: {},
     };
   },
   computed: {
@@ -395,6 +411,55 @@ export default {
     },
     isAdminRole() {
       return this.store.state.role === "admin";
+    },
+    // The business the page is narrowed to, marked in the breakdown as in the assistants table.
+    breakdownSelectedRow() {
+      const rows = (this.breakdownData && this.breakdownData.businesses) || [];
+      return rows.find((row) => row.businessId === this.businessId) || null;
+    },
+    templateNames() {
+      const names = {};
+      this.templates.forEach((t) => { if (t.humanName) names[t.name] = t.humanName; });
+      return names;
+    },
+    filterChips() {
+      const chips = [];
+      if (this.businessId) {
+        chips.push({
+          key: "business",
+          name: this.$t("components.callInsights.filterBar.business"),
+          value: CallInsights.businessLabel(this.businessNames[this.businessId], this.businessId),
+          title: this.businessId,
+          clearLabel: this.$t("components.callInsights.filterBar.clearBusiness"),
+        });
+      }
+      if (this.ownerId) {
+        chips.push({
+          key: "owner",
+          name: this.$t("components.callInsights.filterBar.owner"),
+          value: this.ownerId,
+          clearLabel: this.$t("components.callInsights.filterBar.clearOwner"),
+        });
+      }
+      if (this.plan) {
+        const option = this.planOptions.find((o) => o.value === this.plan);
+        chips.push({
+          key: "plan",
+          name: this.$t("components.callInsights.filterBar.plan"),
+          value: option ? option.label : this.plan,
+          clearLabel: this.$t("components.callInsights.filterBar.clearPlan"),
+        });
+      }
+      const days = { '7d': 7, '30d': 30, '90d': 90 }[this.selectedPreset];
+      chips.push({
+        key: "period",
+        name: this.$t("components.callInsights.filterBar.period"),
+        value: days
+          ? this.$t("components.callInsights.filterBar.lastDays", { days })
+          : new Date(this.timestampGte).toLocaleDateString() + " – " + new Date(this.timestampLte).toLocaleDateString(),
+        clearLabel: this.selectedPreset === '30d' ? null : this.$t("components.callInsights.filterBar.clearPeriod"),
+      });
+      return chips;
     },
     presetOptions() {
       return [
@@ -513,7 +578,7 @@ export default {
       if (!this.breakdownData || !this.breakdownData.businesses || !this.breakdownData.businesses.length) return { labels: [], datasets: [] };
       const sorted = [...this.breakdownData.businesses].sort((a, b) => b.totalCalls - a.totalCalls).slice(0, 20);
       return {
-        labels: sorted.map(b => b.businessId),
+        labels: sorted.map(b => this.businessLabel(b.businessId)),
         datasets: [{
           label: this.$t('components.analytics.breakdown.totalCalls'),
           data: sorted.map(b => b.totalCalls),
@@ -551,6 +616,9 @@ export default {
       this.fetchAllData();
     },
     rangeValue(val) {
+      // A preset sets the range itself and fetches once; only a range the user picks is handled here
+      // (before, every preset and the first load fetched every section twice).
+      if (val === this.presetRange) return;
       if (val && val[0] && val[1]) {
         this.selectedPreset = null;
         this.timestampGte = val[0].getTime();
@@ -569,13 +637,10 @@ export default {
     this.setPresetRange('30d');
     const proceed = async () => {
       // The role on the server is the gate (admin-only routes answer 404 to anyone else); this is
-      // only what decides whether to ask for MrCall's own configuration suggestions at all.
-      // Fetched here, once, strictly after the role resolves: `fetchAllData` itself also runs from
-      // the `rangeValue` watcher that `setPresetRange` above triggers, which can fire before this
-      // await returns, and `fetchIntegrationsIfNeeded`'s own one-shot guard would otherwise consume
-      // itself on that early, still-role-less call and never ask for the suggestions at all.
+      // only what decides whether to ask for MrCall's own configuration suggestions at all, so the
+      // scope-wide lists start (`roleReady`) strictly after the role resolves.
       await this.establishRole();
-      if (this.store.state.user) this.fetchIntegrationsIfNeeded(this.store.state.user);
+      this.roleReady = true;
       this.fetchAllData();
       this.fetchTemplates();
     };
@@ -611,7 +676,10 @@ export default {
       }
       this.timestampGte = start.getTime();
       this.timestampLte = now.getTime();
+      this.selectedPreset = preset;
       this.rangeValue = [start, now];
+      // the reactive array the watcher will receive, to tell this range from one the user picks
+      this.presetRange = this.rangeValue;
     },
     onPresetChange(event) {
       if (event.value) {
@@ -647,6 +715,28 @@ export default {
       this.businessIdInput = '';
       this.ownerIdInput = '';
       this.planInput = '';
+      this.applyFilters();
+    },
+    // The breakdown answer carries ids only: a name another section of the page read is shown instead.
+    businessLabel(businessId) {
+      return CallInsights.businessLabel(this.businessNames[businessId], businessId);
+    },
+    rememberNames(names) {
+      this.businessNames = { ...this.businessNames, ...names };
+    },
+    // Clearing one chip changes that filter only: text typed in the inputs and not applied is not applied by it.
+    onClearFilter(key) {
+      this.businessIdInput = this.businessId;
+      this.ownerIdInput = this.ownerId;
+      this.planInput = this.plan;
+      if (key === "business") this.businessIdInput = '';
+      else if (key === "owner") this.ownerIdInput = '';
+      else if (key === "plan") this.planInput = '';
+      else if (key === "period") {
+        this.setPresetRange('30d');
+        this.fetchAllData();
+        return;
+      }
       this.applyFilters();
     },
     onBreakdownRowSelect(event) {
@@ -694,9 +784,8 @@ export default {
       this.fetchTopics(user, request);
       this.fetchQuality(user, request);
       this.fetchAssistants(user, request);
-      // Integrations and MrCall's own suggestions are fetched once, from `mounted`'s `proceed`,
-      // strictly after the role resolves (see the comment there): not here, where a watcher could
-      // call this before that role is known.
+      // Integrations and MrCall's own suggestions are ScopeInformation's own, fetched once the role
+      // is known (`roleReady`), and follow none of these filters.
     },
     // One `CallInsights.latestOnly()` per section, created on first use: plain, not reactive state.
     insightGate(section) {
@@ -782,41 +871,15 @@ export default {
     },
     onAssistantsSelectBusiness(businessId) {
       // As a breakdown row already does (`onBreakdownRowSelect`): narrow this page's own filter,
-      // never navigate away from the admin's whole-platform page.
+      // never navigate away from the admin's whole-platform page. The sections above the table change
+      // height as they reload, so the table is brought back into view, with its selection and the
+      // control that widens the page again.
       this.businessIdInput = businessId;
       this.applyFilters();
-    },
-    // The caller's whole scope, since a start StarChat itself defaults (30 days): fetched once,
-    // never refetched on a date-range, business, owner or plan change.
-    fetchIntegrationsIfNeeded(user) {
-      if (this.integrationsFetched) return;
-      this.integrationsFetched = true;
-      this.integrationsStatus = 'loading';
-      CallInsights.integrations(user)
-        .then((result) => {
-          if (result === null) { this.integrationsStatus = 'absent'; this.integrationsData = []; }
-          else if (result.unavailable) { this.integrationsStatus = 'unavailable'; this.integrationsData = []; }
-          else { this.integrationsStatus = 'ok'; this.integrationsData = result; }
-        })
-        .catch((error) => {
-          if (isSessionEnded(error)) return;
-          this.integrationsStatus = 'absent';
-          this.handleApiError(error, 'integrations');
-        });
-      if (this.isAdminRole) {
-        this.configSuggestionsStatus = 'loading';
-        CallInsights.configSuggestions(user)
-          .then((result) => {
-            if (result === null) { this.configSuggestionsStatus = 'absent'; this.configSuggestionsData = []; }
-            else if (result.unavailable) { this.configSuggestionsStatus = 'unavailable'; this.configSuggestionsData = []; }
-            else { this.configSuggestionsStatus = 'ok'; this.configSuggestionsData = result; }
-          })
-          .catch((error) => {
-            if (isSessionEnded(error)) return;
-            this.configSuggestionsStatus = 'absent';
-            this.handleApiError(error, 'config-suggestions');
-          });
-      }
+      this.$nextTick(() => {
+        const table = this.$el.querySelector && this.$el.querySelector('.assistants-section');
+        if (table && table.scrollIntoView) table.scrollIntoView({ block: 'start' });
+      });
     },
     fetchTemplates() {
       const user = this.store.state.user;
@@ -988,6 +1051,16 @@ export default {
 <style lang="less" scoped>
 @import "../assets/style/colors";
 @import "../assets/style/fonts";
+
+.breakdown-business {
+  display: flex;
+  flex-direction: column;
+}
+
+.breakdown-business-id {
+  font-size: 12px;
+  color: @mrcall_grey_text2;
+}
 
 .analytics-container {
   margin: auto;

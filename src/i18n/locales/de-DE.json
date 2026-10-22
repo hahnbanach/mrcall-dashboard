@@ -2021,14 +2021,44 @@
           "checks": "Prüfungen",
           "skillErrors": "Funktionsfehler",
           "extractionFailures": "Extraktionsprobleme"
-        }
+        },
+        "showAll": "Alle Unternehmen anzeigen",
+        "noName": "Kein Name hinterlegt"
       },
       "scope": {
         "title": "Integrationen und angefragte Informationen",
         "allBusinesses": "Über alle Unternehmen, die Sie sehen können, in den letzten 30 Tagen.",
         "none": "Noch nichts anzuzeigen.",
-        "saidBy": "{businesses} Unternehmen, {reports} Berichte",
-        "configSuggestionsTitle": "MrCall-Konfigurationsvorschläge"
+        "saidBy": "{businesses}, {reports}",
+        "configSuggestionsTitle": "MrCall-Konfigurationsvorschläge",
+        "loading": "Wird geladen…",
+        "saidByLabel": "Angefragt von:",
+        "andMore": "und {count} weitere",
+        "loadMoreIntegrations": "Weitere Integrationen laden",
+        "loadMoreSuggestions": "Weitere Vorschläge laden",
+        "template": "Tarif: {template}",
+        "reportEnding": "Bericht bis {date}",
+        "kinds": {
+          "integration": "Integration",
+          "business_info": "Informationen zum Unternehmen",
+          "needs_integration_gap": "Unbeantwortet: braucht eine Integration"
+        },
+        "businessesCount": "1 Unternehmen | {n} Unternehmen",
+        "reportsCount": "1 Bericht | {n} Berichte",
+        "shownIntegrations": "{shown} von {total} Einträgen angezeigt",
+        "shownSuggestions": "{shown} von {total} Unternehmen angezeigt"
+      },
+      "filterBar": {
+        "title": "Aktive Filter",
+        "business": "Unternehmen",
+        "owner": "Inhaber",
+        "plan": "Tarif",
+        "period": "Zeitraum",
+        "lastDays": "Letzte {days} Tage",
+        "clearBusiness": "Unternehmensfilter entfernen",
+        "clearOwner": "Inhaberfilter entfernen",
+        "clearPlan": "Tariffilter entfernen",
+        "clearPeriod": "Zurück zu den letzten 30 Tagen"
       }
     }
   },

@@ -123,3 +123,47 @@ describe('callInsights: the keys of outcome 9', () => {
     expect(itIT.components.callInsights.resolution.caller_left).not.toBe('Chiamante uscito')
   })
 })
+
+/**
+ * Brief outcome 10 (amendment of 2026-10-22): the scope-wide lists say who and load a page at a time,
+ * the assistants table widens the page again from itself, and a filter bar undoes each filter where
+ * it shows. The parity test above covers every key; this pins that the new ones are there to be
+ * covered, and that the bar's controls are worded in each language rather than copied from English.
+ */
+describe('callInsights: the keys of outcome 10', () => {
+  const OUTCOME_10_KEYS = [
+    'scope.loading', 'scope.saidByLabel', 'scope.andMore', 'scope.shownIntegrations', 'scope.shownSuggestions',
+    'scope.businessesCount', 'scope.reportsCount', 'assistants.noName', 'scope.loadMoreIntegrations',
+    'scope.loadMoreSuggestions', 'scope.template', 'scope.reportEnding',
+    'scope.kinds.integration', 'scope.kinds.business_info', 'scope.kinds.needs_integration_gap',
+    'assistants.showAll',
+    'filterBar.title', 'filterBar.business', 'filterBar.owner', 'filterBar.plan', 'filterBar.period',
+    'filterBar.lastDays', 'filterBar.clearBusiness', 'filterBar.clearOwner', 'filterBar.clearPlan', 'filterBar.clearPeriod',
+  ]
+
+  it('en-US names every string of outcome 10', () => {
+    expect(referenceKeys).toEqual(expect.arrayContaining(OUTCOME_10_KEYS))
+  })
+
+  // "1 businesses" was the first review's finding: the counts are plural messages in every locale.
+  it('counts businesses and reports with a singular and a plural form in every locale', () => {
+    for (const [locale, messages] of Object.entries(LOCALES)) {
+      const sc = messages.components.callInsights.scope
+      for (const key of ['businessesCount', 'reportsCount']) {
+        expect(sc[key].split('|').length, `${locale} scope.${key}`).toBe(2)
+      }
+    }
+  })
+
+  const get = (obj, path) => path.split('.').reduce((o, k) => (o ? o[k] : undefined), obj)
+  const WORDED = ['assistants.showAll', 'filterBar.title', 'filterBar.clearBusiness', 'filterBar.clearOwner',
+    'filterBar.clearPlan', 'filterBar.clearPeriod', 'scope.loadMoreIntegrations', 'scope.loadMoreSuggestions', 'scope.andMore', 'scope.shownSuggestions', 'assistants.noName']
+  for (const [locale, messages] of Object.entries(LOCALES)) {
+    if (locale === 'en-US') continue
+    it(`${locale} words the filter bar and the paging in its own language`, () => {
+      const ci = messages.components.callInsights
+      const copied = WORDED.filter(k => get(ci, k) === get(enUS.components.callInsights, k))
+      expect(copied, `${locale} carries English text for these keys`).toEqual([])
+    })
+  }
+})

@@ -132,7 +132,7 @@ test.describe('Analytics filters (Admin Role)', () => {
     await expect(adminPage.getByRole('textbox', { name: 'Business ID' })).toHaveValue('biz-b')
 
     const before = requests.length
-    await adminPage.getByRole('button', { name: 'Clear' }).click()
+    await adminPage.getByRole('button', { name: 'Clear', exact: true }).click()
     await expect(adminPage).not.toHaveURL(/businessId=/)
     await expect.poll(() => Object.keys(latestSince(requests, before)).length).toBe(ENDPOINTS.length)
     for (const body of Object.values(latestSince(requests, before))) {

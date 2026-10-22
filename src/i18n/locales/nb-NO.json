@@ -2019,14 +2019,44 @@
           "checks": "Kontroller",
           "skillErrors": "Funksjonsfeil",
           "extractionFailures": "Uttrekksproblemer"
-        }
+        },
+        "showAll": "Vis alle bedrifter",
+        "noName": "Ikke noe navn registrert"
       },
       "scope": {
         "title": "Integrasjoner og etterspurt informasjon",
         "allBusinesses": "På tvers av alle virksomheter du kan se, de siste 30 dagene.",
         "none": "Ingenting å vise ennå.",
-        "saidBy": "{businesses} virksomheter, {reports} rapporter",
-        "configSuggestionsTitle": "MrCalls konfigurasjonsforslag"
+        "saidBy": "{businesses}, {reports}",
+        "configSuggestionsTitle": "MrCalls konfigurasjonsforslag",
+        "loading": "Laster…",
+        "saidByLabel": "Etterspurt av:",
+        "andMore": "og {count} til",
+        "loadMoreIntegrations": "Last inn flere integrasjoner",
+        "loadMoreSuggestions": "Last inn flere forslag",
+        "template": "Abonnement: {template}",
+        "reportEnding": "Rapport til {date}",
+        "kinds": {
+          "integration": "Integrasjon",
+          "business_info": "Informasjon om bedriften",
+          "needs_integration_gap": "Ubesvart: krever en integrasjon"
+        },
+        "businessesCount": "1 bedrift | {n} bedrifter",
+        "reportsCount": "1 rapport | {n} rapporter",
+        "shownIntegrations": "{shown} av {total} elementer vist",
+        "shownSuggestions": "{shown} av {total} bedrifter vist"
+      },
+      "filterBar": {
+        "title": "Aktive filtre",
+        "business": "Bedrift",
+        "owner": "Eier",
+        "plan": "Abonnement",
+        "period": "Periode",
+        "lastDays": "Siste {days} dager",
+        "clearBusiness": "Fjern bedriftsfilteret",
+        "clearOwner": "Fjern eierfilteret",
+        "clearPlan": "Fjern abonnementsfilteret",
+        "clearPeriod": "Tilbake til de siste 30 dagene"
       }
     }
   },

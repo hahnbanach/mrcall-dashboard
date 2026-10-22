@@ -2019,14 +2019,44 @@
           "checks": "Έλεγχοι",
           "skillErrors": "Σφάλματα λειτουργιών",
           "extractionFailures": "Προβλήματα εξαγωγής"
-        }
+        },
+        "showAll": "Εμφάνιση όλων των επιχειρήσεων",
+        "noName": "Δεν υπάρχει καταχωρισμένο όνομα"
       },
       "scope": {
         "title": "Ενσωματώσεις και ζητούμενες πληροφορίες",
         "allBusinesses": "Σε όλες τις επιχειρήσεις που μπορείς να δεις, τις τελευταίες 30 ημέρες.",
         "none": "Τίποτα για εμφάνιση ακόμη.",
-        "saidBy": "{businesses} επιχειρήσεις, {reports} αναφορές",
-        "configSuggestionsTitle": "Προτάσεις ρύθμισης MrCall"
+        "saidBy": "{businesses}, {reports}",
+        "configSuggestionsTitle": "Προτάσεις ρύθμισης MrCall",
+        "loading": "Φόρτωση…",
+        "saidByLabel": "Ζητήθηκε από:",
+        "andMore": "και {count} ακόμη",
+        "loadMoreIntegrations": "Φόρτωση περισσότερων ενοποιήσεων",
+        "loadMoreSuggestions": "Φόρτωση περισσότερων προτάσεων",
+        "template": "Πρόγραμμα: {template}",
+        "reportEnding": "Αναφορά έως {date}",
+        "kinds": {
+          "integration": "Ενοποίηση",
+          "business_info": "Πληροφορίες επιχείρησης",
+          "needs_integration_gap": "Χωρίς απάντηση: χρειάζεται ενοποίηση"
+        },
+        "businessesCount": "1 επιχείρηση | {n} επιχειρήσεις",
+        "reportsCount": "1 αναφορά | {n} αναφορές",
+        "shownIntegrations": "{shown} από {total} στοιχεία",
+        "shownSuggestions": "{shown} από {total} επιχειρήσεις"
+      },
+      "filterBar": {
+        "title": "Ενεργά φίλτρα",
+        "business": "Επιχείρηση",
+        "owner": "Ιδιοκτήτης",
+        "plan": "Πρόγραμμα",
+        "period": "Περίοδος",
+        "lastDays": "Τελευταίες {days} ημέρες",
+        "clearBusiness": "Κατάργηση φίλτρου επιχείρησης",
+        "clearOwner": "Κατάργηση φίλτρου ιδιοκτήτη",
+        "clearPlan": "Κατάργηση φίλτρου προγράμματος",
+        "clearPeriod": "Επιστροφή στις τελευταίες 30 ημέρες"
       }
     }
   },

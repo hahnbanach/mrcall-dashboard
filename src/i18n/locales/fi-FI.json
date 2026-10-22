@@ -2019,14 +2019,44 @@
           "checks": "Tarkistukset",
           "skillErrors": "Toimintovirheet",
           "extractionFailures": "Poiminnan ongelmat"
-        }
+        },
+        "showAll": "Näytä kaikki yritykset",
+        "noName": "Nimeä ei ole tiedossa"
       },
       "scope": {
         "title": "Integraatiot ja kysytyt tiedot",
         "allBusinesses": "Kaikissa yrityksissä, jotka voit nähdä, viimeisten 30 päivän ajalta.",
         "none": "Ei vielä mitään näytettävää.",
-        "saidBy": "{businesses} yritystä, {reports} raporttia",
-        "configSuggestionsTitle": "MrCallin asetusehdotukset"
+        "saidBy": "{businesses}, {reports}",
+        "configSuggestionsTitle": "MrCallin asetusehdotukset",
+        "loading": "Ladataan…",
+        "saidByLabel": "Pyytänyt:",
+        "andMore": "ja {count} muuta",
+        "loadMoreIntegrations": "Lataa lisää integraatioita",
+        "loadMoreSuggestions": "Lataa lisää ehdotuksia",
+        "template": "Paketti: {template}",
+        "reportEnding": "Raportti {date} asti",
+        "kinds": {
+          "integration": "Integraatio",
+          "business_info": "Yrityksen tiedot",
+          "needs_integration_gap": "Vastaamatta: vaatii integraation"
+        },
+        "businessesCount": "1 yritys | {n} yritystä",
+        "reportsCount": "1 raportti | {n} raporttia",
+        "shownIntegrations": "{shown}/{total} kohdetta näytetty",
+        "shownSuggestions": "{shown}/{total} yritystä näytetty"
+      },
+      "filterBar": {
+        "title": "Aktiiviset suodattimet",
+        "business": "Yritys",
+        "owner": "Omistaja",
+        "plan": "Paketti",
+        "period": "Ajanjakso",
+        "lastDays": "Viimeiset {days} päivää",
+        "clearBusiness": "Poista yrityssuodatin",
+        "clearOwner": "Poista omistajasuodatin",
+        "clearPlan": "Poista pakettisuodatin",
+        "clearPeriod": "Takaisin viimeiseen 30 päivään"
       }
     }
   },

@@ -1,5 +1,5 @@
 <template>
-  <div class="main-page-content-section">
+  <div class="main-page-content-section analytics-page">
     <AnalyticsAdmin/>
   </div>
   <footer id="pre-footer">
@@ -43,6 +43,15 @@ export default {
 <style lang="less" scoped>
 @import '../assets/style/colors';
 @import '../assets/style/fonts';
+
+// The section is a flex item with auto margins, which sizes it to its widest content: on a phone
+// the analytics (a 640px heatmap, wide tables) made the whole page 960px wide and cut every section
+// on the right. Held to the screen's width, each wide block scrolls inside its own container.
+.analytics-page {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+}
 
 #pre-footer {
   margin-top: auto;

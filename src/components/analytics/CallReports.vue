@@ -4,11 +4,11 @@
     <div v-if="status === 'unavailable'" class="insights-note">
       {{ $t("components.callInsights.notAvailableYet") }}
     </div>
-    <div v-else-if="status === 'ok' && reports.length === 0" class="insights-note">
+    <div v-else-if="status === 'ok' && shownReports.length === 0" class="insights-note">
       {{ $t("components.callInsights.reports.none") }}
     </div>
     <template v-else-if="status === 'ok'">
-      <div v-for="item in reports" :key="item.periodStart" class="report-card">
+      <div v-for="item in shownReports" :key="item.periodStart" class="report-card" :data-period-start="item.periodStart">
         <button type="button" class="report-header" :aria-expanded="isExpanded(item.periodStart) ? 'true' : 'false'" @click="toggle(item.periodStart)">
           <i :class="isExpanded(item.periodStart) ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" aria-hidden="true"></i>
           <span>{{ periodLabel(item) }}</span>
@@ -137,22 +137,52 @@ export default {
     isOwner: { type: Boolean, default: false },
     isAdmin: { type: Boolean, default: false },
     businessId: { type: String, default: null },
+    // The report a link asked to open (brief outcome 10: an integration's business opens at the
+    // report that said it), and that report when it is not among the pages loaded.
+    focusPeriod: { type: Number, default: null },
+    focusedReport: { type: Object, default: null },
   },
   emits: ["load-more"],
   data() {
     return { expandedPeriods: new Set() };
   },
+  computed: {
+    // A focused report fetched on its own is shown first, and not again when a later page brings it.
+    shownReports() {
+      const extra = this.focusedReport;
+      if (!extra) return this.reports;
+      return [extra, ...this.reports.filter((r) => r.periodStart !== extra.periodStart)];
+    },
+  },
   watch: {
-    reports: {
+    shownReports: {
       immediate: true,
       handler(list) {
-        if (list && list.length > 0 && this.expandedPeriods.size === 0) {
-          this.expandedPeriods = new Set([list[0].periodStart]);
-        }
+        this.applyFocus(list);
       },
+    },
+    focusPeriod() {
+      this.focusShown = false;
+      this.expandedPeriods = new Set();
+      this.applyFocus(this.shownReports);
     },
   },
   methods: {
+    // The report a link named opens alone, scrolled into view once; without one, the latest opens.
+    applyFocus(list) {
+      if (!list || list.length === 0) return;
+      const focused = this.focusPeriod != null && list.find((r) => r.periodStart === this.focusPeriod);
+      if (focused && !this.focusShown) {
+        this.focusShown = true;
+        this.expandedPeriods = new Set([focused.periodStart]);
+        this.$nextTick(() => {
+          const card = this.$el && this.$el.querySelector && this.$el.querySelector(`[data-period-start="${focused.periodStart}"]`);
+          if (card && card.scrollIntoView) card.scrollIntoView({ block: "start" });
+        });
+      } else if (this.expandedPeriods.size === 0 && this.focusPeriod == null) {
+        this.expandedPeriods = new Set([list[0].periodStart]);
+      }
+    },
     isExpanded(periodStart) {
       return this.expandedPeriods.has(periodStart);
     },
@@ -212,6 +242,8 @@ export default {
 }
 
 .report-card {
+  // a report scrolled to by a link is not hidden under the page's sticky filter bar
+  scroll-margin-top: 96px;
   border: 1px solid @mrcall_borders;
   border-radius: 10px;
   padding: 12px 14px;

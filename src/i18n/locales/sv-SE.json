@@ -2019,14 +2019,44 @@
           "checks": "Kontroller",
           "skillErrors": "Funktionsfel",
           "extractionFailures": "Extraktionsproblem"
-        }
+        },
+        "showAll": "Visa alla företag",
+        "noName": "Inget namn registrerat"
       },
       "scope": {
         "title": "Integrationer och efterfrågad information",
         "allBusinesses": "Över alla verksamheter du kan se, de senaste 30 dagarna.",
         "none": "Inget att visa än.",
-        "saidBy": "{businesses} verksamheter, {reports} rapporter",
-        "configSuggestionsTitle": "MrCalls konfigurationsförslag"
+        "saidBy": "{businesses}, {reports}",
+        "configSuggestionsTitle": "MrCalls konfigurationsförslag",
+        "loading": "Laddar…",
+        "saidByLabel": "Efterfrågat av:",
+        "andMore": "och {count} till",
+        "loadMoreIntegrations": "Ladda fler integrationer",
+        "loadMoreSuggestions": "Ladda fler förslag",
+        "template": "Abonnemang: {template}",
+        "reportEnding": "Rapport till {date}",
+        "kinds": {
+          "integration": "Integration",
+          "business_info": "Information om företaget",
+          "needs_integration_gap": "Obesvarad: kräver en integration"
+        },
+        "businessesCount": "1 företag | {n} företag",
+        "reportsCount": "1 rapport | {n} rapporter",
+        "shownIntegrations": "{shown} av {total} poster visas",
+        "shownSuggestions": "{shown} av {total} företag visas"
+      },
+      "filterBar": {
+        "title": "Aktiva filter",
+        "business": "Företag",
+        "owner": "Ägare",
+        "plan": "Abonnemang",
+        "period": "Period",
+        "lastDays": "Senaste {days} dagarna",
+        "clearBusiness": "Ta bort företagsfiltret",
+        "clearOwner": "Ta bort ägarfiltret",
+        "clearPlan": "Ta bort abonnemangsfiltret",
+        "clearPeriod": "Tillbaka till de senaste 30 dagarna"
       }
     }
   },

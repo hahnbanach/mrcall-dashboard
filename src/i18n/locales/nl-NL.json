@@ -2019,14 +2019,44 @@
           "checks": "Controles",
           "skillErrors": "Functiefouten",
           "extractionFailures": "Extractieproblemen"
-        }
+        },
+        "showAll": "Alle bedrijven tonen",
+        "noName": "Geen naam bekend"
       },
       "scope": {
         "title": "Integraties en gevraagde informatie",
         "allBusinesses": "Over alle bedrijven die u kunt zien, van de afgelopen 30 dagen.",
         "none": "Nog niets om te tonen.",
-        "saidBy": "{businesses} bedrijven, {reports} rapporten",
-        "configSuggestionsTitle": "MrCall-configuratiesuggesties"
+        "saidBy": "{businesses}, {reports}",
+        "configSuggestionsTitle": "MrCall-configuratiesuggesties",
+        "loading": "Laden…",
+        "saidByLabel": "Gevraagd door:",
+        "andMore": "en nog {count}",
+        "loadMoreIntegrations": "Meer integraties laden",
+        "loadMoreSuggestions": "Meer suggesties laden",
+        "template": "Abonnement: {template}",
+        "reportEnding": "Rapport tot {date}",
+        "kinds": {
+          "integration": "Integratie",
+          "business_info": "Bedrijfsinformatie",
+          "needs_integration_gap": "Onbeantwoord: vraagt om een integratie"
+        },
+        "businessesCount": "1 bedrijf | {n} bedrijven",
+        "reportsCount": "1 rapport | {n} rapporten",
+        "shownIntegrations": "{shown} van {total} items getoond",
+        "shownSuggestions": "{shown} van {total} bedrijven getoond"
+      },
+      "filterBar": {
+        "title": "Actieve filters",
+        "business": "Bedrijf",
+        "owner": "Eigenaar",
+        "plan": "Abonnement",
+        "period": "Periode",
+        "lastDays": "Laatste {days} dagen",
+        "clearBusiness": "Bedrijfsfilter wissen",
+        "clearOwner": "Eigenaarfilter wissen",
+        "clearPlan": "Abonnementsfilter wissen",
+        "clearPeriod": "Terug naar de laatste 30 dagen"
       }
     }
   },

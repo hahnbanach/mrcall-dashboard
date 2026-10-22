@@ -2025,14 +2025,44 @@
           "checks": "Controlli",
           "skillErrors": "Errori delle funzioni",
           "extractionFailures": "Problemi di estrazione"
-        }
+        },
+        "showAll": "Mostra tutte le attività",
+        "noName": "Nome non disponibile"
       },
       "scope": {
         "title": "Integrazioni e informazioni richieste",
         "allBusinesses": "In tutte le attività che puoi vedere, negli ultimi 30 giorni.",
         "none": "Niente da mostrare per ora.",
-        "saidBy": "{businesses} attività, {reports} report",
-        "configSuggestionsTitle": "Suggerimenti di configurazione MrCall"
+        "saidBy": "{businesses}, {reports}",
+        "configSuggestionsTitle": "Suggerimenti di configurazione MrCall",
+        "loading": "Caricamento…",
+        "saidByLabel": "Richiesto da:",
+        "andMore": "e altre {count}",
+        "loadMoreIntegrations": "Carica altre integrazioni",
+        "loadMoreSuggestions": "Carica altri suggerimenti",
+        "template": "Piano: {template}",
+        "reportEnding": "Report fino al {date}",
+        "kinds": {
+          "integration": "Integrazione",
+          "business_info": "Informazioni sull'attività",
+          "needs_integration_gap": "Senza risposta: serve un'integrazione"
+        },
+        "businessesCount": "1 attività | {n} attività",
+        "reportsCount": "1 report | {n} report",
+        "shownIntegrations": "{shown} di {total} voci mostrate",
+        "shownSuggestions": "{shown} di {total} attività mostrate"
+      },
+      "filterBar": {
+        "title": "Filtri attivi",
+        "business": "Attività",
+        "owner": "Proprietario",
+        "plan": "Piano",
+        "period": "Periodo",
+        "lastDays": "Ultimi {days} giorni",
+        "clearBusiness": "Rimuovi il filtro attività",
+        "clearOwner": "Rimuovi il filtro proprietario",
+        "clearPlan": "Rimuovi il filtro piano",
+        "clearPeriod": "Torna agli ultimi 30 giorni"
       }
     }
   },

@@ -2024,14 +2024,44 @@
           "checks": "Checks",
           "skillErrors": "Skill errors",
           "extractionFailures": "Extraction failures"
-        }
+        },
+        "showAll": "Show all businesses",
+        "noName": "No name on record"
       },
       "scope": {
         "title": "Integrations and information asked",
         "allBusinesses": "Across every business you can see, over the last 30 days.",
         "none": "Nothing to show yet.",
-        "saidBy": "{businesses} businesses, {reports} reports",
-        "configSuggestionsTitle": "MrCall configuration suggestions"
+        "saidBy": "{businesses}, {reports}",
+        "configSuggestionsTitle": "MrCall configuration suggestions",
+        "loading": "Loading…",
+        "saidByLabel": "Asked by:",
+        "andMore": "and {count} more",
+        "loadMoreIntegrations": "Load more integrations",
+        "loadMoreSuggestions": "Load more suggestions",
+        "template": "Plan: {template}",
+        "reportEnding": "Report ending {date}",
+        "kinds": {
+          "integration": "Integration",
+          "business_info": "Business information",
+          "needs_integration_gap": "Unanswered: needs an integration"
+        },
+        "businessesCount": "1 business | {n} businesses",
+        "reportsCount": "1 report | {n} reports",
+        "shownIntegrations": "{shown} of {total} items shown",
+        "shownSuggestions": "{shown} of {total} businesses shown"
+      },
+      "filterBar": {
+        "title": "Active filters",
+        "business": "Business",
+        "owner": "Owner",
+        "plan": "Plan",
+        "period": "Period",
+        "lastDays": "Last {days} days",
+        "clearBusiness": "Clear the business filter",
+        "clearOwner": "Clear the owner filter",
+        "clearPlan": "Clear the plan filter",
+        "clearPeriod": "Back to the last 30 days"
       }
     }
   },

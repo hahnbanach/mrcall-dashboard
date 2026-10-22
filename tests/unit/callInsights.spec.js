@@ -209,21 +209,194 @@ describe('report: one period', () => {
   })
 })
 
-describe('integrations and config-suggestions: the caller\'s whole scope, since a start', () => {
-  it('integrations carries timestampGte when given, and nothing when not', async () => {
-    axios.post.mockResolvedValue({ data: [] })
-    await CallInsights.integrations(user, 1700000000000)
+describe('integrations and config-suggestions: the caller\'s whole scope, since a start, one page at a time', () => {
+  // The base URL comes from the build's environment, absent here: the path and the query are what is checked.
+  const parsed = (url) => new URL(url.replace(/^[^/]*\/mrcall/, 'http://starchat/mrcall'))
+  // StarChat's analytics guide §10 (M16): both answer one page, `from` (default 0) and `size`
+  // (default 20, at most 100) as query parameters, `{total, items}` in the body.
+  it('integrations carries timestampGte when given, nothing when not, and the page in the query', async () => {
+    axios.post.mockResolvedValue({ data: { total: 0, items: [] } })
+    await CallInsights.integrations(user, 1700000000000, 40, 20)
     expect(axios.post.mock.calls[0][1]).toEqual({ timestampGte: 1700000000000 })
+    const first = parsed(axios.post.mock.calls[0][0])
+    expect(first.pathname).toMatch(/\/customer\/insights\/integrations$/)
+    expect(first.searchParams.get('from')).toBe('40')
+    expect(first.searchParams.get('size')).toBe('20')
     await CallInsights.integrations(user)
     expect(axios.post.mock.calls[1][1]).toEqual({})
-    expect(axios.post.mock.calls[1][0]).toContain('/customer/insights/integrations')
+    const second = parsed(axios.post.mock.calls[1][0])
+    expect(second.searchParams.get('from')).toBe('0')
+    expect(second.searchParams.get('size')).toBe(String(CallInsights.INSIGHTS_PAGE_SIZE))
   })
 
-  it('configSuggestions posts to its own route', async () => {
-    axios.post.mockResolvedValue({ data: [] })
-    await CallInsights.configSuggestions(user, 1700000000000)
-    expect(axios.post.mock.calls[0][0]).toContain('/customer/insights/config-suggestions')
+  it('configSuggestions posts to its own route, with the page in the query', async () => {
+    axios.post.mockResolvedValue({ data: { total: 0, items: [] } })
+    await CallInsights.configSuggestions(user, 1700000000000, 20, 20)
+    const url = parsed(axios.post.mock.calls[0][0])
+    expect(url.pathname).toMatch(/\/customer\/insights\/config-suggestions$/)
+    expect(url.searchParams.get('from')).toBe('20')
+    expect(url.searchParams.get('size')).toBe('20')
     expect(axios.post.mock.calls[0][1]).toEqual({ timestampGte: 1700000000000 })
+  })
+
+  it('both send asOf in the query only when given: a first page goes without it', async () => {
+    axios.post.mockResolvedValue({ data: { total: 0, items: [] } })
+    await CallInsights.integrations(user, undefined, 0, 20)
+    expect(parsed(axios.post.mock.calls[0][0]).searchParams.has('asOf')).toBe(false)
+    await CallInsights.integrations(user, undefined, 20, 20, 1761004800000)
+    expect(parsed(axios.post.mock.calls[1][0]).searchParams.get('asOf')).toBe('1761004800000')
+    await CallInsights.configSuggestions(user, undefined, 20, 20, 1761004800000)
+    expect(parsed(axios.post.mock.calls[2][0]).searchParams.get('asOf')).toBe('1761004800000')
+  })
+
+  it('the page size is StarChat\'s default, inside its 1-100 bound', () => {
+    expect(CallInsights.INSIGHTS_PAGE_SIZE).toBe(20)
+  })
+})
+
+describe('businessName: a business\'s company name, for a page that names it', () => {
+  it('reads crm/business?id= and returns its companyName, never touching the store\'s role', async () => {
+    axios.get.mockResolvedValue({ data: [{ businessId: 'b-1', companyName: ' Studio Demo ' }] })
+    expect(await CallInsights.businessName(user, 'b 1')).toBe('Studio Demo')
+    expect(axios.get.mock.calls[0][0]).toMatch(/\/crm\/business\?id=b%201$/)
+    expect(axios.get.mock.calls[0][1].headers.auth).toBe('token')
+  })
+
+  it('has no name for a business without one, an empty answer, or a 404', async () => {
+    axios.get.mockResolvedValueOnce({ data: [{ businessId: 'b-1' }] })
+    expect(await CallInsights.businessName(user, 'b-1')).toBeNull()
+    axios.get.mockResolvedValueOnce({ data: [] })
+    expect(await CallInsights.businessName(user, 'b-1')).toBeNull()
+    axios.get.mockRejectedValueOnce(httpError(404))
+    expect(await CallInsights.businessName(user, 'b-1')).toBeNull()
+  })
+})
+
+describe('pageOf: one page of a scope-wide list', () => {
+  it('reads total and items', () => {
+    expect(CallInsights.pageOf({ total: 42, items: [{ text: 'a' }] })).toEqual({ total: 42, items: [{ text: 'a' }], asOf: undefined })
+    expect(CallInsights.pageOf({ total: 1, items: [], asOf: 5 }).asOf).toBe(5)
+  })
+
+  it('reads a malformed answer (the list before M16, a placeholder) as an empty page, never as items', () => {
+    expect(CallInsights.pageOf([{ text: 'a' }])).toEqual({ total: 0, items: [], asOf: undefined })
+    expect(CallInsights.pageOf({ items: 'x' })).toEqual({ total: 0, items: [], asOf: undefined })
+    expect(CallInsights.pageOf(null)).toEqual({ total: 0, items: [], asOf: undefined })
+  })
+
+  it('never reports fewer in all than it carries', () => {
+    expect(CallInsights.pageOf({ items: [{ text: 'a' }, { text: 'b' }] })).toEqual({ total: 2, items: [{ text: 'a' }, { text: 'b' }], asOf: undefined })
+  })
+})
+
+describe('businessLabel: a business by its name, its id only when it has none', () => {
+  it('prefers the name, trimmed', () => {
+    expect(CallInsights.businessLabel(' Studio Rossi ', 'biz-abc')).toBe('Studio Rossi')
+  })
+
+  it('falls back to the id when the name is absent or blank (StarChat omits it when unreadable)', () => {
+    expect(CallInsights.businessLabel(undefined, 'biz-def')).toBe('biz-def')
+    expect(CallInsights.businessLabel('  ', 'biz-def')).toBe('biz-def')
+  })
+})
+
+describe('saidBy: the businesses StarChat names for an item, and how many it does not', () => {
+  it('lists `said` and counts the businesses beyond it', () => {
+    const said = [{ businessId: 'a', name: 'A', reportPeriodStart: 2 }, { businessId: 'b', reportPeriodStart: 1 }]
+    expect(CallInsights.saidBy({ businesses: 7, said })).toEqual({ said, more: 5 })
+  })
+
+  it('counts none beyond when every business is named, and survives a missing or malformed `said`', () => {
+    expect(CallInsights.saidBy({ businesses: 1, said: [{ businessId: 'a' }] }).more).toBe(0)
+    expect(CallInsights.saidBy({ businesses: 3 })).toEqual({ said: [], more: 3 })
+    expect(CallInsights.saidBy({ businesses: 3, said: 'x' })).toEqual({ said: [], more: 3 })
+  })
+})
+
+describe('pagedList: a scope-wide list loaded a page at a time, on demand', () => {
+  const page = (from, n, total) => ({ total, items: Array.from({ length: n }, (_, i) => ({ id: from + i })) })
+
+  it('asks for the first page only, and the next one only when asked, from where the list ends', async () => {
+    const fetchPage = vi.fn((from, size) => Promise.resolve(page(from, Math.min(size, 45 - from), 45)))
+    const list = CallInsights.pagedList(fetchPage, { size: 20, keyOf: (item) => item.id })
+    expect(list.status).toBe('loading')
+    await list.first()
+    expect(fetchPage.mock.calls).toEqual([[0, 20, undefined]])
+    expect(list.status).toBe('ok')
+    expect(list.items.length).toBe(20)
+    expect(list.total).toBe(45)
+    expect(list.hasMore).toBe(true)
+    await list.more()
+    expect(fetchPage.mock.calls[1]).toEqual([20, 20, undefined])
+    await list.more()
+    expect(fetchPage.mock.calls[2]).toEqual([40, 20, undefined])
+    expect(list.items.length).toBe(45)
+    expect(list.hasMore).toBe(false)
+    await list.more()
+    expect(fetchPage).toHaveBeenCalledTimes(3)
+  })
+
+  it('sends page 1\'s asOf back on every later page of the same list, and a new first page drops it', async () => {
+    let snapshot = 1000
+    const fetchPage = vi.fn((from, size) => Promise.resolve({ ...page(from, size, 6), asOf: from === 0 ? snapshot : 9999 }))
+    const list = CallInsights.pagedList(fetchPage, { size: 2 })
+    await list.first()
+    expect(fetchPage.mock.calls[0][2]).toBeUndefined()
+    await list.more()
+    expect(fetchPage.mock.calls[1]).toEqual([2, 2, 1000])
+    await list.more()
+    // a later page's own asOf never replaces the first page's
+    expect(fetchPage.mock.calls[2]).toEqual([4, 2, 1000])
+    snapshot = 2000
+    await list.first()
+    expect(fetchPage.mock.calls[3]).toEqual([0, 2, undefined])
+    await list.more()
+    expect(fetchPage.mock.calls[4]).toEqual([2, 2, 2000])
+  })
+
+  it('reads a 404 as absent and a 503 as not available yet', async () => {
+    const absent = CallInsights.pagedList(() => Promise.resolve(null))
+    await absent.first()
+    expect(absent.status).toBe('absent')
+    const unavailable = CallInsights.pagedList(() => Promise.resolve({ unavailable: true }))
+    await unavailable.first()
+    expect(unavailable.status).toBe('unavailable')
+  })
+
+  it('does not repeat an item a shifted page brings again, and stops on a page past the end', async () => {
+    const answers = [page(0, 2, 5), { total: 5, items: [{ id: 1 }, { id: 2 }] }, { total: 5, items: [] }]
+    const list = CallInsights.pagedList(() => Promise.resolve(answers.shift()), { size: 2, keyOf: (item) => item.id })
+    await list.first()
+    await list.more()
+    expect(list.items.map((i) => i.id)).toEqual([0, 1, 2])
+    await list.more()
+    expect(list.hasMore).toBe(false)
+  })
+
+  it('a failed later page keeps what is shown and reports the error; a failed first page hides the list', async () => {
+    const onError = vi.fn()
+    const error = httpError(500)
+    const fetchPage = vi.fn()
+      .mockResolvedValueOnce(page(0, 2, 4))
+      .mockRejectedValueOnce(error)
+    const list = CallInsights.pagedList(fetchPage, { size: 2, onError })
+    await list.first()
+    await list.more()
+    expect(list.items.length).toBe(2)
+    expect(list.status).toBe('ok')
+    expect(list.loadingMore).toBe(false)
+    expect(onError).toHaveBeenCalledWith(error)
+
+    const failing = CallInsights.pagedList(() => Promise.reject(error), { onError })
+    await failing.first()
+    expect(failing.status).toBe('absent')
+  })
+
+  it('a session-ended error is left to the interceptor: no error reported', async () => {
+    const onError = vi.fn()
+    const list = CallInsights.pagedList(() => Promise.reject(sessionEndedError()), { onError })
+    await list.first()
+    expect(onError).not.toHaveBeenCalled()
   })
 })
 
