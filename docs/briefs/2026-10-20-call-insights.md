@@ -143,6 +143,26 @@ caller's language.
      route, each with its calls and the previous period's, beside the calls with topics as the base, only when
      one business is selected; across several businesses it says to choose one, without calling the route.
 
+10. **The analytics page is the best of its kind: every item says who, every list stays light, every filter can be
+    undone where it is set** (amendment of 2026-10-22, Angelo: the integrations section shows "1 attività, 1 report"
+    without the business; many items must be paged so the page does not load everything; the assistants table lets
+    a business id be clicked but resetting the filter needs a scroll to the top; "la sezione analytics deve essere
+    veramente ben fatta, deve essere la migliore anche perchè ormai abbiamo troppi concorrenti"; StarChat intent 13).
+    - The integrations and information section lists each item with its counts and the businesses StarChat names
+      for it (`said`, at most 5, by name, each opening that business's analytics at its latest report), "and N more"
+      when `businesses` exceeds them; the MrCall configuration suggestions list each business by name with its
+      suggestions. Both are paged from StarChat (`from`/`size`, `total`), a page at a time on demand, never the
+      whole list.
+    - The assistants table shows each business by name (the id as secondary text) and the selected business is
+      marked in the table, with a clear control on the table itself.
+    - The page's filters live in a bar that stays visible while the page scrolls, showing the active business, owner
+      and period, each with its own clear control, so a filter is undone where the user is.
+    - Before the test tag, a fresh reviewer goes through the page on the dev server as owner, reseller and admin, on
+      desktop and mobile, with screenshots, against: every label says what it counts; every number has its base;
+      no raw id where a name exists; every list bounded; empty, loading and error states; navigation back from a
+      selection; the page's time to show its first section no slower than on v2.2.29 against the same StarChat on
+      test, both measured the same way, and each analytics request answered within one second there. Its findings
+      are fixed or answered in the plan.
 ## Constraints
 
 - Every request through the configured Axios instance; components show no failure UI for
@@ -186,6 +206,10 @@ caller's language.
   extraction problems without `not_managed`; the assistants table's new columns and sorts. Vitest on the
   resolution share's base and the "Non risolte" share's base. On test, the clinic's page against the StarChat release
   that carries intent 12.
+- Outcome 10: Playwright, with StarChat mocked, shows the integrations and configuration items with their
+  businesses by name and links, a second page loaded on demand and no request for it before; the assistants
+  table's names and its clear control; the filter bar visible after scrolling, each filter cleared from it. The
+  UX review's report and its fixes are recorded in the plan.
 - The 12 locales hold every new key; `npm run lint`, vitest and Playwright green.
 
 ## Out of scope
