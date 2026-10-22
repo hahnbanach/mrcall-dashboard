@@ -1880,7 +1880,7 @@
         "resolved": "Lahendatud",
         "unresolved": "Lahendamata",
         "handed_over": "Edastatud inimesele",
-        "caller_left": "Helistaja lahkus",
+        "caller_left": "Rääkis, kuid ei öelnud, mida soovis",
         "spam_wrong_number": "Rämpspost või vale number"
       },
       "message": {
@@ -1941,12 +1941,34 @@
         "unansweredOff": "Kõik kõned"
       },
       "notAvailableYet": "Pole veel saadaval.",
-      "whatCallsSaid": {
-        "title": "Mille kohta kõned käisid",
+      "howCallsWent": {
+        "title": "Kuidas kõned läksid",
         "coverage": "{count} kõnel {total}-st on hinnang.",
         "booked": "{total} kõnest, mille kohta on broneeringu andmed, broneeriti {booked}.",
         "transferred": "{count} suunatud kõnet operaatorite teatel.",
-        "updating": "Värskendamine…"
+        "updating": "Värskendamine…",
+        "shareBase": "Osakaalud nendest {count} kõnest, milles helistaja midagi palus.",
+        "shareOfBase": "{percent}% {base}-st",
+        "outsideTitle": "Osakaalust väljas"
+      },
+      "noConversation": {
+        "title": "Kõned ilma vestluseta",
+        "note": "Need kõned on sellest statistikast välja jäetud.",
+        "reasons": {
+          "caller_silent": "Helistaja pani toru ära ilma rääkimata",
+          "no_credit": "Keelatud krediidi puudumise tõttu",
+          "talk_and_hangup": "Teade esitati, seejärel kõne lõpetati",
+          "not_answered": "Assistent ei vastanud"
+        }
+      },
+      "topics": {
+        "title": "Mille kohta kõned käisid",
+        "base": "{count} teemaga kõnet, eelmisel perioodil {previous}.",
+        "topic": "Teema",
+        "calls": "Kõned",
+        "previousCalls": "Eelmine periood",
+        "none": "Sellel perioodil teemasid pole.",
+        "chooseBusiness": "Valige üks ettevõte, et näha, mille kohta selle kõned käisid."
       },
       "quality": {
         "title": "Kvaliteet",
@@ -1978,7 +2000,10 @@
         "sortLabel": "Sorteeri",
         "businessId": "Ettevõte",
         "calls": "Kõned",
-        "notSolved": "Lahendamata või helistaja lahkus",
+        "notSolved": "Lahendamata",
+        "callerSilent": "Pani toru ära ilma rääkimata",
+        "notAnswered": "Assistent ei vastanud",
+        "callerLeft": "Rääkis, kuid ei öelnud, mida soovis",
         "unanswered": "Vastuseta",
         "checks": "Kontrollid",
         "skillErrors": "Funktsioonivead",
@@ -1986,7 +2011,10 @@
         "shareOfTotal": "{percent}% ({count} / {total})",
         "sortOptions": {
           "calls": "Kõned",
-          "notSolved": "Lahendamata või helistaja lahkus (assistendi hinnang)",
+          "notSolved": "Lahendamata (assistendi hinnang)",
+          "callerSilent": "Pani toru ära ilma rääkimata",
+          "notAnswered": "Assistent ei vastanud",
+          "callerLeft": "Rääkis, kuid ei öelnud, mida soovis (assistendi hinnang)",
           "unanswered": "Vastuseta küsimused",
           "checks": "Kontrollid",
           "skillErrors": "Funktsioonivead",

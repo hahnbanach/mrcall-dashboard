@@ -1885,7 +1885,7 @@
         "resolved": "Resolved",
         "unresolved": "Unresolved",
         "handed_over": "Handed over",
-        "caller_left": "Caller left",
+        "caller_left": "Spoke but never said what they wanted",
         "spam_wrong_number": "Spam or wrong number"
       },
       "message": {
@@ -1946,12 +1946,34 @@
         "unansweredOff": "All calls"
       },
       "notAvailableYet": "Not available yet.",
-      "whatCallsSaid": {
-        "title": "What calls said",
+      "howCallsWent": {
+        "title": "How the calls went",
         "coverage": "{count} of {total} calls were assessed.",
         "booked": "{booked} of {total} calls with a booking record were booked.",
         "transferred": "{count} calls transferred, as reported by the carriers.",
-        "updating": "Updating…"
+        "updating": "Updating…",
+        "shareBase": "Shares over the {count} calls in which the caller asked for something.",
+        "shareOfBase": "{percent}% of {base}",
+        "outsideTitle": "Not in the share"
+      },
+      "noConversation": {
+        "title": "Calls without a conversation",
+        "note": "These calls are left out of these statistics.",
+        "reasons": {
+          "caller_silent": "The caller hung up without speaking",
+          "no_credit": "Refused for lack of credit",
+          "talk_and_hangup": "Message played, then hung up",
+          "not_answered": "Not answered by the assistant"
+        }
+      },
+      "topics": {
+        "title": "What the calls were about",
+        "base": "{count} calls with a topic, {previous} in the previous period.",
+        "topic": "Topic",
+        "calls": "Calls",
+        "previousCalls": "Previous period",
+        "none": "No topic in this period.",
+        "chooseBusiness": "Choose one business to see what its calls were about."
       },
       "quality": {
         "title": "Quality",
@@ -1983,7 +2005,10 @@
         "sortLabel": "Sort by",
         "businessId": "Business",
         "calls": "Calls",
-        "notSolved": "Unresolved or caller left",
+        "notSolved": "Unresolved",
+        "callerSilent": "Hung up without speaking",
+        "notAnswered": "Not answered by the assistant",
+        "callerLeft": "Spoke but never said what they wanted",
         "unanswered": "Unanswered",
         "checks": "Checks",
         "skillErrors": "Skill errors",
@@ -1991,7 +2016,10 @@
         "shareOfTotal": "{percent}% ({count} of {total})",
         "sortOptions": {
           "calls": "Calls",
-          "notSolved": "Unresolved or caller left (assessed by the assistant)",
+          "notSolved": "Unresolved (assessed by the assistant)",
+          "callerSilent": "Hung up without speaking",
+          "notAnswered": "Not answered by the assistant",
+          "callerLeft": "Spoke but never said what they wanted (assessed by the assistant)",
           "unanswered": "Unanswered questions",
           "checks": "Checks",
           "skillErrors": "Skill errors",

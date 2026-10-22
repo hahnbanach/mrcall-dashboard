@@ -5,7 +5,7 @@ import { isSessionEnded } from "@/firebase/session";
  * What a call said, read from StarChat's call insights, version 2 (brief and plan
  * `docs/briefs/2026-10-20-call-insights.md`, `docs/execution-plans/2026-10-20-call-insights.md`;
  * the contract is StarChat's code: `CallDetailsView`, `OutcomesResponse`, `QualityResponse`,
- * `AssistantSignals`, `CustomerConversationSearch`).
+ * `AssistantSignals`, `TopicsResponse`, `CustomerConversationSearch`).
  *
  * THE VALUE TABLE, in one place. A call carries four dimensions:
  * - `resolution` and `message` are the assistant's own judgement, shown by their label and marked
@@ -37,6 +37,78 @@ const GAP_KEYS = ["missing_info", "needs_integration", "out_of_scope", "assistan
 const CHECK_KEYS = ["caller_repeated", "caller_unsatisfied", "promise_not_kept_in_call"];
 
 const UNKEPT_ACTIONS = ["book", "move", "cancel", "transfer"];
+
+/*
+ * Brief outcome 9 (StarChat intent 12): the assistant is measured only on the calls it could serve.
+ * The bases below are StarChat's own (its analytics guide §7-§9, `OutcomesResponse`,
+ * `AssistantSignals`); the dashboard reads each from the answer rather than rebuilding it, so a
+ * column always shows the share StarChat sorts the rows by.
+ * - Resolution is a share only over the calls where the caller asked something (resolved,
+ *   unresolved, handed_over). `caller_left` (the caller spoke and never said what they wanted) and
+ *   `spam_wrong_number` are counted beside that base, never in it, and neither is a failure.
+ * - The calls the assistant had no conversation in (`noConversation`) are facts outside every rate:
+ *   counted by reason, never as a share.
+ * - An extraction problem is `http_error` or `failed`, over the calls whose extraction ran:
+ *   `not_managed` is a call never asked of the model, neither a problem nor in the base.
+ */
+const RESOLUTION_REQUEST_KEYS = ["resolved", "unresolved", "handed_over"];
+const RESOLUTION_OUTSIDE_KEYS = ["caller_left", "spam_wrong_number"];
+const NO_CONVERSATION_KEYS = ["caller_silent", "no_credit", "talk_and_hangup", "not_answered"];
+const EXTRACTION_PROBLEM_KEYS = ["http_error", "failed"];
+const EXTRACTION_RAN_KEYS = ["ok", ...EXTRACTION_PROBLEM_KEYS];
+
+function share(count, base) {
+    const safeCount = count || 0;
+    const safeBase = base || 0;
+    return { count: safeCount, base: safeBase, percent: safeBase > 0 ? Math.round((safeCount / safeBase) * 100) : 0 };
+}
+
+function sumOf(map, keys) {
+    const m = map || {};
+    return keys.reduce((sum, key) => sum + (m[key] || 0), 0);
+}
+
+function resolutionShare(totals) {
+    const t = totals || {};
+    const base = sumOf(t, RESOLUTION_REQUEST_KEYS);
+    return {
+        base,
+        rows: RESOLUTION_REQUEST_KEYS.map((key) => ({ key, ...share(t[key], base) })),
+        outside: RESOLUTION_OUTSIDE_KEYS.map((key) => ({ key, count: t[key] || 0 })),
+    };
+}
+
+function noConversationRows(noConversation) {
+    const n = noConversation || {};
+    return NO_CONVERSATION_KEYS.map((key) => ({ key, count: n[key] || 0 }));
+}
+
+function extractionProblems(extractions) {
+    return { count: sumOf(extractions, EXTRACTION_PROBLEM_KEYS), base: sumOf(extractions, EXTRACTION_RAN_KEYS) };
+}
+
+// StarChat's `sort` keys for the assistants table, in the order the table shows them. Every key but
+// `calls` is a share, each over the base the row returns beside its count (analytics guide §9).
+const ASSISTANT_SORT_KEYS = [
+    "calls", "not_solved", "caller_silent", "not_answered", "caller_left",
+    "unanswered", "checks", "skill_errors", "extraction_failures",
+];
+const ASSISTANT_SHARES = {
+    not_solved: (row) => share(row.resolution && row.resolution.unresolved, row.callsWithRequest),
+    caller_silent: (row) => share(row.noConversation && row.noConversation.caller_silent, row.callsAnswered),
+    not_answered: (row) => share(row.noConversation && row.noConversation.not_answered, row.callsOffered),
+    caller_left: (row) => share(row.resolution && row.resolution.caller_left, row.callsWithResolution),
+    unanswered: (row) => share(row.callsWithUnanswered, row.callsWithUnansweredRecorded),
+    checks: (row) => share(sumOf(row.checks, CHECK_KEYS), row.callsWithChecks),
+    skill_errors: (row) => share(row.callsWithSkillErrors, row.totalCalls),
+    extraction_failures: (row) => share(row.extractionsNotOk, row.totalCalls),
+};
+
+function assistantShare(row, key) {
+    const of = ASSISTANT_SHARES[key];
+    if (!of) throw new Error("CallInsights.assistantShare: " + key + " is not a share");
+    return of(row || {});
+}
 
 function unkeptRows(details) {
     const list = details && details.unkept;
@@ -125,6 +197,14 @@ export default {
     GAP_KEYS,
     CHECK_KEYS,
     UNKEPT_ACTIONS,
+    RESOLUTION_REQUEST_KEYS,
+    RESOLUTION_OUTSIDE_KEYS,
+    NO_CONVERSATION_KEYS,
+    ASSISTANT_SORT_KEYS,
+    resolutionShare,
+    noConversationRows,
+    extractionProblems,
+    assistantShare,
 
     // StarChat cuts the series in this IANA zone and answers 400 to a zone it does not know
     // (Analytics.js's own timeseries carries the same refusal): the call is refused here, before
@@ -147,6 +227,13 @@ export default {
             body,
             { headers: getHeaders(user) }
         ));
+    },
+    // One business's topics (StarChat's analytics guide §11): StarChat answers a body without a
+    // business 400, so the call is refused here, before the request; the page asks only when exactly
+    // one business is chosen.
+    topics: function (user, body) {
+        if (!body || !body.businessId) return Promise.reject(new Error("CallInsights.topics: businessId is required"));
+        return unwrap(axios.post(ANALYTICS_BASE + "/topics", body, { headers: getHeaders(user) }));
     },
     // `before` is the previous page's last `periodEnd`; omit it for the first page.
     reports: function (user, businessId, before, limit) {

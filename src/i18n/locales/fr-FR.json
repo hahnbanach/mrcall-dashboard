@@ -1882,7 +1882,7 @@
         "resolved": "Résolu",
         "unresolved": "Non résolu",
         "handed_over": "Passé à une personne",
-        "caller_left": "L'appelant a raccroché",
+        "caller_left": "A parlé sans dire ce qu'il voulait",
         "spam_wrong_number": "Spam ou faux numéro"
       },
       "message": {
@@ -1943,12 +1943,34 @@
         "unansweredOff": "Tous les appels"
       },
       "notAvailableYet": "Pas encore disponible.",
-      "whatCallsSaid": {
-        "title": "De quoi parlaient les appels",
+      "howCallsWent": {
+        "title": "Comment se sont passés les appels",
         "coverage": "{count} appels sur {total} ont été évalués.",
         "booked": "{booked} appels sur {total} avec un état de réservation enregistré ont été réservés.",
         "transferred": "{count} appels transférés, selon les opérateurs.",
-        "updating": "Mise à jour en cours…"
+        "updating": "Mise à jour en cours…",
+        "shareBase": "Parts calculées sur les {count} appels où l'appelant a demandé quelque chose.",
+        "shareOfBase": "{percent} % de {base}",
+        "outsideTitle": "Hors de la part"
+      },
+      "noConversation": {
+        "title": "Appels sans conversation",
+        "note": "Ces appels sont exclus de ces statistiques.",
+        "reasons": {
+          "caller_silent": "L'appelant a raccroché sans parler",
+          "no_credit": "Refusé faute de crédit",
+          "talk_and_hangup": "Message diffusé, puis raccroché",
+          "not_answered": "Sans réponse de l'assistant"
+        }
+      },
+      "topics": {
+        "title": "De quoi parlaient les appels",
+        "base": "{count} appels avec un sujet, {previous} sur la période précédente.",
+        "topic": "Sujet",
+        "calls": "Appels",
+        "previousCalls": "Période précédente",
+        "none": "Aucun sujet sur cette période.",
+        "chooseBusiness": "Choisissez une entreprise pour voir de quoi parlaient ses appels."
       },
       "quality": {
         "title": "Qualité",
@@ -1980,7 +2002,10 @@
         "sortLabel": "Trier par",
         "businessId": "Établissement",
         "calls": "Appels",
-        "notSolved": "Non résolu ou l'appelant a raccroché",
+        "notSolved": "Non résolu",
+        "callerSilent": "A raccroché sans parler",
+        "notAnswered": "Sans réponse de l'assistant",
+        "callerLeft": "A parlé sans dire ce qu'il voulait",
         "unanswered": "Sans réponse",
         "checks": "Vérifications",
         "skillErrors": "Erreurs de fonctions",
@@ -1988,7 +2013,10 @@
         "shareOfTotal": "{percent} % ({count} sur {total})",
         "sortOptions": {
           "calls": "Appels",
-          "notSolved": "Non résolu ou l'appelant a raccroché (évalué par l'assistant)",
+          "notSolved": "Non résolu (évalué par l'assistant)",
+          "callerSilent": "A raccroché sans parler",
+          "notAnswered": "Sans réponse de l'assistant",
+          "callerLeft": "A parlé sans dire ce qu'il voulait (évalué par l'assistant)",
           "unanswered": "Questions sans réponse",
           "checks": "Vérifications",
           "skillErrors": "Erreurs de fonctions",

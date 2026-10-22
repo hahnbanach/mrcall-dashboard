@@ -264,3 +264,120 @@ describe('CallInsights.latestOnly', () => {
     expect(other()).toBe(true)
   })
 })
+
+/**
+ * Brief outcome 9 (StarChat intent 12): the assistant measured only on calls it could serve. The
+ * numbers below are StarChat's analytics guide's own examples (§7-§9), so each base is checked
+ * against the contract's arithmetic, not against this file's.
+ */
+describe('resolutionShare: the share is over the calls where the caller asked something', () => {
+  const totals = { resolved: 60, unresolved: 14, handed_over: 9, caller_left: 8, spam_wrong_number: 5 }
+
+  it('counts resolved, unresolved and handed_over in the base, and caller_left and spam_wrong_number beside it', () => {
+    expect(CallInsights.RESOLUTION_REQUEST_KEYS).toEqual(['resolved', 'unresolved', 'handed_over'])
+    expect(CallInsights.RESOLUTION_OUTSIDE_KEYS).toEqual(['caller_left', 'spam_wrong_number'])
+    const share = CallInsights.resolutionShare(totals)
+    expect(share.base).toBe(83)
+    expect(share.rows).toEqual([
+      { key: 'resolved', count: 60, base: 83, percent: 72 },
+      { key: 'unresolved', count: 14, base: 83, percent: 17 },
+      { key: 'handed_over', count: 9, base: 83, percent: 11 },
+    ])
+    expect(share.outside).toEqual([
+      { key: 'caller_left', count: 8 },
+      { key: 'spam_wrong_number', count: 5 },
+    ])
+  })
+
+  it('has a zero base, and no share, when no caller asked anything', () => {
+    const share = CallInsights.resolutionShare({ caller_left: 3 })
+    expect(share.base).toBe(0)
+    expect(share.rows.map(r => r.percent)).toEqual([0, 0, 0])
+    expect(share.outside[0]).toEqual({ key: 'caller_left', count: 3 })
+  })
+})
+
+describe('assistantShare: each column and sort of the assistants table over StarChat\'s own base', () => {
+  // StarChat's analytics guide §9, its example row
+  const row = {
+    businessId: 'biz-abc', totalCalls: 40, callsWithResolution: 36,
+    resolution: { resolved: 20, unresolved: 10, caller_left: 6 },
+    callsWithChecks: 36, checks: { caller_repeated: 5, caller_unsatisfied: 4, promise_not_kept_in_call: 0 },
+    callsWithUnansweredRecorded: 36, callsWithUnanswered: 9, gaps: { missing_info: 9 },
+    callsWithSkillErrors: 0, extractionsNotOk: 1,
+    callsManaged: 36, noConversation: { caller_silent: 12, no_credit: 1 },
+    callsAnswered: 48, callsOffered: 48, callsWithRequest: 30,
+  }
+
+  it('"Non risolte" is unresolved over callsWithRequest: caller_left is neither in the count nor in the base', () => {
+    expect(CallInsights.assistantShare(row, 'not_solved')).toEqual({ count: 10, base: 30, percent: 33 })
+  })
+
+  it('caller_silent over callsAnswered, not_answered over callsOffered, caller_left over callsWithResolution', () => {
+    expect(CallInsights.assistantShare(row, 'caller_silent')).toEqual({ count: 12, base: 48, percent: 25 })
+    expect(CallInsights.assistantShare(row, 'not_answered')).toEqual({ count: 0, base: 48, percent: 0 })
+    expect(CallInsights.assistantShare(row, 'caller_left')).toEqual({ count: 6, base: 36, percent: 17 })
+  })
+
+  it('keeps the other signals on the bases StarChat sorts them by', () => {
+    expect(CallInsights.assistantShare(row, 'unanswered')).toEqual({ count: 9, base: 36, percent: 25 })
+    expect(CallInsights.assistantShare(row, 'checks')).toEqual({ count: 9, base: 36, percent: 25 })
+    expect(CallInsights.assistantShare(row, 'skill_errors')).toEqual({ count: 0, base: 40, percent: 0 })
+    expect(CallInsights.assistantShare(row, 'extraction_failures')).toEqual({ count: 1, base: 40, percent: 3 })
+  })
+
+  it('names every sort key StarChat accepts, and refuses one it does not', () => {
+    expect(CallInsights.ASSISTANT_SORT_KEYS).toEqual([
+      'calls', 'not_solved', 'caller_silent', 'not_answered', 'caller_left',
+      'unanswered', 'checks', 'skill_errors', 'extraction_failures',
+    ])
+    expect(() => CallInsights.assistantShare(row, 'calls')).toThrow(/not a share/)
+    expect(() => CallInsights.assistantShare(row, 'something_new')).toThrow(/not a share/)
+  })
+})
+
+describe('noConversationRows: the calls the assistant had no conversation in, one row per reason', () => {
+  it('lists the four reasons in a fixed order, a missing one as zero', () => {
+    expect(CallInsights.noConversationRows({ caller_silent: 31, no_credit: 4, talk_and_hangup: 2, not_answered: 1 })).toEqual([
+      { key: 'caller_silent', count: 31 },
+      { key: 'no_credit', count: 4 },
+      { key: 'talk_and_hangup', count: 2 },
+      { key: 'not_answered', count: 1 },
+    ])
+    expect(CallInsights.noConversationRows({ not_answered: 2 }).map(r => r.count)).toEqual([0, 0, 0, 2])
+  })
+})
+
+describe('extractionProblems: only http_error and failed, over the calls whose extraction ran', () => {
+  it('leaves not_managed out of the problems and out of the base', () => {
+    // StarChat's analytics guide §8: ok 110, http_error 2, failed 1, not_managed 7
+    expect(CallInsights.extractionProblems({ ok: 110, http_error: 2, failed: 1, not_managed: 7 }))
+      .toEqual({ count: 3, base: 113 })
+    expect(CallInsights.extractionProblems({ not_managed: 7 })).toEqual({ count: 0, base: 0 })
+    expect(CallInsights.extractionProblems(undefined)).toEqual({ count: 0, base: 0 })
+  })
+})
+
+describe('topics: one business\'s topics', () => {
+  it('posts the body to the topics route', async () => {
+    axios.post.mockResolvedValue({ data: { topics: [] } })
+    const body = { businessId: 'b-1', timestampGte: 1 }
+    await CallInsights.topics(user, body)
+    const [url, sentBody, config] = axios.post.mock.calls[0]
+    expect(url).toContain('/customer/analytics/topics')
+    expect(sentBody).toBe(body)
+    expect(config.headers.auth).toBe('token')
+  })
+
+  it('refuses a body without a business before sending anything, since StarChat answers it 400', async () => {
+    await expect(CallInsights.topics(user, { timestampGte: 1 })).rejects.toThrow(/businessId/)
+    expect(axios.post).not.toHaveBeenCalled()
+  })
+
+  it('reads a 404 as absent and a 503 as not available yet, as every other section', async () => {
+    axios.post.mockRejectedValueOnce(httpError(404))
+    expect(await CallInsights.topics(user, { businessId: 'b-1' })).toBeNull()
+    axios.post.mockRejectedValueOnce(httpError(503))
+    expect(await CallInsights.topics(user, { businessId: 'b-1' })).toEqual({ unavailable: true })
+  })
+})

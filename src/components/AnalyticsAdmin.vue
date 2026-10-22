@@ -249,8 +249,12 @@
         </div>
       </div>
 
-      <!-- What calls said, across the platform or narrowed by the filters above (brief outcome 3) -->
-      <WhatCallsSaid :status="outcomesStatus" :data="outcomesData" />
+      <!-- How the calls went, across the platform or narrowed by the filters above (brief outcomes 3
+           and 9) -->
+      <CallOutcomes :status="outcomesStatus" :data="outcomesData" />
+      <!-- What the calls were about (brief outcome 9): only with the business filter set; across
+           several businesses it says to choose one and never asks -->
+      <CallTopics :status="businessId ? topicsStatus : 'needsBusiness'" :data="topicsData" />
       <CallQuality :status="qualityStatus" :data="qualityData" :total-calls="outcomesData && outcomesData.totalCalls" />
 
       <!-- Assistants to review and scope-wide information (brief outcome 5): the whole platform,
@@ -295,13 +299,14 @@ import AnalyticsApi from "@/utils/Analytics";
 import TemplatesApi from "@/utils/Templates";
 import CallInsights from "@/utils/CallInsights";
 import businessUtils from "@/utils/Business";
-import WhatCallsSaid from "@/components/analytics/WhatCallsSaid.vue";
+import CallOutcomes from "@/components/analytics/CallOutcomes.vue";
+import CallTopics from "@/components/analytics/CallTopics.vue";
 import CallQuality from "@/components/analytics/CallQuality.vue";
 import AssistantsToReview from "@/components/analytics/AssistantsToReview.vue";
 import ScopeInformation from "@/components/analytics/ScopeInformation.vue";
 
 export default {
-  components: { WhatCallsSaid, CallQuality, AssistantsToReview, ScopeInformation },
+  components: { CallOutcomes, CallTopics, CallQuality, AssistantsToReview, ScopeInformation },
   setup() {
     const store = useStore();
     const toast = useToast();
@@ -342,10 +347,12 @@ export default {
       loadingCallers: false,
       loadingBreakdown: false,
 
-      // What calls said, across the platform (brief outcome 3, 5): status is
+      // Call insights, across the platform (brief outcomes 3, 5, 9): status is
       // 'loading' | 'ok' | 'absent' | 'unavailable'
       outcomesStatus: "loading",
       outcomesData: null,
+      topicsStatus: "loading",
+      topicsData: null,
       qualityStatus: "loading",
       qualityData: null,
       assistantsStatus: "loading",
@@ -684,6 +691,7 @@ export default {
       this.fetchBusinessBreakdown(user, request);
 
       this.fetchOutcomes(user, request, granularity, timezone);
+      this.fetchTopics(user, request);
       this.fetchQuality(user, request);
       this.fetchAssistants(user, request);
       // Integrations and MrCall's own suggestions are fetched once, from `mounted`'s `proceed`,
@@ -711,6 +719,26 @@ export default {
           if (isSessionEnded(error)) return;
           this.outcomesStatus = 'absent';
           this.handleApiError(error, 'outcomes');
+        });
+    },
+    // StarChat reads topics for one business only: without the business filter nothing is asked, and
+    // an answer still on its way for a business no longer filtered is dropped (`insightGate`).
+    fetchTopics(user, request) {
+      const isCurrent = this.insightGate('topics');
+      if (!request.businessId) { this.topicsData = null; return; }
+      this.topicsStatus = 'loading';
+      CallInsights.topics(user, request)
+        .then((result) => {
+          if (!isCurrent()) return;
+          if (result === null) { this.topicsStatus = 'absent'; this.topicsData = null; }
+          else if (result.unavailable) { this.topicsStatus = 'unavailable'; this.topicsData = null; }
+          else { this.topicsStatus = 'ok'; this.topicsData = result; }
+        })
+        .catch((error) => {
+          if (!isCurrent()) return;
+          if (isSessionEnded(error)) return;
+          this.topicsStatus = 'absent';
+          this.handleApiError(error, 'topics');
         });
     },
     fetchQuality(user, request) {

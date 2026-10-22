@@ -14,7 +14,7 @@ const { test } = require('../fixtures/auth')
 
 const ENDPOINTS = [
   'dashboard', 'timeseries', 'duration-distribution', 'hourly-heatmap', 'callers', 'business-breakdown',
-  // What calls said (brief outcome 3, 5): the admin page reacts to the same filters as the rest.
+  // Call insights (brief outcomes 3, 5): the admin page reacts to the same filters as the rest.
   'outcomes', 'quality', 'assistants',
 ]
 
@@ -41,6 +41,7 @@ const RESPONSES = {
     callsWithUnanswered: 0, gaps: {}, callsWithSkillErrors: 0,
   },
   assistants: { sort: 'not_solved', businesses: [] },
+  topics: { period: { from: 0, to: 0 }, previousPeriod: { from: 0, to: 0 }, callsWithTopics: 0, previousCallsWithTopics: 0, topics: [] },
 }
 
 /** Answers the nine analytics endpoints and records every body sent to them, in order. */
@@ -80,10 +81,13 @@ test.describe('Analytics filters (Admin Role)', () => {
     await adminPage.getByRole('button', { name: 'Apply' }).click()
 
     await expect(adminPage).toHaveURL(/[?&]businessId=biz-a(&|$)/)
-    // The breakdown included: StarChat honours businessId there since 9.34.29.
-    await expect.poll(() => Object.keys(latestSince(requests, before)).sort()).toEqual([...ENDPOINTS].sort())
+    // The breakdown included: StarChat honours businessId there since 9.34.29. Topics too, asked
+    // only now that one business is chosen (brief outcome 9); the other tests here, with no
+    // business, see every endpoint but topics.
+    const withTopics = [...ENDPOINTS, 'topics']
+    await expect.poll(() => Object.keys(latestSince(requests, before)).sort()).toEqual([...withTopics].sort())
     const sent = latestSince(requests, before)
-    for (const endpoint of ENDPOINTS) {
+    for (const endpoint of withTopics) {
       expect(sent[endpoint].businessId, endpoint).toBe('biz-a')
       expect(sent[endpoint].ownerId, endpoint).toBeUndefined()
       expect(sent[endpoint].plan, endpoint).toBeUndefined()

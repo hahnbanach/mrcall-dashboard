@@ -35,7 +35,7 @@
 
       <div class="quality-group">
         <h4 class="quality-group-title">{{ $t("components.callInsights.quality.extractionTitle") }}</h4>
-        <p class="quality-row">{{ countOfTotal(extractionIssues.notOk, extractionIssues.recorded) }}</p>
+        <p class="quality-row">{{ countOfTotal(extractionIssues.count, extractionIssues.base) }}</p>
       </div>
     </template>
   </div>
@@ -49,7 +49,8 @@ import CallInsights from "@/utils/CallInsights";
  * calls it is counted on: unanswered questions by reason, the checks that fired, skill errors and
  * extraction failures. No score: StarChat has not calibrated their weights (Mycelium 5e6dbb40).
  * `totalCalls` is the outcomes answer's own `totalCalls`, the counting base the quality answer
- * itself does not carry for skill errors; extraction failures are counted over its own `extractions`.
+ * itself does not carry for skill errors; extraction failures are counted over its own `extractions`
+ * (brief outcome 9: `http_error` and `failed` only).
  */
 export default {
   props: {
@@ -64,24 +65,18 @@ export default {
     checkKeys() {
       return CallInsights.CHECK_KEYS;
     },
-    // Guards against a malformed or placeholder answer the same way WhatCallsSaid.vue does.
+    // Guards against a malformed or placeholder answer the same way CallOutcomes.vue does.
     gaps() {
       return (this.data && this.data.gaps) || {};
     },
     checks() {
       return (this.data && this.data.checks) || {};
     },
-    // Counted over the calls that carry an extraction outcome, which is what StarChat's `extractions`
-    // counts: a call from before the outcome was recorded is no issue, so the period's total is not the base.
+    // `http_error` and `failed` over the calls whose extraction ran, from StarChat's `extractions`: a
+    // call from before the outcome was recorded is no issue, so the period's total is not the base,
+    // and `not_managed` (never asked of the model) is neither an issue nor in the base.
     extractionIssues() {
-      const outcomes = (this.data && this.data.extractions) || {};
-      let recorded = 0;
-      let notOk = 0;
-      for (const [outcome, count] of Object.entries(outcomes)) {
-        recorded += count || 0;
-        if (outcome !== "ok") notOk += count || 0;
-      }
-      return { recorded, notOk };
+      return CallInsights.extractionProblems(this.data && this.data.extractions);
     },
   },
   methods: {

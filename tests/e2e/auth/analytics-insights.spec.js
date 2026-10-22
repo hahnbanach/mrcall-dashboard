@@ -5,10 +5,10 @@ const { mockBusiness } = require('../fixtures/mock-data')
 
 /**
  * Call insights on the analytics page (brief `docs/briefs/2026-10-20-call-insights.md`, plan
- * `docs/execution-plans/2026-10-20-call-insights.md`, D4): "What calls said", "Quality" and "Call
+ * `docs/execution-plans/2026-10-20-call-insights.md`, D4, D11): "How the calls went", "Quality" and "Call
  * reports" on the owner's business page (`/analytics?id=<business>`), and the reseller's scope page
  * (`/analytics` with no business). Mocked at the real StarChat paths (StarChat's own
- * conversation-analytics API reference, §7-10); `setupApiMocks` in `tests/e2e/fixtures/auth.js`
+ * conversation-analytics API reference, §7-11); `setupApiMocks` in `tests/e2e/fixtures/auth.js`
  * already answers the four routes with a shape-correct, empty default, so a test only overrides
  * what it reads.
  */
@@ -18,16 +18,16 @@ function section (page, title) {
   return page.locator('.call-insights-section').filter({ hasText: title })
 }
 
-const dimension = (page, title) => section(page, 'What calls said').locator('.insight-dimension').filter({ hasText: title })
+const dimension = (page, title) => section(page, 'How the calls went').locator('.insight-dimension').filter({ hasText: title })
 
 const emptyDimension = { callsWithValue: 0, totals: {}, previousTotals: {}, buckets: [] }
 
-test.describe('Analytics: what calls said (owner, business page)', () => {
+test.describe('Analytics: how the calls went (owner, business page)', () => {
   test('empty coverage: no call has a resolution or a message yet, nothing booked, nothing transferred', async ({ authenticatedPage: page }) => {
     await page.goto(`/analytics?id=${BUSINESS_ID}`)
     await expect(dimension(page, 'Resolution').getByText('0 of 0 calls were assessed.')).toBeVisible({ timeout: 15000 })
     await expect(dimension(page, 'Message').getByText('0 of 0 calls were assessed.')).toBeVisible()
-    const what = section(page, 'What calls said')
+    const what = section(page, 'How the calls went')
     await expect(what.getByText('0 of 0 calls with a booking record were booked.')).toBeVisible()
     await expect(what.getByText('0 calls transferred, as reported by the carriers.')).toBeVisible()
   })
@@ -75,7 +75,7 @@ test.describe('Analytics: what calls said (owner, business page)', () => {
     await expect(dimension(page, 'Resolution').locator('canvas')).toHaveCount(1)
     await expect(dimension(page, 'Message').locator('canvas')).toHaveCount(1)
 
-    const what = section(page, 'What calls said')
+    const what = section(page, 'How the calls went')
     await expect(what.getByText('6 of 14 calls with a booking record were booked.')).toBeVisible()
     await expect(what.getByText('2 calls transferred, as reported by the carriers.')).toBeVisible()
     // booked and transferred are recorded facts, not assessments
@@ -100,7 +100,7 @@ test.describe('Analytics: what calls said (owner, business page)', () => {
       await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(answer(changed ? 9 : 5)) })
     })
     await page.goto(`/analytics?id=${BUSINESS_ID}`)
-    const what = section(page, 'What calls said')
+    const what = section(page, 'How the calls went')
     const resolved = what.locator('.insight-dimension').filter({ hasText: 'Resolution' }).locator('li').filter({ hasText: /^\s*Resolved/ }).locator('.legend-count')
     await expect(resolved).toHaveText('5', { timeout: 15000 })
     await expect(what).not.toHaveAttribute('aria-busy', 'true')
@@ -136,7 +136,7 @@ test.describe('Analytics: what calls said (owner, business page)', () => {
       await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(answer(asked === 0 ? 5 : asked === 1 ? 9 : 3)) })
     })
     await page.goto(`/analytics?id=${BUSINESS_ID}`)
-    const what = section(page, 'What calls said')
+    const what = section(page, 'How the calls went')
     const resolved = what.locator('.insight-dimension').filter({ hasText: 'Resolution' }).locator('li').filter({ hasText: /^\s*Resolved/ }).locator('.legend-count')
     await expect(resolved).toHaveText('5', { timeout: 15000 })
 
@@ -160,7 +160,7 @@ test.describe('Analytics: what calls said (owner, business page)', () => {
       status: 404, contentType: 'application/json', body: JSON.stringify({ message: 'not for you' }),
     }))
     await page.goto(`/analytics?id=${BUSINESS_ID}`)
-    await expect(section(page, 'What calls said')).toBeVisible({ timeout: 15000 })
+    await expect(section(page, 'How the calls went')).toBeVisible({ timeout: 15000 })
     await expect(section(page, 'Quality')).toHaveCount(0)
     await expect(page.locator('.p-toast-message')).toHaveCount(0)
   })
@@ -315,7 +315,7 @@ test.describe('Analytics: the reseller\'s scope page', () => {
   test('opening /analytics directly, in a fresh context, shows the scope page: the owner selector and the whole-scope sections', async ({ resellerPage: page }) => {
     await page.goto('/analytics')
     await expect(page.locator('.owner-selector')).toBeVisible({ timeout: 15000 })
-    await expect(section(page, 'What calls said')).toBeVisible()
+    await expect(section(page, 'How the calls went')).toBeVisible()
     await expect(section(page, 'Quality')).toBeVisible()
     await expect(section(page, 'Assistants to review')).toBeVisible()
     await expect(section(page, 'Integrations and information asked')).toBeVisible()
@@ -340,5 +340,168 @@ test.describe('Analytics: the reseller\'s scope page', () => {
     await section(page, 'Assistants to review').getByRole('row', { name: new RegExp(BUSINESS_ID) }).click()
     await expect(page).toHaveURL(new RegExp(`[?&]id=${BUSINESS_ID}(&|$)`))
     await expect(section(page, 'Call reports')).toBeVisible({ timeout: 15000 })
+  })
+})
+
+/**
+ * Brief outcome 9 (amendment of 2026-10-21, StarChat intent 12): the outcomes section says how the
+ * calls went, the calls without a conversation sit under it outside every rate, the resolution
+ * share is over the calls where the caller asked something, extraction problems leave `not_managed`
+ * out, and a topics section reads StarChat's topics route for one business only. The answers are
+ * StarChat's analytics guide's own examples (§7, §8, §11).
+ */
+const outcomesWithNoConversation = {
+  granularity: 'daily',
+  period: { from: 1706140800000, to: 1706745600000 },
+  totalCalls: 120,
+  resolution: {
+    callsWithValue: 96,
+    totals: { resolved: 60, unresolved: 14, handed_over: 9, caller_left: 8, spam_wrong_number: 5 },
+    previousTotals: { resolved: 52, unresolved: 17 },
+    buckets: [{ timestamp: 1706140800000, counts: { resolved: 7, unresolved: 2, caller_left: 1 } }],
+  },
+  message: emptyDimension,
+  callsWithBooked: 96,
+  booked: 20,
+  transferred: 7,
+  noConversation: { caller_silent: 31, no_credit: 4, talk_and_hangup: 2, not_answered: 1 },
+  callsAnswered: 127,
+}
+
+// The failure colours of this page: its status error and danger tokens, red, and the orange
+// `caller_left` carried before outcome 9.
+const FAILURE_COLOURS = ['rgb(239, 68, 68)', 'rgb(220, 38, 38)', 'rgb(249, 115, 22)', 'rgb(255, 0, 0)']
+
+test.describe('Analytics: how the calls went (outcome 9, owner, business page)', () => {
+  test('the section is titled for how the calls went, and lists each call without a conversation under its own neutral label, outside every rate', async ({ authenticatedPage: page }) => {
+    await page.route('**/customer/analytics/outcomes*', (route) => route.fulfill({
+      status: 200, contentType: 'application/json', body: JSON.stringify(outcomesWithNoConversation),
+    }))
+    await page.goto(`/analytics?id=${BUSINESS_ID}`)
+    const how = section(page, 'How the calls went')
+    await expect(how.getByRole('heading', { name: 'How the calls went' })).toBeVisible({ timeout: 15000 })
+    await expect(page.getByRole('heading', { name: 'What calls said' })).toHaveCount(0)
+
+    const none = how.locator('.no-conversation')
+    await expect(none.getByRole('heading', { name: 'Calls without a conversation' })).toBeVisible()
+    await expect(none.getByText('These calls are left out of these statistics.')).toBeVisible()
+    const reasons = [
+      ['The caller hung up without speaking', '31'],
+      ['Refused for lack of credit', '4'],
+      ['Message played, then hung up', '2'],
+      ['Not answered by the assistant', '1'],
+    ]
+    for (const [label, count] of reasons) {
+      const row = none.locator('li').filter({ hasText: label })
+      await expect(row).toHaveCount(1)
+      await expect(row.locator('.no-conversation-count')).toHaveText(count)
+    }
+    // never a rate, never a failure colour
+    await expect(none).not.toContainText('%')
+    for (const row of await none.locator('li').all()) {
+      const colours = await row.evaluate((el) => [el, ...el.querySelectorAll('*')].map((e) => getComputedStyle(e).color))
+      for (const colour of colours) expect(FAILURE_COLOURS).not.toContain(colour)
+    }
+  })
+
+  test('resolution is a share over resolved, unresolved and handed over; caller_left and spam_wrong_number are counted beside it, each in its own neutral colour', async ({ authenticatedPage: page }) => {
+    await page.route('**/customer/analytics/outcomes*', (route) => route.fulfill({
+      status: 200, contentType: 'application/json', body: JSON.stringify(outcomesWithNoConversation),
+    }))
+    await page.goto(`/analytics?id=${BUSINESS_ID}`)
+    const resolution = dimension(page, 'Resolution')
+    await expect(resolution.getByText('Shares over the 83 calls in which the caller asked for something.')).toBeVisible({ timeout: 15000 })
+
+    const inShare = resolution.locator('.in-share')
+    await expect(inShare.locator('li').filter({ hasText: /^\s*Resolved/ }).locator('.legend-share')).toHaveText('72% of 83')
+    await expect(inShare.locator('li').filter({ hasText: 'Unresolved' }).locator('.legend-share')).toHaveText('17% of 83')
+    await expect(inShare.locator('li').filter({ hasText: 'Handed over' }).locator('.legend-share')).toHaveText('11% of 83')
+    await expect(inShare).not.toContainText('Spoke but never said what they wanted')
+    await expect(inShare).not.toContainText('Spam or wrong number')
+
+    const outside = resolution.locator('.outside-share')
+    await expect(outside.getByRole('heading', { name: 'Not in the share' })).toBeVisible()
+    const callerLeft = outside.locator('li').filter({ hasText: 'Spoke but never said what they wanted' })
+    const spam = outside.locator('li').filter({ hasText: 'Spam or wrong number' })
+    await expect(callerLeft.locator('.legend-count')).toHaveText('8')
+    await expect(spam.locator('.legend-count')).toHaveText('5')
+    await expect(outside).not.toContainText('%')
+    await expect(page.getByText('Caller left', { exact: true })).toHaveCount(0)
+
+    const swatch = (row) => row.locator('.legend-swatch').evaluate((el) => getComputedStyle(el).backgroundColor)
+    const callerLeftColour = await swatch(callerLeft)
+    const spamColour = await swatch(spam)
+    // neutral greys, the page's own tokens (@mrcall_grey_text2, @mrcall_light_grey_1), and not the same one
+    expect(callerLeftColour).toBe('rgb(108, 117, 125)')
+    expect(spamColour).toBe('rgb(215, 220, 226)')
+    expect(FAILURE_COLOURS).not.toContain(callerLeftColour)
+    expect(FAILURE_COLOURS).not.toContain(spamColour)
+  })
+
+  test('extraction problems count http_error and failed only, over the extractions that ran: not_managed is no problem', async ({ authenticatedPage: page }) => {
+    await page.route('**/customer/analytics/quality*', (route) => route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({
+        period: { from: 1706140800000, to: 1706745600000 },
+        extractions: { ok: 110, http_error: 2, failed: 1, not_managed: 7 },
+        callsWithChecks: 108, checks: {}, callsWithUnansweredRecorded: 108, callsWithUnanswered: 14, gaps: {},
+        callsWithSkillErrors: 3,
+      }),
+    }))
+    await page.goto(`/analytics?id=${BUSINESS_ID}`)
+    const extraction = section(page, 'Quality').locator('.quality-group').filter({ hasText: 'Extraction issues' })
+    await expect(extraction.locator('.quality-row')).toHaveText('3 of 113 calls', { timeout: 15000 })
+  })
+})
+
+const topicsAnswer = {
+  period: { from: 1706140800000, to: 1706745600000 },
+  previousPeriod: { from: 1705536000000, to: 1706140799999 },
+  reportPeriodStart: 1705276800000,
+  callsWithTopics: 88,
+  previousCallsWithTopics: 74,
+  topics: [
+    { topic: 'Orari di apertura', calls: 31, previousCalls: 28 },
+    // model-written text: shown as received, never as markup
+    { topic: '<b>costo</b> pulizia', calls: 4, previousCalls: 0 },
+  ],
+}
+
+test.describe('Analytics: what the calls were about (outcome 9)', () => {
+  test('one business: each topic with its calls and the previous period\'s, beside the calls with topics', async ({ authenticatedPage: page }) => {
+    const bodies = []
+    await page.route('**/customer/analytics/topics*', (route) => {
+      bodies.push(route.request().postDataJSON())
+      route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(topicsAnswer) })
+    })
+    await page.goto(`/analytics?id=${BUSINESS_ID}`)
+    const topics = section(page, 'What the calls were about')
+    await expect(topics.getByText('88 calls with a topic, 74 in the previous period.')).toBeVisible({ timeout: 15000 })
+
+    const hours = topics.getByRole('row', { name: /Orari di apertura/ })
+    await expect(hours.getByRole('cell').nth(1)).toHaveText('31')
+    await expect(hours.getByRole('cell').nth(2)).toHaveText('28')
+    await expect(topics.getByText('<b>costo</b> pulizia')).toBeVisible()
+    await expect(topics.locator('b')).toHaveCount(0)
+    expect(bodies.length).toBeGreaterThan(0)
+    for (const body of bodies) expect(body.businessId).toBe(BUSINESS_ID)
+  })
+
+  test('the reseller\'s scope page, several businesses: says to choose one, and never asks the topics route', async ({ resellerPage: page }) => {
+    let topicsCalls = 0
+    await page.route('**/customer/analytics/topics*', (route) => {
+      topicsCalls += 1
+      route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(topicsAnswer) })
+    })
+    await page.goto('/analytics')
+    const topics = section(page, 'What the calls were about')
+    await expect(topics.getByText('Choose one business to see what its calls were about.')).toBeVisible({ timeout: 15000 })
+    // every other section of the scope page has had its answer
+    await expect(section(page, 'How the calls went').getByText('0 of 0 calls were assessed.').first()).toBeVisible()
+    await expect(section(page, 'Assistants to review')).toBeVisible()
+    await page.waitForTimeout(500)
+    expect(topicsCalls).toBe(0)
+    await expect(topics.getByRole('table')).toHaveCount(0)
   })
 })

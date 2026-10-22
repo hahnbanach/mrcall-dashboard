@@ -29,26 +29,14 @@
           <Column :header="$t('components.callInsights.assistants.calls')">
             <template #body="slotProps">{{ slotProps.data.totalCalls }}</template>
           </Column>
-          <Column>
+          <Column v-for="column in shareColumns" :key="column.sort">
             <template #header>
-              <span class="assessed-header">
-                {{ $t("components.callInsights.assistants.notSolved") }}
-                <Tag severity="secondary" :value="$t('components.callInsights.assessedMarking')" class="insight-assessed-tag" />
+              <span :class="{ 'assessed-header': column.assessed }">
+                {{ $t("components.callInsights.assistants." + column.label) }}
+                <Tag v-if="column.assessed" severity="secondary" :value="$t('components.callInsights.assessedMarking')" class="insight-assessed-tag" />
               </span>
             </template>
-            <template #body="slotProps">{{ shareOf(notSolvedCount(slotProps.data), slotProps.data.callsWithResolution) }}</template>
-          </Column>
-          <Column :header="$t('components.callInsights.assistants.unanswered')">
-            <template #body="slotProps">{{ shareOf(slotProps.data.callsWithUnanswered, slotProps.data.callsWithUnansweredRecorded) }}</template>
-          </Column>
-          <Column :header="$t('components.callInsights.assistants.checks')">
-            <template #body="slotProps">{{ shareOf(checksCount(slotProps.data), slotProps.data.callsWithChecks) }}</template>
-          </Column>
-          <Column :header="$t('components.callInsights.assistants.skillErrors')">
-            <template #body="slotProps">{{ shareOf(slotProps.data.callsWithSkillErrors, slotProps.data.totalCalls) }}</template>
-          </Column>
-          <Column :header="$t('components.callInsights.assistants.extractionIssues')">
-            <template #body="slotProps">{{ shareOf(slotProps.data.extractionsNotOk, slotProps.data.totalCalls) }}</template>
+            <template #body="slotProps">{{ shareOf(slotProps.data, column.sort) }}</template>
           </Column>
         </DataTable>
       </div>
@@ -60,15 +48,29 @@
 import CallInsights from "@/utils/CallInsights";
 
 /**
- * The per-business signals, sorted to find the assistants to review (brief outcome 5): admin and
- * reseller only (StarChat answers any other role 404, which the parent reads as an absent
- * section). Every share here is the exact formula StarChat sorts by
- * (`CallInsightsAnalytics.sorted` in the StarChat repository), so the column a business is sorted
- * on always matches what the column shows. "Not solved" (the share of `unresolved` and
- * `caller_left` among the calls with a resolution, `callsWithResolution`) is marked assessed, in
- * its header and its sort option, since the resolution is the assistant's own judgement.
+ * The per-business signals, sorted to find the assistants to review (brief outcomes 5 and 9): admin
+ * and reseller only (StarChat answers any other role 404, which the parent reads as an absent
+ * section). Every share here is the one StarChat sorts by, over the base the row returns beside its
+ * count (`CallInsights.assistantShare`), so the column a business is sorted on always matches what
+ * the column shows. "Unresolved" (`unresolved` over `callsWithRequest`) and "caller left" (over
+ * `callsWithResolution`) are marked assessed, in their headers and sort options, since the
+ * resolution is the assistant's own judgement; `caller_silent` and `not_answered` are facts.
  */
-const NOT_SOLVED_KEYS = ["unresolved", "caller_left"];
+// How each share is headed and offered as a sort; the columns follow StarChat's sort keys, in the
+// order `CallInsights.ASSISTANT_SORT_KEYS` holds them (`calls` is the plain count column).
+const SHARE_LABELS = {
+  not_solved: { label: "notSolved", option: "notSolved", assessed: true },
+  caller_silent: { label: "callerSilent", option: "callerSilent", assessed: false },
+  not_answered: { label: "notAnswered", option: "notAnswered", assessed: false },
+  caller_left: { label: "callerLeft", option: "callerLeft", assessed: true },
+  unanswered: { label: "unanswered", option: "unanswered", assessed: false },
+  checks: { label: "checks", option: "checks", assessed: false },
+  skill_errors: { label: "skillErrors", option: "skillErrors", assessed: false },
+  extraction_failures: { label: "extractionIssues", option: "extractionFailures", assessed: false },
+};
+const SHARE_COLUMNS = CallInsights.ASSISTANT_SORT_KEYS
+  .filter((sort) => sort !== "calls")
+  .map((sort) => ({ sort, ...SHARE_LABELS[sort] }));
 
 export default {
   props: {
@@ -79,33 +81,27 @@ export default {
   emits: ["sort-change", "select-business"],
   computed: {
     // Guards against a malformed or placeholder answer (an empty array, from a test's generic
-    // fallback), the same way WhatCallsSaid.vue and CallQuality.vue do.
+    // fallback), the same way CallOutcomes.vue and CallQuality.vue do.
     businesses() {
       return (this.data && this.data.businesses) || [];
+    },
+    shareColumns() {
+      return SHARE_COLUMNS;
     },
     sortOptions() {
       return [
         { value: "calls", label: this.$t("components.callInsights.assistants.sortOptions.calls") },
-        { value: "not_solved", label: this.$t("components.callInsights.assistants.sortOptions.notSolved") },
-        { value: "unanswered", label: this.$t("components.callInsights.assistants.sortOptions.unanswered") },
-        { value: "checks", label: this.$t("components.callInsights.assistants.sortOptions.checks") },
-        { value: "skill_errors", label: this.$t("components.callInsights.assistants.sortOptions.skillErrors") },
-        { value: "extraction_failures", label: this.$t("components.callInsights.assistants.sortOptions.extractionFailures") },
+        ...SHARE_COLUMNS.map((column) => ({
+          value: column.sort,
+          label: this.$t("components.callInsights.assistants.sortOptions." + column.option),
+        })),
       ];
     },
   },
   methods: {
-    notSolvedCount(row) {
-      return NOT_SOLVED_KEYS.reduce((sum, key) => sum + ((row.resolution && row.resolution[key]) || 0), 0);
-    },
-    checksCount(row) {
-      const checks = row.checks || {};
-      return CallInsights.CHECK_KEYS.reduce((sum, key) => sum + (checks[key] || 0), 0);
-    },
-    shareOf(count, of) {
-      const safeCount = count || 0;
-      const percent = of > 0 ? Math.round((safeCount / of) * 100) : 0;
-      return this.$t("components.callInsights.assistants.shareOfTotal", { percent, count: safeCount, total: of || 0 });
+    shareOf(row, sort) {
+      const { count, base, percent } = CallInsights.assistantShare(row, sort);
+      return this.$t("components.callInsights.assistants.shareOfTotal", { percent, count, total: base });
     },
     onRowSelect(event) {
       this.$emit("select-business", event.data.businessId);
@@ -130,6 +126,7 @@ export default {
 }
 
 .table-container {
+  overflow-x: auto;
   background: #fff;
   border: 1px solid #e5e7eb;
   border-radius: 12px;

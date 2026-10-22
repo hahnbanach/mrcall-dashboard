@@ -16,12 +16,17 @@ function section (page, title) {
   return page.locator('.call-insights-section').filter({ hasText: title })
 }
 
+// StarChat's analytics guide §9, its example row
 const assistantsResponse = (overrides = {}) => ({
   sort: 'not_solved',
   businesses: [{
-    businessId: BUSINESS_ID, totalCalls: 10, callsWithResolution: 10, resolution: { unresolved: 2, caller_left: 1, handed_over: 4, resolved: 3 },
-    callsWithChecks: 8, checks: { caller_repeated: 1 }, callsWithUnansweredRecorded: 8, callsWithUnanswered: 1,
-    gaps: {}, callsWithSkillErrors: 0, extractionsNotOk: 0,
+    businessId: BUSINESS_ID, totalCalls: 40, callsWithResolution: 36,
+    resolution: { resolved: 20, unresolved: 10, caller_left: 6 },
+    callsWithChecks: 36, checks: { caller_repeated: 5, caller_unsatisfied: 4, promise_not_kept_in_call: 0 },
+    callsWithUnansweredRecorded: 36, callsWithUnanswered: 9, gaps: { missing_info: 9 },
+    callsWithSkillErrors: 0, extractionsNotOk: 1,
+    callsManaged: 36, noConversation: { caller_silent: 12, no_credit: 1 },
+    callsAnswered: 48, callsOffered: 48, callsWithRequest: 30,
   }],
   ...overrides,
 })
@@ -35,13 +40,10 @@ test.describe('AnalyticsAdmin: assistants to review, across the whole platform',
     const assistants = section(page, 'Assistants to review')
     await expect(assistants.getByText(BUSINESS_ID)).toBeVisible({ timeout: 15000 })
 
-    const notSolvedHeader = assistants.locator('th').filter({ hasText: 'Unresolved or caller left' })
+    const notSolvedHeader = assistants.locator('th').filter({ hasText: /^\s*Unresolved/ })
     await expect(notSolvedHeader.getByText('Assessed by the assistant')).toBeVisible()
-    // unresolved and caller_left over the calls with a resolution; handed_over is not "not solved"
-    await expect(assistants.getByRole('row', { name: new RegExp(BUSINESS_ID) })).toContainText('30% (3 of 10)')
-
     await assistants.getByRole('combobox', { name: 'Sort by' }).click()
-    await expect(page.getByRole('option', { name: 'Unresolved or caller left (assessed by the assistant)' })).toBeVisible()
+    await expect(page.getByRole('option', { name: 'Unresolved (assessed by the assistant)', exact: true })).toBeVisible()
     await page.keyboard.press('Escape')
 
     await assistants.getByRole('row', { name: new RegExp(BUSINESS_ID) }).click()
@@ -54,9 +56,90 @@ test.describe('AnalyticsAdmin: assistants to review, across the whole platform',
       status: 404, contentType: 'application/json', body: JSON.stringify({ message: 'not for you' }),
     }))
     await page.goto('/analytics-admin')
-    await expect(section(page, 'What calls said')).toBeVisible({ timeout: 15000 })
+    await expect(section(page, 'How the calls went')).toBeVisible({ timeout: 15000 })
     await expect(section(page, 'Assistants to review')).toHaveCount(0)
     await expect(page.locator('.p-toast-message')).toHaveCount(0)
+  })
+})
+
+/** The cell under `header`, in the business's row: the header's index picks the cell. */
+async function cellUnder (assistants, header) {
+  const headers = await assistants.locator('thead th').allInnerTexts()
+  const index = headers.findIndex((text) => text.trim().startsWith(header))
+  expect(index, `a column headed "${header}"`).toBeGreaterThanOrEqual(0)
+  return assistants.getByRole('row', { name: new RegExp(BUSINESS_ID) }).locator('td').nth(index)
+}
+
+test.describe('AnalyticsAdmin: assistants to review, outcome 9', () => {
+  test('"Unresolved" is unresolved over the calls with a request, and the caller_silent, not_answered and caller_left shares show each with its base', async ({ adminPage: page }) => {
+    await page.route('**/customer/analytics/assistants*', (route) => route.fulfill({
+      status: 200, contentType: 'application/json', body: JSON.stringify(assistantsResponse()),
+    }))
+    await page.goto('/analytics-admin')
+    const assistants = section(page, 'Assistants to review')
+    await expect(assistants.getByText(BUSINESS_ID)).toBeVisible({ timeout: 15000 })
+
+    // caller_left is neither in the count nor in the base of "Unresolved"
+    await expect(await cellUnder(assistants, 'Unresolved')).toHaveText('33% (10 of 30)')
+    await expect(await cellUnder(assistants, 'Hung up without speaking')).toHaveText('25% (12 of 48)')
+    await expect(await cellUnder(assistants, 'Not answered by the assistant')).toHaveText('0% (0 of 48)')
+    await expect(await cellUnder(assistants, 'Spoke but never said what they wanted')).toHaveText('17% (6 of 36)')
+    // caller_left is the assistant's own judgement, as unresolved is
+    await expect(assistants.locator('th').filter({ hasText: 'Spoke but never said what they wanted' }).getByText('Assessed by the assistant')).toBeVisible()
+  })
+
+  test('the three new shares are sort options, and choosing one asks StarChat for that sort', async ({ adminPage: page }) => {
+    const sorts = []
+    await page.route('**/customer/analytics/assistants*', (route) => {
+      sorts.push(new URL(route.request().url()).searchParams.get('sort'))
+      route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(assistantsResponse()) })
+    })
+    await page.goto('/analytics-admin')
+    const assistants = section(page, 'Assistants to review')
+    await expect(assistants.getByText(BUSINESS_ID)).toBeVisible({ timeout: 15000 })
+
+    const options = [
+      ['Hung up without speaking', 'caller_silent'],
+      ['Not answered by the assistant', 'not_answered'],
+      ['Spoke but never said what they wanted (assessed by the assistant)', 'caller_left'],
+    ]
+    for (const [label, sort] of options) {
+      await assistants.getByRole('combobox', { name: 'Sort by' }).click()
+      await page.getByRole('option', { name: label, exact: true }).click()
+      await expect.poll(() => sorts[sorts.length - 1]).toBe(sort)
+      await expect(assistants.getByText(BUSINESS_ID)).toBeVisible()
+    }
+  })
+})
+
+test.describe('AnalyticsAdmin: what the calls were about (outcome 9)', () => {
+  test('across several businesses it says to choose one and does not ask; with one business chosen it shows its topics', async ({ adminPage: page }) => {
+    const bodies = []
+    await page.route('**/customer/analytics/topics*', (route) => {
+      bodies.push(route.request().postDataJSON())
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          period: { from: 1, to: 2 }, previousPeriod: { from: 0, to: 1 }, callsWithTopics: 12, previousCallsWithTopics: 9,
+          topics: [{ topic: 'Parcheggio', calls: 5, previousCalls: 2 }],
+        }),
+      })
+    })
+    await page.goto('/analytics-admin')
+    const topics = section(page, 'What the calls were about')
+    await expect(topics.getByText('Choose one business to see what its calls were about.')).toBeVisible({ timeout: 15000 })
+    await expect(section(page, 'How the calls went')).toBeVisible()
+    await page.waitForTimeout(500)
+    expect(bodies).toEqual([])
+
+    await page.getByRole('textbox', { name: 'Business ID' }).fill(BUSINESS_ID)
+    await page.getByRole('button', { name: 'Apply' }).click()
+    await expect(topics.getByText('12 calls with a topic, 9 in the previous period.')).toBeVisible()
+    await expect(topics.getByRole('row', { name: /Parcheggio/ })).toBeVisible()
+    expect(bodies.length).toBeGreaterThan(0)
+    for (const body of bodies) expect(body.businessId).toBe(BUSINESS_ID)
+    await expect(topics.getByText('Choose one business to see what its calls were about.')).toHaveCount(0)
   })
 })
 
@@ -138,7 +221,7 @@ test.describe('AnalyticsAdmin: a changed scope', () => {
       await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(answer(changed ? 9 : 5)) })
     })
     await page.goto('/analytics-admin')
-    const what = section(page, 'What calls said')
+    const what = section(page, 'How the calls went')
     const resolved = what.locator('.insight-dimension').filter({ hasText: 'Resolution' }).locator('li').filter({ hasText: /^\s*Resolved/ }).locator('.legend-count')
     await expect(resolved).toHaveText('5', { timeout: 15000 })
     await expect(what).not.toHaveAttribute('aria-busy', 'true')

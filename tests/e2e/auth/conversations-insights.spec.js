@@ -394,7 +394,7 @@ test.describe('Conversations: filtering on what the call said', () => {
     await expect(row('Transfer').getByText('Assessed by the assistant')).toHaveCount(0)
 
     await dropdown(page, 'Resolution').click()
-    await expect(page.getByRole('listbox').getByRole('option')).toHaveText(['Resolved', 'Unresolved', 'Handed over', 'Caller left', 'Spam or wrong number'])
+    await expect(page.getByRole('listbox').getByRole('option')).toHaveText(['Resolved', 'Unresolved', 'Handed over', 'Spoke but never said what they wanted', 'Spam or wrong number'])
     await page.keyboard.press('Escape')
     await dropdown(page, 'Message').click()
     await expect(page.getByRole('listbox').getByRole('option')).toHaveText(['Complete message', 'Incomplete message', 'Unintelligible message', 'No message'])

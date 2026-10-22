@@ -1880,7 +1880,7 @@
         "resolved": "Løst",
         "unresolved": "Uløst",
         "handed_over": "Givet videre til en person",
-        "caller_left": "Den der ringede, lagde på",
+        "caller_left": "Talte, men sagde aldrig, hvad de ville",
         "spam_wrong_number": "Spam eller forkert nummer"
       },
       "message": {
@@ -1941,12 +1941,34 @@
         "unansweredOff": "Alle opkald"
       },
       "notAvailableYet": "Endnu ikke tilgængelig.",
-      "whatCallsSaid": {
-        "title": "Hvad opkaldene handlede om",
+      "howCallsWent": {
+        "title": "Hvordan opkaldene gik",
         "coverage": "{count} ud af {total} opkald er vurderet.",
         "booked": "{booked} ud af {total} opkald med en registreret bookingoplysning blev booket.",
         "transferred": "{count} viderestillede opkald, som meldt af operatørerne.",
-        "updating": "Opdaterer…"
+        "updating": "Opdaterer…",
+        "shareBase": "Andele af de {count} opkald, hvor den der ringede bad om noget.",
+        "shareOfBase": "{percent} % af {base}",
+        "outsideTitle": "Ikke med i andelen"
+      },
+      "noConversation": {
+        "title": "Opkald uden samtale",
+        "note": "Disse opkald er ikke med i denne statistik.",
+        "reasons": {
+          "caller_silent": "Den der ringede lagde på uden at sige noget",
+          "no_credit": "Afvist på grund af manglende kredit",
+          "talk_and_hangup": "Besked afspillet, derefter lagt på",
+          "not_answered": "Ikke besvaret af assistenten"
+        }
+      },
+      "topics": {
+        "title": "Hvad opkaldene handlede om",
+        "base": "{count} opkald med et emne, {previous} i den forrige periode.",
+        "topic": "Emne",
+        "calls": "Opkald",
+        "previousCalls": "Forrige periode",
+        "none": "Intet emne i denne periode.",
+        "chooseBusiness": "Vælg én virksomhed for at se, hvad dens opkald handlede om."
       },
       "quality": {
         "title": "Kvalitet",
@@ -1978,7 +2000,10 @@
         "sortLabel": "Sortér efter",
         "businessId": "Virksomhed",
         "calls": "Opkald",
-        "notSolved": "Uløst eller lagt på",
+        "notSolved": "Uløst",
+        "callerSilent": "Lagde på uden at sige noget",
+        "notAnswered": "Ikke besvaret af assistenten",
+        "callerLeft": "Talte, men sagde aldrig, hvad de ville",
         "unanswered": "Ubesvarede",
         "checks": "Kontroller",
         "skillErrors": "Funktionsfejl",
@@ -1986,7 +2011,10 @@
         "shareOfTotal": "{percent} % ({count} ud af {total})",
         "sortOptions": {
           "calls": "Opkald",
-          "notSolved": "Uløst eller lagt på (vurderet af assistenten)",
+          "notSolved": "Uløst (vurderet af assistenten)",
+          "callerSilent": "Lagde på uden at sige noget",
+          "notAnswered": "Ikke besvaret af assistenten",
+          "callerLeft": "Talte, men sagde aldrig, hvad de ville (vurderet af assistenten)",
           "unanswered": "Ubesvarede spørgsmål",
           "checks": "Kontroller",
           "skillErrors": "Funktionsfejl",

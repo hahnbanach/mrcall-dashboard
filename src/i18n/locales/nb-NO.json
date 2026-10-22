@@ -1880,7 +1880,7 @@
         "resolved": "Løst",
         "unresolved": "Uløst",
         "handed_over": "Overlatt til en person",
-        "caller_left": "Den som ringte, la på",
+        "caller_left": "Snakket, men sa aldri hva de ville",
         "spam_wrong_number": "Spam eller feil nummer"
       },
       "message": {
@@ -1941,12 +1941,34 @@
         "unansweredOff": "Alle samtaler"
       },
       "notAvailableYet": "Ikke tilgjengelig ennå.",
-      "whatCallsSaid": {
-        "title": "Hva samtalene handlet om",
+      "howCallsWent": {
+        "title": "Hvordan samtalene gikk",
         "coverage": "{count} av {total} samtaler er vurdert.",
         "booked": "{booked} av {total} samtaler med en registrert bookingopplysning ble booket.",
         "transferred": "{count} viderekoblede samtaler, ifølge operatørene.",
-        "updating": "Oppdaterer…"
+        "updating": "Oppdaterer…",
+        "shareBase": "Andeler av de {count} samtalene der den som ringte ba om noe.",
+        "shareOfBase": "{percent} % av {base}",
+        "outsideTitle": "Ikke med i andelen"
+      },
+      "noConversation": {
+        "title": "Anrop uten samtale",
+        "note": "Disse samtalene er holdt utenfor denne statistikken.",
+        "reasons": {
+          "caller_silent": "Den som ringte la på uten å si noe",
+          "no_credit": "Avvist på grunn av manglende kreditt",
+          "talk_and_hangup": "Melding spilt av, deretter lagt på",
+          "not_answered": "Ikke besvart av assistenten"
+        }
+      },
+      "topics": {
+        "title": "Hva samtalene handlet om",
+        "base": "{count} samtaler med et emne, {previous} i forrige periode.",
+        "topic": "Emne",
+        "calls": "Samtaler",
+        "previousCalls": "Forrige periode",
+        "none": "Ingen emner i denne perioden.",
+        "chooseBusiness": "Velg én virksomhet for å se hva samtalene handlet om."
       },
       "quality": {
         "title": "Kvalitet",
@@ -1978,7 +2000,10 @@
         "sortLabel": "Sorter etter",
         "businessId": "Virksomhet",
         "calls": "Samtaler",
-        "notSolved": "Uløst eller la på",
+        "notSolved": "Uløst",
+        "callerSilent": "La på uten å si noe",
+        "notAnswered": "Ikke besvart av assistenten",
+        "callerLeft": "Snakket, men sa aldri hva de ville",
         "unanswered": "Ubesvarte",
         "checks": "Kontroller",
         "skillErrors": "Funksjonsfeil",
@@ -1986,7 +2011,10 @@
         "shareOfTotal": "{percent} % ({count} av {total})",
         "sortOptions": {
           "calls": "Samtaler",
-          "notSolved": "Uløst eller la på (vurdert av assistenten)",
+          "notSolved": "Uløst (vurdert av assistenten)",
+          "callerSilent": "La på uten å si noe",
+          "notAnswered": "Ikke besvart av assistenten",
+          "callerLeft": "Snakket, men sa aldri hva de ville (vurdert av assistenten)",
           "unanswered": "Ubesvarte spørsmål",
           "checks": "Kontroller",
           "skillErrors": "Funksjonsfeil",

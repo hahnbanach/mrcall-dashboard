@@ -1880,7 +1880,7 @@
         "resolved": "Opgelost",
         "unresolved": "Niet opgelost",
         "handed_over": "Doorgegeven aan een persoon",
-        "caller_left": "Beller heeft opgehangen",
+        "caller_left": "Sprak, maar zei niet wat hij wilde",
         "spam_wrong_number": "Spam of verkeerd nummer"
       },
       "message": {
@@ -1941,12 +1941,34 @@
         "unansweredOff": "Alle gesprekken"
       },
       "notAvailableYet": "Nog niet beschikbaar.",
-      "whatCallsSaid": {
-        "title": "Waar de gesprekken over gingen",
+      "howCallsWent": {
+        "title": "Hoe de gesprekken verliepen",
         "coverage": "{count} van de {total} gesprekken zijn beoordeeld.",
         "booked": "{booked} van de {total} gesprekken met een geregistreerd boekingsgegeven zijn geboekt.",
         "transferred": "{count} doorverbonden gesprekken, zoals gemeld door de providers.",
-        "updating": "Wordt bijgewerkt…"
+        "updating": "Wordt bijgewerkt…",
+        "shareBase": "Aandelen van de {count} gesprekken waarin de beller iets vroeg.",
+        "shareOfBase": "{percent}% van {base}",
+        "outsideTitle": "Niet in het aandeel"
+      },
+      "noConversation": {
+        "title": "Oproepen zonder gesprek",
+        "note": "Deze gesprekken vallen buiten deze statistieken.",
+        "reasons": {
+          "caller_silent": "De beller hing op zonder iets te zeggen",
+          "no_credit": "Geweigerd wegens onvoldoende tegoed",
+          "talk_and_hangup": "Bericht afgespeeld, daarna opgehangen",
+          "not_answered": "Niet beantwoord door de assistent"
+        }
+      },
+      "topics": {
+        "title": "Waar de gesprekken over gingen",
+        "base": "{count} gesprekken met een onderwerp, {previous} in de vorige periode.",
+        "topic": "Onderwerp",
+        "calls": "Gesprekken",
+        "previousCalls": "Vorige periode",
+        "none": "Geen onderwerp in deze periode.",
+        "chooseBusiness": "Kies één bedrijf om te zien waar de gesprekken over gingen."
       },
       "quality": {
         "title": "Kwaliteit",
@@ -1978,7 +2000,10 @@
         "sortLabel": "Sorteren op",
         "businessId": "Bedrijf",
         "calls": "Gesprekken",
-        "notSolved": "Niet opgelost of opgehangen",
+        "notSolved": "Niet opgelost",
+        "callerSilent": "Opgehangen zonder te spreken",
+        "notAnswered": "Niet beantwoord door de assistent",
+        "callerLeft": "Sprak, maar zei niet wat hij wilde",
         "unanswered": "Onbeantwoord",
         "checks": "Controles",
         "skillErrors": "Functiefouten",
@@ -1986,7 +2011,10 @@
         "shareOfTotal": "{percent}% ({count} van de {total})",
         "sortOptions": {
           "calls": "Gesprekken",
-          "notSolved": "Niet opgelost of opgehangen (door de assistent beoordeeld)",
+          "notSolved": "Niet opgelost (door de assistent beoordeeld)",
+          "callerSilent": "Opgehangen zonder te spreken",
+          "notAnswered": "Niet beantwoord door de assistent",
+          "callerLeft": "Sprak, maar zei niet wat hij wilde (door de assistent beoordeeld)",
           "unanswered": "Onbeantwoorde vragen",
           "checks": "Controles",
           "skillErrors": "Functiefouten",

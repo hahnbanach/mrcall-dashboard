@@ -381,11 +381,11 @@ async function setupApiMocks(page, overrides = {}) {
     })
   })
 
-  // Call insights, version 2 (StarChat's `OutcomesResponse`, `QualityResponse`, `AssistantsResponse`):
-  // object-shaped answers, unlike most of this file's `[]` fallback, which a component reading
-  // `.resolution`/`.businesses` off an empty array would crash on (seen failing on 2026-10-20:
-  // "Cannot read properties of undefined", WhatCallsSaid.vue against this fixture before these
-  // three routes existed).
+  // Call insights, version 2 (StarChat's `OutcomesResponse`, `QualityResponse`, `AssistantsResponse`,
+  // `TopicsResponse`): object-shaped answers, unlike most of this file's `[]` fallback, which a
+  // component reading `.resolution`/`.businesses` off an empty array would crash on (seen failing on
+  // 2026-10-20: "Cannot read properties of undefined", WhatCallsSaid.vue, now CallOutcomes.vue,
+  // against this fixture before these routes existed).
   await page.route('**/customer/analytics/outcomes*', (route) => {
     route.fulfill({
       status: 200,
@@ -394,7 +394,16 @@ async function setupApiMocks(page, overrides = {}) {
         granularity: 'daily', period: { from: 0, to: 0 }, totalCalls: 0,
         resolution: { callsWithValue: 0, totals: {}, previousTotals: {}, buckets: [] },
         message: { callsWithValue: 0, totals: {}, previousTotals: {}, buckets: [] },
-        callsWithBooked: 0, booked: 0, transferred: 0,
+        callsWithBooked: 0, booked: 0, transferred: 0, noConversation: {}, callsAnswered: 0,
+      }),
+    })
+  })
+  await page.route('**/customer/analytics/topics*', (route) => {
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify(overrides.topics || {
+        period: { from: 0, to: 0 }, previousPeriod: { from: 0, to: 0 }, callsWithTopics: 0, previousCallsWithTopics: 0, topics: [],
       }),
     })
   })

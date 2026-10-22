@@ -1880,7 +1880,7 @@
         "resolved": "Ratkaistu",
         "unresolved": "Ratkaisematta",
         "handed_over": "Siirretty henkilölle",
-        "caller_left": "Soittaja lopetti puhelun",
+        "caller_left": "Puhui, mutta ei kertonut mitä halusi",
         "spam_wrong_number": "Roskapostia tai väärä numero"
       },
       "message": {
@@ -1941,12 +1941,34 @@
         "unansweredOff": "Kaikki puhelut"
       },
       "notAvailableYet": "Ei vielä saatavilla.",
-      "whatCallsSaid": {
-        "title": "Mistä puhelut kertoivat",
+      "howCallsWent": {
+        "title": "Miten puhelut menivät",
         "coverage": "{count} / {total} puhelusta on arvioitu.",
         "booked": "{booked} / {total} puhelusta, joille on kirjattu varaustieto, johti varaukseen.",
         "transferred": "{count} yhdistettyä puhelua operaattorien ilmoittamana.",
-        "updating": "Päivitetään…"
+        "updating": "Päivitetään…",
+        "shareBase": "Osuudet niistä {count} puhelusta, joissa soittaja pyysi jotakin.",
+        "shareOfBase": "{percent} % / {base}",
+        "outsideTitle": "Ei osuudessa"
+      },
+      "noConversation": {
+        "title": "Puhelut ilman keskustelua",
+        "note": "Nämä puhelut eivät sisälly näihin tilastoihin.",
+        "reasons": {
+          "caller_silent": "Soittaja lopetti puhumatta",
+          "no_credit": "Hylätty saldon puutteen vuoksi",
+          "talk_and_hangup": "Viesti toistettiin, sitten puhelu lopetettiin",
+          "not_answered": "Avustaja ei vastannut"
+        }
+      },
+      "topics": {
+        "title": "Mistä puhelut kertoivat",
+        "base": "{count} puhelua, joilla on aihe, edellisellä jaksolla {previous}.",
+        "topic": "Aihe",
+        "calls": "Puhelut",
+        "previousCalls": "Edellinen jakso",
+        "none": "Ei aiheita tällä jaksolla.",
+        "chooseBusiness": "Valitse yksi yritys nähdäksesi, mistä sen puhelut kertoivat."
       },
       "quality": {
         "title": "Laatu",
@@ -1978,7 +2000,10 @@
         "sortLabel": "Järjestä",
         "businessId": "Yritys",
         "calls": "Puhelut",
-        "notSolved": "Ratkaisematta tai soittaja lopetti",
+        "notSolved": "Ratkaisematta",
+        "callerSilent": "Lopetti puhumatta",
+        "notAnswered": "Avustaja ei vastannut",
+        "callerLeft": "Puhui, mutta ei kertonut mitä halusi",
         "unanswered": "Vastaamatta",
         "checks": "Tarkistukset",
         "skillErrors": "Toimintovirheet",
@@ -1986,7 +2011,10 @@
         "shareOfTotal": "{percent} % ({count} / {total})",
         "sortOptions": {
           "calls": "Puhelut",
-          "notSolved": "Ratkaisematta tai soittaja lopetti (avustajan arvioima)",
+          "notSolved": "Ratkaisematta (avustajan arvioima)",
+          "callerSilent": "Lopetti puhumatta",
+          "notAnswered": "Avustaja ei vastannut",
+          "callerLeft": "Puhui, mutta ei kertonut mitä halusi (avustajan arvioima)",
           "unanswered": "Vastaamattomat kysymykset",
           "checks": "Tarkistukset",
           "skillErrors": "Toimintovirheet",

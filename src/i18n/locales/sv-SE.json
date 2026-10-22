@@ -1880,7 +1880,7 @@
         "resolved": "Löst",
         "unresolved": "Olöst",
         "handed_over": "Överlämnat till en person",
-        "caller_left": "Den som ringde la på",
+        "caller_left": "Pratade men sa aldrig vad den ville",
         "spam_wrong_number": "Skräppost eller fel nummer"
       },
       "message": {
@@ -1941,12 +1941,34 @@
         "unansweredOff": "Alla samtal"
       },
       "notAvailableYet": "Inte tillgängligt ännu.",
-      "whatCallsSaid": {
-        "title": "Vad samtalen handlade om",
+      "howCallsWent": {
+        "title": "Hur samtalen gick",
         "coverage": "{count} av {total} samtal har bedömts.",
         "booked": "{booked} av {total} samtal med en registrerad bokningsuppgift blev bokade.",
         "transferred": "{count} vidarekopplade samtal, enligt operatörerna.",
-        "updating": "Uppdateras…"
+        "updating": "Uppdateras…",
+        "shareBase": "Andelar av de {count} samtal där den som ringde bad om något.",
+        "shareOfBase": "{percent} % av {base}",
+        "outsideTitle": "Ingår inte i andelen"
+      },
+      "noConversation": {
+        "title": "Samtal utan konversation",
+        "note": "De här samtalen ingår inte i statistiken.",
+        "reasons": {
+          "caller_silent": "Den som ringde la på utan att säga något",
+          "no_credit": "Nekat på grund av otillräcklig kredit",
+          "talk_and_hangup": "Meddelandet spelades upp, sedan avslutat",
+          "not_answered": "Inte besvarat av assistenten"
+        }
+      },
+      "topics": {
+        "title": "Vad samtalen handlade om",
+        "base": "{count} samtal med ett ämne, {previous} under föregående period.",
+        "topic": "Ämne",
+        "calls": "Samtal",
+        "previousCalls": "Föregående period",
+        "none": "Inget ämne under den här perioden.",
+        "chooseBusiness": "Välj ett företag för att se vad dess samtal handlade om."
       },
       "quality": {
         "title": "Kvalitet",
@@ -1978,7 +2000,10 @@
         "sortLabel": "Sortera efter",
         "businessId": "Verksamhet",
         "calls": "Samtal",
-        "notSolved": "Olöst eller la på",
+        "notSolved": "Olöst",
+        "callerSilent": "La på utan att säga något",
+        "notAnswered": "Inte besvarat av assistenten",
+        "callerLeft": "Pratade men sa aldrig vad den ville",
         "unanswered": "Obesvarade",
         "checks": "Kontroller",
         "skillErrors": "Funktionsfel",
@@ -1986,7 +2011,10 @@
         "shareOfTotal": "{percent} % ({count} av {total})",
         "sortOptions": {
           "calls": "Samtal",
-          "notSolved": "Olöst eller la på (bedömt av assistenten)",
+          "notSolved": "Olöst (bedömt av assistenten)",
+          "callerSilent": "La på utan att säga något",
+          "notAnswered": "Inte besvarat av assistenten",
+          "callerLeft": "Pratade men sa aldrig vad den ville (bedömt av assistenten)",
           "unanswered": "Obesvarade frågor",
           "checks": "Kontroller",
           "skillErrors": "Funktionsfel",

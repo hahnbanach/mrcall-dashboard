@@ -1894,7 +1894,7 @@
         "resolved": "Resuelto",
         "unresolved": "Sin resolver",
         "handed_over": "Pasado a una persona",
-        "caller_left": "Quien llamó colgó",
+        "caller_left": "Habló sin decir qué quería",
         "spam_wrong_number": "Spam o número equivocado"
       },
       "message": {
@@ -1955,12 +1955,34 @@
         "unansweredOff": "Todas las llamadas"
       },
       "notAvailableYet": "Aún no disponible.",
-      "whatCallsSaid": {
-        "title": "De qué trataron las llamadas",
+      "howCallsWent": {
+        "title": "Cómo fueron las llamadas",
         "coverage": "{count} de {total} llamadas fueron evaluadas.",
         "booked": "{booked} de {total} llamadas con un dato de reserva registrado fueron reservadas.",
         "transferred": "{count} llamadas transferidas, según los operadores.",
-        "updating": "Actualizando…"
+        "updating": "Actualizando…",
+        "shareBase": "Porcentajes sobre las {count} llamadas en las que quien llamó pidió algo.",
+        "shareOfBase": "{percent}% de {base}",
+        "outsideTitle": "Fuera del porcentaje"
+      },
+      "noConversation": {
+        "title": "Llamadas sin conversación",
+        "note": "Estas llamadas quedan fuera de estas estadísticas.",
+        "reasons": {
+          "caller_silent": "Quien llamó colgó sin hablar",
+          "no_credit": "Rechazada por falta de crédito",
+          "talk_and_hangup": "Mensaje reproducido y luego colgada",
+          "not_answered": "No atendida por el asistente"
+        }
+      },
+      "topics": {
+        "title": "De qué trataron las llamadas",
+        "base": "{count} llamadas con un tema, {previous} en el periodo anterior.",
+        "topic": "Tema",
+        "calls": "Llamadas",
+        "previousCalls": "Periodo anterior",
+        "none": "Ningún tema en este periodo.",
+        "chooseBusiness": "Elige un negocio para ver de qué trataron sus llamadas."
       },
       "quality": {
         "title": "Calidad",
@@ -1992,7 +2014,10 @@
         "sortLabel": "Ordenar por",
         "businessId": "Negocio",
         "calls": "Llamadas",
-        "notSolved": "Sin resolver o colgó",
+        "notSolved": "Sin resolver",
+        "callerSilent": "Colgó sin hablar",
+        "notAnswered": "No atendidas por el asistente",
+        "callerLeft": "Habló sin decir qué quería",
         "unanswered": "Sin responder",
         "checks": "Controles",
         "skillErrors": "Errores de funciones",
@@ -2000,7 +2025,10 @@
         "shareOfTotal": "{percent}% ({count} de {total})",
         "sortOptions": {
           "calls": "Llamadas",
-          "notSolved": "Sin resolver o colgó (evaluado por el asistente)",
+          "notSolved": "Sin resolver (evaluado por el asistente)",
+          "callerSilent": "Colgó sin hablar",
+          "notAnswered": "No atendidas por el asistente",
+          "callerLeft": "Habló sin decir qué quería (evaluado por el asistente)",
           "unanswered": "Preguntas sin responder",
           "checks": "Controles",
           "skillErrors": "Errores de funciones",

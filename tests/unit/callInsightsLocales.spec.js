@@ -95,3 +95,31 @@ describe('callInsights: the value table is translated, not copied from English',
     })
   }
 })
+
+/**
+ * Brief outcome 9 (amendment of 2026-10-21): the outcomes section is retitled for what it shows, the
+ * calls without a conversation and the topics get their own strings, and the assistants table three
+ * more columns and sorts. The parity test above already covers every key under
+ * `components.callInsights`; this pins that the new ones are there to be covered, and that
+ * `caller_left` is labelled for its meaning.
+ */
+describe('callInsights: the keys of outcome 9', () => {
+  it('en-US names the retitled outcomes section, the calls without a conversation, the topics and the new assistants columns', () => {
+    expect(referenceKeys).toEqual(expect.arrayContaining([
+      'howCallsWent.title', 'howCallsWent.shareBase', 'howCallsWent.shareOfBase', 'howCallsWent.outsideTitle',
+      'noConversation.title', 'noConversation.note',
+      'noConversation.reasons.caller_silent', 'noConversation.reasons.no_credit',
+      'noConversation.reasons.talk_and_hangup', 'noConversation.reasons.not_answered',
+      'topics.title', 'topics.base', 'topics.topic', 'topics.calls', 'topics.previousCalls', 'topics.none',
+      'topics.chooseBusiness',
+      'assistants.callerSilent', 'assistants.notAnswered', 'assistants.callerLeft',
+      'assistants.sortOptions.callerSilent', 'assistants.sortOptions.notAnswered', 'assistants.sortOptions.callerLeft',
+    ]))
+    expect(referenceKeys.filter(k => k.startsWith('whatCallsSaid.'))).toEqual([])
+  })
+
+  it('labels caller_left for what it means, never as the caller having left', () => {
+    expect(enUS.components.callInsights.resolution.caller_left).not.toBe('Caller left')
+    expect(itIT.components.callInsights.resolution.caller_left).not.toBe('Chiamante uscito')
+  })
+})

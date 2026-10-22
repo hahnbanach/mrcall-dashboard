@@ -171,9 +171,16 @@
         </div>
       </div>
 
-      <!-- What calls said (brief outcome 3): the business page (any role, via its id) or, for a
-           reseller with no business chosen, its whole scope -->
-      <WhatCallsSaid v-if="businessId || showScopePage" :status="outcomesStatus" :data="outcomesData" />
+      <!-- How the calls went (brief outcomes 3 and 9): the business page (any role, via its id) or,
+           for a reseller with no business chosen, its whole scope -->
+      <CallOutcomes v-if="businessId || showScopePage" :status="outcomesStatus" :data="outcomesData" />
+      <!-- What the calls were about (brief outcome 9): one business's topics; the scope page, over
+           several businesses, says to choose one and never asks -->
+      <CallTopics
+        v-if="businessId || showScopePage"
+        :status="businessId ? topicsStatus : 'needsBusiness'"
+        :data="topicsData"
+      />
       <CallQuality
         v-if="businessId || showScopePage"
         :status="qualityStatus"
@@ -235,14 +242,15 @@ import AnalyticsApi from "@/utils/Analytics";
 import CallInsights from "@/utils/CallInsights";
 import businessUtils from "@/utils/Business";
 import OwnerSelector from "@/components/reseller/OwnerSelector.vue";
-import WhatCallsSaid from "@/components/analytics/WhatCallsSaid.vue";
+import CallOutcomes from "@/components/analytics/CallOutcomes.vue";
+import CallTopics from "@/components/analytics/CallTopics.vue";
 import CallQuality from "@/components/analytics/CallQuality.vue";
 import CallReports from "@/components/analytics/CallReports.vue";
 import AssistantsToReview from "@/components/analytics/AssistantsToReview.vue";
 import ScopeInformation from "@/components/analytics/ScopeInformation.vue";
 
 export default {
-  components: { OwnerSelector, WhatCallsSaid, CallQuality, CallReports, AssistantsToReview, ScopeInformation },
+  components: { OwnerSelector, CallOutcomes, CallTopics, CallQuality, CallReports, AssistantsToReview, ScopeInformation },
   setup() {
     const store = useStore();
     const toast = useToast();
@@ -278,9 +286,11 @@ export default {
       loadingHeatmap: false,
       loadingCallers: false,
 
-      // What calls said (brief outcome 3-5): status is 'loading' | 'ok' | 'absent' | 'unavailable'
+      // Call insights (brief outcomes 3-5, 9): status is 'loading' | 'ok' | 'absent' | 'unavailable'
       outcomesStatus: "loading",
       outcomesData: null,
+      topicsStatus: "loading",
+      topicsData: null,
       qualityStatus: "loading",
       qualityData: null,
       reportsStatus: "loading",
@@ -559,6 +569,7 @@ export default {
       this.fetchCallers(user, request);
 
       this.fetchOutcomes(user, request, granularity, timezone);
+      this.fetchTopics(user, request);
       this.fetchQuality(user, request);
       this.reportsData = [];
       this.fetchReports(user, this.businessId, null);
@@ -600,6 +611,24 @@ export default {
           if (isSessionEnded(error)) return;
           this.outcomesStatus = 'absent';
           this.handleApiError(error, 'outcomes');
+        });
+    },
+    // One business only: `fetchAllData` reaches this with `businessId` set, never from the scope page.
+    fetchTopics(user, request) {
+      this.topicsStatus = 'loading';
+      const isCurrent = this.insightGate('topics');
+      CallInsights.topics(user, request)
+        .then((result) => {
+          if (!isCurrent()) return;
+          if (result === null) { this.topicsStatus = 'absent'; this.topicsData = null; }
+          else if (result.unavailable) { this.topicsStatus = 'unavailable'; this.topicsData = null; }
+          else { this.topicsStatus = 'ok'; this.topicsData = result; }
+        })
+        .catch((error) => {
+          if (!isCurrent()) return;
+          if (isSessionEnded(error)) return;
+          this.topicsStatus = 'absent';
+          this.handleApiError(error, 'topics');
         });
     },
     fetchQuality(user, request) {

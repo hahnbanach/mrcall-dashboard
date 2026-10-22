@@ -1886,7 +1886,7 @@
         "resolved": "Risolto",
         "unresolved": "Non risolto",
         "handed_over": "Passato a una persona",
-        "caller_left": "Chiamante uscito",
+        "caller_left": "Ha parlato senza dire cosa voleva",
         "spam_wrong_number": "Spam o numero sbagliato"
       },
       "message": {
@@ -1947,12 +1947,34 @@
         "unansweredOff": "Tutte le chiamate"
       },
       "notAvailableYet": "Non ancora disponibile.",
-      "whatCallsSaid": {
-        "title": "Di cosa hanno parlato le chiamate",
+      "howCallsWent": {
+        "title": "Come sono andate le chiamate",
         "coverage": "{count} chiamate su {total} sono state valutate.",
         "booked": "{booked} su {total} chiamate con un dato di prenotazione registrato sono state prenotate.",
         "transferred": "{count} chiamate trasferite, secondo gli operatori telefonici.",
-        "updating": "Aggiornamento in corso…"
+        "updating": "Aggiornamento in corso…",
+        "shareBase": "Quote sulle {count} chiamate in cui il chiamante ha chiesto qualcosa.",
+        "shareOfBase": "{percent}% di {base}",
+        "outsideTitle": "Fuori dalla quota"
+      },
+      "noConversation": {
+        "title": "Chiamate senza conversazione",
+        "note": "Queste chiamate sono escluse da queste statistiche.",
+        "reasons": {
+          "caller_silent": "Il chiamante ha riattaccato senza parlare",
+          "no_credit": "Rifiutata per credito insufficiente",
+          "talk_and_hangup": "Messaggio riprodotto, poi chiusa",
+          "not_answered": "Non risposta dall'assistente"
+        }
+      },
+      "topics": {
+        "title": "Di cosa hanno parlato le chiamate",
+        "base": "{count} chiamate con un argomento, {previous} nel periodo precedente.",
+        "topic": "Argomento",
+        "calls": "Chiamate",
+        "previousCalls": "Periodo precedente",
+        "none": "Nessun argomento in questo periodo.",
+        "chooseBusiness": "Scegli un'attività per vedere di cosa hanno parlato le sue chiamate."
       },
       "quality": {
         "title": "Qualità",
@@ -1984,7 +2006,10 @@
         "sortLabel": "Ordina per",
         "businessId": "Attività",
         "calls": "Chiamate",
-        "notSolved": "Non risolte o chiamante uscito",
+        "notSolved": "Non risolte",
+        "callerSilent": "Riattaccato senza parlare",
+        "notAnswered": "Non risposte dall'assistente",
+        "callerLeft": "Ha parlato senza dire cosa voleva",
         "unanswered": "Senza risposta",
         "checks": "Controlli",
         "skillErrors": "Errori delle funzioni",
@@ -1992,7 +2017,10 @@
         "shareOfTotal": "{percent}% ({count} di {total})",
         "sortOptions": {
           "calls": "Chiamate",
-          "notSolved": "Non risolte o chiamante uscito (valutato dall'assistente)",
+          "notSolved": "Non risolte (valutato dall'assistente)",
+          "callerSilent": "Riattaccato senza parlare",
+          "notAnswered": "Non risposte dall'assistente",
+          "callerLeft": "Ha parlato senza dire cosa voleva (valutato dall'assistente)",
           "unanswered": "Domande senza risposta",
           "checks": "Controlli",
           "skillErrors": "Errori delle funzioni",

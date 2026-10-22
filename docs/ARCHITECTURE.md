@@ -179,20 +179,28 @@ for the four dimensions lives in `src/utils/CallInsights.js`.
   "Assessed by the assistant"), a booked `Dropdown`, and "transferred" and "unanswered questions"
   `ToggleButton`s, all folded into the
   one `searchBody(extra)` the list, its poll, both exports and the two bulk actions all build from.
-- **The analytics pages** (`src/components/analytics/`: `WhatCallsSaid.vue`, `CallQuality.vue`,
-  `CallReports.vue`, `AssistantsToReview.vue`, `ScopeInformation.vue`, `InsightLabel.vue`), all
-  presentational — `Analytics.vue` and `AnalyticsAdmin.vue` own every fetch, the same way they
-  already do for the older KPI/chart sections:
-  - `Analytics.vue` with a business (`?id=`, any role): outcomes, quality, and the business's call
-    reports (topics with their share and whether they are new, gaps with example calls linked for
-    the owner only, suggestions, `mrcall_config` for an admin only).
+- **The analytics pages** (`src/components/analytics/`: `CallOutcomes.vue`, `CallTopics.vue`,
+  `CallQuality.vue`, `CallReports.vue`, `AssistantsToReview.vue`, `ScopeInformation.vue`,
+  `InsightLabel.vue`), all presentational — `Analytics.vue` and `AnalyticsAdmin.vue` own every
+  fetch, the same way they already do for the older KPI/chart sections. The assistant is measured
+  only on the calls it could serve, with StarChat's own bases, read through `CallInsights.js`
+  (`resolutionShare`, `assistantShare`, `extractionProblems`): "How the calls went"
+  (`CallOutcomes.vue`) shows resolution as a share over resolved, unresolved and handed over, with
+  `caller_left` and `spam_wrong_number` counted beside it in neutral colours, and under it the calls
+  without a conversation by reason, outside every rate; "What the calls were about"
+  (`CallTopics.vue`) reads StarChat's topics route for one business only.
+  - `Analytics.vue` with a business (`?id=`, any role): outcomes, topics, quality, and the business's
+    call reports (topics with their share and whether they are new, gaps with example calls linked
+    for the owner only, suggestions, `mrcall_config` for an admin only).
   - `Analytics.vue` with no business, role `reseller` (its scope page, reached directly or from
     `ResellerDashboard.vue`): outcomes and quality over its scope (the existing `OwnerSelector`
-    narrows it to one owner), the assistants-to-review table (a row opens that business, i.e. sets
-    `?id=`), and the integrations/information section, which ignores every filter.
-  - `AnalyticsAdmin.vue`: the same outcomes/quality/assistants reacting to its own filters, plus the
-    integrations section and MrCall's own configuration suggestions (admin only), neither reacting
-    to a filter; an assistants row sets this page's own business filter instead of navigating.
+    narrows it to one owner), the topics section saying to choose a business (no request), the
+    assistants-to-review table (a row opens that business, i.e. sets `?id=`), and the
+    integrations/information section, which ignores every filter.
+  - `AnalyticsAdmin.vue`: the same outcomes/quality/assistants reacting to its own filters, topics
+    only with the business filter set, plus the integrations section and MrCall's own configuration
+    suggestions (admin only), neither reacting to a filter; an assistants row sets this page's own
+    business filter instead of navigating.
   - Both pages establish the role on mount (the same business search that already sets it,
     `Business.js`'s `checkUserHasBusinesses`) before choosing which of these sections to show; the
     server remains the actual gate (a 404 hides a section with no toast, a 503 shows a short note).

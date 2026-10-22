@@ -1882,7 +1882,7 @@
         "resolved": "Gelöst",
         "unresolved": "Nicht gelöst",
         "handed_over": "An eine Person übergeben",
-        "caller_left": "Anrufer hat aufgelegt",
+        "caller_left": "Hat gesprochen, aber nicht gesagt, was er wollte",
         "spam_wrong_number": "Spam oder falsche Nummer"
       },
       "message": {
@@ -1943,12 +1943,34 @@
         "unansweredOff": "Alle Anrufe"
       },
       "notAvailableYet": "Noch nicht verfügbar.",
-      "whatCallsSaid": {
-        "title": "Worum es in den Anrufen ging",
+      "howCallsWent": {
+        "title": "Wie die Anrufe verliefen",
         "coverage": "{count} von {total} Anrufen wurden eingeschätzt.",
         "booked": "{booked} von {total} Anrufen mit erfasster Buchungsangabe wurden gebucht.",
         "transferred": "{count} weitergeleitete Anrufe, wie von den Netzbetreibern gemeldet.",
-        "updating": "Wird aktualisiert…"
+        "updating": "Wird aktualisiert…",
+        "shareBase": "Anteile an den {count} Anrufen, in denen der Anrufer etwas wollte.",
+        "shareOfBase": "{percent} % von {base}",
+        "outsideTitle": "Nicht im Anteil"
+      },
+      "noConversation": {
+        "title": "Anrufe ohne Gespräch",
+        "note": "Diese Anrufe sind in diesen Statistiken nicht enthalten.",
+        "reasons": {
+          "caller_silent": "Der Anrufer hat aufgelegt, ohne zu sprechen",
+          "no_credit": "Mangels Guthaben abgelehnt",
+          "talk_and_hangup": "Ansage abgespielt, dann aufgelegt",
+          "not_answered": "Vom Assistenten nicht angenommen"
+        }
+      },
+      "topics": {
+        "title": "Worum es in den Anrufen ging",
+        "base": "{count} Anrufe mit einem Thema, {previous} im vorherigen Zeitraum.",
+        "topic": "Thema",
+        "calls": "Anrufe",
+        "previousCalls": "Vorheriger Zeitraum",
+        "none": "Kein Thema in diesem Zeitraum.",
+        "chooseBusiness": "Wählen Sie ein Unternehmen, um zu sehen, worum es in seinen Anrufen ging."
       },
       "quality": {
         "title": "Qualität",
@@ -1980,7 +2002,10 @@
         "sortLabel": "Sortieren nach",
         "businessId": "Unternehmen",
         "calls": "Anrufe",
-        "notSolved": "Nicht gelöst oder aufgelegt",
+        "notSolved": "Nicht gelöst",
+        "callerSilent": "Ohne zu sprechen aufgelegt",
+        "notAnswered": "Vom Assistenten nicht angenommen",
+        "callerLeft": "Hat gesprochen, aber nicht gesagt, was er wollte",
         "unanswered": "Unbeantwortet",
         "checks": "Prüfungen",
         "skillErrors": "Funktionsfehler",
@@ -1988,7 +2013,10 @@
         "shareOfTotal": "{percent} % ({count} von {total})",
         "sortOptions": {
           "calls": "Anrufe",
-          "notSolved": "Nicht gelöst oder aufgelegt (vom Assistenten eingeschätzt)",
+          "notSolved": "Nicht gelöst (vom Assistenten eingeschätzt)",
+          "callerSilent": "Ohne zu sprechen aufgelegt",
+          "notAnswered": "Vom Assistenten nicht angenommen",
+          "callerLeft": "Hat gesprochen, aber nicht gesagt, was er wollte (vom Assistenten eingeschätzt)",
           "unanswered": "Offene Fragen",
           "checks": "Prüfungen",
           "skillErrors": "Funktionsfehler",
