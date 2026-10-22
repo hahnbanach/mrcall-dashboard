@@ -1,4 +1,5 @@
 const { setupAuthPage, setupApiMocks } = require('./auth')
+const { ORIGIN } = require('./origin')
 const { mockUser, mockBusiness } = require('./mock-data')
 
 const businessId = mockBusiness.businessId
@@ -23,7 +24,7 @@ async function setupSkillPage(page, state = {}, user = mockUser) {
   const blocked = []
   await page.context().route('**/*', route => {
     const url = new URL(route.request().url())
-    if (url.origin === 'http://localhost:8080') return route.continue()
+    if (url.origin === ORIGIN) return route.continue()
     blocked.push(url.origin)
     return route.abort()
   })

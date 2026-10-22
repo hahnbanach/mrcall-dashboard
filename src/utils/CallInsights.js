@@ -251,6 +251,9 @@ function pagedList(fetchPage, { size = INSIGHTS_PAGE_SIZE, keyOf = null, onError
         total: 0,
         asOf: undefined,
         loadingMore: false,
+        // The last later page failed (404, 503 or an error): the list stays and `more()` asks again
+        // for the same page with the same `asOf`. Never read as the end of the list.
+        moreFailed: false,
         // A page past the end (no items) ends the list even if `total` says otherwise.
         exhausted: false,
         get hasMore() {
@@ -260,6 +263,7 @@ function pagedList(fetchPage, { size = INSIGHTS_PAGE_SIZE, keyOf = null, onError
             const isCurrent = gate.begin();
             state.status = "loading";
             state.loadingMore = false;
+            state.moreFailed = false;
             state.asOf = undefined;
             return fetchPage(0, size, undefined).then((answer) => {
                 if (!isCurrent()) return;
@@ -283,6 +287,11 @@ function pagedList(fetchPage, { size = INSIGHTS_PAGE_SIZE, keyOf = null, onError
             state.loadingMore = true;
             return fetchPage(state.items.length, size, state.asOf).then((answer) => {
                 if (!isCurrent()) return;
+                if (answer === null || (answer && answer.unavailable)) {
+                    state.moreFailed = true;
+                    return;
+                }
+                state.moreFailed = false;
                 const page = pageOf(answer);
                 const seen = keyOf ? new Set(state.items.map(keyOf)) : null;
                 const fresh = seen ? page.items.filter((item) => !seen.has(keyOf(item))) : page.items;
@@ -290,8 +299,11 @@ function pagedList(fetchPage, { size = INSIGHTS_PAGE_SIZE, keyOf = null, onError
                 state.items = state.items.concat(fresh);
                 state.total = Math.max(page.total, state.items.length);
             }).catch((error) => {
-                // the items already shown stay, and so does the button to try again
-                if (isCurrent()) report(error);
+                // The items already shown stay, and the list itself says the page failed, with a retry:
+                // that is the one error state of a later page, so no toast besides it.
+                if (!isCurrent()) return;
+                state.moreFailed = true;
+                if (!isSessionEnded(error)) console.warn("CallInsights.pagedList: a later page failed", error);
             }).finally(() => {
                 if (isCurrent()) state.loadingMore = false;
             });
@@ -303,6 +315,7 @@ function pagedList(fetchPage, { size = INSIGHTS_PAGE_SIZE, keyOf = null, onError
         state.total = 0;
         state.asOf = undefined;
         state.exhausted = false;
+        state.moreFailed = false;
     }
     function report(error) {
         if (isSessionEnded(error)) return;
@@ -375,6 +388,20 @@ export default {
                 const business = Array.isArray(answer) ? answer[0] : null;
                 const name = business && business.companyName;
                 return typeof name === "string" && name.trim() !== "" ? name.trim() : null;
+            });
+    },
+    // An owner by name, for the admin page's owner filter: StarChat's admin user record carries only the
+    // role (`FirebaseUserRegistryItem`), so the name is the contact its first business was registered
+    // with (`name surname`, else its e-mail). An approximation: an owner whose businesses name another
+    // contact shows that contact. Not `Business.checkUserHasBusinesses`, which rewrites the store's role.
+    ownerName: function (user, ownerId) {
+        return unwrap(axios.post(BUSINESS_URL + "/search", { owner: ownerId, offset: 0, limit: 1 }, { headers: getHeaders(user) }))
+            .then((answer) => {
+                const business = Array.isArray(answer) ? answer[0] : null;
+                if (!business) return null;
+                const name = [business.name, business.surname].filter((v) => typeof v === "string" && v.trim() !== "").map((v) => v.trim()).join(" ");
+                if (name) return name;
+                return typeof business.emailAddress === "string" && business.emailAddress.trim() !== "" ? business.emailAddress.trim() : null;
             });
     },
     // `before` is the previous page's last `periodEnd`; omit it for the first page.

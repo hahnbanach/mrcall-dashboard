@@ -1996,8 +1996,8 @@
         "title": "Informes de llamadas",
         "none": "Todavía no hay ningún informe.",
         "summaryTitle": "El periodo",
-        "booked": "Llamadas reservadas: {count}",
-        "transferred": "Llamadas transferidas, según los operadores: {count}",
+        "booked": "Llamadas reservadas: {count} de {total}",
+        "transferred": "Llamadas transferidas, según los operadores: {count} de {total}",
         "topicsTitle": "Temas",
         "newTopic": "Nuevo",
         "topicShare": "{calls} llamadas ({percent}%)",
@@ -2007,7 +2007,8 @@
         "integrationTitle": "Un sistema para conectar",
         "mrcallConfigTitle": "Sugerencias de configuración de MrCall",
         "flaggedTitle": "Llamadas que vale la pena revisar",
-        "loadMore": "Mostrar informes anteriores"
+        "loadMore": "Mostrar informes anteriores",
+        "callsInPeriod": "{calls} llamadas en este periodo"
       },
       "assistants": {
         "title": "Asistentes para revisar",
@@ -2035,7 +2036,30 @@
           "extractionFailures": "Problemas de extracción"
         },
         "showAll": "Mostrar todos los negocios",
-        "noName": "Sin nombre registrado"
+        "noName": "Sin nombre registrado",
+        "short": {
+          "calls": "Llamadas",
+          "notSolved": "No resueltas",
+          "callerSilent": "Silenciosos",
+          "notAnswered": "No atendidas",
+          "callerLeft": "Sin petición",
+          "unanswered": "Preguntas abiertas",
+          "checks": "Controles",
+          "skillErrors": "Errores de skill",
+          "extractionIssues": "Extracción"
+        },
+        "legend": {
+          "notSolved": "sobre las llamadas en que el llamante pidió algo (resueltas, no resueltas o derivadas)",
+          "callerSilent": "sobre las llamadas atendidas",
+          "notAnswered": "sobre las llamadas que llegaron al asistente",
+          "callerLeft": "sobre las llamadas con un resultado",
+          "unanswered": "llamadas con una pregunta sin respuesta, sobre las llamadas con preguntas registradas",
+          "checks": "llamadas en que saltó un control, sobre las llamadas controladas",
+          "skillErrors": "llamadas con un error de skill, sobre todas las llamadas",
+          "extractionIssues": "llamadas en que falló la extracción de datos, sobre todas las llamadas"
+        },
+        "legendTitle": "Cómo se cuenta cada columna",
+        "assessedShort": "evaluado"
       },
       "scope": {
         "title": "Integraciones e información solicitada",
@@ -2058,7 +2082,9 @@
         "businessesCount": "1 negocio | {n} negocios",
         "reportsCount": "1 informe | {n} informes",
         "shownIntegrations": "{shown} de {total} elementos mostrados",
-        "shownSuggestions": "{shown} de {total} negocios mostrados"
+        "shownSuggestions": "{shown} de {total} negocios mostrados",
+        "moreFailed": "No se pudo cargar la página siguiente.",
+        "retry": "Reintentar"
       },
       "filterBar": {
         "title": "Filtros activos",
@@ -2070,7 +2096,9 @@
         "clearBusiness": "Quitar el filtro de negocio",
         "clearOwner": "Quitar el filtro de propietario",
         "clearPlan": "Quitar el filtro de plan",
-        "clearPeriod": "Volver a los últimos 30 días"
+        "clearPeriod": "Volver a los últimos 30 días",
+        "scopeNote": "Esta sección: todos los negocios que puedes ver, últimos 30 días",
+        "notApplied": "Filtros no aplicados a esta sección"
       }
     }
   },

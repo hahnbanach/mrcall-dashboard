@@ -1982,8 +1982,8 @@
         "title": "Samtalsrapporter",
         "none": "Ingen rapport än.",
         "summaryTitle": "Perioden",
-        "booked": "Bokade samtal: {count}",
-        "transferred": "Vidarekopplade samtal, enligt operatörerna: {count}",
+        "booked": "Bokade samtal: {count} av {total}",
+        "transferred": "Vidarekopplade samtal, enligt operatörerna: {count} av {total}",
         "topicsTitle": "Ämnen",
         "newTopic": "Nytt",
         "topicShare": "{calls} samtal ({percent} %)",
@@ -1993,7 +1993,8 @@
         "integrationTitle": "Ett system att koppla till",
         "mrcallConfigTitle": "MrCalls konfigurationsförslag",
         "flaggedTitle": "Samtal värda att läsa",
-        "loadMore": "Visa tidigare rapporter"
+        "loadMore": "Visa tidigare rapporter",
+        "callsInPeriod": "{calls} samtal under perioden"
       },
       "assistants": {
         "title": "Assistenter att granska",
@@ -2021,7 +2022,30 @@
           "extractionFailures": "Extraktionsproblem"
         },
         "showAll": "Visa alla företag",
-        "noName": "Inget namn registrerat"
+        "noName": "Inget namn registrerat",
+        "short": {
+          "calls": "Samtal",
+          "notSolved": "Olösta",
+          "callerSilent": "Tysta",
+          "notAnswered": "Obesvarade",
+          "callerLeft": "Ingen förfrågan",
+          "unanswered": "Öppna frågor",
+          "checks": "Kontroller",
+          "skillErrors": "Skillfel",
+          "extractionIssues": "Extrahering"
+        },
+        "legend": {
+          "notSolved": "av samtalen där den som ringde bad om något (lösta, olösta eller överlämnade)",
+          "callerSilent": "av de besvarade samtalen",
+          "notAnswered": "av samtalen som nådde assistenten",
+          "callerLeft": "av samtalen med ett utfall",
+          "unanswered": "samtal med en obesvarad fråga, av samtalen där frågor registrerades",
+          "checks": "samtal där en kontroll slog till, av de kontrollerade samtalen",
+          "skillErrors": "samtal med ett skillfel, av alla samtal",
+          "extractionIssues": "samtal där dataextraheringen misslyckades, av alla samtal"
+        },
+        "legendTitle": "Hur varje kolumn räknas",
+        "assessedShort": "bedömt"
       },
       "scope": {
         "title": "Integrationer och efterfrågad information",
@@ -2044,7 +2068,9 @@
         "businessesCount": "1 företag | {n} företag",
         "reportsCount": "1 rapport | {n} rapporter",
         "shownIntegrations": "{shown} av {total} poster visas",
-        "shownSuggestions": "{shown} av {total} företag visas"
+        "shownSuggestions": "{shown} av {total} företag visas",
+        "moreFailed": "Nästa sida kunde inte laddas.",
+        "retry": "Försök igen"
       },
       "filterBar": {
         "title": "Aktiva filter",
@@ -2056,7 +2082,9 @@
         "clearBusiness": "Ta bort företagsfiltret",
         "clearOwner": "Ta bort ägarfiltret",
         "clearPlan": "Ta bort abonnemangsfiltret",
-        "clearPeriod": "Tillbaka till de senaste 30 dagarna"
+        "clearPeriod": "Tillbaka till de senaste 30 dagarna",
+        "scopeNote": "Det här avsnittet: alla företag du kan se, senaste 30 dagarna",
+        "notApplied": "Filter som inte gäller det här avsnittet"
       }
     }
   },

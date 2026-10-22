@@ -1982,8 +1982,8 @@
         "title": "Puheluraportit",
         "none": "Ei vielä raporttia.",
         "summaryTitle": "Ajanjakso",
-        "booked": "Varatut puhelut: {count}",
-        "transferred": "Yhdistetyt puhelut operaattorien ilmoittamana: {count}",
+        "booked": "Varatut puhelut: {count}/{total}",
+        "transferred": "Yhdistetyt puhelut operaattorien ilmoittamana: {count}/{total}",
         "topicsTitle": "Aiheet",
         "newTopic": "Uusi",
         "topicShare": "{calls} puhelua ({percent} %)",
@@ -1993,7 +1993,8 @@
         "integrationTitle": "Järjestelmä yhdistettäväksi",
         "mrcallConfigTitle": "MrCallin asetusehdotukset",
         "flaggedTitle": "Puhelut, jotka kannattaa lukea",
-        "loadMore": "Näytä aiemmat raportit"
+        "loadMore": "Näytä aiemmat raportit",
+        "callsInPeriod": "{calls} puhelua tällä jaksolla"
       },
       "assistants": {
         "title": "Tarkistettavat avustajat",
@@ -2021,7 +2022,30 @@
           "extractionFailures": "Poiminnan ongelmat"
         },
         "showAll": "Näytä kaikki yritykset",
-        "noName": "Nimeä ei ole tiedossa"
+        "noName": "Nimeä ei ole tiedossa",
+        "short": {
+          "calls": "Puhelut",
+          "notSolved": "Ratkaisemattomat",
+          "callerSilent": "Hiljaiset",
+          "notAnswered": "Vastaamattomat",
+          "callerLeft": "Ei pyyntöä",
+          "unanswered": "Avoimet kysymykset",
+          "checks": "Tarkistukset",
+          "skillErrors": "Skill-virheet",
+          "extractionIssues": "Poiminta"
+        },
+        "legend": {
+          "notSolved": "puheluista, joissa soittaja pyysi jotain (ratkaistu, ratkaisematon tai siirretty)",
+          "callerSilent": "vastatuista puheluista",
+          "notAnswered": "avustajalle tulleista puheluista",
+          "callerLeft": "puheluista, joilla on lopputulos",
+          "unanswered": "puhelut, joissa kysymys jäi vastaamatta, puheluista, joissa kysymykset kirjattiin",
+          "checks": "puhelut, joissa tarkistus laukesi, tarkistetuista puheluista",
+          "skillErrors": "puhelut, joissa oli skill-virhe, kaikista puheluista",
+          "extractionIssues": "puhelut, joiden tietojen poiminta epäonnistui, kaikista puheluista"
+        },
+        "legendTitle": "Miten kukin sarake lasketaan",
+        "assessedShort": "arvioitu"
       },
       "scope": {
         "title": "Integraatiot ja kysytyt tiedot",
@@ -2044,7 +2068,9 @@
         "businessesCount": "1 yritys | {n} yritystä",
         "reportsCount": "1 raportti | {n} raporttia",
         "shownIntegrations": "{shown}/{total} kohdetta näytetty",
-        "shownSuggestions": "{shown}/{total} yritystä näytetty"
+        "shownSuggestions": "{shown}/{total} yritystä näytetty",
+        "moreFailed": "Seuraavaa sivua ei voitu ladata.",
+        "retry": "Yritä uudelleen"
       },
       "filterBar": {
         "title": "Aktiiviset suodattimet",
@@ -2056,7 +2082,9 @@
         "clearBusiness": "Poista yrityssuodatin",
         "clearOwner": "Poista omistajasuodatin",
         "clearPlan": "Poista pakettisuodatin",
-        "clearPeriod": "Takaisin viimeiseen 30 päivään"
+        "clearPeriod": "Takaisin viimeiseen 30 päivään",
+        "scopeNote": "Tämä osio: kaikki näkemäsi yritykset, viimeiset 30 päivää",
+        "notApplied": "Suodattimet, jotka eivät koske tätä osiota"
       }
     }
   },

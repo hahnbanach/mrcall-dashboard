@@ -65,7 +65,10 @@ API clients and business logic:
   and configuration-suggestions routes; a 404 resolves to `null` (absent section), a 503 to
   `{unavailable: true}`. `pagedList` is the one mechanism for a list read a page at a time on demand
   (the integrations and configuration suggestions: `from`/`size`, the first page's `asOf` sent back on
-  every later page); `businessLabel` shows a business by name, its id only when StarChat has none
+  every later page; a later page that fails keeps the list and is asked again, same `asOf`, from a retry);
+  `businessLabel` shows a business by name, its id only when StarChat has none; `businessName` and
+  `ownerName` name the business and the owner a filter is set on (the owner by the contact of its first
+  business: StarChat's admin user record carries only the role)
 - `Admin.js` — Admin API endpoints
 - `Reseller.js` — Reseller API endpoints
 - `Contact.js` — Contact management API
@@ -188,7 +191,10 @@ for the four dimensions lives in `src/utils/CallInsights.js`.
   `AnalyticsAdmin.vue` own every other fetch, the same way they already do for the older KPI/chart
   sections. Both pages carry `AnalyticsFilterBar.vue`, a bar that stays at the top while the page
   scrolls and shows the business (by name), owner, plan and period in force, each with its own clear
-  control; a business is shown by name wherever an answer names it. The assistant is measured
+  control; while the scope-wide lists (which follow none of these filters) are on screen, the bar says
+  what they cover and shows its chips as not applying. A business is shown by name wherever an answer
+  names it. The assistants table has short one-line headers, the full wording and base of each share in
+  a legend under it and in the header's tooltip, and a frozen business column. The assistant is measured
   only on the calls it could serve, with StarChat's own bases, read through `CallInsights.js`
   (`resolutionShare`, `assistantShare`, `extractionProblems`): "How the calls went"
   (`CallOutcomes.vue`) shows resolution as a share over resolved, unresolved and handed over, with

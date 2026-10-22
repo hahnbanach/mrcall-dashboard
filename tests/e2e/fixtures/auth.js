@@ -1,5 +1,6 @@
 // @ts-check
 const { test: base } = require('@playwright/test')
+const { ORIGIN, HOST } = require('./origin')
 const {
   mockUser,
   mockAdminUser,
@@ -63,7 +64,7 @@ function buildFirebaseUserRecord(user) {
 
 /**
  * Seeds Firebase Auth's IndexedDB so the SDK finds a persisted user on init.
- * Must run on the same origin as the app (http://localhost:8080).
+ * Must run on the same origin as the app (`ORIGIN`, ./origin.js).
  */
 async function seedFirebaseIndexedDB(page, user) {
   const record = buildFirebaseUserRecord(user)
@@ -453,16 +454,16 @@ async function setupApiMocks(page, overrides = {}) {
  */
 async function setupAuthPage(page, user, role, overrides = {}) {
   // Serve a minimal HTML page on the app origin to seed IndexedDB
-  await page.route('**/localhost:8080/__e2e_seed__', route => {
+  await page.route(`**/${HOST}/__e2e_seed__`, route => {
     route.fulfill({ status: 200, contentType: 'text/html', body: '<html><body></body></html>' })
   })
-  await page.goto('http://localhost:8080/__e2e_seed__')
+  await page.goto(`${ORIGIN}/__e2e_seed__`)
 
   // Seed Firebase IndexedDB on the correct origin
   await seedFirebaseIndexedDB(page, user)
 
   // Remove the seed route
-  await page.unroute('**/localhost:8080/__e2e_seed__')
+  await page.unroute(`**/${HOST}/__e2e_seed__`)
 
   // Set up all network interceptions
   await mockAiBackend(page)

@@ -225,15 +225,18 @@ test.describe('Analytics: call reports (owner, business page)', () => {
     await expect(reports.getByText('Opening hours')).toBeVisible({ timeout: 15000 })
 
     const topicRow = reports.locator('.report-topic').filter({ hasText: 'Opening hours' })
-    await expect(topicRow.locator('.report-topic-outcome').filter({ hasText: 'Unresolved' }).getByText('Assessed by the assistant')).toBeVisible()
+    // the marking is said once for the line, not on every value of it
+    await expect(topicRow.getByText('Assessed by the assistant')).toHaveCount(1)
     await expect(topicRow.locator('.report-topic-outcome').filter({ hasText: 'Unresolved' })).toContainText('2')
     await expect(topicRow.locator('.report-topic-outcome').filter({ hasText: 'Resolved' }).filter({ hasNotText: 'Unresolved' })).toContainText('4')
 
     const summary = reports.locator('.report-summary')
-    await expect(summary.locator('.report-topic-outcome').filter({ hasText: 'Handed over' }).getByText('Assessed by the assistant')).toBeVisible()
+    // one marking for the resolution line and one for the message line
+    await expect(summary.getByText('Assessed by the assistant')).toHaveCount(2)
+    await expect(summary.getByText('10 calls in this period')).toBeVisible()
     await expect(summary.locator('.report-topic-outcome').filter({ hasText: /^\s*Complete message/ })).toContainText('4')
-    await expect(summary.getByText('Booked calls: 3')).toBeVisible()
-    await expect(summary.getByText('Transferred calls, as reported by the carriers: 1')).toBeVisible()
+    await expect(summary.getByText('Booked calls: 3 of 10')).toBeVisible()
+    await expect(summary.getByText('Transferred calls, as reported by the carriers: 1 of 10')).toBeVisible()
     await expect(summary.locator('.report-fact').getByText('Assessed by the assistant')).toHaveCount(0)
 
     await expect(reports.getByRole('link', { name: 'CON-1' }))
@@ -645,5 +648,24 @@ test.describe('Analytics: the UX review of outcome 10, its findings pinned', () 
     const scope = section(page, 'Integrations and information asked')
     await expect(scope.getByText('1 business, 4 reports')).toBeVisible({ timeout: 15000 })
     await expect(scope.getByText('1 of 1 items shown')).toBeVisible()
+  })
+})
+
+test.describe('Analytics: the plan names, wherever the scope page is reached from (outcome 10)', () => {
+  test('a reseller who lands on a business first, then goes back to the scope page, sees the plan by name', async ({ resellerPage: page }) => {
+    await page.route('**/crm/template*', (route) => route.fulfill({
+      status: 200, contentType: 'application/json', body: JSON.stringify([{ name: 'PLAN_DENTIST', humanName: 'Dentist plan' }]),
+    }))
+    await page.route('**/customer/insights/integrations*', (route) => route.fulfill({
+      status: 200, contentType: 'application/json',
+      body: JSON.stringify({ total: 1, items: [{ template: 'PLAN_DENTIST', kind: 'integration', text: 'A booking calendar', businesses: 1, reports: 1,
+        said: [{ businessId: BUSINESS_ID, name: 'Studio Demo', reportPeriodStart: 1700000000000 }] }] }),
+    }))
+    await page.goto(`/analytics?id=${BUSINESS_ID}`)
+    const bar = page.getByRole('region', { name: 'Active filters' })
+    await bar.getByRole('button', { name: 'Clear the business filter' }).click({ timeout: 15000 })
+    const scope = section(page, 'Integrations and information asked')
+    await expect(scope.getByText('A booking calendar')).toBeVisible({ timeout: 15000 })
+    await expect(scope.getByText('Plan: Dentist plan')).toBeVisible()
   })
 })

@@ -1982,8 +1982,8 @@
         "title": "Opkaldsrapporter",
         "none": "Ingen rapport endnu.",
         "summaryTitle": "Perioden",
-        "booked": "Bookede opkald: {count}",
-        "transferred": "Viderestillede opkald, som meldt af operatørerne: {count}",
+        "booked": "Bookede opkald: {count} af {total}",
+        "transferred": "Viderestillede opkald, som meldt af operatørerne: {count} af {total}",
         "topicsTitle": "Emner",
         "newTopic": "Nyt",
         "topicShare": "{calls} opkald ({percent} %)",
@@ -1993,7 +1993,8 @@
         "integrationTitle": "Et system at forbinde",
         "mrcallConfigTitle": "MrCalls konfigurationsforslag",
         "flaggedTitle": "Opkald, det er værd at læse",
-        "loadMore": "Vis tidligere rapporter"
+        "loadMore": "Vis tidligere rapporter",
+        "callsInPeriod": "{calls} opkald i perioden"
       },
       "assistants": {
         "title": "Assistenter, der skal gennemgås",
@@ -2021,7 +2022,30 @@
           "extractionFailures": "Udtræksproblemer"
         },
         "showAll": "Vis alle virksomheder",
-        "noName": "Intet navn registreret"
+        "noName": "Intet navn registreret",
+        "short": {
+          "calls": "Opkald",
+          "notSolved": "Uløste",
+          "callerSilent": "Tavse",
+          "notAnswered": "Ubesvarede",
+          "callerLeft": "Ingen forespørgsel",
+          "unanswered": "Åbne spørgsmål",
+          "checks": "Kontroller",
+          "skillErrors": "Skillfejl",
+          "extractionIssues": "Udtræk"
+        },
+        "legend": {
+          "notSolved": "af de opkald, hvor den, der ringede, spurgte om noget (løst, uløst eller overdraget)",
+          "callerSilent": "af de besvarede opkald",
+          "notAnswered": "af de opkald, der nåede assistenten",
+          "callerLeft": "af opkaldene med et udfald",
+          "unanswered": "opkald med et ubesvaret spørgsmål, af de opkald, hvor spørgsmål blev registreret",
+          "checks": "opkald, hvor en kontrol slog ud, af de kontrollerede opkald",
+          "skillErrors": "opkald med en skillfejl, af alle opkald",
+          "extractionIssues": "opkald, hvor dataudtrækket mislykkedes, af alle opkald"
+        },
+        "legendTitle": "Hvordan hver kolonne tælles",
+        "assessedShort": "vurderet"
       },
       "scope": {
         "title": "Integrationer og efterspurgt information",
@@ -2044,7 +2068,9 @@
         "businessesCount": "1 virksomhed | {n} virksomheder",
         "reportsCount": "1 rapport | {n} rapporter",
         "shownIntegrations": "{shown} af {total} punkter vist",
-        "shownSuggestions": "{shown} af {total} virksomheder vist"
+        "shownSuggestions": "{shown} af {total} virksomheder vist",
+        "moreFailed": "Den næste side kunne ikke indlæses.",
+        "retry": "Prøv igen"
       },
       "filterBar": {
         "title": "Aktive filtre",
@@ -2056,7 +2082,9 @@
         "clearBusiness": "Fjern virksomhedsfilteret",
         "clearOwner": "Fjern ejerfilteret",
         "clearPlan": "Fjern abonnementsfilteret",
-        "clearPeriod": "Tilbage til de seneste 30 dage"
+        "clearPeriod": "Tilbage til de seneste 30 dage",
+        "scopeNote": "Denne sektion: alle virksomheder, du kan se, seneste 30 dage",
+        "notApplied": "Filtre, der ikke gælder for denne sektion"
       }
     }
   },

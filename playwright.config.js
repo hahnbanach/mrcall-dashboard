@@ -19,6 +19,13 @@ const { defineConfig, devices } = require('@playwright/test')
 // fallback the suite silently lands on /signin on any machine that only has .env.
 require('dotenv').config({ path: require('fs').existsSync('.env.test') ? '.env.test' : '.env' })
 
+// The one origin the app is served on and the fixtures seed, route and allow: `E2E_PORT` (default
+// 8080) when another process holds 8080. Seen 2026-10-22: a Docker container bound [::1]:8080,
+// `localhost` resolved there first and the run got 404s mid-suite. Set here, in the config every
+// worker also loads, so the fixtures read the same value (`tests/e2e/fixtures/origin.js`).
+const E2E_PORT = process.env.E2E_PORT || '8080'
+process.env.E2E_BASE_URL = process.env.E2E_BASE_URL || `http://localhost:${E2E_PORT}`
+
 module.exports = defineConfig({
   testDir: './tests/e2e',
   fullyParallel: true,
@@ -28,7 +35,7 @@ module.exports = defineConfig({
   reporter: [['html', { open: 'never' }], ['list']],
 
   use: {
-    baseURL: 'http://localhost:8080',
+    baseURL: process.env.E2E_BASE_URL,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
   },
@@ -65,8 +72,8 @@ module.exports = defineConfig({
   ],
 
   webServer: {
-    command: 'npm run serve -- --mode test',
-    url: 'http://localhost:8080',
+    command: `npm run serve -- --mode test --port ${new URL(process.env.E2E_BASE_URL).port || '80'}`,
+    url: process.env.E2E_BASE_URL,
     reuseExistingServer: !process.env.CI,
     timeout: 120000,
   },

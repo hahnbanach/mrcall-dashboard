@@ -17,23 +17,30 @@
         <div v-if="isExpanded(item.periodStart) && item.content" class="report-body">
           <section v-if="hasSummary(item.content)" class="report-summary report-section">
             <h4 class="report-section-title">{{ $t("components.callInsights.reports.summaryTitle") }}</h4>
+            <!-- The period's calls: the base every count below is read against. -->
+            <p v-if="isCount(item.content.calls)" class="report-fact report-calls">
+              {{ $t("components.callInsights.reports.callsInPeriod", { calls: item.content.calls }) }}
+            </p>
+            <!-- A line of the assistant's judgements says so once, not on every value of it. -->
             <div v-if="resolutionKeys(item.content).length > 0" class="report-topic-outcomes">
+              <Tag severity="secondary" :value="$t('components.callInsights.assessedMarking')" class="report-line-assessed" />
               <span v-for="key in resolutionKeys(item.content)" :key="key" class="report-topic-outcome">
-                <InsightLabel dimension="resolution" :value="key" />
+                <InsightLabel dimension="resolution" :value="key" :marked="false" />
                 <span class="report-topic-outcome-count">{{ item.content.resolution[key] }}</span>
               </span>
             </div>
             <div v-if="messageKeys(item.content).length > 0" class="report-topic-outcomes">
+              <Tag severity="secondary" :value="$t('components.callInsights.assessedMarking')" class="report-line-assessed" />
               <span v-for="key in messageKeys(item.content)" :key="key" class="report-topic-outcome">
-                <InsightLabel dimension="message" :value="key" />
+                <InsightLabel dimension="message" :value="key" :marked="false" />
                 <span class="report-topic-outcome-count">{{ item.content.message[key] }}</span>
               </span>
             </div>
             <p v-if="isCount(item.content.booked)" class="report-fact">
-              {{ $t("components.callInsights.reports.booked", { count: item.content.booked }) }}
+              {{ factOverCalls("booked", item.content.booked, item.content.calls) }}
             </p>
             <p v-if="isCount(item.content.transferred)" class="report-fact">
-              {{ $t("components.callInsights.reports.transferred", { count: item.content.transferred }) }}
+              {{ factOverCalls("transferred", item.content.transferred, item.content.calls) }}
             </p>
           </section>
 
@@ -46,8 +53,9 @@
                 <span class="report-topic-share">{{ topicShare(topic, item.content) }}</span>
               </div>
               <div class="report-topic-outcomes">
+                <Tag v-if="resolutionKeys(topic).length > 0" severity="secondary" :value="$t('components.callInsights.assessedMarking')" class="report-line-assessed" />
                 <span v-for="key in resolutionKeys(topic)" :key="key" class="report-topic-outcome">
-                  <InsightLabel dimension="resolution" :value="key" />
+                  <InsightLabel dimension="resolution" :value="key" :marked="false" />
                   <span class="report-topic-outcome-count">{{ topic.resolution[key] }}</span>
                 </span>
               </div>
@@ -114,6 +122,7 @@
 
 <script>
 import CallInsights from "@/utils/CallInsights";
+import { scrollBelowBar } from "@/utils/scrollBelowBar";
 import InsightLabel from "@/components/analytics/InsightLabel.vue";
 
 /**
@@ -177,7 +186,7 @@ export default {
         this.expandedPeriods = new Set([focused.periodStart]);
         this.$nextTick(() => {
           const card = this.$el && this.$el.querySelector && this.$el.querySelector(`[data-period-start="${focused.periodStart}"]`);
-          if (card && card.scrollIntoView) card.scrollIntoView({ block: "start" });
+          scrollBelowBar(card);
         });
       } else if (this.expandedPeriods.size === 0 && this.focusPeriod == null) {
         this.expandedPeriods = new Set([list[0].periodStart]);
@@ -213,6 +222,10 @@ export default {
       const counts = holder.message || {};
       return CallInsights.MESSAGE_KEYS.filter((key) => counts[key]);
     },
+    // Booked and transferred over the period's calls; a report without `calls` has no base to give.
+    factOverCalls(kind, count, calls) {
+      return this.$t("components.callInsights.reports." + kind, { count, total: this.isCount(calls) ? calls : "–" });
+    },
     isCount(value) {
       return typeof value === "number";
     },
@@ -241,9 +254,12 @@ export default {
   font-size: 14px;
 }
 
+.report-line-assessed {
+  font-size: 10px;
+  font-weight: 600;
+}
+
 .report-card {
-  // a report scrolled to by a link is not hidden under the page's sticky filter bar
-  scroll-margin-top: 96px;
   border: 1px solid @mrcall_borders;
   border-radius: 10px;
   padding: 12px 14px;

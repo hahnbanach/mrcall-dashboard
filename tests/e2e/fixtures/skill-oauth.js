@@ -1,4 +1,5 @@
 const { setupSkillPage, businessId, operation, json } = require('./skill-chat')
+const { ORIGIN, HOST } = require('./origin')
 const { setupApiMocks } = require('./auth')
 const { mockBusiness, mockUser } = require('./mock-data')
 
@@ -47,9 +48,9 @@ async function setupOAuthPage(page, options = {}) {
   await page.route('**/www.googleapis.com/calendar/v3/users/me/calendarList*', route => json(route, { items: [{ id: 'legacy-calendar', summary: 'Legacy calendar', primary: true }] }))
   await page.route('**/accounts.google.com/o/oauth2/v2/auth*', route => {
     model.authorizationUrls.push(route.request().url())
-    return route.fulfill({ status: 200, contentType: 'text/html', body: '<html><script>window.location.replace("http://localhost:8080/__oauth_capture__")</script></html>' })
+    return route.fulfill({ status: 200, contentType: 'text/html', body: `<html><script>window.location.replace("${ORIGIN}/__oauth_capture__")</script></html>` })
   })
-  await page.route('**/localhost:8080/__oauth_capture__', route => route.fulfill({ status: 200, contentType: 'text/html', body: '<html><body>Authorization intercepted locally</body></html>' }))
+  await page.route(`**/${HOST}/__oauth_capture__`, route => route.fulfill({ status: 200, contentType: 'text/html', body: '<html><body>Authorization intercepted locally</body></html>' }))
   return model
 }
 

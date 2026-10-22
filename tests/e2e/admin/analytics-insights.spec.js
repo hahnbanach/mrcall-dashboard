@@ -41,7 +41,7 @@ test.describe('AnalyticsAdmin: assistants to review, across the whole platform',
     await expect(assistants.getByText(BUSINESS_ID)).toBeVisible({ timeout: 15000 })
 
     const notSolvedHeader = assistants.locator('th').filter({ hasText: /^\s*Unresolved/ })
-    await expect(notSolvedHeader.getByText('Assessed by the assistant')).toBeVisible()
+    await expect(notSolvedHeader.getByLabel('Assessed by the assistant')).toBeVisible()
     await assistants.getByRole('combobox', { name: 'Sort by' }).click()
     await expect(page.getByRole('option', { name: 'Unresolved (assessed by the assistant)', exact: true })).toBeVisible()
     await page.keyboard.press('Escape')
@@ -81,11 +81,11 @@ test.describe('AnalyticsAdmin: assistants to review, outcome 9', () => {
 
     // caller_left is neither in the count nor in the base of "Unresolved"
     await expect(await cellUnder(assistants, 'Unresolved')).toHaveText('33% (10 of 30)')
-    await expect(await cellUnder(assistants, 'Hung up without speaking')).toHaveText('25% (12 of 48)')
-    await expect(await cellUnder(assistants, 'Not answered by the assistant')).toHaveText('0% (0 of 48)')
-    await expect(await cellUnder(assistants, 'Spoke but never said what they wanted')).toHaveText('17% (6 of 36)')
+    await expect(await cellUnder(assistants, 'Silent callers')).toHaveText('25% (12 of 48)')
+    await expect(await cellUnder(assistants, 'Not answered')).toHaveText('0% (0 of 48)')
+    await expect(await cellUnder(assistants, 'No request')).toHaveText('17% (6 of 36)')
     // caller_left is the assistant's own judgement, as unresolved is
-    await expect(assistants.locator('th').filter({ hasText: 'Spoke but never said what they wanted' }).getByText('Assessed by the assistant')).toBeVisible()
+    await expect(assistants.locator('th').filter({ hasText: 'No request' }).getByLabel('Assessed by the assistant')).toBeVisible()
   })
 
   test('the three new shares are sort options, and choosing one asks StarChat for that sort', async ({ adminPage: page }) => {
@@ -275,6 +275,34 @@ test.describe('AnalyticsAdmin: integrations and MrCall\'s own configuration sugg
   })
 })
 
+test.describe('AnalyticsAdmin: a later page that fails', () => {
+  for (const [status, label] of [[404, '404'], [503, '503'], [500, '500']]) {
+    test(`a ${label} on the second page keeps the first, says so, and a retry asks again with the same asOf`, async ({ adminPage: page }) => {
+      const requests = []
+      let fail = true
+      await page.route('**/customer/insights/integrations*', (route) => {
+        const url = new URL(route.request().url())
+        const from = Number(url.searchParams.get('from') || 0)
+        requests.push({ from, asOf: url.searchParams.get('asOf') })
+        if (from > 0 && fail) { fail = false; return route.fulfill({ status, contentType: 'application/json', body: '{}' }) }
+        const items = []
+        for (let i = from; i < Math.min(from + 20, 25); i++) items.push(integrationItem(i))
+        return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ total: 25, asOf: 1761100000000, items }) })
+      })
+      await page.goto('/analytics-admin')
+      const scope = section(page, 'Integrations and information asked')
+      await expect(scope.getByText('Integration request 19')).toBeVisible({ timeout: 15000 })
+      await scope.getByRole('button', { name: 'Load more integrations' }).click()
+      await expect(scope.getByText('The next page could not be loaded.')).toBeVisible()
+      await expect(scope.getByText('Integration request 19')).toBeVisible()
+      await scope.getByRole('button', { name: 'Try again' }).click()
+      await expect(scope.getByText('Integration request 24')).toBeVisible()
+      await expect(scope.getByText('The next page could not be loaded.')).toHaveCount(0)
+      expect(requests.slice(1)).toEqual([{ from: 20, asOf: '1761100000000' }, { from: 20, asOf: '1761100000000' }])
+    })
+  }
+})
+
 test.describe('AnalyticsAdmin: assistants by name, and the business filter undone where it was set', () => {
   test('a row shows the business\'s name with its id beside it, or the id alone without a name', async ({ adminPage: page }) => {
     await page.route('**/customer/analytics/assistants*', (route) => route.fulfill({
@@ -312,6 +340,45 @@ test.describe('AnalyticsAdmin: assistants by name, and the business filter undon
   })
 })
 
+test.describe('AnalyticsAdmin: the first load asks each section once', () => {
+  test('one outcomes, one dashboard and one breakdown request, not one per watcher', async ({ adminPage: page }) => {
+    const counts = { outcomes: 0, dashboard: 0, breakdown: 0 }
+    await page.route('**/customer/analytics/outcomes*', (route) => { counts.outcomes += 1; route.fallback() })
+    await page.route('**/customer/analytics/dashboard*', (route) => { counts.dashboard += 1; route.fallback() })
+    await page.route('**/customer/analytics/business-breakdown*', (route) => { counts.breakdown += 1; route.fallback() })
+    await page.goto('/analytics-admin')
+    await expect(section(page, 'How the calls went')).toBeVisible({ timeout: 15000 })
+    await page.waitForTimeout(1000)
+    expect(counts).toEqual({ outcomes: 1, dashboard: 1, breakdown: 1 })
+  })
+})
+
+test.describe('AnalyticsAdmin: the assistants table reads on one screen', () => {
+  test('short headers (the full wording in a legend), and the business column stays while the table scrolls sideways', async ({ adminPage: page }) => {
+    await page.route('**/customer/analytics/assistants*', (route) => route.fulfill({
+      status: 200, contentType: 'application/json',
+      body: JSON.stringify(assistantsResponse({ businesses: [{ ...assistantsResponse().businesses[0], businessName: 'Studio Demo' }] })),
+    }))
+    await page.setViewportSize({ width: 1024, height: 900 })
+    await page.goto('/analytics-admin')
+    const assistants = section(page, 'Assistants to review')
+    await expect(assistants.getByRole('row', { name: /Studio Demo/ })).toBeVisible({ timeout: 15000 })
+    // one line of header, the assessed tag beside it: ~170px and 7 lines before
+    const head = await assistants.locator('thead').boundingBox()
+    expect(head.height).toBeLessThanOrEqual(64)
+    await expect(assistants.getByRole('definition').filter({ hasText: 'Hung up without speaking' })).toBeVisible()
+
+    const cell = assistants.getByRole('cell', { name: /Studio Demo/ })
+    await cell.scrollIntoViewIfNeeded()
+    const before = await cell.boundingBox()
+    await assistants.locator('.p-datatable-table-container').evaluate((el) => { el.scrollLeft = el.scrollWidth })
+    await page.waitForTimeout(200)
+    const after = await cell.boundingBox()
+    expect(Math.abs(after.x - before.x)).toBeLessThanOrEqual(1)
+    await expect(cell).toBeInViewport()
+  })
+})
+
 test.describe('AnalyticsAdmin: a row chosen on a phone', () => {
   test('the table stays while it reloads, and the control that widens the page again is on screen', async ({ adminPage: page }) => {
     await page.setViewportSize({ width: 375, height: 812 })
@@ -339,15 +406,24 @@ test.describe('AnalyticsAdmin: a row chosen on a phone', () => {
 
 test.describe('AnalyticsAdmin: the filter bar', () => {
   test('stays visible while the page scrolls, and clears each filter from where it shows it', async ({ adminPage: page }) => {
-    await page.route('**/customer/analytics/assistants*', (route) => route.fulfill({
-      status: 200, contentType: 'application/json',
-      body: JSON.stringify(assistantsResponse({ businesses: [{ ...assistantsResponse().businesses[0], businessName: 'Studio Demo' }] })),
-    }))
+    // No section of the page names the business or the owner: the bar asks for both. The owner is
+    // named from the contact on its own business (`crm/business/search` by `owner`), since
+    // StarChat's admin user record carries only the role.
+    await page.route('**/crm/business/search*', (route) => {
+      const body = route.request().postDataJSON() || {}
+      if (body.owner !== 'owner-9') return route.fallback()
+      return route.fulfill({
+        status: 200, contentType: 'application/json',
+        body: JSON.stringify([{ ...mockBusiness, businessId: 'biz-owned', name: 'Demo', surname: 'Owner', emailAddress: 'demo-owner@example.com' }]),
+      })
+    })
     await page.goto(`/analytics-admin?businessId=${BUSINESS_ID}&ownerId=owner-9&plan=restaurant`)
     const bar = page.getByRole('region', { name: 'Active filters' })
-    await expect(bar.getByText('Studio Demo')).toBeVisible({ timeout: 15000 })
-    await expect(bar.getByText('owner-9')).toBeVisible()
-    await expect(bar.getByText('restaurant')).toBeVisible()
+    await expect(bar.getByText(mockBusiness.companyName)).toBeVisible({ timeout: 15000 })
+    await expect(bar.getByText('Demo Owner')).toBeVisible()
+    await expect(bar.getByText(BUSINESS_ID)).toHaveCount(0)
+    await expect(bar.getByText('owner-9')).toHaveCount(0)
+    await expect(bar.getByText('restaurant', { exact: true })).toBeVisible()
     await expect(bar.getByText('Last 30 days')).toBeVisible()
 
     await section(page, 'Integrations and information asked').scrollIntoViewIfNeeded()
@@ -373,6 +449,21 @@ test.describe('AnalyticsAdmin: the filter bar', () => {
     const box = await bar.boundingBox()
     // one line of chips: 24px controls in a padded bar; two lines measured 95px on the first review
     expect(box.height).toBeLessThanOrEqual(56)
+  })
+
+  test('over the scope-wide lists, which follow no filter, the bar says what they cover', async ({ adminPage: page }) => {
+    await page.route('**/customer/insights/integrations*', (route) => route.fulfill({
+      status: 200, contentType: 'application/json', body: JSON.stringify({ total: 1, items: [integrationItem(1)] }),
+    }))
+    await page.goto(`/analytics-admin?businessId=${BUSINESS_ID}`)
+    const bar = page.getByRole('region', { name: 'Active filters' })
+    await expect(bar.getByText('Last 30 days')).toBeVisible({ timeout: 15000 })
+    await expect(bar.getByText('This section: every business you can see, last 30 days')).toHaveCount(0)
+    await section(page, 'Integrations and information asked').getByText('Integration request 1').scrollIntoViewIfNeeded()
+    await expect(bar.getByText('This section: every business you can see, last 30 days')).toBeVisible()
+    await expect(bar.getByRole('list', { name: 'Filters not applied to this section' })).toBeVisible()
+    await page.locator('#app-central-content').evaluate((el) => el.scrollTo(0, 0))
+    await expect(bar.getByText('This section: every business you can see, last 30 days')).toHaveCount(0)
   })
 
   test('a changed period shows in the bar and is reset from it', async ({ adminPage: page }) => {

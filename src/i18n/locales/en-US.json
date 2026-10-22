@@ -1987,8 +1987,8 @@
         "title": "Call reports",
         "none": "No report yet.",
         "summaryTitle": "The period",
-        "booked": "Booked calls: {count}",
-        "transferred": "Transferred calls, as reported by the carriers: {count}",
+        "booked": "Booked calls: {count} of {total}",
+        "transferred": "Transferred calls, as reported by the carriers: {count} of {total}",
         "topicsTitle": "Topics",
         "newTopic": "New",
         "topicShare": "{calls} calls ({percent}%)",
@@ -1998,7 +1998,8 @@
         "integrationTitle": "A system to connect",
         "mrcallConfigTitle": "MrCall configuration suggestions",
         "flaggedTitle": "Calls worth reading",
-        "loadMore": "Show earlier reports"
+        "loadMore": "Show earlier reports",
+        "callsInPeriod": "{calls} calls in this period"
       },
       "assistants": {
         "title": "Assistants to review",
@@ -2026,7 +2027,30 @@
           "extractionFailures": "Extraction failures"
         },
         "showAll": "Show all businesses",
-        "noName": "No name on record"
+        "noName": "No name on record",
+        "short": {
+          "calls": "Calls",
+          "notSolved": "Unresolved",
+          "callerSilent": "Silent callers",
+          "notAnswered": "Not answered",
+          "callerLeft": "No request",
+          "unanswered": "Open questions",
+          "checks": "Checks",
+          "skillErrors": "Skill errors",
+          "extractionIssues": "Extraction"
+        },
+        "legend": {
+          "notSolved": "over the calls where the caller asked something (resolved, unresolved or handed over)",
+          "callerSilent": "over the calls answered",
+          "notAnswered": "over the calls offered to the assistant",
+          "callerLeft": "over the calls with a resolution",
+          "unanswered": "calls with a question left unanswered, over the calls where questions were recorded",
+          "checks": "calls where a check fired, over the calls checked",
+          "skillErrors": "calls with a skill error, over all calls",
+          "extractionIssues": "calls whose data extraction failed, over all calls"
+        },
+        "legendTitle": "How each column is counted",
+        "assessedShort": "assessed"
       },
       "scope": {
         "title": "Integrations and information asked",
@@ -2049,7 +2073,9 @@
         "businessesCount": "1 business | {n} businesses",
         "reportsCount": "1 report | {n} reports",
         "shownIntegrations": "{shown} of {total} items shown",
-        "shownSuggestions": "{shown} of {total} businesses shown"
+        "shownSuggestions": "{shown} of {total} businesses shown",
+        "moreFailed": "The next page could not be loaded.",
+        "retry": "Try again"
       },
       "filterBar": {
         "title": "Active filters",
@@ -2061,7 +2087,9 @@
         "clearBusiness": "Clear the business filter",
         "clearOwner": "Clear the owner filter",
         "clearPlan": "Clear the plan filter",
-        "clearPeriod": "Back to the last 30 days"
+        "clearPeriod": "Back to the last 30 days",
+        "scopeNote": "This section: every business you can see, last 30 days",
+        "notApplied": "Filters not applied to this section"
       }
     }
   },

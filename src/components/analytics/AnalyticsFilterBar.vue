@@ -1,7 +1,12 @@
 <template>
   <section class="analytics-filter-bar" :aria-label="$t('components.callInsights.filterBar.title')">
     <span class="filter-bar-title">{{ $t("components.callInsights.filterBar.title") }}</span>
-    <ul class="filter-bar-list">
+    <span v-if="scopeNote" class="filter-bar-note" role="status">{{ scopeNote }}</span>
+    <ul
+      class="filter-bar-list"
+      :class="{ 'filter-bar-list-idle': !!scopeNote }"
+      :aria-label="scopeNote ? $t('components.callInsights.filterBar.notApplied') : null"
+    >
       <li v-for="chip in chips" :key="chip.key" class="filter-chip" :class="{ 'filter-chip-clearable': !!chip.clearLabel }">
         <span class="filter-chip-name">{{ chip.name }}</span>
         <span class="filter-chip-value" :title="chip.title || chip.value">{{ chip.value }}</span>
@@ -31,6 +36,9 @@
 export default {
   props: {
     chips: { type: Array, required: true },
+    // Set while a section that follows none of these filters is on screen (the scope-wide lists):
+    // what that section covers, said in the bar, and the chips shown as not applying to it.
+    scopeNote: { type: String, default: null },
   },
   emits: ["clear"],
 };
@@ -70,6 +78,16 @@ export default {
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+.filter-bar-note {
+  font-size: 13px;
+  font-weight: 600;
+  color: @mrcall_dark_grey_text;
+}
+
+.filter-bar-list-idle {
+  opacity: 0.55;
 }
 
 .filter-chip {
@@ -148,6 +166,11 @@ export default {
 
   .filter-chip-value {
     max-width: 160px;
+  }
+
+  .filter-bar-note {
+    flex: 0 0 auto;
+    white-space: nowrap;
   }
 }
 </style>

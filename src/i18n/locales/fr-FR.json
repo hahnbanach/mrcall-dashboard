@@ -1984,8 +1984,8 @@
         "title": "Rapports d'appels",
         "none": "Pas encore de rapport.",
         "summaryTitle": "La période",
-        "booked": "Appels réservés : {count}",
-        "transferred": "Appels transférés, selon les opérateurs : {count}",
+        "booked": "Appels réservés : {count} sur {total}",
+        "transferred": "Appels transférés, selon les opérateurs : {count} sur {total}",
         "topicsTitle": "Sujets",
         "newTopic": "Nouveau",
         "topicShare": "{calls} appels ({percent} %)",
@@ -1995,7 +1995,8 @@
         "integrationTitle": "Un système à connecter",
         "mrcallConfigTitle": "Suggestions de configuration MrCall",
         "flaggedTitle": "Appels à relire",
-        "loadMore": "Afficher les rapports précédents"
+        "loadMore": "Afficher les rapports précédents",
+        "callsInPeriod": "{calls} appels sur cette période"
       },
       "assistants": {
         "title": "Assistants à revoir",
@@ -2023,7 +2024,30 @@
           "extractionFailures": "Problèmes d'extraction"
         },
         "showAll": "Afficher toutes les entreprises",
-        "noName": "Aucun nom enregistré"
+        "noName": "Aucun nom enregistré",
+        "short": {
+          "calls": "Appels",
+          "notSolved": "Non résolus",
+          "callerSilent": "Silencieux",
+          "notAnswered": "Sans réponse",
+          "callerLeft": "Sans demande",
+          "unanswered": "Questions ouvertes",
+          "checks": "Contrôles",
+          "skillErrors": "Erreurs de skill",
+          "extractionIssues": "Extraction"
+        },
+        "legend": {
+          "notSolved": "sur les appels où l'appelant a demandé quelque chose (résolus, non résolus ou transmis)",
+          "callerSilent": "sur les appels décrochés",
+          "notAnswered": "sur les appels arrivés à l'assistant",
+          "callerLeft": "sur les appels ayant un résultat",
+          "unanswered": "appels avec une question restée sans réponse, sur les appels où les questions sont enregistrées",
+          "checks": "appels où un contrôle s'est déclenché, sur les appels contrôlés",
+          "skillErrors": "appels avec une erreur de skill, sur tous les appels",
+          "extractionIssues": "appels dont l'extraction des données a échoué, sur tous les appels"
+        },
+        "legendTitle": "Comment chaque colonne est comptée",
+        "assessedShort": "évalué"
       },
       "scope": {
         "title": "Intégrations et informations demandées",
@@ -2046,7 +2070,9 @@
         "businessesCount": "1 entreprise | {n} entreprises",
         "reportsCount": "1 rapport | {n} rapports",
         "shownIntegrations": "{shown} éléments affichés sur {total}",
-        "shownSuggestions": "{shown} entreprises affichées sur {total}"
+        "shownSuggestions": "{shown} entreprises affichées sur {total}",
+        "moreFailed": "La page suivante n'a pas pu être chargée.",
+        "retry": "Réessayer"
       },
       "filterBar": {
         "title": "Filtres actifs",
@@ -2058,7 +2084,9 @@
         "clearBusiness": "Retirer le filtre entreprise",
         "clearOwner": "Retirer le filtre propriétaire",
         "clearPlan": "Retirer le filtre formule",
-        "clearPeriod": "Revenir aux 30 derniers jours"
+        "clearPeriod": "Revenir aux 30 derniers jours",
+        "scopeNote": "Cette section : toutes les entreprises que vous voyez, 30 derniers jours",
+        "notApplied": "Filtres non appliqués à cette section"
       }
     }
   },

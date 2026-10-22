@@ -2,7 +2,7 @@
   <span class="insight-label">
     {{ label }}
     <Tag
-      v-if="assessed"
+      v-if="assessed && marked"
       severity="secondary"
       :value="$t('components.callInsights.assessedMarking')"
       class="insight-assessed-tag"
@@ -23,6 +23,8 @@ export default {
   props: {
     dimension: { type: String, required: true },
     value: { type: String, required: true },
+    // false where a whole line of values carries the marking once (a report's lines)
+    marked: { type: Boolean, default: true },
   },
   computed: {
     label() {

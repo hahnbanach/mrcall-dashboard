@@ -35,6 +35,7 @@
           :rows="10"
           :paginator="businesses.length > 10"
           stripedRows
+          scrollable
           selectionMode="single"
           dataKey="businessId"
           :selection="selectedRow"
@@ -42,7 +43,8 @@
           @row-select="onRowSelect"
           @row-unselect="onRowSelect"
         >
-          <Column :header="$t('components.callInsights.assistants.businessId')">
+          <!-- Frozen: the row's business stays in view while the shares scroll sideways. -->
+          <Column frozen class="assistant-business-column" :header="$t('components.callInsights.assistants.businessId')">
             <template #body="slotProps">
               <span class="assistant-business">
                 <span class="assistant-business-name">{{ businessLabel(slotProps.data) }}</span>
@@ -51,20 +53,41 @@
               </span>
             </template>
           </Column>
-          <Column :header="$t('components.callInsights.assistants.calls')">
+          <Column>
+            <template #header>
+              <span class="assistant-header">{{ $t("components.callInsights.assistants.short.calls") }}</span>
+            </template>
             <template #body="slotProps">{{ slotProps.data.totalCalls }}</template>
           </Column>
+          <!-- Short headers on one line; the full wording and the base of each share are in the
+               legend under the table and in the header's tooltip. -->
           <Column v-for="column in shareColumns" :key="column.sort">
             <template #header>
-              <span :class="{ 'assessed-header': column.assessed }">
-                {{ $t("components.callInsights.assistants." + column.label) }}
-                <Tag v-if="column.assessed" severity="secondary" :value="$t('components.callInsights.assessedMarking')" class="insight-assessed-tag" />
+              <span class="assistant-header" :title="headerTitle(column)">
+                {{ $t("components.callInsights.assistants.short." + column.label) }}
+                <Tag
+                  v-if="column.assessed"
+                  severity="secondary"
+                  :value="$t('components.callInsights.assistants.assessedShort')"
+                  :aria-label="$t('components.callInsights.assessedMarking')"
+                  :title="$t('components.callInsights.assessedMarking')"
+                  class="insight-assessed-tag"
+                />
               </span>
             </template>
             <template #body="slotProps"><span class="assistant-share">{{ shareOf(slotProps.data, column.sort) }}</span></template>
           </Column>
         </DataTable>
       </div>
+      <dl class="assistants-legend" :aria-label="$t('components.callInsights.assistants.legendTitle')">
+        <template v-for="column in shareColumns" :key="column.sort">
+          <dt>{{ $t("components.callInsights.assistants.short." + column.label) }}</dt>
+          <dd>
+            {{ $t("components.callInsights.assistants." + column.label) }}<span v-if="column.assessed">
+              ({{ $t("components.callInsights.assessedMarking") }})</span>: {{ $t("components.callInsights.assistants.legend." + column.label) }}
+          </dd>
+        </template>
+      </dl>
     </template>
   </div>
 </template>
@@ -139,6 +162,10 @@ export default {
     },
   },
   methods: {
+    headerTitle(column) {
+      return this.$t("components.callInsights.assistants." + column.label) + ": " +
+        this.$t("components.callInsights.assistants.legend." + column.label);
+    },
     businessLabel(row) {
       return CallInsights.businessLabel(row.businessName, row.businessId);
     },
@@ -175,11 +202,6 @@ export default {
   max-width: 100%;
 }
 
-.assistants-section {
-  // brought into view after a row narrows the page: not under the sticky filter bar
-  scroll-margin-top: 96px;
-}
-
 .assistant-share {
   white-space: nowrap;
 }
@@ -206,10 +228,43 @@ export default {
   padding: 12px;
 }
 
-.assessed-header {
+.assistant-header {
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  white-space: nowrap;
+}
+
+.assistants-legend {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 4px 12px;
+  margin: 12px 0 0 0;
+  font-size: 13px;
+  color: @mrcall_grey_text;
+
+  dt {
+    font-weight: 600;
+    color: @mrcall_dark_grey_text;
+  }
+
+  dd {
+    margin: 0;
+  }
+}
+
+// The frozen column needs an opaque background, or the shares show through it as they scroll under:
+// the header cell its own (its row has none), a body cell its row's (striped, selected).
+:deep(.assistant-business-column) {
+  min-width: 160px;
+}
+
+:deep(th.assistant-business-column) {
+  background: @mrcall_white;
+}
+
+:deep(td.assistant-business-column) {
+  background: inherit;
 }
 
 .insight-assessed-tag {

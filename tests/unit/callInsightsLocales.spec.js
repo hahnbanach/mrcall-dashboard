@@ -167,3 +167,45 @@ describe('callInsights: the keys of outcome 10', () => {
     })
   }
 })
+
+/**
+ * The milestone review of D12: short assistants headers with their full wording and base in a legend,
+ * a failed later page with a retry, the bar saying what the scope-wide lists cover, and a report's
+ * period total as the base of its counts.
+ */
+describe('callInsights: the keys of the D12 review', () => {
+  const SHORT = ['calls', 'notSolved', 'callerSilent', 'notAnswered', 'callerLeft', 'unanswered', 'checks', 'skillErrors', 'extractionIssues']
+  const KEYS = [
+    ...SHORT.map(k => `assistants.short.${k}`),
+    ...SHORT.filter(k => k !== 'calls').map(k => `assistants.legend.${k}`),
+    'assistants.legendTitle', 'assistants.assessedShort',
+    'scope.moreFailed', 'scope.retry',
+    'filterBar.scopeNote', 'filterBar.notApplied',
+    'reports.callsInPeriod',
+  ]
+
+  it('en-US names every one of them', () => {
+    expect(referenceKeys).toEqual(expect.arrayContaining(KEYS))
+  })
+
+  const get = (obj, path) => path.split('.').reduce((o, k) => (o ? o[k] : undefined), obj)
+  const WORDED = ['assistants.legendTitle', 'scope.moreFailed', 'scope.retry', 'filterBar.scopeNote', 'filterBar.notApplied',
+    'reports.callsInPeriod', 'assistants.short.callerSilent', 'assistants.legend.notSolved']
+  for (const [locale, messages] of Object.entries(LOCALES)) {
+    if (locale === 'en-US') continue
+    it(`${locale} words them in its own language`, () => {
+      const ci = messages.components.callInsights
+      const copied = WORDED.filter(k => get(ci, k) === get(enUS.components.callInsights, k))
+      expect(copied, `${locale} carries English text for these keys`).toEqual([])
+    })
+  }
+
+  // the base of the report's booked and transferred lines
+  it('says booked and transferred over the period\'s calls in every locale', () => {
+    for (const [locale, messages] of Object.entries(LOCALES)) {
+      const r = messages.components.callInsights.reports
+      expect(r.booked, `${locale} reports.booked`).toContain('{total}')
+      expect(r.transferred, `${locale} reports.transferred`).toContain('{total}')
+    }
+  })
+})

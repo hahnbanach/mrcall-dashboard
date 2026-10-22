@@ -22,7 +22,7 @@ npx playwright test --project=desktop
 
 `playwright.config.js` configures `tests/e2e/`, with domain suites including `auth/`, `public/`, `admin/`, `responsive/`, and `visual/`. Page objects live in `tests/e2e/pages/`; fixtures live in `tests/e2e/fixtures/`.
 
-The base URL is `http://localhost:8080`. Desktop, tablet and mobile projects use widths of 1440, 768 and 375 pixels. Visual specs run only under the desktop project and select their own viewport sizes. The test server runs `npm run serve -- --mode test`; the test process loads `.env.test` when present and otherwise `.env`. Supply local configuration before running the application; do not commit credentials.
+The base URL is `http://localhost:8080`, or `http://localhost:$E2E_PORT` when `E2E_PORT` is set (for when another process holds 8080: a container bound to `[::1]:8080` answers `localhost` first); the fixtures read the same origin from `tests/e2e/fixtures/origin.js`, and the test server is started on that port. Desktop, tablet and mobile projects use widths of 1440, 768 and 375 pixels. Visual specs run only under the desktop project and select their own viewport sizes. The test server runs `npm run serve -- --mode test --port <port>`; the test process loads `.env.test` when present and otherwise `.env`. Supply local configuration before running the application; do not commit credentials.
 
 ## Environment routing
 

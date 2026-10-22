@@ -1982,8 +1982,8 @@
         "title": "Kõnearuanded",
         "none": "Ühtegi aruannet veel pole.",
         "summaryTitle": "Periood",
-        "booked": "Broneeritud kõned: {count}",
-        "transferred": "Suunatud kõned operaatorite teatel: {count}",
+        "booked": "Broneeritud kõned: {count}/{total}",
+        "transferred": "Suunatud kõned operaatorite teatel: {count}/{total}",
         "topicsTitle": "Teemad",
         "newTopic": "Uus",
         "topicShare": "{calls} kõnet ({percent}%)",
@@ -1993,7 +1993,8 @@
         "integrationTitle": "Ühendatav süsteem",
         "mrcallConfigTitle": "MrCalli seadistussoovitused",
         "flaggedTitle": "Lugemist väärivad kõned",
-        "loadMore": "Näita varasemaid aruandeid"
+        "loadMore": "Näita varasemaid aruandeid",
+        "callsInPeriod": "{calls} kõnet selles perioodis"
       },
       "assistants": {
         "title": "Ülevaatamist vajavad assistendid",
@@ -2021,7 +2022,30 @@
           "extractionFailures": "Väljavõtteprobleemid"
         },
         "showAll": "Näita kõiki ettevõtteid",
-        "noName": "Nimi puudub"
+        "noName": "Nimi puudub",
+        "short": {
+          "calls": "Kõned",
+          "notSolved": "Lahendamata",
+          "callerSilent": "Vaiksed",
+          "notAnswered": "Vastamata",
+          "callerLeft": "Soovita",
+          "unanswered": "Avatud küsimused",
+          "checks": "Kontrollid",
+          "skillErrors": "Skilli vead",
+          "extractionIssues": "Eraldamine"
+        },
+        "legend": {
+          "notSolved": "kõnedest, kus helistaja midagi küsis (lahendatud, lahendamata või edasi antud)",
+          "callerSilent": "vastatud kõnedest",
+          "notAnswered": "assistendini jõudnud kõnedest",
+          "callerLeft": "tulemusega kõnedest",
+          "unanswered": "kõned, kus küsimus jäi vastuseta, kõnedest, kus küsimused registreeriti",
+          "checks": "kõned, kus kontroll rakendus, kontrollitud kõnedest",
+          "skillErrors": "skilli veaga kõned, kõigist kõnedest",
+          "extractionIssues": "kõned, mille andmete eraldamine ebaõnnestus, kõigist kõnedest"
+        },
+        "legendTitle": "Kuidas iga veergu loetakse",
+        "assessedShort": "hinnatud"
       },
       "scope": {
         "title": "Integratsioonid ja küsitud teave",
@@ -2044,7 +2068,9 @@
         "businessesCount": "1 ettevõte | {n} ettevõtet",
         "reportsCount": "1 aruanne | {n} aruannet",
         "shownIntegrations": "Näidatud {shown}/{total} kirjet",
-        "shownSuggestions": "Näidatud {shown}/{total} ettevõtet"
+        "shownSuggestions": "Näidatud {shown}/{total} ettevõtet",
+        "moreFailed": "Järgmist lehte ei õnnestunud laadida.",
+        "retry": "Proovi uuesti"
       },
       "filterBar": {
         "title": "Aktiivsed filtrid",
@@ -2056,7 +2082,9 @@
         "clearBusiness": "Eemalda ettevõtte filter",
         "clearOwner": "Eemalda omaniku filter",
         "clearPlan": "Eemalda paketi filter",
-        "clearPeriod": "Tagasi viimase 30 päeva juurde"
+        "clearPeriod": "Tagasi viimase 30 päeva juurde",
+        "scopeNote": "See jaotis: kõik ettevõtted, mida näed, viimased 30 päeva",
+        "notApplied": "Filtrid, mis sellele jaotisele ei kehti"
       }
     }
   },

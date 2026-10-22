@@ -1,5 +1,5 @@
 <template>
-  <div v-if="status !== 'absent'" class="analytics-section call-insights-section">
+  <div v-if="status !== 'absent'" class="analytics-section call-insights-section" :aria-busy="status === 'loading' ? 'true' : 'false'">
     <h3 class="section-title">{{ $t("components.callInsights.topics.title") }}</h3>
     <div v-if="status === 'needsBusiness'" class="insights-note">
       {{ $t("components.callInsights.topics.chooseBusiness") }}
@@ -7,7 +7,9 @@
     <div v-else-if="status === 'unavailable'" class="insights-note">
       {{ $t("components.callInsights.notAvailableYet") }}
     </div>
-    <template v-else-if="status === 'ok' && data">
+    <!-- While a new answer is on its way the previous one stays (marked busy): a section that emptied
+         itself made the page shrink and jump under the user (the D12 review, a row chosen on a phone). -->
+    <template v-else-if="(status === 'ok' || status === 'loading') && data">
       <p class="topics-base">
         {{ $t("components.callInsights.topics.base", { count: formatNumber(data.callsWithTopics), previous: formatNumber(data.previousCallsWithTopics) }) }}
       </p>

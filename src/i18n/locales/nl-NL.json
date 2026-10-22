@@ -1982,8 +1982,8 @@
         "title": "Gespreksrapporten",
         "none": "Nog geen rapport.",
         "summaryTitle": "De periode",
-        "booked": "Geboekte gesprekken: {count}",
-        "transferred": "Doorverbonden gesprekken, zoals gemeld door de providers: {count}",
+        "booked": "Geboekte gesprekken: {count} van {total}",
+        "transferred": "Doorverbonden gesprekken, zoals gemeld door de providers: {count} van {total}",
         "topicsTitle": "Onderwerpen",
         "newTopic": "Nieuw",
         "topicShare": "{calls} gesprekken ({percent}%)",
@@ -1993,7 +1993,8 @@
         "integrationTitle": "Een systeem om te koppelen",
         "mrcallConfigTitle": "MrCall-configuratiesuggesties",
         "flaggedTitle": "Gesprekken die het lezen waard zijn",
-        "loadMore": "Eerdere rapporten tonen"
+        "loadMore": "Eerdere rapporten tonen",
+        "callsInPeriod": "{calls} gesprekken in deze periode"
       },
       "assistants": {
         "title": "Te controleren assistenten",
@@ -2021,7 +2022,30 @@
           "extractionFailures": "Extractieproblemen"
         },
         "showAll": "Alle bedrijven tonen",
-        "noName": "Geen naam bekend"
+        "noName": "Geen naam bekend",
+        "short": {
+          "calls": "Gesprekken",
+          "notSolved": "Onopgelost",
+          "callerSilent": "Stil",
+          "notAnswered": "Niet beantwoord",
+          "callerLeft": "Geen vraag",
+          "unanswered": "Open vragen",
+          "checks": "Controles",
+          "skillErrors": "Skillfouten",
+          "extractionIssues": "Extractie"
+        },
+        "legend": {
+          "notSolved": "van de gesprekken waarin de beller iets vroeg (opgelost, onopgelost of doorgegeven)",
+          "callerSilent": "van de beantwoorde gesprekken",
+          "notAnswered": "van de gesprekken die bij de assistent binnenkwamen",
+          "callerLeft": "van de gesprekken met een uitkomst",
+          "unanswered": "gesprekken met een onbeantwoorde vraag, van de gesprekken waarin vragen zijn vastgelegd",
+          "checks": "gesprekken waarin een controle afging, van de gecontroleerde gesprekken",
+          "skillErrors": "gesprekken met een skillfout, van alle gesprekken",
+          "extractionIssues": "gesprekken waarvan de gegevensextractie mislukte, van alle gesprekken"
+        },
+        "legendTitle": "Hoe elke kolom wordt geteld",
+        "assessedShort": "beoordeeld"
       },
       "scope": {
         "title": "Integraties en gevraagde informatie",
@@ -2044,7 +2068,9 @@
         "businessesCount": "1 bedrijf | {n} bedrijven",
         "reportsCount": "1 rapport | {n} rapporten",
         "shownIntegrations": "{shown} van {total} items getoond",
-        "shownSuggestions": "{shown} van {total} bedrijven getoond"
+        "shownSuggestions": "{shown} van {total} bedrijven getoond",
+        "moreFailed": "De volgende pagina kon niet worden geladen.",
+        "retry": "Opnieuw proberen"
       },
       "filterBar": {
         "title": "Actieve filters",
@@ -2056,7 +2082,9 @@
         "clearBusiness": "Bedrijfsfilter wissen",
         "clearOwner": "Eigenaarfilter wissen",
         "clearPlan": "Abonnementsfilter wissen",
-        "clearPeriod": "Terug naar de laatste 30 dagen"
+        "clearPeriod": "Terug naar de laatste 30 dagen",
+        "scopeNote": "Deze sectie: alle bedrijven die je kunt zien, laatste 30 dagen",
+        "notApplied": "Filters die niet voor deze sectie gelden"
       }
     }
   },

@@ -70,7 +70,7 @@
       </div>
 
       <!-- The filters in force, each undone where it shows (brief outcome 10) -->
-      <AnalyticsFilterBar :chips="filterChips" @clear="onClearFilter" />
+      <AnalyticsFilterBar :chips="filterChips" :scope-note="scopeNote" @clear="onClearFilter" />
 
       <!-- KPI Cards -->
       <div v-if="dashboardData" class="analytics-section">
@@ -287,6 +287,7 @@
         :template-names="templateNames"
         @names="rememberNames"
         @error="handleApiError"
+        @in-view="scopeInView = $event"
       />
 
       <!-- Empty state -->
@@ -313,6 +314,7 @@ import { isSessionEnded } from "@/firebase/axiosConfig";
 import AnalyticsApi from "@/utils/Analytics";
 import TemplatesApi from "@/utils/Templates";
 import CallInsights from "@/utils/CallInsights";
+import { scrollBelowBar } from "@/utils/scrollBelowBar";
 import businessUtils from "@/utils/Business";
 import CallOutcomes from "@/components/analytics/CallOutcomes.vue";
 import CallTopics from "@/components/analytics/CallTopics.vue";
@@ -379,6 +381,10 @@ export default {
       roleReady: false,
       // businessId -> company name, from every answer that names a business (brief outcome 10)
       businessNames: {},
+      // ownerId -> a name for it (`CallInsights.ownerName`), for the owner filter's chip
+      ownerNames: {},
+      // the scope-wide lists are on screen: the bar says they follow none of its filters
+      scopeInView: false,
     };
   },
   computed: {
@@ -422,6 +428,9 @@ export default {
       this.templates.forEach((t) => { if (t.humanName) names[t.name] = t.humanName; });
       return names;
     },
+    scopeNote() {
+      return this.scopeInView ? this.$t("components.callInsights.filterBar.scopeNote") : null;
+    },
     filterChips() {
       const chips = [];
       if (this.businessId) {
@@ -437,7 +446,8 @@ export default {
         chips.push({
           key: "owner",
           name: this.$t("components.callInsights.filterBar.owner"),
-          value: this.ownerId,
+          value: this.ownerNames[this.ownerId] || this.ownerId,
+          title: this.ownerId,
           clearLabel: this.$t("components.callInsights.filterBar.clearOwner"),
         });
       }
@@ -721,6 +731,23 @@ export default {
     businessLabel(businessId) {
       return CallInsights.businessLabel(this.businessNames[businessId], businessId);
     },
+    // The bar names the business and the owner the page is filtered on, whatever section happens to
+    // name them: asked once each, the id shown while the answer is on its way or if there is none.
+    resolveFilterNames(user) {
+      const businessId = this.businessId;
+      if (businessId && !this.businessNames[businessId]) {
+        CallInsights.businessName(user, businessId)
+          .then((name) => { if (name) this.rememberNames({ [businessId]: name }); })
+          .catch((error) => { if (!isSessionEnded(error)) console.warn('AnalyticsAdmin business name:', error); });
+      }
+      const ownerId = this.ownerId;
+      if (ownerId && !(ownerId in this.ownerNames)) {
+        this.ownerNames = { ...this.ownerNames, [ownerId]: null };
+        CallInsights.ownerName(user, ownerId)
+          .then((name) => { this.ownerNames = { ...this.ownerNames, [ownerId]: name }; })
+          .catch((error) => { if (!isSessionEnded(error)) console.warn('AnalyticsAdmin owner name:', error); });
+      }
+    },
     rememberNames(names) {
       this.businessNames = { ...this.businessNames, ...names };
     },
@@ -784,6 +811,7 @@ export default {
       this.fetchTopics(user, request);
       this.fetchQuality(user, request);
       this.fetchAssistants(user, request);
+      this.resolveFilterNames(user);
       // Integrations and MrCall's own suggestions are ScopeInformation's own, fetched once the role
       // is known (`roleReady`), and follow none of these filters.
     },
@@ -878,7 +906,7 @@ export default {
       this.applyFilters();
       this.$nextTick(() => {
         const table = this.$el.querySelector && this.$el.querySelector('.assistants-section');
-        if (table && table.scrollIntoView) table.scrollIntoView({ block: 'start' });
+        scrollBelowBar(table);
       });
     },
     fetchTemplates() {

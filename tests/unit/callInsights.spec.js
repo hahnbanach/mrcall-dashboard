@@ -272,6 +272,26 @@ describe('businessName: a business\'s company name, for a page that names it', (
   })
 })
 
+describe('ownerName: an owner by the contact on its own business', () => {
+  // StarChat's admin user record carries only the role (`FirebaseUserRegistryItem`): the owner's name
+  // is the one its business was registered with.
+  it('searches the owner\'s businesses and names it by the contact\'s name, else its e-mail', async () => {
+    axios.post.mockResolvedValueOnce({ data: [{ businessId: 'b-1', name: ' Demo ', surname: 'Owner', emailAddress: 'o@example.com' }] })
+    expect(await CallInsights.ownerName(user, 'owner-9')).toBe('Demo Owner')
+    expect(axios.post.mock.calls[0][0]).toMatch(/\/crm\/business\/search$/)
+    expect(axios.post.mock.calls[0][1]).toEqual({ owner: 'owner-9', offset: 0, limit: 1 })
+    axios.post.mockResolvedValueOnce({ data: [{ businessId: 'b-1', emailAddress: 'o@example.com' }] })
+    expect(await CallInsights.ownerName(user, 'owner-9')).toBe('o@example.com')
+  })
+
+  it('has no name for an owner without businesses, or a 404', async () => {
+    axios.post.mockResolvedValueOnce({ data: [] })
+    expect(await CallInsights.ownerName(user, 'owner-9')).toBeNull()
+    axios.post.mockRejectedValueOnce(httpError(404))
+    expect(await CallInsights.ownerName(user, 'owner-9')).toBeNull()
+  })
+})
+
 describe('pageOf: one page of a scope-wide list', () => {
   it('reads total and items', () => {
     expect(CallInsights.pageOf({ total: 42, items: [{ text: 'a' }] })).toEqual({ total: 42, items: [{ text: 'a' }], asOf: undefined })
@@ -373,7 +393,7 @@ describe('pagedList: a scope-wide list loaded a page at a time, on demand', () =
     expect(list.hasMore).toBe(false)
   })
 
-  it('a failed later page keeps what is shown and reports the error; a failed first page hides the list', async () => {
+  it('a failed later page keeps what is shown and says so in the list, not in a toast; a failed first page hides the list and reports', async () => {
     const onError = vi.fn()
     const error = httpError(500)
     const fetchPage = vi.fn()
@@ -385,12 +405,43 @@ describe('pagedList: a scope-wide list loaded a page at a time, on demand', () =
     expect(list.items.length).toBe(2)
     expect(list.status).toBe('ok')
     expect(list.loadingMore).toBe(false)
-    expect(onError).toHaveBeenCalledWith(error)
+    expect(list.moreFailed).toBe(true)
+    expect(onError).not.toHaveBeenCalled()
 
     const failing = CallInsights.pagedList(() => Promise.reject(error), { onError })
     await failing.first()
     expect(failing.status).toBe('absent')
+    expect(onError).toHaveBeenCalledWith(error)
   })
+
+  // A later page that fails (404, 503, any error) is not the end of the list: what is shown stays,
+  // the list says the page failed, and asking again sends the same page with the same snapshot.
+  for (const [label, failure] of [
+    ['a 404 (null)', () => Promise.resolve(null)],
+    ['a 503 ({unavailable})', () => Promise.resolve({ unavailable: true })],
+    ['an error', () => Promise.reject(httpError(500))],
+  ]) {
+    it(`${label} on a later page keeps the list, marks the page failed, and a retry resends it with the same asOf`, async () => {
+      const onError = vi.fn()
+      const fetchPage = vi.fn()
+        .mockResolvedValueOnce({ ...page(0, 2, 4), asOf: 77 })
+        .mockImplementationOnce(failure)
+        .mockResolvedValueOnce({ ...page(2, 2, 4), asOf: 99 })
+      const list = CallInsights.pagedList(fetchPage, { size: 2, onError })
+      await list.first()
+      await list.more()
+      expect(list.items.length).toBe(2)
+      expect(list.moreFailed).toBe(true)
+      expect(list.hasMore).toBe(true)
+      expect(list.loadingMore).toBe(false)
+      await list.more()
+      expect(fetchPage.mock.calls[1]).toEqual([2, 2, 77])
+      expect(fetchPage.mock.calls[2]).toEqual([2, 2, 77])
+      expect(list.items.length).toBe(4)
+      expect(list.moreFailed).toBe(false)
+      expect(list.hasMore).toBe(false)
+    })
+  }
 
   it('a session-ended error is left to the interceptor: no error reported', async () => {
     const onError = vi.fn()

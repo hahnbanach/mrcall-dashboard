@@ -1982,8 +1982,8 @@
         "title": "Samtalerapporter",
         "none": "Ingen rapport ennå.",
         "summaryTitle": "Perioden",
-        "booked": "Bookede samtaler: {count}",
-        "transferred": "Viderekoblede samtaler, ifølge operatørene: {count}",
+        "booked": "Bookede samtaler: {count} av {total}",
+        "transferred": "Viderekoblede samtaler, ifølge operatørene: {count} av {total}",
         "topicsTitle": "Emner",
         "newTopic": "Nytt",
         "topicShare": "{calls} samtaler ({percent} %)",
@@ -1993,7 +1993,8 @@
         "integrationTitle": "Et system å koble til",
         "mrcallConfigTitle": "MrCalls konfigurasjonsforslag",
         "flaggedTitle": "Samtaler verdt å lese",
-        "loadMore": "Vis tidligere rapporter"
+        "loadMore": "Vis tidligere rapporter",
+        "callsInPeriod": "{calls} samtaler i perioden"
       },
       "assistants": {
         "title": "Assistenter å gjennomgå",
@@ -2021,7 +2022,30 @@
           "extractionFailures": "Uttrekksproblemer"
         },
         "showAll": "Vis alle bedrifter",
-        "noName": "Ikke noe navn registrert"
+        "noName": "Ikke noe navn registrert",
+        "short": {
+          "calls": "Samtaler",
+          "notSolved": "Uløste",
+          "callerSilent": "Tause",
+          "notAnswered": "Ubesvarte",
+          "callerLeft": "Ingen forespørsel",
+          "unanswered": "Åpne spørsmål",
+          "checks": "Kontroller",
+          "skillErrors": "Skillfeil",
+          "extractionIssues": "Uttrekk"
+        },
+        "legend": {
+          "notSolved": "av samtalene der den som ringte spurte om noe (løst, uløst eller overlevert)",
+          "callerSilent": "av de besvarte samtalene",
+          "notAnswered": "av samtalene som nådde assistenten",
+          "callerLeft": "av samtalene med et utfall",
+          "unanswered": "samtaler med et ubesvart spørsmål, av samtalene der spørsmål ble registrert",
+          "checks": "samtaler der en kontroll slo ut, av de kontrollerte samtalene",
+          "skillErrors": "samtaler med en skillfeil, av alle samtaler",
+          "extractionIssues": "samtaler der datauttrekket mislyktes, av alle samtaler"
+        },
+        "legendTitle": "Hvordan hver kolonne telles",
+        "assessedShort": "vurdert"
       },
       "scope": {
         "title": "Integrasjoner og etterspurt informasjon",
@@ -2044,7 +2068,9 @@
         "businessesCount": "1 bedrift | {n} bedrifter",
         "reportsCount": "1 rapport | {n} rapporter",
         "shownIntegrations": "{shown} av {total} elementer vist",
-        "shownSuggestions": "{shown} av {total} bedrifter vist"
+        "shownSuggestions": "{shown} av {total} bedrifter vist",
+        "moreFailed": "Neste side kunne ikke lastes inn.",
+        "retry": "Prøv igjen"
       },
       "filterBar": {
         "title": "Aktive filtre",
@@ -2056,7 +2082,9 @@
         "clearBusiness": "Fjern bedriftsfilteret",
         "clearOwner": "Fjern eierfilteret",
         "clearPlan": "Fjern abonnementsfilteret",
-        "clearPeriod": "Tilbake til de siste 30 dagene"
+        "clearPeriod": "Tilbake til de siste 30 dagene",
+        "scopeNote": "Denne delen: alle bedrifter du kan se, siste 30 dager",
+        "notApplied": "Filtre som ikke gjelder denne delen"
       }
     }
   },

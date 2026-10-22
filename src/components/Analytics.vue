@@ -11,7 +11,7 @@
       <OwnerSelector v-if="isReseller" />
 
       <!-- The filters in force, each undone where it shows (brief outcome 10) -->
-      <AnalyticsFilterBar :chips="filterChips" @clear="onClearFilter" />
+      <AnalyticsFilterBar :chips="filterChips" :scope-note="scopeNote" @clear="onClearFilter" />
 
       <!-- Date Range Controls -->
       <div class="analytics-section">
@@ -223,6 +223,7 @@
         :template-names="templateNames"
         @names="rememberNames"
         @error="handleApiError"
+        @in-view="scopeInView = $event"
       />
 
       <!-- Empty state -->
@@ -319,6 +320,9 @@ export default {
       focusReport: null,
       focusedReport: null,
       templateNames: {},
+      templatesFetched: false,
+      // the scope-wide lists are on screen: the bar says they follow none of its filters
+      scopeInView: false,
     };
   },
   computed: {
@@ -336,6 +340,9 @@ export default {
     // Only a reseller or an admin can widen the page past one business; an owner's page is its business.
     canLeaveBusiness() {
       return this.isReseller || this.isAdminRole;
+    },
+    scopeNote() {
+      return this.showScopePage && this.scopeInView ? this.$t("components.callInsights.filterBar.scopeNote") : null;
     },
     filterChips() {
       const chips = [];
@@ -527,7 +534,6 @@ export default {
       await this.establishRole();
       this.roleReady = true;
       this.fetchAllData();
-      if (this.showScopePage) this.fetchTemplateNames();
     };
     if (!this.store.state.user) {
       onAuthStateChanged(auth, (user) => {
@@ -594,14 +600,18 @@ export default {
     // The plan of an integrations item by its name, not its key (the admin page reads the same list).
     fetchTemplateNames() {
       const user = this.store.state.user;
-      if (!user || !user.accessToken) return;
+      if (this.templatesFetched || !user || !user.accessToken) return;
+      this.templatesFetched = true;
       TemplatesApi.list(user, this.$i18n.locale)
         .then((response) => {
           const names = {};
           (response.data || []).forEach((t) => { if (t.humanName) names[t.name] = t.humanName; });
           this.templateNames = names;
         })
-        .catch((error) => { if (!isSessionEnded(error)) console.warn('Analytics templates:', error); });
+        .catch((error) => {
+          this.templatesFetched = false;
+          if (!isSessionEnded(error)) console.warn('Analytics templates:', error);
+        });
     },
     reportFromRoute() {
       const value = Number(this.$route.query.report);
@@ -678,6 +688,8 @@ export default {
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
       if (!this.businessId) {
+        // the plan names the scope page's integrations show, however the page was reached
+        if (this.showScopePage) this.fetchTemplateNames();
         this.fetchScopeInsights(user, granularity, timezone);
         return;
       }

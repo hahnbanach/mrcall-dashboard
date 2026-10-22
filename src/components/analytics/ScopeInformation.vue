@@ -39,13 +39,14 @@
       </ul>
       <div v-if="integrations.items.length > 0" class="scope-pager">
         <span class="scope-shown">{{ $t("components.callInsights.scope.shownIntegrations", { shown: integrations.items.length, total: integrations.total }) }}</span>
+        <span v-if="integrations.moreFailed" class="scope-more-failed" role="alert">{{ $t("components.callInsights.scope.moreFailed") }}</span>
         <Button
           v-if="integrations.hasMore"
           type="button"
           size="small"
           outlined
           :loading="integrations.loadingMore"
-          :label="$t('components.callInsights.scope.loadMoreIntegrations')"
+          :label="integrations.moreFailed ? $t('components.callInsights.scope.retry') : $t('components.callInsights.scope.loadMoreIntegrations')"
           @click="integrations.more()"
         />
       </div>
@@ -79,13 +80,14 @@
         </div>
         <div v-if="configSuggestions.items.length > 0" class="scope-pager">
           <span class="scope-shown">{{ $t("components.callInsights.scope.shownSuggestions", { shown: configSuggestions.items.length, total: configSuggestions.total }) }}</span>
+          <span v-if="configSuggestions.moreFailed" class="scope-more-failed" role="alert">{{ $t("components.callInsights.scope.moreFailed") }}</span>
           <Button
             v-if="configSuggestions.hasMore"
             type="button"
             size="small"
             outlined
             :loading="configSuggestions.loadingMore"
-            :label="$t('components.callInsights.scope.loadMoreSuggestions')"
+            :label="configSuggestions.moreFailed ? $t('components.callInsights.scope.retry') : $t('components.callInsights.scope.loadMoreSuggestions')"
             @click="configSuggestions.more()"
           />
         </div>
@@ -118,7 +120,9 @@ export default {
     // shown, rather than as its raw key
     templateNames: { type: Object, default: () => ({}) },
   },
-  emits: ["error", "names"],
+  // `in-view`: whether the section is on screen, so the page's filter bar can say these two lists
+  // follow none of its filters while the user reads them.
+  emits: ["error", "names", "in-view"],
   data() {
     const user = () => this.$store.state.user;
     return {
@@ -132,6 +136,24 @@ export default {
       ),
       started: false,
     };
+  },
+  mounted() {
+    if (typeof IntersectionObserver === "undefined") return;
+    // On screen means filling a good part of the screen (a list several pages long never reaches a
+    // high ratio of itself) or being mostly visible (the last section, short, at the bottom of the page
+    // never crosses the middle of the screen).
+    const thresholds = Array.from({ length: 21 }, (_, i) => i / 20);
+    this.observer = new IntersectionObserver((entries) => {
+      const entry = entries[entries.length - 1];
+      const screen = entry.rootBounds ? entry.rootBounds.height : window.innerHeight;
+      const shown = entry.intersectionRect.height;
+      this.$emit("in-view", entry.isIntersecting && (shown >= 0.4 * screen || entry.intersectionRatio >= 0.6));
+    }, { threshold: thresholds });
+    if (this.$el && this.$el.nodeType === 1) this.observer.observe(this.$el);
+  },
+  beforeUnmount() {
+    if (this.observer) this.observer.disconnect();
+    this.$emit("in-view", false);
   },
   watch: {
     ready: {
@@ -308,6 +330,10 @@ export default {
   margin-top: 12px;
   font-size: 13px;
   color: @mrcall_grey_text;
+}
+
+.scope-more-failed {
+  color: @mrcall_status_danger;
 }
 
 .scope-config-title {
