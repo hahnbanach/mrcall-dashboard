@@ -1997,7 +1997,7 @@
         "none": "Todavía no hay ningún informe.",
         "summaryTitle": "El periodo",
         "booked": "Llamadas reservadas: {count} de {total}",
-        "transferred": "Llamadas transferidas, según los operadores: {count} de {total}",
+        "transferred": "Llamadas transferidas, según los operadores: {count}",
         "topicsTitle": "Temas",
         "newTopic": "Nuevo",
         "topicShare": "{calls} llamadas ({percent}%)",
@@ -2008,7 +2008,8 @@
         "mrcallConfigTitle": "Sugerencias de configuración de MrCall",
         "flaggedTitle": "Llamadas que vale la pena revisar",
         "loadMore": "Mostrar informes anteriores",
-        "callsInPeriod": "{calls} llamadas en este periodo"
+        "callsInPeriod": "{calls} llamadas con análisis en este periodo",
+        "callsBaseNote": "Aquí solo cuentan las llamadas que el asistente analizó; «{section}» cuenta también las que no tienen análisis."
       },
       "assistants": {
         "title": "Asistentes para revisar",
@@ -2098,7 +2099,8 @@
         "clearPlan": "Quitar el filtro de plan",
         "clearPeriod": "Volver a los últimos 30 días",
         "scopeNote": "Esta sección: todos los negocios que puedes ver, últimos 30 días",
-        "notApplied": "Filtros no aplicados a esta sección"
+        "notApplied": "Filtros no aplicados a esta sección",
+        "ownerNameSource": "nombre del contacto del negocio de este propietario"
       }
     }
   },

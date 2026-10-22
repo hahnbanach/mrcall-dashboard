@@ -1985,7 +1985,7 @@
         "none": "Noch kein Bericht.",
         "summaryTitle": "Der Zeitraum",
         "booked": "Gebuchte Anrufe: {count} von {total}",
-        "transferred": "Weitergeleitete Anrufe, wie von den Netzbetreibern gemeldet: {count} von {total}",
+        "transferred": "Weitergeleitete Anrufe, wie von den Netzbetreibern gemeldet: {count}",
         "topicsTitle": "Themen",
         "newTopic": "Neu",
         "topicShare": "{calls} Anrufe ({percent} %)",
@@ -1996,7 +1996,8 @@
         "mrcallConfigTitle": "MrCall-Konfigurationsvorschläge",
         "flaggedTitle": "Anrufe, die sich zu lesen lohnen",
         "loadMore": "Frühere Berichte anzeigen",
-        "callsInPeriod": "{calls} Anrufe in diesem Zeitraum"
+        "callsInPeriod": "{calls} ausgewertete Anrufe in diesem Zeitraum",
+        "callsBaseNote": "Hier zählen nur die vom Assistenten ausgewerteten Anrufe; „{section}“ zählt auch die Anrufe ohne Auswertung."
       },
       "assistants": {
         "title": "Zu überprüfende Assistenten",
@@ -2086,7 +2087,8 @@
         "clearPlan": "Tariffilter entfernen",
         "clearPeriod": "Zurück zu den letzten 30 Tagen",
         "scopeNote": "Dieser Abschnitt: alle Unternehmen, die Sie sehen, letzte 30 Tage",
-        "notApplied": "Filter, die für diesen Abschnitt nicht gelten"
+        "notApplied": "Filter, die für diesen Abschnitt nicht gelten",
+        "ownerNameSource": "Name des Kontakts im Unternehmen dieses Inhabers"
       }
     }
   },

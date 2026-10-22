@@ -447,7 +447,10 @@ export default {
           key: "owner",
           name: this.$t("components.callInsights.filterBar.owner"),
           value: this.ownerNames[this.ownerId] || this.ownerId,
-          title: this.ownerId,
+          // the name is the contact of the owner's first business (`CallInsights.ownerName`), and says so
+          title: this.ownerNames[this.ownerId]
+            ? this.ownerId + " · " + this.$t("components.callInsights.filterBar.ownerNameSource")
+            : this.ownerId,
           clearLabel: this.$t("components.callInsights.filterBar.clearOwner"),
         });
       }

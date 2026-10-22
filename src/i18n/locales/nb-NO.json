@@ -1983,7 +1983,7 @@
         "none": "Ingen rapport ennå.",
         "summaryTitle": "Perioden",
         "booked": "Bookede samtaler: {count} av {total}",
-        "transferred": "Viderekoblede samtaler, ifølge operatørene: {count} av {total}",
+        "transferred": "Viderekoblede samtaler, ifølge operatørene: {count}",
         "topicsTitle": "Emner",
         "newTopic": "Nytt",
         "topicShare": "{calls} samtaler ({percent} %)",
@@ -1994,7 +1994,8 @@
         "mrcallConfigTitle": "MrCalls konfigurasjonsforslag",
         "flaggedTitle": "Samtaler verdt å lese",
         "loadMore": "Vis tidligere rapporter",
-        "callsInPeriod": "{calls} samtaler i perioden"
+        "callsInPeriod": "{calls} analyserte samtaler i perioden",
+        "callsBaseNote": "Her telles bare samtaler assistenten har analysert; «{section}» teller også samtaler uten analyse."
       },
       "assistants": {
         "title": "Assistenter å gjennomgå",
@@ -2084,7 +2085,8 @@
         "clearPlan": "Fjern abonnementsfilteret",
         "clearPeriod": "Tilbake til de siste 30 dagene",
         "scopeNote": "Denne delen: alle bedrifter du kan se, siste 30 dager",
-        "notApplied": "Filtre som ikke gjelder denne delen"
+        "notApplied": "Filtre som ikke gjelder denne delen",
+        "ownerNameSource": "navn på kontakten for denne eierens bedrift"
       }
     }
   },

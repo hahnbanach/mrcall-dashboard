@@ -1983,7 +1983,7 @@
         "none": "Ühtegi aruannet veel pole.",
         "summaryTitle": "Periood",
         "booked": "Broneeritud kõned: {count}/{total}",
-        "transferred": "Suunatud kõned operaatorite teatel: {count}/{total}",
+        "transferred": "Suunatud kõned operaatorite teatel: {count}",
         "topicsTitle": "Teemad",
         "newTopic": "Uus",
         "topicShare": "{calls} kõnet ({percent}%)",
@@ -1994,7 +1994,8 @@
         "mrcallConfigTitle": "MrCalli seadistussoovitused",
         "flaggedTitle": "Lugemist väärivad kõned",
         "loadMore": "Näita varasemaid aruandeid",
-        "callsInPeriod": "{calls} kõnet selles perioodis"
+        "callsInPeriod": "{calls} analüüsitud kõnet selles perioodis",
+        "callsBaseNote": "Siin loetakse ainult assistendi analüüsitud kõnesid; „{section}“ loeb ka analüüsita kõnesid."
       },
       "assistants": {
         "title": "Ülevaatamist vajavad assistendid",
@@ -2084,7 +2085,8 @@
         "clearPlan": "Eemalda paketi filter",
         "clearPeriod": "Tagasi viimase 30 päeva juurde",
         "scopeNote": "See jaotis: kõik ettevõtted, mida näed, viimased 30 päeva",
-        "notApplied": "Filtrid, mis sellele jaotisele ei kehti"
+        "notApplied": "Filtrid, mis sellele jaotisele ei kehti",
+        "ownerNameSource": "selle omaniku ettevõtte kontaktisiku nimi"
       }
     }
   },

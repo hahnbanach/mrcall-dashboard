@@ -200,12 +200,22 @@ describe('callInsights: the keys of the D12 review', () => {
     })
   }
 
-  // the base of the report's booked and transferred lines
-  it('says booked and transferred over the period\'s calls in every locale', () => {
+  // Booked is over the report's `calls` (the calls with insights); transferred is a bare count: StarChat
+  // writes it only where a carrier reports the transfer leg, so no base holds it (the D12 re-review).
+  it('says booked over the calls with insights, and transferred as a count with no base, in every locale', () => {
     for (const [locale, messages] of Object.entries(LOCALES)) {
       const r = messages.components.callInsights.reports
       expect(r.booked, `${locale} reports.booked`).toContain('{total}')
-      expect(r.transferred, `${locale} reports.transferred`).toContain('{total}')
+      expect(r.transferred, `${locale} reports.transferred`).not.toContain('{total}')
+      expect(r.callsInPeriod, `${locale} reports.callsInPeriod`).toContain('{calls}')
+      expect(r.callsBaseNote, `${locale} reports.callsBaseNote`).toBeTruthy()
+      expect(messages.components.callInsights.filterBar.ownerNameSource, `${locale} filterBar.ownerNameSource`).toBeTruthy()
     }
+  })
+
+  // "N calls in this period" read as every call; the report's `calls` counts the calls with insights only
+  it('names the report\'s base as the calls with insights, not every call', () => {
+    expect(enUS.components.callInsights.reports.callsInPeriod).toMatch(/insights/)
+    expect(itIT.components.callInsights.reports.callsInPeriod).not.toBe('{calls} chiamate in questo periodo')
   })
 })

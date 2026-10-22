@@ -17,9 +17,13 @@
         <div v-if="isExpanded(item.periodStart) && item.content" class="report-body">
           <section v-if="hasSummary(item.content)" class="report-summary report-section">
             <h4 class="report-section-title">{{ $t("components.callInsights.reports.summaryTitle") }}</h4>
-            <!-- The period's calls: the base every count below is read against. -->
+            <!-- The report's `calls` is the calls with insights (version 2) in the period, not every call:
+                 the base of the counts below, and said to be so, since "How the calls went" counts more. -->
             <p v-if="isCount(item.content.calls)" class="report-fact report-calls">
               {{ $t("components.callInsights.reports.callsInPeriod", { calls: item.content.calls }) }}
+            </p>
+            <p v-if="isCount(item.content.calls)" class="report-base-note">
+              {{ $t("components.callInsights.reports.callsBaseNote", { section: $t("components.callInsights.howCallsWent.title") }) }}
             </p>
             <!-- A line of the assistant's judgements says so once, not on every value of it. -->
             <div v-if="resolutionKeys(item.content).length > 0" class="report-topic-outcomes">
@@ -39,8 +43,10 @@
             <p v-if="isCount(item.content.booked)" class="report-fact">
               {{ factOverCalls("booked", item.content.booked, item.content.calls) }}
             </p>
+            <!-- A bare count: StarChat records a transfer only where the carrier reports its leg, so the
+                 fact is absent, never false, elsewhere and no base holds it (as in CallOutcomes). -->
             <p v-if="isCount(item.content.transferred)" class="report-fact">
-              {{ factOverCalls("transferred", item.content.transferred, item.content.calls) }}
+              {{ $t("components.callInsights.reports.transferred", { count: item.content.transferred }) }}
             </p>
           </section>
 
@@ -222,7 +228,7 @@ export default {
       const counts = holder.message || {};
       return CallInsights.MESSAGE_KEYS.filter((key) => counts[key]);
     },
-    // Booked and transferred over the period's calls; a report without `calls` has no base to give.
+    // Booked over the report's calls with insights; a report without `calls` has no base to give.
     factOverCalls(kind, count, calls) {
       return this.$t("components.callInsights.reports." + kind, { count, total: this.isCount(calls) ? calls : "–" });
     },
@@ -252,6 +258,12 @@ export default {
 .insights-note {
   color: @mrcall_grey_text;
   font-size: 14px;
+}
+
+.report-base-note {
+  margin: 0 0 8px 0;
+  font-size: 12px;
+  color: @mrcall_grey_text2;
 }
 
 .report-line-assessed {

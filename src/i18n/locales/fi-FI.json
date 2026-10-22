@@ -1983,7 +1983,7 @@
         "none": "Ei vielä raporttia.",
         "summaryTitle": "Ajanjakso",
         "booked": "Varatut puhelut: {count}/{total}",
-        "transferred": "Yhdistetyt puhelut operaattorien ilmoittamana: {count}/{total}",
+        "transferred": "Yhdistetyt puhelut operaattorien ilmoittamana: {count}",
         "topicsTitle": "Aiheet",
         "newTopic": "Uusi",
         "topicShare": "{calls} puhelua ({percent} %)",
@@ -1994,7 +1994,8 @@
         "mrcallConfigTitle": "MrCallin asetusehdotukset",
         "flaggedTitle": "Puhelut, jotka kannattaa lukea",
         "loadMore": "Näytä aiemmat raportit",
-        "callsInPeriod": "{calls} puhelua tällä jaksolla"
+        "callsInPeriod": "{calls} analysoitua puhelua tällä jaksolla",
+        "callsBaseNote": "Tässä lasketaan vain avustajan analysoimat puhelut; ”{section}” laskee myös puhelut ilman analyysia."
       },
       "assistants": {
         "title": "Tarkistettavat avustajat",
@@ -2084,7 +2085,8 @@
         "clearPlan": "Poista pakettisuodatin",
         "clearPeriod": "Takaisin viimeiseen 30 päivään",
         "scopeNote": "Tämä osio: kaikki näkemäsi yritykset, viimeiset 30 päivää",
-        "notApplied": "Suodattimet, jotka eivät koske tätä osiota"
+        "notApplied": "Suodattimet, jotka eivät koske tätä osiota",
+        "ownerNameSource": "tämän omistajan yrityksen yhteyshenkilön nimi"
       }
     }
   },

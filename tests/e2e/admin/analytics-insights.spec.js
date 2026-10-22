@@ -421,6 +421,8 @@ test.describe('AnalyticsAdmin: the filter bar', () => {
     const bar = page.getByRole('region', { name: 'Active filters' })
     await expect(bar.getByText(mockBusiness.companyName)).toBeVisible({ timeout: 15000 })
     await expect(bar.getByText('Demo Owner')).toBeVisible()
+    // the name is the contact of the owner's business, and the chip says so
+    await expect(bar.getByText('Demo Owner')).toHaveAttribute('title', /owner-9.*contact/)
     await expect(bar.getByText(BUSINESS_ID)).toHaveCount(0)
     await expect(bar.getByText('owner-9')).toHaveCount(0)
     await expect(bar.getByText('restaurant', { exact: true })).toBeVisible()
@@ -464,6 +466,23 @@ test.describe('AnalyticsAdmin: the filter bar', () => {
     await expect(bar.getByRole('list', { name: 'Filters not applied to this section' })).toBeVisible()
     await page.locator('#app-central-content').evaluate((el) => el.scrollTo(0, 0))
     await expect(bar.getByText('This section: every business you can see, last 30 days')).toHaveCount(0)
+  })
+
+  test('on a phone the note over the scope-wide lists reads whole, and the dimmed chips stay on screen', async ({ adminPage: page }) => {
+    await page.setViewportSize({ width: 375, height: 812 })
+    await page.route('**/customer/insights/integrations*', (route) => route.fulfill({
+      status: 200, contentType: 'application/json', body: JSON.stringify({ total: 1, items: [integrationItem(1)] }),
+    }))
+    await page.goto(`/analytics-admin?businessId=${BUSINESS_ID}&ownerId=owner-9`)
+    const bar = page.getByRole('region', { name: 'Active filters' })
+    await expect(bar.getByText('Last 30 days')).toBeAttached({ timeout: 15000 })
+    await section(page, 'Integrations and information asked').getByText('Integration request 1').scrollIntoViewIfNeeded()
+    const note = bar.getByText('This section: every business you can see, last 30 days')
+    await expect(note).toBeVisible()
+    const barBox = await bar.boundingBox()
+    const noteBox = await note.boundingBox()
+    expect(noteBox.x + noteBox.width).toBeLessThanOrEqual(barBox.x + barBox.width)
+    await expect(bar.getByText('Last 30 days', { exact: true })).toBeInViewport({ ratio: 1 })
   })
 
   test('a changed period shows in the bar and is reset from it', async ({ adminPage: page }) => {

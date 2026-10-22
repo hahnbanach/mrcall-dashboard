@@ -1989,7 +1989,7 @@
         "none": "Ancora nessun report.",
         "summaryTitle": "Il periodo",
         "booked": "Chiamate prenotate: {count} su {total}",
-        "transferred": "Chiamate trasferite, secondo gli operatori telefonici: {count} su {total}",
+        "transferred": "Chiamate trasferite, secondo gli operatori telefonici: {count}",
         "topicsTitle": "Argomenti",
         "newTopic": "Nuovo",
         "topicShare": "{calls} chiamate ({percent}%)",
@@ -2000,7 +2000,8 @@
         "mrcallConfigTitle": "Suggerimenti di configurazione MrCall",
         "flaggedTitle": "Chiamate da rileggere",
         "loadMore": "Mostra report precedenti",
-        "callsInPeriod": "{calls} chiamate in questo periodo"
+        "callsInPeriod": "{calls} chiamate con analisi in questo periodo",
+        "callsBaseNote": "Qui contano solo le chiamate analizzate dall'assistente; “{section}” conta anche quelle senza analisi."
       },
       "assistants": {
         "title": "Assistenti da rivedere",
@@ -2090,7 +2091,8 @@
         "clearPlan": "Rimuovi il filtro piano",
         "clearPeriod": "Torna agli ultimi 30 giorni",
         "scopeNote": "Questa sezione: tutte le attività che puoi vedere, ultimi 30 giorni",
-        "notApplied": "Filtri non applicati a questa sezione"
+        "notApplied": "Filtri non applicati a questa sezione",
+        "ownerNameSource": "nome del contatto dell'attività di questo proprietario"
       }
     }
   },

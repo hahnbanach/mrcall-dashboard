@@ -1983,7 +1983,7 @@
         "none": "Ingen rapport endnu.",
         "summaryTitle": "Perioden",
         "booked": "Bookede opkald: {count} af {total}",
-        "transferred": "Viderestillede opkald, som meldt af operatørerne: {count} af {total}",
+        "transferred": "Viderestillede opkald, som meldt af operatørerne: {count}",
         "topicsTitle": "Emner",
         "newTopic": "Nyt",
         "topicShare": "{calls} opkald ({percent} %)",
@@ -1994,7 +1994,8 @@
         "mrcallConfigTitle": "MrCalls konfigurationsforslag",
         "flaggedTitle": "Opkald, det er værd at læse",
         "loadMore": "Vis tidligere rapporter",
-        "callsInPeriod": "{calls} opkald i perioden"
+        "callsInPeriod": "{calls} analyserede opkald i perioden",
+        "callsBaseNote": "Her tælles kun opkald, som assistenten har analyseret; “{section}” tæller også opkald uden analyse."
       },
       "assistants": {
         "title": "Assistenter, der skal gennemgås",
@@ -2084,7 +2085,8 @@
         "clearPlan": "Fjern abonnementsfilteret",
         "clearPeriod": "Tilbage til de seneste 30 dage",
         "scopeNote": "Denne sektion: alle virksomheder, du kan se, seneste 30 dage",
-        "notApplied": "Filtre, der ikke gælder for denne sektion"
+        "notApplied": "Filtre, der ikke gælder for denne sektion",
+        "ownerNameSource": "navn på kontakten for denne ejers virksomhed"
       }
     }
   },

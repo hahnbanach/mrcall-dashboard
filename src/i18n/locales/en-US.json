@@ -1988,7 +1988,7 @@
         "none": "No report yet.",
         "summaryTitle": "The period",
         "booked": "Booked calls: {count} of {total}",
-        "transferred": "Transferred calls, as reported by the carriers: {count} of {total}",
+        "transferred": "Transferred calls, as reported by the carriers: {count}",
         "topicsTitle": "Topics",
         "newTopic": "New",
         "topicShare": "{calls} calls ({percent}%)",
@@ -1999,7 +1999,8 @@
         "mrcallConfigTitle": "MrCall configuration suggestions",
         "flaggedTitle": "Calls worth reading",
         "loadMore": "Show earlier reports",
-        "callsInPeriod": "{calls} calls in this period"
+        "callsInPeriod": "{calls} calls with insights in this period",
+        "callsBaseNote": "Only calls the assistant analysed are counted here; “{section}” also counts the calls without insights."
       },
       "assistants": {
         "title": "Assistants to review",
@@ -2089,7 +2090,8 @@
         "clearPlan": "Clear the plan filter",
         "clearPeriod": "Back to the last 30 days",
         "scopeNote": "This section: every business you can see, last 30 days",
-        "notApplied": "Filters not applied to this section"
+        "notApplied": "Filters not applied to this section",
+        "ownerNameSource": "named from the contact of this owner's business"
       }
     }
   },

@@ -1983,7 +1983,7 @@
         "none": "Nog geen rapport.",
         "summaryTitle": "De periode",
         "booked": "Geboekte gesprekken: {count} van {total}",
-        "transferred": "Doorverbonden gesprekken, zoals gemeld door de providers: {count} van {total}",
+        "transferred": "Doorverbonden gesprekken, zoals gemeld door de providers: {count}",
         "topicsTitle": "Onderwerpen",
         "newTopic": "Nieuw",
         "topicShare": "{calls} gesprekken ({percent}%)",
@@ -1994,7 +1994,8 @@
         "mrcallConfigTitle": "MrCall-configuratiesuggesties",
         "flaggedTitle": "Gesprekken die het lezen waard zijn",
         "loadMore": "Eerdere rapporten tonen",
-        "callsInPeriod": "{calls} gesprekken in deze periode"
+        "callsInPeriod": "{calls} geanalyseerde gesprekken in deze periode",
+        "callsBaseNote": "Hier tellen alleen de gesprekken die de assistent analyseerde; ‘{section}’ telt ook de gesprekken zonder analyse."
       },
       "assistants": {
         "title": "Te controleren assistenten",
@@ -2084,7 +2085,8 @@
         "clearPlan": "Abonnementsfilter wissen",
         "clearPeriod": "Terug naar de laatste 30 dagen",
         "scopeNote": "Deze sectie: alle bedrijven die je kunt zien, laatste 30 dagen",
-        "notApplied": "Filters die niet voor deze sectie gelden"
+        "notApplied": "Filters die niet voor deze sectie gelden",
+        "ownerNameSource": "naam van het contact van het bedrijf van deze eigenaar"
       }
     }
   },

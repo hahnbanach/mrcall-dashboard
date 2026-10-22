@@ -233,10 +233,14 @@ test.describe('Analytics: call reports (owner, business page)', () => {
     const summary = reports.locator('.report-summary')
     // one marking for the resolution line and one for the message line
     await expect(summary.getByText('Assessed by the assistant')).toHaveCount(2)
-    await expect(summary.getByText('10 calls in this period')).toBeVisible()
+    // the report's `calls` counts the calls with insights only, and says so
+    const base = summary.getByText('10 calls with insights in this period')
+    await expect(base).toBeVisible()
+    await expect(summary.getByText('Only calls the assistant analysed are counted here')).toBeVisible()
     await expect(summary.locator('.report-topic-outcome').filter({ hasText: /^\s*Complete message/ })).toContainText('4')
     await expect(summary.getByText('Booked calls: 3 of 10')).toBeVisible()
-    await expect(summary.getByText('Transferred calls, as reported by the carriers: 1 of 10')).toBeVisible()
+    // a bare count: carriers that report no transfer leg leave the fact absent, so it has no base
+    await expect(summary.getByText('Transferred calls, as reported by the carriers: 1', { exact: true })).toBeVisible()
     await expect(summary.locator('.report-fact').getByText('Assessed by the assistant')).toHaveCount(0)
 
     await expect(reports.getByRole('link', { name: 'CON-1' }))

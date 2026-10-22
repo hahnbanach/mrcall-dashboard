@@ -1,5 +1,5 @@
 <template>
-  <section class="analytics-filter-bar" :aria-label="$t('components.callInsights.filterBar.title')">
+  <section class="analytics-filter-bar" :class="{ 'analytics-filter-bar-noted': !!scopeNote }" :aria-label="$t('components.callInsights.filterBar.title')">
     <span class="filter-bar-title">{{ $t("components.callInsights.filterBar.title") }}</span>
     <span v-if="scopeNote" class="filter-bar-note" role="status">{{ scopeNote }}</span>
     <ul
@@ -168,9 +168,19 @@ export default {
     max-width: 160px;
   }
 
+  // With the note the bar reflows instead: the note reads whole on its own line and the dimmed chips
+  // wrap under it, all on screen (the D12 re-review: "last 30 day…" cut at the edge, chips off screen).
+  .analytics-filter-bar-noted {
+    flex-wrap: wrap;
+    overflow-x: visible;
+
+    .filter-bar-list {
+      flex-wrap: wrap;
+    }
+  }
+
   .filter-bar-note {
-    flex: 0 0 auto;
-    white-space: nowrap;
+    flex: 1 1 100%;
   }
 }
 </style>

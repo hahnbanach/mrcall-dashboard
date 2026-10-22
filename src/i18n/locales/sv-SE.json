@@ -1983,7 +1983,7 @@
         "none": "Ingen rapport än.",
         "summaryTitle": "Perioden",
         "booked": "Bokade samtal: {count} av {total}",
-        "transferred": "Vidarekopplade samtal, enligt operatörerna: {count} av {total}",
+        "transferred": "Vidarekopplade samtal, enligt operatörerna: {count}",
         "topicsTitle": "Ämnen",
         "newTopic": "Nytt",
         "topicShare": "{calls} samtal ({percent} %)",
@@ -1994,7 +1994,8 @@
         "mrcallConfigTitle": "MrCalls konfigurationsförslag",
         "flaggedTitle": "Samtal värda att läsa",
         "loadMore": "Visa tidigare rapporter",
-        "callsInPeriod": "{calls} samtal under perioden"
+        "callsInPeriod": "{calls} analyserade samtal under perioden",
+        "callsBaseNote": "Här räknas bara samtal som assistenten analyserat; ”{section}” räknar även samtal utan analys."
       },
       "assistants": {
         "title": "Assistenter att granska",
@@ -2084,7 +2085,8 @@
         "clearPlan": "Ta bort abonnemangsfiltret",
         "clearPeriod": "Tillbaka till de senaste 30 dagarna",
         "scopeNote": "Det här avsnittet: alla företag du kan se, senaste 30 dagarna",
-        "notApplied": "Filter som inte gäller det här avsnittet"
+        "notApplied": "Filter som inte gäller det här avsnittet",
+        "ownerNameSource": "namn på kontakten för den här ägarens företag"
       }
     }
   },
