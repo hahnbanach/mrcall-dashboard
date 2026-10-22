@@ -252,7 +252,8 @@ describe('the function this instance publishes', () => {
   const withArguments = {
     ...skill,
     parameters: [
-      { name: 'date', type: 'string', required: true, description: 'The day as YYYY-MM-DD' },
+      { name: 'date', type: 'string', required: true, description: 'The day as YYYY-MM-DD',
+        title: { en: 'Day' }, hint: { en: 'The day of the booking, from what the caller says' } },
       { name: 'reason', type: 'string', required: false, description: 'What it is for, if said' }
     ],
     // The catalogue row carries both, and the card answers "mandatory?" from the manifest against
@@ -266,13 +267,16 @@ describe('the function this instance publishes', () => {
     }
   }
 
+  // What it is for, in the owner's words: the model's description is never the explanation (2026-10-18).
   it('names each argument, says whether it is required, and says what it is for', () => {
     const open = card({ skill: withArguments })
     const text = open.text()
+    expect(text).toContain('Day')
     expect(text).toContain('date')
     expect(text).toContain('required')
     expect(text).toContain('optional')
-    expect(text).toContain('The day as YYYY-MM-DD')
+    expect(text).toContain('The day of the booking, from what the caller says')
+    expect(text).not.toContain('The day as YYYY-MM-DD')
   })
 
   it('says the names can be used in the text fields of this card', () => {

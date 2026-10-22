@@ -43,6 +43,15 @@ const lang = computed(() => (locale.value || 'en-US').split('-')[0]);
 const asksTheModel = computed(() => props.phase === 'during');
 const declared = computed(() => (asksTheModel.value ? props.parameters || [] : []));
 const shows = computed(() => declared.value.length > 0 || props.extrasField !== null);
+
+/** The owner's words for an argument, in the screen's language (`x-title`, `x-hint`, served as `title` and `hint`).
+  * Never the `description`: that is the model's English instruction, and an Italian card used to explain the
+  * collected details with it (2026-10-18). Without a title the argument's name stands, with nothing beside it. */
+function localisedText (map) {
+  return (map && (map[lang.value] || map['*'] || map.en)) || '';
+}
+const titleOf = argument => localisedText(argument.title) || argument.name;
+const hintOf = argument => localisedText(argument.hint);
 </script>
 
 <template>
@@ -52,11 +61,12 @@ const shows = computed(() => declared.value.length > 0 || props.extrasField !== 
     <table v-if="declared.length > 0" class="arguments-table">
       <tbody>
         <tr v-for="argument in declared" :key="argument.name">
-          <td class="argument-name"><code>{{ argument.name }}</code></td>
+          <!-- The name stays beside the title, small: it is what a text field of this card writes as %%name%%. -->
+          <td class="argument-name">{{ titleOf(argument) }} <code v-if="titleOf(argument) !== argument.name" class="argument-key">{{ argument.name }}</code></td>
           <td class="argument-need">
             {{ argument.required ? t('widgets.agentSkills.argumentRequired') : t('widgets.agentSkills.argumentOptional') }}
           </td>
-          <td class="argument-what">{{ argument.description }}</td>
+          <td class="argument-what">{{ hintOf(argument) }}</td>
         </tr>
       </tbody>
     </table>
@@ -106,6 +116,11 @@ const shows = computed(() => declared.value.length > 0 || props.extrasField !== 
 
 .argument-name {
   white-space: nowrap;
+}
+
+.argument-key {
+  font-size: 0.68rem;
+  color: var(--p-text-muted-color);
 }
 
 .argument-need {
