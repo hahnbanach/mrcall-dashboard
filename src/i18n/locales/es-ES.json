@@ -2057,7 +2057,7 @@
           "unanswered": "llamadas con una pregunta sin respuesta, sobre las llamadas con preguntas registradas",
           "checks": "llamadas en que saltó un control, sobre las llamadas controladas",
           "skillErrors": "llamadas con un error de skill, sobre todas las llamadas",
-          "extractionIssues": "llamadas en que falló la extracción de datos, sobre todas las llamadas"
+          "extractionIssues": "llamadas en que falló la extracción de datos, sobre las llamadas en que se ejecutó la extracción"
         },
         "legendTitle": "Cómo se cuenta cada columna",
         "assessedShort": "evaluado"

@@ -2049,7 +2049,7 @@
           "unanswered": "chiamate con una domanda rimasta senza risposta, sulle chiamate in cui le domande sono state registrate",
           "checks": "chiamate in cui un controllo è scattato, sulle chiamate controllate",
           "skillErrors": "chiamate con un errore di skill, su tutte le chiamate",
-          "extractionIssues": "chiamate in cui l'estrazione dei dati non è riuscita, su tutte le chiamate"
+          "extractionIssues": "chiamate in cui l'estrazione dei dati non è riuscita, sulle chiamate in cui l'estrazione è stata eseguita"
         },
         "legendTitle": "Come si conta ogni colonna",
         "assessedShort": "valutato"

@@ -2043,7 +2043,7 @@
           "unanswered": "kõned, kus küsimus jäi vastuseta, kõnedest, kus küsimused registreeriti",
           "checks": "kõned, kus kontroll rakendus, kontrollitud kõnedest",
           "skillErrors": "skilli veaga kõned, kõigist kõnedest",
-          "extractionIssues": "kõned, mille andmete eraldamine ebaõnnestus, kõigist kõnedest"
+          "extractionIssues": "kõned, mille andmete eraldamine ebaõnnestus, kõnedest, kus eraldamine tehti"
         },
         "legendTitle": "Kuidas iga veergu loetakse",
         "assessedShort": "hinnatud"

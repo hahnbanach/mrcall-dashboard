@@ -528,7 +528,7 @@ describe('assistantShare: each column and sort of the assistants table over Star
     resolution: { resolved: 20, unresolved: 10, caller_left: 6 },
     callsWithChecks: 36, checks: { caller_repeated: 5, caller_unsatisfied: 4, promise_not_kept_in_call: 0 },
     callsWithUnansweredRecorded: 36, callsWithUnanswered: 9, gaps: { missing_info: 9 },
-    callsWithSkillErrors: 0, extractionsNotOk: 1,
+    callsWithSkillErrors: 0, extractionsNotOk: 1, extractionsRun: 36,
     callsManaged: 36, noConversation: { caller_silent: 12, no_credit: 1 },
     callsAnswered: 48, callsOffered: 48, callsWithRequest: 30,
   }
@@ -547,7 +547,21 @@ describe('assistantShare: each column and sort of the assistants table over Star
     expect(CallInsights.assistantShare(row, 'unanswered')).toEqual({ count: 9, base: 36, percent: 25 })
     expect(CallInsights.assistantShare(row, 'checks')).toEqual({ count: 9, base: 36, percent: 25 })
     expect(CallInsights.assistantShare(row, 'skill_errors')).toEqual({ count: 0, base: 40, percent: 0 })
-    expect(CallInsights.assistantShare(row, 'extraction_failures')).toEqual({ count: 1, base: 40, percent: 3 })
+    expect(CallInsights.assistantShare(row, 'extraction_failures')).toEqual({ count: 1, base: 36, percent: 3 })
+  })
+
+  // The final review of D12: one signal on one base across the page. The quality section counts the
+  // extraction problems over the calls whose extraction ran, and so does this column (StarChat 9.34,
+  // `extractionsRun`), never over totalCalls, which also counts calls never put to the model.
+  it('extraction_failures is over extractionsRun, not totalCalls', () => {
+    const r = { totalCalls: 100, extractionsRun: 10, extractionsNotOk: 2, callsWithSkillErrors: 5 }
+    expect(CallInsights.assistantShare(r, 'extraction_failures')).toEqual({ count: 2, base: 10, percent: 20 })
+    expect(CallInsights.assistantShare(r, 'skill_errors')).toEqual({ count: 5, base: 100, percent: 5 })
+  })
+
+  it('a row without extractionsRun has no base for extraction_failures: no fallback to totalCalls', () => {
+    expect(CallInsights.assistantShare({ totalCalls: 100, extractionsNotOk: 2 }, 'extraction_failures'))
+      .toEqual({ count: 2, base: 0, percent: 0 })
   })
 
   it('names every sort key StarChat accepts, and refuses one it does not', () => {

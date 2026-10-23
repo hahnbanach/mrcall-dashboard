@@ -2043,7 +2043,7 @@
           "unanswered": "puhelut, joissa kysymys jäi vastaamatta, puheluista, joissa kysymykset kirjattiin",
           "checks": "puhelut, joissa tarkistus laukesi, tarkistetuista puheluista",
           "skillErrors": "puhelut, joissa oli skill-virhe, kaikista puheluista",
-          "extractionIssues": "puhelut, joiden tietojen poiminta epäonnistui, kaikista puheluista"
+          "extractionIssues": "puhelut, joiden tietojen poiminta epäonnistui, puheluista, joissa poiminta suoritettiin"
         },
         "legendTitle": "Miten kukin sarake lasketaan",
         "assessedShort": "arvioitu"

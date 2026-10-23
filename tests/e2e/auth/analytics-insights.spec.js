@@ -338,7 +338,7 @@ test.describe('Analytics: the reseller\'s scope page', () => {
         businesses: [{
           businessId: BUSINESS_ID, totalCalls: 10, callsWithResolution: 8, resolution: { unresolved: 3 },
           callsWithChecks: 8, checks: {}, callsWithUnansweredRecorded: 8, callsWithUnanswered: 1,
-          gaps: {}, callsWithSkillErrors: 0, extractionsNotOk: 0,
+          gaps: {}, callsWithSkillErrors: 0, extractionsNotOk: 0, extractionsRun: 8,
         }],
       }),
     }))
@@ -522,7 +522,7 @@ const resellerAssistants = {
   businesses: [{
     businessId: BUSINESS_ID, businessName: 'Studio Demo', totalCalls: 10, callsWithResolution: 8, resolution: { unresolved: 3 },
     callsWithChecks: 8, checks: {}, callsWithUnansweredRecorded: 8, callsWithUnanswered: 1,
-    gaps: {}, callsWithSkillErrors: 0, extractionsNotOk: 0,
+    gaps: {}, callsWithSkillErrors: 0, extractionsNotOk: 0, extractionsRun: 8,
   }],
 }
 

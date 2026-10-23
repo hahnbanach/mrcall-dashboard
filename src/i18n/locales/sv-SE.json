@@ -2043,7 +2043,7 @@
           "unanswered": "samtal med en obesvarad fråga, av samtalen där frågor registrerades",
           "checks": "samtal där en kontroll slog till, av de kontrollerade samtalen",
           "skillErrors": "samtal med ett skillfel, av alla samtal",
-          "extractionIssues": "samtal där dataextraheringen misslyckades, av alla samtal"
+          "extractionIssues": "samtal där dataextraheringen misslyckades, av samtalen där extraheringen kördes"
         },
         "legendTitle": "Hur varje kolumn räknas",
         "assessedShort": "bedömt"

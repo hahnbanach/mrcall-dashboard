@@ -2043,7 +2043,7 @@
           "unanswered": "samtaler med et ubesvart spørsmål, av samtalene der spørsmål ble registrert",
           "checks": "samtaler der en kontroll slo ut, av de kontrollerte samtalene",
           "skillErrors": "samtaler med en skillfeil, av alle samtaler",
-          "extractionIssues": "samtaler der datauttrekket mislyktes, av alle samtaler"
+          "extractionIssues": "samtaler der datauttrekket mislyktes, av samtalene der uttrekket ble kjørt"
         },
         "legendTitle": "Hvordan hver kolonne telles",
         "assessedShort": "vurdert"

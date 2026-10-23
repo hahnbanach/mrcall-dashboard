@@ -102,7 +102,10 @@ const ASSISTANT_SHARES = {
     unanswered: (row) => share(row.callsWithUnanswered, row.callsWithUnansweredRecorded),
     checks: (row) => share(sumOf(row.checks, CHECK_KEYS), row.callsWithChecks),
     skill_errors: (row) => share(row.callsWithSkillErrors, row.totalCalls),
-    extraction_failures: (row) => share(row.extractionsNotOk, row.totalCalls),
+    // Over the calls whose extraction ran (`ok`, `http_error`, `failed`), as the quality section counts
+    // the same problems (`extractionProblems`). No fallback to totalCalls, which also counts calls never
+    // put to the model: a row without `extractionsRun` has no base, and shows "0% (n of 0)".
+    extraction_failures: (row) => share(row.extractionsNotOk, row.extractionsRun),
 };
 
 function assistantShare(row, key) {

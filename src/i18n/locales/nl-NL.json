@@ -2043,7 +2043,7 @@
           "unanswered": "gesprekken met een onbeantwoorde vraag, van de gesprekken waarin vragen zijn vastgelegd",
           "checks": "gesprekken waarin een controle afging, van de gecontroleerde gesprekken",
           "skillErrors": "gesprekken met een skillfout, van alle gesprekken",
-          "extractionIssues": "gesprekken waarvan de gegevensextractie mislukte, van alle gesprekken"
+          "extractionIssues": "gesprekken waarvan de gegevensextractie mislukte, van de gesprekken waarin de extractie is uitgevoerd"
         },
         "legendTitle": "Hoe elke kolom wordt geteld",
         "assessedShort": "beoordeeld"

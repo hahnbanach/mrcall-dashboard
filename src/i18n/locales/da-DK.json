@@ -2043,7 +2043,7 @@
           "unanswered": "opkald med et ubesvaret spørgsmål, af de opkald, hvor spørgsmål blev registreret",
           "checks": "opkald, hvor en kontrol slog ud, af de kontrollerede opkald",
           "skillErrors": "opkald med en skillfejl, af alle opkald",
-          "extractionIssues": "opkald, hvor dataudtrækket mislykkedes, af alle opkald"
+          "extractionIssues": "opkald, hvor dataudtrækket mislykkedes, af de opkald, hvor udtrækket blev kørt"
         },
         "legendTitle": "Hvordan hver kolonne tælles",
         "assessedShort": "vurderet"

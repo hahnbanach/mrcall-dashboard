@@ -2045,7 +2045,7 @@
           "unanswered": "appels avec une question restée sans réponse, sur les appels où les questions sont enregistrées",
           "checks": "appels où un contrôle s'est déclenché, sur les appels contrôlés",
           "skillErrors": "appels avec une erreur de skill, sur tous les appels",
-          "extractionIssues": "appels dont l'extraction des données a échoué, sur tous les appels"
+          "extractionIssues": "appels dont l'extraction des données a échoué, sur les appels où l'extraction a été effectuée"
         },
         "legendTitle": "Comment chaque colonne est comptée",
         "assessedShort": "évalué"

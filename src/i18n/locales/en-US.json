@@ -2048,7 +2048,7 @@
           "unanswered": "calls with a question left unanswered, over the calls where questions were recorded",
           "checks": "calls where a check fired, over the calls checked",
           "skillErrors": "calls with a skill error, over all calls",
-          "extractionIssues": "calls whose data extraction failed, over all calls"
+          "extractionIssues": "calls whose data extraction failed, over the calls whose extraction ran"
         },
         "legendTitle": "How each column is counted",
         "assessedShort": "assessed"

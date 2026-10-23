@@ -24,7 +24,7 @@ const assistantsResponse = (overrides = {}) => ({
     resolution: { resolved: 20, unresolved: 10, caller_left: 6 },
     callsWithChecks: 36, checks: { caller_repeated: 5, caller_unsatisfied: 4, promise_not_kept_in_call: 0 },
     callsWithUnansweredRecorded: 36, callsWithUnanswered: 9, gaps: { missing_info: 9 },
-    callsWithSkillErrors: 0, extractionsNotOk: 1,
+    callsWithSkillErrors: 0, extractionsNotOk: 1, extractionsRun: 36,
     callsManaged: 36, noConversation: { caller_silent: 12, no_credit: 1 },
     callsAnswered: 48, callsOffered: 48, callsWithRequest: 30,
   }],
@@ -84,6 +84,11 @@ test.describe('AnalyticsAdmin: assistants to review, outcome 9', () => {
     await expect(await cellUnder(assistants, 'Silent callers')).toHaveText('25% (12 of 48)')
     await expect(await cellUnder(assistants, 'Not answered')).toHaveText('0% (0 of 48)')
     await expect(await cellUnder(assistants, 'No request')).toHaveText('17% (6 of 36)')
+    // extraction problems over the calls whose extraction ran, as the quality section counts them;
+    // skill errors stay over all calls
+    await expect(await cellUnder(assistants, 'Extraction')).toHaveText('3% (1 of 36)')
+    await expect(await cellUnder(assistants, 'Skill errors')).toHaveText('0% (0 of 40)')
+    await expect(assistants.getByRole('definition').filter({ hasText: 'calls whose data extraction failed, over the calls whose extraction ran' })).toBeVisible()
     // caller_left is the assistant's own judgement, as unresolved is
     await expect(assistants.locator('th').filter({ hasText: 'No request' }).getByLabel('Assessed by the assistant')).toBeVisible()
   })

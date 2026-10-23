@@ -2045,7 +2045,7 @@
           "unanswered": "Anrufe mit einer unbeantworteten Frage, von den Anrufen mit erfassten Fragen",
           "checks": "Anrufe, bei denen eine Prüfung anschlug, von den geprüften Anrufen",
           "skillErrors": "Anrufe mit einem Skill-Fehler, von allen Anrufen",
-          "extractionIssues": "Anrufe, deren Datenextraktion fehlschlug, von allen Anrufen"
+          "extractionIssues": "Anrufe, deren Datenextraktion fehlschlug, von den Anrufen, bei denen die Extraktion durchgeführt wurde"
         },
         "legendTitle": "Wie jede Spalte gezählt wird",
         "assessedShort": "eingeschätzt"

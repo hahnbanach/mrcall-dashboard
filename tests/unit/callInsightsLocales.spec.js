@@ -173,6 +173,29 @@ describe('callInsights: the keys of outcome 10', () => {
  * a failed later page with a retry, the bar saying what the scope-wide lists cover, and a report's
  * period total as the base of its counts.
  */
+/**
+ * The final review of D12: the extraction column is over the calls whose extraction ran
+ * (`extractionsRun`), as the quality section counts it, while skill errors stay over all calls. Each
+ * legend names its base after the last comma: the two must differ in every locale, and en-US says
+ * which base the extraction column has.
+ */
+describe('callInsights: the extraction legend names the calls whose extraction ran', () => {
+  const baseOf = (text) => text.slice(text.lastIndexOf(',') + 1).trim()
+
+  it('en-US words both bases', () => {
+    const legend = enUS.components.callInsights.assistants.legend
+    expect(legend.extractionIssues).toBe('calls whose data extraction failed, over the calls whose extraction ran')
+    expect(legend.skillErrors).toBe('calls with a skill error, over all calls')
+  })
+
+  for (const [locale, messages] of Object.entries(LOCALES)) {
+    it(`${locale} does not give the extraction column the skill errors' base (all calls)`, () => {
+      const legend = messages.components.callInsights.assistants.legend
+      expect(baseOf(legend.extractionIssues)).not.toBe(baseOf(legend.skillErrors))
+    })
+  }
+})
+
 describe('callInsights: the keys of the D12 review', () => {
   const SHORT = ['calls', 'notSolved', 'callerSilent', 'notAnswered', 'callerLeft', 'unanswered', 'checks', 'skillErrors', 'extractionIssues']
   const KEYS = [
