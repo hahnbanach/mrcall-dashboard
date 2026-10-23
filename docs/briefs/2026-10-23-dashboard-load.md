@@ -65,7 +65,7 @@ differ by 16 to 38 ms. Two series, a few minutes apart:
 | 10 Mbps, 40 ms latency | 2, 3 runs | 6 524, 6 534, 6 561 ms | 6 544, 6 555, 6 587 ms (median 6 555) | same |
 
 The time to first data on Businesses and Analytics needs a real session and is measured in the plan's
-first milestone, on `v2.2.30-test`, before anything is deployed.
+measurement protocol, on the release dashboard-test serves immediately before this work's test deploy.
 
 **Authentication before mount** (read in the code at `80946cf`):
 
@@ -190,19 +190,21 @@ Measured on the revision delivered, each figure reported with its commit:
    gzip`): a hashed JS and CSS asset answer `content-encoding: gzip`, `cache-control: public,
    max-age=31536000, immutable` and their content type; `index.html` and a route copy answer
    `cache-control: no-cache`; an asset of the previous release still answers 200 after the deploy.
-3. **First paint**, the same Playwright measurement on dashboard-test against the `v2.2.30-test`
-   figures above, both figures reported per run:
+3. **First paint**, measured under the plan's measurement protocol on dashboard-test, against the
+   baseline series the protocol takes immediately before the test deploy; both figures reported per
+   run:
    - the splash (first child of `#app`): reported, not gated;
-   - the rendered app (sign-in form visible) at 10 Mbps: median at most 3 278 ms, half the lower of
-     the two baseline medians (6 555 ms; half of the other, 6 780 ms, is 3 390 ms);
-   - the rendered app unthrottled: median not above the baseline's 808 ms;
+   - the rendered app (sign-in form visible) at 10 Mbps: median at most half the baseline median.
+     On `v2.2.30-test` that was 6 555 ms (half 3 278 ms; the other series' 6 780 ms gives 3 390 ms),
+     kept for reference;
+   - the rendered app unthrottled: median not above the baseline median (808 ms on `v2.2.30-test`);
    - loading the active locale before mount adds one request that starts only after the main
      bundle has run. Its time, from the locale chunk's request to its response, is reported
      separately and is inside the two gated figures, not added to them;
    - a warm reload transfers at most `index.html` plus requests the cache cannot serve, which are
      listed.
 4. **First data** on Businesses and Analytics, with a real session on dashboard-test, cold and warm,
-   against the M0 figures for `v2.2.30-test`: reported per run, the median not worse. From `/` with
+   against the protocol's baseline series: reported per run, the median not worse. From `/` with
    a verified session whose token already carries `email_verified: true`, the network log shows no
    `accounts:lookup` beyond Firebase's initialisation and no `securetoken` call. The one allowed
    refresh is the one a claim mismatch triggers.
@@ -220,10 +222,12 @@ Measured on the revision delivered, each figure reported with its commit:
 ## Assumptions
 
 - Scaleway Object Storage keeps the `Content-Encoding` and `Cache-Control` set on upload and Edge
-  Services passes them through. Not yet observed; the deploy milestone checks it on test first, and
-  if the edge alters them, the pre-compression is left out and the cache headers kept.
+  Services passes them through. This has not been observed yet. The plan checks it on test with a
+  60-second `max-age` before any immutable upload. If the edge alters the headers, the objects are
+  purged, the pre-compression is left out, and the cache headers are kept.
 - `vue-cli-plugin-compression` writes a `.gz` only when it shrinks the file to 80% or less
-  (`minRatio: 0.8`). At `80946cf` every JS file has one, but the four fonts and two PNG images do not.
+  (`minRatio: 0.8`). At `80946cf` every JS file has one; the source maps, the four fonts and two PNG
+  images do not.
   A hashed asset with no `.gz` is uploaded raw, with the same cache header and no `Content-Encoding`.
 - Every browser that uses the dashboard sends `Accept-Encoding: gzip`. A client that does not
   (a bare `curl`) receives gzip bytes for hashed assets.
@@ -241,7 +245,11 @@ Measured on the revision delivered, each figure reported with its commit:
 
 ## Rollback
 
-`v2.2.30-test` is the tag at `caaff42`; `80946cf`, this work's base, differs from it only in one plan
-file. Rollback redeploys that tag (`workflow_dispatch` on its ref, or a new environment tag on the
-same commit), which needs authorisation like any deployment. Its `sync` re-uploads raw assets without
-the new headers; hashed names make a browser's immutable copy of a newer file harmless.
+The work targets the first dashboard release after `v2.2.31`, not `v2.2.31` itself (decided
+2026-10-23: the deploy change could not be rehearsed before it). Rollback redeploys, per environment,
+the tag that environment served before this work, identified and verified before the deploy as the
+plan's release sequence states (on 2026-10-23: `v2.2.30-test`, at `caaff42`, on test;
+`v2.2.25-production`, at `0515932`, on production). A redeploy needs authorisation like any
+deployment. Its `sync` re-uploads raw assets without the new headers, and hashed names make a
+browser's immutable copy of a newer file harmless. A wrong header cached on the edge is removed by a
+purge, not by a redeploy.
