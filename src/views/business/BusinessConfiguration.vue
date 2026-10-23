@@ -336,7 +336,10 @@
                     v-else
                     class="w-full"
                     :disabled="businessVariablesUtils.checkIfDisabledByParentsDecorator(business, variable, isAdmin)"
-                    v-model="business.variables[variable.name]" mode="decimal"
+                    :model-value="businessVariablesUtils.numberFieldModel(business.variables[variable.name])"
+                    @update:model-value="value => business.variables[variable.name] = businessVariablesUtils.numberFieldValue(value)"
+                    mode="decimal"
+                    v-bind="businessVariablesUtils.numberFieldBounds(variable)"
                 />
                 <span class="inputboxsubtitle" v-html="variable.description"></span>
                 <div v-if="variable.upgradeInformation" class="inputboxsubtitle" v-html="variable.upgradeInformation">

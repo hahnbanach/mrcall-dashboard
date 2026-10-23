@@ -149,6 +149,47 @@ export default {
         const item = variable.templatedVariable.values[value]
         return offered.concat([{ label: item.label || value, value: value, description: item.description, language: item.language }])
     },
+    /**
+     * The bounds a number variable's definition declares in `constraints` ({integer, min, max}), as
+     * the props of the number field: `min`, `max`, and no decimal digits for a whole number. A
+     * definition without constraints, or with a bound that is not a number, gives the unbounded
+     * field every number variable had before. StarChat refuses an out-of-range value on save too:
+     * the field only stops the owner typing one.
+     */
+    numberFieldBounds(variable) {
+        let constraints = variable ? variable.constraints : null
+        if (typeof constraints === "string") {
+            try { constraints = JSON.parse(constraints) } catch { constraints = null }
+        }
+        if (!constraints || typeof constraints !== "object") return {}
+        const bounds = {}
+        if (Number.isFinite(constraints.min)) bounds.min = constraints.min
+        if (Number.isFinite(constraints.max)) bounds.max = constraints.max
+        if (constraints.integer === true) bounds.maxFractionDigits = 0
+        return bounds
+    },
+    /**
+     * What a number field holds once the owner changes it: the number, or "" when the field was
+     * emptied. The field reports an empty value as null, which the save below would send as "null",
+     * a value every StarChat reader of a number fails to parse; for "" StarChat stores the
+     * variable's default. Kept to number fields because for a JSON-typed variable null is a value.
+     */
+    numberFieldValue(value) {
+        return value === null || value === undefined ? "" : value
+    },
+    /**
+     * What a number field is given to show: the stored value (a string, as every variable is) as a
+     * number, or null for an empty or unreadable one. Given "" the field formats Number(""), 0, and
+     * an emptied field read 0 while it was about to be saved as "".
+     */
+    numberFieldModel(value) {
+        if (value === null || value === undefined) return null
+        if (typeof value === "number") return Number.isFinite(value) ? value : null
+        const text = String(value).trim()
+        if (text === "") return null
+        const number = Number(text)
+        return Number.isFinite(number) ? number : null
+    },
     businessVariablesToSerializable(inBusiness) {
         let business = {}
         for (const item of Object.entries(inBusiness)) {
