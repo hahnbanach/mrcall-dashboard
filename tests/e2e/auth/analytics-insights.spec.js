@@ -181,10 +181,10 @@ function reportPage (n, { withContent = false } = {}) {
     businessId: BUSINESS_ID,
     periodStart: 1700000000000 - i * 86400000,
     periodEnd: 1700000000000 - i * 86400000 + 86400000,
-    cadence: 'weekly',
+    cadence: 7,
     content: (withContent && i === 0) ? {
       version: 1,
-      period: { from: '2026-10-01T00:00:00Z', to: '2026-10-08T00:00:00Z', cadence: 'weekly' },
+      period: { from: '2026-10-01T00:00:00Z', to: '2026-10-08T00:00:00Z', cadence: 7 },
       calls: 10,
       resolution: { resolved: 6, unresolved: 2, handed_over: 1 },
       message: { complete: 4, none: 3 },
@@ -278,9 +278,9 @@ test.describe('Analytics: a report written before insights version 2', () => {
       status: 200,
       contentType: 'application/json',
       body: JSON.stringify([{
-        businessId: BUSINESS_ID, periodStart: 1700000000000, periodEnd: 1700086400000, cadence: 'weekly',
+        businessId: BUSINESS_ID, periodStart: 1700000000000, periodEnd: 1700086400000, cadence: 7,
         content: {
-          version: 1, period: { from: '2026-10-01T00:00:00Z', to: '2026-10-08T00:00:00Z', cadence: 'weekly' },
+          version: 1, period: { from: '2026-10-01T00:00:00Z', to: '2026-10-08T00:00:00Z', cadence: 7 },
           calls: 10, outcomes: { booked: 3, unresolved: 2 },
           topics: [{ topic: 'Opening hours', calls: 6, labels: [], outcomes: { booked: 3 }, with_unanswered: 0, new: true }],
           gap_calls: {}, gaps: [], suggestions: { business_info: [], integration: [], mrcall_config: [] }, flagged_calls: [],
@@ -585,7 +585,7 @@ test.describe('Analytics: the reseller\'s page says who (outcome 10)', () => {
     await page.route('**/customer/insights/reports*', (route) => route.fulfill({
       status: 200, contentType: 'application/json',
       body: JSON.stringify([1700604800000, 1700000000000].map((periodStart) => ({
-        businessId: BUSINESS_ID, periodStart, periodEnd: periodStart + 604800000, cadence: 'weekly',
+        businessId: BUSINESS_ID, periodStart, periodEnd: periodStart + 604800000, cadence: 7,
         content: { version: 2, calls: 1, topics: [], gap_calls: {}, gaps: [], suggestions: { business_info: [`Said in ${periodStart}`], integration: [] }, flagged_calls: [] },
       }))),
     }))

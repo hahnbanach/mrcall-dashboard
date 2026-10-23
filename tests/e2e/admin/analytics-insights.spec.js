@@ -508,10 +508,10 @@ test.describe('Analytics: an admin reading one business\'s report', () => {
       status: 200,
       contentType: 'application/json',
       body: JSON.stringify([{
-        businessId: BUSINESS_ID, periodStart: 1700000000000, periodEnd: 1700086400000, cadence: 'weekly',
+        businessId: BUSINESS_ID, periodStart: 1700000000000, periodEnd: 1700086400000, cadence: 7,
         content: {
           version: 1,
-          period: { from: '2026-10-01T00:00:00Z', to: '2026-10-08T00:00:00Z', cadence: 'weekly' },
+          period: { from: '2026-10-01T00:00:00Z', to: '2026-10-08T00:00:00Z', cadence: 7 },
           calls: 5, resolution: { resolved: 4, unresolved: 1 }, message: { complete: 3, none: 2 }, booked: 2, transferred: 1, topics: [],
           gap_calls: {}, gaps: [{ group: 'missing_info', summary: 'Ask about parking.', examples: ['CON-9'] }],
           suggestions: { business_info: [], integration: [], mrcall_config: ['Turn on the restaurant skill.'] },
