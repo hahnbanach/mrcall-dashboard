@@ -38,7 +38,7 @@ the 120 s webServer timeout is not enough under load.
 
 - **M2, M3 and M4 each add async chunks** (pages, locales, the webcall client, the JSON editor). A tab
   opened before a deploy needs them after it. None of the three reaches any environment unless M5's
-  retention (steps 2 and 5 below) is in the same deploy or an earlier one.
+  retention (M5 steps 1, 3, 5 and 6) is in the same deploy or an earlier one.
 - M7 depends on M6 (the readiness promise).
 - M5's immutable header depends on the passthrough probe of the release sequence (step 2).
 - Otherwise each milestone can be left out if it fails review or Playwright.
@@ -58,6 +58,10 @@ Every figure the brief's acceptance 3 and 4 gate on is produced this way and no 
 - **Profiles**: unthrottled, and CDP emulation at 10 Mbps down and up with 40 ms latency.
 - **Runs**: cold runs (new context, cache disabled), 7 per page and profile; warm runs (same context,
   cache enabled, after one priming load), 5 per page and profile.
+- **Session state**: every real-session run signs in fresh in its own context. Its ID token is
+  therefore less than an hour old, and Firebase's start-up makes no expiry refresh. The figures do
+  not cover a returning user with a persisted token older than an hour, who pays one `securetoken`
+  call (0.23 to 0.27 s measured in the diagnosis) at start-up, on both baseline and candidate.
 - **Order and window**:
   1. The baseline series runs on dashboard-test against the release it serves, immediately before
      the test deploy of this work.
@@ -186,12 +190,23 @@ All names under `js/`, `css/`, `fonts/` and `img/` carry a content hash.
 **Steps, in this order.** A page must never name an asset that is not yet uploaded, and a deep link
 must never lose its key during a deploy.
 
-1. **Manifest of what is being superseded.** List every key under `js/`, `css/`, `fonts/` and `img/`
-   currently in the bucket. Write the list as `deploy-manifests/<UTC timestamp>.txt`: the assets
-   this deploy supersedes, stamped with the moment they stopped being current.
-   - On the first deploy under this scheme, this captures the previous release's assets, so they
-     are retained too.
-   - The keys are not secret: the same names are served publicly.
+Two kinds of list live under `deploy-manifests/`, holding hashed keys only (the hashed keys are not
+secret: the same names are served publicly):
+
+- `current.txt`: the hashed keys of the build that is live, rewritten by every deploy (step 5);
+- `superseded-<UTC timestamp>.txt`: the keys one deploy took out of service, stamped with the moment
+  they stopped being current. A key appears in a list only when it stops being current, so a key
+  current again after a rollback and then superseded again appears in a newer list.
+
+1. **Record what this deploy supersedes.** The list is written as `superseded-<now>.txt`, and no
+   file is written when it is empty. It is the union of:
+   - the keys of the previous `current.txt` that are not in this build's `dist/`;
+   - orphans: keys under `js/`, `css/`, `fonts/` and `img/` that are in the bucket, not in this
+     `dist/`, not in the previous `current.txt` and in no retained `superseded-*` list.
+
+   Orphans are the assets of the release live before this scheme exists (the first deploy has no
+   `current.txt`), and the leftovers of a deploy interrupted before step 5. They are retained like
+   any superseded key rather than deleted unseen.
 2. **Hashed assets.** Every file under `js/`, `css/`, `fonts/` and `img/` except the `.gz` and `.br`
    siblings, each with its content type and `ASSET_CACHE_CONTROL`:
    - with a `.gz` sibling: the sibling's bytes under the original key, with `Content-Encoding: gzip`;
@@ -199,7 +214,7 @@ must never lose its key during a deploy.
      maps, fonts and PNGs): the raw file, with no `Content-Encoding`;
    - no deletion in this step.
 3. **The rest of the site.** `aws s3 sync dist/ --delete` with these excludes:
-   - `js/*`, `css/*`, `fonts/*`, `img/*`: uploaded in step 2 and pruned only in step 5;
+   - `js/*`, `css/*`, `fonts/*`, `img/*`: uploaded in step 2 and pruned only in step 6;
    - `*.gz`, `*.br`: siblings, never keys of their own;
    - `index.html`: uploaded last, in step 4;
    - every route key printed by `scripts/static-routes.js`. These copies of `index.html` are not in
@@ -209,14 +224,25 @@ must never lose its key during a deploy.
 
    Excluded keys are neither uploaded nor deleted by `sync`.
 4. **`index.html` and its route copies, last.** Raw, with `no-cache`, as today.
-5. **Prune.** Delete a key under the hashed prefixes only if both hold:
-   - it is not in this build's `dist/`;
-   - it is in no manifest younger than the retention period (proposed 14 days).
+5. **`current.txt`** rewritten with this build's hashed keys, once `index.html` names them.
+6. **Prune.** For each key under the hashed prefixes that is not in this build's `dist/`:
+   - the newest `superseded-*` list naming the key decides;
+   - if that list is older than the retention period (proposed 14 days), the key is deleted;
+   - a key that no list names is left in place and reported. After step 1 this can happen only
+     through a concurrent writer.
 
-   Then delete manifests older than the retention period. Retention therefore counts from the deploy
-   that superseded an asset, not from its upload: a release that stayed live for a month keeps its
-   assets for 14 days after it is replaced. The rule is never "not referenced by `index.html`",
-   because lazy chunks are named only by the runtime.
+   Then every `superseded-*` list older than the retention period is deleted. Each of its keys has
+   by then been deleted, is current again, or is named by a newer list.
+
+   **Why the bucket stays bounded.** A key is listed only when it leaves service, and it goes once
+   its newest listing is older than the retention period. The bucket therefore holds the live
+   release, plus the assets superseded within the last 14 days, plus the reported strays, whatever
+   the interval between deploys.
+
+   **Why it never deletes too early.** Retention counts from the deploy that superseded an asset,
+   not from its upload: a release live for a month keeps its assets for 14 days after it is
+   replaced. The rule is never "not referenced by `index.html`", because lazy chunks are named only
+   by the runtime.
 
 **Rehearsal**, before any deploy, against a local S3-compatible endpoint: MinIO in Docker (Docker
 is on this machine). A throwaway bucket, with local credentials invented for the container and
@@ -229,12 +255,29 @@ never written to a file.
     `Content-Type` and `Cache-Control`;
   - no `.gz` or `.br` key exists;
   - `index.html` and the route keys are present, with `no-cache`;
-  - step 1's manifest holds the previous build's keys.
+  - step 1's list holds exactly the keys that left service, and `current.txt` equals the build's
+    hashed keys.
 - Upload order checked from the script's own log: every hashed key before `index.html`.
-- Prune checked by setting the retention period to 0 and to 14 days on the third deploy:
-  - with 14 days, the first build's assets remain;
-  - with 0, they go and the current build's remain.
 - A route key's presence polled throughout step 3: never absent.
+- **Retention over time, with backdated lists.** The script reads a list's date from its name, so
+  the rehearsal renames lists to move them in time.
+  - Setup: the bucket is first filled the way today's workflow fills it, with the base build. Then
+    five builds are deployed with the script:
+    - B1 = the base build;
+    - B2, B3 and B5, each with at least one chunk of its own;
+    - B4, which brings back one chunk of B2, as a rollback would.
+  - After each deploy, the new list is renamed to put supersessions at day 0 (D2 supersedes B1),
+    day 10 (D3, B2), day 20 (D4, B3) and day 30 (D5, B4). D5's prune runs at day 31 with a
+    14-day retention.
+  - Expected after D5:
+    - B1's own chunks are gone (superseded 31 days earlier), and so are B2's (21 days);
+    - B3's remain (11 days) and B4's remain (1 day);
+    - the B2 chunk that B4 brought back remains, because D5 listed it again;
+    - B5's are all present;
+    - the lists dated day 0 and day 10 are deleted;
+    - the orphans of the pre-scheme fill are recorded by D1 and gone once their list ages out.
+  - The object count after each deploy is recorded. It must fall once lists age out instead of
+    growing with every deploy.
 
 The rehearsal proves the script, not the edge; the edge is the probe's job.
 
