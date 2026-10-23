@@ -193,7 +193,7 @@ function reportContent ({ suggestion = 'Tell us your Sunday hours.', from = '202
       resolution: { resolved: 4, unresolved: 2 }, with_unanswered: 1, new: true,
     }],
     gap_calls: { missing_info: 1 },
-    gaps: [{ group: 'missing_info', summary: 'Callers ask about Sunday hours.', examples: ['CON-1', 'CON-3'] }],
+    gaps: [{ group: 'missing_info', summary: 'Callers ask about Sunday hours.', examples: ['CON-1', 'CON-3', 'CON-4'] }],
     suggestions: { business_info: [suggestion], integration: ['A booking calendar'], mrcall_config: ['Turn on multilingual.'] },
     flagged_calls: ['CON-2'],
     extractor_audit: { sampled_resolved: 2, disagreements: 0 },
@@ -211,8 +211,18 @@ function reportPage (n, { withContent = false } = {}) {
     periodEnd: 1700000000000 - i * DAY + DAY,
     cadence: 7,
     content: (withContent && i === 0) ? reportContent() : null,
+    ...((withContent && i === 0) ? { exampleCalls: EXAMPLE_CALLS } : {}),
   }))
 }
+
+/** How StarChat names a report's example calls when it answers (analytics guide §10): CON-1 with its caller,
+  * CON-3 without one on record; CON-4, deleted since, has no entry. */
+const EXAMPLE_START = Date.UTC(2026, 9, 14, 9, 30)
+const EXAMPLE_CALLS = {
+  'CON-1': { startTimestamp: EXAMPLE_START, caller: 'Maria Rossi' },
+  'CON-3': { startTimestamp: EXAMPLE_START + 3600000 },
+}
+const exampleWhen = (page, ms) => page.evaluate((t) => new Date(t).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }), ms)
 
 const reportsQuery = (route) => new URL(route.request().url()).searchParams
 
@@ -258,9 +268,13 @@ test.describe('Analytics: call reports of the period chosen at the top of the pa
     const gap = reports.locator('.report-gap')
     await expect(gap.getByText('Missing information')).toBeVisible()
     await expect(gap.getByText('Callers ask about Sunday hours.')).toBeVisible()
-    // an example call is named by its place in the list, its id kept for the link, never shown
-    await expect(gap.getByRole('link', { name: 'Call 1' })).toHaveAttribute('href', `/conversations?id=${BUSINESS_ID}&conversation=CON-1`)
-    await expect(gap.getByRole('link', { name: 'Call 2' })).toHaveAttribute('href', `/conversations?id=${BUSINESS_ID}&conversation=CON-3`)
+    // an example call is named by its caller and when it started, else by when it started, and only without
+    // either by its place in the list; its id kept for the link, never shown
+    const first = `Maria Rossi, ${await exampleWhen(page, EXAMPLE_START)}`
+    await expect(gap.getByRole('link', { name: first, exact: true })).toHaveAttribute('href', `/conversations?id=${BUSINESS_ID}&conversation=CON-1`)
+    await expect(gap.getByRole('link', { name: await exampleWhen(page, EXAMPLE_START + 3600000), exact: true }))
+      .toHaveAttribute('href', `/conversations?id=${BUSINESS_ID}&conversation=CON-3`)
+    await expect(gap.getByRole('link', { name: 'Call 3', exact: true })).toHaveAttribute('href', `/conversations?id=${BUSINESS_ID}&conversation=CON-4`)
     await expect(reports.getByText(/CON-\d/)).toHaveCount(0)
 
     await expect(reports.getByText('Tell us your Sunday hours.')).toBeVisible()

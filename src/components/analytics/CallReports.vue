@@ -34,14 +34,15 @@
             <div v-for="(gap, idx) in item.content.gaps" :key="idx" class="report-gap">
               <span class="report-gap-group">{{ $t("components.callInsights.gaps." + gap.group) }}</span>
               <p class="report-gap-summary">{{ gap.summary }}</p>
-              <!-- An example call is named by its place in the list: its id says nothing to a reader, and
-                   stays in the link (and in the title, for whoever has to quote it). -->
+              <!-- An example call is named by its caller and when it started, as StarChat names it when it
+                   answers; by its place in the list only when StarChat could not name it. Its id says nothing to
+                   a reader, and stays in the link (and in the title, for whoever has to quote it). -->
               <div v-if="gap.examples && gap.examples.length > 0" class="report-gap-examples">
                 <span class="report-gap-examples-label">{{ $t("components.callInsights.reports.examples") }}</span>
                 <template v-for="(id, i) in gap.examples" :key="id">
                   <span v-if="i > 0">, </span>
-                  <router-link v-if="isOwner" :to="conversationLink(id)" :title="id">{{ exampleName(i) }}</router-link>
-                  <span v-else :title="id">{{ exampleName(i) }}</span>
+                  <router-link v-if="isOwner" :to="conversationLink(id)" :title="id">{{ exampleName(item, id, i) }}</router-link>
+                  <span v-else :title="id">{{ exampleName(item, id, i) }}</span>
                 </template>
               </div>
             </div>
@@ -95,7 +96,8 @@ import { scrollBelowBar } from "@/utils/scrollBelowBar";
  * sections above for the same period, and is not repeated here, although StarChat's content still carries
  * the counts until this dashboard is in production (StarChat plan B9b). A report asked for an interval is
  * marked as such; it can share its days with an automatic one, so a report is known by its start and its
- * request id together (`CallInsights.reportKey`). Example calls open for the business's owner only: a
+ * request id together (`CallInsights.reportKey`). Example calls are named by their caller and start, which
+ * StarChat reads when it answers (`exampleCalls`), and open for the business's owner only: a
  * reseller or an admin reading a managed owner's call is out of scope (StarChat, a Mycelium task).
  */
 export default {
@@ -191,8 +193,9 @@ export default {
     labelsOf(topic) {
       return Array.isArray(topic.labels) ? topic.labels.filter((l) => typeof l === "string" && l.trim() !== "") : [];
     },
-    exampleName(index) {
-      return this.$t("components.callInsights.reports.exampleCall", { n: index + 1 });
+    exampleName(item, id, index) {
+      return CallInsights.exampleCallName(item, id, this.$i18n.locale) ||
+        this.$t("components.callInsights.reports.exampleCall", { n: index + 1 });
     },
     hasSuggestions(content) {
       const s = content.suggestions || {};

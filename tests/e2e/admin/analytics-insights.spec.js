@@ -518,15 +518,18 @@ test.describe('Analytics: an admin reading one business\'s report', () => {
           flagged_calls: [], extractor_audit: { sampled_resolved: 0, disagreements: 0 },
           model: 'gpt-x', usage: { input_tokens: 10, output_tokens: 5 },
         },
+        exampleCalls: { 'CON-9': { startTimestamp: Date.UTC(2026, 9, 14, 9, 30), caller: '+39021234567' } },
       }]),
     }))
     await page.goto(`/analytics?id=${BUSINESS_ID}`)
     const reports = section(page, 'Call reports')
     await expect(reports.getByText('Turn on the restaurant skill.')).toBeVisible({ timeout: 15000 })
     await expect(reports.getByText('Ask about parking.')).toBeVisible()
-    // named by its place in the list, as for the owner, but not a link
-    await expect(reports.getByRole('link', { name: 'Call 1' })).toHaveCount(0)
-    await expect(reports.locator('.report-gap').getByText('Call 1')).toBeVisible()
+    // named by its caller and when it started, as for the owner, but not a link
+    const name = await page.evaluate((t) => '+39021234567, ' + new Date(t).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }),
+      Date.UTC(2026, 9, 14, 9, 30))
+    await expect(reports.getByRole('link', { name })).toHaveCount(0)
+    await expect(reports.locator('.report-gap').getByText(name, { exact: true })).toBeVisible()
     await expect(reports.getByText('CON-9')).toHaveCount(0)
     // the counts are the analytics' own, not the report's
     await expect(reports.getByText('Booked')).toHaveCount(0)

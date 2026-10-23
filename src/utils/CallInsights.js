@@ -340,10 +340,25 @@ function reportKey(report) {
     return report.periodStart + ":" + (isOnRequest(report) ? report.requestId : "");
 }
 
+/*
+ * An example call of a report as StarChat names it when it answers (`exampleCalls`, analytics guide §10): its
+ * caller, the contact's name as the conversation list shows it or else its number, and when it started, in the
+ * reader's locale; the start alone without a caller. Null for a call StarChat did not name (deleted since), whose
+ * place in the list is then all there is to say.
+ */
+function exampleCallName(report, id, locale) {
+    const label = report && report.exampleCalls ? report.exampleCalls[id] : null;
+    if (!label || typeof label.startTimestamp !== "number") return null;
+    const when = new Date(label.startTimestamp).toLocaleString(locale, { dateStyle: "medium", timeStyle: "short" });
+    const caller = typeof label.caller === "string" ? label.caller.trim() : "";
+    return caller ? caller + ", " + when : when;
+}
+
 export default {
     insightRows,
     isOnRequest,
     reportKey,
+    exampleCallName,
     unkeptRows,
     firedChecks,
     latestOnly,

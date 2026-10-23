@@ -206,7 +206,8 @@ for the four dimensions lives in `src/utils/CallInsights.js`.
     the reports overlapping it, automatic and asked for an interval, paged on the last report's
     `periodEnd` and `requestId`; a new period reloads them). A report shows only what the model adds:
     themes with the call topics they group and whether they are new, the questions left unanswered by
-    reason with example calls (named "Call 1, 2...", linked for the owner only), suggestions
+    reason with example calls (named by caller and start from the answer's `exampleCalls`, StarChat reading
+    them when it answers; "Call N" only for one it could not name; linked for the owner only), suggestions
     (`mrcall_config` for an admin only); every count is the analytics' own and is not repeated. A
     report asked for an interval is marked "On request" and known by its start and `requestId`
     together; `?report=<periodStart>&requestId=<id>` opens one.

@@ -257,6 +257,29 @@ describe('a report\'s identity: automatic or on request', () => {
   })
 })
 
+// StarChat names a report's example calls when it answers (`exampleCalls`, analytics guide §10): by conversation
+// id, the call's start and its caller, the contact's name as the conversation list shows it, else its number.
+describe('exampleCallName: an example call by its caller and when it started', () => {
+  const START = Date.UTC(2026, 9, 14, 9, 30)
+  const when = (locale) => new Date(START).toLocaleString(locale, { dateStyle: 'medium', timeStyle: 'short' })
+  const report = { exampleCalls: { 'CON-1': { startTimestamp: START, caller: 'Maria Rossi' }, 'CON-2': { startTimestamp: START } } }
+
+  it('says the caller and the start in the reader\'s locale', () => {
+    expect(CallInsights.exampleCallName(report, 'CON-1', 'it-IT')).toBe(`Maria Rossi, ${when('it-IT')}`)
+    expect(CallInsights.exampleCallName(report, 'CON-1', 'en-US')).toBe(`Maria Rossi, ${when('en-US')}`)
+  })
+
+  it('says the start alone for a call without a caller on record', () => {
+    expect(CallInsights.exampleCallName(report, 'CON-2', 'en-US')).toBe(when('en-US'))
+  })
+
+  it('has no name for a call StarChat did not name, or a label without its start', () => {
+    expect(CallInsights.exampleCallName(report, 'CON-3', 'en-US')).toBeNull()
+    expect(CallInsights.exampleCallName({}, 'CON-1', 'en-US')).toBeNull()
+    expect(CallInsights.exampleCallName({ exampleCalls: { 'CON-1': { caller: 'Maria Rossi' } } }, 'CON-1', 'en-US')).toBeNull()
+  })
+})
+
 describe('integrations and config-suggestions: the caller\'s whole scope, since a start, one page at a time', () => {
   // The base URL comes from the build's environment, absent here: the path and the query are what is checked.
   const parsed = (url) => new URL(url.replace(/^[^/]*\/mrcall/, 'http://starchat/mrcall'))
