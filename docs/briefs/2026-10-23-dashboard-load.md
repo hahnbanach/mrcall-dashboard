@@ -51,13 +51,18 @@ is what splits the vendors into dozens of files.
   applies its heuristic: that is the "sometimes". The diagnosis saw 65 of 104 edge misses on a first
   fetch.
 
-**First paint** (Playwright Chromium, a fresh context per run with the cache disabled, time from
-navigation to `#app` having children; `/signin` because it needs no session):
+**First paint** (Playwright Chromium, a fresh context per run with the cache disabled; `/signin`
+because it needs no session). Two figures: the first child of `#app` (the splash, once one exists),
+and the rendered app, meaning Vue has mounted and the sign-in form's email or password input is
+visible. On `v2.2.30-test` there is no splash, so the first child is the mounted app and the two
+differ by 16 to 38 ms. Two series, a few minutes apart:
 
-| Link | Runs | `#app` rendered | Transferred |
-|---|---|---|---|
-| unthrottled (office line) | 5 | 924, 992, 994, 1 121, 1 412 ms | 8.03 to 8.23 MB, 119 to 120 requests |
-| 10 Mbps, 40 ms latency (CDP emulation) | 3 | 6 696, 6 780, 6 952 ms | 8.23 MB |
+| Link | Series | First child of `#app` | Sign-in form visible | Transferred |
+|---|---|---|---|---|
+| unthrottled (office line) | 1, 5 runs | 924, 992, 994, 1 121, 1 412 ms | not recorded | 8.03 to 8.23 MB, 119 to 120 requests |
+| unthrottled | 2, 5 runs | 681, 698, 788, 871, 1 071 ms | 698, 715, 808, 887, 1 109 ms (median 808) | same |
+| 10 Mbps, 40 ms latency (CDP emulation) | 1, 3 runs | 6 696, 6 780, 6 952 ms | not recorded | 8.23 MB |
+| 10 Mbps, 40 ms latency | 2, 3 runs | 6 524, 6 534, 6 561 ms | 6 544, 6 555, 6 587 ms (median 6 555) | same |
 
 The time to first data on Businesses and Analytics needs a real session and is measured in the plan's
 first milestone, on `v2.2.30-test`, before anything is deployed.
@@ -85,8 +90,20 @@ first milestone, on `v2.2.30-test`, before anything is deployed.
 - `getIdToken(true)` appears 15 times in `src`. Besides the sign-in path it is in five other
   functions of `Business.js` (among them `getBusiness`, with 17 call sites), in `AiConfigure.js`, in
   the webcall and Whatsapp components, in the 401 interceptor (where forcing is the point) and in the
-  50-minute proactive refresh. `checkUserHasBusinesses` is also called by Analytics and AnalyticsAdmin
-  on mount, so its forced refresh delays their first data too.
+  50-minute proactive refresh.
+- `checkUserHasBusinesses` is also called by Analytics and AnalyticsAdmin on mount (it sets the role
+  from `x-mrcall-role`). Changing it changes those two pages as well as sign-in.
+
+**Why one forced refresh must stay** (reviewer's evidence, 2026-10-23, StarChat at its `9.34` line):
+StarChat authorises a Firebase token only when its `email_verified` claim is true
+(`JwtFirebaseTokenService.tokenAuthorize`, used by `FirebaseBusinessResource.scala` and about 50
+other resources), and refuses otherwise with Akka's default 403, which the dashboard's 401
+interceptor never retries. Sign-up sends `sendEmailVerification` with `handleCodeInApp: false` and
+a continue URL of `/login?confirm_email=true` (`Signup.vue`, `store/index.js`): the person verifies on
+Firebase's page and comes back holding the ID token minted before verification, whose claim is still
+false. Firebase's start-up reload updates `user.emailVerified` but mints no new token. Today the
+unconditional `getIdToken(true)` in `Signin.vue` is what puts the true claim into the token. There is
+no Playwright test of this return in `tests/`.
 
 ## Findings that change the diagnosis's fixes
 
@@ -112,8 +129,13 @@ first milestone, on `v2.2.30-test`, before anything is deployed.
 4. **The forced refreshes outside the sign-in path** (point above) cost one securetoken round trip per
    call on Business Configuration, the wizard, the onboarding pages, Plan and the Aladdin
    configurator (the callers of `getBusiness`). They are the same defect as
-   fix 4 but outside the sign-in path the request named. The plan holds them in a separate milestone
-   that runs only if the lead extends the scope.
+   fix 4 but outside the sign-in path the request named. The lead decided on 2026-10-23 that they
+   are out of this release: a follow-up (see Follow-ups).
+5. **Fix 4 cannot drop every forced refresh.** The diagnosis proposed `getIdToken()` without forcing
+   on the sign-in path. That would leave a person returning from email verification with a token
+   StarChat refuses (evidence above). The refresh stays, but only when it is needed: when the cached
+   token's `email_verified` claim (read locally with `getIdTokenResult()`, no network) differs from
+   `user.emailVerified`, which Firebase's start-up reload has just updated.
 
 ## Scope
 
@@ -129,11 +151,16 @@ In scope:
    without waiting for the router, with a loading state in `App.vue` until the first navigation
    resolves; the guard awaits the SDK's single `authStateReady()` instead of a listener per
    navigation; the `setPersistence` call removed.
-3. **The sign-in path.** No `user.reload()` and no forced refresh on the path from `/` or `/signin`
-   with a session to the first page; `/` redirects without mounting a component; a loading state
+3. **The sign-in path.** No `user.reload()` on the path from `/` or `/signin` with a session to the
+   first page (Firebase reloaded the user at initialisation). A forced token refresh only when the
+   cached token's `email_verified` claim differs from `user.emailVerified`, decided in one place once
+   authentication is ready, so that a deep link after verification is covered as well as `/signin`;
+   otherwise `getIdToken()` without forcing, in `Signin.vue` and in `checkUserHasBusinesses` (and so
+   on Analytics and AnalyticsAdmin too). `/` redirects without mounting a component; a loading state
    instead of the sign-in form while a session is being resolved.
 
-Out of scope: the StarChat overview read (fix 3); the per-mount `onAuthStateChanged` listeners in
+Out of scope: the StarChat overview read (fix 3); the forced refreshes outside the sign-in path
+(Follow-ups); the per-mount `onAuthStateChanged` listeners in
 Businesses, Analytics, AnalyticsAdmin and Conversations, beyond what the guard change makes
 unnecessary; brotli; source maps published to the bucket; the unhashed copy of
 `MrCallWebCall.bundle.js` that `public/` puts at the site root (left in place: no caller was found in
@@ -164,13 +191,27 @@ Measured on the revision delivered, each figure reported with its commit:
    max-age=31536000, immutable` and their content type; `index.html` and a route copy answer
    `cache-control: no-cache`; an asset of the previous release still answers 200 after the deploy.
 3. **First paint**, the same Playwright measurement on dashboard-test against the `v2.2.30-test`
-   figures above: `#app` (or the splash) visible at 10 Mbps in at most half of the baseline median
-   (6 780 ms); unthrottled not slower than the baseline; a warm reload transfers at most
-   `index.html` plus requests the cache cannot serve, which are listed.
+   figures above, both figures reported per run:
+   - the splash (first child of `#app`): reported, not gated;
+   - the rendered app (sign-in form visible) at 10 Mbps: median at most 3 278 ms, half the lower of
+     the two baseline medians (6 555 ms; half of the other, 6 780 ms, is 3 390 ms);
+   - the rendered app unthrottled: median not above the baseline's 808 ms;
+   - loading the active locale before mount adds one request that starts only after the main
+     bundle has run. Its time, from the locale chunk's request to its response, is reported
+     separately and is inside the two gated figures, not added to them;
+   - a warm reload transfers at most `index.html` plus requests the cache cannot serve, which are
+     listed.
 4. **First data** on Businesses and Analytics, with a real session on dashboard-test, cold and warm,
-   against the M0 figures for `v2.2.30-test`: reported per run; the median is not worse, and the
-   sign-in hop from `/` to the first page makes no `accounts:lookup` and no forced `securetoken` call
-   beyond Firebase's own initialisation (checked in the network log).
+   against the M0 figures for `v2.2.30-test`: reported per run, the median not worse. From `/` with
+   a verified session whose token already carries `email_verified: true`, the network log shows no
+   `accounts:lookup` beyond Firebase's initialisation and no `securetoken` call. The one allowed
+   refresh is the one a claim mismatch triggers.
+   - A Playwright test of the confirm-email return, written first and seen passing on `80946cf`
+     (the current behaviour is correct, only slow): a session whose `user.emailVerified` is true
+     after the start-up `accounts:lookup` and whose cached token says `email_verified: false` lands
+     on the first page. The StarChat mock refuses with 403 a token without the claim, so the test
+     fails if the refresh is skipped.
+   - Its converse: a token that already carries the claim makes no `securetoken` call.
 5. **No regression**: `npm run lint` exit 0; vitest all passing; the whole Playwright suite (desktop,
    tablet, mobile) with no failure that does not also fail on `80946cf` under the same conditions
    (failures rerun as in earlier plans); a test seeding a v2.2.30-style localStorage session lands
@@ -181,10 +222,22 @@ Measured on the revision delivered, each figure reported with its commit:
 - Scaleway Object Storage keeps the `Content-Encoding` and `Cache-Control` set on upload and Edge
   Services passes them through. Not yet observed; the deploy milestone checks it on test first, and
   if the edge alters them, the pre-compression is left out and the cache headers kept.
+- `vue-cli-plugin-compression` writes a `.gz` only when it shrinks the file to 80% or less
+  (`minRatio: 0.8`). At `80946cf` every JS file has one, but the four fonts and two PNG images do not.
+  A hashed asset with no `.gz` is uploaded raw, with the same cache header and no `Content-Encoding`.
 - Every browser that uses the dashboard sends `Accept-Encoding: gzip`. A client that does not
   (a bare `curl`) receives gzip bytes for hashed assets.
 - The Edge Services note that requests carrying cookies bypass its cache was not reproduced on test
   (a request with a cookie answered `hit-fresh`); it is not relied on either way.
+
+## Follow-ups
+
+- The forced refreshes outside the sign-in path (finding 4): `Business.js` (`selectVariables`,
+  `getBusiness`, `chooseBusinessTemplate`, `updateBusiness`, `createBusiness`), `AiConfigure.js`,
+  `Whatsappweb.vue`, `DirectVoiceButton.vue`, `TextChatWidget.vue`. Once this work's single
+  claim check runs at authentication readiness, an unforced `getIdToken()` there is safe. Its own
+  brief, after this release.
+- The StarChat overview read (fix 3 of the diagnosis): its own brief in both repositories.
 
 ## Rollback
 
