@@ -1980,22 +1980,19 @@
       },
       "reports": {
         "title": "Opkaldsrapporter",
-        "none": "Ingen rapport endnu.",
-        "summaryTitle": "Perioden",
-        "booked": "Bookede opkald: {count} af {total}",
-        "transferred": "Viderestillede opkald, som meldt af operatørerne: {count}",
+        "none": "Ingen rapport dækker denne periode.",
         "topicsTitle": "Emner",
         "newTopic": "Nyt",
-        "topicShare": "{calls} opkald ({percent} %)",
+        "themeIncludes": "Omfatter: {labels}",
         "gapsTitle": "Spørgsmål uden svar",
+        "examples": "Eksempelopkald:",
+        "exampleCall": "Opkald {n}",
         "suggestionsTitle": "Forslag",
         "businessInfoTitle": "Hvad kun du kan fortælle din assistent",
         "integrationTitle": "Et system at forbinde",
         "mrcallConfigTitle": "MrCalls konfigurationsforslag",
-        "flaggedTitle": "Opkald, det er værd at læse",
         "loadMore": "Vis tidligere rapporter",
-        "callsInPeriod": "{calls} analyserede opkald i perioden",
-        "callsBaseNote": "Her tælles kun opkald, som assistenten har analyseret; “{section}” tæller også opkald uden analyse."
+        "onRequest": "På anmodning"
       },
       "assistants": {
         "title": "Assistenter, der skal gennemgås",

@@ -1980,22 +1980,19 @@
       },
       "reports": {
         "title": "Kõnearuanded",
-        "none": "Ühtegi aruannet veel pole.",
-        "summaryTitle": "Periood",
-        "booked": "Broneeritud kõned: {count}/{total}",
-        "transferred": "Suunatud kõned operaatorite teatel: {count}",
+        "none": "Ükski aruanne ei kata seda perioodi.",
         "topicsTitle": "Teemad",
         "newTopic": "Uus",
-        "topicShare": "{calls} kõnet ({percent}%)",
+        "themeIncludes": "Hõlmab: {labels}",
         "gapsTitle": "Vastuseta jäänud küsimused",
+        "examples": "Näidiskõned:",
+        "exampleCall": "Kõne {n}",
         "suggestionsTitle": "Soovitused",
         "businessInfoTitle": "Mida ainult sina saad oma assistendile öelda",
         "integrationTitle": "Ühendatav süsteem",
         "mrcallConfigTitle": "MrCalli seadistussoovitused",
-        "flaggedTitle": "Lugemist väärivad kõned",
         "loadMore": "Näita varasemaid aruandeid",
-        "callsInPeriod": "{calls} analüüsitud kõnet selles perioodis",
-        "callsBaseNote": "Siin loetakse ainult assistendi analüüsitud kõnesid; „{section}“ loeb ka analüüsita kõnesid."
+        "onRequest": "Tellimisel"
       },
       "assistants": {
         "title": "Ülevaatamist vajavad assistendid",

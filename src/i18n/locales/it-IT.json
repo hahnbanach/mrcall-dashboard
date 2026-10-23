@@ -1986,22 +1986,19 @@
       },
       "reports": {
         "title": "Report delle chiamate",
-        "none": "Ancora nessun report.",
-        "summaryTitle": "Il periodo",
-        "booked": "Chiamate prenotate: {count} su {total}",
-        "transferred": "Chiamate trasferite, secondo gli operatori telefonici: {count}",
+        "none": "Nessun report copre questo periodo.",
         "topicsTitle": "Argomenti",
         "newTopic": "Nuovo",
-        "topicShare": "{calls} chiamate ({percent}%)",
+        "themeIncludes": "Comprende: {labels}",
         "gapsTitle": "Domande rimaste senza risposta",
+        "examples": "Chiamate di esempio:",
+        "exampleCall": "Chiamata {n}",
         "suggestionsTitle": "Suggerimenti",
         "businessInfoTitle": "Cosa solo tu puoi dire al tuo assistente",
         "integrationTitle": "Un sistema da collegare",
         "mrcallConfigTitle": "Suggerimenti di configurazione MrCall",
-        "flaggedTitle": "Chiamate da rileggere",
         "loadMore": "Mostra report precedenti",
-        "callsInPeriod": "{calls} chiamate con analisi in questo periodo",
-        "callsBaseNote": "Qui contano solo le chiamate analizzate dall'assistente; “{section}” conta anche quelle senza analisi."
+        "onRequest": "Su richiesta"
       },
       "assistants": {
         "title": "Assistenti da rivedere",

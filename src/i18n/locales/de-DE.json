@@ -1982,22 +1982,19 @@
       },
       "reports": {
         "title": "Anrufberichte",
-        "none": "Noch kein Bericht.",
-        "summaryTitle": "Der Zeitraum",
-        "booked": "Gebuchte Anrufe: {count} von {total}",
-        "transferred": "Weitergeleitete Anrufe, wie von den Netzbetreibern gemeldet: {count}",
+        "none": "Kein Bericht deckt diesen Zeitraum ab.",
         "topicsTitle": "Themen",
         "newTopic": "Neu",
-        "topicShare": "{calls} Anrufe ({percent} %)",
+        "themeIncludes": "Umfasst: {labels}",
         "gapsTitle": "Offen gebliebene Fragen",
+        "examples": "Beispielanrufe:",
+        "exampleCall": "Anruf {n}",
         "suggestionsTitle": "Vorschläge",
         "businessInfoTitle": "Was nur Sie Ihrem Assistenten sagen können",
         "integrationTitle": "Ein System zum Verbinden",
         "mrcallConfigTitle": "MrCall-Konfigurationsvorschläge",
-        "flaggedTitle": "Anrufe, die sich zu lesen lohnen",
         "loadMore": "Frühere Berichte anzeigen",
-        "callsInPeriod": "{calls} ausgewertete Anrufe in diesem Zeitraum",
-        "callsBaseNote": "Hier zählen nur die vom Assistenten ausgewerteten Anrufe; „{section}“ zählt auch die Anrufe ohne Auswertung."
+        "onRequest": "Auf Anfrage"
       },
       "assistants": {
         "title": "Zu überprüfende Assistenten",

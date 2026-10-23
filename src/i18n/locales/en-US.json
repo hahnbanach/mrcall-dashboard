@@ -1985,22 +1985,19 @@
       },
       "reports": {
         "title": "Call reports",
-        "none": "No report yet.",
-        "summaryTitle": "The period",
-        "booked": "Booked calls: {count} of {total}",
-        "transferred": "Transferred calls, as reported by the carriers: {count}",
+        "none": "No report covers this period.",
         "topicsTitle": "Topics",
         "newTopic": "New",
-        "topicShare": "{calls} calls ({percent}%)",
+        "themeIncludes": "Includes: {labels}",
         "gapsTitle": "Questions left unanswered",
+        "examples": "Example calls:",
+        "exampleCall": "Call {n}",
         "suggestionsTitle": "Suggestions",
         "businessInfoTitle": "What only you can tell your assistant",
         "integrationTitle": "A system to connect",
         "mrcallConfigTitle": "MrCall configuration suggestions",
-        "flaggedTitle": "Calls worth reading",
         "loadMore": "Show earlier reports",
-        "callsInPeriod": "{calls} calls with insights in this period",
-        "callsBaseNote": "Only calls the assistant analysed are counted here; “{section}” also counts the calls without insights."
+        "onRequest": "On request"
       },
       "assistants": {
         "title": "Assistants to review",

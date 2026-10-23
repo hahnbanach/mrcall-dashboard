@@ -327,8 +327,23 @@ function pagedList(fetchPage, { size = INSIGHTS_PAGE_SIZE, keyOf = null, onError
     return state;
 }
 
+/*
+ * A report asked for an interval carries the id of the job that asked (`requestId`) and no cadence; an
+ * automatic one its cadence and no `requestId` (StarChat's `CallReportView`). An automatic and an asked
+ * report can cover the same days, so a report is known by its start and its request id together.
+ */
+function isOnRequest(report) {
+    return !!(report && typeof report.requestId === "string" && report.requestId !== "");
+}
+
+function reportKey(report) {
+    return report.periodStart + ":" + (isOnRequest(report) ? report.requestId : "");
+}
+
 export default {
     insightRows,
+    isOnRequest,
+    reportKey,
     unkeptRows,
     firedChecks,
     latestOnly,
@@ -407,16 +422,28 @@ export default {
                 return typeof business.emailAddress === "string" && business.emailAddress.trim() !== "" ? business.emailAddress.trim() : null;
             });
     },
-    // `before` is the previous page's last `periodEnd`; omit it for the first page.
-    reports: function (user, businessId, before, limit) {
-        let url = INSIGHTS_BASE + "/reports?businessId=" + encodeURIComponent(businessId);
-        if (before != null) url += "&before=" + encodeURIComponent(before);
+    // The reports whose period overlaps `from`-`to` (epoch millis, the page's chosen period), automatic and
+    // on request, newest first on StarChat's total order (periodEnd, requestId). `after` is the previous
+    // page's last report, null for the first page: its `periodEnd` as `before`, and its `requestId` when it
+    // was asked, so that the automatic report ending with it is not skipped (an automatic one needs none,
+    // its empty request id being the least). Refused without the period: StarChat would then answer the
+    // automatic reports alone, as it does for the dashboard of before (StarChat insights-backfill B6).
+    reports: function (user, businessId, from, to, after, limit) {
+        if (from == null || to == null) return Promise.reject(new Error("CallInsights.reports: from and to are required"));
+        let url = INSIGHTS_BASE + "/reports?businessId=" + encodeURIComponent(businessId) +
+            "&from=" + encodeURIComponent(from) + "&to=" + encodeURIComponent(to);
+        if (after) {
+            url += "&before=" + encodeURIComponent(after.periodEnd);
+            if (isOnRequest(after)) url += "&beforeRequestId=" + encodeURIComponent(after.requestId);
+        }
         if (limit != null) url += "&limit=" + encodeURIComponent(limit);
         return unwrap(axios.get(url, { headers: getHeaders(user) }));
     },
-    report: function (user, businessId, periodStart) {
-        const url = INSIGHTS_BASE + "/reports/" + encodeURIComponent(periodStart) +
+    // The automatic report starting at `periodStart`, or with `requestId` the one asked for an interval.
+    report: function (user, businessId, periodStart, requestId) {
+        let url = INSIGHTS_BASE + "/reports/" + encodeURIComponent(periodStart) +
             "?businessId=" + encodeURIComponent(businessId);
+        if (requestId) url += "&requestId=" + encodeURIComponent(requestId);
         return unwrap(axios.get(url, { headers: getHeaders(user) }));
     },
     // Across the caller's whole scope since `since` (StarChat defaults to 30 days when omitted):

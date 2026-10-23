@@ -202,8 +202,14 @@ for the four dimensions lives in `src/utils/CallInsights.js`.
   without a conversation by reason, outside every rate; "What the calls were about"
   (`CallTopics.vue`) reads StarChat's topics route for one business only.
   - `Analytics.vue` with a business (`?id=`, any role): outcomes, topics, quality, and the business's
-    call reports (topics with their share and whether they are new, gaps with example calls linked
-    for the owner only, suggestions, `mrcall_config` for an admin only).
+    call reports of the period chosen at the top of the page (StarChat's reports route with `from`/`to`,
+    the reports overlapping it, automatic and asked for an interval, paged on the last report's
+    `periodEnd` and `requestId`; a new period reloads them). A report shows only what the model adds:
+    themes with the call topics they group and whether they are new, the questions left unanswered by
+    reason with example calls (named "Call 1, 2...", linked for the owner only), suggestions
+    (`mrcall_config` for an admin only); every count is the analytics' own and is not repeated. A
+    report asked for an interval is marked "On request" and known by its start and `requestId`
+    together; `?report=<periodStart>&requestId=<id>` opens one.
   - `Analytics.vue` with no business, role `reseller` (its scope page, reached directly or from
     `ResellerDashboard.vue`): outcomes and quality over its scope (the existing `OwnerSelector`
     narrows it to one owner), the topics section saying to choose a business (no request), the

@@ -1980,22 +1980,19 @@
       },
       "reports": {
         "title": "Samtalsrapporter",
-        "none": "Ingen rapport än.",
-        "summaryTitle": "Perioden",
-        "booked": "Bokade samtal: {count} av {total}",
-        "transferred": "Vidarekopplade samtal, enligt operatörerna: {count}",
+        "none": "Ingen rapport täcker den här perioden.",
         "topicsTitle": "Ämnen",
         "newTopic": "Nytt",
-        "topicShare": "{calls} samtal ({percent} %)",
+        "themeIncludes": "Omfattar: {labels}",
         "gapsTitle": "Obesvarade frågor",
+        "examples": "Exempelsamtal:",
+        "exampleCall": "Samtal {n}",
         "suggestionsTitle": "Förslag",
         "businessInfoTitle": "Vad bara du kan berätta för din assistent",
         "integrationTitle": "Ett system att koppla till",
         "mrcallConfigTitle": "MrCalls konfigurationsförslag",
-        "flaggedTitle": "Samtal värda att läsa",
         "loadMore": "Visa tidigare rapporter",
-        "callsInPeriod": "{calls} analyserade samtal under perioden",
-        "callsBaseNote": "Här räknas bara samtal som assistenten analyserat; ”{section}” räknar även samtal utan analys."
+        "onRequest": "På begäran"
       },
       "assistants": {
         "title": "Assistenter att granska",

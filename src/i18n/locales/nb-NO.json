@@ -1980,22 +1980,19 @@
       },
       "reports": {
         "title": "Samtalerapporter",
-        "none": "Ingen rapport ennå.",
-        "summaryTitle": "Perioden",
-        "booked": "Bookede samtaler: {count} av {total}",
-        "transferred": "Viderekoblede samtaler, ifølge operatørene: {count}",
+        "none": "Ingen rapport dekker denne perioden.",
         "topicsTitle": "Emner",
         "newTopic": "Nytt",
-        "topicShare": "{calls} samtaler ({percent} %)",
+        "themeIncludes": "Omfatter: {labels}",
         "gapsTitle": "Spørsmål uten svar",
+        "examples": "Eksempelsamtaler:",
+        "exampleCall": "Samtale {n}",
         "suggestionsTitle": "Forslag",
         "businessInfoTitle": "Hva bare du kan fortelle assistenten din",
         "integrationTitle": "Et system å koble til",
         "mrcallConfigTitle": "MrCalls konfigurasjonsforslag",
-        "flaggedTitle": "Samtaler verdt å lese",
         "loadMore": "Vis tidligere rapporter",
-        "callsInPeriod": "{calls} analyserte samtaler i perioden",
-        "callsBaseNote": "Her telles bare samtaler assistenten har analysert; «{section}» teller også samtaler uten analyse."
+        "onRequest": "På forespørsel"
       },
       "assistants": {
         "title": "Assistenter å gjennomgå",

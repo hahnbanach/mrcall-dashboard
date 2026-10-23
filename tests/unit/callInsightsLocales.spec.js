@@ -204,7 +204,6 @@ describe('callInsights: the keys of the D12 review', () => {
     'assistants.legendTitle', 'assistants.assessedShort',
     'scope.moreFailed', 'scope.retry',
     'filterBar.scopeNote', 'filterBar.notApplied',
-    'reports.callsInPeriod',
   ]
 
   it('en-US names every one of them', () => {
@@ -213,7 +212,7 @@ describe('callInsights: the keys of the D12 review', () => {
 
   const get = (obj, path) => path.split('.').reduce((o, k) => (o ? o[k] : undefined), obj)
   const WORDED = ['assistants.legendTitle', 'scope.moreFailed', 'scope.retry', 'filterBar.scopeNote', 'filterBar.notApplied',
-    'reports.callsInPeriod', 'assistants.short.callerSilent', 'assistants.legend.notSolved']
+    'assistants.short.callerSilent', 'assistants.legend.notSolved']
   for (const [locale, messages] of Object.entries(LOCALES)) {
     if (locale === 'en-US') continue
     it(`${locale} words them in its own language`, () => {
@@ -223,22 +222,42 @@ describe('callInsights: the keys of the D12 review', () => {
     })
   }
 
-  // Booked is over the report's `calls` (the calls with insights); transferred is a bare count: StarChat
-  // writes it only where a carrier reports the transfer leg, so no base holds it (the D12 re-review).
-  it('says booked over the calls with insights, and transferred as a count with no base, in every locale', () => {
+  it('names the owner\'s source in every locale', () => {
     for (const [locale, messages] of Object.entries(LOCALES)) {
-      const r = messages.components.callInsights.reports
-      expect(r.booked, `${locale} reports.booked`).toContain('{total}')
-      expect(r.transferred, `${locale} reports.transferred`).not.toContain('{total}')
-      expect(r.callsInPeriod, `${locale} reports.callsInPeriod`).toContain('{calls}')
-      expect(r.callsBaseNote, `${locale} reports.callsBaseNote`).toBeTruthy()
       expect(messages.components.callInsights.filterBar.ownerNameSource, `${locale} filterBar.ownerNameSource`).toBeTruthy()
     }
   })
+})
 
-  // "N calls in this period" read as every call; the report's `calls` counts the calls with insights only
-  it('names the report\'s base as the calls with insights, not every call', () => {
-    expect(enUS.components.callInsights.reports.callsInPeriod).toMatch(/insights/)
-    expect(itIT.components.callInsights.reports.callsInPeriod).not.toBe('{calls} chiamate in questo periodo')
+/**
+ * Insights backfill (StarChat brief 2026-10-23, B9): a report holds only what the model adds (themes,
+ * unanswered questions with example calls, suggestions) and none of the counts the analytics show; the
+ * section lists the reports of the page's period, an on-request one marked. The strings of the counts are
+ * gone, so no locale can show them again; the new ones are worded in each language.
+ */
+describe('callInsights: the report without counts, by period, on request (B9)', () => {
+  const get = (obj, path) => path.split('.').reduce((o, k) => (o ? o[k] : undefined), obj)
+  const ADDED = ['reports.onRequest', 'reports.themeIncludes', 'reports.examples', 'reports.exampleCall', 'reports.none']
+  const REMOVED = ['reports.summaryTitle', 'reports.booked', 'reports.transferred', 'reports.topicShare',
+    'reports.callsInPeriod', 'reports.callsBaseNote', 'reports.flaggedTitle']
+
+  it('en-US names the new keys and none of the counts\' ones', () => {
+    expect(referenceKeys).toEqual(expect.arrayContaining(ADDED))
+    expect(referenceKeys.filter(k => REMOVED.includes(k))).toEqual([])
   })
+
+  it('says a period without reports, not "no report yet"', () => {
+    expect(enUS.components.callInsights.reports.none).toMatch(/period/)
+  })
+
+  for (const [locale, messages] of Object.entries(LOCALES)) {
+    it(`${locale} carries the placeholders${locale === 'en-US' ? '' : ' and words them in its own language'}`, () => {
+      const ci = messages.components.callInsights
+      expect(get(ci, 'reports.themeIncludes'), `${locale} reports.themeIncludes`).toContain('{labels}')
+      expect(get(ci, 'reports.exampleCall'), `${locale} reports.exampleCall`).toContain('{n}')
+      if (locale === 'en-US') return
+      const copied = ADDED.filter(k => get(ci, k) === get(enUS.components.callInsights, k))
+      expect(copied, `${locale} carries English text for these keys`).toEqual([])
+    })
+  }
 })

@@ -191,7 +191,7 @@
         :total-calls="outcomesData && outcomesData.totalCalls"
       />
 
-      <!-- Call reports (brief outcome 4): the business page only -->
+      <!-- Call reports (brief outcome 4): the business page only, those of the period chosen above -->
       <CallReports
         v-if="businessId"
         :status="reportsStatus"
@@ -202,6 +202,7 @@
         :is-admin="isAdminRole"
         :business-id="businessId"
         :focus-period="focusReport"
+        :focus-request-id="focusRequestId"
         :focused-report="focusedReport"
         @load-more="loadMoreReports"
       />
@@ -315,9 +316,10 @@ export default {
       roleReady: false,
       // businessId -> company name, from every answer that names a business (brief outcome 10)
       businessNames: {},
-      // A report a link asked to open (`?report=<periodStart>`), and that report when it is not on
-      // the first page of the business's reports.
+      // A report a link asked to open (`?report=<periodStart>`, with `&requestId=<id>` for one asked
+      // for an interval), and that report when it is not on the first page of the business's reports.
       focusReport: null,
+      focusRequestId: null,
       focusedReport: null,
       templateNames: {},
       templatesFetched: false,
@@ -512,8 +514,10 @@ export default {
       if (this.$route.name !== 'Analytics') return;
       const id = this.$route.query.id || null;
       const report = this.reportFromRoute();
-      if (id === this.businessId && report === this.focusReport) return;
+      const requestId = this.requestIdFromRoute();
+      if (id === this.businessId && report === this.focusReport && requestId === this.focusRequestId) return;
       this.focusReport = report;
+      this.focusRequestId = requestId;
       this.focusedReport = null;
       if (id === this.businessId) { this.focusOnReport(); return; }
       this.businessId = id;
@@ -523,6 +527,7 @@ export default {
   mounted() {
     this.businessId = this.$route.query.id || null;
     this.focusReport = this.reportFromRoute();
+    this.focusRequestId = this.requestIdFromRoute();
     if (!this.store || !this.store.state) {
       return;
     }
@@ -617,6 +622,10 @@ export default {
       const value = Number(this.$route.query.report);
       return Number.isFinite(value) && value > 0 ? value : null;
     },
+    requestIdFromRoute() {
+      const value = this.$route.query.requestId;
+      return typeof value === 'string' && value !== '' ? value : null;
+    },
     rememberNames(names) {
       this.businessNames = { ...this.businessNames, ...names };
     },
@@ -660,11 +669,13 @@ export default {
     focusOnReport() {
       const user = this.store.state.user;
       if (!this.focusReport || !this.businessId || !user || this.reportsStatus !== 'ok') return;
-      if (this.reportsData.some((r) => r.periodStart === this.focusReport)) return;
+      const key = CallInsights.reportKey({ periodStart: this.focusReport, requestId: this.focusRequestId });
+      if (this.reportsData.some((r) => CallInsights.reportKey(r) === key)) return;
       const periodStart = this.focusReport;
-      CallInsights.report(user, this.businessId, periodStart)
+      const requestId = this.focusRequestId;
+      CallInsights.report(user, this.businessId, periodStart, requestId)
         .then((report) => {
-          if (periodStart !== this.focusReport) return;
+          if (periodStart !== this.focusReport || requestId !== this.focusRequestId) return;
           if (report && !report.unavailable) this.focusedReport = report;
         })
         .catch((error) => this.handleApiError(error, 'reports'));
@@ -783,17 +794,19 @@ export default {
           this.handleApiError(error, 'quality');
         });
     },
-    fetchReports(user, businessId, before) {
-      this.reportsStatus = before == null ? 'loading' : this.reportsStatus;
+    // The reports overlapping the page's period, a page of 10 after `after` (the last report shown, null
+    // for the first page); a new period starts again from the first page (`fetchAllData`).
+    fetchReports(user, businessId, after) {
+      this.reportsStatus = after == null ? 'loading' : this.reportsStatus;
       const isCurrent = this.insightGate('reports');
-      return CallInsights.reports(user, businessId, before, 10)
+      return CallInsights.reports(user, businessId, this.timestampGte, this.timestampLte, after, 10)
         .then((result) => {
           if (!isCurrent()) return;
           if (result === null) { this.reportsStatus = 'absent'; this.reportsData = []; this.reportsHasMore = false; }
           else if (result.unavailable) { this.reportsStatus = 'unavailable'; this.reportsData = []; this.reportsHasMore = false; }
           else {
             this.reportsStatus = 'ok';
-            this.reportsData = before == null ? result : this.reportsData.concat(result);
+            this.reportsData = after == null ? result : this.reportsData.concat(result);
             this.reportsHasMore = result.length >= 10;
           }
         })
@@ -801,7 +814,7 @@ export default {
           if (!isCurrent()) return;
           if (isSessionEnded(error)) return;
           // an earlier page that fails leaves the reports already shown, and the button to try again
-          if (before == null) this.reportsStatus = 'absent';
+          if (after == null) this.reportsStatus = 'absent';
           this.handleApiError(error, 'reports');
         });
     },
@@ -811,7 +824,7 @@ export default {
       if (!user) return;
       this.reportsLoadingMore = true;
       const last = this.reportsData[this.reportsData.length - 1];
-      this.fetchReports(user, this.businessId, last.periodEnd).finally(() => { this.reportsLoadingMore = false; });
+      this.fetchReports(user, this.businessId, last).finally(() => { this.reportsLoadingMore = false; });
     },
     fetchAssistants(user, request) {
       this.assistantsStatus = 'loading';

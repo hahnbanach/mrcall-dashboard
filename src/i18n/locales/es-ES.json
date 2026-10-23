@@ -1994,22 +1994,19 @@
       },
       "reports": {
         "title": "Informes de llamadas",
-        "none": "Todavía no hay ningún informe.",
-        "summaryTitle": "El periodo",
-        "booked": "Llamadas reservadas: {count} de {total}",
-        "transferred": "Llamadas transferidas, según los operadores: {count}",
+        "none": "Ningún informe cubre este período.",
         "topicsTitle": "Temas",
         "newTopic": "Nuevo",
-        "topicShare": "{calls} llamadas ({percent}%)",
+        "themeIncludes": "Incluye: {labels}",
         "gapsTitle": "Preguntas que quedaron sin responder",
+        "examples": "Llamadas de ejemplo:",
+        "exampleCall": "Llamada {n}",
         "suggestionsTitle": "Sugerencias",
         "businessInfoTitle": "Lo que solo tú puedes decirle a tu asistente",
         "integrationTitle": "Un sistema para conectar",
         "mrcallConfigTitle": "Sugerencias de configuración de MrCall",
-        "flaggedTitle": "Llamadas que vale la pena revisar",
         "loadMore": "Mostrar informes anteriores",
-        "callsInPeriod": "{calls} llamadas con análisis en este periodo",
-        "callsBaseNote": "Aquí solo cuentan las llamadas que el asistente analizó; «{section}» cuenta también las que no tienen análisis."
+        "onRequest": "A petición"
       },
       "assistants": {
         "title": "Asistentes para revisar",

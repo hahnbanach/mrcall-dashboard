@@ -1980,22 +1980,19 @@
       },
       "reports": {
         "title": "Puheluraportit",
-        "none": "Ei vielä raporttia.",
-        "summaryTitle": "Ajanjakso",
-        "booked": "Varatut puhelut: {count}/{total}",
-        "transferred": "Yhdistetyt puhelut operaattorien ilmoittamana: {count}",
+        "none": "Mikään raportti ei kata tätä jaksoa.",
         "topicsTitle": "Aiheet",
         "newTopic": "Uusi",
-        "topicShare": "{calls} puhelua ({percent} %)",
+        "themeIncludes": "Sisältää: {labels}",
         "gapsTitle": "Kysymykset, joihin ei vastattu",
+        "examples": "Esimerkkipuhelut:",
+        "exampleCall": "Puhelu {n}",
         "suggestionsTitle": "Ehdotukset",
         "businessInfoTitle": "Mitä vain sinä voit kertoa avustajallesi",
         "integrationTitle": "Järjestelmä yhdistettäväksi",
         "mrcallConfigTitle": "MrCallin asetusehdotukset",
-        "flaggedTitle": "Puhelut, jotka kannattaa lukea",
         "loadMore": "Näytä aiemmat raportit",
-        "callsInPeriod": "{calls} analysoitua puhelua tällä jaksolla",
-        "callsBaseNote": "Tässä lasketaan vain avustajan analysoimat puhelut; ”{section}” laskee myös puhelut ilman analyysia."
+        "onRequest": "Pyynnöstä"
       },
       "assistants": {
         "title": "Tarkistettavat avustajat",

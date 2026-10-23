@@ -181,31 +181,79 @@ describe('assistants', () => {
   })
 })
 
-describe('reports: paging', () => {
-  it('reads the first page with businessId and limit only', async () => {
+// StarChat's reports route (`CallInsightsReportResource`, insights-backfill B6): with `from` and `to` it
+// lists the reports overlapping that interval, automatic and asked, newest first on the total order
+// (period_end, request_id), the cursor being the previous page's last report (`before` its end,
+// `beforeRequestId` its request id); without them only the automatic ones, as v2.2.31 reads it.
+describe('reports: the period chosen on the page, paged on (periodEnd, requestId)', () => {
+  const query = (url) => new URL(url.replace(/^[^/]*\/mrcall/, 'http://starchat/mrcall')).searchParams
+
+  it('reads the first page with businessId, the period and limit, and no cursor', async () => {
     axios.get.mockResolvedValue({ data: [] })
-    await CallInsights.reports(user, 'b-1', null, 20)
-    const [url] = axios.get.mock.calls[0]
-    expect(url).toContain('businessId=b-1')
-    expect(url).toContain('limit=20')
-    expect(url).not.toContain('before=')
+    await CallInsights.reports(user, 'b-1', 1700000000000, 1702592000000, null, 10)
+    const q = query(axios.get.mock.calls[0][0])
+    expect(q.get('businessId')).toBe('b-1')
+    expect(q.get('from')).toBe('1700000000000')
+    expect(q.get('to')).toBe('1702592000000')
+    expect(q.get('limit')).toBe('10')
+    expect(q.has('before')).toBe(false)
+    expect(q.has('beforeRequestId')).toBe(false)
   })
 
-  it('carries `before` as the previous page\'s last periodEnd', async () => {
+  it('after an automatic report, the cursor is its periodEnd alone', async () => {
     axios.get.mockResolvedValue({ data: [] })
-    await CallInsights.reports(user, 'b-1', 1700000000000, 20)
-    const [url] = axios.get.mock.calls[0]
-    expect(url).toContain('before=1700000000000')
+    await CallInsights.reports(user, 'b-1', 1, 2, { periodStart: 10, periodEnd: 20, cadence: 7 }, 10)
+    const q = query(axios.get.mock.calls[0][0])
+    expect(q.get('before')).toBe('20')
+    expect(q.has('beforeRequestId')).toBe(false)
+  })
+
+  it('after a report on request, the cursor carries its requestId too, so the automatic report ending with it is not skipped', async () => {
+    axios.get.mockResolvedValue({ data: [] })
+    await CallInsights.reports(user, 'b-1', 1, 2, { periodStart: 10, periodEnd: 20, requestId: 'job-1' }, 10)
+    const q = query(axios.get.mock.calls[0][0])
+    expect(q.get('before')).toBe('20')
+    expect(q.get('beforeRequestId')).toBe('job-1')
+  })
+
+  it('refuses a call without the period, rather than reading the automatic reports alone', async () => {
+    await expect(CallInsights.reports(user, 'b-1', null, 2, null, 10)).rejects.toThrow(/from and to/)
+    await expect(CallInsights.reports(user, 'b-1', 1, undefined, null, 10)).rejects.toThrow(/from and to/)
+    expect(axios.get).not.toHaveBeenCalled()
   })
 })
 
-describe('report: one period', () => {
-  it('reads the report at its periodStart, scoped to the business', async () => {
+describe('report: one report', () => {
+  it('reads the automatic report at its periodStart, scoped to the business', async () => {
     axios.get.mockResolvedValue({ data: { version: 1 } })
     await CallInsights.report(user, 'b-1', '2026-10-13T00:00:00Z')
     const [url] = axios.get.mock.calls[0]
     expect(url).toContain('/customer/insights/reports/2026-10-13T00%3A00%3A00Z')
     expect(url).toContain('businessId=b-1')
+    expect(url).not.toContain('requestId=')
+  })
+
+  it('reads a report on request by its requestId', async () => {
+    axios.get.mockResolvedValue({ data: { version: 2 } })
+    await CallInsights.report(user, 'b-1', 1700000000000, 'job 1')
+    const [url] = axios.get.mock.calls[0]
+    expect(url).toContain('/customer/insights/reports/1700000000000')
+    expect(url).toContain('requestId=job%201')
+  })
+})
+
+describe('a report\'s identity: automatic or on request', () => {
+  it('tells an on-request report by its requestId, an automatic one by its absence', () => {
+    expect(CallInsights.isOnRequest({ periodStart: 1, requestId: 'job-1' })).toBe(true)
+    expect(CallInsights.isOnRequest({ periodStart: 1, cadence: 7 })).toBe(false)
+    expect(CallInsights.isOnRequest({ periodStart: 1, requestId: '' })).toBe(false)
+  })
+
+  it('keys an automatic and an on-request report of the same start apart', () => {
+    const automatic = CallInsights.reportKey({ periodStart: 1, periodEnd: 2, cadence: 7 })
+    const asked = CallInsights.reportKey({ periodStart: 1, periodEnd: 2, requestId: 'job-1' })
+    expect(automatic).not.toBe(asked)
+    expect(CallInsights.reportKey({ periodStart: 1, requestId: 'job-1' })).toBe(asked)
   })
 })
 
@@ -459,7 +507,7 @@ describe('what every route answers beyond 200', () => {
 
   it('a 503 resolves to {unavailable: true}: not a failure, not yet', async () => {
     axios.get.mockRejectedValue(httpError(503))
-    await expect(CallInsights.reports(user, 'b-1')).resolves.toEqual({ unavailable: true })
+    await expect(CallInsights.reports(user, 'b-1', 1, 2)).resolves.toEqual({ unavailable: true })
   })
 
   it('a session-ended error is rethrown untouched, read by isSessionEnded', async () => {

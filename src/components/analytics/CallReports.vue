@@ -8,63 +8,24 @@
       {{ $t("components.callInsights.reports.none") }}
     </div>
     <template v-else-if="status === 'ok'">
-      <div v-for="item in shownReports" :key="item.periodStart" class="report-card" :data-period-start="item.periodStart">
-        <button type="button" class="report-header" :aria-expanded="isExpanded(item.periodStart) ? 'true' : 'false'" @click="toggle(item.periodStart)">
-          <i :class="isExpanded(item.periodStart) ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" aria-hidden="true"></i>
+      <div v-for="item in shownReports" :key="keyOf(item)" class="report-card" :data-report-key="keyOf(item)">
+        <button type="button" class="report-header" :aria-expanded="isExpanded(item) ? 'true' : 'false'" @click="toggle(item)">
+          <i :class="isExpanded(item) ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" aria-hidden="true"></i>
           <span>{{ periodLabel(item) }}</span>
+          <Tag v-if="onRequest(item)" severity="info" :value="$t('components.callInsights.reports.onRequest')" class="report-on-request" />
         </button>
 
-        <div v-if="isExpanded(item.periodStart) && item.content" class="report-body">
-          <section v-if="hasSummary(item.content)" class="report-summary report-section">
-            <h4 class="report-section-title">{{ $t("components.callInsights.reports.summaryTitle") }}</h4>
-            <!-- The report's `calls` is the calls with insights (version 2) in the period, not every call:
-                 the base of the counts below, and said to be so, since "How the calls went" counts more. -->
-            <p v-if="isCount(item.content.calls)" class="report-fact report-calls">
-              {{ $t("components.callInsights.reports.callsInPeriod", { calls: item.content.calls }) }}
-            </p>
-            <p v-if="isCount(item.content.calls)" class="report-base-note">
-              {{ $t("components.callInsights.reports.callsBaseNote", { section: $t("components.callInsights.howCallsWent.title") }) }}
-            </p>
-            <!-- A line of the assistant's judgements says so once, not on every value of it. -->
-            <div v-if="resolutionKeys(item.content).length > 0" class="report-topic-outcomes">
-              <Tag severity="secondary" :value="$t('components.callInsights.assessedMarking')" class="report-line-assessed" />
-              <span v-for="key in resolutionKeys(item.content)" :key="key" class="report-topic-outcome">
-                <InsightLabel dimension="resolution" :value="key" :marked="false" />
-                <span class="report-topic-outcome-count">{{ item.content.resolution[key] }}</span>
-              </span>
-            </div>
-            <div v-if="messageKeys(item.content).length > 0" class="report-topic-outcomes">
-              <Tag severity="secondary" :value="$t('components.callInsights.assessedMarking')" class="report-line-assessed" />
-              <span v-for="key in messageKeys(item.content)" :key="key" class="report-topic-outcome">
-                <InsightLabel dimension="message" :value="key" :marked="false" />
-                <span class="report-topic-outcome-count">{{ item.content.message[key] }}</span>
-              </span>
-            </div>
-            <p v-if="isCount(item.content.booked)" class="report-fact">
-              {{ factOverCalls("booked", item.content.booked, item.content.calls) }}
-            </p>
-            <!-- A bare count: StarChat records a transfer only where the carrier reports its leg, so the
-                 fact is absent, never false, elsewhere and no base holds it (as in CallOutcomes). -->
-            <p v-if="isCount(item.content.transferred)" class="report-fact">
-              {{ $t("components.callInsights.reports.transferred", { count: item.content.transferred }) }}
-            </p>
-          </section>
-
+        <div v-if="isExpanded(item) && item.content" class="report-body">
           <section v-if="item.content.topics && item.content.topics.length > 0" class="report-section">
             <h4 class="report-section-title">{{ $t("components.callInsights.reports.topicsTitle") }}</h4>
             <div v-for="topic in item.content.topics" :key="topic.topic" class="report-topic">
               <div class="report-topic-header">
                 <span class="report-topic-name">{{ topic.topic }}</span>
                 <Tag v-if="topic.new" severity="info" :value="$t('components.callInsights.reports.newTopic')" class="report-topic-new" />
-                <span class="report-topic-share">{{ topicShare(topic, item.content) }}</span>
               </div>
-              <div class="report-topic-outcomes">
-                <Tag v-if="resolutionKeys(topic).length > 0" severity="secondary" :value="$t('components.callInsights.assessedMarking')" class="report-line-assessed" />
-                <span v-for="key in resolutionKeys(topic)" :key="key" class="report-topic-outcome">
-                  <InsightLabel dimension="resolution" :value="key" :marked="false" />
-                  <span class="report-topic-outcome-count">{{ topic.resolution[key] }}</span>
-                </span>
-              </div>
+              <p v-if="labelsOf(topic).length > 0" class="report-topic-labels">
+                {{ $t("components.callInsights.reports.themeIncludes", { labels: labelsOf(topic).join(", ") }) }}
+              </p>
             </div>
           </section>
 
@@ -73,11 +34,14 @@
             <div v-for="(gap, idx) in item.content.gaps" :key="idx" class="report-gap">
               <span class="report-gap-group">{{ $t("components.callInsights.gaps." + gap.group) }}</span>
               <p class="report-gap-summary">{{ gap.summary }}</p>
+              <!-- An example call is named by its place in the list: its id says nothing to a reader, and
+                   stays in the link (and in the title, for whoever has to quote it). -->
               <div v-if="gap.examples && gap.examples.length > 0" class="report-gap-examples">
+                <span class="report-gap-examples-label">{{ $t("components.callInsights.reports.examples") }}</span>
                 <template v-for="(id, i) in gap.examples" :key="id">
                   <span v-if="i > 0">, </span>
-                  <router-link v-if="isOwner" :to="conversationLink(id)">{{ id }}</router-link>
-                  <span v-else>{{ id }}</span>
+                  <router-link v-if="isOwner" :to="conversationLink(id)" :title="id">{{ exampleName(i) }}</router-link>
+                  <span v-else :title="id">{{ exampleName(i) }}</span>
                 </template>
               </div>
             </div>
@@ -104,17 +68,6 @@
               </ul>
             </div>
           </section>
-
-          <section v-if="item.content.flagged_calls && item.content.flagged_calls.length > 0" class="report-section">
-            <h4 class="report-section-title">{{ $t("components.callInsights.reports.flaggedTitle") }}</h4>
-            <div class="report-gap-examples">
-              <template v-for="(id, i) in item.content.flagged_calls" :key="id">
-                <span v-if="i > 0">, </span>
-                <router-link v-if="isOwner" :to="conversationLink(id)">{{ id }}</router-link>
-                <span v-else>{{ id }}</span>
-              </template>
-            </div>
-          </section>
         </div>
       </div>
 
@@ -129,21 +82,23 @@
 <script>
 import CallInsights from "@/utils/CallInsights";
 import { scrollBelowBar } from "@/utils/scrollBelowBar";
-import InsightLabel from "@/components/analytics/InsightLabel.vue";
 
 /**
- * A business's call reports (brief outcome 4): the latest one open, earlier ones by `before`
- * paging (the parent reads it from the last loaded item's `periodEnd`); topics with their share
- * and whether they are new, and the period's resolution, message, booked and transferred counts,
- * each under the same value table as the rest of the dashboard; the
- * unanswered questions grouped by reason; the suggestions, `mrcall_config` for an admin only
- * (the server already strips it for anyone else; this is the same rule kept on the client, since a
- * mocked or future answer could still carry it). A report's example calls and the flagged calls
- * open for the business's owner only: a reseller or an admin reading a managed owner's call is out
- * of scope (StarChat, a Mycelium task).
+ * A business's call reports of the period chosen at the top of the page (StarChat insights-backfill
+ * brief, scope 7-9): the parent asks for the reports overlapping that period, automatic and asked for
+ * an interval, newest first, and pages them on demand. The latest opens. A report shows only what the
+ * model adds: its topics grouped into themes (each with the call topics it groups, and whether it is
+ * new), the questions left unanswered grouped by reason with example calls, and the suggestions,
+ * `mrcall_config` for an admin only (the server already strips it for anyone else; the same rule is kept
+ * here, since a mocked or future answer could still carry it). Every number of the period (resolution,
+ * message, booked, transferred, calls per topic, the calls worth reading) is the analytics' own, in the
+ * sections above for the same period, and is not repeated here, although StarChat's content still carries
+ * the counts until this dashboard is in production (StarChat plan B9b). A report asked for an interval is
+ * marked as such; it can share its days with an automatic one, so a report is known by its start and its
+ * request id together (`CallInsights.reportKey`). Example calls open for the business's owner only: a
+ * reseller or an admin reading a managed owner's call is out of scope (StarChat, a Mycelium task).
  */
 export default {
-  components: { InsightLabel },
   props: {
     status: { type: String, required: true },
     reports: { type: Array, default: () => [] },
@@ -153,20 +108,26 @@ export default {
     isAdmin: { type: Boolean, default: false },
     businessId: { type: String, default: null },
     // The report a link asked to open (brief outcome 10: an integration's business opens at the
-    // report that said it), and that report when it is not among the pages loaded.
+    // report that said it; `focusRequestId` for one asked for an interval), and that report when it is
+    // not among the pages loaded.
     focusPeriod: { type: Number, default: null },
+    focusRequestId: { type: String, default: null },
     focusedReport: { type: Object, default: null },
   },
   emits: ["load-more"],
   data() {
-    return { expandedPeriods: new Set() };
+    return { expandedKeys: new Set() };
   },
   computed: {
+    focusKey() {
+      return this.focusPeriod == null ? null : CallInsights.reportKey({ periodStart: this.focusPeriod, requestId: this.focusRequestId });
+    },
     // A focused report fetched on its own is shown first, and not again when a later page brings it.
     shownReports() {
       const extra = this.focusedReport;
       if (!extra) return this.reports;
-      return [extra, ...this.reports.filter((r) => r.periodStart !== extra.periodStart)];
+      const key = CallInsights.reportKey(extra);
+      return [extra, ...this.reports.filter((r) => CallInsights.reportKey(r) !== key)];
     },
   },
   watch: {
@@ -176,68 +137,62 @@ export default {
         this.applyFocus(list);
       },
     },
-    focusPeriod() {
+    focusKey() {
       this.focusShown = false;
-      this.expandedPeriods = new Set();
+      this.expandedKeys = new Set();
       this.applyFocus(this.shownReports);
     },
   },
   methods: {
+    keyOf(item) {
+      return CallInsights.reportKey(item);
+    },
+    onRequest(item) {
+      return CallInsights.isOnRequest(item);
+    },
     // The report a link named opens alone, scrolled into view once; without one, the latest opens.
     applyFocus(list) {
       if (!list || list.length === 0) return;
-      const focused = this.focusPeriod != null && list.find((r) => r.periodStart === this.focusPeriod);
+      const focused = this.focusKey != null && list.find((r) => this.keyOf(r) === this.focusKey);
       if (focused && !this.focusShown) {
         this.focusShown = true;
-        this.expandedPeriods = new Set([focused.periodStart]);
+        const key = this.keyOf(focused);
+        this.expandedKeys = new Set([key]);
         this.$nextTick(() => {
-          const card = this.$el && this.$el.querySelector && this.$el.querySelector(`[data-period-start="${focused.periodStart}"]`);
+          const card = this.$el && this.$el.querySelector &&
+            Array.from(this.$el.querySelectorAll(".report-card")).find((el) => el.dataset.reportKey === key);
           scrollBelowBar(card);
         });
-      } else if (this.expandedPeriods.size === 0 && this.focusPeriod == null) {
-        this.expandedPeriods = new Set([list[0].periodStart]);
+        return;
       }
+      if (this.focusKey != null) return;
+      // A new period brings other reports: those open stay open only while listed, and with none of
+      // them left the latest of the new list opens.
+      const listed = new Set(list.map((r) => this.keyOf(r)));
+      const kept = new Set([...this.expandedKeys].filter((k) => listed.has(k)));
+      this.expandedKeys = kept.size > 0 ? kept : new Set([this.keyOf(list[0])]);
     },
-    isExpanded(periodStart) {
-      return this.expandedPeriods.has(periodStart);
+    isExpanded(item) {
+      return this.expandedKeys.has(this.keyOf(item));
     },
-    toggle(periodStart) {
-      const next = new Set(this.expandedPeriods);
-      if (next.has(periodStart)) next.delete(periodStart);
-      else next.add(periodStart);
-      this.expandedPeriods = next;
+    toggle(item) {
+      const key = this.keyOf(item);
+      const next = new Set(this.expandedKeys);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
+      this.expandedKeys = next;
     },
     periodLabel(item) {
       const from = item.content && item.content.period ? new Date(item.content.period.from) : new Date(item.periodStart);
       const to = item.content && item.content.period ? new Date(item.content.period.to) : new Date(item.periodEnd);
       return from.toLocaleDateString() + " – " + to.toLocaleDateString();
     },
-    topicShare(topic, content) {
-      const total = content.calls || 0;
-      const pct = total > 0 ? Math.round((topic.calls / total) * 100) : 0;
-      return this.$t("components.callInsights.reports.topicShare", { calls: topic.calls, percent: pct });
+    // The call topics a theme groups, as the model wrote them; a report of before has none.
+    labelsOf(topic) {
+      return Array.isArray(topic.labels) ? topic.labels.filter((l) => typeof l === "string" && l.trim() !== "") : [];
     },
-    // A report's `resolution` and `message` are code -> count maps, in a topic and over the
-    // period. A report written before insights version 2 carries `outcomes` instead and shows none
-    // of the four.
-    resolutionKeys(holder) {
-      const counts = holder.resolution || {};
-      return CallInsights.RESOLUTION_KEYS.filter((key) => counts[key]);
-    },
-    messageKeys(holder) {
-      const counts = holder.message || {};
-      return CallInsights.MESSAGE_KEYS.filter((key) => counts[key]);
-    },
-    // Booked over the report's calls with insights; a report without `calls` has no base to give.
-    factOverCalls(kind, count, calls) {
-      return this.$t("components.callInsights.reports." + kind, { count, total: this.isCount(calls) ? calls : "–" });
-    },
-    isCount(value) {
-      return typeof value === "number";
-    },
-    hasSummary(content) {
-      return this.resolutionKeys(content).length > 0 || this.messageKeys(content).length > 0 ||
-        this.isCount(content.booked) || this.isCount(content.transferred);
+    exampleName(index) {
+      return this.$t("components.callInsights.reports.exampleCall", { n: index + 1 });
     },
     hasSuggestions(content) {
       const s = content.suggestions || {};
@@ -258,17 +213,6 @@ export default {
 .insights-note {
   color: @mrcall_grey_text;
   font-size: 14px;
-}
-
-.report-base-note {
-  margin: 0 0 8px 0;
-  font-size: 12px;
-  color: @mrcall_grey_text2;
-}
-
-.report-line-assessed {
-  font-size: 10px;
-  font-weight: 600;
 }
 
 .report-card {
@@ -323,34 +267,18 @@ export default {
   gap: 8px;
 }
 
+.report-on-request {
+  font-size: 11px;
+}
+
+.report-topic-labels {
+  margin: 2px 0 0 0;
+  font-size: 13px;
+  color: @mrcall_grey_text;
+}
+
 .report-topic-name {
   font-weight: 600;
-  color: @mrcall_dark_grey_text;
-}
-
-.report-topic-share {
-  color: @mrcall_grey_text;
-  font-size: 13px;
-}
-
-.report-topic-outcomes {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 4px;
-}
-
-.report-topic-outcome {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 13px;
-  color: @mrcall_grey_text;
-}
-
-.report-fact {
-  margin: 6px 0 0 0;
-  font-size: 13px;
   color: @mrcall_dark_grey_text;
 }
 
@@ -377,6 +305,10 @@ export default {
 .report-gap-examples {
   font-size: 13px;
   color: @mrcall_grey_text;
+}
+
+.report-gap-examples-label {
+  margin-right: 4px;
 }
 
 .report-suggestion-group {

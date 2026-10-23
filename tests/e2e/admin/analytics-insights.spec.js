@@ -503,7 +503,7 @@ test.describe('AnalyticsAdmin: the filter bar', () => {
 })
 
 test.describe('Analytics: an admin reading one business\'s report', () => {
-  test('MrCall\'s own configuration suggestions show, and an example call does not link (out of scope: reading an owner\'s call as an admin)', async ({ adminPage: page }) => {
+  test('MrCall\'s own configuration suggestions show, and an example call is named but does not link (out of scope: reading an owner\'s call as an admin)', async ({ adminPage: page }) => {
     await page.route('**/customer/insights/reports*', (route) => route.fulfill({
       status: 200,
       contentType: 'application/json',
@@ -524,8 +524,12 @@ test.describe('Analytics: an admin reading one business\'s report', () => {
     const reports = section(page, 'Call reports')
     await expect(reports.getByText('Turn on the restaurant skill.')).toBeVisible({ timeout: 15000 })
     await expect(reports.getByText('Ask about parking.')).toBeVisible()
-    await expect(reports.getByRole('link', { name: 'CON-9' })).toHaveCount(0)
-    await expect(reports.getByText('CON-9')).toBeVisible()
+    // named by its place in the list, as for the owner, but not a link
+    await expect(reports.getByRole('link', { name: 'Call 1' })).toHaveCount(0)
+    await expect(reports.locator('.report-gap').getByText('Call 1')).toBeVisible()
+    await expect(reports.getByText('CON-9')).toHaveCount(0)
+    // the counts are the analytics' own, not the report's
+    await expect(reports.getByText('Booked')).toHaveCount(0)
   })
 })
 

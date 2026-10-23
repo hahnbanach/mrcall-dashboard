@@ -1980,22 +1980,19 @@
       },
       "reports": {
         "title": "Gespreksrapporten",
-        "none": "Nog geen rapport.",
-        "summaryTitle": "De periode",
-        "booked": "Geboekte gesprekken: {count} van {total}",
-        "transferred": "Doorverbonden gesprekken, zoals gemeld door de providers: {count}",
+        "none": "Geen rapport beslaat deze periode.",
         "topicsTitle": "Onderwerpen",
         "newTopic": "Nieuw",
-        "topicShare": "{calls} gesprekken ({percent}%)",
+        "themeIncludes": "Omvat: {labels}",
         "gapsTitle": "Onbeantwoorde vragen",
+        "examples": "Voorbeeldgesprekken:",
+        "exampleCall": "Gesprek {n}",
         "suggestionsTitle": "Suggesties",
         "businessInfoTitle": "Wat alleen u uw assistent kunt vertellen",
         "integrationTitle": "Een systeem om te koppelen",
         "mrcallConfigTitle": "MrCall-configuratiesuggesties",
-        "flaggedTitle": "Gesprekken die het lezen waard zijn",
         "loadMore": "Eerdere rapporten tonen",
-        "callsInPeriod": "{calls} geanalyseerde gesprekken in deze periode",
-        "callsBaseNote": "Hier tellen alleen de gesprekken die de assistent analyseerde; ‘{section}’ telt ook de gesprekken zonder analyse."
+        "onRequest": "Op aanvraag"
       },
       "assistants": {
         "title": "Te controleren assistenten",

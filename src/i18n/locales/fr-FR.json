@@ -1982,22 +1982,19 @@
       },
       "reports": {
         "title": "Rapports d'appels",
-        "none": "Pas encore de rapport.",
-        "summaryTitle": "La période",
-        "booked": "Appels réservés : {count} sur {total}",
-        "transferred": "Appels transférés, selon les opérateurs : {count}",
+        "none": "Aucun rapport ne couvre cette période.",
         "topicsTitle": "Sujets",
         "newTopic": "Nouveau",
-        "topicShare": "{calls} appels ({percent} %)",
+        "themeIncludes": "Comprend : {labels}",
         "gapsTitle": "Questions restées sans réponse",
+        "examples": "Appels d'exemple :",
+        "exampleCall": "Appel {n}",
         "suggestionsTitle": "Suggestions",
         "businessInfoTitle": "Ce que vous seul pouvez dire à votre assistant",
         "integrationTitle": "Un système à connecter",
         "mrcallConfigTitle": "Suggestions de configuration MrCall",
-        "flaggedTitle": "Appels à relire",
         "loadMore": "Afficher les rapports précédents",
-        "callsInPeriod": "{calls} appels analysés sur cette période",
-        "callsBaseNote": "Seuls les appels analysés par l'assistant sont comptés ici ; « {section} » compte aussi les appels sans analyse."
+        "onRequest": "Sur demande"
       },
       "assistants": {
         "title": "Assistants à revoir",

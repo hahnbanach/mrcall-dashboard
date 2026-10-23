@@ -174,92 +174,200 @@ test.describe('Analytics: how the calls went (owner, business page)', () => {
   })
 })
 
-/** One report page's worth of items: the first carries a real `content`, the rest are filler so
-  * the list answers exactly the page size (10), which is what makes "Show earlier reports" appear. */
+const DAY = 86400000
+
+/** A report's content as StarChat writes it today: what the model adds (topics grouped into themes, the
+  * unanswered questions grouped by reason with example calls, the suggestions) and, until the dashboard in
+  * production no longer reads them (StarChat plan B9b), the period's counts, which this page never shows. */
+function reportContent ({ suggestion = 'Tell us your Sunday hours.', from = '2026-10-01T00:00:00Z', to = '2026-10-08T00:00:00Z', cadence = 7 } = {}) {
+  return {
+    version: 2,
+    period: { from, to, cadence },
+    calls: 10,
+    resolution: { resolved: 6, unresolved: 2, handed_over: 1 },
+    message: { complete: 4, none: 3 },
+    booked: 3,
+    transferred: 1,
+    topics: [{
+      topic: 'Opening hours', calls: 6, labels: ['hours', 'Sunday opening'],
+      resolution: { resolved: 4, unresolved: 2 }, with_unanswered: 1, new: true,
+    }],
+    gap_calls: { missing_info: 1 },
+    gaps: [{ group: 'missing_info', summary: 'Callers ask about Sunday hours.', examples: ['CON-1', 'CON-3'] }],
+    suggestions: { business_info: [suggestion], integration: ['A booking calendar'], mrcall_config: ['Turn on multilingual.'] },
+    flagged_calls: ['CON-2'],
+    extractor_audit: { sampled_resolved: 2, disagreements: 0 },
+    model: 'gpt-x',
+    usage: { input_tokens: 100, output_tokens: 50 },
+  }
+}
+
+/** One report page's worth of automatic reports: the first carries a real `content`, the rest are filler
+  * so the list answers exactly the page size (10), which is what makes "Show earlier reports" appear. */
 function reportPage (n, { withContent = false } = {}) {
   return Array.from({ length: n }, (_, i) => ({
     businessId: BUSINESS_ID,
-    periodStart: 1700000000000 - i * 86400000,
-    periodEnd: 1700000000000 - i * 86400000 + 86400000,
+    periodStart: 1700000000000 - i * DAY,
+    periodEnd: 1700000000000 - i * DAY + DAY,
     cadence: 7,
-    content: (withContent && i === 0) ? {
-      version: 1,
-      period: { from: '2026-10-01T00:00:00Z', to: '2026-10-08T00:00:00Z', cadence: 7 },
-      calls: 10,
-      resolution: { resolved: 6, unresolved: 2, handed_over: 1 },
-      message: { complete: 4, none: 3 },
-      booked: 3,
-      transferred: 1,
-      topics: [{
-        topic: 'Opening hours', calls: 6, labels: ['hours'],
-        resolution: { resolved: 4, unresolved: 2 }, with_unanswered: 1, new: false,
-      }],
-      gap_calls: { missing_info: 1 },
-      gaps: [{ group: 'missing_info', summary: 'Callers ask about Sunday hours.', examples: ['CON-1'] }],
-      suggestions: { business_info: ['Tell us your Sunday hours.'], integration: [], mrcall_config: ['Turn on multilingual.'] },
-      flagged_calls: ['CON-2'],
-      extractor_audit: { sampled_resolved: 2, disagreements: 0 },
-      model: 'gpt-x',
-      usage: { input_tokens: 100, output_tokens: 50 },
-    } : null,
+    content: (withContent && i === 0) ? reportContent() : null,
   }))
 }
 
-test.describe('Analytics: call reports (owner, business page)', () => {
-  test('the latest report opens, a topic\'s outcome carries the assessed marking, an example call links for the owner, and MrCall\'s own suggestions never show', async ({ authenticatedPage: page }) => {
-    // Keyed on `before`, not on call order: the page's own date-range watcher fires its own,
-    // idempotent first-page request before `mounted`'s role-and-data sequence finishes (harmless
-    // in a real backend, since both ask for the same first page; a counter here would not be).
+const reportsQuery = (route) => new URL(route.request().url()).searchParams
+
+test.describe('Analytics: call reports of the period chosen at the top of the page (owner, business page)', () => {
+  test('asks for the page\'s period, asks again when it changes with the new period\'s latest report open, and says when no report covers it', async ({ authenticatedPage: page }) => {
+    const asked = []
+    const NINETY = { businessId: BUSINESS_ID, periodStart: 1690000000000, periodEnd: 1690000000000 + 7 * DAY, cadence: 7,
+      content: reportContent({ suggestion: 'Ninety days: add the holiday closures.' }) }
+    await page.route('**/customer/insights/reports*', (route) => {
+      const q = reportsQuery(route)
+      const span = Number(q.get('to')) - Number(q.get('from'))
+      asked.push(span)
+      const body = span === 30 * DAY ? reportPage(1, { withContent: true }) : span === 90 * DAY ? [NINETY] : []
+      route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(body) })
+    })
+    await page.goto(`/analytics?id=${BUSINESS_ID}`)
+    const reports = section(page, 'Call reports')
+    await expect(reports.getByText('Tell us your Sunday hours.')).toBeVisible({ timeout: 15000 })
+    expect(asked[asked.length - 1]).toBe(30 * DAY)
+
+    await page.getByRole('button', { name: '90 days' }).click()
+    await expect(reports.getByText('Ninety days: add the holiday closures.')).toBeVisible()
+    await expect(reports.getByText('Tell us your Sunday hours.')).toHaveCount(0)
+    expect(asked[asked.length - 1]).toBe(90 * DAY)
+
+    await page.getByRole('button', { name: '7 days' }).click()
+    await expect(reports.getByText('No report covers this period.')).toBeVisible()
+    await expect(reports.locator('.report-card')).toHaveCount(0)
+    expect(asked[asked.length - 1]).toBe(7 * DAY)
+  })
+
+  test('a report shows its themes, the questions left unanswered with example calls, and the suggestions, and none of the counts the analytics show', async ({ authenticatedPage: page }) => {
+    await page.route('**/customer/insights/reports*', (route) => route.fulfill({
+      status: 200, contentType: 'application/json', body: JSON.stringify(reportPage(1, { withContent: true })),
+    }))
+    await page.goto(`/analytics?id=${BUSINESS_ID}`)
+    const reports = section(page, 'Call reports')
+    const theme = reports.locator('.report-topic').filter({ hasText: 'Opening hours' })
+    await expect(theme).toBeVisible({ timeout: 15000 })
+    await expect(theme.getByText('New', { exact: true })).toBeVisible()
+    await expect(theme.getByText('Includes: hours, Sunday opening')).toBeVisible()
+
+    const gap = reports.locator('.report-gap')
+    await expect(gap.getByText('Missing information')).toBeVisible()
+    await expect(gap.getByText('Callers ask about Sunday hours.')).toBeVisible()
+    // an example call is named by its place in the list, its id kept for the link, never shown
+    await expect(gap.getByRole('link', { name: 'Call 1' })).toHaveAttribute('href', `/conversations?id=${BUSINESS_ID}&conversation=CON-1`)
+    await expect(gap.getByRole('link', { name: 'Call 2' })).toHaveAttribute('href', `/conversations?id=${BUSINESS_ID}&conversation=CON-3`)
+    await expect(reports.getByText(/CON-\d/)).toHaveCount(0)
+
+    await expect(reports.getByText('Tell us your Sunday hours.')).toBeVisible()
+    await expect(reports.getByText('A booking calendar')).toBeVisible()
+    await expect(reports.getByText('Turn on multilingual.')).toHaveCount(0)
+
+    // the analytics above hold every number of the period: the report repeats none
+    for (const text of ['calls with insights', 'Booked', 'Transferred', 'Assessed by the assistant', '6 calls', 'Unresolved',
+      'Complete message', 'Calls worth reading']) {
+      await expect(reports.getByText(text)).toHaveCount(0)
+    }
+    await expect(reports.locator('.report-summary, .report-topic-outcome, .report-fact')).toHaveCount(0)
+  })
+
+  test('pages to the end with the last report as the cursor', async ({ authenticatedPage: page }) => {
     let beforeCalls = 0
     await page.route('**/customer/insights/reports*', (route) => {
-      const before = new URL(route.request().url()).searchParams.get('before')
-      if (before) beforeCalls += 1
+      const q = reportsQuery(route)
+      if (q.get('before')) beforeCalls += 1
       route.fulfill({
-        status: 200,
-        contentType: 'application/json',
-        body: JSON.stringify(before ? reportPage(3) : reportPage(10, { withContent: true })),
+        status: 200, contentType: 'application/json',
+        body: JSON.stringify(q.get('before') ? reportPage(3) : reportPage(10, { withContent: true })),
       })
     })
     await page.goto(`/analytics?id=${BUSINESS_ID}`)
     const reports = section(page, 'Call reports')
     await expect(reports.getByText('Opening hours')).toBeVisible({ timeout: 15000 })
-
-    const topicRow = reports.locator('.report-topic').filter({ hasText: 'Opening hours' })
-    // the marking is said once for the line, not on every value of it
-    await expect(topicRow.getByText('Assessed by the assistant')).toHaveCount(1)
-    await expect(topicRow.locator('.report-topic-outcome').filter({ hasText: 'Unresolved' })).toContainText('2')
-    await expect(topicRow.locator('.report-topic-outcome').filter({ hasText: 'Resolved' }).filter({ hasNotText: 'Unresolved' })).toContainText('4')
-
-    const summary = reports.locator('.report-summary')
-    // one marking for the resolution line and one for the message line
-    await expect(summary.getByText('Assessed by the assistant')).toHaveCount(2)
-    // the report's `calls` counts the calls with insights only, and says so
-    const base = summary.getByText('10 calls with insights in this period')
-    await expect(base).toBeVisible()
-    await expect(summary.getByText('Only calls the assistant analysed are counted here')).toBeVisible()
-    await expect(summary.locator('.report-topic-outcome').filter({ hasText: /^\s*Complete message/ })).toContainText('4')
-    await expect(summary.getByText('Booked calls: 3 of 10')).toBeVisible()
-    // a bare count: carriers that report no transfer leg leave the fact absent, so it has no base
-    await expect(summary.getByText('Transferred calls, as reported by the carriers: 1', { exact: true })).toBeVisible()
-    await expect(summary.locator('.report-fact').getByText('Assessed by the assistant')).toHaveCount(0)
-
-    await expect(reports.getByRole('link', { name: 'CON-1' }))
-      .toHaveAttribute('href', `/conversations?id=${BUSINESS_ID}&conversation=CON-1`)
-    await expect(reports.getByRole('link', { name: 'CON-2' }))
-      .toHaveAttribute('href', `/conversations?id=${BUSINESS_ID}&conversation=CON-2`)
-    await expect(reports.getByText('Turn on multilingual.')).toHaveCount(0)
-
-    // paging to the end: the second page answers fewer than the page size (10), so there is no third
     await reports.getByRole('button', { name: 'Show earlier reports' }).click()
     await expect.poll(() => beforeCalls).toBe(1)
     await expect(reports.getByRole('button', { name: 'Show earlier reports' })).toHaveCount(0)
   })
 })
 
+test.describe('Analytics: a report asked for an interval (owner, business page)', () => {
+  const START = 1700000000000
+  const END = START + 7 * DAY
+  const asked = (requestId, periodStart, periodEnd, content = null) => ({ businessId: BUSINESS_ID, periodStart, periodEnd, requestId, content })
+  const automatic = (periodStart, periodEnd, content = null) => ({ businessId: BUSINESS_ID, periodStart, periodEnd, cadence: 7, content })
+  const isoOf = (ms) => new Date(ms).toISOString()
+
+  test('is marked with its interval, is told apart from the automatic report of the same days, and pages on its requestId', async ({ authenticatedPage: page }) => {
+    const firstPage = [
+      asked('job-7', START, END, reportContent({ suggestion: 'Asked: add the parking hours.', from: isoOf(START), to: isoOf(END), cadence: null })),
+      automatic(START, END, reportContent({ suggestion: 'Automatic: add the Sunday hours.', from: isoOf(START), to: isoOf(END) })),
+      ...Array.from({ length: 7 }, (_, i) => automatic(START - (i + 1) * 7 * DAY, END - (i + 1) * 7 * DAY)),
+      asked('job-3', START - 70 * DAY, START - 63 * DAY),
+    ]
+    const cursors = []
+    await page.route('**/customer/insights/reports*', (route) => {
+      const q = reportsQuery(route)
+      if (q.get('before')) cursors.push({ before: q.get('before'), beforeRequestId: q.get('beforeRequestId') })
+      route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(q.get('before') ? [] : firstPage) })
+    })
+    await page.goto(`/analytics?id=${BUSINESS_ID}`)
+    const reports = section(page, 'Call reports')
+    const cards = reports.locator('.report-card')
+    await expect(cards).toHaveCount(10, { timeout: 15000 })
+
+    const interval = await page.evaluate(([a, b]) => new Date(a).toLocaleDateString() + ' – ' + new Date(b).toLocaleDateString(), [START, END])
+    const askedHeader = cards.nth(0).locator('.report-header')
+    await expect(askedHeader).toContainText(interval)
+    await expect(askedHeader.getByText('On request', { exact: true })).toBeVisible()
+    await expect(cards.nth(1).locator('.report-header')).toContainText(interval)
+    await expect(cards.nth(1).getByText('On request', { exact: true })).toHaveCount(0)
+    await expect(cards.nth(9).getByText('On request', { exact: true })).toBeVisible()
+
+    // the newest opens alone; the automatic one of the same days opens on its own, each with its own content
+    await expect(cards.nth(0).getByText('Asked: add the parking hours.')).toBeVisible()
+    await expect(reports.getByText('Automatic: add the Sunday hours.')).toHaveCount(0)
+    await cards.nth(1).locator('.report-header').click()
+    await expect(cards.nth(1).getByText('Automatic: add the Sunday hours.')).toBeVisible()
+    await expect(cards.nth(0).getByText('Asked: add the parking hours.')).toBeVisible()
+
+    await reports.getByRole('button', { name: 'Show earlier reports' }).click()
+    await expect.poll(() => cursors.length).toBe(1)
+    expect(cursors[0]).toEqual({ before: String(START - 63 * DAY), beforeRequestId: 'job-3' })
+  })
+
+  test('a link to it opens it by its requestId when it is not among the reports listed', async ({ authenticatedPage: page }) => {
+    const single = []
+    await page.route('**/customer/insights/reports*', (route) => route.fulfill({
+      status: 200, contentType: 'application/json', body: JSON.stringify([automatic(START, END, reportContent({ suggestion: 'Automatic: add the Sunday hours.' }))]),
+    }))
+    await page.route('**/customer/insights/reports/*', (route) => {
+      const url = new URL(route.request().url())
+      single.push({ path: url.pathname, requestId: url.searchParams.get('requestId') })
+      route.fulfill({
+        status: 200, contentType: 'application/json',
+        body: JSON.stringify(asked('job-7', START, END, reportContent({ suggestion: 'Asked: add the parking hours.', cadence: null }))),
+      })
+    })
+    await page.goto(`/analytics?id=${BUSINESS_ID}&report=${START}&requestId=job-7`)
+    const reports = section(page, 'Call reports')
+    const card = reports.locator('.report-card').first()
+    await expect(card.getByText('Asked: add the parking hours.')).toBeVisible({ timeout: 15000 })
+    await expect(card.getByText('On request', { exact: true })).toBeVisible()
+    // the automatic report of the same start is still listed, closed
+    await expect(reports.locator('.report-card')).toHaveCount(2)
+    await expect(reports.getByText('Automatic: add the Sunday hours.')).toHaveCount(0)
+    expect(single).toEqual([{ path: expect.stringMatching(new RegExp(`/reports/${START}$`)), requestId: 'job-7' }])
+  })
+})
+
 test.describe('Analytics: call reports, an earlier page that fails', () => {
   test('keeps the reports already shown and the button to try again', async ({ authenticatedPage: page }) => {
     await page.route('**/customer/insights/reports*', (route) => {
-      const before = new URL(route.request().url()).searchParams.get('before')
+      const before = reportsQuery(route).get('before')
       if (before) return route.fulfill({ status: 500, contentType: 'application/json', body: JSON.stringify({ message: 'boom' }) })
       return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(reportPage(10, { withContent: true })) })
     })
@@ -273,7 +381,7 @@ test.describe('Analytics: call reports, an earlier page that fails', () => {
 })
 
 test.describe('Analytics: a report written before insights version 2', () => {
-  test('shows its topics and no resolution, message, booked or transferred', async ({ authenticatedPage: page }) => {
+  test('shows its topics and none of its counts', async ({ authenticatedPage: page }) => {
     await page.route('**/customer/insights/reports*', (route) => route.fulfill({
       status: 200,
       contentType: 'application/json',
@@ -290,8 +398,8 @@ test.describe('Analytics: a report written before insights version 2', () => {
     await page.goto(`/analytics?id=${BUSINESS_ID}`)
     const reports = section(page, 'Call reports')
     await expect(reports.getByText('Opening hours')).toBeVisible({ timeout: 15000 })
-    await expect(reports.locator('.report-summary')).toHaveCount(0)
-    await expect(reports.locator('.report-topic-outcome')).toHaveCount(0)
+    await expect(reports.getByText('6 calls')).toHaveCount(0)
+    await expect(reports.getByText('Includes:')).toHaveCount(0)
   })
 })
 
