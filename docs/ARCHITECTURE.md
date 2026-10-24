@@ -60,15 +60,25 @@ API clients and business logic:
 - `Analytics.js` — Analytics API client
 - `CallInsights.js` — what calls said: the value table of a call's four dimensions (`insightRows`:
   `resolution` and `message` are the assistant's own assessment, marked as such; `booked` and
-  `transferred` are recorded facts, `transferred` absent on a version-2 call is "not known") and the
-  clients for StarChat's outcomes, quality, assistants, reports, integrations
-  and configuration-suggestions routes; a 404 resolves to `null` (absent section), a 503 to
-  `{unavailable: true}`. `pagedList` is the one mechanism for a list read a page at a time on demand
-  (the integrations and configuration suggestions: `from`/`size`, the first page's `asOf` sent back on
-  every later page; a later page that fails keeps the list and is asked again, same `asOf`, from a retry);
-  `businessLabel` shows a business by name, its id only when StarChat has none; `businessName` and
-  `ownerName` name the business and the owner a filter is set on (the owner by the contact of its first
-  business: StarChat's admin user record carries only the role)
+  `transferred` are recorded facts, `transferred` absent on a version-2 call is "not known"; `forwarded`, a
+  request passed to the business, is one entry of the resolution list), the outcome lines over the calls where
+  the caller asked something (`outcomeShare`, from StarChat's `outcome` and `callsWithRequest`), and the clients
+  for StarChat's outcomes, quality, assistants, topics, reports (page, one report, overlap, delete), insights jobs
+  (estimate, create, read, list, cancel), callers' requests by category (`view=categories`, a category's
+  businesses, dismiss and restore) and configuration-suggestions routes; a 404 resolves to `null` (absent
+  section), a 503 to `{unavailable: true}`, a refusal's closed code is read by `refusalOf`. `serverPage` is the
+  one mechanism for a list StarChat pages (offset and size, the first page's `asOf` sent back on every other page,
+  the sort and its direction, and the states `loading`, `ok`, `absent`, `unavailable`, `error`);
+  `businessLabel` shows a business by name, its id only when StarChat has none; `business` reads a business's
+  name, zone, owner and plan; `searchBusinesses` finds businesses by company name; `ownerName` names the owner a
+  filter is set on (by the contact of its first business: StarChat's admin user record carries only the role)
+- `InsightsReports.js` — the reports' and jobs' rules applied to StarChat's answers: a period's days in the
+  business's zone, its last day included; the periods a request offers, ending at the last midnight there; the
+  label of every report and job state; a recompute's progress; who asked, never by an id; the coverage banner's
+  threshold. Pure, pinned by `tests/unit/insightsReports.spec.js`
+- `KnowledgeBase.js` — "Add the answer": one question/answer pair added to the business's knowledge base
+  (`?section=__KNOWLEDGE_BASE__&draftQuestion=`), unsaved until the person saves
+- `TopUp.js` — whether a business has an automatic top-up switched on, for the offer to switch it on
 - `Admin.js` — Admin API endpoints
 - `Reseller.js` — Reseller API endpoints
 - `Contact.js` — Contact management API
@@ -184,48 +194,48 @@ for the four dimensions lives in `src/utils/CallInsights.js`.
   "Assessed by the assistant"), a booked `Dropdown`, and "transferred" and "unanswered questions"
   `ToggleButton`s, all folded into the
   one `searchBody(extra)` the list, its poll, both exports and the two bulk actions all build from.
-- **The analytics pages** (`src/components/analytics/`: `CallOutcomes.vue`, `CallTopics.vue`,
-  `CallQuality.vue`, `CallReports.vue`, `AssistantsToReview.vue`, `ScopeInformation.vue`,
-  `InsightLabel.vue`, `AnalyticsFilterBar.vue`), presentational except `ScopeInformation.vue`, which
-  pages its two scope-wide lists itself once the page says the role is known — `Analytics.vue` and
-  `AnalyticsAdmin.vue` own every other fetch, the same way they already do for the older KPI/chart
-  sections. Both pages carry `AnalyticsFilterBar.vue`, a bar that stays at the top while the page
-  scrolls and shows the business (by name), owner, plan and period in force, each with its own clear
-  control; while the scope-wide lists (which follow none of these filters) are on screen, the bar says
-  what they cover and shows its chips as not applying. A business is shown by name wherever an answer
-  names it. The assistants table has short one-line headers, the full wording and base of each share in
-  a legend under it and in the header's tooltip, and a frozen business column. The assistant is measured
-  only on the calls it could serve, with StarChat's own bases, read through `CallInsights.js`
-  (`resolutionShare`, `assistantShare`, `extractionProblems`): "How the calls went"
-  (`CallOutcomes.vue`) shows resolution as a share over resolved, unresolved and handed over, with
-  `caller_left` and `spam_wrong_number` counted beside it in neutral colours, and under it the calls
-  without a conversation by reason, outside every rate; "What the calls were about"
-  (`CallTopics.vue`) reads StarChat's topics route for one business only.
-  - `Analytics.vue` with a business (`?id=`, any role): outcomes, topics, quality, and the business's
-    call reports of the period chosen at the top of the page (StarChat's reports route with `from`/`to`,
-    the reports overlapping it, automatic and asked for an interval, paged on the last report's
-    `periodEnd` and `requestId`; a new period reloads them). A report shows only what the model adds:
-    themes with the call topics they group and whether they are new, the questions left unanswered by
-    reason with example calls (named by caller and start from the answer's `exampleCalls`, StarChat reading
-    them when it answers; "Call N" only for one it could not name; linked for the owner only), suggestions
-    (`mrcall_config` for an admin only); every count is the analytics' own and is not repeated. A
-    report asked for an interval is marked "On request" and known by its start and `requestId`
-    together; `?report=<periodStart>&requestId=<id>` opens one.
-  - `Analytics.vue` with no business, role `reseller` (its scope page, reached directly or from
-    `ResellerDashboard.vue`): outcomes and quality over its scope (the existing `OwnerSelector`
-    narrows it to one owner), the topics section saying to choose a business (no request), the
-    assistants-to-review table (a row opens that business, i.e. sets `?id=`; the filter bar's
-    business control leads back), and the integrations/information section, which ignores every
-    filter; each item names the businesses that asked, each opening `/analytics?id=<business>&report=<periodStart>`,
-    where that report opens.
-  - `AnalyticsAdmin.vue`: the same outcomes/quality/assistants reacting to its own filters, topics
-    only with the business filter set, plus the integrations section and MrCall's own configuration
-    suggestions (admin only), neither reacting to a filter; an assistants row sets this page's own
-    business filter instead of navigating, is marked as the table's selection, and a control on the
-    table clears it.
+- **The analytics pages** (`src/components/analytics/`; StarChat's brief docs/briefs/2026-10-24-insights-reports-ux.md
+  for the reports, jobs and requests). `Analytics.vue` and `AnalyticsAdmin.vue` fetch the outcomes, topics and
+  quality and pass them to presentational sections (`CallOutcomes.vue`, `CallTopics.vue`, `CallQuality.vue`);
+  every server-paged list owns its `CallInsights.serverPage` and draws through `PagedTable.vue` (a real table,
+  sortable headers with `aria-sort`, page numbers and "1–10 of N", each row a card under 640 pixels), and every
+  loading, empty, unavailable and error state is `InsightsState.vue`. Both pages carry `AnalyticsFilterBar.vue`,
+  the filters in force each undone where it shows; a business is shown by name wherever an answer names it.
+  "How the calls went" shows the outcome of the calls where the caller asked something in four lines adding up to
+  their base (resolved in the call; passed to the business, split by the message taken; passed to a person; not
+  resolved), from StarChat's `outcome` and `callsWithRequest`, with `caller_left` and `spam_wrong_number` beside
+  it in neutral colours, the message, booked and transferred, and the calls without a conversation by reason.
+  No section shows a cost, a credit amount or a token count: StarChat answers none.
+  - `Analytics.vue` with a business (`?id=`, any role) has three tabs, each with its address (`?tab=`):
+    Overview (the period's sections, a coverage banner when at least 10 managed calls and a tenth of them lack
+    the analysis, with "Analyse them now", and a card on the callers who never spoke linking to the greeting);
+    Reports (`ReportsTab.vue`: the schedule panel with the cadence, the next report and a report held back for
+    credit, "Request a report" and "Prepare now", the report jobs asked recently, and the history paged on the
+    server with its inclusive days in the business's zone, type, version, state, calls over the calls managed,
+    who asked and when, filtered by state and type, with Regenerate, an admin's re-run of a written-off period and
+    delete); Processing (`JobsTab.vue`: the jobs, their state and progress, who asked, the report written and a
+    cancel while open). A FREE business's owner is offered the plan instead of paid work.
+  - `/analytics/report?id=&start=&requestId=` (`views/AnalyticsReport.vue`, `CallReportDetail.vue`): one report,
+    its base and the calls left out (the analytics of its days), a note when more calls of its days were analysed
+    since, its themes, the questions left unanswered by reason with example calls (linked for the owner only) and
+    "Add the answer", its suggestions (`mrcall_config` for an admin only), and the quality gaps beside the period
+    before. A link of before (`/analytics?id=&report=`) opens it.
+  - `InsightsRequestDialog.vue`: a report for a period, a regeneration, a recompute, "Prepare now" and a re-run,
+    one dialog: the period with the overlap choices, a hidden estimate, a confirmation without amount (an admin
+    may put the work at MrCall's cost), the job under one request key, its progress and end, and each refusal
+    with its own copy and offers.
+  - `Analytics.vue` with no business, role `reseller` (its scope page): outcomes and quality over its scope (the
+    `OwnerSelector` narrows it to one owner), the topics section saying to choose a business,
+    `AssistantsToReview.vue` and `RequestCategories.vue`, both following the period and owner.
+  - `AnalyticsAdmin.vue`: the same sections reacting to its own filters (the business chosen by company name,
+    `BusinessAutocomplete.vue`), topics only with a business chosen, "Assistants to review" (paged, sorted on
+    the server, searched by name, each account's health in words), "Callers' requests" (`RequestCategories.vue`:
+    one row per category with its status, numbers, histogram and freshness, its businesses on demand, archive and
+    restore for an admin), and MrCall's own configuration suggestions (`ConfigSuggestions.vue`, admin only, the
+    one section that follows no filter, which the bar says while it is on screen).
   - Both pages establish the role on mount (the same business search that already sets it,
-    `Business.js`'s `checkUserHasBusinesses`) before choosing which of these sections to show; the
-    server remains the actual gate (a 404 hides a section with no toast, a 503 shows a short note).
+    `Business.js`'s `checkUserHasBusinesses`) before choosing which sections to show; the server remains the
+    actual gate (a 404 hides a section with no toast, a 503 shows a short note).
 
 ### Restaurant bookings (`RestaurantBook.vue`)
 
