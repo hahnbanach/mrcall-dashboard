@@ -1883,7 +1883,8 @@
         "unresolved": "Nicht gelöst",
         "handed_over": "An eine Person übergeben",
         "caller_left": "Hat gesprochen, aber nicht gesagt, was er wollte",
-        "spam_wrong_number": "Spam oder falsche Nummer"
+        "spam_wrong_number": "Spam oder falsche Nummer",
+        "forwarded": "Anliegen an das Unternehmen weitergegeben"
       },
       "message": {
         "complete": "Vollständige Nachricht",
@@ -1940,7 +1941,9 @@
         "transferredOff": "Alle Anrufe",
         "unansweredLabel": "Offene Fragen",
         "unansweredOn": "Mit einer offenen Frage",
-        "unansweredOff": "Alle Anrufe"
+        "unansweredOff": "Alle Anrufe",
+        "business": "Unternehmen",
+        "noBusinessFound": "Kein Unternehmen mit diesem Namen"
       },
       "notAvailableYet": "Noch nicht verfügbar.",
       "howCallsWent": {
@@ -1981,8 +1984,6 @@
         "countOfTotal": "{count} von {total} Anrufen"
       },
       "reports": {
-        "title": "Anrufberichte",
-        "none": "Kein Bericht deckt diesen Zeitraum ab.",
         "topicsTitle": "Themen",
         "newTopic": "Neu",
         "themeIncludes": "Umfasst: {labels}",
@@ -1993,8 +1994,24 @@
         "businessInfoTitle": "Was nur Sie Ihrem Assistenten sagen können",
         "integrationTitle": "Ein System zum Verbinden",
         "mrcallConfigTitle": "MrCall-Konfigurationsvorschläge",
-        "loadMore": "Frühere Berichte anzeigen",
-        "onRequest": "Auf Anfrage"
+        "panel": {
+          "cadence": "Alle {days} Tage erstellt MrCall einen Bericht über die Anrufe Ihres Unternehmens. Jeder Bericht verbraucht Guthaben des Unternehmens.",
+          "next": "Der nächste kommt am {date} und deckt den Zeitraum vom {from} bis {to} ab.",
+          "retry": "Der Bericht für den Zeitraum vom {from} bis {to} war nicht erfolgreich: Er wird heute Nacht erneut versucht.",
+          "settings": "Wie oft, können Sie in den Einstellungen des Unternehmens ändern (0 = keine Berichte).",
+          "settingsLink": "Einstellungen des Unternehmens öffnen",
+          "off": "Automatische Berichte sind nicht aktiv. Sie können sie in den Einstellungen des Unternehmens einschalten oder einen Bericht für einen Zeitraum Ihrer Wahl anfordern.",
+          "skipped": "Der Bericht für {period} ist verschoben: Es ist nicht genug Guthaben vorhanden. Nach der nächsten Aufladung erstellen wir den Bericht für die letzten {days} Tage; die Tage davor bleiben in der Statistik und können mit einem Bericht auf Anfrage analysiert werden."
+        },
+        "type": {
+          "automatic": "Automatisch",
+          "requested": "Auf Anfrage",
+          "onRequestHelp": "Erstellt, weil jemand ihn für einen gewählten Zeitraum angefordert hat. Er ersetzt die automatischen Berichte nicht."
+        },
+        "base": "Basiert auf {analysed} der {managed} Anrufe, die der Assistent im Zeitraum bearbeitet hat.",
+        "baseOld": "Basiert auf {analysed} analysierten Anrufen.",
+        "baseOldNote": "Bei Anrufen vor dem 10. Oktober wissen wir nicht, wie viele der Assistent bearbeitet hat.",
+        "excluded": "Nicht berücksichtigt: {silent} Anrufe, in denen der Anrufer nicht sprach, {credit} wegen fehlenden Guthabens abgelehnt."
       },
       "assistants": {
         "title": "Zu überprüfende Assistenten",
@@ -2035,7 +2052,7 @@
           "extractionIssues": "Extraktion"
         },
         "legend": {
-          "notSolved": "von den Anrufen, in denen der Anrufer etwas wollte (gelöst, ungelöst oder übergeben)",
+          "notSolved": "nicht gelöst, plus an das Unternehmen weitergegebene Anliegen mit unvollständiger Nachricht, bezogen auf die Anrufe, in denen der Anrufer etwas wollte",
           "callerSilent": "von den angenommenen Anrufen",
           "notAnswered": "von den Anrufen, die beim Assistenten ankamen",
           "callerLeft": "von den Anrufen mit einem Ergebnis",
@@ -2045,32 +2062,30 @@
           "extractionIssues": "Anrufe, deren Datenextraktion fehlschlug, von den Anrufen, bei denen die Extraktion durchgeführt wurde"
         },
         "legendTitle": "Wie jede Spalte gezählt wird",
-        "assessedShort": "eingeschätzt"
+        "assessedShort": "eingeschätzt",
+        "search": "Unternehmen nach Namen suchen",
+        "searchButton": "Suchen",
+        "clearSearch": "Suche „{term}“ löschen",
+        "none": "Kein Assistent zur Durchsicht in diesem Zeitraum.",
+        "noneFound": "Kein Unternehmen mit dem Namen „{term}“ in diesem Zeitraum.",
+        "healthTitle": "Konto",
+        "health": {
+          "ok": "In Ordnung",
+          "creditLow": "Wenig Guthaben",
+          "inDebt": "Im Minus",
+          "unknown": "Nicht bekannt",
+          "planOther": "Tarif nicht aktiv"
+        }
       },
       "scope": {
-        "title": "Integrationen und angefragte Informationen",
         "allBusinesses": "Über alle Unternehmen, die Sie sehen können, in den letzten 30 Tagen.",
         "none": "Noch nichts anzuzeigen.",
-        "saidBy": "{businesses}, {reports}",
         "configSuggestionsTitle": "MrCall-Konfigurationsvorschläge",
-        "loading": "Wird geladen…",
-        "saidByLabel": "Angefragt von:",
-        "andMore": "und {count} weitere",
-        "loadMoreIntegrations": "Weitere Integrationen laden",
-        "loadMoreSuggestions": "Weitere Vorschläge laden",
-        "template": "Tarif: {template}",
-        "reportEnding": "Bericht bis {date}",
-        "kinds": {
-          "integration": "Integration",
-          "business_info": "Informationen zum Unternehmen",
-          "needs_integration_gap": "Unbeantwortet: braucht eine Integration"
-        },
-        "businessesCount": "1 Unternehmen | {n} Unternehmen",
-        "reportsCount": "1 Bericht | {n} Berichte",
-        "shownIntegrations": "{shown} von {total} Einträgen angezeigt",
-        "shownSuggestions": "{shown} von {total} Unternehmen angezeigt",
-        "moreFailed": "Die nächste Seite konnte nicht geladen werden.",
-        "retry": "Erneut versuchen"
+        "columns": {
+          "business": "Unternehmen",
+          "reportEnding": "Bericht bis",
+          "suggestions": "Vorschläge"
+        }
       },
       "filterBar": {
         "title": "Aktive Filter",
@@ -2086,6 +2101,265 @@
         "scopeNote": "Dieser Abschnitt: alle Unternehmen, die Sie sehen, letzte 30 Tage",
         "notApplied": "Filter, die für diesen Abschnitt nicht gelten",
         "ownerNameSource": "Name des Kontakts im Unternehmen dieses Inhabers"
+      },
+      "outcome": {
+        "title": "Ergebnis der Anrufe, in denen der Anrufer etwas wollte",
+        "resolved": "Im Anruf gelöst",
+        "forwarded": "Anliegen an das Unternehmen weitergegeben",
+        "forwarded_complete": "mit vollständiger Nachricht",
+        "forwarded_incomplete": "mit unvollständiger Nachricht",
+        "handed_over": "An eine Person übergeben",
+        "unresolved": "Nicht gelöst",
+        "forwardedHelp": "Der Assistent konnte es während des Anrufs nicht erledigen und hat das Anliegen notiert, damit das Unternehmen sich darum kümmert.",
+        "notYet": "Dieses Ergebnis erscheint, sobald der Server die an das Unternehmen weitergegebenen Anliegen ausliest."
+      },
+      "state": {
+        "loading": "Wird geladen…",
+        "updating": "Wird aktualisiert…",
+        "error": "Dieser Bereich konnte nicht geladen werden.",
+        "retry": "Erneut versuchen",
+        "actionFailed": "Das hat nicht geklappt. Bitte versuchen Sie es erneut."
+      },
+      "pager": {
+        "range": "{from}–{to} von {total}",
+        "label": "Seiten von {name}",
+        "previous": "Vorherige Seite",
+        "next": "Nächste Seite",
+        "page": "Seite {n}",
+        "sortBy": "Sortieren nach",
+        "descending": "Absteigend",
+        "ascending": "Aufsteigend"
+      },
+      "tabs": {
+        "label": "Bereiche der Statistik",
+        "overview": "Übersicht",
+        "reports": "Berichte",
+        "jobs": "Verarbeitung"
+      },
+      "free": {
+        "paidUnavailable": "Mit einem kostenpflichtigen Tarif verfügbar.",
+        "seePlans": "Tarife ansehen"
+      },
+      "requester": {
+        "you": "Sie",
+        "owner": "{name} (Inhaber)",
+        "ownerNoName": "Der Inhaber",
+        "staff": "MrCall oder der Reseller"
+      },
+      "status": {
+        "ready": "Fertig",
+        "preparing": "In Vorbereitung",
+        "queued": "In der Warteschlange",
+        "retryTomorrow": "Neuer Versuch morgen",
+        "failed": "Nicht erfolgreich",
+        "postponed": "Verschoben",
+        "noCalls": "Keine Anrufe zum Analysieren",
+        "notRun": "Nicht ausgeführt",
+        "notRunCredit": "Nicht ausgeführt: nicht genug Guthaben",
+        "stoppedCredit": "Gestoppt: nicht genug Guthaben",
+        "cancelled": "Abgebrochen",
+        "recomputeStopped": "Gestoppt: nicht genug Guthaben. {done} von {total} Anrufen wurden mit dem Guthaben des Unternehmens analysiert. Die übrigen wurden nicht analysiert."
+      },
+      "reportsTab": {
+        "scheduleTitle": "Automatische Berichte",
+        "request": "Bericht anfordern",
+        "anticipate": "Jetzt erstellen",
+        "recentTitle": "Kürzlich angefordert",
+        "historyTitle": "Alle Berichte",
+        "filterStatus": "Status",
+        "filterType": "Art",
+        "clearFilters": "Filter zurücksetzen",
+        "none": "Noch keine Berichte.",
+        "noneFiltered": "Kein Bericht entspricht diesen Filtern.",
+        "days": "{days} Tage",
+        "callsOfManaged": "{calls} von {managed} bearbeitet",
+        "callsAnalysed": "{calls} analysiert",
+        "automaticBy": "Automatisch",
+        "open": "Öffnen",
+        "regenerate": "Neu erstellen",
+        "regenerateOf": "Den Bericht {period} neu erstellen",
+        "rerun": "Erneut versuchen",
+        "rerunOf": "Den Bericht {period} erneut versuchen",
+        "delete": "Löschen",
+        "deleteOf": "Den Bericht {period} löschen",
+        "jobReport": "Bericht {period}",
+        "jobRecompute": "Analyse der Anrufe {period}",
+        "jobAnticipate": "Automatischer Bericht jetzt erstellt",
+        "jobRegenerate": "Bericht neu erstellt",
+        "jobRerun": "Automatischer Bericht {period} erneut versucht",
+        "columns": {
+          "period": "Zeitraum",
+          "type": "Art",
+          "revision": "Version",
+          "status": "Status",
+          "calls": "Anrufe",
+          "requestedBy": "Angefordert von",
+          "createdAt": "Erstellt am",
+          "actions": "Aktionen"
+        }
+      },
+      "jobs": {
+        "title": "Verarbeitung",
+        "purpose": "Die angeforderten und neu erstellten Berichte sowie die Analysen vergangener Anrufe für dieses Unternehmen, mit Angabe, wer sie angefordert hat und wie jede endete.",
+        "none": "Für dieses Unternehmen wurde noch nichts verarbeitet.",
+        "progress": "{done} von {total} Anrufen",
+        "estimate": "Eine Anfrage wird vorbereitet",
+        "columns": {
+          "what": "Was",
+          "status": "Status",
+          "progress": "Fortschritt",
+          "requestedBy": "Angefordert von",
+          "createdAt": "Gestartet am",
+          "result": "Ergebnis"
+        }
+      },
+      "reportDetail": {
+        "back": "Zurück zu den Berichten",
+        "title": "Anrufbericht, {period}",
+        "notFound": "Dieser Bericht existiert nicht oder ist nicht mehr verfügbar.",
+        "baseTitle": "Welche Anrufe er ausgewertet hat",
+        "newerCalls": "Seit diesem Bericht wurden {n} weitere Anrufe aus diesen Tagen analysiert: Erstellen Sie ihn neu, um sie einzubeziehen.",
+        "addAnswer": "Antwort hinzufügen",
+        "qualityTitle": "Fragen ohne Antwort, verglichen mit dem Zeitraum davor",
+        "qualityReason": "Grund",
+        "qualityNow": "Diese Tage",
+        "qualityBefore": "Zeitraum davor",
+        "qualityBase": "Anrufe gezählt von den {calls} Anrufen, bei denen diese Prüfung erfasst wurde.",
+        "draftAdded": "Wir haben die Frage zu Ihren Fragen und Antworten hinzugefügt: Schreiben Sie die Antwort und speichern Sie.",
+        "draftPresent": "Diese Frage steht bereits in Ihren Fragen und Antworten."
+      },
+      "deleteReport": {
+        "title": "Bericht löschen",
+        "what": "Der Bericht {period} wird für alle ausgeblendet, mit allen seinen Versionen.",
+        "reason": "Warum er gelöscht wird",
+        "confirm": "Löschen"
+      },
+      "request": {
+        "title": {
+          "report": "Bericht anfordern",
+          "regenerate": "Bericht neu erstellen",
+          "recompute": "Die Anrufe des Zeitraums analysieren",
+          "anticipate": "Den automatischen Bericht jetzt erstellen",
+          "rerun": "Den automatischen Bericht erneut versuchen"
+        },
+        "periodLabel": "Zeitraum",
+        "preset": "Letzte {days} Tage",
+        "custom": "Tage auswählen",
+        "periodHint": "Es gelten die Tage des Unternehmens, bis einschließlich gestern.",
+        "selected": "Vom {from} bis {to} ({days} Tage)",
+        "continue": "Weiter",
+        "cancel": "Abbrechen",
+        "close": "Schließen",
+        "preparing": "Wir bereiten die Anfrage vor…",
+        "confirm": "Diese Verarbeitung verbraucht Guthaben des Unternehmens {business}. Möchten Sie fortfahren?",
+        "confirmPlatform": "Diese Verarbeitung geht auf Kosten von MrCall: Das Guthaben des Unternehmens wird nicht verbraucht. Möchten Sie fortfahren?",
+        "raceNote": "Wenn in der Zwischenzeit Anrufe Guthaben verbrauchen, kann die Verarbeitung eine kleine Schuld hinterlassen.",
+        "platformPays": "Auf Kosten von MrCall: Das Unternehmen verbraucht kein Guthaben",
+        "confirmButton": "Bestätigen",
+        "notEnoughCredit": "Nicht genug Guthaben für diese Verarbeitung.",
+        "reserve": "Das Guthaben des Unternehmens liegt auf dem Niveau, das wir für Anrufe zurückhalten. Laden Sie Guthaben auf oder schalten Sie das automatische Aufladen ein, um diese Funktion zu nutzen.",
+        "shorter": "Versuchen Sie einen kürzeren Zeitraum",
+        "topUp": "Aufladen",
+        "enableTopUp": "Automatisches Aufladen einschalten",
+        "overlap": {
+          "same": "Für diese Tage gibt es bereits einen Bericht.",
+          "cycle": "Diese Tage werden vom nächsten automatischen Bericht erneut gelesen und verbrauchen erneut Guthaben.",
+          "partial": "Diese Tage sind bereits teilweise im Bericht ({kind}) {period} enthalten. Ein neuer Bericht liest sie erneut und verbraucht erneut Guthaben.",
+          "acknowledge": "Verstanden: trotzdem erneut lesen",
+          "regenerateInstead": "Diesen Bericht neu erstellen"
+        },
+        "kind": {
+          "automatic": "automatisch",
+          "requested": "auf Anfrage"
+        },
+        "anticipateCycle": "Der laufende automatische Bericht deckt den Zeitraum vom {from} bis gestern ab: Wir erstellen ihn jetzt für den gesamten Zeitraum, und der nächste beginnt ab heute.",
+        "busy": "Für dieses Unternehmen läuft bereits eine Verarbeitung, gestartet von {who} am {when}.",
+        "busyUnknown": "Für dieses Unternehmen läuft bereits eine Verarbeitung.",
+        "busyOpen": "Verarbeitung ansehen",
+        "automaticPending": "Der automatische Bericht für diesen Zeitraum ist in Vorbereitung: Er ist nach der nächsten nächtlichen Verarbeitung fertig.",
+        "retention": "Dieser Bericht betrifft Tage, die mehr als 11 Monate zurückliegen: Er kann nicht mehr neu erstellt werden.",
+        "noCalls": "Keine Anrufe zum Analysieren in diesem Zeitraum.",
+        "failed": "Die Anfrage konnte nicht abgeschlossen werden. Bitte versuchen Sie es später erneut.",
+        "queued": "In der Warteschlange: Es beginnt in Kürze.",
+        "working": "In Vorbereitung…",
+        "progress": "{done} von {total} Anrufen analysiert.",
+        "doneReport": "Der Bericht ist fertig.",
+        "doneRecompute": "Analyse abgeschlossen: {written} Anrufe aktualisiert.",
+        "openReport": "Bericht öffnen",
+        "cancelJob": "Verarbeitung abbrechen",
+        "cancelReport": "Abbrechen: Der Bericht wird nicht erstellt und es wird kein Guthaben verbraucht.",
+        "cancelRecompute": "Sie stoppt nach dem laufenden Anruf; die bereits analysierten Anrufe bleiben erhalten und haben Guthaben des Unternehmens verbraucht.",
+        "cancelled": "Verarbeitung abgebrochen.",
+        "keepOpen": "Sie können dieses Fenster schließen: Die Verarbeitung läuft weiter und Sie finden sie unter Verarbeitung."
+      },
+      "recompute": {
+        "banner": "{n} in diesem Zeitraum bearbeitete Anrufe haben noch keine automatische Analyse, daher zählen Ergebnisse, Themen und Qualität sie nicht mit.",
+        "cannotChange": "Eine neue Analyse ändert nichts an Anrufen ohne Gespräch (der Anrufer sprach nicht, oder es war kein Guthaben da).",
+        "action": "Jetzt analysieren"
+      },
+      "silent": {
+        "title": "Anrufer, die nicht gesprochen haben",
+        "text": "In {n} Anrufen hat der Anrufer aufgelegt, ohne etwas zu sagen. Das liegt oft an der Begrüßung: Prüfen Sie, ob sie kurz und klar ist.",
+        "link": "Begrüßung prüfen"
+      },
+      "requests": {
+        "title": "Anliegen der Anrufer",
+        "purpose": "Was Anrufer wollen und die Assistenten nicht können, nach Kategorie über alle Unternehmen gruppiert: um zu entscheiden, was entwickelt und in die Tarife aufgenommen werden soll.",
+        "window": "Zeitraum: {period}",
+        "sortLabel": "Sortieren nach",
+        "sortScore": "Neueste und am weitesten verbreitete",
+        "sortBusinesses": "Anzahl der Unternehmen",
+        "showDismissed": "Archivierte anzeigen",
+        "scoreHelp": "Jedes Unternehmen zählt 1, wenn es in den letzten von seinen Berichten abgedeckten Tagen danach gefragt hat, die Hälfte bei zwei Wochen davor, ein Viertel bei vier Wochen davor.",
+        "none": "Keine Anliegen in diesem Zeitraum.",
+        "columns": {
+          "category": "Kategorie",
+          "businesses": "Unternehmen",
+          "trend": "Trend",
+          "freshness": "Aktualität"
+        },
+        "businesses": "{n} Unternehmen",
+        "trend": "{sign}{n} gegenüber dem vorherigen Zeitraum",
+        "share": "{pct} % der Unternehmen mit Berichten",
+        "histogramLabel": "Unternehmen pro {bucket}, beginnend mit dem ältesten: {values}",
+        "bucket": {
+          "week": "Woche",
+          "month": "Monat"
+        },
+        "freshness": "Letzte Anfrage am {date} · {pct} % im letzten Zeitraum ({bucket})",
+        "reportDated": "{n} Unternehmen mit Datum zum Ende des Berichts",
+        "nextAction": "Nächster Schritt",
+        "examples": "Beispiele",
+        "hideExample": "Ausblenden",
+        "hideExampleOf": "Das Beispiel „{text}“ ausblenden",
+        "whoAsked": "Wer gefragt hat",
+        "businessesOf": "Unternehmen, die nach {category} gefragt haben",
+        "businessColumns": {
+          "name": "Unternehmen",
+          "lastSeen": "Letzte Anfrage",
+          "said": "Was sie wollten"
+        },
+        "noBusinesses": "Kein Unternehmen in diesem Zeitraum.",
+        "dismiss": "Archivieren",
+        "dismissOf": "{category} archivieren",
+        "restore": "Wiederherstellen",
+        "restoreOf": "{category} wiederherstellen",
+        "dismissedAs": "Archiviert am {date}: {reason}",
+        "reasonLabel": "Grund",
+        "reason": {
+          "done": "Erledigt",
+          "not_relevant": "Nicht relevant",
+          "already_integrated": "Bereits integriert"
+        },
+        "note": "Notiz (optional)",
+        "confirmDismiss": "Archivieren",
+        "reopened": "Wieder geöffnet: {n} neue Unternehmen haben danach gefragt, nachdem es am {date} archiviert wurde.",
+        "status": {
+          "rising": "Steigend",
+          "steady": "Gleichbleibend",
+          "falling": "Sinkend",
+          "stale": "In letzter Zeit nicht mehr gefragt"
+        }
       }
     }
   },

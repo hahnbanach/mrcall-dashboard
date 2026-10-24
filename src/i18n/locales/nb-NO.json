@@ -1881,7 +1881,8 @@
         "unresolved": "Uløst",
         "handed_over": "Overlatt til en person",
         "caller_left": "Snakket, men sa aldri hva de ville",
-        "spam_wrong_number": "Spam eller feil nummer"
+        "spam_wrong_number": "Spam eller feil nummer",
+        "forwarded": "Henvendelse sendt videre til virksomheten"
       },
       "message": {
         "complete": "Fullstendig melding",
@@ -1938,7 +1939,9 @@
         "transferredOff": "Alle samtaler",
         "unansweredLabel": "Ubesvarte spørsmål",
         "unansweredOn": "Med et ubesvart spørsmål",
-        "unansweredOff": "Alle samtaler"
+        "unansweredOff": "Alle samtaler",
+        "business": "Virksomhet",
+        "noBusinessFound": "Ingen virksomhet med dette navnet"
       },
       "notAvailableYet": "Ikke tilgjengelig ennå.",
       "howCallsWent": {
@@ -1979,8 +1982,6 @@
         "countOfTotal": "{count} av {total} samtaler"
       },
       "reports": {
-        "title": "Samtalerapporter",
-        "none": "Ingen rapport dekker denne perioden.",
         "topicsTitle": "Emner",
         "newTopic": "Nytt",
         "themeIncludes": "Omfatter: {labels}",
@@ -1991,8 +1992,24 @@
         "businessInfoTitle": "Hva bare du kan fortelle assistenten din",
         "integrationTitle": "Et system å koble til",
         "mrcallConfigTitle": "MrCalls konfigurasjonsforslag",
-        "loadMore": "Vis tidligere rapporter",
-        "onRequest": "På forespørsel"
+        "panel": {
+          "cadence": "Hver {days}. dag lager MrCall en rapport om virksomhetens samtaler. Hver rapport bruker virksomhetens kreditt.",
+          "next": "Den neste kommer {date} og dekker {from} til {to}.",
+          "retry": "Rapporten for perioden {from} til {to} lyktes ikke: den prøves på nytt i natt.",
+          "settings": "Du kan endre hvor ofte i virksomhetens innstillinger (0 = ingen rapporter).",
+          "settingsLink": "Åpne virksomhetens innstillinger",
+          "off": "Automatiske rapporter er ikke aktive. Du kan slå dem på i virksomhetens innstillinger eller be om en rapport for en periode du velger selv.",
+          "skipped": "Rapporten for {period} er utsatt: det er ikke nok kreditt. Etter neste påfyll lager vi rapporten for de siste {days} dagene. Dagene før blir værende i statistikken og kan analyseres med en rapport på forespørsel."
+        },
+        "type": {
+          "automatic": "Automatisk",
+          "requested": "På forespørsel",
+          "onRequestHelp": "Laget da noen ba om det, for en valgt periode. Den erstatter ikke de automatiske rapportene."
+        },
+        "base": "Basert på {analysed} av de {managed} samtalene assistenten tok imot i perioden.",
+        "baseOld": "Basert på {analysed} analyserte samtaler.",
+        "baseOldNote": "For samtaler før 10. oktober vet vi ikke hvor mange assistenten tok imot.",
+        "excluded": "Utelatt: {silent} samtaler der den som ringte, ikke sa noe, {credit} avvist på grunn av manglende kreditt."
       },
       "assistants": {
         "title": "Assistenter å gjennomgå",
@@ -2033,7 +2050,7 @@
           "extractionIssues": "Uttrekk"
         },
         "legend": {
-          "notSolved": "av samtalene der den som ringte spurte om noe (løst, uløst eller overlevert)",
+          "notSolved": "ikke løst, pluss henvendelser sendt videre til virksomheten med en ufullstendig beskjed, av samtalene der den som ringte, spurte om noe",
           "callerSilent": "av de besvarte samtalene",
           "notAnswered": "av samtalene som nådde assistenten",
           "callerLeft": "av samtalene med et utfall",
@@ -2043,32 +2060,30 @@
           "extractionIssues": "samtaler der datauttrekket mislyktes, av samtalene der uttrekket ble kjørt"
         },
         "legendTitle": "Hvordan hver kolonne telles",
-        "assessedShort": "vurdert"
+        "assessedShort": "vurdert",
+        "search": "Søk etter en virksomhet på navn",
+        "searchButton": "Søk",
+        "clearSearch": "Fjern søket “{term}”",
+        "none": "Ingen assistent å gjennomgå i denne perioden.",
+        "noneFound": "Ingen virksomhet med navnet “{term}” i denne perioden.",
+        "healthTitle": "Konto",
+        "health": {
+          "ok": "I orden",
+          "creditLow": "Lav kreditt",
+          "inDebt": "Med gjeld",
+          "unknown": "Ukjent",
+          "planOther": "Abonnementet er ikke aktivt"
+        }
       },
       "scope": {
-        "title": "Integrasjoner og etterspurt informasjon",
         "allBusinesses": "På tvers av alle virksomheter du kan se, de siste 30 dagene.",
         "none": "Ingenting å vise ennå.",
-        "saidBy": "{businesses}, {reports}",
         "configSuggestionsTitle": "MrCalls konfigurasjonsforslag",
-        "loading": "Laster…",
-        "saidByLabel": "Etterspurt av:",
-        "andMore": "og {count} til",
-        "loadMoreIntegrations": "Last inn flere integrasjoner",
-        "loadMoreSuggestions": "Last inn flere forslag",
-        "template": "Abonnement: {template}",
-        "reportEnding": "Rapport til {date}",
-        "kinds": {
-          "integration": "Integrasjon",
-          "business_info": "Informasjon om bedriften",
-          "needs_integration_gap": "Ubesvart: krever en integrasjon"
-        },
-        "businessesCount": "1 bedrift | {n} bedrifter",
-        "reportsCount": "1 rapport | {n} rapporter",
-        "shownIntegrations": "{shown} av {total} elementer vist",
-        "shownSuggestions": "{shown} av {total} bedrifter vist",
-        "moreFailed": "Neste side kunne ikke lastes inn.",
-        "retry": "Prøv igjen"
+        "columns": {
+          "business": "Virksomhet",
+          "reportEnding": "Rapport som slutter",
+          "suggestions": "Forslag"
+        }
       },
       "filterBar": {
         "title": "Aktive filtre",
@@ -2084,6 +2099,265 @@
         "scopeNote": "Denne delen: alle bedrifter du kan se, siste 30 dager",
         "notApplied": "Filtre som ikke gjelder denne delen",
         "ownerNameSource": "navn på kontakten for denne eierens bedrift"
+      },
+      "outcome": {
+        "title": "Utfallet av samtalene der den som ringte, spurte om noe",
+        "resolved": "Løst i samtalen",
+        "forwarded": "Henvendelse sendt videre til virksomheten",
+        "forwarded_complete": "med en fullstendig beskjed",
+        "forwarded_incomplete": "med en ufullstendig beskjed",
+        "handed_over": "Overlatt til en person",
+        "unresolved": "Ikke løst",
+        "forwardedHelp": "Assistenten klarte det ikke under samtalen og noterte henvendelsen, slik at virksomheten kan følge den opp.",
+        "notYet": "Dette utfallet vises når serveren begynner å lese henvendelser som er sendt videre til virksomheten."
+      },
+      "state": {
+        "loading": "Laster…",
+        "updating": "Oppdaterer…",
+        "error": "Denne delen kunne ikke lastes.",
+        "retry": "Prøv igjen",
+        "actionFailed": "Det gikk ikke. Prøv igjen."
+      },
+      "pager": {
+        "range": "{from}–{to} av {total}",
+        "label": "Sider for {name}",
+        "previous": "Forrige side",
+        "next": "Neste side",
+        "page": "Side {n}",
+        "sortBy": "Sorter etter",
+        "descending": "Synkende",
+        "ascending": "Stigende"
+      },
+      "tabs": {
+        "label": "Statistikkdeler",
+        "overview": "Oversikt",
+        "reports": "Rapporter",
+        "jobs": "Behandling"
+      },
+      "free": {
+        "paidUnavailable": "Tilgjengelig med et betalt abonnement.",
+        "seePlans": "Se abonnementene"
+      },
+      "requester": {
+        "you": "Deg",
+        "owner": "{name} (eier)",
+        "ownerNoName": "Eieren",
+        "staff": "MrCall eller forhandleren"
+      },
+      "status": {
+        "ready": "Klar",
+        "preparing": "Under forberedelse",
+        "queued": "I kø",
+        "retryTomorrow": "Nytt forsøk i morgen",
+        "failed": "Mislyktes",
+        "postponed": "Utsatt",
+        "noCalls": "Ingen samtaler å analysere",
+        "notRun": "Ikke kjørt",
+        "notRunCredit": "Ikke kjørt: ikke nok kreditt",
+        "stoppedCredit": "Stoppet: ikke nok kreditt",
+        "cancelled": "Avbrutt",
+        "recomputeStopped": "Stoppet: ikke nok kreditt. {done} av {total} samtaler ble analysert med virksomhetens kreditt. De andre ble ikke analysert."
+      },
+      "reportsTab": {
+        "scheduleTitle": "Automatiske rapporter",
+        "request": "Be om en rapport",
+        "anticipate": "Lag nå",
+        "recentTitle": "Nylig bestilt",
+        "historyTitle": "Alle rapporter",
+        "filterStatus": "Status",
+        "filterType": "Type",
+        "clearFilters": "Fjern filtre",
+        "none": "Ingen rapporter ennå.",
+        "noneFiltered": "Ingen rapport passer med disse filtrene.",
+        "days": "{days} dager",
+        "callsOfManaged": "{calls} av {managed} behandlet",
+        "callsAnalysed": "{calls} analysert",
+        "automaticBy": "Automatisk",
+        "open": "Åpne",
+        "regenerate": "Lag på nytt",
+        "regenerateOf": "Lag rapporten {period} på nytt",
+        "rerun": "Prøv igjen",
+        "rerunOf": "Prøv rapporten {period} igjen",
+        "delete": "Slett",
+        "deleteOf": "Slett rapporten {period}",
+        "jobReport": "Rapport {period}",
+        "jobRecompute": "Analyse av samtalene {period}",
+        "jobAnticipate": "Automatisk rapport laget nå",
+        "jobRegenerate": "Rapport laget på nytt",
+        "jobRerun": "Automatisk rapport {period} prøvd på nytt",
+        "columns": {
+          "period": "Periode",
+          "type": "Type",
+          "revision": "Versjon",
+          "status": "Status",
+          "calls": "Samtaler",
+          "requestedBy": "Bestilt av",
+          "createdAt": "Opprettet",
+          "actions": "Handlinger"
+        }
+      },
+      "jobs": {
+        "title": "Behandling",
+        "purpose": "Rapportene som er bestilt eller laget på nytt, og analysene av tidligere samtaler for denne virksomheten, med hvem som ba om dem og hvordan hver endte.",
+        "none": "Ingenting er behandlet for denne virksomheten ennå.",
+        "progress": "{done} av {total} samtaler",
+        "estimate": "Forbereder en forespørsel",
+        "columns": {
+          "what": "Hva",
+          "status": "Status",
+          "progress": "Framdrift",
+          "requestedBy": "Bestilt av",
+          "createdAt": "Startet",
+          "result": "Resultat"
+        }
+      },
+      "reportDetail": {
+        "back": "Tilbake til rapportene",
+        "title": "Samtalerapport, {period}",
+        "notFound": "Denne rapporten finnes ikke eller er ikke lenger tilgjengelig.",
+        "baseTitle": "Hvilke samtaler den har lest",
+        "newerCalls": "Siden denne rapporten ble skrevet, er {n} flere samtaler fra disse dagene analysert: lag den på nytt for å ta dem med.",
+        "addAnswer": "Legg til svaret",
+        "qualityTitle": "Spørsmål uten svar, sammenlignet med perioden før",
+        "qualityReason": "Årsak",
+        "qualityNow": "Disse dagene",
+        "qualityBefore": "Perioden før",
+        "qualityBase": "Samtaler regnet av de {calls} samtalene der denne kontrollen er registrert.",
+        "draftAdded": "Vi har lagt spørsmålet til i spørsmålene og svarene dine: skriv svaret og lagre.",
+        "draftPresent": "Dette spørsmålet finnes allerede blant spørsmålene og svarene dine."
+      },
+      "deleteReport": {
+        "title": "Slett rapporten",
+        "what": "Rapporten {period} blir skjult for alle, sammen med alle versjonene av den.",
+        "reason": "Hvorfor den slettes",
+        "confirm": "Slett"
+      },
+      "request": {
+        "title": {
+          "report": "Be om en rapport",
+          "regenerate": "Lag rapporten på nytt",
+          "recompute": "Analyser samtalene i perioden",
+          "anticipate": "Lag den automatiske rapporten nå",
+          "rerun": "Prøv den automatiske rapporten igjen"
+        },
+        "periodLabel": "Periode",
+        "preset": "Siste {days} dager",
+        "custom": "Velg dagene",
+        "periodHint": "Dagene er virksomhetens, til og med i går.",
+        "selected": "Fra {from} til {to} ({days} dager)",
+        "continue": "Fortsett",
+        "cancel": "Avbryt",
+        "close": "Lukk",
+        "preparing": "Vi forbereder forespørselen…",
+        "confirm": "Denne behandlingen bruker kreditten til virksomheten {business}. Vil du fortsette?",
+        "confirmPlatform": "Denne behandlingen betales av MrCall: virksomhetens kreditt brukes ikke. Vil du fortsette?",
+        "raceNote": "Hvis samtaler bruker kreditten i mellomtiden, kan behandlingen etterlate en liten gjeld.",
+        "platformPays": "Betales av MrCall: virksomheten bruker ingen kreditt",
+        "confirmButton": "Bekreft",
+        "notEnoughCredit": "Ikke nok kreditt til denne behandlingen.",
+        "reserve": "Virksomhetens kreditt er nede på nivået vi holder av til samtaler. Fyll på kreditten eller slå på automatisk påfyll for å bruke denne funksjonen.",
+        "shorter": "Prøv en kortere periode",
+        "topUp": "Fyll på",
+        "enableTopUp": "Slå på automatisk påfyll",
+        "overlap": {
+          "same": "Det finnes allerede en rapport for disse dagene.",
+          "cycle": "Disse dagene leses på nytt av den neste automatiske rapporten og bruker kreditten på nytt.",
+          "partial": "Disse dagene er allerede delvis med i rapporten {period} ({kind}). En ny rapport leser dem på nytt og bruker kreditten på nytt.",
+          "acknowledge": "Jeg forstår: les dem på nytt likevel",
+          "regenerateInstead": "Lag den rapporten på nytt"
+        },
+        "kind": {
+          "automatic": "automatisk",
+          "requested": "på forespørsel"
+        },
+        "anticipateCycle": "Den automatiske rapporten som pågår, dekker fra {from} til i går: vi lager den nå for hele perioden, og den neste starter fra i dag.",
+        "busy": "Det pågår allerede en behandling for denne virksomheten, startet av {who} {when}.",
+        "busyUnknown": "Det pågår allerede en behandling for denne virksomheten.",
+        "busyOpen": "Se behandlingen",
+        "automaticPending": "Den automatiske rapporten for denne perioden er under forberedelse: den er klar etter neste nattlige behandling.",
+        "retention": "Denne rapporten dekker dager for mer enn 11 måneder siden: den kan ikke lenger lages på nytt.",
+        "noCalls": "Ingen samtaler å analysere i denne perioden.",
+        "failed": "Forespørselen kunne ikke gjennomføres. Prøv igjen senere.",
+        "queued": "I kø: den starter om litt.",
+        "working": "Under forberedelse…",
+        "progress": "{done} av {total} samtaler analysert.",
+        "doneReport": "Rapporten er klar.",
+        "doneRecompute": "Analysen er ferdig: {written} samtaler oppdatert.",
+        "openReport": "Åpne rapporten",
+        "cancelJob": "Avbryt behandlingen",
+        "cancelReport": "Avbryt: rapporten blir ikke skrevet, og det brukes ingen kreditt.",
+        "cancelRecompute": "Den stopper etter samtalen som pågår. Samtalene som allerede er analysert, blir værende, og de har brukt virksomhetens kreditt.",
+        "cancelled": "Behandlingen er avbrutt.",
+        "keepOpen": "Du kan lukke dette vinduet: behandlingen fortsetter, og du finner den under Behandling."
+      },
+      "recompute": {
+        "banner": "{n} samtaler behandlet i denne perioden har ikke den automatiske analysen ennå, så utfall, emner og kvalitet tar dem ikke med.",
+        "cannotChange": "En ny analyse endrer ikke samtaler uten dialog (den som ringte, sa ikke noe, eller det var ingen kreditt).",
+        "action": "Analyser dem nå"
+      },
+      "silent": {
+        "title": "Oppringere som ikke sa noe",
+        "text": "I {n} samtaler la den som ringte, på uten å si noe. Det henger ofte sammen med hilsenen: sjekk at den er kort og tydelig.",
+        "link": "Sjekk hilsenen"
+      },
+      "requests": {
+        "title": "Oppringernes ønsker",
+        "purpose": "Hva oppringere ber om som assistentene ikke kan, gruppert etter kategori på tvers av alle virksomheter: for å bestemme hva som skal bygges og hva som skal med i abonnementene.",
+        "window": "Periode: {period}",
+        "sortLabel": "Sorter etter",
+        "sortScore": "Nyeste og mest utbredte",
+        "sortBusinesses": "Antall virksomheter",
+        "showDismissed": "Vis arkiverte",
+        "scoreHelp": "Hver virksomhet teller 1 hvis den spurte i de siste dagene rapportene dekker, en halv hvis to uker tidligere, en fjerdedel hvis fire uker tidligere.",
+        "none": "Ingen ønsker i denne perioden.",
+        "columns": {
+          "category": "Kategori",
+          "businesses": "Virksomheter",
+          "trend": "Utvikling",
+          "freshness": "Aktualitet"
+        },
+        "businesses": "{n} virksomheter",
+        "trend": "{sign}{n} sammenlignet med forrige periode",
+        "share": "{pct} % av virksomhetene med rapporter",
+        "histogramLabel": "Virksomheter per {bucket}, fra den eldste: {values}",
+        "bucket": {
+          "week": "uke",
+          "month": "måned"
+        },
+        "freshness": "Siste ønske {date} · {pct} % den siste {bucket}",
+        "reportDated": "{n} virksomheter datert ved rapportens slutt",
+        "nextAction": "Neste steg",
+        "examples": "Eksempler",
+        "hideExample": "Skjul",
+        "hideExampleOf": "Skjul eksemplet “{text}”",
+        "whoAsked": "Hvem som ba om det",
+        "businessesOf": "Virksomheter som ba om {category}",
+        "businessColumns": {
+          "name": "Virksomhet",
+          "lastSeen": "Siste ønske",
+          "said": "Hva de ba om"
+        },
+        "noBusinesses": "Ingen virksomhet i denne perioden.",
+        "dismiss": "Arkiver",
+        "dismissOf": "Arkiver {category}",
+        "restore": "Gjenopprett",
+        "restoreOf": "Gjenopprett {category}",
+        "dismissedAs": "Arkivert {date}: {reason}",
+        "reasonLabel": "Årsak",
+        "reason": {
+          "done": "Utført",
+          "not_relevant": "Ikke relevant",
+          "already_integrated": "Allerede integrert"
+        },
+        "note": "Notat (valgfritt)",
+        "confirmDismiss": "Arkiver",
+        "reopened": "Gjenåpnet: {n} nye virksomheter har bedt om det etter at det ble arkivert {date}.",
+        "status": {
+          "rising": "Økende",
+          "steady": "Stabil",
+          "falling": "Synkende",
+          "stale": "Ikke etterspurt i det siste"
+        }
       }
     }
   },

@@ -396,6 +396,10 @@ async function setupApiMocks(page, overrides = {}) {
         resolution: { callsWithValue: 0, totals: {}, previousTotals: {}, buckets: [] },
         message: { callsWithValue: 0, totals: {}, previousTotals: {}, buckets: [] },
         callsWithBooked: 0, booked: 0, transferred: 0, noConversation: {}, callsAnswered: 0,
+        // StarChat plan F3 (docs/execution-plans/2026-10-24-call-resolution-forwarded.md): the outcome over the calls
+        // where the caller asked something
+        callsWithRequest: 0, outcome: { callsWithValue: 0, totals: {}, previousTotals: {}, buckets: [] },
+        callsManaged: 0, recomputable: 0,
       }),
     })
   })
@@ -422,12 +426,16 @@ async function setupApiMocks(page, overrides = {}) {
     route.fulfill({
       status: 200,
       contentType: 'application/json',
-      body: JSON.stringify(overrides.assistants || { period: { from: 0, to: 0 }, sort: 'not_solved', businesses: [] }),
+      body: JSON.stringify(overrides.assistants || { period: { from: 0, to: 0 }, sort: 'not_solved', businesses: [], total: 0, from: 0, size: 10, direction: 'desc' }),
     })
   })
-  // The scope-wide lists (StarChat's analytics guide §10, M16): one page of `{total, items, asOf}`.
+  // "Richieste dei chiamanti" (`view=categories`) and a category's businesses, and MrCall's configuration
+  // suggestions: one page of `{total, items, asOf}` (StarChat's docs/briefs/2026-10-24-insights-reports-ux.md).
   await page.route('**/customer/insights/integrations*', (route) => {
-    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(overrides.integrations || { total: 0, items: [] }) })
+    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(overrides.requestCategories || { total: 0, asOf: 0, from: 0, to: 0, items: [] }) })
+  })
+  await page.route('**/customer/insights/integrations/*/businesses*', (route) => {
+    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(overrides.requestBusinesses || { total: 0, asOf: 0, items: [] }) })
   })
   await page.route('**/customer/insights/config-suggestions*', (route) => {
     route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(overrides.configSuggestions || { total: 0, items: [] }) })
@@ -435,10 +443,17 @@ async function setupApiMocks(page, overrides = {}) {
   // The list (`reports?businessId=...`), registered before the single report so the single
   // report's own route, more specific, is the one Playwright checks first.
   await page.route('**/customer/insights/reports*', (route) => {
-    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(overrides.reports || []) })
+    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(overrides.reports || { items: [], total: 0, asOf: 0, schedule: { cadenceDays: 0 } }) })
+  })
+  await page.route('**/customer/insights/jobs*', (route) => {
+    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(overrides.jobs || { total: 0, items: [] }) })
   })
   await page.route('**/customer/insights/reports/*', (route) => {
     route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(overrides.report || null) })
+  })
+  // registered after the single report, so that Playwright, checking the last registered first, answers it here
+  await page.route('**/customer/insights/reports/overlap*', (route) => {
+    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(overrides.overlap || { past: [] }) })
   })
 }
 

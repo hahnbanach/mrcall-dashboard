@@ -1881,7 +1881,8 @@
         "unresolved": "Lahendamata",
         "handed_over": "Edastatud inimesele",
         "caller_left": "Rääkis, kuid ei öelnud, mida soovis",
-        "spam_wrong_number": "Rämpspost või vale number"
+        "spam_wrong_number": "Rämpspost või vale number",
+        "forwarded": "Palve edastatud ettevõttele"
       },
       "message": {
         "complete": "Täielik sõnum",
@@ -1938,7 +1939,9 @@
         "transferredOff": "Kõik kõned",
         "unansweredLabel": "Vastuseta küsimused",
         "unansweredOn": "Vastuseta küsimusega",
-        "unansweredOff": "Kõik kõned"
+        "unansweredOff": "Kõik kõned",
+        "business": "Ettevõte",
+        "noBusinessFound": "Selle nimega ettevõtet ei leitud"
       },
       "notAvailableYet": "Pole veel saadaval.",
       "howCallsWent": {
@@ -1979,8 +1982,6 @@
         "countOfTotal": "{count} kõnet {total}-st"
       },
       "reports": {
-        "title": "Kõnearuanded",
-        "none": "Ükski aruanne ei kata seda perioodi.",
         "topicsTitle": "Teemad",
         "newTopic": "Uus",
         "themeIncludes": "Hõlmab: {labels}",
@@ -1991,8 +1992,24 @@
         "businessInfoTitle": "Mida ainult sina saad oma assistendile öelda",
         "integrationTitle": "Ühendatav süsteem",
         "mrcallConfigTitle": "MrCalli seadistussoovitused",
-        "loadMore": "Näita varasemaid aruandeid",
-        "onRequest": "Tellimisel"
+        "panel": {
+          "cadence": "MrCall koostab sinu ettevõtte kõnedest aruande iga {days} päeva järel. Iga aruanne kulutab ettevõtte krediiti.",
+          "next": "Järgmine saabub {date} ja katab ajavahemiku {from}–{to}.",
+          "retry": "Aruanne perioodi {from}–{to} kohta ei õnnestunud: seda proovitakse uuesti täna öösel.",
+          "settings": "Sagedust saad muuta ettevõtte seadetes (0 = aruandeid ei tehta).",
+          "settingsLink": "Ava ettevõtte seaded",
+          "off": "Automaatsed aruanded ei ole aktiivsed. Saad need ettevõtte seadetes sisse lülitada või tellida aruande enda valitud perioodi kohta.",
+          "skipped": "Aruanne perioodi {period} kohta on edasi lükatud: krediiti ei piisa. Pärast järgmist täiendust koostame aruande viimase {days} päeva kohta. Varasemad päevad jäävad statistikasse ja neid saab analüüsida tellitava aruandega."
+        },
+        "type": {
+          "automatic": "Automaatne",
+          "requested": "Tellimisel",
+          "onRequestHelp": "Loodud, kui keegi seda palus, valitud perioodi kohta. See ei asenda automaatseid aruandeid."
+        },
+        "base": "Põhineb {analysed} kõnel nendest {managed} kõnest, mida assistent perioodi jooksul käsitles.",
+        "baseOld": "Põhineb {analysed} analüüsitud kõnel.",
+        "baseOldNote": "10. oktoobrile eelnenud kõnede kohta me ei tea, mitut assistent käsitles.",
+        "excluded": "Välja jäetud: {silent} kõnet, kus helistaja ei rääkinud, {credit} tagasi lükatud krediidi puudumise tõttu."
       },
       "assistants": {
         "title": "Ülevaatamist vajavad assistendid",
@@ -2033,7 +2050,7 @@
           "extractionIssues": "Eraldamine"
         },
         "legend": {
-          "notSolved": "kõnedest, kus helistaja midagi küsis (lahendatud, lahendamata või edasi antud)",
+          "notSolved": "lahendamata, lisaks ettevõttele puuduliku sõnumiga edastatud palved, nende kõnede seast, kus helistaja midagi küsis",
           "callerSilent": "vastatud kõnedest",
           "notAnswered": "assistendini jõudnud kõnedest",
           "callerLeft": "tulemusega kõnedest",
@@ -2043,32 +2060,30 @@
           "extractionIssues": "kõned, mille andmete eraldamine ebaõnnestus, kõnedest, kus eraldamine tehti"
         },
         "legendTitle": "Kuidas iga veergu loetakse",
-        "assessedShort": "hinnatud"
+        "assessedShort": "hinnatud",
+        "search": "Otsi ettevõtet nime järgi",
+        "searchButton": "Otsi",
+        "clearSearch": "Tühjenda otsing “{term}”",
+        "none": "Selles perioodis pole ühtegi ülevaatamist vajavat assistenti.",
+        "noneFound": "Selles perioodis pole ettevõtet nimega “{term}”.",
+        "healthTitle": "Konto",
+        "health": {
+          "ok": "Korras",
+          "creditLow": "Krediiti vähe",
+          "inDebt": "Võlgnevus",
+          "unknown": "Teadmata",
+          "planOther": "Pakett ei ole aktiivne"
+        }
       },
       "scope": {
-        "title": "Integratsioonid ja küsitud teave",
         "allBusinesses": "Kõigis ettevõtetes, mida näed, viimase 30 päeva jooksul.",
         "none": "Veel pole midagi näidata.",
-        "saidBy": "{businesses}, {reports}",
         "configSuggestionsTitle": "MrCalli seadistussoovitused",
-        "loading": "Laadimine…",
-        "saidByLabel": "Küsinud:",
-        "andMore": "ja veel {count}",
-        "loadMoreIntegrations": "Laadi rohkem integratsioone",
-        "loadMoreSuggestions": "Laadi rohkem soovitusi",
-        "template": "Pakett: {template}",
-        "reportEnding": "Aruanne kuni {date}",
-        "kinds": {
-          "integration": "Integratsioon",
-          "business_info": "Ettevõtte teave",
-          "needs_integration_gap": "Vastamata: vajab integratsiooni"
-        },
-        "businessesCount": "1 ettevõte | {n} ettevõtet",
-        "reportsCount": "1 aruanne | {n} aruannet",
-        "shownIntegrations": "Näidatud {shown}/{total} kirjet",
-        "shownSuggestions": "Näidatud {shown}/{total} ettevõtet",
-        "moreFailed": "Järgmist lehte ei õnnestunud laadida.",
-        "retry": "Proovi uuesti"
+        "columns": {
+          "business": "Ettevõte",
+          "reportEnding": "Aruanne, mis lõpeb",
+          "suggestions": "Soovitused"
+        }
       },
       "filterBar": {
         "title": "Aktiivsed filtrid",
@@ -2084,6 +2099,265 @@
         "scopeNote": "See jaotis: kõik ettevõtted, mida näed, viimased 30 päeva",
         "notApplied": "Filtrid, mis sellele jaotisele ei kehti",
         "ownerNameSource": "selle omaniku ettevõtte kontaktisiku nimi"
+      },
+      "outcome": {
+        "title": "Nende kõnede tulemus, kus helistaja midagi küsis",
+        "resolved": "Lahendatud kõne ajal",
+        "forwarded": "Palve edastatud ettevõttele",
+        "forwarded_complete": "täieliku sõnumiga",
+        "forwarded_incomplete": "puuduliku sõnumiga",
+        "handed_over": "Edastatud inimesele",
+        "unresolved": "Lahendamata",
+        "forwardedHelp": "Assistent ei saanud sellega kõne ajal hakkama ja võttis palve üles, et ettevõte saaks selle ära teha.",
+        "notYet": "See tulemus ilmub, kui server hakkab lugema ettevõttele edastatud palveid."
+      },
+      "state": {
+        "loading": "Laadin…",
+        "updating": "Uuendan…",
+        "error": "Seda jaotist ei õnnestunud laadida.",
+        "retry": "Proovi uuesti",
+        "actionFailed": "See ei õnnestunud. Proovi uuesti."
+      },
+      "pager": {
+        "range": "{from}–{to} / {total}",
+        "label": "Lehed: {name}",
+        "previous": "Eelmine leht",
+        "next": "Järgmine leht",
+        "page": "Leht {n}",
+        "sortBy": "Sorteeri",
+        "descending": "Kahanev",
+        "ascending": "Kasvav"
+      },
+      "tabs": {
+        "label": "Statistika jaotised",
+        "overview": "Ülevaade",
+        "reports": "Aruanded",
+        "jobs": "Töötlemine"
+      },
+      "free": {
+        "paidUnavailable": "Saadaval tasulise paketiga.",
+        "seePlans": "Vaata pakette"
+      },
+      "requester": {
+        "you": "Sina",
+        "owner": "{name} (omanik)",
+        "ownerNoName": "Omanik",
+        "staff": "MrCall või edasimüüja"
+      },
+      "status": {
+        "ready": "Valmis",
+        "preparing": "Koostamisel",
+        "queued": "Ootel",
+        "retryTomorrow": "Uus katse homme",
+        "failed": "Ei õnnestunud",
+        "postponed": "Edasi lükatud",
+        "noCalls": "Analüüsitavaid kõnesid pole",
+        "notRun": "Ei käivitatud",
+        "notRunCredit": "Ei käivitatud: krediiti ei piisa",
+        "stoppedCredit": "Peatatud: krediiti ei piisa",
+        "cancelled": "Tühistatud",
+        "recomputeStopped": "Peatatud: krediiti ei piisa. {done} kõnet {total}-st analüüsiti ettevõtte krediidiga. Teisi ei analüüsitud."
+      },
+      "reportsTab": {
+        "scheduleTitle": "Automaatsed aruanded",
+        "request": "Telli aruanne",
+        "anticipate": "Koosta kohe",
+        "recentTitle": "Hiljuti tellitud",
+        "historyTitle": "Kõik aruanded",
+        "filterStatus": "Olek",
+        "filterType": "Tüüp",
+        "clearFilters": "Tühjenda filtrid",
+        "none": "Aruandeid veel pole.",
+        "noneFiltered": "Ükski aruanne ei vasta nendele filtritele.",
+        "days": "{days} päeva",
+        "callsOfManaged": "{calls} / {managed} käsitletust",
+        "callsAnalysed": "{calls} analüüsitud",
+        "automaticBy": "Automaatne",
+        "open": "Ava",
+        "regenerate": "Koosta uuesti",
+        "regenerateOf": "Koosta aruanne {period} uuesti",
+        "rerun": "Proovi uuesti",
+        "rerunOf": "Proovi aruannet {period} uuesti",
+        "delete": "Kustuta",
+        "deleteOf": "Kustuta aruanne {period}",
+        "jobReport": "Aruanne {period}",
+        "jobRecompute": "Kõnede {period} analüüs",
+        "jobAnticipate": "Automaatne aruanne koostatud kohe",
+        "jobRegenerate": "Aruanne koostatud uuesti",
+        "jobRerun": "Automaatset aruannet {period} proovitud uuesti",
+        "columns": {
+          "period": "Periood",
+          "type": "Tüüp",
+          "revision": "Versioon",
+          "status": "Olek",
+          "calls": "Kõned",
+          "requestedBy": "Tellija",
+          "createdAt": "Loodud",
+          "actions": "Toimingud"
+        }
+      },
+      "jobs": {
+        "title": "Töötlemine",
+        "purpose": "Selle ettevõtte tellitud ja uuesti koostatud aruanded ning varasemate kõnede analüüsid, koos tellija ja iga töö lõpptulemusega.",
+        "none": "Selle ettevõtte jaoks pole veel midagi töödeldud.",
+        "progress": "{done} / {total} kõnet",
+        "estimate": "Valmistan päringut ette",
+        "columns": {
+          "what": "Mis",
+          "status": "Olek",
+          "progress": "Edenemine",
+          "requestedBy": "Tellija",
+          "createdAt": "Alustatud",
+          "result": "Tulemus"
+        }
+      },
+      "reportDetail": {
+        "back": "Tagasi aruannete juurde",
+        "title": "Kõnearuanne, {period}",
+        "notFound": "Seda aruannet ei ole või see ei ole enam saadaval.",
+        "baseTitle": "Milliseid kõnesid see luges",
+        "newerCalls": "Pärast selle aruande kirjutamist on nendest päevadest analüüsitud veel {n} kõnet: koosta see uuesti, et need kaasata.",
+        "addAnswer": "Lisa vastus",
+        "qualityTitle": "Vastuseta jäänud küsimused võrreldes eelneva perioodiga",
+        "qualityReason": "Põhjus",
+        "qualityNow": "Need päevad",
+        "qualityBefore": "Eelnev periood",
+        "qualityBase": "Kõned loetud nendest {calls} kõnest, mille kohta see kontroll on salvestatud.",
+        "draftAdded": "Lisasime küsimuse sinu küsimuste ja vastuste hulka: kirjuta vastus ja salvesta.",
+        "draftPresent": "See küsimus on juba sinu küsimuste ja vastuste hulgas."
+      },
+      "deleteReport": {
+        "title": "Kustuta aruanne",
+        "what": "Aruanne {period} peidetakse kõigi eest koos kõigi selle versioonidega.",
+        "reason": "Miks see kustutatakse",
+        "confirm": "Kustuta"
+      },
+      "request": {
+        "title": {
+          "report": "Telli aruanne",
+          "regenerate": "Koosta aruanne uuesti",
+          "recompute": "Analüüsi perioodi kõned",
+          "anticipate": "Koosta automaatne aruanne kohe",
+          "rerun": "Proovi automaatset aruannet uuesti"
+        },
+        "periodLabel": "Periood",
+        "preset": "Viimased {days} päeva",
+        "custom": "Vali päevad",
+        "periodHint": "Päevad on ettevõtte omad, kuni eilse päevani kaasa arvatud.",
+        "selected": "Ajavahemik {from}–{to} ({days} päeva)",
+        "continue": "Jätka",
+        "cancel": "Tühista",
+        "close": "Sulge",
+        "preparing": "Valmistame päringut ette…",
+        "confirm": "See töötlus kulutab ettevõtte {business} krediiti. Kas soovid jätkata?",
+        "confirmPlatform": "Selle töötluse eest tasub MrCall: ettevõtte krediiti ei kulutata. Kas soovid jätkata?",
+        "raceNote": "Kui kõned kulutavad vahepeal krediiti, võib töötlus jätta väikese võla.",
+        "platformPays": "MrCalli kulul: ettevõte ei kuluta krediiti",
+        "confirmButton": "Kinnita",
+        "notEnoughCredit": "Sellele töötlusele ei piisa krediiti.",
+        "reserve": "Ettevõtte krediit on tasemel, mille me kõnede jaoks kõrvale jätame. Täienda krediiti või lülita sisse automaatne täiendamine, et seda funktsiooni kasutada.",
+        "shorter": "Proovi lühemat perioodi",
+        "topUp": "Täienda",
+        "enableTopUp": "Lülita sisse automaatne täiendamine",
+        "overlap": {
+          "same": "Nende päevade kohta on aruanne juba olemas.",
+          "cycle": "Järgmine automaatne aruanne loeb need päevad uuesti ja kulutab krediiti uuesti.",
+          "partial": "Need päevad on juba osaliselt aruandes {period} ({kind}). Uus aruanne loeb need uuesti ja kulutab krediiti uuesti.",
+          "acknowledge": "Saan aru: loe need ikkagi uuesti",
+          "regenerateInstead": "Koosta see aruanne uuesti"
+        },
+        "kind": {
+          "automatic": "automaatne",
+          "requested": "tellitud"
+        },
+        "anticipateCycle": "Pooleliolev automaatne aruanne katab ajavahemiku {from} kuni eilseni: koostame selle nüüd kogu perioodi kohta ja järgmine algab tänasest.",
+        "busy": "Selle ettevõtte jaoks on juba töötlus pooleli, mille algatas {who} {when}.",
+        "busyUnknown": "Selle ettevõtte jaoks on juba töötlus pooleli.",
+        "busyOpen": "Vaata töötlust",
+        "automaticPending": "Selle perioodi automaatne aruanne on koostamisel: see on valmis pärast järgmist öist töötlust.",
+        "retention": "See aruanne katab päevi, mis on üle 11 kuu vanad: seda ei saa enam uuesti koostada.",
+        "noCalls": "Selles perioodis pole analüüsitavaid kõnesid.",
+        "failed": "Päringut ei õnnestunud lõpule viia. Proovi hiljem uuesti.",
+        "queued": "Ootel: algab varsti.",
+        "working": "Koostamisel…",
+        "progress": "{done} kõnet {total}-st analüüsitud.",
+        "doneReport": "Aruanne on valmis.",
+        "doneRecompute": "Analüüs lõpetatud: {written} kõnet uuendatud.",
+        "openReport": "Ava aruanne",
+        "cancelJob": "Tühista töötlus",
+        "cancelReport": "Tühista: aruannet ei kirjutata ja krediiti ei kulutata.",
+        "cancelRecompute": "See peatub pärast pooleliolevat kõnet. Juba analüüsitud kõned jäävad alles ja need on kulutanud ettevõtte krediiti.",
+        "cancelled": "Töötlus tühistatud.",
+        "keepOpen": "Võid selle akna sulgeda: töötlus jätkub ja leiad selle jaotisest Töötlemine."
+      },
+      "recompute": {
+        "banner": "{n} sellel perioodil käsitletud kõnel ei ole veel automaatset analüüsi, mistõttu tulemused, teemad ja kvaliteet neid ei arvesta.",
+        "cannotChange": "Uus analüüs ei muuda kõnesid, kus vestlust ei toimunud (helistaja ei rääkinud või krediiti ei olnud).",
+        "action": "Analüüsi need nüüd"
+      },
+      "silent": {
+        "title": "Helistajad, kes ei rääkinud",
+        "text": "{n} kõnes pani helistaja toru ära, ilma et oleks midagi öelnud. See sõltub sageli tervitusest: kontrolli, et see oleks lühike ja selge.",
+        "link": "Kontrolli tervitust"
+      },
+      "requests": {
+        "title": "Helistajate soovid",
+        "purpose": "Mida helistajad paluvad, millega assistendid hakkama ei saa, rühmitatud kategooria järgi kõigi ettevõtete lõikes: et otsustada, mida ehitada ja mida pakettidesse lisada.",
+        "window": "Periood: {period}",
+        "sortLabel": "Järjesta",
+        "sortScore": "Viimased ja levinuimad",
+        "sortBusinesses": "Ettevõtete arv",
+        "showDismissed": "Näita arhiveeritud",
+        "scoreHelp": "Iga ettevõte loeb 1, kui küsis aruannetega kaetud viimastel päevadel, poole, kui kaks nädalat varem, veerandi, kui neli nädalat varem.",
+        "none": "Selles perioodis soove pole.",
+        "columns": {
+          "category": "Kategooria",
+          "businesses": "Ettevõtted",
+          "trend": "Suund",
+          "freshness": "Värskus"
+        },
+        "businesses": "{n} ettevõtet",
+        "trend": "{sign}{n} võrreldes eelmise perioodiga",
+        "share": "{pct} % aruannetega ettevõtetest",
+        "histogramLabel": "Ettevõtted {bucket} kohta, vanimast alates: {values}",
+        "bucket": {
+          "week": "nädal",
+          "month": "kuu"
+        },
+        "freshness": "Viimane soov {date} · {pct} % viimase {bucket} jooksul",
+        "reportDated": "{n} ettevõtet dateeritud aruande lõpu järgi",
+        "nextAction": "Järgmine samm",
+        "examples": "Näited",
+        "hideExample": "Peida",
+        "hideExampleOf": "Peida näide “{text}”",
+        "whoAsked": "Kes palus",
+        "businessesOf": "Ettevõtted, kes palusid: {category}",
+        "businessColumns": {
+          "name": "Ettevõte",
+          "lastSeen": "Viimane soov",
+          "said": "Mida nad palusid"
+        },
+        "noBusinesses": "Selles perioodis ettevõtteid pole.",
+        "dismiss": "Arhiveeri",
+        "dismissOf": "Arhiveeri {category}",
+        "restore": "Taasta",
+        "restoreOf": "Taasta {category}",
+        "dismissedAs": "Arhiveeritud {date}: {reason}",
+        "reasonLabel": "Põhjus",
+        "reason": {
+          "done": "Tehtud",
+          "not_relevant": "Ei ole asjakohane",
+          "already_integrated": "Juba integreeritud"
+        },
+        "note": "Märkus (valikuline)",
+        "confirmDismiss": "Arhiveeri",
+        "reopened": "Taasavatud: {n} uut ettevõtet on seda palunud pärast arhiveerimist {date}.",
+        "status": {
+          "rising": "Kasvab",
+          "steady": "Stabiilne",
+          "falling": "Langeb",
+          "stale": "Viimasel ajal ei ole küsitud"
+        }
       }
     }
   },

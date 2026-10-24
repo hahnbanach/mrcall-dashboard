@@ -1,170 +1,152 @@
 <template>
-  <div v-if="status !== 'absent'" class="analytics-section call-insights-section assistants-section" :aria-busy="status === 'loading' ? 'true' : 'false'">
-    <h3 class="section-title">{{ $t("components.callInsights.assistants.title") }}</h3>
-    <div v-if="status === 'unavailable'" class="insights-note">
-      {{ $t("components.callInsights.notAvailableYet") }}
-    </div>
-    <!-- While a new answer is on its way the table stays, so the page does not shrink under the row
-         just clicked (the UX review of outcome 10: on a phone the view landed on another section). -->
-    <template v-else-if="(status === 'ok' || status === 'loading') && data">
-      <div class="assistants-sort">
-        <Button
-          v-if="selectedBusinessId"
-          type="button"
-          size="small"
-          severity="secondary"
-          icon="pi pi-times"
-          class="assistants-clear"
-          :label="$t('components.callInsights.assistants.showAll')"
-          @click="$emit('clear-business')"
-        />
-        <label class="filter-label">{{ $t("components.callInsights.assistants.sortLabel") }}</label>
-        <Dropdown
-          :modelValue="sort"
-          :options="sortOptions"
-          optionLabel="label"
-          optionValue="value"
-          :ariaLabel="$t('components.callInsights.assistants.sortLabel')"
-          class="assistants-sort-select"
-          @update:modelValue="$emit('sort-change', $event)"
-        />
-      </div>
-      <div class="table-container">
-        <DataTable
-          :value="businesses"
-          :rows="10"
-          :paginator="businesses.length > 10"
-          stripedRows
-          scrollable
-          selectionMode="single"
-          dataKey="businessId"
-          :selection="selectedRow"
-          :metaKeySelection="false"
-          @row-select="onRowSelect"
-          @row-unselect="onRowSelect"
-        >
-          <!-- Frozen: the row's business stays in view while the shares scroll sideways. -->
-          <Column frozen class="assistant-business-column" :header="$t('components.callInsights.assistants.businessId')">
-            <template #body="slotProps">
-              <span class="assistant-business">
-                <span class="assistant-business-name">{{ businessLabel(slotProps.data) }}</span>
-                <span v-if="slotProps.data.businessName" class="assistant-business-id">{{ slotProps.data.businessId }}</span>
-                <span v-else class="assistant-business-id">{{ $t("components.callInsights.assistants.noName") }}</span>
-              </span>
-            </template>
-          </Column>
-          <Column>
-            <template #header>
-              <span class="assistant-header">{{ $t("components.callInsights.assistants.short.calls") }}</span>
-            </template>
-            <template #body="slotProps">{{ slotProps.data.totalCalls }}</template>
-          </Column>
-          <!-- Short headers on one line; the full wording and the base of each share are in the
-               legend under the table and in the header's tooltip. -->
-          <Column v-for="column in shareColumns" :key="column.sort">
-            <template #header>
-              <span class="assistant-header" :title="headerTitle(column)">
-                {{ $t("components.callInsights.assistants.short." + column.label) }}
-                <Tag
-                  v-if="column.assessed"
-                  severity="secondary"
-                  :value="$t('components.callInsights.assistants.assessedShort')"
-                  :aria-label="$t('components.callInsights.assessedMarking')"
-                  :title="$t('components.callInsights.assessedMarking')"
-                  class="insight-assessed-tag"
-                />
-              </span>
-            </template>
-            <template #body="slotProps"><span class="assistant-share">{{ shareOf(slotProps.data, column.sort) }}</span></template>
-          </Column>
-        </DataTable>
-      </div>
-      <dl class="assistants-legend" :aria-label="$t('components.callInsights.assistants.legendTitle')">
-        <template v-for="column in shareColumns" :key="column.sort">
-          <dt>{{ $t("components.callInsights.assistants.short." + column.label) }}</dt>
-          <dd>
-            {{ $t("components.callInsights.assistants." + column.label) }}<span v-if="column.assessed">
-              ({{ $t("components.callInsights.assessedMarking") }})</span>: {{ $t("components.callInsights.assistants.legend." + column.label) }}
-          </dd>
-        </template>
-      </dl>
-    </template>
-  </div>
+  <section v-if="table.status !== 'absent'" class="analytics-section call-insights-section assistants-section" aria-labelledby="assistants-title">
+    <h3 id="assistants-title" class="section-title">{{ $t("components.callInsights.assistants.title") }}</h3>
+    <form class="assistants-sort" role="search" @submit.prevent="applySearch">
+      <Button
+        v-if="selectedBusinessId"
+        type="button"
+        size="small"
+        severity="secondary"
+        icon="pi pi-times"
+        class="assistants-clear"
+        :label="$t('components.callInsights.assistants.showAll')"
+        @click="$emit('clear-business')"
+      />
+      <InputText
+        v-model="searchInput"
+        type="search"
+        :aria-label="$t('components.callInsights.assistants.search')"
+        :placeholder="$t('components.callInsights.assistants.search')"
+        class="assistants-search"
+      />
+      <Button type="submit" size="small" outlined icon="pi pi-search" :label="$t('components.callInsights.assistants.searchButton')" />
+      <Button
+        v-if="search"
+        type="button" size="small" text icon="pi pi-times"
+        :label="$t('components.callInsights.assistants.clearSearch', { term: search })"
+        @click="clearSearch"
+      />
+    </form>
+    <PagedTable
+      :state="table"
+      :columns="columns"
+      :row-key="(row) => row.businessId"
+      :row-class="(row) => (row.businessId === selectedBusinessId ? 'assistant-selected' : null)"
+      :caption="$t('components.callInsights.assistants.title')"
+      :empty-text="search ? $t('components.callInsights.assistants.noneFound', { term: search }) : $t('components.callInsights.assistants.none')"
+    >
+      <template #cell-business="{ row }">
+        <span class="assistant-business">
+          <button
+            type="button"
+            class="assistant-business-name"
+            :aria-pressed="row.businessId === selectedBusinessId ? 'true' : 'false'"
+            @click="$emit('select-business', row.businessId)"
+          >{{ businessLabel(row) }}</button>
+          <span v-if="!row.businessName" class="assistant-business-id">{{ $t("components.callInsights.assistants.noName") }}</span>
+        </span>
+      </template>
+      <template #cell-calls="{ row }">{{ row.totalCalls }}</template>
+      <template v-for="column in shareColumns" :key="column.sort" #[cellSlot(column)]="{ row }">
+        <span class="assistant-share">{{ shareOf(row, column.sort) }}</span>
+      </template>
+      <template #cell-health="{ row }">
+        <span class="assistant-health">
+          <span v-for="word in healthOf(row)" :key="word" class="assistant-health-flag">{{ word }}</span>
+        </span>
+      </template>
+    </PagedTable>
+    <dl class="assistants-legend" :aria-label="$t('components.callInsights.assistants.legendTitle')">
+      <template v-for="column in shareColumns" :key="column.sort">
+        <dt>{{ $t("components.callInsights.assistants.short." + column.label) }}</dt>
+        <dd>
+          {{ $t("components.callInsights.assistants." + column.label) }}<span v-if="column.assessed">
+            ({{ $t("components.callInsights.assessedMarking") }})</span>: {{ $t("components.callInsights.assistants.legend." + column.label) }}
+        </dd>
+      </template>
+    </dl>
+  </section>
 </template>
 
 <script>
 import CallInsights from "@/utils/CallInsights";
+import PagedTable from "@/components/analytics/PagedTable.vue";
 
 /**
- * The per-business signals, sorted to find the assistants to review (brief outcomes 5 and 9): admin
- * and reseller only (StarChat answers any other role 404, which the parent reads as an absent
- * section). Every share here is the one StarChat sorts by, over the base the row returns beside its
- * count (`CallInsights.assistantShare`), so the column a business is sorted on always matches what
- * the column shows. Each business is shown by its name (StarChat's `businessName`), its id beside it,
- * or the id alone when StarChat has no name. The business the page is narrowed to is the table's
- * selection, and a control on the table itself widens the page again. "Unresolved" (`unresolved`
- * over `callsWithRequest`) and "caller left" (over `callsWithResolution`) are marked assessed, in their headers and sort options, since the
- * resolution is the assistant's own judgement; `caller_silent` and `not_answered` are facts.
+ * "Assistenti da rivedere" (docs/briefs/2026-10-24-insights-reports-ux.md in StarChat): the per-business signals,
+ * server-paged with their total, sortable on every header (StarChat sorts, `aria-sort` says the order), searched by
+ * company name, each business with its account health in words (no amount). Admin and reseller only (StarChat answers
+ * anyone else 404, and the section hides). Every share is the one StarChat sorts by, over the base the row returns
+ * beside its count (`CallInsights.assistantShare`); "Non risolte" is StarChat's `notSolved` over `callsWithRequest`
+ * (unresolved, and requests passed on with an incomplete message). A business's name selects it: the page narrows to
+ * it, and the control above the table widens it again. The table follows the page's filters (`body`).
  */
-// How each share is headed and offered as a sort; the columns follow StarChat's sort keys, in the
-// order `CallInsights.ASSISTANT_SORT_KEYS` holds them (`calls` is the plain count column).
 const SHARE_LABELS = {
-  not_solved: { label: "notSolved", option: "notSolved", assessed: true },
-  caller_silent: { label: "callerSilent", option: "callerSilent", assessed: false },
-  not_answered: { label: "notAnswered", option: "notAnswered", assessed: false },
-  caller_left: { label: "callerLeft", option: "callerLeft", assessed: true },
-  unanswered: { label: "unanswered", option: "unanswered", assessed: false },
-  checks: { label: "checks", option: "checks", assessed: false },
-  skill_errors: { label: "skillErrors", option: "skillErrors", assessed: false },
-  extraction_failures: { label: "extractionIssues", option: "extractionFailures", assessed: false },
+  not_solved: { label: "notSolved", assessed: true },
+  caller_silent: { label: "callerSilent", assessed: false },
+  not_answered: { label: "notAnswered", assessed: false },
+  caller_left: { label: "callerLeft", assessed: true },
+  unanswered: { label: "unanswered", assessed: false },
+  checks: { label: "checks", assessed: false },
+  skill_errors: { label: "skillErrors", assessed: false },
+  extraction_failures: { label: "extractionIssues", assessed: false },
 };
 const SHARE_COLUMNS = CallInsights.ASSISTANT_SORT_KEYS
   .filter((sort) => sort !== "calls")
   .map((sort) => ({ sort, ...SHARE_LABELS[sort] }));
 
 export default {
+  components: { PagedTable },
   props: {
-    status: { type: String, required: true },
-    data: { type: Object, default: null },
-    sort: { type: String, required: true },
-    // The business the page is narrowed to, marked in the table (brief outcome 10); null for none.
+    // the page's filters, as every other section sends them
+    body: { type: Object, default: null },
+    // the business the page is narrowed to, marked in the table; null for none
     selectedBusinessId: { type: String, default: null },
   },
-  emits: ["sort-change", "select-business", "clear-business", "names"],
+  emits: ["select-business", "clear-business", "names", "error"],
+  data() {
+    const user = () => this.$store.state.user;
+    return {
+      table: CallInsights.serverPage(
+        ({ offset, size, sort, direction }) => CallInsights.assistants(user(), this.body || {}, { sort, direction, from: offset, size, search: this.search || undefined }),
+        { sort: "not_solved", direction: "desc", read: (answer) => CallInsights.pageOf(answer, "businesses"), onError: (error) => this.$emit("error", error, "assistants") },
+      ),
+      searchInput: "",
+      search: "",
+    };
+  },
   computed: {
-    // Guards against a malformed or placeholder answer (an empty array, from a test's generic
-    // fallback), the same way CallOutcomes.vue and CallQuality.vue do.
-    businesses() {
-      return (this.data && this.data.businesses) || [];
-    },
-    selectedRow() {
-      return this.businesses.find((row) => row.businessId === this.selectedBusinessId) || null;
-    },
     shareColumns() {
       return SHARE_COLUMNS;
     },
-    sortOptions() {
+    columns() {
+      const short = (label) => this.$t("components.callInsights.assistants.short." + label);
       return [
-        { value: "calls", label: this.$t("components.callInsights.assistants.sortOptions.calls") },
-        ...SHARE_COLUMNS.map((column) => ({
-          value: column.sort,
-          label: this.$t("components.callInsights.assistants.sortOptions." + column.option),
-        })),
+        { key: "business", label: this.$t("components.callInsights.assistants.businessId"), class: "assistant-business-column" },
+        { key: "calls", label: short("calls"), sortKey: "calls" },
+        ...SHARE_COLUMNS.map((c) => ({ key: c.sort, label: short(c.label) + (c.assessed ? " (" + this.$t("components.callInsights.assistants.assessedShort") + ")" : ""), sortKey: c.sort })),
+        { key: "health", label: this.$t("components.callInsights.assistants.healthTitle") },
       ];
     },
   },
   watch: {
+    body: {
+      deep: true,
+      handler(value) { if (value) this.table.refresh(); },
+    },
     // The names this table knows, for the page's filter bar.
-    businesses(rows) {
+    "table.items"(rows) {
       const names = {};
       rows.forEach((row) => { if (row.businessName) names[row.businessId] = row.businessName; });
       this.$emit("names", names);
     },
   },
+  mounted() {
+    if (this.body) this.table.refresh();
+  },
   methods: {
-    headerTitle(column) {
-      return this.$t("components.callInsights.assistants." + column.label) + ": " +
-        this.$t("components.callInsights.assistants.legend." + column.label);
+    cellSlot(column) {
+      return "cell-" + column.sort;
     },
     businessLabel(row) {
       return CallInsights.businessLabel(row.businessName, row.businessId);
@@ -173,10 +155,29 @@ export default {
       const { count, base, percent } = CallInsights.assistantShare(row, sort);
       return this.$t("components.callInsights.assistants.shareOfTotal", { percent, count, total: base });
     },
-    // Clicking the selected row again (PrimeVue's unselect) keeps it chosen: widening the page is the
-    // explicit control above the table and in the filter bar.
-    onRowSelect(event) {
-      this.$emit("select-business", event.data.businessId);
+    // The account in words, no amount: a debt or low credit, and the plan's state when it is not plainly active
+    // (named as the plan page names it); "In regola" when none applies.
+    healthOf(row) {
+      const h = row.accountHealth;
+      if (!h) return [this.$t("components.callInsights.assistants.health.unknown")];
+      const words = [];
+      if (h.inDebt) words.push(this.$t("components.callInsights.assistants.health.inDebt"));
+      else if (h.creditLow) words.push(this.$t("components.callInsights.assistants.health.creditLow"));
+      const plan = h.subscriptionStatus;
+      if (plan && plan !== "ACTIVE") {
+        const key = "components.businesses.form.subscriptionStatusLabels." + plan;
+        words.push(this.$te(key) ? this.$t(key) : this.$t("components.callInsights.assistants.health.planOther"));
+      }
+      return words.length ? words : [this.$t("components.callInsights.assistants.health.ok")];
+    },
+    applySearch() {
+      this.search = this.searchInput.trim();
+      this.table.refresh();
+    },
+    clearSearch() {
+      this.searchInput = "";
+      this.search = "";
+      this.table.refresh();
     },
   },
 };
@@ -255,20 +256,46 @@ export default {
 
 // The frozen column needs an opaque background, or the shares show through it as they scroll under:
 // the header cell its own (its row has none), a body cell its row's (striped, selected).
+.assistant-business-name {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  font-weight: 600;
+  color: @mrcall_blue;
+  text-align: left;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.assistants-search {
+  min-width: 220px;
+}
+
+.assistant-health {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  white-space: nowrap;
+}
+
+:deep(tr.assistant-selected td), :deep(tr.assistant-selected td.assistant-business-column) {
+  background: @mrcall_bluette;
+}
+
+// The business stays in view while the shares scroll sideways (the review of D12); not on a phone, where the rows
+// are cards.
+@media screen and (min-width: 641px) {
+  :deep(th.assistant-business-column), :deep(td.assistant-business-column) {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    background: @mrcall_white;
+  }
+}
+
 :deep(.assistant-business-column) {
   min-width: 160px;
 }
 
-:deep(th.assistant-business-column) {
-  background: @mrcall_white;
-}
-
-:deep(td.assistant-business-column) {
-  background: inherit;
-}
-
-.insight-assessed-tag {
-  font-size: 10px;
-  font-weight: 600;
-}
 </style>

@@ -483,6 +483,7 @@ import phoneOperators from "@/utils/PhoneOperators";
 import axios from "axios";
 import { isSessionEnded } from "@/firebase/axiosConfig";
 import TupleVariable from "../../components/widgets/TupleVariable.vue";
+import { addDraftQuestion, KNOWLEDGE_BASE_SECTION } from "@/utils/KnowledgeBase";
 import TemplatedVariable from "../../components/widgets/TemplatedVariable.vue";
 import MultiselectVariable from "../../components/widgets/MultiselectVariable.vue";
 import TimeSlotsEditor from "@/components/widgets/TimeSlotsEditor.vue";
@@ -1083,6 +1084,7 @@ export default {
         // The URL decides which section opens. Not a push: this is the first render of the page
         // the person is already on.
         await this.switchToMenupage(this.$route.query?.section, { pushUrl: false })
+        this.applyDraftQuestion()
         if (this.$route.query.skillPhase && this.$route.query.skillInstance) {
           await this.openSkillTarget({ phase: this.$route.query.skillPhase, instanceId: this.$route.query.skillInstance })
         }
@@ -1094,6 +1096,21 @@ export default {
         this.setMessage("error", `${this.t("components.business.configuration.errorRetrievingDataMessage")} : ${error.message}`)
         return false
       })
+    },
+    // A report's "Aggiungi la risposta" (src/utils/KnowledgeBase.js): one pair added to the knowledge base with the
+    // question filled, unsaved until the person writes the answer and saves. The question leaves the address once
+    // read, so a reload or the back button does not add it again.
+    applyDraftQuestion() {
+      const question = this.$route.query?.draftQuestion
+      if (typeof question !== 'string' || question === '') return
+      if (this.selectedMenupage?.collection?.id === KNOWLEDGE_BASE_SECTION) {
+        const { outcome } = addDraftQuestion(this.business, this.variablesAnnotations, question)
+        if (outcome === 'added') this.setMessage("info", this.t("components.callInsights.reportDetail.draftAdded"))
+        else if (outcome === 'present') this.setMessage("info", this.t("components.callInsights.reportDetail.draftPresent"))
+      }
+      const query = { ...this.$route.query }
+      delete query.draftQuestion
+      this.$router.replace({ query }).catch((error) => console.debug("draftQuestion not removed from the address:", error))
     },
     async setMessage(severity, content, sticky = true, life = 0) {
       //severity: success, info, warn, error
