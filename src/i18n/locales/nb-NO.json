@@ -2358,6 +2358,11 @@
           "falling": "Synkende",
           "stale": "Ikke etterspurt i det siste"
         }
+      },
+      "admin": {
+        "reason": {
+          "reserve": "Reserve for samtaler"
+        }
       }
     }
   },

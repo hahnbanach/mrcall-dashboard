@@ -90,13 +90,13 @@
       <p v-if="interval && mode !== 'anticipate'" class="request-selected">{{ selectedText }}</p>
       <p v-if="mode === 'regenerate'" class="request-selected">{{ regenerateText }}</p>
       <p class="request-confirm">
-        {{ platformPays
+        {{ platformPaid
           ? $t("components.callInsights.request.confirmPlatform")
           : $t("components.callInsights.request.confirm", { business: businessName }) }}
       </p>
-      <p v-if="!platformPays" class="request-note">{{ $t("components.callInsights.request.raceNote") }}</p>
-      <label v-if="isAdmin" class="request-check">
-        <input v-model="platformPays" type="checkbox" />
+      <p v-if="!platformPaid" class="request-note">{{ $t("components.callInsights.request.raceNote") }}</p>
+      <label v-if="isAdmin && !freeForMrCall" class="request-check">
+        <input v-model="platformPays" type="checkbox" :disabled="submitting" />
         <span>{{ $t("components.callInsights.request.platformPays") }}</span>
       </label>
       <div class="request-actions">
@@ -240,6 +240,14 @@ export default {
     hasPeriod() {
       return this.mode === "report" || (this.mode === "recompute" && !this.fixedInterval);
     },
+    // A reseller's or an admin's work on a FREE business is MrCall's: StarChat makes it platform-paid whatever is asked
+    // (InsightsJobs.submit), so the dialog says so and offers no choice.
+    freeForMrCall() {
+      return this.role !== "owner" && !!this.business && this.business.subscriptionStatus === "FREE";
+    },
+    platformPaid() {
+      return this.freeForMrCall || (this.isAdmin && this.platformPays);
+    },
     canRegenerate() {
       return this.mode === "report";
     },
@@ -356,6 +364,11 @@ export default {
       this.overlap = null;
       this.acknowledged = false;
     },
+    // MrCall's cost is one of the work's arguments, which the estimate and its job must share (InsightsJobs.cap): a
+    // change of it is estimated again before the job can be created.
+    platformPays() {
+      if (this.step === "confirm") this.estimate();
+    },
   },
   beforeUnmount() {
     this.stopPolling();
@@ -434,6 +447,10 @@ export default {
       else if (this.mode === "regenerate") body.regenerates = this.regenerates.map((r) => ({ periodStart: r.periodStart, periodEnd: r.periodEnd, ...(r.requestId ? { requestId: r.requestId } : {}) }));
       else { body.from = this.interval.from; body.to = this.interval.to; }
       if (this.mode === "rerun") body.rerunAutomatic = true;
+      // the days already reported, acknowledged (a requested report only: StarChat refuses the option elsewhere)
+      if (this.mode === "report" && this.overlap && this.acknowledged) body.acknowledgeOverlap = true;
+      // only an admin asks it; on a FREE business StarChat sets it itself for a reseller or an admin
+      if (this.isAdmin && this.platformPays) body.platformPays = true;
       return body;
     },
     estimate() {
@@ -449,6 +466,15 @@ export default {
           if (refusal && refusal.code === "estimate_open" && refusal.jobId && this.reEstimates < 2) {
             this.reEstimates++;
             this.waitFor(refusal.jobId, () => this.estimate());
+            return;
+          }
+          // days StarChat finds already reported that the period step did not show: back there, with them
+          if (refusal && refusal.code === "overlap_unacknowledged" && this.hasPeriod && this.reEstimates < 2) {
+            this.reEstimates++;
+            this.overlap = null;
+            this.acknowledged = false;
+            this.step = "period";
+            this.checkPeriod();
             return;
           }
           this.fail(error);
@@ -475,8 +501,6 @@ export default {
       if (this.submitting || !this.estimateJob) return;
       this.submitting = true;
       const body = { ...this.work(), estimateJobId: this.estimateJob.jobId, idempotencyKey: this.requestKey };
-      if (this.overlap && this.acknowledged) body.acknowledgeOverlap = true;
-      if (this.isAdmin && this.platformPays) body.platformPays = true;
       CallInsights.createJob(this.user(), this.jobKind, body)
         .then((job) => {
           this.job = job;

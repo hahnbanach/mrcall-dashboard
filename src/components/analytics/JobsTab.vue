@@ -13,6 +13,7 @@
       <template #cell-status="{ row }">
         <span>{{ $t("components.callInsights.status." + statusOf(row)) }}</span>
         <span v-if="row.status === 'refused' && row.error === 'automatic_pending'" class="jobs-detail">{{ $t("components.callInsights.request.automaticPending") }}</span>
+        <span v-else-if="reasonOf(row)" class="jobs-detail">{{ $t("components.callInsights.admin.reason." + reasonOf(row)) }}</span>
         <span v-else-if="row.status === 'ceiling_reached' && progressOf(row)" class="jobs-detail">
           {{ $t("components.callInsights.status.recomputeStopped", { done: progressOf(row).written, total: progressOf(row).total }) }}
         </span>
@@ -100,6 +101,9 @@ export default {
     },
     statusOf(row) {
       return InsightsReports.jobStatusKey(row);
+    },
+    reasonOf(row) {
+      return InsightsReports.refusalReason(row);
     },
     progressOf(row) {
       return InsightsReports.jobProgress(row);

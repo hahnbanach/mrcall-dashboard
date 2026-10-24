@@ -127,7 +127,10 @@ function reportStatusKey(row) {
     return key;
 }
 
-const CREDIT_ERRORS = ["no_credit", "reserve", "over_ceiling"];
+// Refused because the business's credit could not pay for the work. A refusal for the reserve kept for calls is not
+// "not enough credit" (the credit may well cover the work; it would leave the calls short): its reason is said apart
+// (`refusalReason`), as is a work above its cap (`over_ceiling`).
+const CREDIT_ERRORS = ["no_credit"];
 
 // A job (`InsightsJobStatus`, with its error and counts): queued, running, done, ceiling_reached, failed, cancelled,
 // refused. A report job done with no request wrote nothing: no call to analyse.
@@ -144,6 +147,12 @@ function jobStatusKey(job) {
         case "refused": return CREDIT_ERRORS.includes(job.error) ? "notRunCredit" : "notRun";
         default: throw new Error("InsightsReports.jobStatusKey: unknown status " + status);
     }
+}
+
+// The reason a refused job gives beside its state, as a key under `components.callInsights.admin.reason`, or null.
+const REFUSAL_REASONS = ["reserve"];
+function refusalReason(job) {
+    return job && job.status === "refused" && REFUSAL_REASONS.includes(job.error) ? job.error : null;
 }
 
 function jobOpen(job) {
@@ -219,6 +228,7 @@ export default {
     isoDayLabel,
     reportStatusKey,
     jobStatusKey,
+    refusalReason,
     jobOpen,
     jobProgress,
     requester,

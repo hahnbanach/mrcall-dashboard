@@ -2372,6 +2372,11 @@
           "falling": "En descenso",
           "stale": "Ya no se pide últimamente"
         }
+      },
+      "admin": {
+        "reason": {
+          "reserve": "Reserva para las llamadas"
+        }
       }
     }
   },

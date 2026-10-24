@@ -2363,6 +2363,11 @@
           "falling": "Falling",
           "stale": "No longer asked recently"
         }
+      },
+      "admin": {
+        "reason": {
+          "reserve": "Reserve for calls"
+        }
       }
     }
   },

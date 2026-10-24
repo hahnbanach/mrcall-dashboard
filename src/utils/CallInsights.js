@@ -135,7 +135,9 @@ const ASSISTANT_SHARES = {
     not_answered: (row) => share(row.noConversation && row.noConversation.not_answered, row.callsOffered),
     caller_left: (row) => share(row.resolution && row.resolution.caller_left, row.callsWithResolution),
     unanswered: (row) => share(row.callsWithUnanswered, row.callsWithUnansweredRecorded),
-    checks: (row) => share(sumOf(row.checks, CHECK_KEYS), row.callsWithChecks),
+    // the calls with at least one check true, each call once, as StarChat sorts the column (`callsWithAnyCheck`): a sum
+    // of the checks counted a call with two of them twice, and could pass 100% (the U17b review, B3)
+    checks: (row) => share(row.callsWithAnyCheck, row.callsWithChecks),
     skill_errors: (row) => share(row.callsWithSkillErrors, row.totalCalls),
     // Over the calls whose extraction ran (`ok`, `http_error`, `failed`), as the quality section counts
     // the same problems (`extractionProblems`). No fallback to totalCalls, which also counts calls never

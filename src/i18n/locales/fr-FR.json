@@ -2360,6 +2360,11 @@
           "falling": "En baisse",
           "stale": "Plus demandée récemment"
         }
+      },
+      "admin": {
+        "reason": {
+          "reserve": "Réserve pour les appels"
+        }
       }
     }
   },

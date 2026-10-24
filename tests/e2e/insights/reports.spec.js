@@ -203,3 +203,19 @@ test.describe('the Report tab (admin)', () => {
     expect(asked.estimate[0].body).toMatchObject({ businessId: BUSINESS_ID, kind: 'report', from: writtenOff.periodStart, to: writtenOff.periodEnd, rerunAutomatic: true })
   })
 })
+
+test.describe('the history on a desktop screen', () => {
+  // The U17b review found "Regenerate" cut at the table's right edge: on a desktop the admin's history, the widest,
+  // fits its card with every action in view, and the page starts under its header, not half a screen down.
+  test('fits its card, every action in view, at the top of the page', async ({ adminPage: page }) => {
+    await page.setViewportSize({ width: 1440, height: 1800 })
+    await mockInsights(page)
+    await page.goto(`/analytics?id=${BUSINESS_ID}&tab=reports`)
+    await expect(page.getByText('1–10 of 25')).toBeVisible({ timeout: 15000 })
+    const [scroll, client] = await page.locator('.paged-table-scroll').evaluate((el) => [el.scrollWidth, el.clientWidth])
+    expect(scroll).toBeLessThanOrEqual(client)
+    await expect(history(page).getByRole('button', { name: 'Delete the report Oct 1, 2026 – Oct 7, 2026' })).toBeInViewport({ ratio: 1 })
+    const tabs = await page.getByRole('navigation', { name: 'Statistics sections' }).boundingBox()
+    expect(tabs.y).toBeLessThan(300)
+  })
+})

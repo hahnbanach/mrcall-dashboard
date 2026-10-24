@@ -152,6 +152,8 @@ export default {
       return CallInsights.businessLabel(row.businessName, row.businessId);
     },
     shareOf(row, sort) {
+      // a server without `notSolved` (before StarChat's F3) has no such share: said as unknown, never as 0%
+      if (sort === "not_solved" && typeof row.notSolved !== "number") return "–";
       const { count, base, percent } = CallInsights.assistantShare(row, sort);
       return this.$t("components.callInsights.assistants.shareOfTotal", { percent, count, total: base });
     },

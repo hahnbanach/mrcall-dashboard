@@ -75,6 +75,7 @@
                         type="button" text size="small" severity="secondary"
                         :label="$t('components.callInsights.requests.restore')"
                         :aria-label="$t('components.callInsights.requests.restoreOf', { category: row.label })"
+                        :disabled="busy"
                         @click="restore(row)"
                       />
                     </template>
@@ -363,9 +364,12 @@ export default {
         .finally(() => { this.busy = false; });
     },
     restore(row) {
+      if (this.busy) return;
+      this.busy = true;
       CallInsights.restoreCategory(this.user(), row.category)
         .then(() => this.load())
-        .catch((error) => { if (!isSessionEnded(error)) this.$emit("error", error, "requests"); });
+        .catch((error) => { if (!isSessionEnded(error)) this.$emit("error", error, "requests"); })
+        .finally(() => { this.busy = false; });
     },
   },
 };

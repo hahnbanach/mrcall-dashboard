@@ -214,6 +214,15 @@ async function sortBy (page, table, label) {
   }
 }
 
+// The arguments an estimate and its job must share (`InsightsJobArguments`): the interval, the report mode and its
+// options. `kind` on an estimate names what it estimates, on a job only "Anticipa"; the keys differ by design.
+const ARGUMENTS = ['from', 'to', 'conversationId', 'recompute', 'regenerates', 'rerunAutomatic', 'platformPays', 'acknowledgeOverlap']
+function sameArguments (estimate, job) {
+  const norm = (o) => JSON.stringify(ARGUMENTS.map((k) => (o[k] === undefined || o[k] === false ? null : o[k])))
+  const anticipate = (o) => o.kind === 'automatic_now'
+  return norm(estimate) === norm(job) && anticipate(estimate) === anticipate(job)
+}
+
 const json = (body, status = 200) => ({ status, contentType: 'application/json', body: JSON.stringify(body) })
 
 /**
@@ -249,15 +258,33 @@ async function mockInsights (page, options = {}) {
     route.fulfill(json(options.report === undefined ? REPORT : options.report))
   })
   await page.route('**/customer/insights/reports/overlap*', (route) => { record('overlap', route); route.fulfill(json(options.overlap || { past: [] })) })
+  // StarChat's contract for an estimate (InsightsJobs.requested): a recompute takes no report mode; a requested report
+  // over days of the cycle in progress or of a past report is refused unless acknowledged, the estimate included.
   await page.route('**/customer/insights/estimate', (route) => {
     record('estimate', route)
+    const body = route.request().postDataJSON() || {}
+    if (body.kind === 'recompute' && body.acknowledgeOverlap) {
+      route.fulfill(json('a recompute takes no report mode', 400)); return
+    }
+    const overlap = options.overlap || { past: [] }
+    const needsAck = !!overlap.cycle || (overlap.past || []).length > 0
+    if (body.kind === 'report' && !body.regenerates && !body.rerunAutomatic && needsAck && !body.acknowledgeOverlap) {
+      route.fulfill(json({ code: 'overlap_unacknowledged', message: 'acknowledgeOverlap' }, 400)); return
+    }
     const answer = options.estimate ? options.estimate(asked.estimate.length) : estimateJob({ status: 'queued', phase: 'queued' })
     route.fulfill(json(answer, 202))
   })
   await page.route('**/customer/insights/jobs*', (route) => { record('jobs', route); route.fulfill(json(options.jobs || JOBS)) })
   await page.route(/\/customer\/insights\/jobs\/(report|recompute)$/, (route) => {
     record('create', route)
-    const answer = options.createJob ? options.createJob(route.request().postDataJSON(), asked.create.length) : { status: 202, body: job({ jobId: 'job-new' }) }
+    // StarChat's cap (InsightsJobs.cap): the estimate named must be over exactly the job's arguments, platformPays and
+    // acknowledgeOverlap included; otherwise 409 estimate_mismatch
+    const body = route.request().postDataJSON() || {}
+    const estimate = asked.estimate.length ? asked.estimate[asked.estimate.length - 1].body : null
+    if (!estimate || !sameArguments(estimate, body)) {
+      route.fulfill(json({ code: 'estimate_mismatch', message: 'estimateJobId does not name a finished estimate over these arguments' }, 409)); return
+    }
+    const answer = options.createJob ? options.createJob(body, asked.create.length) : { status: 202, body: job({ jobId: 'job-new' }) }
     route.fulfill(json(answer.body, answer.status))
   })
   await page.route(/\/customer\/insights\/jobs\/[^/]+$/, (route) => {

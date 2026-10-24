@@ -66,8 +66,8 @@
                   <span>{{ $t("components.callInsights.reports.examples") }}</span>{{ " " }}
                   <template v-for="(id, k) in gap.examples" :key="id">
                     <span v-if="k > 0">, </span>
-                    <router-link v-if="isOwner" :to="conversationLink(id)" :title="id">{{ exampleName(id, k) }}</router-link>
-                    <span v-else :title="id">{{ exampleName(id, k) }}</span>
+                    <router-link v-if="isOwner" :to="conversationLink(id)">{{ exampleName(id, k) }}</router-link>
+                    <span v-else>{{ exampleName(id, k) }}</span>
                   </template>
                 </p>
                 <router-link :to="answerLink(gap)" class="report-answer">

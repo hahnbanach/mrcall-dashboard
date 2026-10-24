@@ -359,7 +359,10 @@ describe('assistantShare: each column and sort of the assistants table over Star
 
   it('keeps the other signals on the bases StarChat sorts them by', () => {
     expect(CallInsights.assistantShare(row, 'unanswered')).toEqual({ count: 9, base: 36, percent: 25 })
-    expect(CallInsights.assistantShare(row, 'checks')).toEqual({ count: 9, base: 36, percent: 25 })
+    // the calls with any check, each once: seen failing on 9999149, which summed the checks (9 of 36)
+    expect(CallInsights.assistantShare({ ...row, callsWithAnyCheck: 7 }, 'checks')).toEqual({ count: 7, base: 36, percent: 19 })
+    // a call with every check true counts once: never above 100%
+    expect(CallInsights.assistantShare({ callsWithChecks: 2, callsWithAnyCheck: 2, checks: { caller_repeated: 2, caller_unsatisfied: 2, promise_not_kept_in_call: 2 } }, 'checks').percent).toBe(100)
     expect(CallInsights.assistantShare(row, 'skill_errors')).toEqual({ count: 0, base: 40, percent: 0 })
     expect(CallInsights.assistantShare(row, 'extraction_failures')).toEqual({ count: 1, base: 36, percent: 3 })
   })

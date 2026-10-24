@@ -2358,6 +2358,11 @@
           "falling": "Langeb",
           "stale": "Viimasel ajal ei ole küsitud"
         }
+      },
+      "admin": {
+        "reason": {
+          "reserve": "Kõnede reserv"
+        }
       }
     }
   },

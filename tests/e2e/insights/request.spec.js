@@ -75,7 +75,11 @@ test.describe('requesting a report', () => {
     await dialog.getByRole('button', { name: 'Continue' }).click()
     await dialog.getByRole('button', { name: 'Confirm' }).click({ timeout: 15000 })
     await expect.poll(() => asked.create.length).toBe(1)
+    // the estimate is asked for exactly what the job asks (StarChat refuses the estimate of unacknowledged days, and a
+    // job whose estimate's arguments differ): seen failing on 9999149, where only the job carried the acknowledgement
+    expect(asked.estimate[asked.estimate.length - 1].body.acknowledgeOverlap).toBe(true)
     expect(asked.create[0].body.acknowledgeOverlap).toBe(true)
+    await expect(dialog.getByText('In preparation…').or(dialog.getByText('Queued: it will start shortly.'))).toBeVisible()
   })
 
   test('the same days as a ready report are refused, and offered as a regeneration', async ({ authenticatedPage: page }) => {
@@ -243,5 +247,34 @@ test.describe('an admin\'s request', () => {
     await dialog.getByRole('button', { name: 'Confirm' }).click()
     await expect.poll(() => asked.create.length).toBe(1)
     expect(asked.create[0].body.platformPays).toBe(true)
+    // the estimate the job is created from was asked at MrCall's cost too: seen failing on 9999149 (estimate_mismatch)
+    expect(asked.estimate[asked.estimate.length - 1].body.platformPays).toBe(true)
+    await expect(dialog.getByText('In preparation…').or(dialog.getByText('Queued: it will start shortly.'))).toBeVisible()
+  })
+})
+
+test.describe('a reseller\'s or an admin\'s request on a FREE business', () => {
+  // StarChat makes such work MrCall's (InsightsJobs.submit): the confirmation must not say the business pays or may
+  // owe, nor offer a choice that is not one. Seen failing on 9999149 (the business's credit named, the debt note shown).
+  async function confirmationOnFree (page) {
+    const asked = await mockInsights(page)
+    await page.route('**/crm/business?*', (route) => route.fulfill({ status: 200, contentType: 'application/json',
+      body: JSON.stringify([{ ...mockBusiness, subscriptionStatus: 'FREE' }]) }))
+    const dialog = await openRequest(page)
+    await dialog.getByRole('button', { name: 'Continue' }).click()
+    await expect(dialog.getByText('This processing is at MrCall\'s cost: the business\'s credit is not used. Do you want to continue?')).toBeVisible({ timeout: 15000 })
+    await expect(dialog.getByText(/uses the credit of the business/)).toHaveCount(0)
+    await expect(dialog.getByText(/small debt/)).toHaveCount(0)
+    await expect(dialog.getByLabel('At MrCall\'s cost: the business uses no credit')).toHaveCount(0)
+    // nothing asked of StarChat that a reseller may not ask: it sets platformPays itself
+    expect(asked.estimate[0].body.platformPays).toBeUndefined()
+  }
+
+  test('reseller: the confirmation says MrCall pays, with no debt note and no choice', async ({ resellerPage: page }) => {
+    await confirmationOnFree(page)
+  })
+
+  test('admin: the confirmation says MrCall pays, with no debt note and no choice', async ({ adminPage: page }) => {
+    await confirmationOnFree(page)
   })
 })

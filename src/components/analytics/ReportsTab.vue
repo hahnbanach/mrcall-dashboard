@@ -50,7 +50,9 @@
       <ul class="recent-strip">
         <li v-for="job in recent" :key="job.jobId" class="recent-card">
           <span class="recent-what">{{ jobWhat(job) }}</span>
-          <span class="recent-status">{{ $t("components.callInsights.status." + statusOfJob(job)) }}</span>
+          <span class="recent-status">
+            {{ $t("components.callInsights.status." + statusOfJob(job)) }}<template v-if="reasonOfJob(job)"> · {{ $t("components.callInsights.admin.reason." + reasonOfJob(job)) }}</template>
+          </span>
           <span class="recent-meta">{{ requesterName(job.requestedBy) }} · {{ dateTime(job.createdAt) }}</span>
           <router-link v-if="jobReport(job)" :to="jobReport(job)" class="recent-open">{{ $t("components.callInsights.reportsTab.open") }}</router-link>
         </li>
@@ -298,6 +300,9 @@ export default {
     statusOfJob(job) {
       return InsightsReports.jobStatusKey(job);
     },
+    reasonOfJob(job) {
+      return InsightsReports.refusalReason(job);
+    },
     callsText(row) {
       if (typeof row.calls !== "number") return "–";
       if (typeof row.callsManaged === "number") return this.$t("components.callInsights.reportsTab.callsOfManaged", { calls: row.calls, managed: row.callsManaged });
@@ -468,11 +473,14 @@ export default {
   white-space: nowrap;
 }
 
+// One action under the other: side by side they made the table wider than its card, and "Rigenera" was cut at its
+// right edge (the U17b review).
 .history-actions {
   display: inline-flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 4px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  white-space: nowrap;
 }
 
 .history-action {

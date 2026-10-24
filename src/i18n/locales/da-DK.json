@@ -2358,6 +2358,11 @@
           "falling": "Faldende",
           "stale": "Ikke efterspurgt for nylig"
         }
+      },
+      "admin": {
+        "reason": {
+          "reserve": "Reserve til opkald"
+        }
       }
     }
   },

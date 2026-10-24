@@ -2360,6 +2360,11 @@
           "falling": "Sinkend",
           "stale": "In letzter Zeit nicht mehr gefragt"
         }
+      },
+      "admin": {
+        "reason": {
+          "reserve": "Reserve für Anrufe"
+        }
       }
     }
   },

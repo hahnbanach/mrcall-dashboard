@@ -2364,6 +2364,11 @@
           "falling": "In calo",
           "stale": "Non più richiesta di recente"
         }
+      },
+      "admin": {
+        "reason": {
+          "reserve": "Riserva per le chiamate"
+        }
       }
     }
   },

@@ -185,7 +185,7 @@ export default {
 
   th, td {
     text-align: left;
-    padding: 10px 12px;
+    padding: 10px 8px;
     border-bottom: 1px solid @mrcall_borders;
     vertical-align: top;
   }

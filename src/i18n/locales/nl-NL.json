@@ -2358,6 +2358,11 @@
           "falling": "Dalend",
           "stale": "Recent niet meer gevraagd"
         }
+      },
+      "admin": {
+        "reason": {
+          "reserve": "Reserve voor gesprekken"
+        }
       }
     }
   },

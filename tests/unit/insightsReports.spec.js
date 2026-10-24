@@ -72,7 +72,11 @@ describe('the label of each state', () => {
   })
 
   it('a job: why it did not run, and a report of a period without calls', () => {
-    expect(R.jobStatusKey({ status: 'refused', error: 'reserve' })).toBe('notRunCredit')
+    // the reserve for calls is its own reason, not "not enough credit" (the U17b review, B4; seen failing on 9999149)
+    expect(R.jobStatusKey({ status: 'refused', error: 'reserve' })).toBe('notRun')
+    expect(R.refusalReason({ status: 'refused', error: 'reserve' })).toBe('reserve')
+    expect(R.refusalReason({ status: 'refused', error: 'no_credit' })).toBeNull()
+    expect(R.jobStatusKey({ status: 'refused', error: 'over_ceiling' })).toBe('notRun')
     expect(R.jobStatusKey({ status: 'refused', error: 'no_credit' })).toBe('notRunCredit')
     expect(R.jobStatusKey({ status: 'refused', error: 'automatic_pending' })).toBe('notRun')
     expect(R.jobStatusKey({ status: 'ceiling_reached' })).toBe('stoppedCredit')
@@ -153,5 +157,9 @@ describe('"Aggiungi la risposta": one pair added to the knowledge base, the ques
     expect(addDraftQuestion(business, annotations, '   ').outcome).toBe('none')
     expect(addDraftQuestion(business, [], 'D?').outcome).toBe('none')
     expect(cleanQuestion('x'.repeat(600)).length).toBe(500)
+    // pairs that cannot be read are left as they are, never replaced by the one new pair
+    const broken = { variables: { KB_PAIRS: '[["A?",' } }
+    expect(addDraftQuestion(broken, annotations, 'E?').outcome).toBe('none')
+    expect(broken.variables.KB_PAIRS).toBe('[["A?",')
   })
 })

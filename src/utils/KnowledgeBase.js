@@ -36,10 +36,15 @@ export function addDraftQuestion(business, variablesAnnotations, rawQuestion) {
   const variable = pairsVariable(variablesAnnotations);
   if (!question || !variable || !business || !business.variables) return { outcome: "none", variable: null };
   let pairs = business.variables[variable.name];
+  // pairs that cannot be read are left alone: writing over them would lose them on save
   if (typeof pairs === "string") {
-    try { pairs = JSON.parse(pairs); } catch { pairs = []; }
+    if (pairs.trim() === "") pairs = [];
+    else {
+      try { pairs = JSON.parse(pairs); } catch { return { outcome: "none", variable: null }; }
+    }
   }
-  if (!Array.isArray(pairs)) pairs = [];
+  if (pairs === undefined || pairs === null) pairs = [];
+  if (!Array.isArray(pairs)) return { outcome: "none", variable: null };
   const folded = question.toLowerCase();
   if (pairs.some((p) => Array.isArray(p) && typeof p[0] === "string" && p[0].trim().toLowerCase() === folded)) {
     return { outcome: "present", variable: variable.name };

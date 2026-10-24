@@ -277,6 +277,7 @@ describe('callInsights: the reports, requests and outcomes of 2026-10-24', () =>
     expect(ci.outcome.handed_over).toBe('Passate a una persona')
     expect(ci.outcome.unresolved).toBe('Non risolte')
     expect(ci.resolution.forwarded).toBe("Richiesta passata all'attività")
+    expect(ci.admin.reason.reserve).toBe('Riserva per le chiamate')
     expect(ci.requests.status).toEqual({ rising: 'In crescita', steady: 'Stabile', falling: 'In calo', stale: 'Non più richiesta di recente' })
   })
 

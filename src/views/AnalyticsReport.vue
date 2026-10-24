@@ -62,6 +62,9 @@ export default {
 
 <style lang="less" scoped>
 .analytics-report-page {
+  // Top-aligned: the dashboard's `margin: auto` centres a page vertically, which left a band as tall as half the
+  // screen above a short tab (the U17b review: about 900px in the tall screenshots, on any tall monitor too).
+  margin: 0 auto auto;
   box-sizing: border-box;
   width: 100%;
   min-width: 0;

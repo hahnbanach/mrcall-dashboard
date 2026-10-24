@@ -2358,6 +2358,11 @@
           "falling": "Minskar",
           "stale": "Inte efterfrågad på sistone"
         }
+      },
+      "admin": {
+        "reason": {
+          "reserve": "Reserv för samtal"
+        }
       }
     }
   },
