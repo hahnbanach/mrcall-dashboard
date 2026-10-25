@@ -2047,7 +2047,9 @@
           "unanswered": "Open vragen",
           "checks": "Controles",
           "skillErrors": "Skillfouten",
-          "extractionIssues": "Extractie"
+          "extractionIssues": "Extractie",
+          "change": "Verandering",
+          "configSuggestions": "MrCall-suggesties"
         },
         "legend": {
           "notSolved": "niet opgelost, plus aan het bedrijf doorgegeven verzoeken met een onvolledig bericht, over de gesprekken waarin de beller iets vroeg",
@@ -2057,7 +2059,9 @@
           "unanswered": "gesprekken met een onbeantwoorde vraag, van de gesprekken waarin vragen zijn vastgelegd",
           "checks": "gesprekken waarin een controle afging, van de gecontroleerde gesprekken",
           "skillErrors": "gesprekken met een skillfout, van alle gesprekken",
-          "extractionIssues": "gesprekken waarvan de gegevensextractie mislukte, van de gesprekken waarin de extractie is uitgevoerd"
+          "extractionIssues": "gesprekken waarvan de gegevensextractie mislukte, van de gesprekken waarin de extractie is uitgevoerd",
+          "change": "\"Niet opgelost\" nu tegenover de vorige periode van dezelfde lengte, in procentpunten; een streepje als een van beide perioden geen gesprekken met een vraag heeft",
+          "configSuggestions": "MrCall-configuratiesuggesties in het laatste automatische rapport"
         },
         "legendTitle": "Hoe elke kolom wordt geteld",
         "assessedShort": "beoordeeld",
@@ -2073,7 +2077,8 @@
           "inDebt": "In het rood",
           "unknown": "Niet bekend",
           "planOther": "Abonnement niet actief"
-        }
+        },
+        "changePoints": "{sign}{n} punten"
       },
       "scope": {
         "allBusinesses": "Over alle bedrijven die u kunt zien, van de afgelopen 30 dagen.",
@@ -2142,7 +2147,9 @@
         "you": "U",
         "owner": "{name} (eigenaar)",
         "ownerNoName": "De eigenaar",
-        "staff": "MrCall of de reseller"
+        "reseller": "De wederverkoper",
+        "admin": "MrCall",
+        "system": "Automatisch"
       },
       "status": {
         "ready": "Klaar",
@@ -2172,7 +2179,6 @@
         "days": "{days} dagen",
         "callsOfManaged": "{calls} van {managed} afgehandeld",
         "callsAnalysed": "{calls} geanalyseerd",
-        "automaticBy": "Automatisch",
         "open": "Openen",
         "regenerate": "Opnieuw maken",
         "regenerateOf": "Het rapport {period} opnieuw maken",
@@ -2224,7 +2230,8 @@
         "qualityBefore": "Periode ervoor",
         "qualityBase": "Gesprekken geteld over de {calls} gesprekken waarvoor deze controle is vastgelegd.",
         "draftAdded": "We hebben de vraag toegevoegd aan uw vragen en antwoorden: schrijf het antwoord en sla op.",
-        "draftPresent": "Deze vraag staat al bij uw vragen en antwoorden."
+        "draftPresent": "Deze vraag staat al bij uw vragen en antwoorden.",
+        "version": "Versie {n}"
       },
       "deleteReport": {
         "title": "Het rapport verwijderen",
@@ -2288,7 +2295,8 @@
         "cancelReport": "Annuleren: het rapport wordt niet geschreven en er wordt geen tegoed gebruikt.",
         "cancelRecompute": "Het stopt na het lopende gesprek; de al geanalyseerde gesprekken blijven staan en hebben tegoed van het bedrijf gebruikt.",
         "cancelled": "Verwerking geannuleerd.",
-        "keepOpen": "U kunt dit venster sluiten: de verwerking gaat door en u vindt haar onder Verwerking."
+        "keepOpen": "U kunt dit venster sluiten: de verwerking gaat door en u vindt haar onder Verwerking.",
+        "platformInstead": "Uitvoeren op kosten van MrCall"
       },
       "recompute": {
         "banner": "{n} in deze periode afgehandelde gesprekken hebben nog geen automatische analyse, dus afloop, onderwerpen en kwaliteit tellen ze niet mee.",
@@ -2357,11 +2365,15 @@
           "steady": "Stabiel",
           "falling": "Dalend",
           "stale": "Recent niet meer gevraagd"
-        }
+        },
+        "hiddenExamples": "Verborgen voorbeelden",
+        "hiddenAs": "Verborgen op {date}: {reason}",
+        "restoreExampleOf": "Voorbeeld “{text}” herstellen"
       },
       "admin": {
         "reason": {
-          "reserve": "Reserve voor gesprekken"
+          "reserve": "Reserve voor gesprekken",
+          "over_ceiling": "Groter dan de schatting toestond"
         }
       }
     }

@@ -2053,7 +2053,9 @@
           "unanswered": "Domande aperte",
           "checks": "Controlli",
           "skillErrors": "Errori skill",
-          "extractionIssues": "Estrazione"
+          "extractionIssues": "Estrazione",
+          "change": "Variazione",
+          "configSuggestions": "Suggerimenti MrCall"
         },
         "legend": {
           "notSolved": "non risolte, più le richieste passate all'attività con un messaggio incompleto, sulle chiamate in cui il chiamante ha chiesto qualcosa",
@@ -2063,7 +2065,9 @@
           "unanswered": "chiamate con una domanda rimasta senza risposta, sulle chiamate in cui le domande sono state registrate",
           "checks": "chiamate in cui un controllo è scattato, sulle chiamate controllate",
           "skillErrors": "chiamate con un errore di skill, su tutte le chiamate",
-          "extractionIssues": "chiamate in cui l'estrazione dei dati non è riuscita, sulle chiamate in cui l'estrazione è stata eseguita"
+          "extractionIssues": "chiamate in cui l'estrazione dei dati non è riuscita, sulle chiamate in cui l'estrazione è stata eseguita",
+          "change": "\"Non risolte\" ora rispetto al periodo precedente della stessa durata, in punti percentuali; un trattino se in uno dei due periodi non ci sono chiamate con una richiesta",
+          "configSuggestions": "Suggerimenti di configurazione MrCall nell'ultimo report automatico"
         },
         "legendTitle": "Come si conta ogni colonna",
         "assessedShort": "valutato",
@@ -2079,7 +2083,8 @@
           "inDebt": "In debito",
           "unknown": "Non noto",
           "planOther": "Piano non attivo"
-        }
+        },
+        "changePoints": "{sign}{n} punti"
       },
       "scope": {
         "allBusinesses": "In tutte le attività che puoi vedere, negli ultimi 30 giorni.",
@@ -2148,7 +2153,9 @@
         "you": "Tu",
         "owner": "{name} (titolare)",
         "ownerNoName": "Il titolare",
-        "staff": "MrCall o il rivenditore"
+        "reseller": "Il rivenditore",
+        "admin": "MrCall",
+        "system": "Automatico"
       },
       "status": {
         "ready": "Pronto",
@@ -2178,7 +2185,6 @@
         "days": "{days} giorni",
         "callsOfManaged": "{calls} di {managed} gestite",
         "callsAnalysed": "{calls} analizzate",
-        "automaticBy": "Automatico",
         "open": "Apri",
         "regenerate": "Rigenera",
         "regenerateOf": "Rigenera il report {period}",
@@ -2230,7 +2236,8 @@
         "qualityBefore": "Periodo precedente",
         "qualityBase": "Chiamate contate sulle {calls} chiamate con questo controllo registrato.",
         "draftAdded": "Abbiamo aggiunto la domanda alle tue domande e risposte: scrivi la risposta e salva.",
-        "draftPresent": "Questa domanda è già tra le tue domande e risposte."
+        "draftPresent": "Questa domanda è già tra le tue domande e risposte.",
+        "version": "Versione {n}"
       },
       "deleteReport": {
         "title": "Elimina il report",
@@ -2294,7 +2301,8 @@
         "cancelReport": "Annulla: il report non verrà scritto e non verrà usato credito.",
         "cancelRecompute": "Si ferma dopo la chiamata in corso; le chiamate già analizzate restano e hanno usato il credito dell'attività.",
         "cancelled": "Elaborazione annullata.",
-        "keepOpen": "Puoi chiudere questa finestra: l'elaborazione continua e la trovi in Elaborazioni."
+        "keepOpen": "Puoi chiudere questa finestra: l'elaborazione continua e la trovi in Elaborazioni.",
+        "platformInstead": "Esegui a carico di MrCall"
       },
       "recompute": {
         "banner": "{n} chiamate gestite in questo periodo non hanno ancora l'analisi automatica, quindi esiti, argomenti e qualità non le contano.",
@@ -2363,11 +2371,15 @@
           "steady": "Stabile",
           "falling": "In calo",
           "stale": "Non più richiesta di recente"
-        }
+        },
+        "hiddenExamples": "Esempi nascosti",
+        "hiddenAs": "Nascosto il {date}: {reason}",
+        "restoreExampleOf": "Ripristina l'esempio “{text}”"
       },
       "admin": {
         "reason": {
-          "reserve": "Riserva per le chiamate"
+          "reserve": "Riserva per le chiamate",
+          "over_ceiling": "Più grande di quanto la stima consentiva"
         }
       }
     }

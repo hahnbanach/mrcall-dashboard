@@ -74,11 +74,10 @@ API clients and business logic:
   filter is set on (by the contact of its first business: StarChat's admin user record carries only the role)
 - `InsightsReports.js` — the reports' and jobs' rules applied to StarChat's answers: a period's days in the
   business's zone, its last day included; the periods a request offers, ending at the last midnight there; the
-  label of every report and job state; a recompute's progress; who asked, never by an id; the coverage banner's
+  label of every report and job state; a recompute's progress; who asked, by the role StarChat recorded (`requesterRole`), never by an id; the coverage banner's
   threshold. Pure, pinned by `tests/unit/insightsReports.spec.js`
 - `KnowledgeBase.js` — "Add the answer": one question/answer pair added to the business's knowledge base
   (`?section=__KNOWLEDGE_BASE__&draftQuestion=`), unsaved until the person saves
-- `TopUp.js` — whether a business has an automatic top-up switched on, for the offer to switch it on
 - `Admin.js` — Admin API endpoints
 - `Reseller.js` — Reseller API endpoints
 - `Contact.js` — Contact management API
@@ -215,7 +214,7 @@ for the four dimensions lives in `src/utils/CallInsights.js`.
     who asked and when, filtered by state and type, with Regenerate, an admin's re-run of a written-off period and
     delete); Processing (`JobsTab.vue`: the jobs, their state and progress, who asked, the report written and a
     cancel while open). A FREE business's owner is offered the plan instead of paid work.
-  - `/analytics/report?id=&start=&requestId=` (`views/AnalyticsReport.vue`, `CallReportDetail.vue`): one report,
+  - `/analytics/report?id=&start=&requestId=` (`views/AnalyticsReport.vue`, `CallReportDetail.vue`): one report, its version,
     its base and the calls left out (the analytics of its days), a note when more calls of its days were analysed
     since, its themes, the questions left unanswered by reason with example calls (linked for the owner only) and
     "Add the answer", its suggestions (`mrcall_config` for an admin only), and the quality gaps beside the period
@@ -223,15 +222,15 @@ for the four dimensions lives in `src/utils/CallInsights.js`.
   - `InsightsRequestDialog.vue`: a report for a period, a regeneration, a recompute, "Prepare now" and a re-run,
     one dialog: the period with the overlap choices, a hidden estimate, a confirmation without amount (an admin
     may put the work at MrCall's cost), the job under one request key, its progress and end, and each refusal
-    with its own copy and offers.
+    with its own copy and offers (automatic top-up offered only when StarChat's estimate says it is not effective, `topUpEffective`; an admin refused for credit can run the work at MrCall's cost).
   - `Analytics.vue` with no business, role `reseller` (its scope page): outcomes and quality over its scope (the
     `OwnerSelector` narrows it to one owner), the topics section saying to choose a business,
     `AssistantsToReview.vue` and `RequestCategories.vue`, both following the period and owner.
   - `AnalyticsAdmin.vue`: the same sections reacting to its own filters (the business chosen by company name,
     `BusinessAutocomplete.vue`), topics only with a business chosen, "Assistants to review" (paged, sorted on
-    the server, searched by name, each account's health in words), "Callers' requests" (`RequestCategories.vue`:
+    the server, searched by name, "Unresolved" against the period before in points, MrCall's configuration suggestions for an admin, each account's health in words), "Callers' requests" (`RequestCategories.vue`:
     one row per category with its status, numbers, histogram and freshness, its businesses on demand, archive and
-    restore for an admin), and MrCall's own configuration suggestions (`ConfigSuggestions.vue`, admin only, the
+    restore for an admin, the examples hidden from a row shown and restored with "Show archived"), and MrCall's own configuration suggestions (`ConfigSuggestions.vue`, admin only, the
     one section that follows no filter, which the bar says while it is on screen).
   - Both pages establish the role on mount (the same business search that already sets it,
     `Business.js`'s `checkUserHasBusinesses`) before choosing which sections to show; the server remains the

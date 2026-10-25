@@ -111,7 +111,7 @@ test.describe('requesting a report', () => {
   })
 
   test('the reserve for calls: its copy and a top-up, no shorter period, and automatic top-up offered only without one', async ({ authenticatedPage: page }) => {
-    await mockInsights(page, { job: () => estimateJob({ estimate: { fits: false, reason: 'reserve', calls: 10 } }) })
+    await mockInsights(page, { job: () => estimateJob({ estimate: { fits: false, reason: 'reserve', calls: 10, topUpEffective: false } }) })
     let dialog = await openRequest(page)
     await dialog.getByRole('button', { name: 'Continue' }).click()
     await expect(dialog.getByText('The business\'s credit is at the level we keep for calls. Top up the credit or turn on automatic top-up to use this feature.')).toBeVisible({ timeout: 15000 })
@@ -120,7 +120,7 @@ test.describe('requesting a report', () => {
     await expect(dialog.getByRole('link', { name: 'Turn on automatic top-up' })).toBeVisible()
 
     // the same refusal for a business whose automatic top-up is on: no offer to turn it on
-    await mockInsights(page, { job: () => estimateJob({ estimate: { fits: false, reason: 'reserve', calls: 10 } }), topUpStatus: { status: 'ACTIVE' } })
+    await mockInsights(page, { job: () => estimateJob({ estimate: { fits: false, reason: 'reserve', calls: 10, topUpEffective: true } }) })
     dialog = await openRequest(page)
     await dialog.getByRole('button', { name: 'Continue' }).click()
     await expect(dialog.getByText(/level we keep for calls/)).toBeVisible({ timeout: 15000 })
@@ -131,13 +131,13 @@ test.describe('requesting a report', () => {
   test('another job open: who started it and when, and the way to it', async ({ authenticatedPage: page }) => {
     await mockInsights(page, {
       createJob: () => refused('job_open', { jobId: 'job-other' }),
-      job: (id) => (id === 'job-other' ? job({ jobId: 'job-other', status: 'running', requestedBy: 'admin-uid-12345', createdAt: rome(2026, 10, 24) + 8 * 3600 * 1000 }) : estimateJob()),
+      job: (id) => (id === 'job-other' ? job({ jobId: 'job-other', status: 'running', requestedBy: 'admin-uid-12345', requesterRole: 'admin', createdAt: rome(2026, 10, 24) + 8 * 3600 * 1000 }) : estimateJob()),
     })
     const dialog = await openRequest(page)
     await dialog.getByRole('button', { name: 'Continue' }).click()
     await dialog.getByRole('button', { name: 'Confirm' }).click({ timeout: 15000 })
     // WebKit (the tablet and phone projects) joins date and time with "at"
-    await expect(dialog.getByText(/^There is already a processing in progress for this business, started by MrCall or the reseller on Oct 24, 2026,? (at )?8:00\sAM\.$/)).toBeVisible()
+    await expect(dialog.getByText(/^There is already a processing in progress for this business, started by MrCall on Oct 24, 2026,? (at )?8:00\sAM\.$/)).toBeVisible()
     await expect(dialog.getByRole('link', { name: 'See the processing' })).toHaveAttribute('href', `/analytics?id=${BUSINESS_ID}&tab=jobs`)
   })
 

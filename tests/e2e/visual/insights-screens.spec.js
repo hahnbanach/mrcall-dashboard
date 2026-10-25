@@ -58,7 +58,7 @@ test.describe('insights screens: owner', () => {
     await shoot(page, 'owner-reports-sorted-calls')
     await page.getByRole('combobox', { name: 'Type' }).click()
     await page.getByRole('option', { name: 'On request' }).click()
-    await expect(page.getByText('1–1 of 1')).toBeVisible()
+    await expect(page.getByText('1–2 of 2')).toBeVisible()
     await shoot(page, 'owner-reports-filtered')
   })
 
@@ -153,8 +153,8 @@ test.describe('insights screens: owner', () => {
 
   const refusals = [
     ['no-credit', { job: () => ins.estimateJob({ estimate: { fits: false, reason: 'no_credit', calls: 900 } }) }, 'Not enough credit for this processing.'],
-    ['reserve-no-topup', { job: () => ins.estimateJob({ estimate: { fits: false, reason: 'reserve', calls: 9 } }) }, 'Turn on automatic top-up'],
-    ['reserve-topup-on', { job: () => ins.estimateJob({ estimate: { fits: false, reason: 'reserve', calls: 9 } }), topUpStatus: { status: 'ACTIVE' } }, 'Top up'],
+    ['reserve-no-topup', { job: () => ins.estimateJob({ estimate: { fits: false, reason: 'reserve', calls: 9, topUpEffective: false } }) }, 'Turn on automatic top-up'],
+    ['reserve-topup-on', { job: () => ins.estimateJob({ estimate: { fits: false, reason: 'reserve', calls: 9, topUpEffective: true } }) }, 'Top up'],
     ['job-open', { createJob: () => ({ status: 409, body: { code: 'job_open', message: 'x', jobId: 'job-other' } }), job: (id) => (id === 'job-other' ? ins.job({ jobId: 'job-other', status: 'running' }) : ins.estimateJob()) }, 'There is already a processing'],
     ['no-calls', { job: () => ins.estimateJob({ estimate: { fits: true, calls: 0, requests: 0 } }) }, 'No calls to analyse in this period.'],
     ['failed', { createJob: () => ({ status: 500, body: {} }) }, 'The request could not be completed.'],
@@ -208,7 +208,7 @@ test.describe('insights screens: owner', () => {
 
 test.describe('insights screens: admin and reseller', () => {
   test('admin page: assistants, callers\' requests, configuration suggestions', async ({ adminPage: page }) => {
-    await ins.mockInsights(page)
+    await ins.mockInsights(page, { role: 'admin' })
     await page.route('**/customer/insights/config-suggestions*', (route) => route.fulfill({ status: 200, contentType: 'application/json',
       body: JSON.stringify({ total: 2, asOf: 1, items: [{ businessId: 'biz-1', name: 'Studio 1', periodEnd: ins.rome(2026, 10, 21), suggestions: ['Shorten the greeting.'] }, { businessId: 'biz-2', periodEnd: ins.rome(2026, 10, 14), suggestions: ['Turn on multilingual.'] }] }) }))
     await page.goto('/analytics-admin')
@@ -238,6 +238,16 @@ test.describe('insights screens: admin and reseller', () => {
     await page.goto('/analytics-admin')
     await expect(page.getByText('This section could not be loaded.').first()).toBeVisible({ timeout: 15000 })
     await shoot(page, 'admin-requests-error')
+  })
+
+  test('admin: refused for the reserve, offered MrCall\'s cost', async ({ adminPage: page }) => {
+    await ins.mockInsights(page, { job: () => ins.estimateJob({ estimate: { fits: false, reason: 'reserve', calls: 9, topUpEffective: false } }) })
+    await page.goto(`/analytics?id=${B}&tab=reports`)
+    await page.getByRole('button', { name: 'Request a report' }).click({ timeout: 15000 })
+    const dialog = page.getByRole('dialog')
+    await dialog.getByRole('button', { name: 'Continue' }).click()
+    await expect(dialog.getByRole('button', { name: 'Run it at MrCall\'s cost' })).toBeVisible({ timeout: 15000 })
+    await both(page, 'dialog-refused-reserve-admin')
   })
 
   test('admin: a business\'s report tab with delete and re-run', async ({ adminPage: page }) => {

@@ -95,13 +95,25 @@ describe('the label of each state', () => {
   })
 })
 
-describe('who asked, never by an id', () => {
+describe('who asked: by the role StarChat recorded, never by an id', () => {
   const business = { owner: 'owner-1', ownerName: 'Anna Bianchi' }
-  it('the reader, the owner by name, anyone else as MrCall or the reseller', () => {
-    expect(R.requester('me', { me: 'me', business })).toEqual({ kind: 'you' })
-    expect(R.requester('owner-1', { me: 'me', business })).toEqual({ kind: 'owner', name: 'Anna Bianchi' })
-    expect(R.requester('someone', { me: 'me', business })).toEqual({ kind: 'staff' })
-    expect(R.requester(null, { me: 'me', business })).toBeNull()
+  const t = (key, params) => key + (params ? JSON.stringify(params) : '')
+  it('the reader; else the owner by the contact, the reseller, MrCall, an automatic report; a dash for an unknown role', () => {
+    expect(R.requester('me', 'owner', { me: 'me', business })).toEqual({ kind: 'you' })
+    expect(R.requester('someone', 'owner', { me: 'me', business })).toEqual({ kind: 'owner', name: 'Anna Bianchi' })
+    expect(R.requester('someone', 'reseller', { me: 'me', business })).toEqual({ kind: 'reseller' })
+    expect(R.requester('someone', 'admin', { me: 'me', business })).toEqual({ kind: 'admin' })
+    expect(R.requester(undefined, 'system', { me: 'me', business })).toEqual({ kind: 'system' })
+    // seen failing on 59eae9f, which named any other account "MrCall or the reseller"
+    expect(R.requester('someone', null, { me: 'me', business })).toBeNull()
+    expect(R.requester('someone', 'robot', { me: 'me', business })).toBeNull()
+    expect(R.requesterLabel(t, { requestedBy: 'someone', requesterRole: null }, { me: 'me', business })).toBe('—')
+    expect(R.requesterLabel(t, { requestedBy: 'someone', requesterRole: 'reseller' }, { me: 'me', business })).toBe('components.callInsights.requester.reseller')
+    expect(R.requesterLabel(t, { requestedBy: 'x', requesterRole: 'owner' }, { me: 'me', business: {} })).toBe('components.callInsights.requester.ownerNoName')
+  })
+
+  it('reads a job refused for its cap with its reason', () => {
+    expect(R.refusalReason({ status: 'refused', error: 'over_ceiling' })).toBe('over_ceiling')
   })
 })
 

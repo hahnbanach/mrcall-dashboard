@@ -2047,7 +2047,9 @@
           "unanswered": "Öppna frågor",
           "checks": "Kontroller",
           "skillErrors": "Skillfel",
-          "extractionIssues": "Extrahering"
+          "extractionIssues": "Extrahering",
+          "change": "Förändring",
+          "configSuggestions": "MrCall-förslag"
         },
         "legend": {
           "notSolved": "olöst, plus ärenden som vidarebefordrats till företaget med ett ofullständigt meddelande, av samtalen där den som ringde bad om något",
@@ -2057,7 +2059,9 @@
           "unanswered": "samtal med en obesvarad fråga, av samtalen där frågor registrerades",
           "checks": "samtal där en kontroll slog till, av de kontrollerade samtalen",
           "skillErrors": "samtal med ett skillfel, av alla samtal",
-          "extractionIssues": "samtal där dataextraheringen misslyckades, av samtalen där extraheringen kördes"
+          "extractionIssues": "samtal där dataextraheringen misslyckades, av samtalen där extraheringen kördes",
+          "change": "\"Ej lösta\" nu jämfört med föregående period av samma längd, i procentenheter; ett streck om någon av perioderna saknar samtal med en förfrågan",
+          "configSuggestions": "MrCalls konfigurationsförslag i den senaste automatiska rapporten"
         },
         "legendTitle": "Hur varje kolumn räknas",
         "assessedShort": "bedömt",
@@ -2073,7 +2077,8 @@
           "inDebt": "I skuld",
           "unknown": "Okänt",
           "planOther": "Abonnemanget är inte aktivt"
-        }
+        },
+        "changePoints": "{sign}{n} enheter"
       },
       "scope": {
         "allBusinesses": "Över alla verksamheter du kan se, de senaste 30 dagarna.",
@@ -2142,7 +2147,9 @@
         "you": "Du",
         "owner": "{name} (ägare)",
         "ownerNoName": "Ägaren",
-        "staff": "MrCall eller återförsäljaren"
+        "reseller": "Återförsäljaren",
+        "admin": "MrCall",
+        "system": "Automatisk"
       },
       "status": {
         "ready": "Klar",
@@ -2172,7 +2179,6 @@
         "days": "{days} dagar",
         "callsOfManaged": "{calls} av {managed} hanterade",
         "callsAnalysed": "{calls} analyserade",
-        "automaticBy": "Automatisk",
         "open": "Öppna",
         "regenerate": "Ta fram på nytt",
         "regenerateOf": "Ta fram rapporten {period} på nytt",
@@ -2224,7 +2230,8 @@
         "qualityBefore": "Perioden före",
         "qualityBase": "Samtal räknade av de {calls} samtal där den här kontrollen registrerats.",
         "draftAdded": "Vi har lagt till frågan bland dina frågor och svar: skriv svaret och spara.",
-        "draftPresent": "Den här frågan finns redan bland dina frågor och svar."
+        "draftPresent": "Den här frågan finns redan bland dina frågor och svar.",
+        "version": "Version {n}"
       },
       "deleteReport": {
         "title": "Ta bort rapporten",
@@ -2288,7 +2295,8 @@
         "cancelReport": "Avbryt: rapporten skrivs inte och ingen kredit används.",
         "cancelRecompute": "Den stannar efter det pågående samtalet; de redan analyserade samtalen finns kvar och har använt företagets kredit.",
         "cancelled": "Bearbetningen avbröts.",
-        "keepOpen": "Du kan stänga det här fönstret: bearbetningen fortsätter och du hittar den under Bearbetning."
+        "keepOpen": "Du kan stänga det här fönstret: bearbetningen fortsätter och du hittar den under Bearbetning.",
+        "platformInstead": "Kör på MrCalls bekostnad"
       },
       "recompute": {
         "banner": "{n} samtal som hanterats under den här perioden har ännu ingen automatisk analys, så utfall, ämnen och kvalitet räknar inte med dem.",
@@ -2357,11 +2365,15 @@
           "steady": "Stabil",
           "falling": "Minskar",
           "stale": "Inte efterfrågad på sistone"
-        }
+        },
+        "hiddenExamples": "Dolda exempel",
+        "hiddenAs": "Dolt den {date}: {reason}",
+        "restoreExampleOf": "Återställ exemplet ”{text}”"
       },
       "admin": {
         "reason": {
-          "reserve": "Reserv för samtal"
+          "reserve": "Reserv för samtal",
+          "over_ceiling": "Större än uppskattningen tillät"
         }
       }
     }

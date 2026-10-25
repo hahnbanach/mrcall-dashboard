@@ -126,6 +126,23 @@
                       />
                     </li>
                   </ul>
+                  <!-- With "Mostra archiviate", an admin finds the examples hidden from the row, and restores them -->
+                  <ul v-if="isAdmin && includeDismissed && hiddenOf(row).length" class="requests-examples requests-hidden"
+                      :aria-label="$t('components.callInsights.requests.hiddenExamples')">
+                    <li v-for="h in hiddenOf(row)" :key="h.text">
+                      <q>{{ h.text }}</q>
+                      <span class="requests-sub">
+                        {{ $t("components.callInsights.requests.hiddenAs", { date: day(h.at), reason: $t("components.callInsights.requests.reason." + h.reason) }) }}<template v-if="h.note"> · {{ h.note }}</template>
+                      </span>
+                      <Button
+                        type="button" text size="small" severity="secondary"
+                        :label="$t('components.callInsights.requests.restore')"
+                        :aria-label="$t('components.callInsights.requests.restoreExampleOf', { text: h.text })"
+                        :disabled="restoring.has(row.category + '\u0000' + h.text)"
+                        @click="restoreExample(row, h)"
+                      />
+                    </li>
+                  </ul>
                 </td>
               </tr>
               <tr v-if="expanded === row.category" class="requests-expansion">
@@ -225,6 +242,8 @@ export default {
       dismissReason: null,
       dismissNote: "",
       busy: false,
+      // the hidden examples being restored, `category NUL text`: a second click on one waits for the first
+      restoring: new Set(),
       actionFailed: false,
       gate: CallInsights.latestOnly(),
     };
@@ -363,6 +382,22 @@ export default {
         .catch((error) => { if (!isSessionEnded(error)) this.actionFailed = true; })
         .finally(() => { this.busy = false; });
     },
+    hiddenOf(row) {
+      return Array.isArray(row.dismissedExamples) ? row.dismissedExamples.filter((h) => h && typeof h.text === "string") : [];
+    },
+    restoreExample(row, hidden) {
+      const key = row.category + "\u0000" + hidden.text;
+      if (this.restoring.has(key)) return;
+      this.restoring = new Set([...this.restoring, key]);
+      CallInsights.restoreExample(this.user(), row.category, hidden.text)
+        .then(() => this.load())
+        .catch((error) => { if (!isSessionEnded(error)) this.$emit("error", error, "requests"); })
+        .finally(() => {
+          const next = new Set(this.restoring);
+          next.delete(key);
+          this.restoring = next;
+        });
+    },
     restore(row) {
       if (this.busy) return;
       this.busy = true;
@@ -495,6 +530,13 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 6px;
+}
+
+.requests-hidden {
+  margin-top: 8px;
+  padding-top: 6px;
+  border-top: 1px dashed @mrcall_borders;
+  color: @mrcall_grey_text;
 }
 
 .requests-expansion td {

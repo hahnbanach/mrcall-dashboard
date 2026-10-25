@@ -2052,7 +2052,9 @@
           "unanswered": "Open questions",
           "checks": "Checks",
           "skillErrors": "Skill errors",
-          "extractionIssues": "Extraction"
+          "extractionIssues": "Extraction",
+          "change": "Change",
+          "configSuggestions": "MrCall suggestions"
         },
         "legend": {
           "notSolved": "not resolved, plus requests passed to the business with an incomplete message, over the calls where the caller asked something",
@@ -2062,7 +2064,9 @@
           "unanswered": "calls with a question left unanswered, over the calls where questions were recorded",
           "checks": "calls where a check fired, over the calls checked",
           "skillErrors": "calls with a skill error, over all calls",
-          "extractionIssues": "calls whose data extraction failed, over the calls whose extraction ran"
+          "extractionIssues": "calls whose data extraction failed, over the calls whose extraction ran",
+          "change": "\"Unresolved\" now against the period before of the same length, in percentage points; a dash without calls with a request in either",
+          "configSuggestions": "MrCall configuration suggestions in the latest automatic report"
         },
         "legendTitle": "How each column is counted",
         "assessedShort": "assessed",
@@ -2078,7 +2082,8 @@
           "inDebt": "In debt",
           "unknown": "Not known",
           "planOther": "Plan not active"
-        }
+        },
+        "changePoints": "{sign}{n} points"
       },
       "scope": {
         "allBusinesses": "Across every business you can see, over the last 30 days.",
@@ -2147,7 +2152,9 @@
         "you": "You",
         "owner": "{name} (owner)",
         "ownerNoName": "The owner",
-        "staff": "MrCall or the reseller"
+        "reseller": "The reseller",
+        "admin": "MrCall",
+        "system": "Automatic"
       },
       "status": {
         "ready": "Ready",
@@ -2177,7 +2184,6 @@
         "days": "{days} days",
         "callsOfManaged": "{calls} of {managed} managed",
         "callsAnalysed": "{calls} analysed",
-        "automaticBy": "Automatic",
         "open": "Open",
         "regenerate": "Regenerate",
         "regenerateOf": "Regenerate the report {period}",
@@ -2229,7 +2235,8 @@
         "qualityBefore": "Period before",
         "qualityBase": "Calls counted over the {calls} calls with this check recorded.",
         "draftAdded": "We added the question to your questions and answers: write the answer and save.",
-        "draftPresent": "This question is already among your questions and answers."
+        "draftPresent": "This question is already among your questions and answers.",
+        "version": "Version {n}"
       },
       "deleteReport": {
         "title": "Delete the report",
@@ -2293,7 +2300,8 @@
         "cancelReport": "Cancel: the report will not be written and no credit will be used.",
         "cancelRecompute": "It stops after the call in progress; the calls already analysed stay and have used the business's credit.",
         "cancelled": "Processing cancelled.",
-        "keepOpen": "You can close this window: the processing continues and you will find it under Processing."
+        "keepOpen": "You can close this window: the processing continues and you will find it under Processing.",
+        "platformInstead": "Run it at MrCall's cost"
       },
       "recompute": {
         "banner": "{n} calls managed in this period do not have the automatic analysis yet, so outcomes, topics and quality do not count them.",
@@ -2362,11 +2370,15 @@
           "steady": "Steady",
           "falling": "Falling",
           "stale": "No longer asked recently"
-        }
+        },
+        "hiddenExamples": "Hidden examples",
+        "hiddenAs": "Hidden on {date}: {reason}",
+        "restoreExampleOf": "Restore the example “{text}”"
       },
       "admin": {
         "reason": {
-          "reserve": "Reserve for calls"
+          "reserve": "Reserve for calls",
+          "over_ceiling": "Larger than its estimate allowed"
         }
       }
     }

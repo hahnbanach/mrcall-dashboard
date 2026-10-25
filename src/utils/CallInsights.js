@@ -145,6 +145,18 @@ const ASSISTANT_SHARES = {
     extraction_failures: (row) => share(row.extractionsNotOk, row.extractionsRun),
 };
 
+/*
+ * The change of "Non risolte" against the period before of the same length (StarChat U13c: `previousNotSolved` over
+ * `previousCallsWithRequest`): the share now minus the share before, in percentage points, rounded once at the end.
+ * Null when either period has no call with a request: no share to compare, said as a dash, never as 0.
+ */
+function notSolvedChange(row) {
+    const r = row || {};
+    if (typeof r.notSolved !== "number" || !(r.callsWithRequest > 0)) return null;
+    if (typeof r.previousNotSolved !== "number" || !(r.previousCallsWithRequest > 0)) return null;
+    return Math.round((r.notSolved / r.callsWithRequest - r.previousNotSolved / r.previousCallsWithRequest) * 100);
+}
+
 function assistantShare(row, key) {
     const of = ASSISTANT_SHARES[key];
     if (!of) throw new Error("CallInsights.assistantShare: " + key + " is not a share");
@@ -401,6 +413,7 @@ export default {
     noConversationRows,
     extractionProblems,
     assistantShare,
+    notSolvedChange,
     PAGE_SIZE,
     pageOf,
     businessLabel,

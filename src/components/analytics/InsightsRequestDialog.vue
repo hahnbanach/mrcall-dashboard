@@ -143,10 +143,18 @@
       <p class="request-result">{{ refusalText }}</p>
       <div class="request-actions">
         <Button v-if="refusal === 'no_credit' && hasPeriod" type="button" outlined :label="$t('components.callInsights.request.shorter')" @click="tryShorter" />
+        <!-- an admin refused for the business's credit can run the same work at MrCall's cost (the U17b review) -->
+        <Button
+          v-if="(refusal === 'no_credit' || refusal === 'reserve') && isAdmin && !platformPaid"
+          type="button" outlined
+          :label="$t('components.callInsights.request.platformInstead')"
+          @click="runAtPlatformCost"
+        />
         <router-link v-if="refusal === 'no_credit' || refusal === 'reserve'" :to="planLink" class="p-button p-component p-button-outlined request-link" @click="close">
           {{ $t("components.callInsights.request.topUp") }}
         </router-link>
-        <router-link v-if="refusal === 'reserve' && topUp !== true" :to="planLink" class="p-button p-component p-button-outlined request-link" @click="close">
+        <!-- only when StarChat says the business's automatic top-up is not effective (its estimate's topUpEffective) -->
+        <router-link v-if="refusal === 'reserve' && topUpEffective === false" :to="planLink" class="p-button p-component p-button-outlined request-link" @click="close">
           {{ $t("components.callInsights.request.enableTopUp") }}
         </router-link>
         <router-link v-if="refusal === 'job_open'" :to="jobsLink" class="p-button p-component p-button-outlined request-link" @click="close">
@@ -164,7 +172,6 @@
 <script>
 import CallInsights from "@/utils/CallInsights";
 import InsightsReports from "@/utils/InsightsReports";
-import { topUpOn } from "@/utils/TopUp";
 import { isSessionEnded } from "@/firebase/session";
 
 const POLL_MS = 1500;
@@ -216,7 +223,7 @@ export default {
       cancelling: false,
       refusal: null,
       refusalJob: null,
-      topUp: null,
+      topUpEffective: null,
       reEstimates: 0,
       now: Date.now(),
     };
@@ -337,7 +344,7 @@ export default {
     busyText() {
       const job = this.refusalJob;
       if (!job) return this.$t("components.callInsights.request.busyUnknown");
-      const who = this.requesterName(job.requestedBy);
+      const who = this.requesterName(job);
       const when = InsightsReports.dateTimeLabel(job.createdAt, this.zone, this.locale);
       return this.$t("components.callInsights.request.busy", { who, when });
     },
@@ -380,11 +387,8 @@ export default {
     period(start, end) {
       return InsightsReports.periodLabel(start, end, this.zone, this.locale);
     },
-    requesterName(uid) {
-      const r = InsightsReports.requester(uid, { me: this.user() && this.user().uid, business: this.business });
-      if (!r) return this.$t("components.callInsights.requester.staff");
-      if (r.kind === "owner") return r.name ? this.$t("components.callInsights.requester.owner", { name: r.name }) : this.$t("components.callInsights.requester.ownerNoName");
-      return this.$t("components.callInsights.requester." + r.kind);
+    requesterName(item) {
+      return InsightsReports.requesterLabel(this.$t, item, { me: this.$store.state.user && this.$store.state.user.uid, business: this.business });
     },
     start() {
       this.now = Date.now();
@@ -489,7 +493,7 @@ export default {
       }
       if (job.status !== "done" || !job.estimate) { this.showRefusal("failed"); return; }
       const e = job.estimate;
-      if (e.fits === false) { this.showRefusal(e.reason || "no_credit"); return; }
+      if (e.fits === false) { this.showRefusal(e.reason || "no_credit", e); return; }
       if (this.mode !== "anticipate" && this.mode !== "regenerate" && (e.calls === 0 || (this.jobKind === "report" && e.requests === 0))) {
         this.showRefusal("no_calls");
         return;
@@ -535,7 +539,7 @@ export default {
         return;
       }
       this.$emit("ended", job);
-      if (job.status === "refused") { this.showRefusal(job.error || "failed"); return; }
+      if (job.status === "refused") { this.showRefusal(job.error || "failed", job.estimate); return; }
       this.step = "result";
     },
     cancelJob() {
@@ -563,13 +567,17 @@ export default {
     stopPolling() {
       if (this.timer) { clearTimeout(this.timer); this.timer = null; }
     },
-    showRefusal(code) {
+    // `topUpEffective` is StarChat's, from the estimate that was refused (or the job's own estimate): absent, it offers
+    // nothing to switch on.
+    showRefusal(code, estimate = null) {
       this.refusal = code;
       this.step = "refused";
-      if (code === "reserve") {
-        this.topUp = null;
-        topUpOn(this.user(), this.business, this.locale).then((on) => { this.topUp = on; });
-      }
+      this.topUpEffective = estimate && typeof estimate.topUpEffective === "boolean" ? estimate.topUpEffective : null;
+    },
+    runAtPlatformCost() {
+      this.refusal = null;
+      this.platformPays = true;
+      this.estimate();
     },
     fail(error) {
       if (isSessionEnded(error)) { this.close(); return; }

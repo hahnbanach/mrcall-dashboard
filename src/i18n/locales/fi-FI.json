@@ -2047,7 +2047,9 @@
           "unanswered": "Avoimet kysymykset",
           "checks": "Tarkistukset",
           "skillErrors": "Skill-virheet",
-          "extractionIssues": "Poiminta"
+          "extractionIssues": "Poiminta",
+          "change": "Muutos",
+          "configSuggestions": "MrCallin ehdotukset"
         },
         "legend": {
           "notSolved": "ratkaisematta, sekä yritykselle puutteellisella viestillä välitetyt pyynnöt, niistä puheluista, joissa soittaja kysyi jotain",
@@ -2057,7 +2059,9 @@
           "unanswered": "puhelut, joissa kysymys jäi vastaamatta, puheluista, joissa kysymykset kirjattiin",
           "checks": "puhelut, joissa tarkistus laukesi, tarkistetuista puheluista",
           "skillErrors": "puhelut, joissa oli skill-virhe, kaikista puheluista",
-          "extractionIssues": "puhelut, joiden tietojen poiminta epäonnistui, puheluista, joissa poiminta suoritettiin"
+          "extractionIssues": "puhelut, joiden tietojen poiminta epäonnistui, puheluista, joissa poiminta suoritettiin",
+          "change": "\"Ratkaisematta\" nyt verrattuna edelliseen yhtä pitkään jaksoon, prosenttiyksikköinä; viiva, jos kummallakaan jaksolla ei ole puheluita, joissa oli pyyntö",
+          "configSuggestions": "MrCallin määritysehdotukset viimeisimmässä automaattisessa raportissa"
         },
         "legendTitle": "Miten kukin sarake lasketaan",
         "assessedShort": "arvioitu",
@@ -2073,7 +2077,8 @@
           "inDebt": "Velkaa",
           "unknown": "Ei tiedossa",
           "planOther": "Tilaus ei ole aktiivinen"
-        }
+        },
+        "changePoints": "{sign}{n} prosenttiyksikköä"
       },
       "scope": {
         "allBusinesses": "Kaikissa yrityksissä, jotka voit nähdä, viimeisten 30 päivän ajalta.",
@@ -2142,7 +2147,9 @@
         "you": "Sinä",
         "owner": "{name} (omistaja)",
         "ownerNoName": "Omistaja",
-        "staff": "MrCall tai jälleenmyyjä"
+        "reseller": "Jälleenmyyjä",
+        "admin": "MrCall",
+        "system": "Automaattinen"
       },
       "status": {
         "ready": "Valmis",
@@ -2172,7 +2179,6 @@
         "days": "{days} päivää",
         "callsOfManaged": "{calls} / {managed} hoidetusta",
         "callsAnalysed": "{calls} analysoitu",
-        "automaticBy": "Automaattinen",
         "open": "Avaa",
         "regenerate": "Laadi uudelleen",
         "regenerateOf": "Laadi raportti {period} uudelleen",
@@ -2224,7 +2230,8 @@
         "qualityBefore": "Edellinen jakso",
         "qualityBase": "Puhelut lasketaan niistä {calls} puhelusta, joille tämä tarkistus on tallennettu.",
         "draftAdded": "Lisäsimme kysymyksen kysymyksiisi ja vastauksiisi: kirjoita vastaus ja tallenna.",
-        "draftPresent": "Tämä kysymys on jo kysymyksissäsi ja vastauksissasi."
+        "draftPresent": "Tämä kysymys on jo kysymyksissäsi ja vastauksissasi.",
+        "version": "Versio {n}"
       },
       "deleteReport": {
         "title": "Poista raportti",
@@ -2288,7 +2295,8 @@
         "cancelReport": "Peruuta: raporttia ei kirjoiteta, eikä saldoa kuluteta.",
         "cancelRecompute": "Se pysähtyy käynnissä olevan puhelun jälkeen. Jo analysoidut puhelut säilyvät, ja ne ovat kuluttaneet yrityksen saldoa.",
         "cancelled": "Käsittely peruttu.",
-        "keepOpen": "Voit sulkea tämän ikkunan: käsittely jatkuu, ja löydät sen kohdasta Käsittely."
+        "keepOpen": "Voit sulkea tämän ikkunan: käsittely jatkuu, ja löydät sen kohdasta Käsittely.",
+        "platformInstead": "Suorita MrCallin kustannuksella"
       },
       "recompute": {
         "banner": "{n} tällä jaksolla hoidetulla puhelulla ei ole vielä automaattista analyysia, joten lopputulokset, aiheet ja laatu eivät laske niitä mukaan.",
@@ -2357,11 +2365,15 @@
           "steady": "Vakaa",
           "falling": "Laskussa",
           "stale": "Ei enää pyydetty viime aikoina"
-        }
+        },
+        "hiddenExamples": "Piilotetut esimerkit",
+        "hiddenAs": "Piilotettu {date}: {reason}",
+        "restoreExampleOf": "Palauta esimerkki ”{text}”"
       },
       "admin": {
         "reason": {
-          "reserve": "Puheluille varattu saldo"
+          "reserve": "Puheluille varattu saldo",
+          "over_ceiling": "Suurempi kuin arvio salli"
         }
       }
     }

@@ -591,3 +591,16 @@ describe('serverPage: the one mechanism of a server-paged list', () => {
     expect(page.items).toEqual(['new'])
   })
 })
+
+describe('notSolvedChange: "Non risolte" against the period before, in points', () => {
+  it('the share now minus the share before, rounded once', () => {
+    expect(CallInsights.notSolvedChange({ notSolved: 29, callsWithRequest: 60, previousNotSolved: 20, previousCallsWithRequest: 50 })).toBe(8)
+    expect(CallInsights.notSolvedChange({ notSolved: 10, callsWithRequest: 100, previousNotSolved: 30, previousCallsWithRequest: 100 })).toBe(-20)
+  })
+
+  it('nothing to compare without calls with a request in either period, or before StarChat sends the fields', () => {
+    expect(CallInsights.notSolvedChange({ notSolved: 5, callsWithRequest: 10, previousNotSolved: 0, previousCallsWithRequest: 0 })).toBeNull()
+    expect(CallInsights.notSolvedChange({ notSolved: 0, callsWithRequest: 0, previousNotSolved: 3, previousCallsWithRequest: 9 })).toBeNull()
+    expect(CallInsights.notSolvedChange({ notSolved: 5, callsWithRequest: 10 })).toBeNull()
+  })
+})

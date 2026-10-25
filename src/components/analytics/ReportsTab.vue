@@ -53,7 +53,7 @@
           <span class="recent-status">
             {{ $t("components.callInsights.status." + statusOfJob(job)) }}<template v-if="reasonOfJob(job)"> · {{ $t("components.callInsights.admin.reason." + reasonOfJob(job)) }}</template>
           </span>
-          <span class="recent-meta">{{ requesterName(job.requestedBy) }} · {{ dateTime(job.createdAt) }}</span>
+          <span class="recent-meta">{{ requesterName(job) }} · {{ dateTime(job.createdAt) }}</span>
           <router-link v-if="jobReport(job)" :to="jobReport(job)" class="recent-open">{{ $t("components.callInsights.reportsTab.open") }}</router-link>
         </li>
       </ul>
@@ -112,7 +112,7 @@
           <span class="history-status" :class="'status-' + row.status">{{ $t("components.callInsights.status." + statusOf(row)) }}</span>
         </template>
         <template #cell-calls="{ row }">{{ callsText(row) }}</template>
-        <template #cell-requestedBy="{ row }">{{ row.type === 'requested' ? requesterName(row.requestedBy) : $t("components.callInsights.reportsTab.automaticBy") }}</template>
+        <template #cell-requestedBy="{ row }">{{ requesterName(row) }}</template>
         <template #cell-createdAt="{ row }">{{ dateTime(row.createdAt) }}</template>
         <template #cell-actions="{ row }">
           <span class="history-actions">
@@ -308,11 +308,8 @@ export default {
       if (typeof row.callsManaged === "number") return this.$t("components.callInsights.reportsTab.callsOfManaged", { calls: row.calls, managed: row.callsManaged });
       return this.$t("components.callInsights.reportsTab.callsAnalysed", { calls: row.calls });
     },
-    requesterName(uid) {
-      const r = InsightsReports.requester(uid, { me: this.$store.state.user && this.$store.state.user.uid, business: this.business });
-      if (!r) return "–";
-      if (r.kind === "owner") return r.name ? this.$t("components.callInsights.requester.owner", { name: r.name }) : this.$t("components.callInsights.requester.ownerNoName");
-      return this.$t("components.callInsights.requester." + r.kind);
+    requesterName(item) {
+      return InsightsReports.requesterLabel(this.$t, item, { me: this.$store.state.user && this.$store.state.user.uid, business: this.business });
     },
     detailLink(row) {
       const query = { id: this.business.businessId, start: String(row.periodStart) };

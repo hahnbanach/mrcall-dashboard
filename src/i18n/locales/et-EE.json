@@ -2047,7 +2047,9 @@
           "unanswered": "Avatud küsimused",
           "checks": "Kontrollid",
           "skillErrors": "Skilli vead",
-          "extractionIssues": "Eraldamine"
+          "extractionIssues": "Eraldamine",
+          "change": "Muutus",
+          "configSuggestions": "MrCalli soovitused"
         },
         "legend": {
           "notSolved": "lahendamata, lisaks ettevõttele puuduliku sõnumiga edastatud palved, nende kõnede seast, kus helistaja midagi küsis",
@@ -2057,7 +2059,9 @@
           "unanswered": "kõned, kus küsimus jäi vastuseta, kõnedest, kus küsimused registreeriti",
           "checks": "kõned, kus kontroll rakendus, kontrollitud kõnedest",
           "skillErrors": "skilli veaga kõned, kõigist kõnedest",
-          "extractionIssues": "kõned, mille andmete eraldamine ebaõnnestus, kõnedest, kus eraldamine tehti"
+          "extractionIssues": "kõned, mille andmete eraldamine ebaõnnestus, kõnedest, kus eraldamine tehti",
+          "change": "\"Lahendamata\" nüüd võrreldes eelmise sama pika perioodiga, protsendipunktides; kriips, kui ühelgi kahest perioodist pole päringuga kõnesid",
+          "configSuggestions": "MrCalli seadistussoovitused viimases automaatses aruandes"
         },
         "legendTitle": "Kuidas iga veergu loetakse",
         "assessedShort": "hinnatud",
@@ -2073,7 +2077,8 @@
           "inDebt": "Võlgnevus",
           "unknown": "Teadmata",
           "planOther": "Pakett ei ole aktiivne"
-        }
+        },
+        "changePoints": "{sign}{n} punkti"
       },
       "scope": {
         "allBusinesses": "Kõigis ettevõtetes, mida näed, viimase 30 päeva jooksul.",
@@ -2142,7 +2147,9 @@
         "you": "Sina",
         "owner": "{name} (omanik)",
         "ownerNoName": "Omanik",
-        "staff": "MrCall või edasimüüja"
+        "reseller": "Edasimüüja",
+        "admin": "MrCall",
+        "system": "Automaatne"
       },
       "status": {
         "ready": "Valmis",
@@ -2172,7 +2179,6 @@
         "days": "{days} päeva",
         "callsOfManaged": "{calls} / {managed} käsitletust",
         "callsAnalysed": "{calls} analüüsitud",
-        "automaticBy": "Automaatne",
         "open": "Ava",
         "regenerate": "Koosta uuesti",
         "regenerateOf": "Koosta aruanne {period} uuesti",
@@ -2224,7 +2230,8 @@
         "qualityBefore": "Eelnev periood",
         "qualityBase": "Kõned loetud nendest {calls} kõnest, mille kohta see kontroll on salvestatud.",
         "draftAdded": "Lisasime küsimuse sinu küsimuste ja vastuste hulka: kirjuta vastus ja salvesta.",
-        "draftPresent": "See küsimus on juba sinu küsimuste ja vastuste hulgas."
+        "draftPresent": "See küsimus on juba sinu küsimuste ja vastuste hulgas.",
+        "version": "Versioon {n}"
       },
       "deleteReport": {
         "title": "Kustuta aruanne",
@@ -2288,7 +2295,8 @@
         "cancelReport": "Tühista: aruannet ei kirjutata ja krediiti ei kulutata.",
         "cancelRecompute": "See peatub pärast pooleliolevat kõnet. Juba analüüsitud kõned jäävad alles ja need on kulutanud ettevõtte krediiti.",
         "cancelled": "Töötlus tühistatud.",
-        "keepOpen": "Võid selle akna sulgeda: töötlus jätkub ja leiad selle jaotisest Töötlemine."
+        "keepOpen": "Võid selle akna sulgeda: töötlus jätkub ja leiad selle jaotisest Töötlemine.",
+        "platformInstead": "Käivita MrCalli kulul"
       },
       "recompute": {
         "banner": "{n} sellel perioodil käsitletud kõnel ei ole veel automaatset analüüsi, mistõttu tulemused, teemad ja kvaliteet neid ei arvesta.",
@@ -2357,11 +2365,15 @@
           "steady": "Stabiilne",
           "falling": "Langeb",
           "stale": "Viimasel ajal ei ole küsitud"
-        }
+        },
+        "hiddenExamples": "Peidetud näited",
+        "hiddenAs": "Peidetud {date}: {reason}",
+        "restoreExampleOf": "Taasta näide „{text}“"
       },
       "admin": {
         "reason": {
-          "reserve": "Kõnede reserv"
+          "reserve": "Kõnede reserv",
+          "over_ceiling": "Suurem, kui hinnang lubas"
         }
       }
     }

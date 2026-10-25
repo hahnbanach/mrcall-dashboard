@@ -2047,7 +2047,9 @@
           "unanswered": "Åpne spørsmål",
           "checks": "Kontroller",
           "skillErrors": "Skillfeil",
-          "extractionIssues": "Uttrekk"
+          "extractionIssues": "Uttrekk",
+          "change": "Endring",
+          "configSuggestions": "MrCall-forslag"
         },
         "legend": {
           "notSolved": "ikke løst, pluss henvendelser sendt videre til virksomheten med en ufullstendig beskjed, av samtalene der den som ringte, spurte om noe",
@@ -2057,7 +2059,9 @@
           "unanswered": "samtaler med et ubesvart spørsmål, av samtalene der spørsmål ble registrert",
           "checks": "samtaler der en kontroll slo ut, av de kontrollerte samtalene",
           "skillErrors": "samtaler med en skillfeil, av alle samtaler",
-          "extractionIssues": "samtaler der datauttrekket mislyktes, av samtalene der uttrekket ble kjørt"
+          "extractionIssues": "samtaler der datauttrekket mislyktes, av samtalene der uttrekket ble kjørt",
+          "change": "\"Ikke løst\" nå sammenlignet med forrige periode av samme lengde, i prosentpoeng; en strek hvis en av periodene ikke har samtaler med en forespørsel",
+          "configSuggestions": "MrCalls konfigurasjonsforslag i den siste automatiske rapporten"
         },
         "legendTitle": "Hvordan hver kolonne telles",
         "assessedShort": "vurdert",
@@ -2073,7 +2077,8 @@
           "inDebt": "Med gjeld",
           "unknown": "Ukjent",
           "planOther": "Abonnementet er ikke aktivt"
-        }
+        },
+        "changePoints": "{sign}{n} poeng"
       },
       "scope": {
         "allBusinesses": "På tvers av alle virksomheter du kan se, de siste 30 dagene.",
@@ -2142,7 +2147,9 @@
         "you": "Deg",
         "owner": "{name} (eier)",
         "ownerNoName": "Eieren",
-        "staff": "MrCall eller forhandleren"
+        "reseller": "Forhandleren",
+        "admin": "MrCall",
+        "system": "Automatisk"
       },
       "status": {
         "ready": "Klar",
@@ -2172,7 +2179,6 @@
         "days": "{days} dager",
         "callsOfManaged": "{calls} av {managed} behandlet",
         "callsAnalysed": "{calls} analysert",
-        "automaticBy": "Automatisk",
         "open": "Åpne",
         "regenerate": "Lag på nytt",
         "regenerateOf": "Lag rapporten {period} på nytt",
@@ -2224,7 +2230,8 @@
         "qualityBefore": "Perioden før",
         "qualityBase": "Samtaler regnet av de {calls} samtalene der denne kontrollen er registrert.",
         "draftAdded": "Vi har lagt spørsmålet til i spørsmålene og svarene dine: skriv svaret og lagre.",
-        "draftPresent": "Dette spørsmålet finnes allerede blant spørsmålene og svarene dine."
+        "draftPresent": "Dette spørsmålet finnes allerede blant spørsmålene og svarene dine.",
+        "version": "Versjon {n}"
       },
       "deleteReport": {
         "title": "Slett rapporten",
@@ -2288,7 +2295,8 @@
         "cancelReport": "Avbryt: rapporten blir ikke skrevet, og det brukes ingen kreditt.",
         "cancelRecompute": "Den stopper etter samtalen som pågår. Samtalene som allerede er analysert, blir værende, og de har brukt virksomhetens kreditt.",
         "cancelled": "Behandlingen er avbrutt.",
-        "keepOpen": "Du kan lukke dette vinduet: behandlingen fortsetter, og du finner den under Behandling."
+        "keepOpen": "Du kan lukke dette vinduet: behandlingen fortsetter, og du finner den under Behandling.",
+        "platformInstead": "Kjør for MrCalls regning"
       },
       "recompute": {
         "banner": "{n} samtaler behandlet i denne perioden har ikke den automatiske analysen ennå, så utfall, emner og kvalitet tar dem ikke med.",
@@ -2357,11 +2365,15 @@
           "steady": "Stabil",
           "falling": "Synkende",
           "stale": "Ikke etterspurt i det siste"
-        }
+        },
+        "hiddenExamples": "Skjulte eksempler",
+        "hiddenAs": "Skjult {date}: {reason}",
+        "restoreExampleOf": "Gjenopprett eksempelet «{text}»"
       },
       "admin": {
         "reason": {
-          "reserve": "Reserve for samtaler"
+          "reserve": "Reserve for samtaler",
+          "over_ceiling": "Større enn estimatet tillot"
         }
       }
     }

@@ -10,6 +10,7 @@
           <h2 class="report-title">{{ $t("components.callInsights.reportDetail.title", { period: periodText }) }}</h2>
           <div class="report-tags">
             <Tag severity="secondary" :value="$t('components.callInsights.reports.type.' + (onRequest ? 'requested' : 'automatic'))" />
+            <span class="report-version">{{ $t("components.callInsights.reportDetail.version", { n: (report.revision || 0) + 1 }) }}</span>
             <span v-if="onRequest" class="report-help">{{ $t("components.callInsights.reports.type.onRequestHelp") }}</span>
           </div>
           <div class="report-actions">

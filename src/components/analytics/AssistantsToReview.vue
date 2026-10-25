@@ -50,6 +50,8 @@
       <template v-for="column in shareColumns" :key="column.sort" #[cellSlot(column)]="{ row }">
         <span class="assistant-share">{{ shareOf(row, column.sort) }}</span>
       </template>
+      <template #cell-change="{ row }">{{ changeOf(row) }}</template>
+      <template #cell-suggestions="{ row }">{{ typeof row.configSuggestions === "number" ? row.configSuggestions : "–" }}</template>
       <template #cell-health="{ row }">
         <span class="assistant-health">
           <span v-for="word in healthOf(row)" :key="word" class="assistant-health-flag">{{ word }}</span>
@@ -57,6 +59,12 @@
       </template>
     </PagedTable>
     <dl class="assistants-legend" :aria-label="$t('components.callInsights.assistants.legendTitle')">
+      <dt>{{ $t("components.callInsights.assistants.short.change") }}</dt>
+      <dd>{{ $t("components.callInsights.assistants.legend.change") }}</dd>
+      <template v-if="showSuggestions">
+        <dt>{{ $t("components.callInsights.assistants.short.configSuggestions") }}</dt>
+        <dd>{{ $t("components.callInsights.assistants.legend.configSuggestions") }}</dd>
+      </template>
       <template v-for="column in shareColumns" :key="column.sort">
         <dt>{{ $t("components.callInsights.assistants.short." + column.label) }}</dt>
         <dd>
@@ -116,6 +124,9 @@ export default {
     };
   },
   computed: {
+    showSuggestions() {
+      return this.table.items.some((row) => typeof row.configSuggestions === "number");
+    },
     shareColumns() {
       return SHARE_COLUMNS;
     },
@@ -125,6 +136,10 @@ export default {
         { key: "business", label: this.$t("components.callInsights.assistants.businessId"), class: "assistant-business-column" },
         { key: "calls", label: short("calls"), sortKey: "calls" },
         ...SHARE_COLUMNS.map((c) => ({ key: c.sort, label: short(c.label) + (c.assessed ? " (" + this.$t("components.callInsights.assistants.assessedShort") + ")" : ""), sortKey: c.sort })),
+        // "Non risolte" against the period before, beside the shares (not a server sort)
+        { key: "change", label: short("change") },
+        // MrCall's configuration suggestions: an admin's only (StarChat sends them to no one else)
+        ...(this.showSuggestions ? [{ key: "suggestions", label: short("configSuggestions") }] : []),
         { key: "health", label: this.$t("components.callInsights.assistants.healthTitle") },
       ];
     },
@@ -156,6 +171,12 @@ export default {
       if (sort === "not_solved" && typeof row.notSolved !== "number") return "–";
       const { count, base, percent } = CallInsights.assistantShare(row, sort);
       return this.$t("components.callInsights.assistants.shareOfTotal", { percent, count, total: base });
+    },
+    changeOf(row) {
+      const points = CallInsights.notSolvedChange(row);
+      if (points === null) return "–";
+      const sign = points > 0 ? "+" : points < 0 ? "−" : "±";
+      return this.$t("components.callInsights.assistants.changePoints", { sign, n: Math.abs(points) });
     },
     // The account in words, no amount: a debt or low credit, and the plan's state when it is not plainly active
     // (named as the plan page names it); "In regola" when none applies.

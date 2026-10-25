@@ -29,7 +29,7 @@ function historyRows () {
     const start = end - 7 * DAY
     rows.push({
       periodStart: start, periodEnd: end, status: 'done', type: 'automatic', revision: 0, days: 7,
-      calls: 40 + i, callsManaged: 45 + i, failures: 0, createdAt: end + 3 * 3600 * 1000,
+      calls: 40 + i, callsManaged: 45 + i, failures: 0, createdAt: end + 3 * 3600 * 1000, requesterRole: 'system',
     })
   }
   rows[0].status = 'claimed'
@@ -45,8 +45,10 @@ function historyRows () {
   // a requested report: 1-7 October, asked by the owner, version 2 (one regeneration)
   rows[1] = {
     periodStart: rome(2026, 10, 1), periodEnd: rome(2026, 10, 8), status: 'done', type: 'requested', revision: 1, days: 7,
-    calls: 120, callsManaged: 130, requestId: 'job-req-1', requestedBy: mockUser.uid, failures: 0, createdAt: rome(2026, 10, 9) + 10 * 3600 * 1000,
+    calls: 120, callsManaged: 130, requestId: 'job-req-1', requestedBy: mockUser.uid, requesterRole: 'owner', failures: 0, createdAt: rome(2026, 10, 9) + 10 * 3600 * 1000,
   }
+  // a report the reseller asked for
+  Object.assign(rows[5], { type: 'requested', requestId: 'job-req-5', requestedBy: 'reseller-uid-12345', requesterRole: 'reseller' })
   // a report of before 10 October without its managed calls
   delete rows[6].callsManaged
   return rows
@@ -74,6 +76,9 @@ const REPORT = {
   periodStart: rome(2026, 10, 1),
   periodEnd: rome(2026, 10, 8),
   requestId: 'job-req-1',
+  revision: 1,
+  requestedBy: mockUser.uid,
+  requesterRole: 'owner',
   content: {
     version: 3,
     period: { from: '2026-09-30T22:00:00Z', to: '2026-10-07T22:00:00Z' },
@@ -133,7 +138,7 @@ const OUTCOMES = {
 function job (over = {}) {
   return {
     jobId: 'job-1', businessId: BUSINESS_ID, kind: 'report', status: 'queued', from: rome(2026, 9, 24), to: rome(2026, 10, 24),
-    counts: {}, createdAt: rome(2026, 10, 24) + 9 * 3600 * 1000, requestedBy: mockUser.uid, phase: 'queued', ...over,
+    counts: {}, createdAt: rome(2026, 10, 24) + 9 * 3600 * 1000, requestedBy: mockUser.uid, requesterRole: 'owner', phase: 'queued', ...over,
   }
 }
 
@@ -142,12 +147,16 @@ function estimateJob (over = {}) {
     estimate: { fits: true, kind: 'report', calls: 120, toSend: 1, skipped: 0, reasoned: 0, left: 0, notFinalised: 0, requests: 1 }, ...over })
 }
 
+// Who asked, in every role StarChat records (`requesterRole`), and one it does not know (null).
 const JOBS = {
-  total: 3,
+  total: 6,
   items: [
     job({ jobId: 'job-run', kind: 'recompute', status: 'running', phase: 'working', estimate: { calls: 40 }, counts: { written: 10, reasoned: 2 } }),
     job({ jobId: 'job-done', status: 'done', phase: 'finished', counts: { requests: 1 }, result: { reports: [{ periodStart: rome(2026, 10, 1), periodEnd: rome(2026, 10, 8), requestId: 'job-req-1' }] } }),
-    job({ jobId: 'job-refused', status: 'refused', phase: 'finished', error: 'reserve', requestedBy: 'admin-uid-12345', mode: 'automatic_now' }),
+    job({ jobId: 'job-refused', status: 'refused', phase: 'finished', error: 'reserve', requestedBy: 'admin-uid-12345', requesterRole: 'admin', mode: 'automatic_now' }),
+    job({ jobId: 'job-reseller', status: 'refused', phase: 'finished', error: 'over_ceiling', requestedBy: 'reseller-uid-12345', requesterRole: 'reseller', from: rome(2026, 9, 1), to: rome(2026, 9, 8) }),
+    job({ jobId: 'job-owner-other', status: 'cancelled', phase: 'finished', requestedBy: 'owner-uid-other', requesterRole: 'owner', from: rome(2026, 8, 1), to: rome(2026, 8, 8) }),
+    job({ jobId: 'job-unknown', status: 'done', phase: 'finished', counts: { requests: 0 }, requestedBy: 'gone-uid', requesterRole: null, from: rome(2026, 7, 1), to: rome(2026, 7, 8) }),
   ],
 }
 
@@ -180,17 +189,21 @@ function assistantRow (i) {
     callsWithChecks: 80, checks: { caller_repeated: 2 }, callsWithUnansweredRecorded: 80, callsWithUnanswered: 8, gaps: {}, callsWithSkillErrors: 1,
     extractionsNotOk: 0, extractionsRun: 80, callsManaged: 80, noConversation: { caller_silent: 4 }, callsAnswered: 84, callsOffered: 90,
     callsWithRequest: 60, notSolved: 30 - i, callsWithAnyCheck: 2,
+    // the period before (StarChat U13c): row 1 at 20 of 50, row 2 with no request then
+    previousCallsWithRequest: i === 2 ? 0 : 50, previousNotSolved: i === 2 ? 0 : 20,
     accountHealth: i === 1 ? { subscriptionStatus: 'ACTIVE', creditLow: true, inDebt: false } : i === 2 ? { subscriptionStatus: 'UNPAID', creditLow: false, inDebt: true } : { subscriptionStatus: 'ACTIVE', creditLow: false, inDebt: false },
   }
 }
 
-function assistantsPage (url) {
+function assistantsPage (url, forAdmin = false) {
   const q = new URL(url).searchParams
   const from = Number(q.get('from') || 0)
   const size = Number(q.get('size') || 10)
   let all = Array.from({ length: 23 }, (_, i) => assistantRow(i + 1))
   const search = q.get('search')
   if (search) all = all.filter((r) => (r.businessName || '').toLowerCase().includes(search.toLowerCase()))
+  // MrCall's configuration suggestions of each row's latest automatic report, for an admin only; none without a report
+  if (forAdmin) all = all.map((r, i) => (i === 2 ? r : { ...r, configSuggestions: i + 1 }))
   return { period: { from: 0, to: 0 }, sort: q.get('sort') || 'not_solved', businesses: all.slice(from, from + size), total: all.length, from, size, direction: q.get('direction') || 'desc' }
 }
 
@@ -229,7 +242,7 @@ const json = (body, status = 200) => ({ status, contentType: 'application/json',
  * Answers the insights routes on `page` and records each request in `asked` (`{method, url, body}`), keyed by
  * route. Options replace an answer: `reports`, `report`, `jobs`, `job` (by id), `estimate` (the job the estimate
  * route creates), `createJob` (a function of the body answering `{status, body}`), `categories`, `businesses`,
- * `outcomes`, `quality`, `products`.
+ * `outcomes`, `quality`, and `role` (admin answers carry admin-only fields).
  */
 async function mockInsights (page, options = {}) {
   const asked = { reports: [], report: [], overlap: [], estimate: [], create: [], job: [], jobs: [], cancel: [], delete: [],
@@ -247,7 +260,7 @@ async function mockInsights (page, options = {}) {
     route.fulfill(json(forReport ? (options.reportOutcomes || REPORT_OUTCOMES) : (options.outcomes || OUTCOMES)))
   })
   await page.route('**/customer/analytics/quality*', (route) => { record('quality', route); route.fulfill(json(options.quality || REPORT_QUALITY)) })
-  await page.route('**/customer/analytics/assistants*', (route) => { record('assistants', route); route.fulfill(json(assistantsPage(route.request().url()))) })
+  await page.route('**/customer/analytics/assistants*', (route) => { record('assistants', route); route.fulfill(json(assistantsPage(route.request().url(), options.role === 'admin'))) })
   await page.route('**/customer/insights/reports*', (route) => {
     record('reports', route)
     route.fulfill(json(options.reports ? options.reports(route.request().url()) : reportsPage(route.request().url())))
@@ -299,7 +312,15 @@ async function mockInsights (page, options = {}) {
     record('cancel', route)
     route.fulfill(json(job({ jobId: 'job-new', status: 'cancelled', phase: 'finished' })))
   })
-  await page.route('**/customer/insights/integrations*', (route) => { record('categories', route); route.fulfill(json(options.categories || CATEGORIES)) })
+  // with includeDismissed, an admin's rows carry the examples hidden from them (StarChat U13c)
+  await page.route('**/customer/insights/integrations*', (route) => {
+    record('categories', route)
+    const answer = options.categories || CATEGORIES
+    const dismissed = new URL(route.request().url()).searchParams.get('includeDismissed') === 'true'
+    route.fulfill(json(dismissed && !options.categories
+      ? { ...answer, items: answer.items.map((r) => (r.category === 'online_booking' ? { ...r, dismissedExamples: [{ text: 'Can I pay online?', reason: 'not_relevant', at: rome(2026, 10, 12), by: 'admin-uid-12345' }] } : r)) }
+      : answer))
+  })
   await page.route('**/customer/insights/integrations/*/businesses*', (route) => {
     record('businesses', route)
     route.fulfill(json(options.businesses || { total: 12, asOf: 1761300000000, items: Array.from({ length: 10 }, (_, i) => ({ businessId: `biz-${i}`, name: `Studio ${i}`, lastSeen: '2026-10-2' + (i % 2), reportPeriodStart: rome(2026, 10, 14), examples: ['Can I book online?'] })) }))
@@ -307,8 +328,7 @@ async function mockInsights (page, options = {}) {
   await page.route('**/customer/insights/integrations/*/dismiss', (route) => { record('dismiss', route); route.fulfill(json({ category: 'x', reason: 'done', at: 1, by: 'a' })) })
   await page.route('**/customer/insights/integrations/*/examples/dismiss', (route) => { record('dismiss', route); route.fulfill(json({ category: 'x', reason: 'done', at: 1, by: 'a' })) })
   await page.route('**/customer/insights/integrations/*/restore', (route) => { record('restore', route); route.fulfill(json({ restored: 1 })) })
-  await page.route('**/crm/product?*', (route) => route.fulfill(json(options.products || [{ name: 'call50_euros', productType: 'onetime', topup: true }])))
-  await page.route('**/crm/product/onetime/status*', (route) => route.fulfill(json(options.topUpStatus || { status: 'CANCELED' })))
+  await page.route('**/customer/insights/integrations/*/examples/restore', (route) => { record('restore', route); route.fulfill(json({ restored: 1 })) })
   return asked
 }
 

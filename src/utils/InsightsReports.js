@@ -129,7 +129,7 @@ function reportStatusKey(row) {
 
 // Refused because the business's credit could not pay for the work. A refusal for the reserve kept for calls is not
 // "not enough credit" (the credit may well cover the work; it would leave the calls short): its reason is said apart
-// (`refusalReason`), as is a work above its cap (`over_ceiling`).
+// (`refusalReason`), as is a work larger than its estimate allowed (`over_ceiling`).
 const CREDIT_ERRORS = ["no_credit"];
 
 // A job (`InsightsJobStatus`, with its error and counts): queued, running, done, ceiling_reached, failed, cancelled,
@@ -150,7 +150,7 @@ function jobStatusKey(job) {
 }
 
 // The reason a refused job gives beside its state, as a key under `components.callInsights.admin.reason`, or null.
-const REFUSAL_REASONS = ["reserve"];
+const REFUSAL_REASONS = ["reserve", "over_ceiling"];
 function refusalReason(job) {
     return job && job.status === "refused" && REFUSAL_REASONS.includes(job.error) ? job.error : null;
 }
@@ -171,16 +171,28 @@ function jobProgress(job) {
 }
 
 /*
- * WHO ASKED. StarChat names the requester by its account id (`requestedBy`, a Firebase uid); an id says nothing to a
- * reader, so it is never shown. The reader is "you", the business's owner by the business's contact name; anyone
- * else, who can only be MrCall's staff or the owner's reseller, is said so. Naming that person needs StarChat to
- * answer a name with the id (a gap, recorded in the hand-back of 2026-10-24).
+ * WHO ASKED, by the role StarChat recorded for the request (`requesterRole`, StarChat U13c): never by an account id,
+ * which says nothing to a reader. The reader is "you"; otherwise the owner by the business's contact name, the
+ * reseller, MrCall (an admin), or "automatic" for an automatic report (`system`). A role StarChat does not know
+ * (`null`: a request written before roles were recorded, or gone) is a dash.
  */
-function requester(uid, { me, business } = {}) {
-    if (typeof uid !== "string" || uid === "") return null;
-    if (me && uid === me) return { kind: "you" };
-    if (business && business.owner && uid === business.owner) return { kind: "owner", name: business.ownerName || null };
-    return { kind: "staff" };
+const REQUESTER_ROLES = ["owner", "reseller", "admin", "system"];
+
+function requester(uid, role, { me, business } = {}) {
+    if (me && typeof uid === "string" && uid !== "" && uid === me) return { kind: "you" };
+    if (!REQUESTER_ROLES.includes(role)) return null;
+    if (role === "owner") return { kind: "owner", name: (business && business.ownerName) || null };
+    return { kind: role };
+}
+
+// The one label of a requester (`t` the i18n translate function): its words, or a dash.
+function requesterLabel(t, item, context) {
+    const r = requester(item && item.requestedBy, item && item.requesterRole, context);
+    if (!r) return "—";
+    if (r.kind === "owner") {
+        return r.name ? t("components.callInsights.requester.owner", { name: r.name }) : t("components.callInsights.requester.ownerNoName");
+    }
+    return t("components.callInsights.requester." + r.kind);
 }
 
 // A FREE business's owner is offered no paid work (StarChat answers it `plan_required`): the screens offer the plan
@@ -232,6 +244,7 @@ export default {
     jobOpen,
     jobProgress,
     requester,
+    requesterLabel,
     freeOwner,
     recomputeBanner,
     newRequestKey,

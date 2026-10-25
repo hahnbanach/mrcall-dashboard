@@ -19,7 +19,7 @@
         </span>
       </template>
       <template #cell-progress="{ row }">{{ progressText(row) }}</template>
-      <template #cell-requestedBy="{ row }">{{ requesterName(row.requestedBy) }}</template>
+      <template #cell-requestedBy="{ row }">{{ requesterName(row) }}</template>
       <template #cell-createdAt="{ row }">{{ dateTime(row.createdAt) }}</template>
       <template #cell-result="{ row }">
         <span class="jobs-actions">
@@ -129,11 +129,8 @@ export default {
     dateTime(ms) {
       return InsightsReports.dateTimeLabel(ms, this.zone, this.$i18n.locale);
     },
-    requesterName(uid) {
-      const r = InsightsReports.requester(uid, { me: this.$store.state.user && this.$store.state.user.uid, business: this.business });
-      if (!r) return "–";
-      if (r.kind === "owner") return r.name ? this.$t("components.callInsights.requester.owner", { name: r.name }) : this.$t("components.callInsights.requester.ownerNoName");
-      return this.$t("components.callInsights.requester." + r.kind);
+    requesterName(item) {
+      return InsightsReports.requesterLabel(this.$t, item, { me: this.$store.state.user && this.$store.state.user.uid, business: this.business });
     },
     reportsOf(row) {
       return row.result && Array.isArray(row.result.reports) ? row.result.reports : [];
