@@ -2379,7 +2379,7 @@
       "admin": {
         "reason": {
           "reserve": "Riserva per le chiamate",
-          "over_ceiling": "Più grande di quanto la stima consentiva"
+          "over_ceiling": "Più grande di quanto la stima consentisse"
         }
       }
     }

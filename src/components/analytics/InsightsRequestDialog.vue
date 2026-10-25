@@ -329,8 +329,9 @@ export default {
     },
     refusalText() {
       switch (this.refusal) {
-        case "no_credit":
-        case "over_ceiling": return this.$t("components.callInsights.request.notEnoughCredit");
+        case "no_credit": return this.$t("components.callInsights.request.notEnoughCredit");
+        // larger than its estimate allowed: the same reason, in the same words, as Processing gives it
+        case "over_ceiling": return this.$t("components.callInsights.admin.reason.over_ceiling");
         case "reserve": return this.$t("components.callInsights.request.reserve");
         case "automatic_pending": return this.$t("components.callInsights.request.automaticPending");
         case "report_exists": return this.$t("components.callInsights.request.overlap.same");

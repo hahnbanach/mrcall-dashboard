@@ -131,6 +131,19 @@ test.describe('a job over its cap', () => {
     await expect(row.getByText('Not run', { exact: true })).toBeVisible({ timeout: 15000 })
     await expect(row.getByText('Larger than its estimate allowed')).toBeVisible()
   })
+
+  // the dialog says the same reason as Processing, not "not enough credit" (the review of cf9a1c3)
+  test('the dialog of a job refused over its cap says the same reason as Processing', async ({ authenticatedPage: page }) => {
+    const { job } = require('../fixtures/insights')
+    await mockInsights(page, { createJob: () => ({ status: 202, body: job({ jobId: 'job-new', status: 'refused', phase: 'finished', error: 'over_ceiling' }) }) })
+    await page.goto(`/analytics?id=${BUSINESS_ID}&tab=reports`)
+    await page.getByRole('button', { name: 'Request a report' }).click({ timeout: 15000 })
+    const dialog = page.getByRole('dialog', { name: 'Request a report' })
+    await dialog.getByRole('button', { name: 'Continue' }).click()
+    await dialog.getByRole('button', { name: 'Confirm' }).click({ timeout: 15000 })
+    await expect(dialog.getByText('Larger than its estimate allowed')).toBeVisible()
+    await expect(dialog.getByText('Not enough credit for this processing.')).toHaveCount(0)
+  })
 })
 
 test.describe('the hidden examples of a category', () => {
