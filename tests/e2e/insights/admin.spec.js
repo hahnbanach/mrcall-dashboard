@@ -31,7 +31,7 @@ test.describe('Processing (owner)', () => {
     await expect(refused.getByText('Not run', { exact: true })).toBeVisible()
     await expect(refused.getByText('Reserve for calls')).toBeVisible()
     await expect(refused.getByText('Not run: not enough credit')).toHaveCount(0)
-    await expect(refused.getByRole('cell', { name: 'MrCall', exact: true })).toBeVisible()
+    await expect(refused.getByText('MrCall', { exact: true })).toBeVisible()
     const text = await page.locator('body').innerText()
     expect(text).not.toMatch(/€|EUR|\d+\s*credits?\b|tokens?|admin-uid/i)
   })

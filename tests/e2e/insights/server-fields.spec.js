@@ -15,6 +15,8 @@ const { mockInsights, BUSINESS_ID, estimateJob, REPORT } = require('../fixtures/
  * - an admin refused for credit can put the work at MrCall's cost; a job over its cap says why.
  * Each case was seen failing on 59eae9f, before this work.
  */
+// A cell is read by its text: on a phone each row is a card and the cell's accessible name also carries its column's
+// label (the card's `::before`), which a screen reader reads, and which an exact name would not match.
 const assistants = (page) => page.getByRole('table', { name: 'Assistants to review' })
 const jobsTable = (page) => page.getByRole('table', { name: 'Processing' })
 
@@ -23,11 +25,11 @@ test.describe('who asked, by the role StarChat recorded', () => {
     await mockInsights(page)
     await page.goto(`/analytics?id=${BUSINESS_ID}&tab=jobs`)
     const row = (text) => jobsTable(page).getByRole('row').filter({ hasText: text })
-    await expect(row('Automatic report prepared now').getByRole('cell', { name: 'MrCall', exact: true })).toBeVisible({ timeout: 15000 })
-    await expect(row('Sep 1, 2026 – Sep 7, 2026').getByRole('cell', { name: 'The reseller', exact: true })).toBeVisible()
-    await expect(row('Aug 1, 2026 – Aug 7, 2026').getByRole('cell', { name: 'Mario Rossi (owner)', exact: true })).toBeVisible()
-    await expect(row('Jul 1, 2026 – Jul 7, 2026').getByRole('cell', { name: '—', exact: true })).toBeVisible()
-    await expect(row('Analysis of the calls').getByRole('cell', { name: 'You', exact: true })).toBeVisible()
+    await expect(row('Automatic report prepared now').getByText('MrCall', { exact: true })).toBeVisible({ timeout: 15000 })
+    await expect(row('Sep 1, 2026 – Sep 7, 2026').getByText('The reseller', { exact: true })).toBeVisible()
+    await expect(row('Aug 1, 2026 – Aug 7, 2026').getByText('Mario Rossi (owner)', { exact: true })).toBeVisible()
+    await expect(row('Jul 1, 2026 – Jul 7, 2026').getByText('—', { exact: true })).toBeVisible()
+    await expect(row('Analysis of the calls').getByText('You', { exact: true })).toBeVisible()
     await expect(page.getByText(/uid/)).toHaveCount(0)
     await expect(page.getByText('MrCall or the reseller')).toHaveCount(0)
   })
@@ -37,9 +39,9 @@ test.describe('who asked, by the role StarChat recorded', () => {
     await page.goto(`/analytics?id=${BUSINESS_ID}&tab=reports`)
     const table = page.getByRole('table', { name: 'All reports' })
     // an admin reading the owner's request: the owner, named by the business's contact
-    await expect(table.getByRole('row').filter({ hasText: 'Oct 1, 2026 – Oct 7, 2026' }).getByRole('cell', { name: 'Mario Rossi (owner)', exact: true })).toBeVisible({ timeout: 15000 })
-    await expect(table.getByRole('row').filter({ hasText: 'Oct 14, 2026 – Oct 20, 2026' }).getByRole('cell', { name: 'Automatic', exact: true }).last()).toBeVisible()
-    await expect(table.getByRole('row').filter({ hasText: 'Sep 9, 2026 – Sep 15, 2026' }).getByRole('cell', { name: 'The reseller', exact: true })).toBeVisible()
+    await expect(table.getByRole('row').filter({ hasText: 'Oct 1, 2026 – Oct 7, 2026' }).getByText('Mario Rossi (owner)', { exact: true })).toBeVisible({ timeout: 15000 })
+    await expect(table.getByRole('row').filter({ hasText: 'Oct 14, 2026 – Oct 20, 2026' }).getByText('Automatic', { exact: true }).last()).toBeVisible()
+    await expect(table.getByRole('row').filter({ hasText: 'Sep 9, 2026 – Sep 15, 2026' }).getByText('The reseller', { exact: true })).toBeVisible()
   })
 })
 
@@ -50,11 +52,11 @@ test.describe('Assistants to review: the change and MrCall\'s suggestions', () =
     const table = assistants(page)
     const row = (name) => table.getByRole('row').filter({ has: page.getByRole('button', { name, exact: true }) })
     // 29 of 60 (48%) now, 20 of 50 (40%) before: 8 points more
-    await expect(row('Studio 1').getByRole('cell', { name: '+8 points', exact: true })).toBeVisible({ timeout: 15000 })
+    await expect(row('Studio 1').getByText('+8 points', { exact: true })).toBeVisible({ timeout: 15000 })
     // no request in the period before: no change to say
-    await expect(row('Studio 2').getByRole('cell', { name: '–', exact: true }).first()).toBeVisible()
+    await expect(row('Studio 2').getByText('–', { exact: true }).first()).toBeVisible()
     await expect(table.getByRole('columnheader', { name: 'MrCall suggestions' })).toBeVisible()
-    await expect(row('Studio 4').getByRole('cell', { name: '4', exact: true })).toBeVisible()
+    await expect(row('Studio 4').getByText('4', { exact: true })).toBeVisible()
   })
 
   test('reseller: no column of MrCall\'s suggestions', async ({ resellerPage: page }) => {
