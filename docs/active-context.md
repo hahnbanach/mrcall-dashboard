@@ -43,6 +43,14 @@ stays open. With a real session, the configuration page and its chat load, and t
 session stays open. The session-expired dialog is covered only by the browser
 tests, because it needs a real session that the server refuses.
 
+Branch `remove-legacy-calendar` (off `v2.2`, not deployed) removes the
+account-level Google Calendar connect from `/account` and from the `__SEND_DATA__` section; Google
+Calendar is authorized per skill only
+([brief](briefs/2026-10-26-remove-account-calendar-connect.md),
+[plan](execution-plans/2026-10-26-remove-account-calendar-connect.md)). StarChat is unchanged.
+Lint, vitest 405 of 405 and the full Playwright suite pass on it, apart from the intermittent
+failures below.
+
 ## Unresolved
 
 - The AI chat SSE client uses native fetch and bypasses the Axios interceptor;
@@ -53,14 +61,23 @@ tests, because it needs a real session that the server refuses.
   unverified.
 - `tests/unit/skillsOwnerSave.spec.js` takes 3.5 to 5.3 s against a 5 s timeout
   in a fresh worktree, and can time out there.
+- `tests/e2e/skills/oauth.spec.js` fails intermittently on the tablet and mobile projects:
+  on 2026-10-26, with `--repeat-each=3`, 4 of 12 runs of two of its cases failed on tablet on
+  the unmodified `v2.2` tree. Under a full run, `admin.spec.js` (mobile) and
+  `analytics-insights.spec.js:388` (desktop) also failed once and passed alone. The cause is not
+  yet measured.
+- The `__BOOKING__` section is not legacy: StarChat (source at 9.34 HEAD `ba76bda1b`) serves in it
+  `BOOKING_TRIGGER` and `NO_BOOKING_INSTRUCTIONS` (the no-booking prompt) and the hidden
+  `BOOKING_CALENDAR_ID` (a skill's fallback calendar, which businesses booking through the
+  platform's service account rely on). Hiding it needs those variables moved first, on the
+  StarChat side; the dashboard only names it in `menuGroups`. Awaiting Angelo's decision and a
+  read-only production measurement by StarChat.
 
 ## Next
 
 - Bring the session guard to production: either with the whole `v2.2` line once
   mrcall-agent and StarChat are promoted, or as a tag on `v2.2.21`. Either way
   needs authorization.
-- `tests/e2e/skills/oauth.spec.js` fails on the mobile project under repeated runs:
-  3 and 4 of 78 tests failed in the second and third of three repeats, on 5 s waits
-  for a button to become enabled. The cause is not yet measured.
+- Land `remove-legacy-calendar` on `v2.2` and deploy it to test; both need authorization.
 - Promoting the chat skill work beyond test requires promoting mrcall-agent first,
   plus authorization.

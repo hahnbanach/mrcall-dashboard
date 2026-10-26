@@ -34,13 +34,13 @@
 ### Naming Conventions
 - **Vue files**: PascalCase (`BusinessConfiguration.vue`, `ZylchChat.vue`)
 - **Utility modules**: PascalCase (`Business.js`, `BusinessVariables.js`, `OAuth.js`)
-- **Store modules**: camelCase (`calendar.js`, `tracking.js`)
+- **Store modules**: camelCase (`tracking.js`)
 - **Translation files**: locale format (`en-US.json`, `it-IT.json`)
 - **Route names**: PascalCase matching view names
 
 ### State Management
 - Vuex root store handles auth, user, business, onboarding, role state
-- Feature modules under `store/modules/` for calendar and tracking
+- Feature modules under `store/modules/` (currently `tracking`)
 - The secure-ls persistence reducer selects `onboardingData`, `role`, and `auth`; the current root state has no `auth` field. Firebase owns authentication persistence.
 - Access store via `this.$store` (Options API) or `import store from '@/store'` (external)
 

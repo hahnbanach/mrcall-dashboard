@@ -28,7 +28,7 @@ Entry point for this repository's documentation. Start here.
 
 | File | Contents |
 |------|----------|
-| [integration/google-oauth.md](integration/google-oauth.md) | Google sign-in, calendar/manual skill authorization and scope ownership |
+| [integration/google-oauth.md](integration/google-oauth.md) | Google sign-in, per-skill calendar authorization (chat handoff and manual editor) and scope ownership |
 | [integration/zylch-integration.md](integration/zylch-integration.md) | mrcall-agent integration: chat, installed-skill preview/Save/recovery and supported OAuth handoff |
 | [integration/restaurant-booking.md](integration/restaurant-booking.md) | Restaurant bookings page: what it owns versus the skill form, the page switch, what every booking carries, staff warnings, call-back requests (apply, Undo), the StarChat routes it uses |
 

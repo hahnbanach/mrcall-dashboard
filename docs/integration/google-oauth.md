@@ -46,7 +46,7 @@ carries an error diagnostic. It does not maintain a dashboard copy of every regi
 | Scope | Sensitivity | Requested by |
 |---|---|---|
 | `openid`, `email`, `profile` | non-sensitive | `GoogleSignIn.vue` (sign-in) |
-| `https://www.googleapis.com/auth/calendar` | **sensitive** | `ConnectCalendar.vue` and the supported chat skill handoff |
+| `https://www.googleapis.com/auth/calendar` | **sensitive** | The chat skill handoff, and the manual skill editor when the calendar manifest declares it |
 | Manifest-declared provider scopes | Provider-dependent | Manual skill editor, subject to catalogue diagnostics |
 
 The chat handoff deliberately supports only Google Calendar. Its local
@@ -54,7 +54,11 @@ The chat handoff deliberately supports only Google Calendar. Its local
 and calendar scopes; they are not an inventory of all scopes registered for the
 Google client. Bound callback processing also rejects scopes outside that supported
 set or missing requested calendar permission. Manual editor authorization and its
-legacy callback retain the catalogue-driven behavior.
+callback retain the catalogue-driven behavior.
+
+There is no account-level calendar connection. Google Calendar is authorized per
+skill, for a business and a grant name, and nothing in the dashboard asks for the
+calendar scope outside those two skill flows.
 
 Changing provider registrations requires the owning StarChat deployment and
 provider console to agree. The dashboard receives diagnostics rather than claiming
@@ -74,20 +78,34 @@ anyone who had connected a calendar it turned a plain login into a
 sensitive-scope authorization. It has been removed everywhere.
 
 The sign-in also no longer sends `access_type=offline`: Firebase owns the
-session and nothing reads a refresh token from the login. The calendar and skill
-flows keep both `access_type=offline` and `prompt=consent`, because StarChat
+session and nothing reads a refresh token from the login. The skill flows keep
+both `access_type=offline` and `prompt=consent`, because StarChat
 renews those grants server-side and Google returns a refresh token only on a
 first grant unless consent is re-requested.
 
 ## Where tokens live
 
 Not in the customer document. Since the authorization-system migration they are
-in PostgreSQL, table `user_oauth_providers`, primary key `(id, provider)`, with
-the token JSON AES-encrypted in `tokens_enc` and the chosen calendar in
-`provider_account_id`. `CrmCustomerRecord.oauth` is only a wire format,
-synthesized on read and stripped on write.
+in PostgreSQL, table `user_oauth_providers`, keyed by
+`(id, provider, business_id, grant_name)`, with the token JSON AES-encrypted in
+`tokens_enc` and the provider account in `provider_account_id`. Facts below about
+StarChat were read from its source at 9.34 HEAD `ba76bda1b` on 2026-10-26 (files
+identical in 9.34.86), not measured on a database.
 
-The single row that matters here is `provider = 'google_calendar'`.
+For `provider = 'google_calendar'` there are three kinds of row:
+
+| Row | Written by | Read by |
+|---|---|---|
+| Per instance: `business_id` and `grant_name` set | `POST /mrcall/v1/mrcall0/oauth/providers/google_calendar/connect` from either skill callback, with the instance's grant name | The calendar skills of that business that name this grant |
+| Shared in a business: `business_id` set, `grant_name = ''` | The same `/connect`, when the skill's saved reference is empty (the manual editor without an instance id, the chat handoff with an empty reference) | The calendar skills of that business, as the fallback when no row matches their grant name |
+| Account level: `business_id = ''`, `grant_name = ''` | The customer registry PUT (`oauth.GOOGLE_CALENDAR`), and `/connect` sent without a business | The registry GET, and `/calendars` called without business and grant. No skill reads it: skill lookups never fall back on an empty business |
+
+The dashboard writes the first two kinds only. It has no account-level connect,
+and the manual skill callback refuses a connect without a business before the code
+is exchanged. Account-level rows written earlier remain on the server,
+unread by any skill; their owner can revoke one with
+`DELETE /mrcall/v1/{realm}/oauth/providers/google_calendar` sent with neither
+business nor grant name, which leaves per-skill grants untouched.
 
 **No credential leaves the server.** `GET /mrcall/v1/{realm}/crm/customer/registry`
 returns `oauth.GOOGLE_CALENDAR` as `{connected: true, calendarId}` and nothing
@@ -98,11 +116,6 @@ credentials to client-side JavaScript on request. Treat the refresh tokens that
 existed before this change as potentially exposed; whether to force-revoke them,
 which costs every affected customer a reconnect, is a product decision that
 belongs next to the client-secret rotation below.
-
-Connectedness is now a boolean the server asserts, not something the client infers
-from a token being present. StarChat's own `readOnly` still returns the token and
-is still correct for the calendar atoms, which run in the same JVM: it is the HTTP
-path that changed (`readForWire`).
 
 **`oauth.GOOGLE` is not a second row.** It never was. StarChat's
 `extractGoogleCalendarTokens` used to accept either key and write both into that
@@ -173,8 +186,8 @@ older than seven and ninety days. Re-run it if the sign-in flow changes again.
 Still unknown and still only readable from the console for project
 `375340415237`: whether verification for the sensitive calendar scope has been
 granted, and whether brand verification has passed. In production and unverified
-is a valid state, and the one that produces the interstitial on the calendar
-connect.
+is a valid state, and the one that produces the interstitial on a skill's
+calendar authorization.
 
 | Page | URL |
 |---|---|
@@ -198,7 +211,7 @@ The body distinguishes them, and they have different causes:
 The email shown in that text is the User Support Email from the Branding page.
 
 Because `auth/calendar` is a sensitive scope, the second screen is expected on
-the calendar connect until verification completes. It should **not** appear on
+a skill's calendar authorization until verification completes. It should **not** appear on
 sign-in: if it does, capture the outgoing request to
 `accounts.google.com/o/oauth2/v2/auth` and read its raw `scope` parameter before
 assuming anything else.
@@ -217,8 +230,9 @@ scope.
 
 Worth settling before submitting rather than after: whether the product needs
 full `auth/calendar` at all. It was narrowed to `calendar.events.owned` once and
-widened back when the calendar picker arrived, since `CalendarSelector.vue` lists
-`calendar/v3/users/me/calendarList`. A narrower scope, or MrCall owning a
+widened back when the calendar picker arrived, since choosing a skill's calendar
+lists the account's calendars (StarChat's `/oauth/providers/google_calendar/calendars`,
+fetched by `useSkillGrants.js` and shown by `CalendarField.vue`). A narrower scope, or MrCall owning a
 calendar it creates itself, would remove the cause instead of licensing it.
 
 ## Changing any of this

@@ -73,7 +73,7 @@ API clients and business logic:
 - `Reseller.js` — Reseller API endpoints
 - `Contact.js` — Contact management API
 - `Conversation.js` — Conversation utilities
-- `OAuth.js` — Google Calendar OAuth helpers and single-use skill authorization context
+- `OAuth.js` — Google authorization flow (PKCE, state, code exchange), the sign-in and chat-skill scope sets, and the single-use skill authorization context
 - `AgentSkills.js` — skill catalogue, saved configuration and scoped effective availability
 - `Restaurant.js` — StarChat restaurant book client and answer shapes; `RestaurantModel.js` — what the restaurant page computes from them
 - `PKCE.js` — PKCE flow for OAuth 2.0
@@ -84,7 +84,6 @@ API clients and business logic:
 
 ### State (`src/store/`)
 - `index.js` — Root store: user auth, selected business, onboarding data, role, reseller state
-- `modules/calendar.js` — Google Calendar connection state
 - `modules/tracking.js` — UTM parameters and referral code tracking
 
 ### Firebase (`src/firebase/`)
@@ -274,7 +273,7 @@ specified in [development.md](development.md#environment-routing).
   as required by the shared authentication integration; actual local and deployed
   environment configuration must be checked separately.
 - **Stripe** — Payment checkout through the StarChat Stripe proxy
-- **Google** — OAuth for Calendar integration, Google Sign-In.
+- **Google** — Google Sign-In, and Google Calendar authorization per skill (for a business, under the skill's grant name or the business's shared one), stored by StarChat.
   The client flow and scope constraints are implemented in `src/utils/OAuth.js`.
 
 ## Cross-Cutting Concerns
@@ -288,9 +287,10 @@ specified in [development.md](development.md#environment-routing).
 
 ### Google authorization
 
-Sign-in, calendar connection and skill authorizations all use the authorization
-code flow with PKCE, and all three go through `GoogleAuthFlow` in
-`src/utils/OAuth.js`:
+Sign-in, the chat skill handoff and the manual skill editor all use the
+authorization code flow with PKCE, and all three go through `GoogleAuthFlow` in
+`src/utils/OAuth.js` (there is no account-level calendar connection; Google
+Calendar is authorized per skill only):
 
 ```
 begin()          mint the PKCE verifier and a state, store both, return the
