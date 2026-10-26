@@ -64,6 +64,9 @@ export default {
         const { codeVerifier, context } = await GoogleAuthFlow.consumeWithContext(urlParams.get('state'))
         if (!code) throw new Error('Missing authorization code')
         if (boundSkillFlow && !context) throw new Error('missing_skill_oauth_context')
+        // StarChat stores a connect without a business as the owner's account-level row, which no
+        // skill reads; refused before the code is exchanged, so no token is minted for it.
+        if (oauthProvider && !context && !oauthBusinessId) throw new Error('missing_skill_oauth_business')
         let skillUser = null
         if (context) {
           skillUser = auth.currentUser || await new Promise(resolve => {

@@ -266,3 +266,23 @@ test('legacy manual skill callback preserves business grant and provider account
   expect(model.mutations).toEqual([])
   expect(model.registryWrites).toEqual([])
 })
+
+// StarChat stores a /connect without a business as the account-level row, which no skill reads.
+// Observed failing before the guard: model.connects held one post with businessId ''.
+test('manual skill callback without a business posts no connect', async ({ page }) => {
+  const model = await setupOAuthPage(page, { pending: false })
+  await page.evaluate(({ businessId }) => {
+    localStorage.setItem('codeVerifier', 'unbound-skill-verifier')
+    localStorage.setItem('oauthState', 'unbound-skill-state')
+    localStorage.setItem('oauthProvider', 'google_calendar')
+    localStorage.setItem('oauthBusinessId', '')
+    localStorage.setItem('oauthGrantName', 'manual-instance-8')
+    localStorage.setItem('oauthReturnUrl', `/businessconfiguration?id=${businessId}`)
+    localStorage.removeItem('oauthSkillContext')
+  }, { businessId })
+  await page.goto('/callback?code=fake-code&state=unbound-skill-state')
+  await expect(page).toHaveURL(new RegExp('businessconfiguration\\?id=' + businessId))
+  expect(model.exchanges).toEqual([])
+  expect(model.connects).toEqual([])
+  expect(model.registryWrites).toEqual([])
+})
