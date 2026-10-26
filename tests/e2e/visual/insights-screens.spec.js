@@ -156,7 +156,10 @@ test.describe('insights screens: owner', () => {
     ['reserve-no-topup', { job: () => ins.estimateJob({ estimate: { fits: false, reason: 'reserve', calls: 9, topUpEffective: false } }) }, 'Turn on automatic top-up'],
     ['reserve-topup-on', { job: () => ins.estimateJob({ estimate: { fits: false, reason: 'reserve', calls: 9, topUpEffective: true } }) }, 'Top up'],
     ['job-open', { createJob: () => ({ status: 409, body: { code: 'job_open', message: 'x', jobId: 'job-other' } }), job: (id) => (id === 'job-other' ? ins.job({ jobId: 'job-other', status: 'running' }) : ins.estimateJob()) }, 'There is already a processing'],
-    ['no-calls', { job: () => ins.estimateJob({ estimate: { fits: true, calls: 0, requests: 0 } }) }, 'No calls to analyse in this period.'],
+    ['no-calls', { job: () => ins.estimateJob({ estimate: { fits: true, calls: 0, requests: 0 } }) }, 'No calls in this period.'],
+    // the amendment of 2026-10-26, rule 5: nothing to read, said before any credit
+    ['no-calls-last-call', { job: () => ins.estimateJob({ estimate: { fits: false, reason: 'no_calls', calls: 0, requests: 0, lastCallAt: ins.rome(2026, 3, 21) + 10 * 3600 * 1000 } }) }, 'The last call was on'],
+    ['no-analysis', { job: () => ins.estimateJob({ estimate: { fits: false, reason: 'no_analysis', calls: 0, requests: 0, recomputable: 14 } }) }, 'none is analysed yet'],
     ['failed', { createJob: () => ({ status: 500, body: {} }) }, 'The request could not be completed.'],
   ]
   for (const [name, options, text] of refusals) {
