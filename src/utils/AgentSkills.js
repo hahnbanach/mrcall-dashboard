@@ -362,6 +362,7 @@ export default {
      * Check if adding another instance of this skill to this phase is allowed.
      */
     canAddToPhase: function(config, skill, phase) {
+        if (!this.isAddable(skill)) return false;
         const ic = this.getInstancesConfig(skill);
         const phases = this.getSkillPhases(skill);
         if (!phases.includes(phase)) return false;
@@ -379,6 +380,21 @@ export default {
         }
 
         return true;
+    },
+
+    /**
+     * Whether the caller may make a new instance of this skill, as the server says it.
+     *
+     * The catalogue answers `addable` on every row. It is false for a skill only an admin may add
+     * when the caller is not one, and such a row is sent only because the business already runs an
+     * instance of it: the row is there so that instance can be drawn and configured. Neither adding
+     * nor duplicating is offered then; the server refuses both anyway (`admin_only_skill`), so this
+     * keeps the screen from proposing what will be refused. The rule itself is the server's and is
+     * not repeated here: no role is read. A row without the field comes from a server older than
+     * the rule and stays addable, as it was.
+     */
+    isAddable: function(skill) {
+        return !skill || skill.addable !== false;
     },
 
     // --- Phase-first operations ---
@@ -446,7 +462,7 @@ export default {
             final: [...(config.final || [])]
         };
         const original = newConfig[phase][index];
-        if (!original) return config;
+        if (!original || !this.isAddable(skillObj)) return config;
 
         const copy = {
             ...original,

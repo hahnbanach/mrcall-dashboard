@@ -49,6 +49,8 @@ const props = defineProps({
   /** The authorisations, from `useSkillGrants`. */
   grants: { type: Object, required: true },
   chatAuthorization: { type: Object, default: null },
+  /** Whether a copy may be made: false for a skill the catalogue marks `addable: false`. */
+  duplicable: { type: Boolean, default: true },
   /** Who is looking: `admin` also sees the fields a manifest marks `x-audience: platform`, `owner`
    *  does not. Required, so that a caller who forgets it is told rather than silently shown the
    *  owner's view. */
@@ -198,12 +200,17 @@ function fieldProps(field) {
            :value="enabled ? t('widgets.agentSkills.entryOn') : t('widgets.agentSkills.entryOff')"
            :severity="enabled ? 'success' : 'warn'"
            class="entry-state-badge" />
-      <Button icon="pi pi-copy" severity="secondary" text rounded size="small"
+      <!-- Not offered for a skill the caller may not add (`duplicable`): a copy is a new instance,
+           and the server would refuse it. `aria-label` because an icon alone names nothing to
+           assistive technology, and the title is not read as the button's name. -->
+      <Button v-if="duplicable" icon="pi pi-copy" severity="secondary" text rounded size="small"
               :disabled="disabled" @click.stop="emit('duplicate')"
-              :title="t('widgets.agentSkills.duplicateSkill')" />
+              :title="t('widgets.agentSkills.duplicateSkill')"
+              :aria-label="t('widgets.agentSkills.duplicateSkill')" />
       <Button icon="pi pi-times" severity="danger" text rounded size="small"
               :disabled="disabled" @click.stop="emit('remove')"
-              :title="t('widgets.agentSkills.removeSkill')" />
+              :title="t('widgets.agentSkills.removeSkill')"
+              :aria-label="t('widgets.agentSkills.removeSkill')" />
     </div>
 
     <!-- The name, first, because it names everything below it and because a card opened to be

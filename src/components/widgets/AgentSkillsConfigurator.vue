@@ -622,6 +622,7 @@ watch(() => props.focusTarget, async () => { await checkChatOAuthStatus(); await
                        :class="{ 'entry-focused': isChatTarget(entry, phase) }"
                        :chat-authorization="isChatTarget(entry, phase) ? { availability: field => oauthAvailability(field, entry, phase), grant: field => oauthGrant(field, entry, phase), supported: supportedOAuth, busy: oauthBusy, refresh: checkChatOAuthStatus } : null"
                        :skill="getSkillObj(entry.skill)"
+                       :duplicable="agentSkillsUtils.isAddable(getSkillObj(entry.skill))"
                        :phase="phase"
                        :open="isEntryOpen(phase, entry, idx)"
                        :disabled="disabled"
