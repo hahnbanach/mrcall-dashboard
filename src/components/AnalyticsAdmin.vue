@@ -5,7 +5,7 @@
       mode="indeterminate"
       :style="{ height: '0.3em', visibility: anyLoading ? 'visible' : 'hidden' }"
     />
-    <div v-if="user" class="analytics-container">
+    <div v-if="user" class="analytics-container insights-ui">
 
       <!-- Admin Mode Banner -->
       <div class="analytics-section">
@@ -37,10 +37,10 @@
           />
         </div>
         <form class="filter-controls" @submit.prevent="applyFilters">
-          <InputText
+          <BusinessAutocomplete
             v-model="businessIdInput"
-            :aria-label="$t('components.analytics.filters.businessId')"
-            :placeholder="$t('components.analytics.filters.businessId')"
+            :name="businessNames[businessIdInput] || null"
+            @names="rememberNames"
           />
           <InputText
             v-model="ownerIdInput"
@@ -269,22 +269,27 @@
       <CallTopics :status="businessId ? topicsStatus : 'needsBusiness'" :data="topicsData" />
       <CallQuality :status="qualityStatus" :data="qualityData" :total-calls="outcomesData && outcomesData.totalCalls" />
 
-      <!-- Assistants to review and scope-wide information (brief outcome 5): the whole platform,
-           the integrations and MrCall's own configuration suggestions ignore the filters above -->
+      <!-- Assistants to review and the callers' requests, following the filters above; MrCall's own configuration
+           suggestions across the platform -->
       <AssistantsToReview
-        :status="assistantsStatus"
-        :data="assistantsData"
-        :sort="assistantsSort"
-        @sort-change="onAssistantsSortChange"
+        v-if="requestBody"
+        :body="requestBody"
         :selected-business-id="businessId || null"
         @select-business="onAssistantsSelectBusiness"
         @clear-business="onClearFilter('business')"
         @names="rememberNames"
+        @error="handleApiError"
       />
-      <ScopeInformation
+      <RequestCategories
+        v-if="requestBody && roleReady"
+        :body="requestBody"
+        :role="store.state.role"
+        @names="rememberNames"
+        @error="handleApiError"
+      />
+      <ConfigSuggestions
+        v-if="isAdminRole"
         :ready="roleReady"
-        :show-config-suggestions="isAdminRole"
-        :template-names="templateNames"
         @names="rememberNames"
         @error="handleApiError"
         @in-view="scopeInView = $event"
@@ -320,11 +325,13 @@ import CallOutcomes from "@/components/analytics/CallOutcomes.vue";
 import CallTopics from "@/components/analytics/CallTopics.vue";
 import CallQuality from "@/components/analytics/CallQuality.vue";
 import AssistantsToReview from "@/components/analytics/AssistantsToReview.vue";
-import ScopeInformation from "@/components/analytics/ScopeInformation.vue";
+import RequestCategories from "@/components/analytics/RequestCategories.vue";
+import ConfigSuggestions from "@/components/analytics/ConfigSuggestions.vue";
+import BusinessAutocomplete from "@/components/analytics/BusinessAutocomplete.vue";
 import AnalyticsFilterBar from "@/components/analytics/AnalyticsFilterBar.vue";
 
 export default {
-  components: { CallOutcomes, CallTopics, CallQuality, AssistantsToReview, ScopeInformation, AnalyticsFilterBar },
+  components: { CallOutcomes, CallTopics, CallQuality, AssistantsToReview, RequestCategories, ConfigSuggestions, BusinessAutocomplete, AnalyticsFilterBar },
   setup() {
     const store = useStore();
     const toast = useToast();
@@ -373,9 +380,8 @@ export default {
       topicsData: null,
       qualityStatus: "loading",
       qualityData: null,
-      assistantsStatus: "loading",
-      assistantsData: null,
-      assistantsSort: "not_solved",
+      // the filters as the assistants and the requests send them, set when the page fetches
+      requestBody: null,
       // The role is known (see `mounted`): the scope-wide lists wait for it, since MrCall's own
       // configuration suggestions are asked for by an admin only.
       roleReady: false,
@@ -422,11 +428,6 @@ export default {
     breakdownSelectedRow() {
       const rows = (this.breakdownData && this.breakdownData.businesses) || [];
       return rows.find((row) => row.businessId === this.businessId) || null;
-    },
-    templateNames() {
-      const names = {};
-      this.templates.forEach((t) => { if (t.humanName) names[t.name] = t.humanName; });
-      return names;
     },
     scopeNote() {
       return this.scopeInView ? this.$t("components.callInsights.filterBar.scopeNote") : null;
@@ -653,6 +654,13 @@ export default {
       // only what decides whether to ask for MrCall's own configuration suggestions at all, so the
       // scope-wide lists start (`roleReady`) strictly after the role resolves.
       await this.establishRole();
+      // The platform page is an admin's: anyone else is taken to their own statistics, never to a page titled for
+      // all businesses that shows their own or nothing (U19 m12). StarChat refuses the admin routes either way.
+      const role = this.store.state.role;
+      if (role && role !== "admin") {
+        this.$router.replace({ path: "/analytics" });
+        return;
+      }
       this.roleReady = true;
       this.fetchAllData();
       this.fetchTemplates();
@@ -714,7 +722,7 @@ export default {
     },
     applyFilters() {
       const query = { ...this.$route.query };
-      const businessId = this.businessIdInput.trim();
+      const businessId = (this.businessIdInput || '').trim();
       const ownerId = this.ownerIdInput.trim();
       const plan = this.planInput || '';
       if (businessId) query.businessId = businessId; else delete query.businessId;
@@ -813,10 +821,10 @@ export default {
       this.fetchOutcomes(user, request, granularity, timezone);
       this.fetchTopics(user, request);
       this.fetchQuality(user, request);
-      this.fetchAssistants(user, request);
+      this.requestBody = { ...request };
       this.resolveFilterNames(user);
-      // Integrations and MrCall's own suggestions are ScopeInformation's own, fetched once the role
-      // is known (`roleReady`), and follow none of these filters.
+      // MrCall's own suggestions are ConfigSuggestions' own, fetched once the role is known (`roleReady`), and follow
+      // none of these filters.
     },
     // One `CallInsights.latestOnly()` per section, created on first use: plain, not reactive state.
     insightGate(section) {
@@ -877,28 +885,6 @@ export default {
           this.qualityStatus = 'absent';
           this.handleApiError(error, 'quality');
         });
-    },
-    fetchAssistants(user, request) {
-      this.assistantsStatus = 'loading';
-      const isCurrent = this.insightGate('assistants');
-      CallInsights.assistants(user, request, this.assistantsSort, 50)
-        .then((result) => {
-          if (!isCurrent()) return;
-          if (result === null) { this.assistantsStatus = 'absent'; this.assistantsData = null; }
-          else if (result.unavailable) { this.assistantsStatus = 'unavailable'; this.assistantsData = null; }
-          else { this.assistantsStatus = 'ok'; this.assistantsData = result; }
-        })
-        .catch((error) => {
-          if (!isCurrent()) return;
-          if (isSessionEnded(error)) return;
-          this.assistantsStatus = 'absent';
-          this.handleApiError(error, 'assistants');
-        });
-    },
-    onAssistantsSortChange(sort) {
-      this.assistantsSort = sort;
-      const user = this.store.state.user;
-      if (user) this.fetchAssistants(user, this.buildRequestBody());
     },
     onAssistantsSelectBusiness(businessId) {
       // As a breakdown row already does (`onBreakdownRowSelect`): narrow this page's own filter,

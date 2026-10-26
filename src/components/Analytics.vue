@@ -5,14 +5,46 @@
       mode="indeterminate"
       :style="{ height: '0.3em', visibility: anyLoading ? 'visible' : 'hidden' }"
     />
-    <div v-if="user" class="analytics-container">
+    <div v-if="user" class="analytics-container insights-ui">
 
       <!-- Reseller Owner Selector -->
-      <OwnerSelector v-if="isReseller" />
+      <!-- not over one business: the business is the filter, and the selector had nothing to show (U19 m23) -->
+      <OwnerSelector v-if="isReseller && !businessId" />
 
       <!-- The filters in force, each undone where it shows (brief outcome 10) -->
       <AnalyticsFilterBar :chips="filterChips" :scope-note="scopeNote" @clear="onClearFilter" />
 
+      <!-- A business the reader cannot see (a 404 from StarChat): said once, with nothing under it (U19 m13) -->
+      <section v-if="businessId && businessMissing" class="analytics-section insights-card overview-empty" role="status">
+        <p class="overview-empty-title">{{ $t("components.callInsights.businessNotFound") }}</p>
+      </section>
+      <template v-else>
+      <!-- A business's page has three tabs, each with its own address (?tab=), insights-reports-ux -->
+      <nav v-if="businessId" class="analytics-tabs" :aria-label="$t('components.callInsights.tabs.label')">
+        <router-link
+          v-for="tab in tabs"
+          :key="tab"
+          :to="tabLink(tab)"
+          class="analytics-tab"
+          :class="{ 'analytics-tab-active': currentTab === tab }"
+          :aria-current="currentTab === tab ? 'page' : null"
+        >{{ $t("components.callInsights.tabs." + tab) }}</router-link>
+      </nav>
+
+      <ReportsTab
+        v-if="businessId && currentTab === 'reports' && businessRecord"
+        :key="'reports-' + businessId"
+        :business="businessRecord"
+        :role="store.state.role || 'owner'"
+      />
+      <JobsTab
+        v-if="businessId && currentTab === 'jobs' && businessRecord"
+        :key="'jobs-' + businessId"
+        :business="businessRecord"
+        :role="store.state.role || 'owner'"
+      />
+
+      <template v-if="!businessId || currentTab === 'overview'">
       <!-- Date Range Controls -->
       <div class="analytics-section">
         <div class="date-controls">
@@ -36,40 +68,43 @@
         </div>
       </div>
 
+      <!-- Panoramica: the calls the analysis has not read yet, said before any number that leaves them out -->
+      <section v-if="businessId && recomputeCount && !noCallsInRange" class="analytics-section insights-banner" role="status">
+        <p>{{ $t("components.callInsights.recompute.banner", { n: recomputeCount }) }}</p>
+        <p class="insights-banner-note">{{ $t("components.callInsights.recompute.cannotChange") }}</p>
+        <Button
+          v-if="businessRecord && !freeOwner"
+          type="button" size="small" icon="pi pi-refresh"
+          :label="$t('components.callInsights.recompute.action')"
+          @click="recomputeVisible = true"
+        />
+        <p v-else-if="freeOwner" class="insights-banner-note">
+          {{ $t("components.callInsights.free.paidUnavailable") }}
+          <router-link :to="{ path: '/plan', query: { id: businessId } }">{{ $t("components.callInsights.free.seePlans") }}</router-link>
+        </p>
+      </section>
+      <!-- Panoramica: a period with no call is one empty state, with the day of the last call (U19 M12) -->
+      <section v-if="businessId && noCallsInRange" class="analytics-section insights-card overview-empty" role="status">
+        <p class="overview-empty-title">{{ noCallsText }}</p>
+        <p v-if="lastCallText">{{ lastCallText }}</p>
+      </section>
+      <template v-if="!(businessId && noCallsInRange)">
       <!-- KPI Cards -->
       <div v-if="dashboardData" class="analytics-section">
         <h3 class="section-title">{{ $t('components.analytics.overview') }}</h3>
         <div class="kpi-grid">
-          <div class="kpi-card">
-            <div class="kpi-label">{{ $t('components.analytics.kpi.totalCalls') }}</div>
-            <div class="kpi-value">{{ formatNumber(dashboardData.totalCalls) }}</div>
-            <div v-if="dashboardData.totalCallsDelta != null" class="kpi-delta" :class="deltaClass(dashboardData.totalCallsDelta)">
-              <i :class="deltaIcon(dashboardData.totalCallsDelta)"></i>
-              {{ formatDeltaPercentage(dashboardData.totalCallsDelta) }}
-            </div>
-          </div>
-          <div class="kpi-card">
-            <div class="kpi-label">{{ $t('components.analytics.kpi.avgDuration') }}</div>
-            <div class="kpi-value">{{ formatDuration(dashboardData.avgCallDurationMs) }}</div>
-            <div v-if="dashboardData.avgDurationDelta != null" class="kpi-delta" :class="deltaClass(dashboardData.avgDurationDelta)">
-              <i :class="deltaIcon(dashboardData.avgDurationDelta)"></i>
-              {{ formatDeltaPercentage(dashboardData.avgDurationDelta) }}
-            </div>
-          </div>
-          <div class="kpi-card">
-            <div class="kpi-label">{{ $t('components.analytics.kpi.totalDuration') }}</div>
-            <div class="kpi-value">{{ formatDuration(dashboardData.totalCallDurationMs) }}</div>
-            <div v-if="dashboardData.totalDurationDelta != null" class="kpi-delta" :class="deltaClass(dashboardData.totalDurationDelta)">
-              <i :class="deltaIcon(dashboardData.totalDurationDelta)"></i>
-              {{ formatDeltaPercentage(dashboardData.totalDurationDelta) }}
-            </div>
-          </div>
-          <div class="kpi-card">
-            <div class="kpi-label">{{ $t('components.analytics.kpi.uniqueCallers') }}</div>
-            <div class="kpi-value">{{ formatNumber(dashboardData.uniqueCallers) }}</div>
-            <div v-if="dashboardData.uniqueCallersDelta != null" class="kpi-delta" :class="deltaClass(dashboardData.uniqueCallersDelta)">
-              <i :class="deltaIcon(dashboardData.uniqueCallersDelta)"></i>
-              {{ formatDeltaPercentage(dashboardData.uniqueCallersDelta) }}
+          <div v-for="kpi in kpis" :key="kpi.key" class="kpi-card">
+            <div class="kpi-label">{{ $t('components.analytics.kpi.' + kpi.key) }}</div>
+            <div class="kpi-value">{{ kpi.text }}</div>
+            <!-- a change over a period before of fewer than 20 calls says nothing: "n.d." (U19 M13) -->
+            <div
+              v-if="kpi.change && !kpi.change.available"
+              class="kpi-delta delta-neutral"
+              :title="$t('components.callInsights.change.notAvailableHelp')"
+            ><abbr :title="$t('components.callInsights.change.notAvailableHelp')">{{ $t('components.callInsights.change.notAvailable') }}</abbr></div>
+            <div v-else-if="kpi.change" class="kpi-delta" :class="deltaClass(kpi.change.value)">
+              <i :class="deltaIcon(kpi.change.value)"></i>
+              {{ formatDeltaPercentage(kpi.change.value) }}
             </div>
           </div>
         </div>
@@ -174,6 +209,24 @@
         </div>
       </div>
 
+      <!-- Panoramica: the callers who never spoke, and where to look -->
+      <section v-if="businessId && silentCalls > 0" class="analytics-section insights-card">
+        <h3 class="section-title">{{ $t("components.callInsights.silent.title") }}</h3>
+        <p>{{ $t("components.callInsights.silent.text", { n: silentCalls }) }}</p>
+        <router-link :to="{ path: '/businessconfiguration', query: { id: businessId, section: '__CONVERSATION__' } }">
+          {{ $t("components.callInsights.silent.link") }}
+        </router-link>
+      </section>
+      <InsightsRequestDialog
+        v-if="businessRecord && recomputeCount"
+        v-model:visible="recomputeVisible"
+        mode="recompute"
+        :business="businessRecord"
+        :role="store.state.role || 'owner'"
+        :fixed-interval="{ from: timestampGte, to: timestampLte }"
+        @ended="fetchAllData"
+      />
+
       <!-- How the calls went (brief outcomes 3 and 9): the business page (any role, via its id) or,
            for a reseller with no business chosen, its whole scope -->
       <CallOutcomes v-if="businessId || showScopePage" :status="outcomesStatus" :data="outcomesData" />
@@ -191,41 +244,24 @@
         :total-calls="outcomesData && outcomesData.totalCalls"
       />
 
-      <!-- Call reports (brief outcome 4): the business page only, those of the period chosen above -->
-      <CallReports
-        v-if="businessId"
-        :status="reportsStatus"
-        :reports="reportsData"
-        :has-more="reportsHasMore"
-        :loading-more="reportsLoadingMore"
-        :is-owner="isOwnerRole"
-        :is-admin="isAdminRole"
-        :business-id="businessId"
-        :focus-period="focusReport"
-        :focus-request-id="focusRequestId"
-        :focused-report="focusedReport"
-        @load-more="loadMoreReports"
-      />
-
-      <!-- Assistants to review and scope-wide information (brief outcome 5): the reseller's scope
-           page only; they ignore the page's date range and owner selector -->
+      <!-- Assistants to review and the callers' requests: the reseller's scope page only, both following the
+           page's period and owner -->
       <AssistantsToReview
-        v-if="showScopePage"
-        :status="assistantsStatus"
-        :data="assistantsData"
-        :sort="assistantsSort"
-        @sort-change="onAssistantsSortChange"
+        v-if="showScopePage && roleReady"
+        :body="scopeBody"
         @select-business="onAssistantsSelectBusiness"
         @names="rememberNames"
+        @error="handleApiError"
       />
-      <ScopeInformation
-        v-if="showScopePage"
-        :ready="roleReady"
-        :template-names="templateNames"
+      <RequestCategories
+        v-if="showScopePage && roleReady"
+        :body="scopeBody"
+        role="reseller"
         @names="rememberNames"
         @error="handleApiError"
-        @in-view="scopeInView = $event"
       />
+
+      </template>
 
       <!-- Empty state -->
       <div v-if="allDataReady && noData && !showScopePage" class="analytics-section">
@@ -235,6 +271,8 @@
           <p>{{ $t('components.analytics.emptyState.description') }}</p>
         </div>
       </div>
+      </template>
+      </template>
 
     </div>
   </div>
@@ -250,19 +288,23 @@ import { auth } from "@/firebase/config";
 import { isSessionEnded } from "@/firebase/axiosConfig";
 import AnalyticsApi from "@/utils/Analytics";
 import CallInsights from "@/utils/CallInsights";
-import TemplatesApi from "@/utils/Templates";
 import businessUtils from "@/utils/Business";
 import OwnerSelector from "@/components/reseller/OwnerSelector.vue";
 import CallOutcomes from "@/components/analytics/CallOutcomes.vue";
 import CallTopics from "@/components/analytics/CallTopics.vue";
 import CallQuality from "@/components/analytics/CallQuality.vue";
-import CallReports from "@/components/analytics/CallReports.vue";
 import AssistantsToReview from "@/components/analytics/AssistantsToReview.vue";
-import ScopeInformation from "@/components/analytics/ScopeInformation.vue";
+import RequestCategories from "@/components/analytics/RequestCategories.vue";
+import ReportsTab from "@/components/analytics/ReportsTab.vue";
+import JobsTab from "@/components/analytics/JobsTab.vue";
+import InsightsRequestDialog from "@/components/analytics/InsightsRequestDialog.vue";
 import AnalyticsFilterBar from "@/components/analytics/AnalyticsFilterBar.vue";
+import InsightsReports from "@/utils/InsightsReports";
+
+const TABS = ["overview", "reports", "jobs"];
 
 export default {
-  components: { OwnerSelector, CallOutcomes, CallTopics, CallQuality, CallReports, AssistantsToReview, ScopeInformation, AnalyticsFilterBar },
+  components: { OwnerSelector, CallOutcomes, CallTopics, CallQuality, AssistantsToReview, RequestCategories, ReportsTab, JobsTab, InsightsRequestDialog, AnalyticsFilterBar },
   setup() {
     const store = useStore();
     const toast = useToast();
@@ -305,26 +347,17 @@ export default {
       topicsData: null,
       qualityStatus: "loading",
       qualityData: null,
-      reportsStatus: "loading",
-      reportsData: [],
-      reportsHasMore: false,
-      reportsLoadingMore: false,
-      assistantsStatus: "loading",
-      assistantsData: null,
-      assistantsSort: "not_solved",
+      // the scope page's filters as its two tables send them, set when the page fetches (`fetchScopeInsights`)
+      scopeBody: null,
+      // the business of the page: its name, time zone, owner and plan (`CallInsights.business`)
+      businessRecord: null,
+      // the business answered as absent: out of the reader's scope, or gone
+      businessMissing: false,
+      recomputeVisible: false,
       // The role is known (see `establishRole`): the scope-wide lists wait for it.
       roleReady: false,
       // businessId -> company name, from every answer that names a business (brief outcome 10)
       businessNames: {},
-      // A report a link asked to open (`?report=<periodStart>`, with `&requestId=<id>` for one asked
-      // for an interval), and that report when it is not on the first page of the business's reports.
-      focusReport: null,
-      focusRequestId: null,
-      focusedReport: null,
-      templateNames: {},
-      templatesFetched: false,
-      // the scope-wide lists are on screen: the bar says they follow none of its filters
-      scopeInView: false,
     };
   },
   computed: {
@@ -343,12 +376,30 @@ export default {
     canLeaveBusiness() {
       return this.isReseller || this.isAdminRole;
     },
+    // Every section of these pages follows the filters now; nothing for the bar to warn about.
     scopeNote() {
-      return this.showScopePage && this.scopeInView ? this.$t("components.callInsights.filterBar.scopeNote") : null;
+      return null;
+    },
+    tabs() {
+      return TABS;
+    },
+    currentTab() {
+      const tab = this.$route.query.tab;
+      return TABS.includes(tab) ? tab : "overview";
+    },
+    freeOwner() {
+      return InsightsReports.freeOwner(this.store.state.role, this.businessRecord);
+    },
+    recomputeCount() {
+      return this.outcomesStatus === "ok" ? InsightsReports.recomputeBanner(this.outcomesData) : null;
+    },
+    silentCalls() {
+      const n = this.outcomesStatus === "ok" && this.outcomesData && this.outcomesData.noConversation;
+      return n ? n.caller_silent || 0 : 0;
     },
     filterChips() {
       const chips = [];
-      if (this.businessId) {
+      if (this.businessId && !this.businessMissing) {
         chips.push({
           key: "business",
           name: this.$t("components.callInsights.filterBar.business"),
@@ -365,8 +416,38 @@ export default {
           clearLabel: this.$t("components.callInsights.filterBar.clearOwner"),
         });
       }
-      chips.push(this.periodChip());
+      // the period applies to Overview only: the Report and Processing tabs list every period (U19 M14)
+      if (!this.businessId || this.currentTab === "overview") chips.push(this.periodChip());
       return chips;
+    },
+    // The period holds no call: the KPI says 0 calls (StarChat's dashboard answer).
+    noCallsInRange() {
+      return !!this.dashboardData && this.dashboardData.totalCalls === 0;
+    },
+    noCallsText() {
+      const days = { '7d': 7, '30d': 30, '90d': 90 }[this.selectedPreset];
+      return days
+        ? this.$t("components.callInsights.overview.noCallsDays", { days }, days)
+        : this.$t("components.callInsights.request.noCallsPeriod");
+    },
+    // The business's latest call, StarChat's `lastCallAt` on outcomes (the amendment's rule 10); null when it has had
+    // none, and nothing said when the server does not answer it.
+    lastCallText() {
+      const o = this.outcomesStatus === "ok" ? this.outcomesData : null;
+      if (!o || !("lastCallAt" in o)) return null;
+      if (typeof o.lastCallAt !== "number") return this.$t("components.callInsights.request.noCallEver");
+      const zone = (this.businessRecord && this.businessRecord.timeZone) || InsightsReports.FALLBACK_ZONE;
+      return this.$t("components.callInsights.request.lastCall", { date: InsightsReports.dayLabel(o.lastCallAt, zone, this.$i18n.locale) });
+    },
+    kpis() {
+      const d = this.dashboardData;
+      if (!d) return [];
+      return [
+        { key: "totalCalls", text: this.formatNumber(d.totalCalls), change: d.totalCallsChange },
+        { key: "avgDuration", text: this.formatDuration(d.avgCallDurationMs), change: d.avgDurationChange },
+        { key: "totalDuration", text: this.formatDuration(d.totalCallDurationMs), change: d.totalDurationChange },
+        { key: "uniqueCallers", text: this.formatNumber(d.uniqueCallers), change: d.uniqueCallersChange },
+      ];
     },
     anyLoading() {
       return this.loadingDashboard || this.loadingTimeseries || this.loadingDuration ||
@@ -512,22 +593,18 @@ export default {
     // (`<router-view/>` has no key, `App.vue:14`), so a route change loads the one the link asks for.
     '$route.query'() {
       if (this.$route.name !== 'Analytics') return;
+      if (this.redirectOldReportLink()) return;
       const id = this.$route.query.id || null;
-      const report = this.reportFromRoute();
-      const requestId = this.requestIdFromRoute();
-      if (id === this.businessId && report === this.focusReport && requestId === this.focusRequestId) return;
-      this.focusReport = report;
-      this.focusRequestId = requestId;
-      this.focusedReport = null;
-      if (id === this.businessId) { this.focusOnReport(); return; }
+      if (id === this.businessId) return;
       this.businessId = id;
+      this.businessRecord = null;
+      this.businessMissing = false;
       this.fetchAllData();
     },
   },
   mounted() {
     this.businessId = this.$route.query.id || null;
-    this.focusReport = this.reportFromRoute();
-    this.focusRequestId = this.requestIdFromRoute();
+    if (this.redirectOldReportLink()) return;
     if (!this.store || !this.store.state) {
       return;
     }
@@ -602,29 +679,20 @@ export default {
       }
       return body;
     },
-    // The plan of an integrations item by its name, not its key (the admin page reads the same list).
-    fetchTemplateNames() {
-      const user = this.store.state.user;
-      if (this.templatesFetched || !user || !user.accessToken) return;
-      this.templatesFetched = true;
-      TemplatesApi.list(user, this.$i18n.locale)
-        .then((response) => {
-          const names = {};
-          (response.data || []).forEach((t) => { if (t.humanName) names[t.name] = t.humanName; });
-          this.templateNames = names;
-        })
-        .catch((error) => {
-          this.templatesFetched = false;
-          if (!isSessionEnded(error)) console.warn('Analytics templates:', error);
-        });
+    tabLink(tab) {
+      const query = { ...this.$route.query };
+      if (tab === "overview") delete query.tab; else query.tab = tab;
+      return { path: "/analytics", query };
     },
-    reportFromRoute() {
-      const value = Number(this.$route.query.report);
-      return Number.isFinite(value) && value > 0 ? value : null;
-    },
-    requestIdFromRoute() {
-      const value = this.$route.query.requestId;
-      return typeof value === 'string' && value !== '' ? value : null;
+    // A link of before (`?id=&report=<periodStart>&requestId=`, in a mail or a bookmark) opens the report's own page.
+    redirectOldReportLink() {
+      const report = Number(this.$route.query.report);
+      const id = this.$route.query.id;
+      if (!id || !Number.isFinite(report) || report <= 0) return false;
+      const query = { id, start: String(report) };
+      if (typeof this.$route.query.requestId === "string" && this.$route.query.requestId) query.requestId = this.$route.query.requestId;
+      this.router.replace({ path: "/analytics/report", query });
+      return true;
     },
     rememberNames(names) {
       this.businessNames = { ...this.businessNames, ...names };
@@ -658,27 +726,22 @@ export default {
         this.fetchAllData();
       }
     },
-    // A business's own page names it from what the page already read, else asks for the name once.
-    fetchBusinessName(user) {
+    // The business of the page, read once: its name for the bar, its zone, owner and plan for the reports' tabs.
+    fetchBusiness(user) {
       const id = this.businessId;
-      if (!id || this.businessNames[id]) return;
-      CallInsights.businessName(user, id)
-        .then((name) => { if (name) this.rememberNames({ [id]: name }); })
-        .catch((error) => { if (!isSessionEnded(error)) console.warn('Analytics business name:', error); });
-    },
-    focusOnReport() {
-      const user = this.store.state.user;
-      if (!this.focusReport || !this.businessId || !user || this.reportsStatus !== 'ok') return;
-      const key = CallInsights.reportKey({ periodStart: this.focusReport, requestId: this.focusRequestId });
-      if (this.reportsData.some((r) => CallInsights.reportKey(r) === key)) return;
-      const periodStart = this.focusReport;
-      const requestId = this.focusRequestId;
-      CallInsights.report(user, this.businessId, periodStart, requestId)
-        .then((report) => {
-          if (periodStart !== this.focusReport || requestId !== this.focusRequestId) return;
-          if (report && !report.unavailable) this.focusedReport = report;
+      if (!id || (this.businessRecord && this.businessRecord.businessId === id)) return;
+      CallInsights.business(user, id)
+        .then((b) => {
+          if (id !== this.businessId) return;
+          this.businessMissing = !b;
+          this.businessRecord = b || { businessId: id, name: null, timeZone: null, owner: null, subscriptionStatus: null };
+          if (b && b.name) this.rememberNames({ [id]: b.name });
         })
-        .catch((error) => this.handleApiError(error, 'reports'));
+        .catch((error) => {
+          if (isSessionEnded(error)) return;
+          console.warn('Analytics business:', error);
+          if (id === this.businessId) this.businessRecord = { businessId: id, name: null, timeZone: null, owner: null, subscriptionStatus: null };
+        });
     },
     handleApiError(error, section) {
       // The session ended: the interceptor has already sent the person to sign in.
@@ -699,8 +762,6 @@ export default {
       const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
       if (!this.businessId) {
-        // the plan names the scope page's integrations show, however the page was reached
-        if (this.showScopePage) this.fetchTemplateNames();
         this.fetchScopeInsights(user, granularity, timezone);
         return;
       }
@@ -715,10 +776,7 @@ export default {
       this.fetchOutcomes(user, request, granularity, timezone);
       this.fetchTopics(user, request);
       this.fetchQuality(user, request);
-      this.reportsData = [];
-      this.focusedReport = null;
-      this.fetchReports(user, this.businessId, null).then(() => this.focusOnReport());
-      this.fetchBusinessName(user);
+      this.fetchBusiness(user);
     },
     // Across the reseller's scope (its own calls and all its managed owners', or one of them
     // through the owner selector): no businessId key, which is StarChat's "every business" the
@@ -734,7 +792,7 @@ export default {
       const request = this.buildScopeRequestBody();
       this.fetchOutcomes(user, request, granularity, timezone);
       this.fetchQuality(user, request);
-      this.fetchAssistants(user, request);
+      this.scopeBody = { ...request };
     },
     // One `CallInsights.latestOnly()` per section, created on first use: plain, not reactive state.
     insightGate(section) {
@@ -794,60 +852,6 @@ export default {
           this.handleApiError(error, 'quality');
         });
     },
-    // The reports overlapping the page's period, a page of 10 after `after` (the last report shown, null
-    // for the first page); a new period starts again from the first page (`fetchAllData`).
-    fetchReports(user, businessId, after) {
-      this.reportsStatus = after == null ? 'loading' : this.reportsStatus;
-      const isCurrent = this.insightGate('reports');
-      return CallInsights.reports(user, businessId, this.timestampGte, this.timestampLte, after, 10)
-        .then((result) => {
-          if (!isCurrent()) return;
-          if (result === null) { this.reportsStatus = 'absent'; this.reportsData = []; this.reportsHasMore = false; }
-          else if (result.unavailable) { this.reportsStatus = 'unavailable'; this.reportsData = []; this.reportsHasMore = false; }
-          else {
-            this.reportsStatus = 'ok';
-            this.reportsData = after == null ? result : this.reportsData.concat(result);
-            this.reportsHasMore = result.length >= 10;
-          }
-        })
-        .catch((error) => {
-          if (!isCurrent()) return;
-          if (isSessionEnded(error)) return;
-          // an earlier page that fails leaves the reports already shown, and the button to try again
-          if (after == null) this.reportsStatus = 'absent';
-          this.handleApiError(error, 'reports');
-        });
-    },
-    loadMoreReports() {
-      if (this.reportsLoadingMore || this.reportsData.length === 0) return;
-      const user = this.store.state.user;
-      if (!user) return;
-      this.reportsLoadingMore = true;
-      const last = this.reportsData[this.reportsData.length - 1];
-      this.fetchReports(user, this.businessId, last).finally(() => { this.reportsLoadingMore = false; });
-    },
-    fetchAssistants(user, request) {
-      this.assistantsStatus = 'loading';
-      const isCurrent = this.insightGate('assistants');
-      CallInsights.assistants(user, request, this.assistantsSort, 50)
-        .then((result) => {
-          if (!isCurrent()) return;
-          if (result === null) { this.assistantsStatus = 'absent'; this.assistantsData = null; }
-          else if (result.unavailable) { this.assistantsStatus = 'unavailable'; this.assistantsData = null; }
-          else { this.assistantsStatus = 'ok'; this.assistantsData = result; }
-        })
-        .catch((error) => {
-          if (!isCurrent()) return;
-          if (isSessionEnded(error)) return;
-          this.assistantsStatus = 'absent';
-          this.handleApiError(error, 'assistants');
-        });
-    },
-    onAssistantsSortChange(sort) {
-      this.assistantsSort = sort;
-      const user = this.store.state.user;
-      if (user) this.fetchAssistants(user, this.buildScopeRequestBody());
-    },
     onAssistantsSelectBusiness(businessId) {
       // A reseller's row opens the business page, the same way a link from the clinic's own email would;
       // the filter bar there leads back.
@@ -893,10 +897,6 @@ export default {
       const intensity = value / max;
       return `rgba(0, 104, 255, ${0.15 + intensity * 0.75})`;
     },
-    computeDelta(current, previous) {
-      if (previous == null || previous === 0 || current == null) return null;
-      return (current - previous) / previous;
-    },
     deltaClass(delta) {
       if (delta > 0) return 'delta-positive';
       if (delta < 0) return 'delta-negative';
@@ -939,12 +939,14 @@ export default {
     transformDashboard(data) {
       if (!data) return data;
       const prev = data.previousPeriod;
+      // every KPI's change is over the previous period's calls: under 20 of them it is "n.d." (U19 M13)
+      const change = (current, previous) => (prev ? InsightsReports.change(current, previous, prev.totalCalls) : null);
       return {
         ...data,
-        totalCallsDelta: prev ? this.computeDelta(data.totalCalls, prev.totalCalls) : null,
-        avgDurationDelta: prev ? this.computeDelta(data.avgCallDurationMs, prev.avgCallDurationMs) : null,
-        totalDurationDelta: prev ? this.computeDelta(data.totalCallDurationMs, prev.totalCallDurationMs) : null,
-        uniqueCallersDelta: prev ? this.computeDelta(data.uniqueCallers, prev.uniqueCallers) : null,
+        totalCallsChange: prev ? change(data.totalCalls, prev.totalCalls) : null,
+        avgDurationChange: prev ? change(data.avgCallDurationMs, prev.avgCallDurationMs) : null,
+        totalDurationChange: prev ? change(data.totalCallDurationMs, prev.totalCallDurationMs) : null,
+        uniqueCallersChange: prev ? change(data.uniqueCallers, prev.uniqueCallers) : null,
       };
     },
     transformTimeseries(data) {
@@ -991,8 +993,10 @@ export default {
       if (!data) return data;
       const result = { ...data };
       if (data.topCallers) {
+        // a web or test call is one row with `web: true` and no identifier (StarChat, the amendment's rule 9): it is
+        // labelled, never shown as a number (U19 M16)
         result.topCallers = data.topCallers.map(c => ({
-          number: c.contactNumber || c.number || '',
+          number: c.web === true ? this.$t('components.callInsights.callers.web') : (c.contactNumber || c.number || ''),
           callCount: c.callCount || 0,
           totalDuration: c.totalDurationMs || c.totalDuration || 0,
           lastCall: c.lastCallTimestamp || c.lastCall || null,
@@ -1023,6 +1027,65 @@ export default {
   font-weight: 600;
   margin-bottom: 16px;
   color: #333;
+}
+
+// The business page's tabs
+.analytics-tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid @mrcall_borders;
+  margin: 12px 0 20px;
+  overflow-x: auto;
+}
+
+.analytics-tab {
+  padding: 10px 16px;
+  font-weight: 600;
+  color: @mrcall_grey_text;
+  text-decoration: none;
+  border-bottom: 3px solid transparent;
+  white-space: nowrap;
+
+  &:focus-visible {
+    outline: 2px solid @mrcall_blue;
+    outline-offset: -2px;
+  }
+}
+
+.analytics-tab-active {
+  color: @mrcall_blue;
+  border-bottom-color: @mrcall_blue;
+}
+
+.insights-banner, .insights-card {
+  background: @mrcall_white;
+  border: 1px solid @mrcall_borders;
+  border-radius: 12px;
+  padding: 16px;
+  font-size: 14px;
+
+  p {
+    margin: 0 0 8px 0;
+  }
+}
+
+.overview-empty {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.overview-empty-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.insights-banner {
+  border-left: 4px solid @mrcall_status_warning;
+}
+
+.insights-banner-note {
+  color: @mrcall_grey_text;
+  font-size: 13px;
 }
 
 // Date controls

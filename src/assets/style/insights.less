@@ -1,0 +1,78 @@
+@import "colors";
+
+/*
+ * The call reports, jobs and requests (StarChat's docs/briefs/2026-10-24-insights-reports-ux.md): the dashboard's
+ * global `.p-button` (default.less) paints every button solid blue, which made a row's secondary actions ("Rigenera",
+ * "Elimina") as loud as the page's one primary action. Inside `.insights-ui` the outlined, text and danger buttons
+ * look as PrimeVue means them, from the colour tokens.
+ */
+.insights-ui {
+  .p-button.p-button-outlined {
+    background: @mrcall_white;
+    color: @mrcall_blue;
+    border-color: @mrcall_blue;
+  }
+
+  .p-button.p-button-text {
+    background: transparent;
+    border-color: transparent;
+    color: @mrcall_blue;
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+
+  .p-button.p-button-text.p-button-secondary,
+  .p-button.p-button-outlined.p-button-secondary {
+    color: @mrcall_grey_text;
+    border-color: transparent;
+  }
+
+  .p-button.p-button-outlined.p-button-secondary {
+    border-color: @mrcall_light_grey_1;
+  }
+
+  .p-button.p-button-text.p-button-danger,
+  .p-button.p-button-outlined.p-button-danger {
+    color: @mrcall_status_danger;
+  }
+
+  .p-button.p-button-outlined.p-button-danger {
+    border-color: @mrcall_status_danger;
+  }
+
+  .p-button.p-button-text:enabled:hover,
+  .p-button.p-button-outlined:enabled:hover {
+    background: @mrcall_light_grey_2;
+  }
+
+  .analytics-section {
+    margin-bottom: 32px;
+  }
+
+  .section-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0 0 16px 0;
+    color: @mrcall_dark_grey_text;
+  }
+}
+
+/*
+ * The page's own paragraph rule (default.less, `.main-page-content-section p`, 1.2em to 1.4em, written for the
+ * onboarding's large copy) made every sentence of these sections larger than the tables they describe. Within them a
+ * paragraph is body text, and takes its size from the section.
+ */
+/*
+ * The dashboard's dialogs put their close button first (default.less, `.p-dialog-header { flex-direction: row-reverse }`),
+ * which in these dialogs set the title on the right and the close on the left (U19 m20). Here the title starts the
+ * header and the close ends it, as a reader expects.
+ */
+.p-dialog.insights-ui .p-dialog-header {
+  flex-direction: row;
+}
+
+.main-page-content-section .insights-ui p,
+.insights-ui p {
+  font-size: inherit;
+  color: inherit;
+}

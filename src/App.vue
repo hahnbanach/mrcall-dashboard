@@ -19,8 +19,11 @@
 <script>
 import Navbar from '@/components/Navbar'
 import { loadLanguageAsync } from '@/i18n/index.js'
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import { useStore } from 'vuex'
+import { useI18n } from 'vue-i18n'
+import { usePrimeVue } from 'primevue/config'
+import { primeLocale } from '@/utils/PrimeLocale'
 
 export default {
   data() {
@@ -29,6 +32,12 @@ export default {
   },
   setup() {
     const store = useStore()
+    // PrimeVue's calendar and its spoken labels follow the reader's language (U19 m16)
+    const primevue = usePrimeVue()
+    const { locale, t } = useI18n({ useScope: 'global' })
+    watch(locale, (tag) => {
+      primevue.config.locale = { ...primevue.config.locale, ...primeLocale(tag, t) }
+    }, { immediate: true })
 
     async function changeLanguage(locale) {
       try {

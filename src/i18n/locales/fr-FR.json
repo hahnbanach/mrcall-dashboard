@@ -164,7 +164,8 @@
       },
       "code": {
         "assistant_without_page": "L'assistant ne peut pas prendre de réservations tant que la page du restaurant est désactivée : désactivez l'assistant, ou activez la page.",
-        "allergies_required_unavailable": "Les allergies ne peuvent pas encore être obligatoires ici : les demander à chaque appelant attend que le point juridique soit réglé."
+        "allergies_required_unavailable": "Les allergies ne peuvent pas encore être obligatoires ici : les demander à chaque appelant attend que le point juridique soit réglé.",
+        "admin_only_skill": "Seul un administrateur peut ajouter cette skill. La page n'était pas à jour : rechargez-la. Les skills déjà configurées restent modifiables."
       }
     }
   },
@@ -1869,7 +1870,8 @@
         "unresolved": "Non résolu",
         "handed_over": "Passé à une personne",
         "caller_left": "A parlé sans dire ce qu'il voulait",
-        "spam_wrong_number": "Spam ou faux numéro"
+        "spam_wrong_number": "Spam ou faux numéro",
+        "forwarded": "Demande transmise à l'entreprise"
       },
       "message": {
         "complete": "Message complet",
@@ -1926,7 +1928,9 @@
         "transferredOff": "Tous les appels",
         "unansweredLabel": "Questions sans réponse",
         "unansweredOn": "Avec une question sans réponse",
-        "unansweredOff": "Tous les appels"
+        "unansweredOff": "Tous les appels",
+        "business": "Entreprise",
+        "noBusinessFound": "Aucune entreprise portant ce nom"
       },
       "notAvailableYet": "Pas encore disponible.",
       "howCallsWent": {
@@ -1967,8 +1971,6 @@
         "countOfTotal": "{count} appels sur {total}"
       },
       "reports": {
-        "title": "Rapports d'appels",
-        "none": "Aucun rapport ne couvre cette période.",
         "topicsTitle": "Sujets",
         "newTopic": "Nouveau",
         "themeIncludes": "Comprend : {labels}",
@@ -1979,8 +1981,28 @@
         "businessInfoTitle": "Ce que vous seul pouvez dire à votre assistant",
         "integrationTitle": "Un système à connecter",
         "mrcallConfigTitle": "Suggestions de configuration MrCall",
-        "loadMore": "Afficher les rapports précédents",
-        "onRequest": "Sur demande"
+        "panel": {
+          "cadence": "Chaque jour, MrCall prépare un rapport sur les appels de votre entreprise. Chaque rapport utilise le crédit de l'entreprise. | Tous les {days} jours, MrCall prépare un rapport sur les appels de votre entreprise. Chaque rapport utilise le crédit de l'entreprise.",
+          "next": "Le prochain arrivera le {date} et couvrira du {from} au {to}.",
+          "retry": "Le rapport couvrant du {from} au {to} n'a pas abouti : il sera retenté cette nuit.",
+          "settings": "Vous pouvez changer la fréquence dans les paramètres de l'entreprise (0 = aucun rapport).",
+          "settingsLink": "Ouvrir les paramètres de l'entreprise",
+          "off": "Les rapports automatiques ne sont pas activés. Vous pouvez les activer dans les paramètres de l'entreprise ou demander un rapport pour la période de votre choix.",
+          "skipped": "Le rapport de {period} est reporté : le crédit est insuffisant. Après la prochaine recharge, nous préparerons le rapport du dernier jour ; les jours précédents restent dans les statistiques et peuvent être analysés avec un rapport à la demande. | Le rapport de {period} est reporté : le crédit est insuffisant. Après la prochaine recharge, nous préparerons le rapport des {days} derniers jours ; les jours précédents restent dans les statistiques et peuvent être analysés avec un rapport à la demande.",
+          "nextOneDay": "Le prochain arrivera le {date} et couvrira le {day}.",
+          "covers": "Le prochain couvrira du {from} au {to}.",
+          "coversOneDay": "Le prochain couvrira le {day}.",
+          "retryOneDay": "Le rapport du {day} n'a pas abouti : il sera retenté cette nuit."
+        },
+        "type": {
+          "automatic": "Automatique",
+          "requested": "À la demande",
+          "onRequestHelp": "Créé quand quelqu'un l'a demandé, pour une période choisie. Il ne remplace pas les rapports automatiques."
+        },
+        "base": "Basé sur {analysed} des {managed} appels gérés par l'assistant sur la période.",
+        "baseOld": "Basé sur {analysed} appels analysés.",
+        "baseOldNote": "Pour les appels antérieurs au 10 octobre, nous ne savons pas combien l'assistant en a gérés.",
+        "excluded": "Exclus : {silent} appels où l'appelant n'a pas parlé, {credit} refusés faute de crédit."
       },
       "assistants": {
         "title": "Assistants à revoir",
@@ -2018,45 +2040,48 @@
           "unanswered": "Questions ouvertes",
           "checks": "Contrôles",
           "skillErrors": "Erreurs de skill",
-          "extractionIssues": "Extraction"
+          "extractionIssues": "Extraction",
+          "change": "Évolution",
+          "configSuggestions": "Suggestions MrCall"
         },
         "legend": {
-          "notSolved": "sur les appels où l'appelant a demandé quelque chose (résolus, non résolus ou transmis)",
+          "notSolved": "non résolu, plus les demandes transmises à l'entreprise avec un message incomplet, sur les appels où l'appelant a demandé quelque chose",
           "callerSilent": "sur les appels décrochés",
           "notAnswered": "sur les appels arrivés à l'assistant",
           "callerLeft": "sur les appels ayant un résultat",
           "unanswered": "appels avec une question restée sans réponse, sur les appels où les questions sont enregistrées",
           "checks": "appels où un contrôle s'est déclenché, sur les appels contrôlés",
           "skillErrors": "appels avec une erreur de skill, sur tous les appels",
-          "extractionIssues": "appels dont l'extraction des données a échoué, sur les appels où l'extraction a été effectuée"
+          "extractionIssues": "appels dont l'extraction des données a échoué, sur les appels où l'extraction a été effectuée",
+          "change": "« Non résolus » maintenant par rapport à la période précédente de même durée, en points de pourcentage ; un tiret si l’une des deux périodes n’a aucun appel avec une demande",
+          "configSuggestions": "Suggestions de configuration MrCall du dernier rapport automatique"
         },
         "legendTitle": "Comment chaque colonne est comptée",
-        "assessedShort": "évalué"
+        "assessedShort": "évalué",
+        "search": "Rechercher une entreprise par nom",
+        "searchButton": "Rechercher",
+        "clearSearch": "Effacer la recherche « {term} »",
+        "none": "Aucun assistant à examiner sur cette période.",
+        "noneFound": "Aucune entreprise nommée « {term} » sur cette période.",
+        "healthTitle": "Compte",
+        "health": {
+          "ok": "À jour",
+          "creditLow": "Crédit faible",
+          "inDebt": "En dette",
+          "unknown": "Inconnu",
+          "planOther": "Forfait inactif"
+        },
+        "changePoints": "{sign}{n} points"
       },
       "scope": {
-        "title": "Intégrations et informations demandées",
         "allBusinesses": "Sur tous les établissements que vous pouvez voir, au cours des 30 derniers jours.",
         "none": "Rien à montrer pour l'instant.",
-        "saidBy": "{businesses}, {reports}",
         "configSuggestionsTitle": "Suggestions de configuration MrCall",
-        "loading": "Chargement…",
-        "saidByLabel": "Demandé par :",
-        "andMore": "et {count} de plus",
-        "loadMoreIntegrations": "Charger plus d'intégrations",
-        "loadMoreSuggestions": "Charger plus de suggestions",
-        "template": "Formule : {template}",
-        "reportEnding": "Rapport jusqu'au {date}",
-        "kinds": {
-          "integration": "Intégration",
-          "business_info": "Informations sur l'entreprise",
-          "needs_integration_gap": "Sans réponse : nécessite une intégration"
-        },
-        "businessesCount": "1 entreprise | {n} entreprises",
-        "reportsCount": "1 rapport | {n} rapports",
-        "shownIntegrations": "{shown} éléments affichés sur {total}",
-        "shownSuggestions": "{shown} entreprises affichées sur {total}",
-        "moreFailed": "La page suivante n'a pas pu être chargée.",
-        "retry": "Réessayer"
+        "columns": {
+          "business": "Entreprise",
+          "reportEnding": "Rapport jusqu'au",
+          "suggestions": "Suggestions"
+        }
       },
       "filterBar": {
         "title": "Filtres actifs",
@@ -2072,7 +2097,353 @@
         "scopeNote": "Cette section : toutes les entreprises que vous voyez, 30 derniers jours",
         "notApplied": "Filtres non appliqués à cette section",
         "ownerNameSource": "nom du contact de l'entreprise de ce propriétaire"
-      }
+      },
+      "outcome": {
+        "title": "Issue des appels où l'appelant a demandé quelque chose",
+        "resolved": "Résolu pendant l'appel",
+        "forwarded": "Demande transmise à l'entreprise",
+        "forwarded_complete": "avec un message complet",
+        "forwarded_incomplete": "avec un message incomplet",
+        "handed_over": "Passé à une personne",
+        "unresolved": "Non résolu",
+        "forwardedHelp": "L'assistant n'a pas pu le faire pendant l'appel et a noté la demande pour que l'entreprise y donne suite.",
+        "notYet": "Cette issue apparaîtra dès que le serveur lira les demandes transmises à l'entreprise."
+      },
+      "state": {
+        "loading": "Chargement…",
+        "updating": "Mise à jour…",
+        "error": "Cette section n'a pas pu être chargée.",
+        "retry": "Réessayer",
+        "actionFailed": "Cela n'a pas fonctionné. Veuillez réessayer."
+      },
+      "pager": {
+        "range": "{from}–{to} sur {total}",
+        "label": "Pages de {name}",
+        "previous": "Page précédente",
+        "next": "Page suivante",
+        "page": "Page {n}",
+        "sortBy": "Trier par",
+        "descending": "Décroissant",
+        "ascending": "Croissant"
+      },
+      "tabs": {
+        "label": "Sections des statistiques",
+        "overview": "Aperçu",
+        "reports": "Rapports",
+        "jobs": "Traitements"
+      },
+      "free": {
+        "paidUnavailable": "Disponible avec un forfait payant.",
+        "seePlans": "Voir les forfaits"
+      },
+      "requester": {
+        "you": "Vous",
+        "owner": "{name} (titulaire)",
+        "ownerNoName": "Le titulaire",
+        "reseller": "Le revendeur",
+        "admin": "MrCall",
+        "system": "Automatique"
+      },
+      "status": {
+        "ready": "Prêt",
+        "preparing": "En préparation",
+        "queued": "En file d'attente",
+        "retryTomorrow": "Nouvel essai demain",
+        "failed": "Échec",
+        "postponed": "Reporté",
+        "noCalls": "Aucun appel à analyser",
+        "notRun": "Non exécuté",
+        "notRunCredit": "Non exécuté : crédit insuffisant",
+        "stoppedCredit": "Arrêté : crédit insuffisant",
+        "cancelled": "Annulé",
+        "recomputeStopped": "Arrêté : crédit insuffisant. {done} appels sur {total} ont été analysés, avec le crédit de l'entreprise. Les autres n'ont pas été analysés."
+      },
+      "reportsTab": {
+        "scheduleTitle": "Rapports automatiques",
+        "request": "Demander un rapport",
+        "anticipate": "Préparer maintenant",
+        "recentTitle": "Demandés récemment",
+        "historyTitle": "Tous les rapports",
+        "filterStatus": "Statut",
+        "filterType": "Type",
+        "clearFilters": "Effacer les filtres",
+        "none": "Aucun rapport pour le moment.",
+        "noneFiltered": "Aucun rapport ne correspond à ces filtres.",
+        "days": "1 jour | {days} jours",
+        "callsOfManaged": "{calls} sur {managed} gérés",
+        "callsAnalysed": "{calls} analysés",
+        "open": "Ouvrir",
+        "regenerate": "Régénérer",
+        "regenerateOf": "Régénérer le rapport {period}",
+        "rerun": "Réessayer",
+        "rerunOf": "Réessayer le rapport {period}",
+        "delete": "Supprimer",
+        "deleteOf": "Supprimer le rapport {period}",
+        "jobReport": "Rapport {period}",
+        "jobRecompute": "Analyse des appels {period}",
+        "jobAnticipate": "Rapport automatique préparé maintenant",
+        "jobRegenerate": "Rapport régénéré {period} | Rapports régénérés {period}",
+        "jobRerun": "Rapport automatique {period} retenté",
+        "columns": {
+          "period": "Période",
+          "type": "Type",
+          "revision": "Version",
+          "status": "Statut",
+          "calls": "Appels",
+          "requestedBy": "Demandé par",
+          "createdAt": "Créé le",
+          "actions": "Actions"
+        },
+        "jobFacts": "Mise à jour des données des appels, {period}"
+      },
+      "jobs": {
+        "title": "Traitements",
+        "purpose": "Les rapports demandés, régénérés et les analyses d'appels passés pour cette entreprise, avec qui les a demandés et comment chacun s'est terminé.",
+        "none": "Rien n'a encore été traité pour cette entreprise.",
+        "progress": "{done} appels sur {total}",
+        "estimate": "Préparation d'une demande",
+        "columns": {
+          "what": "Quoi",
+          "status": "Statut",
+          "progress": "Avancement",
+          "requestedBy": "Demandé par",
+          "createdAt": "Commencé le",
+          "result": "Résultat"
+        },
+        "filterKind": "Type",
+        "noneFiltered": "Aucun traitement avec ces filtres.",
+        "kinds": {
+          "report": "Rapport",
+          "recompute": "Analyse des appels",
+          "estimate": "Préparation d'une demande",
+          "facts": "Mise à jour des données des appels"
+        },
+        "openReport": "Ouvrir le rapport {period}",
+        "examined": "{n} appel examiné | {n} appels examinés",
+        "outcome": {
+          "recompute": {
+            "written": "{n} analysé | {n} analysés",
+            "reasoned": "{n} sans conversation | {n} sans conversation",
+            "skipped": "{n} déjà à jour | {n} déjà à jour",
+            "left": "{n} sans rien à analyser | {n} sans rien à analyser",
+            "not_finalised": "{n} non terminé | {n} non terminés",
+            "conflict": "{n} modifié entre-temps | {n} modifiés entre-temps",
+            "failed": "{n} échoué | {n} échoués",
+            "ceiling": "{n} non analysé : limite atteinte | {n} non analysés : limite atteinte"
+          },
+          "facts": {
+            "written": "{n} mis à jour | {n} mis à jour",
+            "unchanged": "{n} déjà à jour | {n} déjà à jour",
+            "not_finalised": "{n} non terminé | {n} non terminés",
+            "conflict": "{n} modifié entre-temps | {n} modifiés entre-temps"
+          }
+        }
+      },
+      "reportDetail": {
+        "back": "Retour aux rapports",
+        "title": "Rapport d'appels, {period}",
+        "notFound": "Ce rapport n'existe pas ou n'est plus disponible.",
+        "baseTitle": "Quels appels il a lus",
+        "newerCalls": "Depuis la rédaction de ce rapport, {n} appels de plus de ces jours ont été analysés : régénérez-le pour les inclure.",
+        "addAnswer": "Ajouter la réponse",
+        "qualityTitle": "Questions sans réponse, comparées à la période précédente",
+        "qualityReason": "Motif",
+        "qualityNow": "Ces jours-ci",
+        "qualityBefore": "Période précédente",
+        "qualityBase": "Appels comptés sur les {calls} appels pour lesquels ce contrôle a été enregistré.",
+        "draftAdded": "Nous avons ajouté la question à vos questions et réponses : écrivez la réponse et enregistrez.",
+        "draftPresent": "Cette question figure déjà parmi vos questions et réponses.",
+        "version": "Version {n}",
+        "calls": "{n} appel | {n} appels",
+        "booked": "{n} appel avec une réservation prise | {n} appels avec une réservation prise",
+        "transferred": "{n} appel transféré à une personne | {n} appels transférés à une personne",
+        "themeOutcome": "Issue des appels de {topic}",
+        "callBackTitle": "Appels à rappeler",
+        "callBackNote": "Appels non résolus, ou transmis à l'entreprise avec un message incomplet."
+      },
+      "deleteReport": {
+        "title": "Supprimer le rapport",
+        "what": "Le rapport {period} sera masqué pour tout le monde, avec toutes ses versions.",
+        "reason": "Pourquoi il est supprimé",
+        "confirm": "Supprimer"
+      },
+      "request": {
+        "title": {
+          "report": "Demander un rapport",
+          "regenerate": "Régénérer le rapport",
+          "recompute": "Analyser les appels de la période",
+          "anticipate": "Préparer maintenant le rapport automatique",
+          "rerun": "Réessayer le rapport automatique"
+        },
+        "periodLabel": "Période",
+        "preset": "{days} derniers jours",
+        "custom": "Choisir les jours",
+        "periodHint": "Les jours sont ceux de l'entreprise, jusqu'à hier inclus.",
+        "selected": "Le {from} (1 jour) | Du {from} au {to} ({days} jours)",
+        "continue": "Continuer",
+        "cancel": "Annuler",
+        "close": "Fermer",
+        "preparing": "Nous préparons la demande…",
+        "confirm": "Ce traitement utilise le crédit de l'entreprise {business}. Voulez-vous continuer ?",
+        "confirmPlatform": "Ce traitement est à la charge de MrCall : le crédit de l'entreprise n'est pas utilisé. Voulez-vous continuer ?",
+        "raceNote": "Si, entre-temps, des appels consomment le crédit, le traitement pourrait laisser une petite dette.",
+        "platformPays": "À la charge de MrCall : l'entreprise n'utilise pas de crédit",
+        "confirmButton": "Confirmer",
+        "notEnoughCredit": "Crédit insuffisant pour ce traitement.",
+        "reserve": "Le crédit de l'entreprise est au niveau que nous gardons pour les appels. Rechargez le crédit ou activez la recharge automatique pour utiliser cette fonction.",
+        "shorter": "Essayez une période plus courte",
+        "topUp": "Recharger",
+        "enableTopUp": "Activer la recharge automatique",
+        "overlap": {
+          "same": "Un rapport existe déjà pour ces jours.",
+          "cycle": "Ces jours seront relus par le prochain rapport automatique et utiliseront de nouveau le crédit.",
+          "partial": "Ces jours figurent déjà en partie dans le rapport {kind} {period}. Un nouveau rapport les relit et utilise de nouveau le crédit.",
+          "acknowledge": "J'ai compris : les relire quand même",
+          "regenerateInstead": "Régénérer ce rapport",
+          "partialMany": "{n} rapports couvrent déjà une partie de ces jours, du {from} au {to}. Un nouveau rapport les relit et utilise de nouveau le crédit."
+        },
+        "kind": {
+          "automatic": "automatique",
+          "requested": "à la demande"
+        },
+        "anticipateCycle": "Le rapport automatique en cours couvre du {from} à hier : nous le préparons maintenant pour toute cette période, et le suivant commencera à partir d'aujourd'hui.",
+        "busy": "Un traitement est déjà en cours pour cette entreprise, lancé par {who} le {when}.",
+        "busyUnknown": "Un traitement est déjà en cours pour cette entreprise.",
+        "busyOpen": "Voir le traitement",
+        "automaticPending": "Le rapport automatique de cette période est en préparation : il sera prêt après le prochain traitement de nuit.",
+        "retention": "Ce rapport couvre des jours datant de plus de 11 mois : il ne peut plus être régénéré.",
+        "noCalls": "Aucun appel à analyser sur cette période.",
+        "failed": "La demande n'a pas pu être menée à bien. Veuillez réessayer plus tard.",
+        "queued": "En file d'attente : cela démarrera bientôt.",
+        "working": "En préparation…",
+        "progress": "{done} appels analysés sur {total}.",
+        "doneReport": "Le rapport est prêt.",
+        "doneRecompute": "Analyse terminée : {written} appels mis à jour.",
+        "openReport": "Ouvrir le rapport",
+        "cancelJob": "Annuler le traitement",
+        "cancelReport": "Annuler : le rapport ne sera pas rédigé et aucun crédit ne sera utilisé.",
+        "cancelRecompute": "Il s'arrête après l'appel en cours ; les appels déjà analysés restent acquis et ont utilisé le crédit de l'entreprise.",
+        "cancelled": "Traitement annulé.",
+        "keepOpen": "Vous pouvez fermer cette fenêtre : le traitement continue et vous le retrouverez dans Traitements.",
+        "platformInstead": "Lancer aux frais de MrCall",
+        "noCallsPeriod": "Aucun appel sur cette période.",
+        "lastCall": "Le dernier appel date du {date}.",
+        "noCallEver": "L'entreprise n'a encore reçu aucun appel.",
+        "noAnalysis": "Il y a 1 appel sur cette période, mais il n'est pas encore analysé. | Il y a {n} appels sur cette période, mais aucun n'est encore analysé.",
+        "noAnalysisNone": "Aucun appel de cette période n'est analysé, et aucun ne peut l'être.",
+        "cycleEmpty": "Le rapport automatique en cours n'a encore aucun jour terminé : il n'y a rien à préparer pour l'instant.",
+        "busyYou": "Un traitement est déjà en cours pour cette entreprise, lancé par vous le {when}."
+      },
+      "recompute": {
+        "banner": "{n} appels gérés sur cette période n'ont pas encore l'analyse automatique ; les issues, les sujets et la qualité ne les comptent donc pas.",
+        "cannotChange": "Une nouvelle analyse ne change pas les appels sans conversation (l'appelant n'a pas parlé, ou il n'y avait pas de crédit).",
+        "action": "Les analyser maintenant"
+      },
+      "silent": {
+        "title": "Appelants qui n'ont pas parlé",
+        "text": "Dans {n} appels, l'appelant a raccroché sans rien dire. Cela dépend souvent de l'accueil : vérifiez qu'il est court et clair.",
+        "link": "Vérifier l'accueil"
+      },
+      "requests": {
+        "title": "Demandes des appelants",
+        "purpose": "Ce que demandent les appelants et que les assistants ne peuvent pas faire, regroupé par catégorie sur toutes les entreprises : pour décider quoi développer et quoi ajouter aux forfaits.",
+        "window": "Période : {period}",
+        "sortLabel": "Trier par",
+        "sortScore": "Les plus récentes et répandues",
+        "sortBusinesses": "Nombre d'entreprises",
+        "showDismissed": "Afficher les archivées",
+        "scoreHelp": "Chaque entreprise compte 1 si elle l'a demandé dans les derniers jours couverts par ses rapports, la moitié si c'était deux semaines avant, un quart si c'était quatre semaines avant.",
+        "none": "Aucune demande sur cette période.",
+        "columns": {
+          "category": "Catégorie",
+          "businesses": "Entreprises",
+          "trend": "Tendance",
+          "freshness": "Fraîcheur"
+        },
+        "businesses": "{n} entreprises",
+        "trend": "{sign}{n} par rapport à la période précédente",
+        "share": "{pct} % des entreprises ayant des rapports",
+        "histogramLabel": "Entreprises par {bucket}, de la plus ancienne : {values}",
+        "bucket": {
+          "week": "semaine",
+          "month": "mois"
+        },
+        "freshness": "Dernière demande le {date} · {pct} % dans la dernière période ({bucket})",
+        "reportDated": "{n} entreprises datées à la fin du rapport",
+        "nextAction": "Prochaine action",
+        "examples": "Exemples",
+        "hideExample": "Masquer",
+        "hideExampleOf": "Masquer l'exemple « {text} »",
+        "whoAsked": "Qui l'a demandé",
+        "businessesOf": "Entreprises qui ont demandé {category}",
+        "businessColumns": {
+          "name": "Entreprise",
+          "lastSeen": "Dernière demande",
+          "said": "Ce qu'elles ont demandé"
+        },
+        "noBusinesses": "Aucune entreprise sur cette période.",
+        "dismiss": "Archiver",
+        "dismissOf": "Archiver {category}",
+        "restore": "Restaurer",
+        "restoreOf": "Restaurer {category}",
+        "dismissedAs": "Archivée le {date} : {reason}",
+        "reasonLabel": "Motif",
+        "reason": {
+          "done": "Fait",
+          "not_relevant": "Non pertinent",
+          "already_integrated": "Déjà intégré"
+        },
+        "note": "Note (facultatif)",
+        "confirmDismiss": "Archiver",
+        "reopened": "Rouverte : {n} nouvelles entreprises l'ont demandée après son archivage le {date}.",
+        "status": {
+          "rising": "En hausse",
+          "steady": "Stable",
+          "falling": "En baisse",
+          "stale": "Plus demandée récemment"
+        },
+        "hiddenExamples": "Exemples masqués",
+        "hiddenAs": "Masqué le {date} : {reason}",
+        "restoreExampleOf": "Rétablir l’exemple « {text} »",
+        "whoAskedOf": "Qui l'a demandé : {category}",
+        "dismissedBy": "Archivée le {date} par {who} : {reason}",
+        "who": {
+          "you": "vous",
+          "admin": "MrCall"
+        },
+        "archived": "{category} archivée.",
+        "undo": "Annuler"
+      },
+      "admin": {
+        "reason": {
+          "reserve": "Réserve pour les appels",
+          "over_ceiling": "Plus important que ce que l'estimation permettait"
+        }
+      },
+      "change": {
+        "notAvailable": "n.d.",
+        "notAvailableHelp": "La période précédente comptait moins de 20 appels : la variation n'est pas significative."
+      },
+      "overview": {
+        "noCallsDays": "Aucun appel le dernier jour. | Aucun appel ces {days} derniers jours."
+      },
+      "callers": {
+        "web": "Appel web"
+      },
+      "businessNotFound": "Cette entreprise n'existe pas ou ne fait pas partie de celles que vous pouvez voir."
+    },
+    "datePicker": {
+      "chooseDate": "Choisir la date",
+      "chooseMonth": "Choisir le mois",
+      "chooseYear": "Choisir l'année",
+      "prevMonth": "Mois précédent",
+      "nextMonth": "Mois suivant",
+      "prevYear": "Année précédente",
+      "nextYear": "Année suivante",
+      "prevDecade": "Décennie précédente",
+      "nextDecade": "Décennie suivante",
+      "today": "Aujourd'hui",
+      "clear": "Effacer"
     }
   },
   "views": {

@@ -71,13 +71,21 @@ function latestSince(requests, from) {
 }
 
 test.describe('Analytics filters (Admin Role)', () => {
-  test('applying a business ID sends it to every endpoint', async ({ adminPage }) => {
+  // The business is chosen by its company name (StarChat's docs/briefs/2026-10-24-insights-reports-ux.md, "Admin"):
+  // the filter carries its id.
+  test('a business chosen by name sends its id to every endpoint', async ({ adminPage }) => {
     const requests = await recordAnalytics(adminPage)
+    await adminPage.route('**/crm/business/search', (route) => {
+      const body = route.request().postDataJSON() || {}
+      if (!body.companyName) return route.fallback()
+      return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify([{ businessId: 'biz-a', companyName: 'Studio A' }]) })
+    })
     await adminPage.goto('/analytics-admin')
     await expect.poll(() => requests.filter(r => r.endpoint === 'business-breakdown').length).toBeGreaterThan(0)
 
     const before = requests.length
-    await adminPage.getByRole('textbox', { name: 'Business ID' }).fill('  biz-a  ')
+    await adminPage.getByRole('combobox', { name: 'Business' }).pressSequentially('Studio', { delay: 30 })
+    await adminPage.getByRole('option', { name: 'Studio A' }).click()
     await adminPage.getByRole('button', { name: 'Apply' }).click()
 
     await expect(adminPage).toHaveURL(/[?&]businessId=biz-a(&|$)/)
@@ -129,7 +137,8 @@ test.describe('Analytics filters (Admin Role)', () => {
 
     await adminPage.getByRole('cell', { name: 'biz-b' }).click()
     await expect(adminPage).toHaveURL(/[?&]businessId=biz-b(&|$)/)
-    await expect(adminPage.getByRole('textbox', { name: 'Business ID' })).toHaveValue('biz-b')
+    // the filter shows the business by the name its record gives (the fixture answers every id with Test Restaurant)
+    await expect(adminPage.getByRole('combobox', { name: 'Business' })).toHaveValue('Test Restaurant')
 
     const before = requests.length
     await adminPage.getByRole('button', { name: 'Clear', exact: true }).click()

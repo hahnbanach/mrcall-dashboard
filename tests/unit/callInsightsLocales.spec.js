@@ -132,11 +132,7 @@ describe('callInsights: the keys of outcome 9', () => {
  */
 describe('callInsights: the keys of outcome 10', () => {
   const OUTCOME_10_KEYS = [
-    'scope.loading', 'scope.saidByLabel', 'scope.andMore', 'scope.shownIntegrations', 'scope.shownSuggestions',
-    'scope.businessesCount', 'scope.reportsCount', 'assistants.noName', 'scope.loadMoreIntegrations',
-    'scope.loadMoreSuggestions', 'scope.template', 'scope.reportEnding',
-    'scope.kinds.integration', 'scope.kinds.business_info', 'scope.kinds.needs_integration_gap',
-    'assistants.showAll',
+    'assistants.noName', 'assistants.showAll',
     'filterBar.title', 'filterBar.business', 'filterBar.owner', 'filterBar.plan', 'filterBar.period',
     'filterBar.lastDays', 'filterBar.clearBusiness', 'filterBar.clearOwner', 'filterBar.clearPlan', 'filterBar.clearPeriod',
   ]
@@ -145,19 +141,9 @@ describe('callInsights: the keys of outcome 10', () => {
     expect(referenceKeys).toEqual(expect.arrayContaining(OUTCOME_10_KEYS))
   })
 
-  // "1 businesses" was the first review's finding: the counts are plural messages in every locale.
-  it('counts businesses and reports with a singular and a plural form in every locale', () => {
-    for (const [locale, messages] of Object.entries(LOCALES)) {
-      const sc = messages.components.callInsights.scope
-      for (const key of ['businessesCount', 'reportsCount']) {
-        expect(sc[key].split('|').length, `${locale} scope.${key}`).toBe(2)
-      }
-    }
-  })
-
   const get = (obj, path) => path.split('.').reduce((o, k) => (o ? o[k] : undefined), obj)
   const WORDED = ['assistants.showAll', 'filterBar.title', 'filterBar.clearBusiness', 'filterBar.clearOwner',
-    'filterBar.clearPlan', 'filterBar.clearPeriod', 'scope.loadMoreIntegrations', 'scope.loadMoreSuggestions', 'scope.andMore', 'scope.shownSuggestions', 'assistants.noName']
+    'filterBar.clearPlan', 'filterBar.clearPeriod', 'assistants.noName']
   for (const [locale, messages] of Object.entries(LOCALES)) {
     if (locale === 'en-US') continue
     it(`${locale} words the filter bar and the paging in its own language`, () => {
@@ -202,7 +188,6 @@ describe('callInsights: the keys of the D12 review', () => {
     ...SHORT.map(k => `assistants.short.${k}`),
     ...SHORT.filter(k => k !== 'calls').map(k => `assistants.legend.${k}`),
     'assistants.legendTitle', 'assistants.assessedShort',
-    'scope.moreFailed', 'scope.retry',
     'filterBar.scopeNote', 'filterBar.notApplied',
   ]
 
@@ -211,7 +196,7 @@ describe('callInsights: the keys of the D12 review', () => {
   })
 
   const get = (obj, path) => path.split('.').reduce((o, k) => (o ? o[k] : undefined), obj)
-  const WORDED = ['assistants.legendTitle', 'scope.moreFailed', 'scope.retry', 'filterBar.scopeNote', 'filterBar.notApplied',
+  const WORDED = ['assistants.legendTitle', 'filterBar.scopeNote', 'filterBar.notApplied',
     'assistants.short.callerSilent', 'assistants.legend.notSolved']
   for (const [locale, messages] of Object.entries(LOCALES)) {
     if (locale === 'en-US') continue
@@ -237,17 +222,13 @@ describe('callInsights: the keys of the D12 review', () => {
  */
 describe('callInsights: the report without counts, by period, on request (B9)', () => {
   const get = (obj, path) => path.split('.').reduce((o, k) => (o ? o[k] : undefined), obj)
-  const ADDED = ['reports.onRequest', 'reports.themeIncludes', 'reports.examples', 'reports.exampleCall', 'reports.none']
+  const ADDED = ['reports.type.requested', 'reports.themeIncludes', 'reports.examples', 'reports.exampleCall']
   const REMOVED = ['reports.summaryTitle', 'reports.booked', 'reports.transferred', 'reports.topicShare',
     'reports.callsInPeriod', 'reports.callsBaseNote', 'reports.flaggedTitle']
 
   it('en-US names the new keys and none of the counts\' ones', () => {
     expect(referenceKeys).toEqual(expect.arrayContaining(ADDED))
     expect(referenceKeys.filter(k => REMOVED.includes(k))).toEqual([])
-  })
-
-  it('says a period without reports, not "no report yet"', () => {
-    expect(enUS.components.callInsights.reports.none).toMatch(/period/)
   })
 
   for (const [locale, messages] of Object.entries(LOCALES)) {
@@ -258,6 +239,63 @@ describe('callInsights: the report without counts, by period, on request (B9)', 
       if (locale === 'en-US') return
       const copied = ADDED.filter(k => get(ci, k) === get(enUS.components.callInsights, k))
       expect(copied, `${locale} carries English text for these keys`).toEqual([])
+    })
+  }
+})
+
+/**
+ * The reports, requests and outcomes of 2026-10-24 (StarChat's docs/briefs/2026-10-24-insights-reports-ux.md and
+ * docs/briefs/2026-10-24-call-resolution-forwarded.md): every string with placeholders keeps the same placeholders in
+ * every locale (a translation that drops `{days}` would show a sentence without its number), none holds vue-i18n's
+ * syntax characters, the brief's Italian copy is the Italian file's, and the keys a customer reads first are worded
+ * in each language.
+ */
+describe('callInsights: the reports, requests and outcomes of 2026-10-24', () => {
+  const flat = (obj, prefix = '') => Object.entries(obj).flatMap(([k, v]) => {
+    const path = prefix ? `${prefix}.${k}` : k
+    return v && typeof v === 'object' ? flat(v, path) : [[path, v]]
+  })
+  const placeholders = (text) => (String(text).match(/\{[a-zA-Z]+\}/g) || []).sort()
+  const english = Object.fromEntries(flat(enUS.components.callInsights))
+
+  for (const [locale, messages] of Object.entries(LOCALES)) {
+    it(`${locale} keeps every placeholder of en-US, and no "@"`, () => {
+      const wrong = flat(messages.components.callInsights)
+        .filter(([k, v]) => JSON.stringify(placeholders(v)) !== JSON.stringify(placeholders(english[k])) || String(v).includes('@'))
+        .map(([k]) => k)
+      expect(wrong).toEqual([])
+    })
+  }
+
+  it('it-IT carries the brief\'s copy word for word', () => {
+    const ci = itIT.components.callInsights
+    // the brief's copy is the plural form; the singular says "dell'ultimo giorno" (U19 m1)
+    expect(ci.reports.panel.skipped.split(' | ')[1]).toBe('Il report di {period} è rimandato: il credito non basta. Dopo la prossima ricarica prepariamo il report degli ultimi {days} giorni; i giorni precedenti restano nelle statistiche e si possono analizzare con un report su richiesta.')
+    expect(ci.reports.panel.cadence.split(' | ')[1]).toBe("Ogni {days} giorni MrCall prepara un report sulle chiamate della tua attività. Ogni report usa il credito dell'attività.")
+    // the amendment of 2026-10-26 (rule 5 and Dashboard)
+    expect(ci.request.noCallsPeriod).toBe('Nessuna chiamata in questo periodo.')
+    expect(ci.request.noAnalysis.split(' | ')[1]).toBe('Ci sono {n} chiamate in questo periodo, ma nessuna è ancora analizzata.')
+    expect(ci.request.overlap.partialMany).toMatch(/^\{n\} report coprono già parte di questi giorni, dal \{from\} al \{to\}/)
+    expect(ci.request.confirm).toBe("Questa elaborazione usa il credito dell'attività {business}. Vuoi continuare?")
+    expect(ci.request.automaticPending).toBe('Il report automatico di questo periodo è in preparazione: sarà pronto dopo la prossima elaborazione notturna.')
+    expect(ci.outcome.resolved).toBe('Risolte in chiamata')
+    expect(ci.outcome.forwarded).toBe("Richiesta passata all'attività")
+    expect(ci.outcome.handed_over).toBe('Passate a una persona')
+    expect(ci.outcome.unresolved).toBe('Non risolte')
+    expect(ci.resolution.forwarded).toBe("Richiesta passata all'attività")
+    expect(ci.admin.reason.reserve).toBe('Riserva per le chiamate')
+    expect(ci.requests.status).toEqual({ rising: 'In crescita', steady: 'Stabile', falling: 'In calo', stale: 'Non più richiesta di recente' })
+  })
+
+  const WORDED = ['tabs.reports', 'tabs.jobs', 'reports.panel.skipped', 'request.confirm', 'request.reserve', 'outcome.resolved',
+    'outcome.forwarded', 'resolution.forwarded', 'requests.title', 'status.ready', 'pager.range']
+  const get = (obj, path) => path.split('.').reduce((o, k) => (o ? o[k] : undefined), obj)
+  for (const [locale, messages] of Object.entries(LOCALES)) {
+    if (locale === 'en-US') continue
+    it(`${locale} words the screens' first strings in its own language`, () => {
+      const ci = messages.components.callInsights
+      const copied = WORDED.filter(k => k !== 'pager.range' && get(ci, k) === get(enUS.components.callInsights, k))
+      expect(copied).toEqual([])
     })
   }
 })

@@ -45,6 +45,7 @@ import { isAdmitted } from '@/firebase/admission';
 import {createRouter, createWebHistory} from 'vue-router'
 import Analytics from "@/views/Analytics.vue";
 import AnalyticsAdmin from "@/views/AnalyticsAdmin.vue";
+import AnalyticsReport from "@/views/AnalyticsReport.vue";
 import Contacts from "@/views/Contacts.vue";
 import OutboundCalls from "@/views/OutboundCalls.vue";
 import TestChat from "@/views/TestChat.vue";
@@ -316,6 +317,13 @@ const routes = [
     path: '/analytics',
     name: 'Analytics',
     component: Analytics,
+    props: true
+  },
+  {
+    // one call report: ?id=<business>&start=<periodStart>&requestId=<id> (docs/briefs/2026-10-24-insights-reports-ux.md in StarChat)
+    path: '/analytics/report',
+    name: 'AnalyticsReport',
+    component: AnalyticsReport,
     props: true
   },
   {

@@ -142,13 +142,14 @@ export default {
   }
 }
 
-// On a phone the bar stays one line, scrolling sideways, so that it never takes a quarter of the
-// screen nor hides the heading a link scrolled to (the UX review of outcome 10, second pass). The
-// title is left to the region's accessible name.
+// On a phone the title is left to the region's accessible name, and the chips wrap: in one line
+// scrolling sideways, a chip past the edge was cut and its clear control out of reach (U19 m19).
+// Wrapped, the bar can take two or three lines, so on a phone it stays at the top of the page
+// instead of sticking over it, where it would hide the heading a link scrolled to (the UX review
+// of outcome 10, second pass).
 @media screen and (max-width: 640px) {
   .analytics-filter-bar {
-    flex-wrap: nowrap;
-    overflow-x: auto;
+    position: static;
     padding: 6px 8px;
   }
 
@@ -156,12 +157,9 @@ export default {
     display: none;
   }
 
-  .filter-bar-list {
-    flex-wrap: nowrap;
-  }
-
   .filter-chip {
-    flex: 0 0 auto;
+    flex: 0 1 auto;
+    min-width: 0;
   }
 
   .filter-chip-value {

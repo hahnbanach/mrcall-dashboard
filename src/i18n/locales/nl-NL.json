@@ -163,7 +163,8 @@
       },
       "code": {
         "assistant_without_page": "De assistent kan geen reserveringen aannemen zolang de restaurantpagina uit staat: zet de assistent uit, of de pagina aan.",
-        "allergies_required_unavailable": "Allergieën kunnen hier nog niet verplicht zijn: elke beller ernaar vragen wacht tot het juridische punt is opgelost."
+        "allergies_required_unavailable": "Allergieën kunnen hier nog niet verplicht zijn: elke beller ernaar vragen wacht tot het juridische punt is opgelost.",
+        "admin_only_skill": "Alleen een beheerder kan deze skill toevoegen. De pagina was niet bijgewerkt: laad haar opnieuw. Skills die al zijn ingesteld blijven bewerkbaar."
       }
     }
   },
@@ -1867,7 +1868,8 @@
         "unresolved": "Niet opgelost",
         "handed_over": "Doorgegeven aan een persoon",
         "caller_left": "Sprak, maar zei niet wat hij wilde",
-        "spam_wrong_number": "Spam of verkeerd nummer"
+        "spam_wrong_number": "Spam of verkeerd nummer",
+        "forwarded": "Verzoek doorgegeven aan het bedrijf"
       },
       "message": {
         "complete": "Volledig bericht",
@@ -1924,7 +1926,9 @@
         "transferredOff": "Alle gesprekken",
         "unansweredLabel": "Onbeantwoorde vragen",
         "unansweredOn": "Met een onbeantwoorde vraag",
-        "unansweredOff": "Alle gesprekken"
+        "unansweredOff": "Alle gesprekken",
+        "business": "Bedrijf",
+        "noBusinessFound": "Geen bedrijf met deze naam"
       },
       "notAvailableYet": "Nog niet beschikbaar.",
       "howCallsWent": {
@@ -1965,8 +1969,6 @@
         "countOfTotal": "{count} van de {total} gesprekken"
       },
       "reports": {
-        "title": "Gespreksrapporten",
-        "none": "Geen rapport beslaat deze periode.",
         "topicsTitle": "Onderwerpen",
         "newTopic": "Nieuw",
         "themeIncludes": "Omvat: {labels}",
@@ -1977,8 +1979,28 @@
         "businessInfoTitle": "Wat alleen u uw assistent kunt vertellen",
         "integrationTitle": "Een systeem om te koppelen",
         "mrcallConfigTitle": "MrCall-configuratiesuggesties",
-        "loadMore": "Eerdere rapporten tonen",
-        "onRequest": "Op aanvraag"
+        "panel": {
+          "cadence": "Elke dag maakt MrCall een rapport over de gesprekken van uw bedrijf. Elk rapport gebruikt het tegoed van het bedrijf. | Elke {days} dagen maakt MrCall een rapport over de gesprekken van uw bedrijf. Elk rapport gebruikt het tegoed van het bedrijf.",
+          "next": "Het volgende komt op {date} en beslaat {from} tot {to}.",
+          "retry": "Het rapport voor {from} tot {to} is niet gelukt: het wordt vannacht opnieuw geprobeerd.",
+          "settings": "U kunt de frequentie wijzigen in de instellingen van het bedrijf (0 = geen rapporten).",
+          "settingsLink": "Instellingen van het bedrijf openen",
+          "off": "Automatische rapporten zijn niet actief. U kunt ze inschakelen in de instellingen van het bedrijf of een rapport aanvragen voor een periode naar keuze.",
+          "skipped": "Het rapport over {period} is uitgesteld: er is onvoldoende tegoed. Na de volgende opwaardering maken we het rapport over de laatste dag; de dagen daarvoor blijven in de statistieken en kunnen met een rapport op verzoek worden geanalyseerd. | Het rapport over {period} is uitgesteld: er is onvoldoende tegoed. Na de volgende opwaardering maken we het rapport over de laatste {days} dagen; de dagen daarvoor blijven in de statistieken en kunnen met een rapport op verzoek worden geanalyseerd.",
+          "nextOneDay": "Het volgende komt op {date} en beslaat {day}.",
+          "covers": "Het volgende beslaat {from} tot {to}.",
+          "coversOneDay": "Het volgende beslaat {day}.",
+          "retryOneDay": "Het rapport voor {day} is niet gelukt: het wordt vannacht opnieuw geprobeerd."
+        },
+        "type": {
+          "automatic": "Automatisch",
+          "requested": "Op verzoek",
+          "onRequestHelp": "Gemaakt toen iemand erom vroeg, voor een gekozen periode. Het vervangt de automatische rapporten niet."
+        },
+        "base": "Gebaseerd op {analysed} van de {managed} gesprekken die de assistent in de periode heeft afgehandeld.",
+        "baseOld": "Gebaseerd op {analysed} geanalyseerde gesprekken.",
+        "baseOldNote": "Voor gesprekken van vóór 10 oktober weten we niet hoeveel de assistent er heeft afgehandeld.",
+        "excluded": "Niet meegeteld: {silent} gesprekken waarin de beller niets zei, {credit} geweigerd wegens onvoldoende tegoed."
       },
       "assistants": {
         "title": "Te controleren assistenten",
@@ -2016,45 +2038,48 @@
           "unanswered": "Open vragen",
           "checks": "Controles",
           "skillErrors": "Skillfouten",
-          "extractionIssues": "Extractie"
+          "extractionIssues": "Extractie",
+          "change": "Verandering",
+          "configSuggestions": "MrCall-suggesties"
         },
         "legend": {
-          "notSolved": "van de gesprekken waarin de beller iets vroeg (opgelost, onopgelost of doorgegeven)",
+          "notSolved": "niet opgelost, plus aan het bedrijf doorgegeven verzoeken met een onvolledig bericht, over de gesprekken waarin de beller iets vroeg",
           "callerSilent": "van de beantwoorde gesprekken",
           "notAnswered": "van de gesprekken die bij de assistent binnenkwamen",
           "callerLeft": "van de gesprekken met een uitkomst",
           "unanswered": "gesprekken met een onbeantwoorde vraag, van de gesprekken waarin vragen zijn vastgelegd",
           "checks": "gesprekken waarin een controle afging, van de gecontroleerde gesprekken",
           "skillErrors": "gesprekken met een skillfout, van alle gesprekken",
-          "extractionIssues": "gesprekken waarvan de gegevensextractie mislukte, van de gesprekken waarin de extractie is uitgevoerd"
+          "extractionIssues": "gesprekken waarvan de gegevensextractie mislukte, van de gesprekken waarin de extractie is uitgevoerd",
+          "change": "\"Niet opgelost\" nu tegenover de vorige periode van dezelfde lengte, in procentpunten; een streepje als een van beide perioden geen gesprekken met een vraag heeft",
+          "configSuggestions": "MrCall-configuratiesuggesties in het laatste automatische rapport"
         },
         "legendTitle": "Hoe elke kolom wordt geteld",
-        "assessedShort": "beoordeeld"
+        "assessedShort": "beoordeeld",
+        "search": "Zoek een bedrijf op naam",
+        "searchButton": "Zoeken",
+        "clearSearch": "Zoekopdracht “{term}” wissen",
+        "none": "Geen assistent om te bekijken in deze periode.",
+        "noneFound": "Geen bedrijf met de naam “{term}” in deze periode.",
+        "healthTitle": "Account",
+        "health": {
+          "ok": "In orde",
+          "creditLow": "Weinig tegoed",
+          "inDebt": "In het rood",
+          "unknown": "Niet bekend",
+          "planOther": "Abonnement niet actief"
+        },
+        "changePoints": "{sign}{n} punten"
       },
       "scope": {
-        "title": "Integraties en gevraagde informatie",
         "allBusinesses": "Over alle bedrijven die u kunt zien, van de afgelopen 30 dagen.",
         "none": "Nog niets om te tonen.",
-        "saidBy": "{businesses}, {reports}",
         "configSuggestionsTitle": "MrCall-configuratiesuggesties",
-        "loading": "Laden…",
-        "saidByLabel": "Gevraagd door:",
-        "andMore": "en nog {count}",
-        "loadMoreIntegrations": "Meer integraties laden",
-        "loadMoreSuggestions": "Meer suggesties laden",
-        "template": "Abonnement: {template}",
-        "reportEnding": "Rapport tot {date}",
-        "kinds": {
-          "integration": "Integratie",
-          "business_info": "Bedrijfsinformatie",
-          "needs_integration_gap": "Onbeantwoord: vraagt om een integratie"
-        },
-        "businessesCount": "1 bedrijf | {n} bedrijven",
-        "reportsCount": "1 rapport | {n} rapporten",
-        "shownIntegrations": "{shown} van {total} items getoond",
-        "shownSuggestions": "{shown} van {total} bedrijven getoond",
-        "moreFailed": "De volgende pagina kon niet worden geladen.",
-        "retry": "Opnieuw proberen"
+        "columns": {
+          "business": "Bedrijf",
+          "reportEnding": "Rapport tot",
+          "suggestions": "Suggesties"
+        }
       },
       "filterBar": {
         "title": "Actieve filters",
@@ -2070,7 +2095,353 @@
         "scopeNote": "Deze sectie: alle bedrijven die je kunt zien, laatste 30 dagen",
         "notApplied": "Filters die niet voor deze sectie gelden",
         "ownerNameSource": "naam van het contact van het bedrijf van deze eigenaar"
-      }
+      },
+      "outcome": {
+        "title": "Afloop van de gesprekken waarin de beller iets vroeg",
+        "resolved": "Opgelost tijdens het gesprek",
+        "forwarded": "Verzoek doorgegeven aan het bedrijf",
+        "forwarded_complete": "met een volledig bericht",
+        "forwarded_incomplete": "met een onvolledig bericht",
+        "handed_over": "Doorgegeven aan een persoon",
+        "unresolved": "Niet opgelost",
+        "forwardedHelp": "De assistent kon het tijdens het gesprek niet regelen en heeft het verzoek genoteerd zodat het bedrijf ermee aan de slag kan.",
+        "notYet": "Deze afloop verschijnt zodra de server de aan het bedrijf doorgegeven verzoeken uitleest."
+      },
+      "state": {
+        "loading": "Laden…",
+        "updating": "Bijwerken…",
+        "error": "Dit onderdeel kon niet worden geladen.",
+        "retry": "Opnieuw proberen",
+        "actionFailed": "Dat is niet gelukt. Probeer het opnieuw."
+      },
+      "pager": {
+        "range": "{from}–{to} van {total}",
+        "label": "Pagina's van {name}",
+        "previous": "Vorige pagina",
+        "next": "Volgende pagina",
+        "page": "Pagina {n}",
+        "sortBy": "Sorteren op",
+        "descending": "Aflopend",
+        "ascending": "Oplopend"
+      },
+      "tabs": {
+        "label": "Onderdelen van de statistieken",
+        "overview": "Overzicht",
+        "reports": "Rapporten",
+        "jobs": "Verwerking"
+      },
+      "free": {
+        "paidUnavailable": "Beschikbaar met een betaald abonnement.",
+        "seePlans": "Bekijk de abonnementen"
+      },
+      "requester": {
+        "you": "U",
+        "owner": "{name} (eigenaar)",
+        "ownerNoName": "De eigenaar",
+        "reseller": "De wederverkoper",
+        "admin": "MrCall",
+        "system": "Automatisch"
+      },
+      "status": {
+        "ready": "Klaar",
+        "preparing": "In voorbereiding",
+        "queued": "In de wachtrij",
+        "retryTomorrow": "Morgen nieuwe poging",
+        "failed": "Niet gelukt",
+        "postponed": "Uitgesteld",
+        "noCalls": "Geen gesprekken om te analyseren",
+        "notRun": "Niet uitgevoerd",
+        "notRunCredit": "Niet uitgevoerd: onvoldoende tegoed",
+        "stoppedCredit": "Gestopt: onvoldoende tegoed",
+        "cancelled": "Geannuleerd",
+        "recomputeStopped": "Gestopt: onvoldoende tegoed. {done} van de {total} gesprekken zijn geanalyseerd met het tegoed van het bedrijf. De overige zijn niet geanalyseerd."
+      },
+      "reportsTab": {
+        "scheduleTitle": "Automatische rapporten",
+        "request": "Rapport aanvragen",
+        "anticipate": "Nu maken",
+        "recentTitle": "Onlangs aangevraagd",
+        "historyTitle": "Alle rapporten",
+        "filterStatus": "Status",
+        "filterType": "Soort",
+        "clearFilters": "Filters wissen",
+        "none": "Nog geen rapporten.",
+        "noneFiltered": "Geen enkel rapport past bij deze filters.",
+        "days": "1 dag | {days} dagen",
+        "callsOfManaged": "{calls} van {managed} afgehandeld",
+        "callsAnalysed": "{calls} geanalyseerd",
+        "open": "Openen",
+        "regenerate": "Opnieuw maken",
+        "regenerateOf": "Het rapport {period} opnieuw maken",
+        "rerun": "Opnieuw proberen",
+        "rerunOf": "Het rapport {period} opnieuw proberen",
+        "delete": "Verwijderen",
+        "deleteOf": "Het rapport {period} verwijderen",
+        "jobReport": "Rapport {period}",
+        "jobRecompute": "Analyse van de gesprekken {period}",
+        "jobAnticipate": "Automatisch rapport nu gemaakt",
+        "jobRegenerate": "Opnieuw gemaakt rapport {period} | Opnieuw gemaakte rapporten {period}",
+        "jobRerun": "Automatisch rapport {period} opnieuw geprobeerd",
+        "columns": {
+          "period": "Periode",
+          "type": "Soort",
+          "revision": "Versie",
+          "status": "Status",
+          "calls": "Gesprekken",
+          "requestedBy": "Aangevraagd door",
+          "createdAt": "Gemaakt op",
+          "actions": "Acties"
+        },
+        "jobFacts": "Bijwerken van de gespreksgegevens, {period}"
+      },
+      "jobs": {
+        "title": "Verwerking",
+        "purpose": "De aangevraagde en opnieuw gemaakte rapporten en de analyses van eerdere gesprekken voor dit bedrijf, met wie erom vroeg en hoe elk afliep.",
+        "none": "Er is voor dit bedrijf nog niets verwerkt.",
+        "progress": "{done} van {total} gesprekken",
+        "estimate": "Een aanvraag wordt voorbereid",
+        "columns": {
+          "what": "Wat",
+          "status": "Status",
+          "progress": "Voortgang",
+          "requestedBy": "Aangevraagd door",
+          "createdAt": "Gestart op",
+          "result": "Resultaat"
+        },
+        "filterKind": "Soort",
+        "noneFiltered": "Geen verwerking met deze filters.",
+        "kinds": {
+          "report": "Rapport",
+          "recompute": "Analyse van de gesprekken",
+          "estimate": "Voorbereiding van een verzoek",
+          "facts": "Bijwerken van de gespreksgegevens"
+        },
+        "openReport": "Rapport {period} openen",
+        "examined": "{n} gesprek bekeken | {n} gesprekken bekeken",
+        "outcome": {
+          "recompute": {
+            "written": "{n} geanalyseerd | {n} geanalyseerd",
+            "reasoned": "{n} zonder gesprek | {n} zonder gesprek",
+            "skipped": "{n} al bijgewerkt | {n} al bijgewerkt",
+            "left": "{n} zonder iets te analyseren | {n} zonder iets te analyseren",
+            "not_finalised": "{n} niet afgerond | {n} niet afgerond",
+            "conflict": "{n} intussen gewijzigd | {n} intussen gewijzigd",
+            "failed": "{n} niet gelukt | {n} niet gelukt",
+            "ceiling": "{n} niet geanalyseerd: limiet bereikt | {n} niet geanalyseerd: limiet bereikt"
+          },
+          "facts": {
+            "written": "{n} bijgewerkt | {n} bijgewerkt",
+            "unchanged": "{n} al bijgewerkt | {n} al bijgewerkt",
+            "not_finalised": "{n} niet afgerond | {n} niet afgerond",
+            "conflict": "{n} intussen gewijzigd | {n} intussen gewijzigd"
+          }
+        }
+      },
+      "reportDetail": {
+        "back": "Terug naar de rapporten",
+        "title": "Gespreksrapport, {period}",
+        "notFound": "Dit rapport bestaat niet of is niet meer beschikbaar.",
+        "baseTitle": "Welke gesprekken het heeft gelezen",
+        "newerCalls": "Sinds dit rapport is geschreven, zijn nog {n} gesprekken van deze dagen geanalyseerd: maak het opnieuw om ze mee te nemen.",
+        "addAnswer": "Antwoord toevoegen",
+        "qualityTitle": "Vragen zonder antwoord, vergeleken met de periode ervoor",
+        "qualityReason": "Reden",
+        "qualityNow": "Deze dagen",
+        "qualityBefore": "Periode ervoor",
+        "qualityBase": "Gesprekken geteld over de {calls} gesprekken waarvoor deze controle is vastgelegd.",
+        "draftAdded": "We hebben de vraag toegevoegd aan uw vragen en antwoorden: schrijf het antwoord en sla op.",
+        "draftPresent": "Deze vraag staat al bij uw vragen en antwoorden.",
+        "version": "Versie {n}",
+        "calls": "{n} gesprek | {n} gesprekken",
+        "booked": "{n} gesprek met een genoteerde boeking | {n} gesprekken met een genoteerde boeking",
+        "transferred": "{n} gesprek doorverbonden met een persoon | {n} gesprekken doorverbonden met een persoon",
+        "themeOutcome": "Uitkomst van de gesprekken over {topic}",
+        "callBackTitle": "Gesprekken om terug te bellen",
+        "callBackNote": "Gesprekken die niet zijn opgelost, of met een onvolledig bericht aan het bedrijf zijn doorgegeven."
+      },
+      "deleteReport": {
+        "title": "Het rapport verwijderen",
+        "what": "Het rapport {period} wordt voor iedereen verborgen, met al zijn versies.",
+        "reason": "Waarom het wordt verwijderd",
+        "confirm": "Verwijderen"
+      },
+      "request": {
+        "title": {
+          "report": "Rapport aanvragen",
+          "regenerate": "Het rapport opnieuw maken",
+          "recompute": "De gesprekken van de periode analyseren",
+          "anticipate": "Het automatische rapport nu maken",
+          "rerun": "Het automatische rapport opnieuw proberen"
+        },
+        "periodLabel": "Periode",
+        "preset": "Laatste {days} dagen",
+        "custom": "Dagen kiezen",
+        "periodHint": "Het zijn de dagen van het bedrijf, tot en met gisteren.",
+        "selected": "Op {from} (1 dag) | Van {from} tot {to} ({days} dagen)",
+        "continue": "Doorgaan",
+        "cancel": "Annuleren",
+        "close": "Sluiten",
+        "preparing": "We bereiden de aanvraag voor…",
+        "confirm": "Deze verwerking gebruikt het tegoed van het bedrijf {business}. Wilt u doorgaan?",
+        "confirmPlatform": "Deze verwerking is voor rekening van MrCall: het tegoed van het bedrijf wordt niet gebruikt. Wilt u doorgaan?",
+        "raceNote": "Als gesprekken intussen tegoed verbruiken, kan de verwerking een kleine schuld achterlaten.",
+        "platformPays": "Voor rekening van MrCall: het bedrijf gebruikt geen tegoed",
+        "confirmButton": "Bevestigen",
+        "notEnoughCredit": "Onvoldoende tegoed voor deze verwerking.",
+        "reserve": "Het tegoed van het bedrijf zit op het niveau dat we aanhouden voor gesprekken. Waardeer het tegoed op of schakel automatisch opwaarderen in om deze functie te gebruiken.",
+        "shorter": "Probeer een kortere periode",
+        "topUp": "Opwaarderen",
+        "enableTopUp": "Automatisch opwaarderen inschakelen",
+        "overlap": {
+          "same": "Er bestaat al een rapport voor deze dagen.",
+          "cycle": "Deze dagen worden opnieuw gelezen door het volgende automatische rapport en gebruiken opnieuw tegoed.",
+          "partial": "Deze dagen zitten al deels in het rapport ({kind}) {period}. Een nieuw rapport leest ze opnieuw en gebruikt opnieuw tegoed.",
+          "acknowledge": "Begrepen: toch opnieuw lezen",
+          "regenerateInstead": "Dat rapport opnieuw maken",
+          "partialMany": "{n} rapporten beslaan al een deel van deze dagen, van {from} tot {to}. Een nieuw rapport leest ze opnieuw en gebruikt opnieuw tegoed."
+        },
+        "kind": {
+          "automatic": "automatisch",
+          "requested": "op verzoek"
+        },
+        "anticipateCycle": "Het lopende automatische rapport beslaat {from} tot gisteren: we maken het nu voor de hele periode, en het volgende begint vanaf vandaag.",
+        "busy": "Er loopt al een verwerking voor dit bedrijf, gestart door {who} op {when}.",
+        "busyUnknown": "Er loopt al een verwerking voor dit bedrijf.",
+        "busyOpen": "De verwerking bekijken",
+        "automaticPending": "Het automatische rapport voor deze periode is in voorbereiding: het is klaar na de eerstvolgende nachtelijke verwerking.",
+        "retention": "Dit rapport beslaat dagen van meer dan 11 maanden geleden: het kan niet meer opnieuw worden gemaakt.",
+        "noCalls": "Geen gesprekken om te analyseren in deze periode.",
+        "failed": "De aanvraag kon niet worden voltooid. Probeer het later opnieuw.",
+        "queued": "In de wachtrij: het begint zo.",
+        "working": "In voorbereiding…",
+        "progress": "{done} van {total} gesprekken geanalyseerd.",
+        "doneReport": "Het rapport is klaar.",
+        "doneRecompute": "Analyse voltooid: {written} gesprekken bijgewerkt.",
+        "openReport": "Het rapport openen",
+        "cancelJob": "De verwerking annuleren",
+        "cancelReport": "Annuleren: het rapport wordt niet geschreven en er wordt geen tegoed gebruikt.",
+        "cancelRecompute": "Het stopt na het lopende gesprek; de al geanalyseerde gesprekken blijven staan en hebben tegoed van het bedrijf gebruikt.",
+        "cancelled": "Verwerking geannuleerd.",
+        "keepOpen": "U kunt dit venster sluiten: de verwerking gaat door en u vindt haar onder Verwerking.",
+        "platformInstead": "Uitvoeren op kosten van MrCall",
+        "noCallsPeriod": "Geen gesprekken in deze periode.",
+        "lastCall": "Het laatste gesprek was op {date}.",
+        "noCallEver": "Het bedrijf heeft nog geen gesprekken ontvangen.",
+        "noAnalysis": "Er is 1 gesprek in deze periode, maar het is nog niet geanalyseerd. | Er zijn {n} gesprekken in deze periode, maar geen enkel is al geanalyseerd.",
+        "noAnalysisNone": "Geen gesprek van deze periode is geanalyseerd, en geen enkel kan worden geanalyseerd.",
+        "cycleEmpty": "Het lopende automatische rapport heeft nog geen afgeronde dag: er is nu nog niets voor te bereiden.",
+        "busyYou": "Er loopt al een verwerking voor dit bedrijf, door u gestart op {when}."
+      },
+      "recompute": {
+        "banner": "{n} in deze periode afgehandelde gesprekken hebben nog geen automatische analyse, dus afloop, onderwerpen en kwaliteit tellen ze niet mee.",
+        "cannotChange": "Een nieuwe analyse verandert niets aan gesprekken zonder gesprek (de beller zei niets, of er was geen tegoed).",
+        "action": "Nu analyseren"
+      },
+      "silent": {
+        "title": "Bellers die niets zeiden",
+        "text": "In {n} gesprekken hing de beller op zonder iets te zeggen. Dat hangt vaak af van de begroeting: controleer of die kort en duidelijk is.",
+        "link": "De begroeting controleren"
+      },
+      "requests": {
+        "title": "Verzoeken van bellers",
+        "purpose": "Wat bellers vragen en de assistenten niet kunnen, gegroepeerd per categorie over alle bedrijven: om te beslissen wat er gebouwd moet worden en wat in de abonnementen moet komen.",
+        "window": "Periode: {period}",
+        "sortLabel": "Sorteren op",
+        "sortScore": "Meest recent en wijdverbreid",
+        "sortBusinesses": "Aantal bedrijven",
+        "showDismissed": "Gearchiveerde tonen",
+        "scoreHelp": "Elk bedrijf telt voor 1 als het erom vroeg in de laatste dagen die zijn rapporten beslaan, voor de helft als dat twee weken eerder was, voor een kwart als dat vier weken eerder was.",
+        "none": "Geen verzoeken in deze periode.",
+        "columns": {
+          "category": "Categorie",
+          "businesses": "Bedrijven",
+          "trend": "Trend",
+          "freshness": "Actualiteit"
+        },
+        "businesses": "{n} bedrijven",
+        "trend": "{sign}{n} ten opzichte van de vorige periode",
+        "share": "{pct}% van de bedrijven met rapporten",
+        "histogramLabel": "Bedrijven per {bucket}, vanaf de oudste: {values}",
+        "bucket": {
+          "week": "week",
+          "month": "maand"
+        },
+        "freshness": "Laatste verzoek op {date} · {pct}% in de laatste periode ({bucket})",
+        "reportDated": "{n} bedrijven gedateerd op het einde van het rapport",
+        "nextAction": "Volgende stap",
+        "examples": "Voorbeelden",
+        "hideExample": "Verbergen",
+        "hideExampleOf": "Het voorbeeld “{text}” verbergen",
+        "whoAsked": "Wie het vroeg",
+        "businessesOf": "Bedrijven die om {category} vroegen",
+        "businessColumns": {
+          "name": "Bedrijf",
+          "lastSeen": "Laatste verzoek",
+          "said": "Wat ze vroegen"
+        },
+        "noBusinesses": "Geen bedrijf in deze periode.",
+        "dismiss": "Archiveren",
+        "dismissOf": "{category} archiveren",
+        "restore": "Terugzetten",
+        "restoreOf": "{category} terugzetten",
+        "dismissedAs": "Gearchiveerd op {date}: {reason}",
+        "reasonLabel": "Reden",
+        "reason": {
+          "done": "Gedaan",
+          "not_relevant": "Niet relevant",
+          "already_integrated": "Al geïntegreerd"
+        },
+        "note": "Notitie (optioneel)",
+        "confirmDismiss": "Archiveren",
+        "reopened": "Heropend: {n} nieuwe bedrijven vroegen erom nadat het op {date} was gearchiveerd.",
+        "status": {
+          "rising": "Stijgend",
+          "steady": "Stabiel",
+          "falling": "Dalend",
+          "stale": "Recent niet meer gevraagd"
+        },
+        "hiddenExamples": "Verborgen voorbeelden",
+        "hiddenAs": "Verborgen op {date}: {reason}",
+        "restoreExampleOf": "Voorbeeld “{text}” herstellen",
+        "whoAskedOf": "Wie vroeg erom: {category}",
+        "dismissedBy": "Gearchiveerd op {date} door {who}: {reason}",
+        "who": {
+          "you": "u",
+          "admin": "MrCall"
+        },
+        "archived": "{category} gearchiveerd.",
+        "undo": "Ongedaan maken"
+      },
+      "admin": {
+        "reason": {
+          "reserve": "Reserve voor gesprekken",
+          "over_ceiling": "Groter dan de schatting toestond"
+        }
+      },
+      "change": {
+        "notAvailable": "n.v.t.",
+        "notAvailableHelp": "De vorige periode had minder dan 20 gesprekken: de verandering is niet zinvol."
+      },
+      "overview": {
+        "noCallsDays": "Geen gesprekken op de laatste dag. | Geen gesprekken in de laatste {days} dagen."
+      },
+      "callers": {
+        "web": "Webgesprek"
+      },
+      "businessNotFound": "Dit bedrijf bestaat niet of hoort niet bij de bedrijven die u kunt zien."
+    },
+    "datePicker": {
+      "chooseDate": "Datum kiezen",
+      "chooseMonth": "Maand kiezen",
+      "chooseYear": "Jaar kiezen",
+      "prevMonth": "Vorige maand",
+      "nextMonth": "Volgende maand",
+      "prevYear": "Vorig jaar",
+      "nextYear": "Volgend jaar",
+      "prevDecade": "Vorig decennium",
+      "nextDecade": "Volgend decennium",
+      "today": "Vandaag",
+      "clear": "Wissen"
     }
   },
   "views": {

@@ -17,13 +17,62 @@
          chart on a canvas that is already gone (a TypeError in `new Chart`, which the dev server's
          overlay shows over the page). -->
     <template v-else-if="data">
+      <!-- The outcome of the calls where the caller asked something: four lines adding up to their base, the
+           request passed on split by the message taken (StarChat's `outcome`, over `callsWithRequest`) -->
+      <div class="insight-dimension outcome-block" :class="{ 'is-updating': updating }">
+        <h4 class="insight-dimension-title">{{ $t("components.callInsights.outcome.title") }}</h4>
+        <template v-if="outcome">
+          <p class="coverage-note">
+            {{ $t("components.callInsights.howCallsWent.shareBase", { count: formatNumber(outcome.base) }) }}
+            <Tag severity="secondary" :value="$t('components.callInsights.assessedMarking')" class="insight-assessed-tag" />
+          </p>
+          <div class="chart-container">
+            <Chart type="bar" :data="outcomeChart" :options="chartOptions" />
+          </div>
+          <ul class="outcome-legend in-share" :aria-label="$t('components.callInsights.outcome.title')">
+            <li v-for="line in outcome.lines" :key="line.key" class="outcome-line">
+              <span class="outcome-line-head">
+                <span class="legend-swatch" :style="{ background: colorOf(line.key) }" aria-hidden="true"></span>
+                <span class="outcome-label">{{ $t("components.callInsights.outcome." + line.key) }}</span>
+                <span class="legend-count">{{ formatNumber(line.count) }}</span>
+                <span class="legend-share">{{ $t("components.callInsights.howCallsWent.shareOfBase", { percent: line.percent, base: formatNumber(outcome.base) }) }}</span>
+                <!-- neutral: a rise is good news on one line and bad on another, so colour would mislead -->
+                <span v-if="lineChange(line) && !lineChange(line).available" class="legend-delta delta-neutral"><abbr :title="$t('components.callInsights.change.notAvailableHelp')">{{ $t("components.callInsights.change.notAvailable") }}</abbr></span>
+                <span v-else-if="lineChange(line)" class="legend-delta delta-neutral">
+                  <i :class="deltaIcon(lineChange(line).value)" aria-hidden="true"></i>
+                  {{ formatDeltaPercentage(lineChange(line).value) }}
+                </span>
+              </span>
+              <span v-if="line.key === 'forwarded'" class="outcome-help">{{ $t("components.callInsights.outcome.forwardedHelp") }}</span>
+              <ul v-if="line.parts.length" class="outcome-parts">
+                <li v-for="part in line.parts" :key="part.key">
+                  <span class="legend-swatch" :style="{ background: colorOf(part.key) }" aria-hidden="true"></span>
+                  <span>{{ $t("components.callInsights.outcome." + part.key) }}</span>
+                  <span class="legend-count">{{ formatNumber(part.count) }}</span>
+                  <span class="legend-share">{{ $t("components.callInsights.howCallsWent.shareOfBase", { percent: part.percent, base: formatNumber(outcome.base) }) }}</span>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </template>
+        <p v-else class="coverage-note">{{ $t("components.callInsights.outcome.notYet") }}</p>
+        <!-- Counted beside the outcome, never in it, and in neutral colours: neither is a failure -->
+        <div class="outside-share">
+          <h5 class="outside-share-title">{{ $t("components.callInsights.howCallsWent.outsideTitle") }}</h5>
+          <ul class="outcome-legend">
+            <li v-for="row in outside" :key="row.key">
+              <span class="legend-swatch" :style="{ background: colorOf(row.key) }" aria-hidden="true"></span>
+              <InsightLabel dimension="resolution" :value="row.key" :marked="false" />
+              <span class="legend-count">{{ formatNumber(row.count) }}</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
       <div v-for="dim in dimensions" :key="dim.name" class="insight-dimension" :class="{ 'is-updating': updating }">
         <h4 class="insight-dimension-title">{{ $t("components.callInsights.dimensions." + dim.name) }}</h4>
         <p class="coverage-note">
           {{ $t("components.callInsights.howCallsWent.coverage", { count: dim.callsWithValue, total: data.totalCalls || 0 }) }}
-        </p>
-        <p v-if="dim.share" class="coverage-note">
-          {{ $t("components.callInsights.howCallsWent.shareBase", { count: formatNumber(dim.share.base) }) }}
         </p>
         <div class="chart-container">
           <Chart type="bar" :data="dim.chartData" :options="chartOptions" />
@@ -33,26 +82,13 @@
             <span class="legend-swatch" :style="{ background: colorOf(key) }" aria-hidden="true"></span>
             <InsightLabel :dimension="dim.name" :value="key" />
             <span class="legend-count">{{ formatNumber(dim.totals[key] || 0) }}</span>
-            <span v-if="dim.share" class="legend-share">
-              {{ $t("components.callInsights.howCallsWent.shareOfBase", { percent: dim.share.percent[key], base: formatNumber(dim.share.base) }) }}
-            </span>
-            <span v-if="delta(dim, key) !== null" class="legend-delta" :class="deltaClass(delta(dim, key))">
-              <i :class="deltaIcon(delta(dim, key))"></i>
-              {{ formatDeltaPercentage(delta(dim, key)) }}
+            <span v-if="delta(dim, key) && !delta(dim, key).available" class="legend-delta delta-neutral"><abbr :title="$t('components.callInsights.change.notAvailableHelp')">{{ $t("components.callInsights.change.notAvailable") }}</abbr></span>
+            <span v-else-if="delta(dim, key)" class="legend-delta" :class="deltaClass(delta(dim, key).value)">
+              <i :class="deltaIcon(delta(dim, key).value)"></i>
+              {{ formatDeltaPercentage(delta(dim, key).value) }}
             </span>
           </li>
         </ul>
-        <!-- Counted beside the share, never in it, and in neutral colours: neither is a failure -->
-        <div v-if="dim.outside.length" class="outside-share">
-          <h5 class="outside-share-title">{{ $t("components.callInsights.howCallsWent.outsideTitle") }}</h5>
-          <ul class="outcome-legend">
-            <li v-for="row in dim.outside" :key="row.key">
-              <span class="legend-swatch" :style="{ background: colorOf(row.key) }" aria-hidden="true"></span>
-              <InsightLabel :dimension="dim.name" :value="row.key" />
-              <span class="legend-count">{{ formatNumber(row.count) }}</span>
-            </li>
-          </ul>
-        </div>
       </div>
 
       <div class="insight-facts" :class="{ 'is-updating': updating }">
@@ -82,27 +118,28 @@
 
 <script>
 import CallInsights from "@/utils/CallInsights";
+import InsightsReports from "@/utils/InsightsReports";
 import InsightLabel from "@/components/analytics/InsightLabel.vue";
 
 /**
- * "How the calls went" (brief outcomes 3 and 9, insights version 2): the resolution and the message
- * of the period's calls as a stacked bar each, the totals against the previous period, and how many
- * of the period's calls carry the dimension at all (`callsWithValue` of `totalCalls`: calls from
- * before the feature, and calls whose extraction failed, carry none). Resolution is a share only
- * over the calls where the caller asked something; `caller_left` and `spam_wrong_number` are
- * counted beside it (`CallInsights.resolutionShare`). Booked is shown beside the calls it counts on
- * (`callsWithBooked`: the calls the extraction answered for), transferred as a count only
- * (`transferred`: no denominator exists, the carriers that report no transfer leg are in every
- * base). Under them, the calls without a conversation, by reason (`noConversation`). Purely
- * presentational: the parent fetches `CallInsights.outcomes` and passes the answer down, the same
- * way every other section of this page already works.
+ * "How the calls went" (insights version 3, StarChat's brief docs/briefs/2026-10-24-call-resolution-forwarded.md): the
+ * outcome of the calls where the caller asked something, in four lines adding up to their base, "Risolte in chiamata",
+ * "Richiesta passata all'attività" (split by the message taken, complete or not), "Passate a una persona" and
+ * "Non risolte", each against the previous period, from StarChat's `outcome` over `callsWithRequest` (plan step F3);
+ * `caller_left` and `spam_wrong_number` counted beside it, neither a failure. Then the message the assistant took, how
+ * many calls carry it at all (`callsWithValue` of `totalCalls`), booked beside the calls it counts on, transferred as
+ * a count, and the calls without a conversation by reason, outside every rate. Purely presentational: the parent
+ * fetches `CallInsights.outcomes` and passes the answer down.
  */
 // `caller_left` and `spam_wrong_number` are neutral, and told apart: the page's grey tokens
 // @mrcall_grey_text2 and @mrcall_light_grey_1 (Chart.js needs the values, not the LESS names).
 const COLORS = {
   resolved: "#22C55E",
-  unresolved: "#EF4444",
+  forwarded: "#00897B",
+  forwarded_complete: "#00897B",
+  forwarded_incomplete: "#F59E0B",
   handed_over: "#0068FF",
+  unresolved: "#EF4444",
   caller_left: "#6C757D",
   spam_wrong_number: "#D7DCE2",
   complete: "#22C55E",
@@ -110,10 +147,6 @@ const COLORS = {
   unintelligible: "#A78BFA",
   none: "#9CA3AF",
 };
-
-// The keys each dimension lists in its legend; resolution's two others sit apart, outside its share.
-const KEYS = { resolution: CallInsights.RESOLUTION_REQUEST_KEYS, message: CallInsights.MESSAGE_KEYS };
-const CHART_KEYS = { resolution: CallInsights.RESOLUTION_KEYS, message: CallInsights.MESSAGE_KEYS };
 
 export default {
   components: { InsightLabel },
@@ -127,37 +160,47 @@ export default {
     updating() {
       return this.status === "loading" && !!this.data;
     },
+    outcome() {
+      return CallInsights.outcomeShare(this.data);
+    },
+    outcomeChart() {
+      const buckets = (this.data && this.data.outcome && this.data.outcome.buckets) || [];
+      return {
+        labels: buckets.map((b) => new Date(b.timestamp).toLocaleDateString()),
+        datasets: CallInsights.OUTCOME_KEYS.map((key) => ({
+          label: this.$t("components.callInsights.outcome." + key),
+          data: buckets.map((b) => (b.counts && b.counts[key]) || 0),
+          backgroundColor: this.colorOf(key),
+          stack: "outcome",
+        })),
+      };
+    },
+    outside() {
+      const resolution = (this.data && this.data.resolution) || {};
+      return CallInsights.outsideRows(resolution.totals);
+    },
     // A malformed or placeholder answer (an empty array, from a test's generic fallback) must not
-    // crash the page: every real `OutcomesResponse` carries both dimensions with their maps, but
-    // nothing here assumes it.
+    // crash the page.
     dimensions() {
-      return ["resolution", "message"].map((name) => {
-        const dimension = (this.data && this.data[name]) || {};
-        const buckets = dimension.buckets || [];
-        const keys = KEYS[name];
-        const resolution = name === "resolution" ? CallInsights.resolutionShare(dimension.totals) : null;
-        return {
-          name,
-          keys,
-          callsWithValue: dimension.callsWithValue || 0,
-          totals: dimension.totals || {},
-          previousTotals: dimension.previousTotals || {},
-          share: resolution && {
-            base: resolution.base,
-            percent: Object.fromEntries(resolution.rows.map((row) => [row.key, row.percent])),
-          },
-          outside: resolution ? resolution.outside : [],
-          chartData: {
-            labels: buckets.map((b) => new Date(b.timestamp).toLocaleDateString()),
-            datasets: CHART_KEYS[name].map((key) => ({
-              label: this.$t("components.callInsights." + name + "." + key),
-              data: buckets.map((b) => (b.counts && b.counts[key]) || 0),
-              backgroundColor: this.colorOf(key),
-              stack: name,
-            })),
-          },
-        };
-      });
+      const name = "message";
+      const dimension = (this.data && this.data[name]) || {};
+      const buckets = dimension.buckets || [];
+      return [{
+        name,
+        keys: CallInsights.MESSAGE_KEYS,
+        callsWithValue: dimension.callsWithValue || 0,
+        totals: dimension.totals || {},
+        previousTotals: dimension.previousTotals || {},
+        chartData: {
+          labels: buckets.map((b) => new Date(b.timestamp).toLocaleDateString()),
+          datasets: CallInsights.MESSAGE_KEYS.map((key) => ({
+            label: this.$t("components.callInsights." + name + "." + key),
+            data: buckets.map((b) => (b.counts && b.counts[key]) || 0),
+            backgroundColor: this.colorOf(key),
+            stack: name,
+          })),
+        },
+      }];
     },
     // StarChat sends `noConversation` from the release that classifies those calls; an answer without
     // it has no such section rather than four zeros it does not know.
@@ -182,11 +225,16 @@ export default {
     colorOf(key) {
       return COLORS[key] || "#9CA3AF";
     },
+    // Each line's change over the period before, counted on the calls with a request then: under 20 of them it is
+    // "n.d." (U19 M13).
+    lineChange(line) {
+      const base = this.outcome.lines.reduce((sum, l) => sum + (l.previous || 0), 0);
+      return InsightsReports.change(line.count, line.previous || 0, base);
+    },
     delta(dim, key) {
+      const base = Object.values(dim.previousTotals).reduce((sum, v) => sum + (v || 0), 0);
       const prev = dim.previousTotals[key];
-      if (prev == null || prev === 0) return null;
-      const current = dim.totals[key] || 0;
-      return (current - prev) / prev;
+      return InsightsReports.change(dim.totals[key] || 0, prev == null ? null : prev, base);
     },
     deltaClass(delta) {
       if (delta > 0) return "delta-positive";
@@ -277,6 +325,51 @@ export default {
 .legend-share {
   color: @mrcall_grey_text;
   font-size: 13px;
+}
+
+.outcome-line {
+  flex-direction: column;
+  align-items: flex-start !important;
+  gap: 4px !important;
+}
+
+.outcome-line-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.outcome-label {
+  font-weight: 600;
+}
+
+.outcome-help {
+  font-size: 13px;
+  color: @mrcall_grey_text;
+  margin-left: 22px;
+}
+
+.outcome-parts {
+  list-style: none;
+  margin: 0 0 0 22px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+  }
+}
+
+.insight-assessed-tag {
+  font-size: 10px;
+  font-weight: 600;
+  margin-left: 6px;
 }
 
 .outside-share {

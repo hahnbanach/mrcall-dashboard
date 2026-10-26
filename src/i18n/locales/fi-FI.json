@@ -163,7 +163,8 @@
       },
       "code": {
         "assistant_without_page": "Avustaja ei voi ottaa varauksia, kun ravintolasivu on pois päältä: kytke avustaja pois tai sivu päälle.",
-        "allergies_required_unavailable": "Allergiat eivät voi vielä olla pakollisia täällä: jokaiselta soittajalta kysyminen odottaa oikeudellisen kysymyksen ratkeamista."
+        "allergies_required_unavailable": "Allergiat eivät voi vielä olla pakollisia täällä: jokaiselta soittajalta kysyminen odottaa oikeudellisen kysymyksen ratkeamista.",
+        "admin_only_skill": "Vain ylläpitäjä voi lisätä tämän skillin. Sivu ei ollut ajan tasalla: lataa se uudelleen. Jo määritettyjä skillejä voi edelleen muokata."
       }
     }
   },
@@ -1867,7 +1868,8 @@
         "unresolved": "Ratkaisematta",
         "handed_over": "Siirretty henkilölle",
         "caller_left": "Puhui, mutta ei kertonut mitä halusi",
-        "spam_wrong_number": "Roskapostia tai väärä numero"
+        "spam_wrong_number": "Roskapostia tai väärä numero",
+        "forwarded": "Pyyntö välitetty yritykselle"
       },
       "message": {
         "complete": "Täydellinen viesti",
@@ -1924,7 +1926,9 @@
         "transferredOff": "Kaikki puhelut",
         "unansweredLabel": "Vastaamattomat kysymykset",
         "unansweredOn": "Vastaamaton kysymys mukana",
-        "unansweredOff": "Kaikki puhelut"
+        "unansweredOff": "Kaikki puhelut",
+        "business": "Yritys",
+        "noBusinessFound": "Tällä nimellä ei löydy yritystä"
       },
       "notAvailableYet": "Ei vielä saatavilla.",
       "howCallsWent": {
@@ -1965,8 +1969,6 @@
         "countOfTotal": "{count} / {total} puhelua"
       },
       "reports": {
-        "title": "Puheluraportit",
-        "none": "Mikään raportti ei kata tätä jaksoa.",
         "topicsTitle": "Aiheet",
         "newTopic": "Uusi",
         "themeIncludes": "Sisältää: {labels}",
@@ -1977,8 +1979,28 @@
         "businessInfoTitle": "Mitä vain sinä voit kertoa avustajallesi",
         "integrationTitle": "Järjestelmä yhdistettäväksi",
         "mrcallConfigTitle": "MrCallin asetusehdotukset",
-        "loadMore": "Näytä aiemmat raportit",
-        "onRequest": "Pyynnöstä"
+        "panel": {
+          "cadence": "MrCall laatii yrityksesi puheluista raportin joka päivä. Jokainen raportti kuluttaa yrityksen saldoa. | MrCall laatii yrityksesi puheluista raportin {days} päivän välein. Jokainen raportti kuluttaa yrityksen saldoa.",
+          "next": "Seuraava saapuu {date} ja kattaa ajan {from}–{to}.",
+          "retry": "Raportti ajalta {from}–{to} ei onnistunut: sitä yritetään uudelleen tänä yönä.",
+          "settings": "Voit muuttaa tiheyttä yrityksen asetuksissa (0 = ei raportteja).",
+          "settingsLink": "Avaa yrityksen asetukset",
+          "off": "Automaattiset raportit eivät ole käytössä. Voit ottaa ne käyttöön yrityksen asetuksissa tai pyytää raportin itse valitsemaltasi ajalta.",
+          "skipped": "Raportti ajalta {period} on lykätty: saldo ei riitä. Seuraavan latauksen jälkeen laadimme raportin viimeiseltä päivältä. Sitä edeltävät päivät pysyvät tilastoissa, ja ne voi analysoida pyynnöstä tehtävällä raportilla. | Raportti ajalta {period} on lykätty: saldo ei riitä. Seuraavan latauksen jälkeen laadimme raportin viimeisiltä {days} päivältä. Sitä edeltävät päivät pysyvät tilastoissa, ja ne voi analysoida pyynnöstä tehtävällä raportilla.",
+          "nextOneDay": "Seuraava saapuu {date} ja kattaa päivän {day}.",
+          "covers": "Seuraava kattaa ajan {from}–{to}.",
+          "coversOneDay": "Seuraava kattaa päivän {day}.",
+          "retryOneDay": "Raportti päivältä {day} ei onnistunut: sitä yritetään uudelleen tänä yönä."
+        },
+        "type": {
+          "automatic": "Automaattinen",
+          "requested": "Pyynnöstä",
+          "onRequestHelp": "Luotu, kun joku pyysi sitä, valitulta ajalta. Se ei korvaa automaattisia raportteja."
+        },
+        "base": "Perustuu {analysed} puheluun niistä {managed} puhelusta, jotka avustaja hoiti jaksolla.",
+        "baseOld": "Perustuu {analysed} analysoituun puheluun.",
+        "baseOldNote": "10. lokakuuta edeltäneistä puheluista emme tiedä, kuinka monta avustaja hoiti.",
+        "excluded": "Jätetty pois: {silent} puhelua, joissa soittaja ei puhunut, {credit} hylätty saldon puutteen vuoksi."
       },
       "assistants": {
         "title": "Tarkistettavat avustajat",
@@ -2016,45 +2038,48 @@
           "unanswered": "Avoimet kysymykset",
           "checks": "Tarkistukset",
           "skillErrors": "Skill-virheet",
-          "extractionIssues": "Poiminta"
+          "extractionIssues": "Poiminta",
+          "change": "Muutos",
+          "configSuggestions": "MrCallin ehdotukset"
         },
         "legend": {
-          "notSolved": "puheluista, joissa soittaja pyysi jotain (ratkaistu, ratkaisematon tai siirretty)",
+          "notSolved": "ratkaisematta, sekä yritykselle puutteellisella viestillä välitetyt pyynnöt, niistä puheluista, joissa soittaja kysyi jotain",
           "callerSilent": "vastatuista puheluista",
           "notAnswered": "avustajalle tulleista puheluista",
           "callerLeft": "puheluista, joilla on lopputulos",
           "unanswered": "puhelut, joissa kysymys jäi vastaamatta, puheluista, joissa kysymykset kirjattiin",
           "checks": "puhelut, joissa tarkistus laukesi, tarkistetuista puheluista",
           "skillErrors": "puhelut, joissa oli skill-virhe, kaikista puheluista",
-          "extractionIssues": "puhelut, joiden tietojen poiminta epäonnistui, puheluista, joissa poiminta suoritettiin"
+          "extractionIssues": "puhelut, joiden tietojen poiminta epäonnistui, puheluista, joissa poiminta suoritettiin",
+          "change": "\"Ratkaisematta\" nyt verrattuna edelliseen yhtä pitkään jaksoon, prosenttiyksikköinä; viiva, jos kummallakaan jaksolla ei ole puheluita, joissa oli pyyntö",
+          "configSuggestions": "MrCallin määritysehdotukset viimeisimmässä automaattisessa raportissa"
         },
         "legendTitle": "Miten kukin sarake lasketaan",
-        "assessedShort": "arvioitu"
+        "assessedShort": "arvioitu",
+        "search": "Hae yritystä nimellä",
+        "searchButton": "Hae",
+        "clearSearch": "Tyhjennä haku “{term}”",
+        "none": "Ei tarkistettavia avustajia tällä jaksolla.",
+        "noneFound": "Yritystä nimeltä “{term}” ei löytynyt tältä jaksolta.",
+        "healthTitle": "Tili",
+        "health": {
+          "ok": "Kunnossa",
+          "creditLow": "Saldo vähissä",
+          "inDebt": "Velkaa",
+          "unknown": "Ei tiedossa",
+          "planOther": "Tilaus ei ole aktiivinen"
+        },
+        "changePoints": "{sign}{n} prosenttiyksikköä"
       },
       "scope": {
-        "title": "Integraatiot ja kysytyt tiedot",
         "allBusinesses": "Kaikissa yrityksissä, jotka voit nähdä, viimeisten 30 päivän ajalta.",
         "none": "Ei vielä mitään näytettävää.",
-        "saidBy": "{businesses}, {reports}",
         "configSuggestionsTitle": "MrCallin asetusehdotukset",
-        "loading": "Ladataan…",
-        "saidByLabel": "Pyytänyt:",
-        "andMore": "ja {count} muuta",
-        "loadMoreIntegrations": "Lataa lisää integraatioita",
-        "loadMoreSuggestions": "Lataa lisää ehdotuksia",
-        "template": "Paketti: {template}",
-        "reportEnding": "Raportti {date} asti",
-        "kinds": {
-          "integration": "Integraatio",
-          "business_info": "Yrityksen tiedot",
-          "needs_integration_gap": "Vastaamatta: vaatii integraation"
-        },
-        "businessesCount": "1 yritys | {n} yritystä",
-        "reportsCount": "1 raportti | {n} raporttia",
-        "shownIntegrations": "{shown}/{total} kohdetta näytetty",
-        "shownSuggestions": "{shown}/{total} yritystä näytetty",
-        "moreFailed": "Seuraavaa sivua ei voitu ladata.",
-        "retry": "Yritä uudelleen"
+        "columns": {
+          "business": "Yritys",
+          "reportEnding": "Raportti, joka päättyy",
+          "suggestions": "Ehdotukset"
+        }
       },
       "filterBar": {
         "title": "Aktiiviset suodattimet",
@@ -2070,7 +2095,353 @@
         "scopeNote": "Tämä osio: kaikki näkemäsi yritykset, viimeiset 30 päivää",
         "notApplied": "Suodattimet, jotka eivät koske tätä osiota",
         "ownerNameSource": "tämän omistajan yrityksen yhteyshenkilön nimi"
-      }
+      },
+      "outcome": {
+        "title": "Puhelujen lopputulos, joissa soittaja kysyi jotain",
+        "resolved": "Ratkaistu puhelun aikana",
+        "forwarded": "Pyyntö välitetty yritykselle",
+        "forwarded_complete": "täydellisellä viestillä",
+        "forwarded_incomplete": "puutteellisella viestillä",
+        "handed_over": "Siirretty henkilölle",
+        "unresolved": "Ratkaisematta",
+        "forwardedHelp": "Avustaja ei pystynyt hoitamaan asiaa puhelun aikana ja otti pyynnön muistiin, jotta yritys voi toimia sen mukaan.",
+        "notYet": "Tämä lopputulos näkyy, kun palvelin alkaa lukea yritykselle välitettyjä pyyntöjä."
+      },
+      "state": {
+        "loading": "Ladataan…",
+        "updating": "Päivitetään…",
+        "error": "Tätä osiota ei voitu ladata.",
+        "retry": "Yritä uudelleen",
+        "actionFailed": "Se ei onnistunut. Yritä uudelleen."
+      },
+      "pager": {
+        "range": "{from}–{to} / {total}",
+        "label": "Sivut: {name}",
+        "previous": "Edellinen sivu",
+        "next": "Seuraava sivu",
+        "page": "Sivu {n}",
+        "sortBy": "Lajittele",
+        "descending": "Laskeva",
+        "ascending": "Nouseva"
+      },
+      "tabs": {
+        "label": "Tilastojen osiot",
+        "overview": "Yleiskatsaus",
+        "reports": "Raportit",
+        "jobs": "Käsittely"
+      },
+      "free": {
+        "paidUnavailable": "Saatavilla maksullisella tilauksella.",
+        "seePlans": "Katso tilaukset"
+      },
+      "requester": {
+        "you": "Sinä",
+        "owner": "{name} (omistaja)",
+        "ownerNoName": "Omistaja",
+        "reseller": "Jälleenmyyjä",
+        "admin": "MrCall",
+        "system": "Automaattinen"
+      },
+      "status": {
+        "ready": "Valmis",
+        "preparing": "Valmisteilla",
+        "queued": "Jonossa",
+        "retryTomorrow": "Uusi yritys huomenna",
+        "failed": "Ei onnistunut",
+        "postponed": "Lykätty",
+        "noCalls": "Ei analysoitavia puheluita",
+        "notRun": "Ei suoritettu",
+        "notRunCredit": "Ei suoritettu: saldo ei riitä",
+        "stoppedCredit": "Pysäytetty: saldo ei riitä",
+        "cancelled": "Peruttu",
+        "recomputeStopped": "Pysäytetty: saldo ei riitä. {done} / {total} puhelusta analysoitiin yrityksen saldolla. Muita ei analysoitu."
+      },
+      "reportsTab": {
+        "scheduleTitle": "Automaattiset raportit",
+        "request": "Pyydä raportti",
+        "anticipate": "Laadi nyt",
+        "recentTitle": "Äskettäin pyydetyt",
+        "historyTitle": "Kaikki raportit",
+        "filterStatus": "Tila",
+        "filterType": "Tyyppi",
+        "clearFilters": "Tyhjennä suodattimet",
+        "none": "Ei vielä raportteja.",
+        "noneFiltered": "Mikään raportti ei vastaa näitä suodattimia.",
+        "days": "1 päivä | {days} päivää",
+        "callsOfManaged": "{calls} / {managed} hoidetusta",
+        "callsAnalysed": "{calls} analysoitu",
+        "open": "Avaa",
+        "regenerate": "Laadi uudelleen",
+        "regenerateOf": "Laadi raportti {period} uudelleen",
+        "rerun": "Yritä uudelleen",
+        "rerunOf": "Yritä raporttia {period} uudelleen",
+        "delete": "Poista",
+        "deleteOf": "Poista raportti {period}",
+        "jobReport": "Raportti {period}",
+        "jobRecompute": "Puhelujen {period} analyysi",
+        "jobAnticipate": "Automaattinen raportti laadittu nyt",
+        "jobRegenerate": "Uudelleen laadittu raportti {period} | Uudelleen laaditut raportit {period}",
+        "jobRerun": "Automaattista raporttia {period} yritetty uudelleen",
+        "columns": {
+          "period": "Jakso",
+          "type": "Tyyppi",
+          "revision": "Versio",
+          "status": "Tila",
+          "calls": "Puhelut",
+          "requestedBy": "Pyytäjä",
+          "createdAt": "Luotu",
+          "actions": "Toiminnot"
+        },
+        "jobFacts": "Puheluiden tietojen päivitys, {period}"
+      },
+      "jobs": {
+        "title": "Käsittely",
+        "purpose": "Tämän yrityksen pyydetyt ja uudelleen laaditut raportit sekä aiempien puhelujen analyysit, pyytäjä ja se, miten kukin päättyi.",
+        "none": "Tälle yritykselle ei ole vielä käsitelty mitään.",
+        "progress": "{done} / {total} puhelua",
+        "estimate": "Pyyntöä valmistellaan",
+        "columns": {
+          "what": "Mitä",
+          "status": "Tila",
+          "progress": "Eteneminen",
+          "requestedBy": "Pyytäjä",
+          "createdAt": "Aloitettu",
+          "result": "Tulos"
+        },
+        "filterKind": "Tyyppi",
+        "noneFiltered": "Ei käsittelyjä näillä suodattimilla.",
+        "kinds": {
+          "report": "Raportti",
+          "recompute": "Puheluiden analyysi",
+          "estimate": "Pyynnön valmistelu",
+          "facts": "Puheluiden tietojen päivitys"
+        },
+        "openReport": "Avaa raportti {period}",
+        "examined": "{n} puhelu tarkistettu | {n} puhelua tarkistettu",
+        "outcome": {
+          "recompute": {
+            "written": "{n} analysoitu | {n} analysoitu",
+            "reasoned": "{n} ilman keskustelua | {n} ilman keskustelua",
+            "skipped": "{n} jo ajan tasalla | {n} jo ajan tasalla",
+            "left": "{n} ilman analysoitavaa | {n} ilman analysoitavaa",
+            "not_finalised": "{n} keskeneräinen | {n} keskeneräistä",
+            "conflict": "{n} muuttui sillä välin | {n} muuttui sillä välin",
+            "failed": "{n} epäonnistui | {n} epäonnistui",
+            "ceiling": "{n} analysoimatta: raja saavutettu | {n} analysoimatta: raja saavutettu"
+          },
+          "facts": {
+            "written": "{n} päivitetty | {n} päivitetty",
+            "unchanged": "{n} jo ajan tasalla | {n} jo ajan tasalla",
+            "not_finalised": "{n} keskeneräinen | {n} keskeneräistä",
+            "conflict": "{n} muuttui sillä välin | {n} muuttui sillä välin"
+          }
+        }
+      },
+      "reportDetail": {
+        "back": "Takaisin raportteihin",
+        "title": "Puheluraportti, {period}",
+        "notFound": "Tätä raporttia ei ole tai se ei ole enää saatavilla.",
+        "baseTitle": "Mitkä puhelut se luki",
+        "newerCalls": "Tämän raportin kirjoittamisen jälkeen näiltä päiviltä on analysoitu {n} puhelua lisää: laadi se uudelleen, niin ne tulevat mukaan.",
+        "addAnswer": "Lisää vastaus",
+        "qualityTitle": "Kysymykset, joihin ei vastattu, verrattuna edelliseen jaksoon",
+        "qualityReason": "Syy",
+        "qualityNow": "Nämä päivät",
+        "qualityBefore": "Edellinen jakso",
+        "qualityBase": "Puhelut lasketaan niistä {calls} puhelusta, joille tämä tarkistus on tallennettu.",
+        "draftAdded": "Lisäsimme kysymyksen kysymyksiisi ja vastauksiisi: kirjoita vastaus ja tallenna.",
+        "draftPresent": "Tämä kysymys on jo kysymyksissäsi ja vastauksissasi.",
+        "version": "Versio {n}",
+        "calls": "{n} puhelu | {n} puhelua",
+        "booked": "{n} puhelu, jossa tehtiin varaus | {n} puhelua, joissa tehtiin varaus",
+        "transferred": "{n} puhelu siirretty henkilölle | {n} puhelua siirretty henkilölle",
+        "themeOutcome": "Aiheen {topic} puheluiden tulos",
+        "callBackTitle": "Takaisin soitettavat puhelut",
+        "callBackNote": "Ratkaisemattomat puhelut tai yritykselle puutteellisen viestin kanssa välitetyt puhelut."
+      },
+      "deleteReport": {
+        "title": "Poista raportti",
+        "what": "Raportti {period} piilotetaan kaikilta kaikkine versioineen.",
+        "reason": "Miksi se poistetaan",
+        "confirm": "Poista"
+      },
+      "request": {
+        "title": {
+          "report": "Pyydä raportti",
+          "regenerate": "Laadi raportti uudelleen",
+          "recompute": "Analysoi jakson puhelut",
+          "anticipate": "Laadi automaattinen raportti nyt",
+          "rerun": "Yritä automaattista raporttia uudelleen"
+        },
+        "periodLabel": "Jakso",
+        "preset": "Viimeiset {days} päivää",
+        "custom": "Valitse päivät",
+        "periodHint": "Päivät ovat yrityksen päiviä, eilinen mukaan lukien.",
+        "selected": "{from} (1 päivä) | Ajalta {from}–{to} ({days} päivää)",
+        "continue": "Jatka",
+        "cancel": "Peruuta",
+        "close": "Sulje",
+        "preparing": "Valmistelemme pyyntöä…",
+        "confirm": "Tämä käsittely kuluttaa yrityksen {business} saldoa. Haluatko jatkaa?",
+        "confirmPlatform": "Tämän käsittelyn kustantaa MrCall: yrityksen saldoa ei kuluteta. Haluatko jatkaa?",
+        "raceNote": "Jos puhelut kuluttavat saldoa sillä välin, käsittely voi jättää pienen velan.",
+        "platformPays": "MrCallin kustannuksella: yritys ei kuluta saldoa",
+        "confirmButton": "Vahvista",
+        "notEnoughCredit": "Saldo ei riitä tähän käsittelyyn.",
+        "reserve": "Yrityksen saldo on puheluita varten varattavalla tasolla. Lataa saldoa tai ota automaattinen lataus käyttöön, jotta voit käyttää tätä toimintoa.",
+        "shorter": "Kokeile lyhyempää jaksoa",
+        "topUp": "Lataa saldoa",
+        "enableTopUp": "Ota automaattinen lataus käyttöön",
+        "overlap": {
+          "same": "Näille päiville on jo raportti.",
+          "cycle": "Seuraava automaattinen raportti lukee nämä päivät uudelleen ja kuluttaa saldoa uudelleen.",
+          "partial": "Nämä päivät ovat jo osittain raportissa {period} ({kind}). Uusi raportti lukee ne uudelleen ja kuluttaa saldoa uudelleen.",
+          "acknowledge": "Ymmärrän: lue ne silti uudelleen",
+          "regenerateInstead": "Laadi se raportti uudelleen",
+          "partialMany": "{n} raporttia kattaa jo osan näistä päivistä, ajalta {from}–{to}. Uusi raportti lukee ne uudelleen ja kuluttaa saldoa uudelleen."
+        },
+        "kind": {
+          "automatic": "automaattinen",
+          "requested": "pyynnöstä"
+        },
+        "anticipateCycle": "Käynnissä oleva automaattinen raportti kattaa ajan {from}–eilen: laadimme sen nyt koko jaksolle, ja seuraava alkaa tämän päivän alusta.",
+        "busy": "Tälle yritykselle on jo käsittely käynnissä, jonka aloitti {who} {when}.",
+        "busyUnknown": "Tälle yritykselle on jo käsittely käynnissä.",
+        "busyOpen": "Katso käsittely",
+        "automaticPending": "Tämän jakson automaattinen raportti on valmisteilla: se on valmis seuraavan yöllisen käsittelyn jälkeen.",
+        "retention": "Tämä raportti kattaa yli 11 kuukautta vanhoja päiviä: sitä ei voi enää laatia uudelleen.",
+        "noCalls": "Tällä jaksolla ei ole analysoitavia puheluita.",
+        "failed": "Pyyntöä ei voitu suorittaa loppuun. Yritä myöhemmin uudelleen.",
+        "queued": "Jonossa: se alkaa pian.",
+        "working": "Valmisteilla…",
+        "progress": "{done} / {total} puhelua analysoitu.",
+        "doneReport": "Raportti on valmis.",
+        "doneRecompute": "Analyysi valmis: {written} puhelua päivitetty.",
+        "openReport": "Avaa raportti",
+        "cancelJob": "Peruuta käsittely",
+        "cancelReport": "Peruuta: raporttia ei kirjoiteta, eikä saldoa kuluteta.",
+        "cancelRecompute": "Se pysähtyy käynnissä olevan puhelun jälkeen. Jo analysoidut puhelut säilyvät, ja ne ovat kuluttaneet yrityksen saldoa.",
+        "cancelled": "Käsittely peruttu.",
+        "keepOpen": "Voit sulkea tämän ikkunan: käsittely jatkuu, ja löydät sen kohdasta Käsittely.",
+        "platformInstead": "Suorita MrCallin kustannuksella",
+        "noCallsPeriod": "Tällä jaksolla ei ole puheluita.",
+        "lastCall": "Viimeisin puhelu oli {date}.",
+        "noCallEver": "Yritys ei ole vielä saanut yhtään puhelua.",
+        "noAnalysis": "Jaksolla on 1 puhelu, mutta sitä ei ole vielä analysoitu. | Jaksolla on {n} puhelua, mutta yhtäkään ei ole vielä analysoitu.",
+        "noAnalysisNone": "Yhtäkään jakson puhelua ei ole analysoitu, eikä yhtäkään voi analysoida.",
+        "cycleEmpty": "Käynnissä olevalla automaattisella raportilla ei ole vielä yhtään päättynyttä päivää: nyt ei ole mitään laadittavaa.",
+        "busyYou": "Tälle yritykselle on jo käsittely käynnissä, jonka aloitit {when}."
+      },
+      "recompute": {
+        "banner": "{n} tällä jaksolla hoidetulla puhelulla ei ole vielä automaattista analyysia, joten lopputulokset, aiheet ja laatu eivät laske niitä mukaan.",
+        "cannotChange": "Uusi analyysi ei muuta puheluita, joissa ei ollut keskustelua (soittaja ei puhunut tai saldoa ei ollut).",
+        "action": "Analysoi ne nyt"
+      },
+      "silent": {
+        "title": "Soittajat, jotka eivät puhuneet",
+        "text": "{n} puhelussa soittaja katkaisi puhelun sanomatta mitään. Se riippuu usein tervehdyksestä: tarkista, että se on lyhyt ja selkeä.",
+        "link": "Tarkista tervehdys"
+      },
+      "requests": {
+        "title": "Soittajien pyynnöt",
+        "purpose": "Mitä soittajat pyytävät, mihin avustajat eivät pysty, ryhmiteltynä luokittain kaikissa yrityksissä: päättääksesi, mitä rakennetaan ja mitä lisätään tilauksiin.",
+        "window": "Jakso: {period}",
+        "sortLabel": "Järjestys",
+        "sortScore": "Tuoreimmat ja yleisimmät",
+        "sortBusinesses": "Yritysten määrä",
+        "showDismissed": "Näytä arkistoidut",
+        "scoreHelp": "Jokainen yritys lasketaan yhtenä, jos se kysyi raporttien kattamina viimeisinä päivinä, puolena, jos kaksi viikkoa aiemmin, neljänneksenä, jos neljä viikkoa aiemmin.",
+        "none": "Ei pyyntöjä tällä jaksolla.",
+        "columns": {
+          "category": "Luokka",
+          "businesses": "Yritykset",
+          "trend": "Suunta",
+          "freshness": "Tuoreus"
+        },
+        "businesses": "{n} yritystä",
+        "trend": "{sign}{n} edelliseen jaksoon verrattuna",
+        "share": "{pct} % raportillisista yrityksistä",
+        "histogramLabel": "Yritykset per {bucket}, vanhimmasta alkaen: {values}",
+        "bucket": {
+          "week": "viikko",
+          "month": "kuukausi"
+        },
+        "freshness": "Viimeisin pyyntö {date} · {pct} % viimeisen {bucket} aikana",
+        "reportDated": "{n} yritystä päivätty raportin lopun mukaan",
+        "nextAction": "Seuraava toimi",
+        "examples": "Esimerkit",
+        "hideExample": "Piilota",
+        "hideExampleOf": "Piilota esimerkki “{text}”",
+        "whoAsked": "Kuka pyysi",
+        "businessesOf": "Yritykset, jotka pyysivät: {category}",
+        "businessColumns": {
+          "name": "Yritys",
+          "lastSeen": "Viimeisin pyyntö",
+          "said": "Mitä he pyysivät"
+        },
+        "noBusinesses": "Ei yrityksiä tällä jaksolla.",
+        "dismiss": "Arkistoi",
+        "dismissOf": "Arkistoi {category}",
+        "restore": "Palauta",
+        "restoreOf": "Palauta {category}",
+        "dismissedAs": "Arkistoitu {date}: {reason}",
+        "reasonLabel": "Syy",
+        "reason": {
+          "done": "Tehty",
+          "not_relevant": "Ei olennainen",
+          "already_integrated": "Jo integroitu"
+        },
+        "note": "Huomautus (valinnainen)",
+        "confirmDismiss": "Arkistoi",
+        "reopened": "Avattu uudelleen: {n} uutta yritystä on pyytänyt sitä sen jälkeen, kun se arkistoitiin {date}.",
+        "status": {
+          "rising": "Nousussa",
+          "steady": "Vakaa",
+          "falling": "Laskussa",
+          "stale": "Ei enää pyydetty viime aikoina"
+        },
+        "hiddenExamples": "Piilotetut esimerkit",
+        "hiddenAs": "Piilotettu {date}: {reason}",
+        "restoreExampleOf": "Palauta esimerkki ”{text}”",
+        "whoAskedOf": "Kuka kysyi: {category}",
+        "dismissedBy": "Arkistoinut {who} {date}: {reason}",
+        "who": {
+          "you": "sinä",
+          "admin": "MrCall"
+        },
+        "archived": "{category} arkistoitu.",
+        "undo": "Kumoa"
+      },
+      "admin": {
+        "reason": {
+          "reserve": "Puheluille varattu saldo",
+          "over_ceiling": "Suurempi kuin arvio salli"
+        }
+      },
+      "change": {
+        "notAvailable": "ei tiedossa",
+        "notAvailableHelp": "Edellisellä jaksolla oli alle 20 puhelua: muutos ei ole merkitsevä."
+      },
+      "overview": {
+        "noCallsDays": "Ei puheluita viimeisen päivän aikana. | Ei puheluita viimeisten {days} päivän aikana."
+      },
+      "callers": {
+        "web": "Verkkopuhelu"
+      },
+      "businessNotFound": "Tätä yritystä ei ole tai se ei kuulu niihin, jotka voit nähdä."
+    },
+    "datePicker": {
+      "chooseDate": "Valitse päivämäärä",
+      "chooseMonth": "Valitse kuukausi",
+      "chooseYear": "Valitse vuosi",
+      "prevMonth": "Edellinen kuukausi",
+      "nextMonth": "Seuraava kuukausi",
+      "prevYear": "Edellinen vuosi",
+      "nextYear": "Seuraava vuosi",
+      "prevDecade": "Edellinen vuosikymmen",
+      "nextDecade": "Seuraava vuosikymmen",
+      "today": "Tänään",
+      "clear": "Tyhjennä"
     }
   },
   "views": {

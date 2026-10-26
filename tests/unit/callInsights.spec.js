@@ -8,7 +8,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
  * an absent section, 503 (reports, migration not run) as "not available yet", and a session-ended
  * error passed through untouched for the axios interceptor's own navigation.
  */
-vi.mock('axios', () => ({ default: { get: vi.fn(), post: vi.fn() } }))
+vi.mock('axios', () => ({ default: { get: vi.fn(), post: vi.fn(), delete: vi.fn() } }))
 const axios = (await import('axios')).default
 const CallInsights = (await import('@/utils/CallInsights')).default
 
@@ -19,6 +19,7 @@ const sessionEndedError = () => Object.assign(new Error('session ended'), { sess
 beforeEach(() => {
   axios.get.mockReset()
   axios.post.mockReset()
+  axios.delete.mockReset()
 })
 
 describe('insightRows: the one value table for a call\'s four dimensions', () => {
@@ -36,7 +37,7 @@ describe('insightRows: the one value table for a call\'s four dimensions', () =>
   })
 
   it('knows every code StarChat writes for resolution and message, and drops one it does not know', () => {
-    expect(CallInsights.RESOLUTION_KEYS).toEqual(['resolved', 'unresolved', 'handed_over', 'caller_left', 'spam_wrong_number'])
+    expect(CallInsights.RESOLUTION_KEYS).toEqual(['resolved', 'forwarded', 'handed_over', 'unresolved', 'caller_left', 'spam_wrong_number'])
     expect(CallInsights.MESSAGE_KEYS).toEqual(['complete', 'incomplete', 'unintelligible', 'none'])
     for (const code of CallInsights.RESOLUTION_KEYS) {
       expect(CallInsights.insightRows({ resolution: code })).toEqual([row('resolution', code, true)])
@@ -170,59 +171,6 @@ describe('quality', () => {
   })
 })
 
-describe('assistants', () => {
-  it('sends sort and limit on the query string', async () => {
-    axios.post.mockResolvedValue({ data: { businesses: [] } })
-    await CallInsights.assistants(user, { timestampGte: 1 }, 'not_solved', 25)
-    const [url] = axios.post.mock.calls[0]
-    expect(url).toContain('/customer/analytics/assistants')
-    expect(url).toContain('sort=not_solved')
-    expect(url).toContain('limit=25')
-  })
-})
-
-// StarChat's reports route (`CallInsightsReportResource`, insights-backfill B6): with `from` and `to` it
-// lists the reports overlapping that interval, automatic and asked, newest first on the total order
-// (period_end, request_id), the cursor being the previous page's last report (`before` its end,
-// `beforeRequestId` its request id); without them only the automatic ones, as v2.2.31 reads it.
-describe('reports: the period chosen on the page, paged on (periodEnd, requestId)', () => {
-  const query = (url) => new URL(url.replace(/^[^/]*\/mrcall/, 'http://starchat/mrcall')).searchParams
-
-  it('reads the first page with businessId, the period and limit, and no cursor', async () => {
-    axios.get.mockResolvedValue({ data: [] })
-    await CallInsights.reports(user, 'b-1', 1700000000000, 1702592000000, null, 10)
-    const q = query(axios.get.mock.calls[0][0])
-    expect(q.get('businessId')).toBe('b-1')
-    expect(q.get('from')).toBe('1700000000000')
-    expect(q.get('to')).toBe('1702592000000')
-    expect(q.get('limit')).toBe('10')
-    expect(q.has('before')).toBe(false)
-    expect(q.has('beforeRequestId')).toBe(false)
-  })
-
-  it('after an automatic report, the cursor is its periodEnd alone', async () => {
-    axios.get.mockResolvedValue({ data: [] })
-    await CallInsights.reports(user, 'b-1', 1, 2, { periodStart: 10, periodEnd: 20, cadence: 7 }, 10)
-    const q = query(axios.get.mock.calls[0][0])
-    expect(q.get('before')).toBe('20')
-    expect(q.has('beforeRequestId')).toBe(false)
-  })
-
-  it('after a report on request, the cursor carries its requestId too, so the automatic report ending with it is not skipped', async () => {
-    axios.get.mockResolvedValue({ data: [] })
-    await CallInsights.reports(user, 'b-1', 1, 2, { periodStart: 10, periodEnd: 20, requestId: 'job-1' }, 10)
-    const q = query(axios.get.mock.calls[0][0])
-    expect(q.get('before')).toBe('20')
-    expect(q.get('beforeRequestId')).toBe('job-1')
-  })
-
-  it('refuses a call without the period, rather than reading the automatic reports alone', async () => {
-    await expect(CallInsights.reports(user, 'b-1', null, 2, null, 10)).rejects.toThrow(/from and to/)
-    await expect(CallInsights.reports(user, 'b-1', 1, undefined, null, 10)).rejects.toThrow(/from and to/)
-    expect(axios.get).not.toHaveBeenCalled()
-  })
-})
-
 describe('report: one report', () => {
   it('reads the automatic report at its periodStart, scoped to the business', async () => {
     axios.get.mockResolvedValue({ data: { version: 1 } })
@@ -277,51 +225,6 @@ describe('exampleCallName: an example call by its caller and when it started', (
     expect(CallInsights.exampleCallName(report, 'CON-3', 'en-US')).toBeNull()
     expect(CallInsights.exampleCallName({}, 'CON-1', 'en-US')).toBeNull()
     expect(CallInsights.exampleCallName({ exampleCalls: { 'CON-1': { caller: 'Maria Rossi' } } }, 'CON-1', 'en-US')).toBeNull()
-  })
-})
-
-describe('integrations and config-suggestions: the caller\'s whole scope, since a start, one page at a time', () => {
-  // The base URL comes from the build's environment, absent here: the path and the query are what is checked.
-  const parsed = (url) => new URL(url.replace(/^[^/]*\/mrcall/, 'http://starchat/mrcall'))
-  // StarChat's analytics guide §10 (M16): both answer one page, `from` (default 0) and `size`
-  // (default 20, at most 100) as query parameters, `{total, items}` in the body.
-  it('integrations carries timestampGte when given, nothing when not, and the page in the query', async () => {
-    axios.post.mockResolvedValue({ data: { total: 0, items: [] } })
-    await CallInsights.integrations(user, 1700000000000, 40, 20)
-    expect(axios.post.mock.calls[0][1]).toEqual({ timestampGte: 1700000000000 })
-    const first = parsed(axios.post.mock.calls[0][0])
-    expect(first.pathname).toMatch(/\/customer\/insights\/integrations$/)
-    expect(first.searchParams.get('from')).toBe('40')
-    expect(first.searchParams.get('size')).toBe('20')
-    await CallInsights.integrations(user)
-    expect(axios.post.mock.calls[1][1]).toEqual({})
-    const second = parsed(axios.post.mock.calls[1][0])
-    expect(second.searchParams.get('from')).toBe('0')
-    expect(second.searchParams.get('size')).toBe(String(CallInsights.INSIGHTS_PAGE_SIZE))
-  })
-
-  it('configSuggestions posts to its own route, with the page in the query', async () => {
-    axios.post.mockResolvedValue({ data: { total: 0, items: [] } })
-    await CallInsights.configSuggestions(user, 1700000000000, 20, 20)
-    const url = parsed(axios.post.mock.calls[0][0])
-    expect(url.pathname).toMatch(/\/customer\/insights\/config-suggestions$/)
-    expect(url.searchParams.get('from')).toBe('20')
-    expect(url.searchParams.get('size')).toBe('20')
-    expect(axios.post.mock.calls[0][1]).toEqual({ timestampGte: 1700000000000 })
-  })
-
-  it('both send asOf in the query only when given: a first page goes without it', async () => {
-    axios.post.mockResolvedValue({ data: { total: 0, items: [] } })
-    await CallInsights.integrations(user, undefined, 0, 20)
-    expect(parsed(axios.post.mock.calls[0][0]).searchParams.has('asOf')).toBe(false)
-    await CallInsights.integrations(user, undefined, 20, 20, 1761004800000)
-    expect(parsed(axios.post.mock.calls[1][0]).searchParams.get('asOf')).toBe('1761004800000')
-    await CallInsights.configSuggestions(user, undefined, 20, 20, 1761004800000)
-    expect(parsed(axios.post.mock.calls[2][0]).searchParams.get('asOf')).toBe('1761004800000')
-  })
-
-  it('the page size is StarChat\'s default, inside its 1-100 bound', () => {
-    expect(CallInsights.INSIGHTS_PAGE_SIZE).toBe(20)
   })
 })
 
@@ -391,137 +294,6 @@ describe('businessLabel: a business by its name, its id only when it has none', 
   })
 })
 
-describe('saidBy: the businesses StarChat names for an item, and how many it does not', () => {
-  it('lists `said` and counts the businesses beyond it', () => {
-    const said = [{ businessId: 'a', name: 'A', reportPeriodStart: 2 }, { businessId: 'b', reportPeriodStart: 1 }]
-    expect(CallInsights.saidBy({ businesses: 7, said })).toEqual({ said, more: 5 })
-  })
-
-  it('counts none beyond when every business is named, and survives a missing or malformed `said`', () => {
-    expect(CallInsights.saidBy({ businesses: 1, said: [{ businessId: 'a' }] }).more).toBe(0)
-    expect(CallInsights.saidBy({ businesses: 3 })).toEqual({ said: [], more: 3 })
-    expect(CallInsights.saidBy({ businesses: 3, said: 'x' })).toEqual({ said: [], more: 3 })
-  })
-})
-
-describe('pagedList: a scope-wide list loaded a page at a time, on demand', () => {
-  const page = (from, n, total) => ({ total, items: Array.from({ length: n }, (_, i) => ({ id: from + i })) })
-
-  it('asks for the first page only, and the next one only when asked, from where the list ends', async () => {
-    const fetchPage = vi.fn((from, size) => Promise.resolve(page(from, Math.min(size, 45 - from), 45)))
-    const list = CallInsights.pagedList(fetchPage, { size: 20, keyOf: (item) => item.id })
-    expect(list.status).toBe('loading')
-    await list.first()
-    expect(fetchPage.mock.calls).toEqual([[0, 20, undefined]])
-    expect(list.status).toBe('ok')
-    expect(list.items.length).toBe(20)
-    expect(list.total).toBe(45)
-    expect(list.hasMore).toBe(true)
-    await list.more()
-    expect(fetchPage.mock.calls[1]).toEqual([20, 20, undefined])
-    await list.more()
-    expect(fetchPage.mock.calls[2]).toEqual([40, 20, undefined])
-    expect(list.items.length).toBe(45)
-    expect(list.hasMore).toBe(false)
-    await list.more()
-    expect(fetchPage).toHaveBeenCalledTimes(3)
-  })
-
-  it('sends page 1\'s asOf back on every later page of the same list, and a new first page drops it', async () => {
-    let snapshot = 1000
-    const fetchPage = vi.fn((from, size) => Promise.resolve({ ...page(from, size, 6), asOf: from === 0 ? snapshot : 9999 }))
-    const list = CallInsights.pagedList(fetchPage, { size: 2 })
-    await list.first()
-    expect(fetchPage.mock.calls[0][2]).toBeUndefined()
-    await list.more()
-    expect(fetchPage.mock.calls[1]).toEqual([2, 2, 1000])
-    await list.more()
-    // a later page's own asOf never replaces the first page's
-    expect(fetchPage.mock.calls[2]).toEqual([4, 2, 1000])
-    snapshot = 2000
-    await list.first()
-    expect(fetchPage.mock.calls[3]).toEqual([0, 2, undefined])
-    await list.more()
-    expect(fetchPage.mock.calls[4]).toEqual([2, 2, 2000])
-  })
-
-  it('reads a 404 as absent and a 503 as not available yet', async () => {
-    const absent = CallInsights.pagedList(() => Promise.resolve(null))
-    await absent.first()
-    expect(absent.status).toBe('absent')
-    const unavailable = CallInsights.pagedList(() => Promise.resolve({ unavailable: true }))
-    await unavailable.first()
-    expect(unavailable.status).toBe('unavailable')
-  })
-
-  it('does not repeat an item a shifted page brings again, and stops on a page past the end', async () => {
-    const answers = [page(0, 2, 5), { total: 5, items: [{ id: 1 }, { id: 2 }] }, { total: 5, items: [] }]
-    const list = CallInsights.pagedList(() => Promise.resolve(answers.shift()), { size: 2, keyOf: (item) => item.id })
-    await list.first()
-    await list.more()
-    expect(list.items.map((i) => i.id)).toEqual([0, 1, 2])
-    await list.more()
-    expect(list.hasMore).toBe(false)
-  })
-
-  it('a failed later page keeps what is shown and says so in the list, not in a toast; a failed first page hides the list and reports', async () => {
-    const onError = vi.fn()
-    const error = httpError(500)
-    const fetchPage = vi.fn()
-      .mockResolvedValueOnce(page(0, 2, 4))
-      .mockRejectedValueOnce(error)
-    const list = CallInsights.pagedList(fetchPage, { size: 2, onError })
-    await list.first()
-    await list.more()
-    expect(list.items.length).toBe(2)
-    expect(list.status).toBe('ok')
-    expect(list.loadingMore).toBe(false)
-    expect(list.moreFailed).toBe(true)
-    expect(onError).not.toHaveBeenCalled()
-
-    const failing = CallInsights.pagedList(() => Promise.reject(error), { onError })
-    await failing.first()
-    expect(failing.status).toBe('absent')
-    expect(onError).toHaveBeenCalledWith(error)
-  })
-
-  // A later page that fails (404, 503, any error) is not the end of the list: what is shown stays,
-  // the list says the page failed, and asking again sends the same page with the same snapshot.
-  for (const [label, failure] of [
-    ['a 404 (null)', () => Promise.resolve(null)],
-    ['a 503 ({unavailable})', () => Promise.resolve({ unavailable: true })],
-    ['an error', () => Promise.reject(httpError(500))],
-  ]) {
-    it(`${label} on a later page keeps the list, marks the page failed, and a retry resends it with the same asOf`, async () => {
-      const onError = vi.fn()
-      const fetchPage = vi.fn()
-        .mockResolvedValueOnce({ ...page(0, 2, 4), asOf: 77 })
-        .mockImplementationOnce(failure)
-        .mockResolvedValueOnce({ ...page(2, 2, 4), asOf: 99 })
-      const list = CallInsights.pagedList(fetchPage, { size: 2, onError })
-      await list.first()
-      await list.more()
-      expect(list.items.length).toBe(2)
-      expect(list.moreFailed).toBe(true)
-      expect(list.hasMore).toBe(true)
-      expect(list.loadingMore).toBe(false)
-      await list.more()
-      expect(fetchPage.mock.calls[1]).toEqual([2, 2, 77])
-      expect(fetchPage.mock.calls[2]).toEqual([2, 2, 77])
-      expect(list.items.length).toBe(4)
-      expect(list.moreFailed).toBe(false)
-      expect(list.hasMore).toBe(false)
-    })
-  }
-
-  it('a session-ended error is left to the interceptor: no error reported', async () => {
-    const onError = vi.fn()
-    const list = CallInsights.pagedList(() => Promise.reject(sessionEndedError()), { onError })
-    await list.first()
-    expect(onError).not.toHaveBeenCalled()
-  })
-})
-
 describe('what every route answers beyond 200', () => {
   it('a 404 resolves to null: the section is simply absent', async () => {
     axios.post.mockRejectedValue(httpError(404))
@@ -530,7 +302,7 @@ describe('what every route answers beyond 200', () => {
 
   it('a 503 resolves to {unavailable: true}: not a failure, not yet', async () => {
     axios.get.mockRejectedValue(httpError(503))
-    await expect(CallInsights.reports(user, 'b-1', 1, 2)).resolves.toEqual({ unavailable: true })
+    await expect(CallInsights.reportsPage(user, 'b-1')).resolves.toEqual({ unavailable: true })
   })
 
   it('a session-ended error is rethrown untouched, read by isSessionEnded', async () => {
@@ -560,38 +332,6 @@ describe('CallInsights.latestOnly', () => {
   })
 })
 
-/**
- * Brief outcome 9 (StarChat intent 12): the assistant measured only on calls it could serve. The
- * numbers below are StarChat's analytics guide's own examples (§7-§9), so each base is checked
- * against the contract's arithmetic, not against this file's.
- */
-describe('resolutionShare: the share is over the calls where the caller asked something', () => {
-  const totals = { resolved: 60, unresolved: 14, handed_over: 9, caller_left: 8, spam_wrong_number: 5 }
-
-  it('counts resolved, unresolved and handed_over in the base, and caller_left and spam_wrong_number beside it', () => {
-    expect(CallInsights.RESOLUTION_REQUEST_KEYS).toEqual(['resolved', 'unresolved', 'handed_over'])
-    expect(CallInsights.RESOLUTION_OUTSIDE_KEYS).toEqual(['caller_left', 'spam_wrong_number'])
-    const share = CallInsights.resolutionShare(totals)
-    expect(share.base).toBe(83)
-    expect(share.rows).toEqual([
-      { key: 'resolved', count: 60, base: 83, percent: 72 },
-      { key: 'unresolved', count: 14, base: 83, percent: 17 },
-      { key: 'handed_over', count: 9, base: 83, percent: 11 },
-    ])
-    expect(share.outside).toEqual([
-      { key: 'caller_left', count: 8 },
-      { key: 'spam_wrong_number', count: 5 },
-    ])
-  })
-
-  it('has a zero base, and no share, when no caller asked anything', () => {
-    const share = CallInsights.resolutionShare({ caller_left: 3 })
-    expect(share.base).toBe(0)
-    expect(share.rows.map(r => r.percent)).toEqual([0, 0, 0])
-    expect(share.outside[0]).toEqual({ key: 'caller_left', count: 3 })
-  })
-})
-
 describe('assistantShare: each column and sort of the assistants table over StarChat\'s own base', () => {
   // StarChat's analytics guide §9, its example row
   const row = {
@@ -604,8 +344,11 @@ describe('assistantShare: each column and sort of the assistants table over Star
     callsAnswered: 48, callsOffered: 48, callsWithRequest: 30,
   }
 
-  it('"Non risolte" is unresolved over callsWithRequest: caller_left is neither in the count nor in the base', () => {
-    expect(CallInsights.assistantShare(row, 'not_solved')).toEqual({ count: 10, base: 30, percent: 33 })
+  // StarChat plan F3 (docs/execution-plans/2026-10-24-call-resolution-forwarded.md): `notSolved` is the server's own
+  // count (unresolved, and forwarded with an incomplete message); the dashboard never adds resolution keys up.
+  it('"Non risolte" is StarChat\'s notSolved over callsWithRequest, never a sum of resolution keys', () => {
+    expect(CallInsights.assistantShare({ ...row, notSolved: 12 }, 'not_solved')).toEqual({ count: 12, base: 30, percent: 40 })
+    expect(CallInsights.assistantShare(row, 'not_solved')).toEqual({ count: 0, base: 30, percent: 0 })
   })
 
   it('caller_silent over callsAnswered, not_answered over callsOffered, caller_left over callsWithResolution', () => {
@@ -616,7 +359,10 @@ describe('assistantShare: each column and sort of the assistants table over Star
 
   it('keeps the other signals on the bases StarChat sorts them by', () => {
     expect(CallInsights.assistantShare(row, 'unanswered')).toEqual({ count: 9, base: 36, percent: 25 })
-    expect(CallInsights.assistantShare(row, 'checks')).toEqual({ count: 9, base: 36, percent: 25 })
+    // the calls with any check, each once: seen failing on 9999149, which summed the checks (9 of 36)
+    expect(CallInsights.assistantShare({ ...row, callsWithAnyCheck: 7 }, 'checks')).toEqual({ count: 7, base: 36, percent: 19 })
+    // a call with every check true counts once: never above 100%
+    expect(CallInsights.assistantShare({ callsWithChecks: 2, callsWithAnyCheck: 2, checks: { caller_repeated: 2, caller_unsatisfied: 2, promise_not_kept_in_call: 2 } }, 'checks').percent).toBe(100)
     expect(CallInsights.assistantShare(row, 'skill_errors')).toEqual({ count: 0, base: 40, percent: 0 })
     expect(CallInsights.assistantShare(row, 'extraction_failures')).toEqual({ count: 1, base: 36, percent: 3 })
   })
@@ -688,5 +434,173 @@ describe('topics: one business\'s topics', () => {
     expect(await CallInsights.topics(user, { businessId: 'b-1' })).toBeNull()
     axios.post.mockRejectedValueOnce(httpError(503))
     expect(await CallInsights.topics(user, { businessId: 'b-1' })).toEqual({ unavailable: true })
+  })
+})
+
+/*
+ * The outcome of the calls where the caller asked something, as StarChat answers it from plan step F3: `outcome`
+ * keyed resolved, forwarded_complete, forwarded_incomplete, handed_over, unresolved, over `callsWithRequest`.
+ */
+describe('outcomeShare: four lines over callsWithRequest, the request passed on split by its message', () => {
+  const answer = {
+    callsWithRequest: 100,
+    outcome: {
+      callsWithValue: 100,
+      totals: { resolved: 50, forwarded_complete: 20, forwarded_incomplete: 5, handed_over: 10, unresolved: 15 },
+      previousTotals: { resolved: 40, forwarded_complete: 10, forwarded_incomplete: 10, handed_over: 10, unresolved: 30 },
+      buckets: [],
+    },
+    resolution: { totals: { caller_left: 7, spam_wrong_number: 2 } },
+  }
+
+  it('lists resolved, forwarded, handed_over and unresolved, adding up to the base', () => {
+    expect(CallInsights.RESOLUTION_REQUEST_KEYS).toEqual(['resolved', 'forwarded', 'handed_over', 'unresolved'])
+    const share = CallInsights.outcomeShare(answer)
+    expect(share.base).toBe(100)
+    expect(share.lines.map((l) => [l.key, l.count, l.percent, l.previous])).toEqual([
+      ['resolved', 50, 50, 40], ['forwarded', 25, 25, 20], ['handed_over', 10, 10, 10], ['unresolved', 15, 15, 30],
+    ])
+    expect(share.lines.reduce((sum, l) => sum + l.count, 0)).toBe(answer.callsWithRequest)
+    expect(share.lines[1].parts).toEqual([
+      { key: 'forwarded_complete', count: 20, base: 100, percent: 20 },
+      { key: 'forwarded_incomplete', count: 5, base: 100, percent: 5 },
+    ])
+  })
+
+  it('has no lines for an answer without outcome (a server before F3): never rebuilt from resolution', () => {
+    expect(CallInsights.outcomeShare({ resolution: { totals: { resolved: 3 } } })).toBeNull()
+    expect(CallInsights.outcomeShare({ outcome: { totals: {} } })).toBeNull()
+    expect(CallInsights.outcomeShare(null)).toBeNull()
+  })
+
+  it('counts caller_left and spam_wrong_number beside it', () => {
+    expect(CallInsights.outsideRows(answer.resolution.totals)).toEqual([
+      { key: 'caller_left', count: 7 }, { key: 'spam_wrong_number', count: 2 },
+    ])
+  })
+})
+
+describe('the reports and jobs clients (insights-reports-ux)', () => {
+  it('reportsPage asks a page by size, with its filters and order, and never the cursor of v2.2.32', async () => {
+    axios.get.mockResolvedValue({ data: { items: [], total: 0, asOf: 5 } })
+    await CallInsights.reportsPage(user, 'b 1', { offset: 10, size: 10, asOf: 5, status: 'done', type: 'requested', sort: 'calls', direction: 'asc' })
+    const [url] = axios.get.mock.calls[0]
+    expect(url).toContain('/customer/insights/reports?')
+    for (const part of ['businessId=b%201', 'size=10', 'offset=10', 'asOf=5', 'status=done', 'type=requested', 'sort=calls', 'direction=asc']) {
+      expect(url).toContain(part)
+    }
+    expect(url).not.toMatch(/before|limit=/)
+  })
+
+  it('overlap, estimate, createJob, job, jobs and cancel reach their routes', async () => {
+    axios.get.mockResolvedValue({ data: {} })
+    axios.post.mockResolvedValue({ data: { jobId: 'j' } })
+    await CallInsights.overlap(user, 'b', 1, 2)
+    expect(axios.get.mock.calls[0][0]).toMatch(/\/reports\/overlap\?businessId=b&from=1&to=2$/)
+    await CallInsights.estimate(user, { businessId: 'b', kind: 'report' })
+    expect(axios.post.mock.calls[0][0]).toMatch(/\/insights\/estimate$/)
+    await CallInsights.createJob(user, 'report', { estimateJobId: 'e' })
+    expect(axios.post.mock.calls[1][0]).toMatch(/\/insights\/jobs\/report$/)
+    expect(axios.post.mock.calls[1][1]).toEqual({ estimateJobId: 'e' })
+    await CallInsights.jobs(user, 'b', { offset: 0, size: 10 })
+    expect(axios.get.mock.calls[1][0]).toMatch(/\/insights\/jobs\?businessId=b&offset=0&size=10$/)
+    await CallInsights.cancelJob(user, 'j 1')
+    expect(axios.post.mock.calls[2][0]).toMatch(/\/insights\/jobs\/j%201\/cancel$/)
+    await expect(CallInsights.createJob(user, 'estimate', {})).rejects.toThrow(/report or recompute/)
+  })
+
+  it('deleteReport names one report by business, start, end and request id, with the reason', async () => {
+    axios.delete.mockResolvedValue({ data: { deleted: 2 } })
+    await CallInsights.deleteReport(user, { businessId: 'b', periodStart: 1, periodEnd: 2, requestId: 'r', reason: 'test data' })
+    expect(axios.delete.mock.calls[0][0]).toMatch(/\/reports\/1\?businessId=b&periodEnd=2&requestId=r&reason=test%20data$/)
+  })
+
+  it('refusalOf reads StarChat\'s closed code and the job it names, and nothing from any other failure', () => {
+    const refused = Object.assign(new Error('409'), { response: { status: 409, data: { code: 'job_open', message: 'x', jobId: 'j' } } })
+    expect(CallInsights.refusalOf(refused)).toEqual({ code: 'job_open', status: 409, jobId: 'j' })
+    expect(CallInsights.refusalOf(httpError(500))).toBeNull()
+    expect(CallInsights.refusalOf(new Error('network'))).toBeNull()
+  })
+
+  it('requestCategories asks the categories view with its options; the businesses of one are paged', async () => {
+    axios.post.mockResolvedValue({ data: { items: [] } })
+    await CallInsights.requestCategories(user, { timestampGte: 1 }, { includeDismissed: true, sort: 'businesses', language: 'it-IT' })
+    expect(axios.post.mock.calls[0][0]).toMatch(/\/integrations\?view=categories&includeDismissed=true&sort=businesses&language=it-IT$/)
+    await CallInsights.requestBusinesses(user, 'online_booking', {}, { from: 10, size: 10, asOf: 7 })
+    expect(axios.post.mock.calls[1][0]).toMatch(/\/integrations\/online_booking\/businesses\?from=10&size=10&asOf=7$/)
+  })
+
+  it('assistants pages, orders and searches on the query string', async () => {
+    axios.post.mockResolvedValue({ data: { businesses: [] } })
+    await CallInsights.assistants(user, { timestampGte: 1 }, { sort: 'not_solved', direction: 'asc', from: 20, size: 10, search: 'Studio' })
+    const [url] = axios.post.mock.calls[0]
+    expect(url).toMatch(/\/assistants\?sort=not_solved&direction=asc&from=20&size=10&search=Studio$/)
+  })
+
+  it('business reads the name, zone, owner and plan of one business', async () => {
+    axios.get.mockResolvedValue({ data: [{ businessId: 'b', companyName: 'Studio', timezoneStr: 'Europe/Rome', owner: 'u1', name: 'Anna', surname: 'Bianchi', subscriptionStatus: 'FREE', template: 't' }] })
+    expect(await CallInsights.business(user, 'b')).toEqual({
+      businessId: 'b', name: 'Studio', timeZone: 'Europe/Rome', owner: 'u1', ownerName: 'Anna Bianchi', subscriptionStatus: 'FREE', template: 't',
+    })
+  })
+})
+
+describe('serverPage: the one mechanism of a server-paged list', () => {
+  it('reads the first page without asOf, a later page with the first page\'s, and a new sort from the first page again', async () => {
+    const calls = []
+    const fetch = (args) => { calls.push(args); return Promise.resolve({ items: [args.offset], total: 25, asOf: 99 }) }
+    const page = CallInsights.serverPage(fetch, { size: 10, sort: 'periodEnd' })
+    await page.refresh()
+    expect(page.status).toBe('ok')
+    expect(calls[0]).toEqual({ offset: 0, size: 10, asOf: undefined, sort: 'periodEnd', direction: 'desc' })
+    await page.goTo(20)
+    expect(calls[1]).toMatchObject({ offset: 20, asOf: 99 })
+    expect(page.offset).toBe(20)
+    await page.setSort('periodEnd')
+    expect(calls[2]).toMatchObject({ offset: 0, asOf: undefined, direction: 'asc' })
+    await page.setSort('calls')
+    expect(calls[3]).toMatchObject({ sort: 'calls', direction: 'desc' })
+  })
+
+  it('reads a 404 as absent, a 503 as unavailable, any other failure as error with a retry, a session end as nothing', async () => {
+    const onError = vi.fn()
+    let answer = Promise.resolve(null)
+    const page = CallInsights.serverPage(() => answer, { onError })
+    await page.refresh()
+    expect(page.status).toBe('absent')
+    answer = Promise.resolve({ unavailable: true })
+    await page.refresh()
+    expect(page.status).toBe('unavailable')
+    answer = Promise.reject(httpError(500))
+    await page.refresh()
+    expect(page.status).toBe('error')
+    expect(onError).toHaveBeenCalledTimes(1)
+    answer = Promise.reject(sessionEndedError())
+    await page.retry()
+    expect(onError).toHaveBeenCalledTimes(1)
+  })
+
+  it('drops an earlier answer arriving after a later one', async () => {
+    let first
+    const answers = [new Promise((resolve) => { first = resolve }), Promise.resolve({ items: ['new'], total: 1 })]
+    const page = CallInsights.serverPage(() => answers.shift())
+    const a = page.refresh()
+    await page.refresh()
+    first({ items: ['old'], total: 1 })
+    await a
+    expect(page.items).toEqual(['new'])
+  })
+})
+
+describe('notSolvedChange: "Non risolte" against the period before, in points', () => {
+  it('the share now minus the share before, rounded once', () => {
+    expect(CallInsights.notSolvedChange({ notSolved: 29, callsWithRequest: 60, previousNotSolved: 20, previousCallsWithRequest: 50 })).toBe(8)
+    expect(CallInsights.notSolvedChange({ notSolved: 10, callsWithRequest: 100, previousNotSolved: 30, previousCallsWithRequest: 100 })).toBe(-20)
+  })
+
+  it('nothing to compare without calls with a request in either period, or before StarChat sends the fields', () => {
+    expect(CallInsights.notSolvedChange({ notSolved: 5, callsWithRequest: 10, previousNotSolved: 0, previousCallsWithRequest: 0 })).toBeNull()
+    expect(CallInsights.notSolvedChange({ notSolved: 0, callsWithRequest: 0, previousNotSolved: 3, previousCallsWithRequest: 9 })).toBeNull()
+    expect(CallInsights.notSolvedChange({ notSolved: 5, callsWithRequest: 10 })).toBeNull()
   })
 })
