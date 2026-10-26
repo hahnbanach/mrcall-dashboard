@@ -50,7 +50,7 @@
           :user="user"
       />
       <div v-if="selectedMenupage?.collection.id === '__SEND_DATA__'" class="mb-4">
-        <ConnectCalendar />
+        <ConnectCalendar :business-id="typeof $route.query.id === 'string' && $route.query.id === business?.businessId ? $route.query.id : ''" />
       </div>
       <template v-for="(page, index) in selectedMenupage?.variables" :key="index">
         <div v-if="hasVisibleVariables(page)" :class="page.length > 1 ? 'pageblock' : 'pageblock-noborder'">

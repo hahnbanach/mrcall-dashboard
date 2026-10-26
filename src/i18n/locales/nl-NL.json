@@ -814,7 +814,7 @@
     },
     "connectCalendar": {
       "title": "Google Agenda verbinden",
-      "description": "Verbind Google Agenda om automatisch afspraken te beheren. MrCall leest uw bezette tijden en maakt afspraken aan. Uw gegevens blijven in uw agenda.",
+      "description": "Verbind Google Agenda met uw account. Geef elke assistent afzonderlijk toestemming om deze te gebruiken.",
       "connectButton": "Agenda verbinden",
       "disconnectButton": "Agenda ontkoppelen",
       "selectCalendarHint": "Afspraken van deze assistent worden hier geschreven.",
@@ -824,7 +824,15 @@
       "connectedTo": "Verbonden met:",
       "changeCalendar": "Agenda wijzigen",
       "loadingCalendars": "Agenda's laden...",
-      "noCalendarsFound": "Geen beschrijfbare agenda's gevonden"
+      "noCalendarsFound": "Geen beschrijfbare agenda's gevonden",
+      "assistant": {
+        "accountTitle": "Accountverbinding",
+        "accountUnknown": "Informatie over de accountverbinding is hier niet beschikbaar.",
+        "title": "Deze assistent",
+        "available": "Google-agenda’s zijn beschikbaar voor deze assistent.",
+        "unknown": "Google-toegang voor deze assistent is niet geverifieerd.",
+        "explanation": "De accountverbinding staat los hiervan. Deze assistent verbinden slaat geen boekingen op en activeert ze niet. Bij opslaan wordt de toegang opnieuw gecontroleerd."
+      }
     },
     "analytics": {
       "title": "Analyse",
@@ -2684,6 +2692,36 @@
         "reconciling": "Resultaat wordt gecontroleerd",
         "pending": "Openstaand",
         "loadingPending": "Openstaande wijzigingen laden…"
+      },
+      "summary": {
+        "create": "Nieuwe configuratie",
+        "replace": "Configuratiewijzigingen",
+        "remove": "Configuratie verwijderen",
+        "active": "Na opslaan: actief",
+        "inactive": "Na opslaan: inactief",
+        "unspecified": "Deze wijziging geeft de activeringsstatus niet aan.",
+        "removal": "Deze configuratie wordt na het opslaan verwijderd.",
+        "additional": "Extra instellingen staan in de technische details.",
+        "details": "Technische details",
+        "yes": "Ja",
+        "no": "Nee",
+        "closed": "Gesloten",
+        "configuration": "Configuratie",
+        "accessRefused": "Toegang tot de externe bron is geweigerd. Controleer de verbinding en machtigingen en probeer opnieuw op te slaan. Uw wijzigingen blijven in behandeling.",
+        "outcomeDetails": "Bekijk de technische details voor meer informatie.",
+        "monday": "Maandag",
+        "tuesday": "Dinsdag",
+        "wednesday": "Woensdag",
+        "thursday": "Donderdag",
+        "friday": "Vrijdag",
+        "saturday": "Zaterdag",
+        "sunday": "Zondag",
+        "manage": "Verbinding beheren"
+      },
+      "businessConnection": {
+        "connect": "Google verbinden voor deze assistent",
+        "explanation": "Dit geeft Google toestemming voor deze assistent en activeert geen boekingen. Bij het opslaan wordt de kalendertoegang opnieuw gecontroleerd.",
+        "failed": "De verbinding kon niet worden gestart. Vernieuw en probeer opnieuw."
       }
     },
     "aladminConfigurator": {

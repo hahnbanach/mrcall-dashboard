@@ -814,7 +814,7 @@
     },
     "connectCalendar": {
       "title": "Koppla Google Kalender",
-      "description": "Koppla Google Kalender för att automatiskt hantera bokningar. MrCall läser dina upptagna tider och skapar bokningar. Dina uppgifter stannar i din kalender.",
+      "description": "Anslut Google Kalender till ditt konto. Auktorisera varje assistent separat för att använda den.",
       "connectButton": "Koppla kalender",
       "disconnectButton": "Koppla från kalender",
       "selectCalendarHint": "Bokningar fran denna assistent skrivs har.",
@@ -824,7 +824,15 @@
       "connectedTo": "Ansluten till:",
       "changeCalendar": "Byt kalender",
       "loadingCalendars": "Laddar kalendrar...",
-      "noCalendarsFound": "Inga skrivbara kalendrar hittades"
+      "noCalendarsFound": "Inga skrivbara kalendrar hittades",
+      "assistant": {
+        "accountTitle": "Kontoanslutning",
+        "accountUnknown": "Information om kontoanslutningen är inte tillgänglig här.",
+        "title": "Den här assistenten",
+        "available": "Google-kalendrar är tillgängliga för den här assistenten.",
+        "unknown": "Google-åtkomst för den här assistenten har inte verifierats.",
+        "explanation": "Kontoanslutningen är separat. Att ansluta assistenten sparar eller aktiverar inga bokningar. Åtkomsten kontrolleras igen när du sparar."
+      }
     },
     "analytics": {
       "title": "Analys",
@@ -2684,6 +2692,36 @@
         "reconciling": "Kontrollerar resultat",
         "pending": "Väntande",
         "loadingPending": "Läser in väntande ändringar…"
+      },
+      "summary": {
+        "create": "Ny konfiguration",
+        "replace": "Konfigurationsändringar",
+        "remove": "Ta bort konfiguration",
+        "active": "Efter sparande: aktiv",
+        "inactive": "Efter sparande: inaktiv",
+        "unspecified": "Den här ändringen anger inte aktiveringsstatus.",
+        "removal": "Den här konfigurationen tas bort efter sparande.",
+        "additional": "Fler inställningar finns i de tekniska detaljerna.",
+        "details": "Tekniska detaljer",
+        "yes": "Ja",
+        "no": "Nej",
+        "closed": "Stängt",
+        "configuration": "Konfiguration",
+        "accessRefused": "Åtkomst till den externa resursen nekades. Kontrollera anslutningen och behörigheterna och försök spara igen. Dina ändringar är fortfarande väntande.",
+        "outcomeDetails": "Se tekniska detaljer för mer information.",
+        "monday": "Måndag",
+        "tuesday": "Tisdag",
+        "wednesday": "Onsdag",
+        "thursday": "Torsdag",
+        "friday": "Fredag",
+        "saturday": "Lördag",
+        "sunday": "Söndag",
+        "manage": "Hantera anslutning"
+      },
+      "businessConnection": {
+        "connect": "Anslut Google för den här assistenten",
+        "explanation": "Detta auktoriserar Google för den här assistenten utan att aktivera bokningar. Kalenderåtkomsten kontrolleras igen när du sparar.",
+        "failed": "Anslutningen kunde inte startas. Uppdatera och försök igen."
       }
     },
     "aladminConfigurator": {

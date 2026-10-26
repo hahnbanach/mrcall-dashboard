@@ -816,7 +816,7 @@
     },
     "connectCalendar": {
       "title": "Connecter Google Calendar",
-      "description": "Connectez Google Calendar pour gérer automatiquement les rendez-vous MrCall lira vos horaires occupés et créera des rendez-vous. Vos données restent dans votre calendrier.",
+      "description": "Connectez Google Agenda à votre compte. Autorisez chaque assistant séparément pour l’utiliser.",
       "connectButton": "Connecter Calendar",
       "disconnectButton": "Déconnecter Calendar",
       "selectCalendarHint": "Les rendez-vous pris par cet assistant seront ecrits ici.",
@@ -826,7 +826,15 @@
       "connectedTo": "Connecté à :",
       "changeCalendar": "Changer de calendrier",
       "loadingCalendars": "Chargement des calendriers...",
-      "noCalendarsFound": "Aucun calendrier modifiable trouvé"
+      "noCalendarsFound": "Aucun calendrier modifiable trouvé",
+      "assistant": {
+        "accountTitle": "Connexion du compte",
+        "accountUnknown": "Les informations de connexion du compte ne sont pas disponibles ici.",
+        "title": "Cet assistant",
+        "available": "Les agendas Google sont accessibles pour cet assistant.",
+        "unknown": "L’accès à Google pour cet assistant n’a pas été vérifié.",
+        "explanation": "La connexion du compte est distincte. Connecter cet assistant n’enregistre ni n’active les réservations. L’enregistrement vérifie de nouveau l’accès."
+      }
     },
     "analytics": {
       "title": "Statistiques",
@@ -2683,6 +2691,36 @@
         "reconciling": "Vérification en cours",
         "pending": "En attente",
         "loadingPending": "Chargement des modifications en attente…"
+      },
+      "summary": {
+        "create": "Nouvelle configuration",
+        "replace": "Modifications de configuration",
+        "remove": "Supprimer la configuration",
+        "active": "Après enregistrement : active",
+        "inactive": "Après enregistrement : inactive",
+        "unspecified": "Cette modification ne précise pas l’état d’activation.",
+        "removal": "Cette configuration sera supprimée après enregistrement.",
+        "additional": "Des paramètres supplémentaires figurent dans les détails techniques.",
+        "details": "Détails techniques",
+        "yes": "Oui",
+        "no": "Non",
+        "closed": "Fermé",
+        "configuration": "Configuration",
+        "accessRefused": "L’accès à la ressource externe a été refusé. Vérifiez la connexion et les autorisations, puis réessayez d’enregistrer. Les modifications restent en attente.",
+        "outcomeDetails": "Consultez les détails techniques pour plus d’informations.",
+        "monday": "Lundi",
+        "tuesday": "Mardi",
+        "wednesday": "Mercredi",
+        "thursday": "Jeudi",
+        "friday": "Vendredi",
+        "saturday": "Samedi",
+        "sunday": "Dimanche",
+        "manage": "Gérer la connexion"
+      },
+      "businessConnection": {
+        "connect": "Connecter Google pour cet assistant",
+        "explanation": "Cela autorise Google pour cet assistant sans activer les réservations. L’enregistrement vérifiera de nouveau l’accès au calendrier.",
+        "failed": "La connexion n’a pas pu démarrer. Actualisez et réessayez."
       }
     },
     "aladminConfigurator": {

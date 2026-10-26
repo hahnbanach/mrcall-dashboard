@@ -82,14 +82,16 @@ first grant unless consent is re-requested.
 ## Where tokens live
 
 Not in the customer document. Since the authorization-system migration they are
-in PostgreSQL, table `user_oauth_providers`, primary key `(id, provider)`, with
-the token JSON AES-encrypted in `tokens_enc` and the chosen calendar in
-`provider_account_id`. `CrmCustomerRecord.oauth` is only a wire format,
+in PostgreSQL, table `user_oauth_providers`, primary key `(id, provider, business_id, grant_name)`, with
+the token JSON AES-encrypted in `tokens_enc` and calendar/provider account metadata
+in `provider_account_id`. Empty business and grant names identify the account-global
+connection; a business ID with an empty grant name identifies its default grant.
+Named business grants remain separate. `CrmCustomerRecord.oauth` is only a wire format,
 synthesized on read and stripped on write.
 
-The single row that matters here is `provider = 'google_calendar'`.
+The provider type for these flows is `google_calendar`.
 
-**No credential leaves the server.** `GET /mrcall/v1/{realm}/crm/customer/registry`
+**Registry reads expose connection metadata, not credentials.** `GET /mrcall/v1/{realm}/crm/customer/registry`
 returns `oauth.GOOGLE_CALENDAR` as `{connected: true, calendarId}` and nothing
 else. It used to include the Google refresh token, and that route authorizes
 through `ResellerOwnerResolver`, which resolves a reseller to every customer they
@@ -118,6 +120,28 @@ user had picked. Two changes closed that:
 
 The warning is the migration signal: once it stops appearing in the logs, no
 client is sending the old shape any more.
+
+## Account and assistant connection states
+
+Account keeps the global connect, calendar picker, registry write and disconnect
+flow. Its copy identifies the connection as account-level; it does not imply
+that agent skills in every assistant are authorized.
+
+BusinessConfiguration passes the selected business ID to ConnectCalendar. Its
+business mode displays account metadata separately from default business grant
+availability. The existing calendars GET uses exact businessId and empty grantName;
+a nonempty valid list means availability, not booking readiness. Empty, failed
+or malformed checks remain unknown, including when the account registry reports
+connected with the same calendar. The global Disconnect control is absent here. Loading, missing or mismatched route/business IDs remain in assistant mode with unknown status and disabled scoped actions; they never select Account mode. Changing the assistant ID in-place requires reloading configuration to load that assistant; this change does not reinitialize the page router.
+
+Explicit business consent uses owner/state/digest/PKCE, allowed calendar scopes
+and a safe same-business return. It connects the business-wide unnamed grant
+through the existing provider endpoint. Pending proposals survive; explicit Save
+still performs the original resource probe. The existing exchange/callback
+transport temporarily carries OAuth tokens; registry metadata read guarantees
+do not describe that separate authorization transport. No token is copied from
+an existing account grant. Manual-editor manifest scopes, named grants and the
+legacy callback/providerAccountId behavior remain separate and unchanged.
 
 ## Secrets
 

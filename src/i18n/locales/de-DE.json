@@ -816,7 +816,7 @@
     },
     "connectCalendar": {
       "title": "Google Kalender verbinden",
-      "description": "Verbinden Sie Google Calendar, um Termine automatisch zu verwalten. MrCall liest Ihre gebuchten Zeiten und erstellt Termine. Ihre Daten bleiben in Ihrem Kalender.",
+      "description": "Verbinden Sie Google Kalender mit Ihrem Konto. Autorisieren Sie jeden Assistenten separat für die Nutzung.",
       "connectButton": "Kalender verbinden",
       "disconnectButton": "Kalender trennen",
       "selectCalendarHint": "Hier werden die von diesem Assistenten gebuchten Termine eingetragen.",
@@ -826,7 +826,15 @@
       "connectedTo": "Verbunden mit:",
       "changeCalendar": "Kalender ändern",
       "loadingCalendars": "Kalender werden geladen...",
-      "noCalendarsFound": "Keine beschreibbaren Kalender gefunden"
+      "noCalendarsFound": "Keine beschreibbaren Kalender gefunden",
+      "assistant": {
+        "accountTitle": "Kontoverbindung",
+        "accountUnknown": "Informationen zur Kontoverbindung sind hier nicht verfügbar.",
+        "title": "Dieser Assistent",
+        "available": "Google-Kalender sind für diesen Assistenten verfügbar.",
+        "unknown": "Der Google-Zugriff für diesen Assistenten wurde nicht bestätigt.",
+        "explanation": "Die Kontoverbindung ist separat. Das Verbinden dieses Assistenten speichert oder aktiviert keine Buchungen. Beim Speichern wird der Zugriff erneut geprüft."
+      }
     },
     "analytics": {
       "title": "Statistiken",
@@ -2683,6 +2691,36 @@
         "reconciling": "Ergebnis wird geprüft",
         "pending": "Ausstehend",
         "loadingPending": "Ausstehende Änderungen werden geladen…"
+      },
+      "summary": {
+        "create": "Neue Konfiguration",
+        "replace": "Konfigurationsänderungen",
+        "remove": "Konfiguration entfernen",
+        "active": "Nach dem Speichern: aktiv",
+        "inactive": "Nach dem Speichern: inaktiv",
+        "unspecified": "Diese Änderung legt den Aktivierungsstatus nicht fest.",
+        "removal": "Diese Konfiguration wird nach dem Speichern entfernt.",
+        "additional": "Weitere Einstellungen finden Sie in den technischen Details.",
+        "details": "Technische Details",
+        "yes": "Ja",
+        "no": "Nein",
+        "closed": "Geschlossen",
+        "configuration": "Konfiguration",
+        "accessRefused": "Der Zugriff auf die externe Ressource wurde verweigert. Prüfen Sie die Verbindung und Berechtigungen und speichern Sie erneut. Ihre Änderungen bleiben ausstehend.",
+        "outcomeDetails": "Weitere Informationen finden Sie in den technischen Details.",
+        "monday": "Montag",
+        "tuesday": "Dienstag",
+        "wednesday": "Mittwoch",
+        "thursday": "Donnerstag",
+        "friday": "Freitag",
+        "saturday": "Samstag",
+        "sunday": "Sonntag",
+        "manage": "Verbindung verwalten"
+      },
+      "businessConnection": {
+        "connect": "Google für diesen Assistenten verbinden",
+        "explanation": "Dies autorisiert Google für diesen Assistenten und aktiviert keine Buchung. Beim Speichern wird der Kalenderzugriff erneut geprüft.",
+        "failed": "Die Verbindung konnte nicht gestartet werden. Aktualisieren Sie die Seite und versuchen Sie es erneut."
       }
     },
     "aladminConfigurator": {

@@ -814,7 +814,7 @@
     },
     "connectCalendar": {
       "title": "Koble til Google Kalender",
-      "description": "Koble til Google Kalender for a administrere avtaler automatisk. MrCall leser opptatte tider og oppretter avtaler. Dataene dine forblir i kalenderen din.",
+      "description": "Koble Google Kalender til kontoen din. Autoriser hver assistent separat for å bruke den.",
       "connectButton": "Koble til kalender",
       "disconnectButton": "Koble fra kalender",
       "selectCalendarHint": "Avtaler denne assistenten booker skrives her.",
@@ -824,7 +824,15 @@
       "connectedTo": "Koblet til:",
       "changeCalendar": "Endre kalender",
       "loadingCalendars": "Laster kalendere...",
-      "noCalendarsFound": "Ingen skrivbare kalendere funnet"
+      "noCalendarsFound": "Ingen skrivbare kalendere funnet",
+      "assistant": {
+        "accountTitle": "Kontotilkobling",
+        "accountUnknown": "Informasjon om kontotilkoblingen er ikke tilgjengelig her.",
+        "title": "Denne assistenten",
+        "available": "Google-kalendere er tilgjengelige for denne assistenten.",
+        "unknown": "Google-tilgang for denne assistenten er ikke bekreftet.",
+        "explanation": "Kontotilkoblingen er separat. Tilkobling av assistenten lagrer eller aktiverer ikke bestillinger. Tilgangen kontrolleres igjen ved lagring."
+      }
     },
     "analytics": {
       "title": "Analyse",
@@ -2684,6 +2692,36 @@
         "reconciling": "Kontrollerer resultat",
         "pending": "Venter",
         "loadingPending": "Laster ventende endringer…"
+      },
+      "summary": {
+        "create": "Ny konfigurasjon",
+        "replace": "Konfigurasjonsendringer",
+        "remove": "Fjern konfigurasjon",
+        "active": "Etter lagring: aktiv",
+        "inactive": "Etter lagring: inaktiv",
+        "unspecified": "Denne endringen angir ikke aktiveringsstatus.",
+        "removal": "Denne konfigurasjonen fjernes etter lagring.",
+        "additional": "Flere innstillinger finnes i de tekniske detaljene.",
+        "details": "Tekniske detaljer",
+        "yes": "Ja",
+        "no": "Nei",
+        "closed": "Stengt",
+        "configuration": "Konfigurasjon",
+        "accessRefused": "Tilgang til den eksterne ressursen ble avvist. Kontroller tilkoblingen og tillatelsene, og prøv å lagre igjen. Endringene dine venter fortsatt.",
+        "outcomeDetails": "Se tekniske detaljer for mer informasjon.",
+        "monday": "Mandag",
+        "tuesday": "Tirsdag",
+        "wednesday": "Onsdag",
+        "thursday": "Torsdag",
+        "friday": "Fredag",
+        "saturday": "Lørdag",
+        "sunday": "Søndag",
+        "manage": "Administrer tilkobling"
+      },
+      "businessConnection": {
+        "connect": "Koble til Google for denne assistenten",
+        "explanation": "Dette autoriserer Google for denne assistenten uten å aktivere bestilling. Kalendertilgangen kontrolleres igjen når du lagrer.",
+        "failed": "Tilkoblingen kunne ikke startes. Oppdater og prøv igjen."
       }
     },
     "aladminConfigurator": {

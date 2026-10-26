@@ -277,6 +277,13 @@ specified in [development.md](development.md#environment-routing).
 - **Google** — OAuth for Calendar integration, Google Sign-In.
   The client flow and scope constraints are implemented in `src/utils/OAuth.js`.
 
+ConnectCalendar keeps Account's global registry connection flow by default.
+BusinessConfiguration passes its business ID and renders separate account and
+assistant status through AssistantCalendarConnection. A supported nonempty
+business/default-grant calendar list establishes availability only; empty, failed
+or malformed results remain unknown. Business consent uses the bound context
+without the account-global disconnect control or an automatic skill Save.
+
 ## Cross-Cutting Concerns
 
 ### Authentication
@@ -303,9 +310,11 @@ exchangeCode()   POST the code and verifier to the backend, which holds the
                  client secret and talks to Google
 ```
 
-Skill authorization additionally binds owner, business, exact saved grant,
-phase/instance, supported scopes and a safe local return location to that state.
-The callback consumes and verifies the context before connecting; see the
+Skill authorization binds owner, business, supported scopes and a safe local
+return location to that state. Saved-instance authorization also binds the exact
+saved grant and phase/instance. The business target uses an unnamed business
+grant and excludes phase, instance and operation IDs. The callback consumes and
+verifies either context before connecting; see the
 [skill authorization contract](integration/zylch-integration.md#skill-authorization-handoff).
 
 The dashboard sends the code and verifier to

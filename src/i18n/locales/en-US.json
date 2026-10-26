@@ -819,7 +819,7 @@
     },
     "connectCalendar": {
       "title": "Connect Google Calendar",
-      "description": "Connect Google Calendar to automatically manage appointments MrCall will read your busy times and create appointments. Your data stays in your calendar.",
+      "description": "Connect Google Calendar to your account. Authorize each assistant separately to use it.",
       "connectButton": "Connect Calendar",
       "disconnectButton": "Disconnect Calendar",
       "selectCalendarHint": "Appointments this assistant books will be written here.",
@@ -829,7 +829,15 @@
       "connectedTo": "Connected to:",
       "changeCalendar": "Change Calendar",
       "loadingCalendars": "Loading calendars...",
-      "noCalendarsFound": "No writable calendars found"
+      "noCalendarsFound": "No writable calendars found",
+      "assistant": {
+        "accountTitle": "Account connection",
+        "accountUnknown": "Account connection information is not available here.",
+        "title": "This assistant",
+        "available": "Google calendars are available for this assistant.",
+        "unknown": "Google access for this assistant has not been verified.",
+        "explanation": "The account connection is separate. Connecting this assistant does not save or activate bookings. Save checks access again."
+      }
     },
     "analytics": {
       "title": "Analytics",
@@ -2658,6 +2666,36 @@
         "reconciling": "Checking outcome",
         "pending": "Pending",
         "loadingPending": "Loading pending changes…"
+      },
+      "summary": {
+        "create": "New configuration",
+        "replace": "Configuration changes",
+        "remove": "Remove configuration",
+        "active": "After saving: active",
+        "inactive": "After saving: inactive",
+        "unspecified": "Activation is not specified in this change.",
+        "removal": "This configuration will be removed after saving.",
+        "additional": "Additional settings are available in the technical details.",
+        "details": "Technical details",
+        "yes": "Yes",
+        "no": "No",
+        "closed": "Closed",
+        "configuration": "Configuration",
+        "accessRefused": "Access to the external resource was refused. Check the connection and permissions, then try saving again. Your changes remain pending.",
+        "outcomeDetails": "See technical details for more information.",
+        "monday": "Monday",
+        "tuesday": "Tuesday",
+        "wednesday": "Wednesday",
+        "thursday": "Thursday",
+        "friday": "Friday",
+        "saturday": "Saturday",
+        "sunday": "Sunday",
+        "manage": "Manage connection"
+      },
+      "businessConnection": {
+        "connect": "Connect Google for this assistant",
+        "explanation": "This authorizes Google for this assistant. It does not activate booking. Save will check calendar access again.",
+        "failed": "The connection could not be started. Refresh and try again."
       }
     },
     "aladminConfigurator": {

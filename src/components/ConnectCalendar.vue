@@ -1,5 +1,6 @@
 <template>
-  <div class="connect-calendar">
+  <AssistantCalendarConnection v-if="businessId !== null" :business-id="businessId" />
+  <div v-else class="connect-calendar">
     <div class="p-d-flex p-jc-center">
       <div class="card">
         <div v-if="isLoading" class="loading">
@@ -49,18 +50,21 @@ import { getAuth } from 'firebase/auth'
 import Button from 'primevue/button'
 import ProgressSpinner from 'primevue/progressspinner'
 import { GoogleAuthFlow } from '@/utils/OAuth'
+import AssistantCalendarConnection from '@/components/AssistantCalendarConnection.vue'
 
 const CALENDAR_SCOPES = ['https://www.googleapis.com/auth/calendar']
 
 export default {
   name: 'ConnectCalendar',
+  props: { businessId: { type: String, default: null } },
 
   components: {
     Button,
+    AssistantCalendarConnection,
     ProgressSpinner
   },
 
-  setup() {
+  setup(props) {
     const store = useStore()
     const auth = getAuth()
 
@@ -116,7 +120,7 @@ export default {
     }
 
     onMounted(async () => {
-      if (auth.currentUser) {
+      if (props.businessId === null && auth.currentUser) {
         await store.dispatch('calendar/checkCalendarConnection', auth.currentUser)
       }
     })

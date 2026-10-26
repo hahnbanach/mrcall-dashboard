@@ -828,7 +828,7 @@
     },
     "connectCalendar": {
       "title": "Conectar Google Calendar",
-      "description": "Conecta Google Calendar para gestionar citas automáticamente MrCall leerá tus horarios ocupados y creará citas. Tus datos permanecen en tu calendario.",
+      "description": "Conecta Google Calendar a tu cuenta. Autoriza cada asistente por separado para usarlo.",
       "connectButton": "Conectar Calendar",
       "disconnectButton": "Desconectar Calendar",
       "selectCalendarHint": "Las citas que reserve este asistente se escribiran aqui.",
@@ -838,7 +838,15 @@
       "connectedTo": "Conectado a:",
       "changeCalendar": "Cambiar calendario",
       "loadingCalendars": "Cargando calendarios...",
-      "noCalendarsFound": "No se encontraron calendarios editables"
+      "noCalendarsFound": "No se encontraron calendarios editables",
+      "assistant": {
+        "accountTitle": "Conexión de la cuenta",
+        "accountUnknown": "La información de conexión de la cuenta no está disponible aquí.",
+        "title": "Este asistente",
+        "available": "Los calendarios de Google están disponibles para este asistente.",
+        "unknown": "No se ha verificado el acceso a Google para este asistente.",
+        "explanation": "La conexión de la cuenta es independiente. Conectar este asistente no guarda ni activa reservas. Al guardar se vuelve a comprobar el acceso."
+      }
     },
     "analytics": {
       "title": "Estadísticas",
@@ -2685,6 +2693,36 @@
         "reconciling": "Comprobando resultado",
         "pending": "Pendiente",
         "loadingPending": "Cargando cambios pendientes…"
+      },
+      "summary": {
+        "create": "Nueva configuración",
+        "replace": "Cambios de configuración",
+        "remove": "Eliminar configuración",
+        "active": "Después de guardar: activa",
+        "inactive": "Después de guardar: inactiva",
+        "unspecified": "Este cambio no especifica el estado de activación.",
+        "removal": "Esta configuración se eliminará después de guardar.",
+        "additional": "Hay más ajustes en los detalles técnicos.",
+        "details": "Detalles técnicos",
+        "yes": "Sí",
+        "no": "No",
+        "closed": "Cerrado",
+        "configuration": "Configuración",
+        "accessRefused": "Se ha denegado el acceso al recurso externo. Comprueba la conexión y los permisos y vuelve a guardar. Los cambios siguen pendientes.",
+        "outcomeDetails": "Consulta los detalles técnicos para obtener más información.",
+        "monday": "Lunes",
+        "tuesday": "Martes",
+        "wednesday": "Miércoles",
+        "thursday": "Jueves",
+        "friday": "Viernes",
+        "saturday": "Sábado",
+        "sunday": "Domingo",
+        "manage": "Gestionar conexión"
+      },
+      "businessConnection": {
+        "connect": "Conectar Google para este asistente",
+        "explanation": "Esto autoriza Google para este asistente. No activa las reservas. Al guardar se comprobará de nuevo el acceso al calendario.",
+        "failed": "No se ha podido iniciar la conexión. Actualiza y vuelve a intentarlo."
       }
     },
     "activation": {

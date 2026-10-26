@@ -1,6 +1,6 @@
 ---
-doc_baseline_commit: d52785ef965c256ebb192c7e9484602d350a5e15
-doc_baseline_date: 2026-10-08
+doc_baseline_commit: c2b2a58976ad9de869bc4ba39cfc753ac88caf62
+doc_baseline_date: 2026-10-26
 ---
 
 # Active Context
@@ -11,56 +11,43 @@ Scope: Current dashboard operating state, unresolved verification limits, and im
 
 ## State now
 
-Production and beta run `v2.2.21` (`6d3b5dd`, a commit on `v2.2.19`). It carries the
-restaurant booking page, the hiding of platform-only skill fields from owners, and
-the credit balance shown net of debt. A balance that StarChat does not give is shown
-as a dash, not as zero. Each deployment was checked on its live domain: served
-bundle, 57 static routes and the Businesses page.
+The last successful deployment workflows observed by the lead report production
+v2.2.25 and TEST v2.2.32. Those workflow reports are deployment evidence, not a
+fresh browser verification of every deployed feature. The current unpublished
+v2.2.33 candidate starts from exact TEST commit c2b2a589, preserving the deployed
+session guard, manifest-driven editor and legacy callback/provider identity.
 
-Test runs `v2.2.24`, the tip of branch `v2.2`. It carries the restaurant bookings
-page on named tables, which needs StarChat 9.34.68 or later (9.34.69 for the
-tables) on the same environment; see
-[the restaurant integration](integration/restaurant-booking.md). Production stays
-off until StarChat reaches production. It also carries the Configure-via-chat
-skill work, which needs the mrcall-agent deployed on test: the
-agent on beta and production lacks the pending and reconcile endpoints, and the
-skill fields of apply-changes. See the
-[integration contract](integration/zylch-integration.md).
+The candidate has readable pending skill summaries and collapsed exact details,
+safe resource-refusal guidance, and explicit business-bound Google consent.
+Account retains its global flow with clarified wording. Assistant configuration
+separates account metadata from default business availability; negative or
+malformed checks remain unknown. Pending proposals and explicit Save/probe remain
+unchanged. See the [plan](execution-plans/2026-10-26-readable-skill-preview.md),
+[chat contract](integration/zylch-integration.md) and
+[Google contract](integration/google-oauth.md).
 
-And it carries the session guard and the single owner of 401
-([brief](briefs/2026-10-13-shell-session-guard.md),
-[plan](execution-plans/2026-10-13-shell-session-guard.md)):
+The current candidate's local scripted acceptance is recorded in its scoped
+receipts, separately from the historical dirty-tree 110-case candidate. Read-only
+TEST evidence identifies an account connection matching the requested calendar
+and no business grant; it does not establish fresh provider access. Real Google
+consent, live skill Save/activation and deployment remain open.
 
-- Every route needs a session unless it declares `meta.public`.
-- The Axios interceptor alone ends a session. Components skip their failure UI
-  for `isSessionEnded(error)`.
-- The browser-test fixture mocks mrcall-agent, as it already mocked StarChat.
-
-Before release: vitest 120 of 120, and Playwright 733 passed with 3 skipped on
-desktop, tablet and mobile. On the test domain, a fresh browser without a session is
-sent from a deep link to sign-in with the full link to return to, and a public page
-stays open. With a real session, the configuration page and its chat load, and the
-session stays open. The session-expired dialog is covered only by the browser
-tests, because it needs a real session that the server refuses.
+Session ownership remains with the deployed guard: every route requires a session
+unless public, the Axios interceptor alone ends it, and components suppress
+failure UI for isSessionEnded. The browser fixture retains mocked backend calls.
 
 ## Unresolved
 
 - The AI chat SSE client uses native fetch and bypasses the Axios interceptor;
   see [harness-backlog](harness-backlog.md).
-- WebSocket connections (Whatsappweb, the Aladdin configurator, TestChat, the
-  webcall text chat and voice button) do not pass through the interceptor either.
-- Real model quality, and actual Google consent and provider grants, remain
-  unverified.
-- `tests/unit/skillsOwnerSave.spec.js` takes 3.5 to 5.3 s against a 5 s timeout
-  in a fresh worktree, and can time out there.
+- WebSocket connections do not pass through that interceptor.
+- Real model quality, Google consent/provider grants and actual enabled skill
+  Save/activation are unverified. A positive availability check is not a booking.
+- The retained unit-test timing and repeated mobile OAuth enable-wait instability
+  remain unresolved; one passing candidate run does not establish their cause.
 
 ## Next
 
-- Bring the session guard to production: either with the whole `v2.2` line once
-  mrcall-agent and StarChat are promoted, or as a tag on `v2.2.21`. Either way
-  needs authorization.
-- `tests/e2e/skills/oauth.spec.js` fails on the mobile project under repeated runs:
-  3 and 4 of 78 tests failed in the second and third of three repeats, on 5 s waits
-  for a button to become enabled. The cause is not yet measured.
-- Promoting the chat skill work beyond test requires promoting mrcall-agent first,
-  plus authorization.
+Coordinate any separately authorized TEST release using the scoped candidate
+gates recorded in its plan. Preserve unknown pending operations and exact business grant boundaries.
+Production/beta promotion and actual provider consent require their own authority.

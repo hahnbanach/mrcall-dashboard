@@ -37,6 +37,9 @@ assistants to review, call reports, and the conversation list's own resolution, 
 read by `src/utils/CallInsights.js`: its conversation-analytics API reference, §7-11, and its
 customer conversation API guide, both in the StarChat repository. No copy of either lives here.
 
+- [Readable review and assistant Google connection](briefs/2026-10-26-readable-skill-preview.md)
+  — [clean TEST delivery plan](execution-plans/2026-10-26-readable-skill-preview.md).
+
 ## Quick context
 
 - **Stack**: Vue 3, PrimeVue 4, Vuex, Firebase Auth, Axios, vue-i18n (12 locales)

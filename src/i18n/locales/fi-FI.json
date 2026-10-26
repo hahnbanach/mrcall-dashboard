@@ -814,7 +814,7 @@
     },
     "connectCalendar": {
       "title": "Yhdistä Google-kalenteri",
-      "description": "Yhdistä Google-kalenteri hallitaksesi tapaamisia automaattisesti. MrCall lukee varatut aikasi ja luo tapaamisia. Tietosi pysyvät kalenterissasi.",
+      "description": "Yhdistä Google Kalenteri tiliisi. Valtuuta jokainen avustaja erikseen käyttämään sitä.",
       "connectButton": "Yhdistä kalenteri",
       "disconnectButton": "Katkaise kalenterin yhteys",
       "selectCalendarHint": "Taman avustajan varaamat tapaamiset kirjataan tanne.",
@@ -824,7 +824,15 @@
       "connectedTo": "Yhdistetty:",
       "changeCalendar": "Vaihda kalenteri",
       "loadingCalendars": "Ladataan kalentereita...",
-      "noCalendarsFound": "Kirjoitettavia kalentereita ei löytynyt"
+      "noCalendarsFound": "Kirjoitettavia kalentereita ei löytynyt",
+      "assistant": {
+        "accountTitle": "Tilin yhteys",
+        "accountUnknown": "Tilin yhteystietoja ei ole saatavilla täällä.",
+        "title": "Tämä avustaja",
+        "available": "Google-kalenterit ovat tämän avustajan käytettävissä.",
+        "unknown": "Tämän avustajan Google-käyttöoikeutta ei ole vahvistettu.",
+        "explanation": "Tilin yhteys on erillinen. Avustajan yhdistäminen ei tallenna eikä aktivoi ajanvarauksia. Käyttöoikeus tarkistetaan uudelleen tallennettaessa."
+      }
     },
     "analytics": {
       "title": "Analytiikka",
@@ -2684,6 +2692,36 @@
         "reconciling": "Tarkistetaan tulosta",
         "pending": "Odottaa",
         "loadingPending": "Ladataan odottavia muutoksia…"
+      },
+      "summary": {
+        "create": "Uusi määritys",
+        "replace": "Määrityksen muutokset",
+        "remove": "Poista määritys",
+        "active": "Tallennuksen jälkeen: aktiivinen",
+        "inactive": "Tallennuksen jälkeen: ei aktiivinen",
+        "unspecified": "Tämä muutos ei määritä aktivoinnin tilaa.",
+        "removal": "Tämä määritys poistetaan tallennuksen jälkeen.",
+        "additional": "Lisäasetukset ovat teknisissä tiedoissa.",
+        "details": "Tekniset tiedot",
+        "yes": "Kyllä",
+        "no": "Ei",
+        "closed": "Suljettu",
+        "configuration": "Määritys",
+        "accessRefused": "Ulkoisen resurssin käyttö estettiin. Tarkista yhteys ja käyttöoikeudet ja yritä tallentaa uudelleen. Muutoksesi odottavat edelleen.",
+        "outcomeDetails": "Katso lisätietoja teknisistä tiedoista.",
+        "monday": "Maanantai",
+        "tuesday": "Tiistai",
+        "wednesday": "Keskiviikko",
+        "thursday": "Torstai",
+        "friday": "Perjantai",
+        "saturday": "Lauantai",
+        "sunday": "Sunnuntai",
+        "manage": "Hallitse yhteyttä"
+      },
+      "businessConnection": {
+        "connect": "Yhdistä Google tälle avustajalle",
+        "explanation": "Tämä valtuuttaa Googlen tälle avustajalle aktivoimatta ajanvarausta. Kalenterin käyttöoikeus tarkistetaan uudelleen tallennettaessa.",
+        "failed": "Yhteyttä ei voitu aloittaa. Päivitä ja yritä uudelleen."
       }
     },
     "aladminConfigurator": {

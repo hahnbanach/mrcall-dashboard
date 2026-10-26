@@ -5,7 +5,7 @@
           ref="chatComponent"
           :initialSessionId="configSessionId"
           :messageTransformer="agentMessageTransformer"
-          :disabled="isLoading || isSaving || recoveryRequired"
+          :disabled="isLoading || isSaving || connectionBusy || recoveryRequired"
           @pending-changes="onPendingChanges"
           @processing="chatProcessing = $event"
           @history-state="onHistoryState"
@@ -17,7 +17,7 @@
           :label="$t('views.configureAI.quickActions')"
           icon="pi pi-bolt"
           class="p-button-outlined p-button-sm"
-          :disabled="!agentReady || isSaving || recoveryRequired"
+          :disabled="!agentReady || isSaving || connectionBusy || recoveryRequired"
           aria-haspopup="true"
           aria-controls="quick-actions-menu"
           @click="toggleQuickMenu"
@@ -33,34 +33,34 @@
     <div v-if="actionMessage" class="action-message" role="status">{{ actionMessage }}</div>
     <div v-if="handoffTargets.length" class="reconciliation-actions">
       <Button v-for="target in handoffTargets" :key="target.phase + target.instanceId"
-              :label="$t('widgets.agentSkills.handoff.manage', { instance: target.instanceId })"
+              :label="$t('views.configureAI.summary.manage')"
               :disabled="actionsDisabled || recoveryRequired" @click="emitSkillTarget(target)" />
     </div>
     <div v-if="outcomes.length" class="operation-outcomes">
       <div v-for="outcome in outcomes" :key="outcome.operation_id" :data-outcome="outcome.status">
-        {{ outcome.operation_id }}: {{ statusLabel(outcome.status) }}
-        <span v-if="outcome.code"> · {{ outcome.code }}</span>
-        <div v-for="(diagnostic, index) in outcome.diagnostics || []" :key="index">{{ diagnostic.code }} {{ diagnostic.path }}</div>
+        <strong>{{ outcomeLabel(outcome) }}</strong>: {{ statusLabel(outcome.status) }}
+        <p v-if="outcome.code">{{ outcomeMessage(outcome) }}</p>
+        <details class="outcome-details">
+          <summary>{{ $t('views.configureAI.summary.details') }}</summary>
+          <p>{{ outcome.operation_id }} <span v-if="outcome.code"> · {{ outcome.code }}</span></p>
+          <div v-for="(diagnostic, index) in outcome.diagnostics || []" :key="index">{{ diagnostic.code }} {{ diagnostic.path }}</div>
+        </details>
       </div>
     </div>
+    <BusinessSkillConnection v-if="hasPendingChanges" :business-id="businessId" :changes="pendingChanges"
+                             :disabled="externalActionsDisabled || recoveryRequired" @busy-change="connectionBusy = $event" />
     <div v-if="hasPendingChanges" class="pending-preview" data-testid="pending-preview">
       <article v-for="change in pendingChanges" :key="change.operation_id || change.variable_name"
                class="pending-item" :data-operation-id="change.operation_id">
         <template v-if="change.kind === 'skill_instance'">
-          <strong>{{ localized(change.preview?.skill_label) || change.skill }}</strong>
-          <p>{{ $t(`views.configureAI.pending.${change.action}`) }} · {{ $t(`views.configureAI.pending.${change.phase}`) }}</p>
-          <p>{{ change.instance_id || $t('views.configureAI.pending.draft') }}</p>
-          <p v-if="change.execution_state !== 'pending'">{{ statusLabel(change.execution_state) }}</p>
-          <p v-if="change.last_outcome">{{ statusLabel(change.last_outcome.status) }} · {{ change.last_outcome.code }}</p>
+          <strong>{{ localized(change.preview?.skill_label) || $t('views.configureAI.summary.configuration') }}</strong>
+          <SkillPendingSummary :change="change" />
+          <p v-if="change.execution_state && change.execution_state !== 'pending'">{{ statusLabel(change.execution_state) }}</p>
+          <p v-if="change.last_outcome">{{ statusLabel(change.last_outcome.status) }} · {{ outcomeMessage(change.last_outcome) }}</p>
           <p v-if="change.connection_status">{{ $t('views.configureAI.pending.connectionCheck') }}</p>
-          <div v-for="field in changedFields(change)" :key="field" class="field-preview">
-            <strong>{{ localized(change.preview?.field_labels?.[field]) || field }}</strong>
-            <div>{{ $t('views.configureAI.pending.before') }}: <pre>{{ displayValue(change.preview?.before?.[field]) }}</pre></div>
-            <div>{{ $t('views.configureAI.pending.after') }}: <pre>{{ displayValue(change.preview?.after?.[field]) }}</pre></div>
-          </div>
           <div class="reconciliation-actions">
             <Button v-if="change.instance_id && change.action !== 'remove'"
-                    :label="$t('widgets.agentSkills.handoff.manage', { instance: change.instance_id })"
+                    :label="$t('views.configureAI.summary.manage')"
                     :disabled="actionsDisabled || recoveryRequired"
                     @click="emitSkillTarget({ phase: change.phase, instanceId: change.instance_id })" />
             <Button v-if="change.reconciliation_actions?.includes('read')"
@@ -102,6 +102,8 @@ import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
 import Button from 'primevue/button';
 import ZylchChat from '@/components/ZylchChat.vue';
+import SkillPendingSummary from '@/components/SkillPendingSummary.vue';
+import BusinessSkillConnection from '@/components/BusinessSkillConnection.vue';
 import zylchUtils from '@/utils/Zylch';
 
 const QUICK_ACTION_ICONS = [
@@ -115,7 +117,7 @@ const QUICK_ACTION_ICONS = [
 
 export default {
   name: 'ConfigureAIPanel',
-  components: { Button, ZylchChat },
+  components: { Button, ZylchChat, SkillPendingSummary, BusinessSkillConnection },
   emits: ['open-skill'],
   props: {
     businessId: {
@@ -181,6 +183,7 @@ export default {
     );
 
     const chatProcessing = ref(false);
+    const connectionBusy = ref(false);
     const recoveryRequired = ref(true);
     const historyState = ref('loading');
     const actionMessage = ref('');
@@ -188,7 +191,8 @@ export default {
     const handoffTargets = ref([]);
     const emitSkillTarget = target => emit('open-skill', target);
     const readOperations = ref(new Set());
-    const actionsDisabled = computed(() => isLoading.value || isSaving.value || chatProcessing.value || historyState.value === 'loading');
+    const externalActionsDisabled = computed(() => isLoading.value || isSaving.value || chatProcessing.value || historyState.value === 'loading');
+    const actionsDisabled = computed(() => externalActionsDisabled.value || connectionBusy.value);
     const saveableChanges = computed(() => pendingChanges.value.filter(c =>
       c.kind !== 'skill_instance' || !c.execution_state || c.execution_state === 'pending'
     ));
@@ -199,9 +203,11 @@ export default {
     };
     const displayValue = value => value === undefined || value === null ? '—' :
       typeof value === 'object' ? JSON.stringify(value, null, 2) : String(value);
-    const changedFields = change => [...new Set([
-      ...Object.keys(change.preview?.before || {}), ...Object.keys(change.preview?.after || {}),
-    ])].filter(key => JSON.stringify(change.preview?.before?.[key]) !== JSON.stringify(change.preview?.after?.[key]));
+    const outcomeLabel = outcome => localized(pendingChanges.value.find(change =>
+      change.operation_id === outcome.operation_id)?.preview?.skill_label) || t('views.configureAI.summary.configuration');
+    const outcomeMessage = outcome => t(`views.configureAI.summary.${
+      outcome.code === 'resource_access_refused' ? 'accessRefused' : 'outcomeDetails'
+    }`);
     const statusLabel = status => t(`views.configureAI.pending.${
       ['saved', 'closed', 'conflict', 'refused', 'unconfirmed', 'in_flight', 'reconciling', 'pending'].includes(status)
         ? status : 'unconfirmed'
@@ -304,8 +310,8 @@ export default {
     });
 
     return {
-      handoffTargets, emitSkillTarget, onHistoryState, historyState, chatProcessing, recoveryRequired, actionMessage, outcomes, readOperations, actionsDisabled, saveableChanges,
-      localized, displayValue, changedFields, statusLabel, refreshPending, reconcile,
+      connectionBusy, externalActionsDisabled, handoffTargets, emitSkillTarget, onHistoryState, historyState, chatProcessing, recoveryRequired, actionMessage, outcomes, readOperations, actionsDisabled, saveableChanges,
+      localized, displayValue, outcomeLabel, outcomeMessage, statusLabel, refreshPending, reconcile,
       chatComponent,
       agentReady,
       isLoading,

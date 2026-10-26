@@ -67,8 +67,11 @@ the existing SSE path is a discrepancy requiring a separate application fix.
 ConfigureAIPanel accepts the backend's complete pending snapshot from history,
 streamed metadata and action responses, including empty cancellations. Ordinary
 items use variable_name; typed skill items use kind=skill_instance and operation_id.
-Preview shows safe before/after values with served localized skill/field labels,
-phase, action and saved instance or draft identity. Values render as text.
+Preview uses served localized labels, readable values and explicit proposed
+activation state. Exact changed values and technical identities remain in
+collapsed details; creates omit empty Before values while edits retain both
+sides. Safe resource-access guidance identifies the skill rather than exposing
+operation IDs by default. Values render as text.
 
 Save sends ordinary values and skill operation IDs:
 
@@ -107,6 +110,23 @@ Local browser/runtime acceptance and deployment state are recorded in
 [workstream plan](../execution-plans/2026-10-08-agent-skills-chat-configuration.md).
 
 ## Skill authorization handoff
+
+Unsaved create proposals with an applicable unnamed Google Calendar reference
+can start explicit business authorization before Save. The supported catalogue
+and stored pending parameters determine eligibility; named/default-named grants,
+saved edits, unsupported metadata and uncertain operations remain excluded.
+The business target binds owner, provider, business, scopes, state/digest and a
+safe return without a fabricated saved-instance identity. It uses the existing
+connect endpoint with exact businessId and empty grantName. Consent never
+changes the pending parameters, enables an instance or replaces explicit Save
+and its resource probe.
+
+The Account calendar card remains account-global and states that scope clearly.
+The assistant configuration card distinguishes that account connection from the
+selected business/default-grant availability, even when both name the same
+calendar. Empty/error/malformed scoped checks remain unknown. Its explicit
+consent action is business-bound and has no account-global Disconnect control. Loading, missing or mismatched route/business IDs remain in assistant mode with unknown status and disabled scoped actions; they never select Account mode. Changing the assistant ID in-place requires reloading configuration to load that assistant; this change does not reinitialize the page router.
+See [Google OAuth](google-oauth.md#account-and-assistant-connection-states).
 
 Confirmed Save outcomes can open the existing skill editor for the saved
 phase/instance. BusinessConfiguration rereads the dedicated configuration and

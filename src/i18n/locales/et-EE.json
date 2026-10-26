@@ -814,7 +814,7 @@
     },
     "connectCalendar": {
       "title": "Ühenda Google Calendar",
-      "description": "Ühendage Google Calendar, et automaatselt kohtumisi hallata. MrCall loeb teie hõivatud aegu ja loob kohtumisi. Teie andmed jäävad teie kalendrisse.",
+      "description": "Ühenda Google Kalender oma kontoga. Anna igale assistendile selle kasutamiseks eraldi luba.",
       "connectButton": "Ühenda kalender",
       "disconnectButton": "Katkesta kalendri ühendus",
       "selectCalendarHint": "Selle assistendi broneeritud kohtumised kirjutatakse siia.",
@@ -824,7 +824,15 @@
       "connectedTo": "Ühendatud:",
       "changeCalendar": "Muuda kalendrit",
       "loadingCalendars": "Kalendrite laadimine...",
-      "noCalendarsFound": "Kirjutatavaid kalendreid ei leitud"
+      "noCalendarsFound": "Kirjutatavaid kalendreid ei leitud",
+      "assistant": {
+        "accountTitle": "Konto ühendus",
+        "accountUnknown": "Konto ühenduse teave pole siin saadaval.",
+        "title": "See assistent",
+        "available": "Google’i kalendrid on sellele assistendile saadaval.",
+        "unknown": "Selle assistendi juurdepääsu Google’ile pole kontrollitud.",
+        "explanation": "Konto ühendus on eraldi. Assistendi ühendamine ei salvesta ega aktiveeri broneeringuid. Salvestamisel kontrollitakse juurdepääsu uuesti."
+      }
     },
     "analytics": {
       "title": "Analüütika",
@@ -2684,6 +2692,36 @@
         "reconciling": "Tulemuse kontrollimine",
         "pending": "Ootel",
         "loadingPending": "Ootel muudatuste laadimine…"
+      },
+      "summary": {
+        "create": "Uus seadistus",
+        "replace": "Seadistuse muudatused",
+        "remove": "Eemalda seadistus",
+        "active": "Pärast salvestamist: aktiivne",
+        "inactive": "Pärast salvestamist: mitteaktiivne",
+        "unspecified": "See muudatus ei määra aktiveerimise olekut.",
+        "removal": "See seadistus eemaldatakse pärast salvestamist.",
+        "additional": "Lisaseaded on tehnilistes üksikasjades.",
+        "details": "Tehnilised üksikasjad",
+        "yes": "Jah",
+        "no": "Ei",
+        "closed": "Suletud",
+        "configuration": "Seadistus",
+        "accessRefused": "Juurdepääs välisele ressursile keelati. Kontrollige ühendust ja õigusi ning proovige uuesti salvestada. Muudatused jäävad ootele.",
+        "outcomeDetails": "Lisateavet leiate tehnilistest üksikasjadest.",
+        "monday": "Esmaspäev",
+        "tuesday": "Teisipäev",
+        "wednesday": "Kolmapäev",
+        "thursday": "Neljapäev",
+        "friday": "Reede",
+        "saturday": "Laupäev",
+        "sunday": "Pühapäev",
+        "manage": "Halda ühendust"
+      },
+      "businessConnection": {
+        "connect": "Ühenda Google selle assistendiga",
+        "explanation": "See annab Google’ile loa selle assistendi jaoks ega aktiveeri broneerimist. Salvestamisel kontrollitakse kalendri juurdepääsu uuesti.",
+        "failed": "Ühendust ei saanud alustada. Värskendage ja proovige uuesti."
       }
     },
     "aladminConfigurator": {
