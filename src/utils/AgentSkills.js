@@ -18,6 +18,7 @@ import axios from "axios";
  *     type: "string"|"url"|"password"|"number"|"boolean"|"enum"|"keyvalue"|"textarea"|"json"|"oauth"
  *     required: boolean
  *     default: any
+ *     phaseDefault: { during?: any, final?: any, prefetch?: any } - a phase's own default; null copies nothing
  *     min: number               - For type "number"
  *     max: number               - For type "number"
  *     options: Array<{label,value}> - For type "enum": dropdown options
@@ -307,6 +308,25 @@ export default {
         return (skill.configSchema && skill.configSchema.fields) || [];
     },
 
+    /**
+     * The value a new instance of `phase` starts with for this field, or undefined for none.
+     *
+     * A field may give one phase a default of its own (`phaseDefault: {during, final, prefetch}`,
+     * forwarded by StarChat spelt as `default` is): a reference that resolves at the end of the
+     * call is empty during it, and the other way round. When the key for the phase is there its
+     * value wins, and `null` means nothing is copied, not `default`; when it is not, `default`.
+     * The same rule as StarChat's `SkillManifest.defaultFor`; a server that sends no
+     * `phaseDefault` gets the copy it always got.
+     */
+    defaultFor: function(field, phase) {
+        if (!field) return undefined;
+        const own = field.phaseDefault;
+        const value = own && typeof own === "object" && phase && Object.prototype.hasOwnProperty.call(own, phase)
+            ? own[phase]
+            : field.default;
+        return value === undefined || value === null ? undefined : value;
+    },
+
     getOutputPrefix: function(skill) {
         if (skill.configSchema && skill.configSchema.outputPrefix) {
             return skill.configSchema.outputPrefix;
@@ -417,12 +437,13 @@ export default {
         };
         const entry = { skill: skillObj.name, params: {} };
 
-        // Populate defaults from configSchema.fields (skip oauth fields)
+        // Each field's default for this phase (skip oauth fields)
         const fields = this.getSkillFields(skillObj);
         for (const field of fields) {
             if (field.type === "oauth") continue;
-            if (field.default !== undefined && field.default !== null) {
-                entry.params[field.key] = String(field.default);
+            const value = this.defaultFor(field, phase);
+            if (value !== undefined) {
+                entry.params[field.key] = String(value);
             }
         }
 

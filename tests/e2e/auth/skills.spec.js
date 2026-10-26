@@ -320,3 +320,134 @@ test.describe('a skill only an admin may add', () => {
     })
   })
 })
+
+/* A field's default for one phase (`phaseDefault`, StarChat 3c8372685; brief
+ * `2026-10-26-skill-default-references` in StarChat, decisions 1 and 7, amendment points 3 and 5).
+ * The rows below are the catalogue rows StarChat 58eade3e9 forwards for calendar event create and
+ * Sheets write, cut to the fields this checks. A new instance takes the value of the phase it is
+ * added to, nothing for a phase given null, `default` otherwise, and its card shows the rows the
+ * manifest declares (FULL_NAME, reason) as it shows any other row.
+ *
+ * Seen failing on 2026-10-26 before the fix: the during calendar instance was written with the
+ * end-of-call `date`, and the during Sheets instance with the end-of-call columns. */
+const argumentRows = {
+  en: [{ title: 'Name of the variable', type: 'string' },
+    { title: 'What the assistant must ask for, in its words', type: 'text' },
+    { title: 'The call waits for it', type: 'boolean' }]
+}
+const extrasField = rows => ({
+  key: 'variables', type: 'tuples', widget: 'list', required: false, phases: ['during'], storage: 'skill_param',
+  default: JSON.stringify(rows),
+  labels: { en: { label: 'Other details to ask for during the call' } },
+  valuesSelection: { ...argumentRows, '*': argumentRows.en }
+})
+
+const eventCreateRow = {
+  name: 'calendar_event_create',
+  description: 'Creates an event',
+  descriptionI18n: { en: 'Creates an event' },
+  manifest: { title: { en: 'Create event' } },
+  configSchema: {
+    phases: ['during', 'final'],
+    outputPrefix: 'calendar_create',
+    instances: { max: null, maxPerPhase: null },
+    fields: [
+      { key: 'enabled', type: 'boolean', default: 'false' },
+      { key: 'label', type: 'string', labels: { en: { label: 'Name of this instance' } } },
+      { key: 'title', type: 'string', widget: 'text', default: 'Appuntamento: %%FULL_NAME%% -',
+        phaseDefault: { final: 'Appuntamento: %%public:CALLER_NAME%% -' },
+        labels: { en: { label: 'Event title' } } },
+      { key: 'date', type: 'string', widget: 'text', phases: ['final'], default: '%%public:EXTRACTED:BOOKING_DATE%%',
+        phaseDefault: { during: null, final: '%%public:EXTRACTED:BOOKING_DATE%%' },
+        labels: { en: { label: 'Event date' } } },
+      extrasField([['FULL_NAME', 'Nome e cognome della persona per cui è l\'appuntamento', 'true']])
+    ]
+  }
+}
+
+const duringColumns = '[{"column":"Contact","value":"%%FULL_NAME%%"},{"column":"Reason","value":"%%reason%%"}]'
+const finalColumns = '[{"column":"Contact","value":"%%public:CALLER_NAME%%"},{"column":"Reason","value":"%%public:EXTRACTED:CALL_REASON%%"}]'
+const sheetsRow = {
+  name: 'google_sheets_write',
+  description: 'Writes a row',
+  descriptionI18n: { en: 'Writes a row' },
+  manifest: { title: { en: 'Sheets' } },
+  configSchema: {
+    phases: ['during', 'final'],
+    outputPrefix: 'gsheets_write',
+    instances: { max: null, maxPerPhase: null },
+    fields: [
+      { key: 'enabled', type: 'boolean', default: 'false' },
+      { key: 'label', type: 'string', labels: { en: { label: 'Name of this instance' } } },
+      { key: 'SKILL_GSHEETS_WRITE_COLUMNS', type: 'json', widget: 'json', default: finalColumns,
+        phaseDefault: { during: duringColumns, final: finalColumns },
+        labels: { en: { label: 'Columns' } } },
+      extrasField([['reason', 'Motivo della chiamata, in una frase', 'false'],
+        ['FULL_NAME', 'Nome e cognome del chiamante, se li ha detti', 'false']])
+    ]
+  }
+}
+
+/** Opens the phase at `index` (0 prefetch, 1 during, 2 final) and adds `skill` to it. */
+async function addTo (page, index, skill) {
+  const section = page.locator('.phase-section').nth(index)
+  await section.locator('.phase-header').click()
+  await section.locator('.add-skill-dropdown').click()
+  await page.getByRole('option').filter({ hasText: skill }).first().click()
+  return section.locator('.entry-card').first()
+}
+
+/** The params of the instance of `skill` the save wrote into `variable`. */
+function written (writes, variable, skill) {
+  const entries = JSON.parse(writes.skills[writes.skills.length - 1][variable])
+  return entries.find(e => e.skill === skill).params
+}
+
+test.describe('a new instance takes the default of its phase', () => {
+
+  test('calendar event create: the during card asks for FULL_NAME and carries no date, the final one names the caller',
+    async ({ authenticatedPage: page }) => {
+      const writes = await mockSkillsScreen(page, { skills: [eventCreateRow], during: [] })
+      await page.goto(`/businessconfiguration?id=${business.businessId}&section=${SECTION}`)
+      await expect(page.locator('.agent-skills-configurator')).toBeVisible({ timeout: 20000 })
+
+      const during = await addTo(page, 1, 'calendar_event_create')
+      await expect(during.getByText('Other details to ask for during the call')).toBeVisible()
+      await expect(during.locator('.tuple-item')).toHaveCount(1)
+      await expect(during.locator('.tuple-item input').first()).toHaveValue('FULL_NAME')
+      await expect(during.locator('.config-field', { hasText: 'Event title' }).locator('input')).toHaveValue('Appuntamento: %%FULL_NAME%% -')
+      await expect(during.getByText('Event date')).toHaveCount(0)
+
+      await addTo(page, 2, 'calendar_event_create')
+      await page.locator('button:has(.pi-save)').first().click()
+      await expect.poll(() => writes.skills.length, { timeout: 15000 }).toBeGreaterThan(0)
+
+      const d = written(writes, 'SKILL_RUNNINGLOOP_CONFIGURATION', 'calendar_event_create')
+      expect(d.title).toBe('Appuntamento: %%FULL_NAME%% -')
+      expect(d).not.toHaveProperty('date')
+      expect(JSON.parse(d.variables)[0]).toEqual(['FULL_NAME', 'Nome e cognome della persona per cui è l\'appuntamento', 'true'])
+
+      const f = written(writes, 'SKILL_FINAL_CONFIGURATION', 'calendar_event_create')
+      expect(f.title).toBe('Appuntamento: %%public:CALLER_NAME%% -')
+      expect(f.date).toBe('%%public:EXTRACTED:BOOKING_DATE%%')
+    })
+
+  test('Sheets: the during card shows the reason and FULL_NAME rows and writes the during columns',
+    async ({ authenticatedPage: page }) => {
+      const writes = await mockSkillsScreen(page, { skills: [sheetsRow], during: [] })
+      await page.goto(`/businessconfiguration?id=${business.businessId}&section=${SECTION}`)
+      await expect(page.locator('.agent-skills-configurator')).toBeVisible({ timeout: 20000 })
+
+      const during = await addTo(page, 1, 'google_sheets_write')
+      const rows = during.locator('.tuple-item')
+      await expect(rows).toHaveCount(2)
+      await expect(rows.nth(0).locator('input').first()).toHaveValue('reason')
+      await expect(rows.nth(1).locator('input').first()).toHaveValue('FULL_NAME')
+
+      await page.locator('button:has(.pi-save)').first().click()
+      await expect.poll(() => writes.skills.length, { timeout: 15000 }).toBeGreaterThan(0)
+      const d = written(writes, 'SKILL_RUNNINGLOOP_CONFIGURATION', 'google_sheets_write')
+      expect(d.SKILL_GSHEETS_WRITE_COLUMNS).toBe(duringColumns)
+      expect(JSON.parse(d.variables).map(r => [r[0], r[2]])).toEqual([['reason', 'false'], ['FULL_NAME', 'false']])
+    })
+})

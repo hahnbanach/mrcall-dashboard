@@ -12,6 +12,8 @@
  * Nothing here reads or writes state, and nothing here knows about Vue.
  */
 
+import agentSkills from '@/utils/AgentSkills';
+
 /** The name whoever configured an instance gave it. Declared by both phase contracts, so every
  *  skill has one, and it is the only label on the screen a person chose rather than a generator
  *  produced. */
@@ -72,11 +74,14 @@ export function optionTextOf(option, lang) {
  *
  * The hint is already rendered under the control, and these hints are long: every prompt field
  * carries the whole %%var%% syntax in its own. A placeholder is an example of a VALUE, and the only
- * example this schema carries is the field's own default; a field without one shows an empty box,
- * which is the honest thing for a box nobody has filled in.
+ * example this schema carries is the field's own default FOR THE CARD'S PHASE (`phaseDefault`, the
+ * value a new instance of that phase is given): the end-of-call default shown in a during card
+ * would suggest a reference that is empty there. A field without one shows an empty box, which is
+ * the honest thing for a box nobody has filled in.
  */
-export function placeholderOf(field) {
-  return !field || field.default === undefined || field.default === null ? '' : String(field.default);
+export function placeholderOf(field, phase) {
+  const value = agentSkills.defaultFor(field, phase);
+  return value === undefined ? '' : String(value);
 }
 
 /** Stored as a string, because that is how a business variable stores a boolean. */

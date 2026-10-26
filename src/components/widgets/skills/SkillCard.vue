@@ -356,7 +356,7 @@ function fieldProps(field) {
                    :modelValue="value(field.key)"
                    @update:modelValue="write(field.key, $event)"
                    :disabled="disabled"
-                   :placeholder="placeholderOf(field)"
+                   :placeholder="placeholderOf(field, phase)"
                    v-bind="fieldProps(field)" />
 
         <!-- Nothing rather than a text box: a field drawn by the wrong widget looks like it works,
