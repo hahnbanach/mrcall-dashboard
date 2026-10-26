@@ -2198,7 +2198,7 @@
         "jobReport": "Report {period}",
         "jobRecompute": "Analysis of the calls {period}",
         "jobAnticipate": "Automatic report prepared now",
-        "jobRegenerate": "Report regenerated",
+        "jobRegenerate": "Regenerated report {period} | Regenerated reports {period}",
         "jobRerun": "Automatic report {period} tried again",
         "columns": {
           "period": "Period",
@@ -2209,7 +2209,8 @@
           "requestedBy": "Requested by",
           "createdAt": "Created on",
           "actions": "Actions"
-        }
+        },
+        "jobFacts": "Updating the calls' data, {period}"
       },
       "jobs": {
         "title": "Processing",
@@ -2224,6 +2225,34 @@
           "requestedBy": "Requested by",
           "createdAt": "Started on",
           "result": "Result"
+        },
+        "filterKind": "Kind",
+        "noneFiltered": "No processing with these filters.",
+        "kinds": {
+          "report": "Report",
+          "recompute": "Analysis of the calls",
+          "estimate": "Preparing a request",
+          "facts": "Updating the calls' data"
+        },
+        "openReport": "Open the report {period}",
+        "examined": "{n} call examined | {n} calls examined",
+        "outcome": {
+          "recompute": {
+            "written": "{n} analysed | {n} analysed",
+            "reasoned": "{n} without a conversation | {n} without a conversation",
+            "skipped": "{n} already up to date | {n} already up to date",
+            "left": "{n} with nothing to analyse | {n} with nothing to analyse",
+            "not_finalised": "{n} not finished | {n} not finished",
+            "conflict": "{n} changed meanwhile | {n} changed meanwhile",
+            "failed": "{n} not successful | {n} not successful",
+            "ceiling": "{n} not analysed: limit reached | {n} not analysed: limit reached"
+          },
+          "facts": {
+            "written": "{n} updated | {n} updated",
+            "unchanged": "{n} already up to date | {n} already up to date",
+            "not_finalised": "{n} not finished | {n} not finished",
+            "conflict": "{n} changed meanwhile | {n} changed meanwhile"
+          }
         }
       },
       "reportDetail": {

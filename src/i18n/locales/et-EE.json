@@ -2193,7 +2193,7 @@
         "jobReport": "Aruanne {period}",
         "jobRecompute": "Kõnede {period} analüüs",
         "jobAnticipate": "Automaatne aruanne koostatud kohe",
-        "jobRegenerate": "Aruanne koostatud uuesti",
+        "jobRegenerate": "Uuesti koostatud aruanne {period} | Uuesti koostatud aruanded {period}",
         "jobRerun": "Automaatset aruannet {period} proovitud uuesti",
         "columns": {
           "period": "Periood",
@@ -2204,7 +2204,8 @@
           "requestedBy": "Tellija",
           "createdAt": "Loodud",
           "actions": "Toimingud"
-        }
+        },
+        "jobFacts": "Kõnede andmete uuendamine, {period}"
       },
       "jobs": {
         "title": "Töötlemine",
@@ -2219,6 +2220,34 @@
           "requestedBy": "Tellija",
           "createdAt": "Alustatud",
           "result": "Tulemus"
+        },
+        "filterKind": "Liik",
+        "noneFiltered": "Nende filtritega töötlusi pole.",
+        "kinds": {
+          "report": "Aruanne",
+          "recompute": "Kõnede analüüs",
+          "estimate": "Taotluse ettevalmistamine",
+          "facts": "Kõnede andmete uuendamine"
+        },
+        "openReport": "Ava aruanne {period}",
+        "examined": "{n} kõne vaadatud | {n} kõnet vaadatud",
+        "outcome": {
+          "recompute": {
+            "written": "{n} analüüsitud | {n} analüüsitud",
+            "reasoned": "{n} ilma vestluseta | {n} ilma vestluseta",
+            "skipped": "{n} juba ajakohane | {n} juba ajakohased",
+            "left": "{n} ilma analüüsitavata | {n} ilma analüüsitavata",
+            "not_finalised": "{n} lõpetamata | {n} lõpetamata",
+            "conflict": "{n} vahepeal muutunud | {n} vahepeal muutunud",
+            "failed": "{n} ebaõnnestus | {n} ebaõnnestus",
+            "ceiling": "{n} analüüsimata: piir täis | {n} analüüsimata: piir täis"
+          },
+          "facts": {
+            "written": "{n} uuendatud | {n} uuendatud",
+            "unchanged": "{n} juba ajakohane | {n} juba ajakohased",
+            "not_finalised": "{n} lõpetamata | {n} lõpetamata",
+            "conflict": "{n} vahepeal muutunud | {n} vahepeal muutunud"
+          }
         }
       },
       "reportDetail": {

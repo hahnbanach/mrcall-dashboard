@@ -2199,7 +2199,7 @@
         "jobReport": "Report {period}",
         "jobRecompute": "Analisi delle chiamate {period}",
         "jobAnticipate": "Report automatico anticipato",
-        "jobRegenerate": "Report rigenerato",
+        "jobRegenerate": "Report rigenerato {period} | Report rigenerati {period}",
         "jobRerun": "Report automatico {period} riprovato",
         "columns": {
           "period": "Periodo",
@@ -2210,7 +2210,8 @@
           "requestedBy": "Richiesto da",
           "createdAt": "Creato il",
           "actions": "Azioni"
-        }
+        },
+        "jobFacts": "Aggiornamento dei dati delle chiamate, {period}"
       },
       "jobs": {
         "title": "Elaborazioni",
@@ -2225,6 +2226,34 @@
           "requestedBy": "Richiesto da",
           "createdAt": "Avviato il",
           "result": "Risultato"
+        },
+        "filterKind": "Tipo",
+        "noneFiltered": "Nessuna elaborazione con questi filtri.",
+        "kinds": {
+          "report": "Report",
+          "recompute": "Analisi delle chiamate",
+          "estimate": "Preparazione di una richiesta",
+          "facts": "Aggiornamento dei dati delle chiamate"
+        },
+        "openReport": "Apri il report {period}",
+        "examined": "{n} chiamata esaminata | {n} chiamate esaminate",
+        "outcome": {
+          "recompute": {
+            "written": "{n} analizzata | {n} analizzate",
+            "reasoned": "{n} senza conversazione | {n} senza conversazione",
+            "skipped": "{n} già aggiornata | {n} già aggiornate",
+            "left": "{n} senza niente da analizzare | {n} senza niente da analizzare",
+            "not_finalised": "{n} non conclusa | {n} non concluse",
+            "conflict": "{n} cambiata nel frattempo | {n} cambiate nel frattempo",
+            "failed": "{n} non riuscita | {n} non riuscite",
+            "ceiling": "{n} non analizzata: limite raggiunto | {n} non analizzate: limite raggiunto"
+          },
+          "facts": {
+            "written": "{n} aggiornata | {n} aggiornate",
+            "unchanged": "{n} già aggiornata | {n} già aggiornate",
+            "not_finalised": "{n} non conclusa | {n} non concluse",
+            "conflict": "{n} cambiata nel frattempo | {n} cambiate nel frattempo"
+          }
         }
       },
       "reportDetail": {

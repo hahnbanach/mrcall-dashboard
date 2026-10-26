@@ -35,6 +35,7 @@
         v-if="businessId && currentTab === 'jobs' && businessRecord"
         :key="'jobs-' + businessId"
         :business="businessRecord"
+        :role="store.state.role || 'owner'"
       />
 
       <template v-if="!businessId || currentTab === 'overview'">

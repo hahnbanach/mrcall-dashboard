@@ -159,15 +159,46 @@ function jobOpen(job) {
     return !!job && (job.status === "queued" || job.status === "running");
 }
 
-// What a recompute has done of what its estimate counted: every call it went through, whatever became of it, over
-// the calls of the interval. Null for a job that has nothing to count yet (a report, an estimate still running).
+/*
+ * What a recompute or a facts job did with its calls, by StarChat's own outcomes (`RecomputeOutcome`, `FactsOutcome`).
+ * Progress is the calls processed, over the calls the estimate counted (a facts job has no estimate, so no total): a
+ * call stopped at the job's ceiling was never processed, and is named apart, as are the calls not finalised. Counting
+ * the ceiling as done said "200 di 200" beside "Analizzate 120 chiamate su 200" (U19 M10). Null for a job with nothing
+ * to count (a report, an estimate still running).
+ */
 const RECOMPUTE_OUTCOMES = ["written", "reasoned", "skipped", "left", "not_finalised", "conflict", "failed", "ceiling"];
+const FACTS_OUTCOMES = ["written", "unchanged", "not_finalised", "conflict"];
+
+function outcomesOf(job) {
+    if (!job) return null;
+    if (job.kind === "recompute") return RECOMPUTE_OUTCOMES;
+    if (job.kind === "facts") return FACTS_OUTCOMES;
+    return null;
+}
 
 function jobProgress(job) {
-    if (!job || job.kind !== "recompute" || !job.estimate || typeof job.estimate.calls !== "number") return null;
+    const outcomes = outcomesOf(job);
+    if (!outcomes) return null;
+    const total = job.estimate && typeof job.estimate.calls === "number" ? job.estimate.calls : null;
+    if (job.kind === "recompute" && total === null) return null;
     const counts = job.counts || {};
-    const done = RECOMPUTE_OUTCOMES.reduce((sum, key) => sum + (counts[key] || 0), 0);
-    return { done: Math.min(done, job.estimate.calls), total: job.estimate.calls, written: counts.written || 0 };
+    const processed = outcomes.filter((key) => key !== "ceiling").reduce((sum, key) => sum + (counts[key] || 0), 0);
+    return {
+        processed: total === null ? processed : Math.min(processed, total),
+        total,
+        written: counts.written || 0,
+        notFinalised: counts.not_finalised || 0,
+        ceiling: counts.ceiling || 0,
+    };
+}
+
+// What a finished recompute or facts job did, in words: each of its outcomes that has calls, in StarChat's order
+// ("4 analizzate, 10 non concluse"), never an empty result beside "Pronto".
+function jobResult(job) {
+    const outcomes = outcomesOf(job);
+    if (!outcomes || jobOpen(job)) return [];
+    const counts = job.counts || {};
+    return outcomes.filter((key) => counts[key] > 0).map((key) => ({ key, count: counts[key] }));
 }
 
 /*
@@ -180,6 +211,11 @@ const REQUESTER_ROLES = ["owner", "reseller", "admin", "system"];
 
 function requester(uid, role, { me, business } = {}) {
     if (me && typeof uid === "string" && uid !== "" && uid === me) return { kind: "you" };
+    // a request recorded before its role was (`requesterRole` null): the business's owner is still known by its uid
+    // (U19 m4); any other account has no name the dashboard can read
+    if (role == null && business && typeof uid === "string" && uid !== "" && uid === business.owner) {
+        return { kind: "owner", name: business.ownerName || null };
+    }
     if (!REQUESTER_ROLES.includes(role)) return null;
     if (role === "owner") return { kind: "owner", name: (business && business.ownerName) || null };
     return { kind: role };
@@ -305,6 +341,7 @@ export default {
     refusalReason,
     jobOpen,
     jobProgress,
+    jobResult,
     requester,
     requesterLabel,
     freeOwner,

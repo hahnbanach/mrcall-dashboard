@@ -540,9 +540,9 @@ export default {
     job: function (user, jobId) {
         return unwrap(axios.get(INSIGHTS_BASE + "/jobs/" + encodeURIComponent(jobId), { headers: getHeaders(user) }));
     },
-    // `{items, total}`, newest first.
-    jobs: function (user, businessId, { offset = 0, size = PAGE_SIZE } = {}) {
-        return unwrap(axios.get(INSIGHTS_BASE + "/jobs" + query({ businessId, offset, size }), { headers: getHeaders(user) }));
+    // `{items, total}`, newest first; `kind` and `status` narrow it on the server (Elaborazioni's filters).
+    jobs: function (user, businessId, { offset = 0, size = PAGE_SIZE, kind, status } = {}) {
+        return unwrap(axios.get(INSIGHTS_BASE + "/jobs" + query({ businessId, offset, size, kind, status }), { headers: getHeaders(user) }));
     },
     cancelJob: function (user, jobId) {
         return axios.post(INSIGHTS_BASE + "/jobs/" + encodeURIComponent(jobId) + "/cancel", {}, { headers: getHeaders(user) })

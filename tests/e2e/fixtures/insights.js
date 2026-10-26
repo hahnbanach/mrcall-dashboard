@@ -173,6 +173,30 @@ const JOBS = {
   ],
 }
 
+/**
+ * A page of jobs filtered by `kind` and `status` as the dashboard asks them (U19r2: Elaborazioni's filters; StarChat's
+ * `GET insights/jobs` takes `offset` and `size`, and these two filters are the dashboard's request of it).
+ */
+function jobsPage (url, items) {
+  const q = new URL(url).searchParams
+  let list = items
+  if (q.get('kind')) list = list.filter((j) => j.kind === q.get('kind'))
+  if (q.get('status')) list = list.filter((j) => j.status === q.get('status'))
+  const offset = Number(q.get('offset') || 0)
+  const size = Number(q.get('size') || 10)
+  return { total: list.length, items: list.slice(offset, offset + size) }
+}
+
+// The jobs of the U19 attack: OVERLAND's recompute (4 written, 10 not finalised), one stopped at its ceiling, a
+// regeneration of two reports, and an admin's facts job (StarChat answers it to an admin only).
+const JOBS_U19 = [
+  job({ jobId: 'job-overland', kind: 'recompute', status: 'done', phase: 'finished', estimate: { calls: 14 }, counts: { written: 4, not_finalised: 10 } }),
+  job({ jobId: 'job-ceiling', kind: 'recompute', status: 'ceiling_reached', phase: 'finished', estimate: { calls: 200 }, counts: { written: 120, ceiling: 80 } }),
+  job({ jobId: 'job-regen', kind: 'report', mode: 'regenerate', status: 'done', phase: 'finished', from: rome(2026, 10, 1), to: rome(2026, 10, 15), counts: { requests: 2 },
+    result: { reports: [{ periodStart: rome(2026, 10, 1), periodEnd: rome(2026, 10, 8) }, { periodStart: rome(2026, 10, 8), periodEnd: rome(2026, 10, 15) }] } }),
+  job({ jobId: 'job-facts', kind: 'facts', status: 'done', phase: 'finished', requestedBy: 'admin-uid-12345', requesterRole: 'admin', counts: { written: 30, unchanged: 70 } }),
+]
+
 function category (key, over = {}) {
   return {
     category: key, label: key, nextAction: 'Next', dominantKind: 'integration', businesses: 3, previousBusinesses: 1, trend: 2,
@@ -300,7 +324,10 @@ async function mockInsights (page, options = {}) {
     const answer = options.estimate ? options.estimate(asked.estimate.length) : estimateJob({ status: 'queued', phase: 'queued' })
     route.fulfill(json(answer, 202))
   })
-  await page.route('**/customer/insights/jobs*', (route) => { record('jobs', route); route.fulfill(json(options.jobs || JOBS)) })
+  await page.route('**/customer/insights/jobs*', (route) => {
+    record('jobs', route)
+    route.fulfill(json(typeof options.jobs === 'function' ? options.jobs(route.request().url()) : (options.jobs || JOBS)))
+  })
   await page.route(/\/customer\/insights\/jobs\/(report|recompute)$/, (route) => {
     record('create', route)
     // StarChat's cap (InsightsJobs.cap): the estimate named must be over exactly the job's arguments, platformPays and
@@ -347,5 +374,5 @@ async function mockInsights (page, options = {}) {
 
 module.exports = {
   BUSINESS_ID, DAY, rome, historyRows, reportsPage, SCHEDULE, REPORT, REPORT_OUTCOMES, REPORT_QUALITY, OUTCOMES,
-  job, estimateJob, JOBS, CATEGORIES, category, assistantRow, assistantsPage, mockInsights, sortBy,
+  job, estimateJob, JOBS, JOBS_U19, jobsPage, CATEGORIES, category, assistantRow, assistantsPage, mockInsights, sortBy,
 }

@@ -315,13 +315,13 @@ export default {
     },
     progressPercent() {
       const p = this.progress;
-      return p && p.total > 0 ? Math.round((p.done / p.total) * 100) : 0;
+      return p && p.total > 0 ? Math.round((p.processed / p.total) * 100) : 0;
     },
     runningText() {
       const job = this.job;
       if (!job || job.status === "queued") return this.$t("components.callInsights.request.queued");
       const p = this.progress;
-      if (p) return this.$t("components.callInsights.request.progress", { done: p.done, total: p.total });
+      if (p && p.total !== null) return this.$t("components.callInsights.request.progress", { done: p.processed, total: p.total });
       return this.$t("components.callInsights.request.working");
     },
     resultText() {

@@ -2193,7 +2193,7 @@
         "jobReport": "Raportti {period}",
         "jobRecompute": "Puhelujen {period} analyysi",
         "jobAnticipate": "Automaattinen raportti laadittu nyt",
-        "jobRegenerate": "Raportti laadittu uudelleen",
+        "jobRegenerate": "Uudelleen laadittu raportti {period} | Uudelleen laaditut raportit {period}",
         "jobRerun": "Automaattista raporttia {period} yritetty uudelleen",
         "columns": {
           "period": "Jakso",
@@ -2204,7 +2204,8 @@
           "requestedBy": "Pyytäjä",
           "createdAt": "Luotu",
           "actions": "Toiminnot"
-        }
+        },
+        "jobFacts": "Puheluiden tietojen päivitys, {period}"
       },
       "jobs": {
         "title": "Käsittely",
@@ -2219,6 +2220,34 @@
           "requestedBy": "Pyytäjä",
           "createdAt": "Aloitettu",
           "result": "Tulos"
+        },
+        "filterKind": "Tyyppi",
+        "noneFiltered": "Ei käsittelyjä näillä suodattimilla.",
+        "kinds": {
+          "report": "Raportti",
+          "recompute": "Puheluiden analyysi",
+          "estimate": "Pyynnön valmistelu",
+          "facts": "Puheluiden tietojen päivitys"
+        },
+        "openReport": "Avaa raportti {period}",
+        "examined": "{n} puhelu tarkistettu | {n} puhelua tarkistettu",
+        "outcome": {
+          "recompute": {
+            "written": "{n} analysoitu | {n} analysoitu",
+            "reasoned": "{n} ilman keskustelua | {n} ilman keskustelua",
+            "skipped": "{n} jo ajan tasalla | {n} jo ajan tasalla",
+            "left": "{n} ilman analysoitavaa | {n} ilman analysoitavaa",
+            "not_finalised": "{n} keskeneräinen | {n} keskeneräistä",
+            "conflict": "{n} muuttui sillä välin | {n} muuttui sillä välin",
+            "failed": "{n} epäonnistui | {n} epäonnistui",
+            "ceiling": "{n} analysoimatta: raja saavutettu | {n} analysoimatta: raja saavutettu"
+          },
+          "facts": {
+            "written": "{n} päivitetty | {n} päivitetty",
+            "unchanged": "{n} jo ajan tasalla | {n} jo ajan tasalla",
+            "not_finalised": "{n} keskeneräinen | {n} keskeneräistä",
+            "conflict": "{n} muuttui sillä välin | {n} muuttui sillä välin"
+          }
         }
       },
       "reportDetail": {

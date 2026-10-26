@@ -87,9 +87,10 @@ describe('the label of each state', () => {
     expect(() => R.jobStatusKey({ status: 'paused' })).toThrow(/unknown status/)
   })
 
+  // the ceiling's calls were not processed: counted apart since U19r2 (M10)
   it('a recompute\'s progress counts every call it went through over the calls its estimate counted', () => {
     const job = { kind: 'recompute', estimate: { calls: 40 }, counts: { written: 10, reasoned: 2, failed: 1, ceiling: 3 } }
-    expect(R.jobProgress(job)).toEqual({ done: 16, total: 40, written: 10 })
+    expect(R.jobProgress(job)).toEqual({ processed: 13, total: 40, written: 10, notFinalised: 0, ceiling: 3 })
     expect(R.jobProgress({ kind: 'report', estimate: { calls: 4 } })).toBeNull()
     expect(R.jobProgress({ kind: 'recompute' })).toBeNull()
   })

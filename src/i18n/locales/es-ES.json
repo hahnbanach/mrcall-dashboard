@@ -2207,7 +2207,7 @@
         "jobReport": "Informe {period}",
         "jobRecompute": "Análisis de las llamadas {period}",
         "jobAnticipate": "Informe automático preparado ahora",
-        "jobRegenerate": "Informe regenerado",
+        "jobRegenerate": "Informe regenerado {period} | Informes regenerados {period}",
         "jobRerun": "Informe automático {period} intentado de nuevo",
         "columns": {
           "period": "Período",
@@ -2218,7 +2218,8 @@
           "requestedBy": "Pedido por",
           "createdAt": "Creado el",
           "actions": "Acciones"
-        }
+        },
+        "jobFacts": "Actualización de los datos de las llamadas, {period}"
       },
       "jobs": {
         "title": "Procesos",
@@ -2233,6 +2234,34 @@
           "requestedBy": "Pedido por",
           "createdAt": "Iniciado el",
           "result": "Resultado"
+        },
+        "filterKind": "Tipo",
+        "noneFiltered": "Ningún proceso con estos filtros.",
+        "kinds": {
+          "report": "Informe",
+          "recompute": "Análisis de las llamadas",
+          "estimate": "Preparación de una solicitud",
+          "facts": "Actualización de los datos de las llamadas"
+        },
+        "openReport": "Abrir el informe {period}",
+        "examined": "{n} llamada examinada | {n} llamadas examinadas",
+        "outcome": {
+          "recompute": {
+            "written": "{n} analizada | {n} analizadas",
+            "reasoned": "{n} sin conversación | {n} sin conversación",
+            "skipped": "{n} ya actualizada | {n} ya actualizadas",
+            "left": "{n} sin nada que analizar | {n} sin nada que analizar",
+            "not_finalised": "{n} no terminada | {n} no terminadas",
+            "conflict": "{n} cambiada mientras tanto | {n} cambiadas mientras tanto",
+            "failed": "{n} sin éxito | {n} sin éxito",
+            "ceiling": "{n} no analizada: límite alcanzado | {n} no analizadas: límite alcanzado"
+          },
+          "facts": {
+            "written": "{n} actualizada | {n} actualizadas",
+            "unchanged": "{n} ya actualizada | {n} ya actualizadas",
+            "not_finalised": "{n} no terminada | {n} no terminadas",
+            "conflict": "{n} cambiada mientras tanto | {n} cambiadas mientras tanto"
+          }
         }
       },
       "reportDetail": {

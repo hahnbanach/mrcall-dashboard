@@ -2193,7 +2193,7 @@
         "jobReport": "Rapport {period}",
         "jobRecompute": "Analyse van de gesprekken {period}",
         "jobAnticipate": "Automatisch rapport nu gemaakt",
-        "jobRegenerate": "Rapport opnieuw gemaakt",
+        "jobRegenerate": "Opnieuw gemaakt rapport {period} | Opnieuw gemaakte rapporten {period}",
         "jobRerun": "Automatisch rapport {period} opnieuw geprobeerd",
         "columns": {
           "period": "Periode",
@@ -2204,7 +2204,8 @@
           "requestedBy": "Aangevraagd door",
           "createdAt": "Gemaakt op",
           "actions": "Acties"
-        }
+        },
+        "jobFacts": "Bijwerken van de gespreksgegevens, {period}"
       },
       "jobs": {
         "title": "Verwerking",
@@ -2219,6 +2220,34 @@
           "requestedBy": "Aangevraagd door",
           "createdAt": "Gestart op",
           "result": "Resultaat"
+        },
+        "filterKind": "Soort",
+        "noneFiltered": "Geen verwerking met deze filters.",
+        "kinds": {
+          "report": "Rapport",
+          "recompute": "Analyse van de gesprekken",
+          "estimate": "Voorbereiding van een verzoek",
+          "facts": "Bijwerken van de gespreksgegevens"
+        },
+        "openReport": "Rapport {period} openen",
+        "examined": "{n} gesprek bekeken | {n} gesprekken bekeken",
+        "outcome": {
+          "recompute": {
+            "written": "{n} geanalyseerd | {n} geanalyseerd",
+            "reasoned": "{n} zonder gesprek | {n} zonder gesprek",
+            "skipped": "{n} al bijgewerkt | {n} al bijgewerkt",
+            "left": "{n} zonder iets te analyseren | {n} zonder iets te analyseren",
+            "not_finalised": "{n} niet afgerond | {n} niet afgerond",
+            "conflict": "{n} intussen gewijzigd | {n} intussen gewijzigd",
+            "failed": "{n} niet gelukt | {n} niet gelukt",
+            "ceiling": "{n} niet geanalyseerd: limiet bereikt | {n} niet geanalyseerd: limiet bereikt"
+          },
+          "facts": {
+            "written": "{n} bijgewerkt | {n} bijgewerkt",
+            "unchanged": "{n} al bijgewerkt | {n} al bijgewerkt",
+            "not_finalised": "{n} niet afgerond | {n} niet afgerond",
+            "conflict": "{n} intussen gewijzigd | {n} intussen gewijzigd"
+          }
         }
       },
       "reportDetail": {

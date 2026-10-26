@@ -2193,7 +2193,7 @@
         "jobReport": "Rapport {period}",
         "jobRecompute": "Analyse af opkaldene {period}",
         "jobAnticipate": "Automatisk rapport udarbejdet nu",
-        "jobRegenerate": "Rapport lavet igen",
+        "jobRegenerate": "Rapport genereret på ny {period} | Rapporter genereret på ny {period}",
         "jobRerun": "Automatisk rapport {period} prøvet igen",
         "columns": {
           "period": "Periode",
@@ -2204,7 +2204,8 @@
           "requestedBy": "Bestilt af",
           "createdAt": "Oprettet den",
           "actions": "Handlinger"
-        }
+        },
+        "jobFacts": "Opdatering af opkaldenes data, {period}"
       },
       "jobs": {
         "title": "Behandling",
@@ -2219,6 +2220,34 @@
           "requestedBy": "Bestilt af",
           "createdAt": "Startet den",
           "result": "Resultat"
+        },
+        "filterKind": "Type",
+        "noneFiltered": "Ingen behandling med disse filtre.",
+        "kinds": {
+          "report": "Rapport",
+          "recompute": "Analyse af opkaldene",
+          "estimate": "Forberedelse af en anmodning",
+          "facts": "Opdatering af opkaldenes data"
+        },
+        "openReport": "Åbn rapporten {period}",
+        "examined": "{n} opkald gennemgået | {n} opkald gennemgået",
+        "outcome": {
+          "recompute": {
+            "written": "{n} analyseret | {n} analyseret",
+            "reasoned": "{n} uden samtale | {n} uden samtale",
+            "skipped": "{n} allerede opdateret | {n} allerede opdateret",
+            "left": "{n} uden noget at analysere | {n} uden noget at analysere",
+            "not_finalised": "{n} ikke afsluttet | {n} ikke afsluttet",
+            "conflict": "{n} ændret i mellemtiden | {n} ændret i mellemtiden",
+            "failed": "{n} mislykkedes | {n} mislykkedes",
+            "ceiling": "{n} ikke analyseret: grænsen nået | {n} ikke analyseret: grænsen nået"
+          },
+          "facts": {
+            "written": "{n} opdateret | {n} opdateret",
+            "unchanged": "{n} allerede opdateret | {n} allerede opdateret",
+            "not_finalised": "{n} ikke afsluttet | {n} ikke afsluttet",
+            "conflict": "{n} ændret i mellemtiden | {n} ændret i mellemtiden"
+          }
         }
       },
       "reportDetail": {

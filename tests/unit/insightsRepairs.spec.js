@@ -67,3 +67,37 @@ describe('M1: an analysed count is never printed above its managed base', () => 
     expect(R.reportBase({ calls: 120 })).toEqual({ kind: 'old', analysed: 120 })
   })
 })
+
+describe('M10: a recompute\'s progress and result, told honestly', () => {
+  it('progress counts the calls processed; the calls stopped at the ceiling are named apart, never counted as done', () => {
+    const job = { kind: 'recompute', status: 'ceiling_reached', estimate: { calls: 200 }, counts: { written: 120, ceiling: 80 } }
+    // U19: "200 di 200" beside "Analizzate 120 chiamate su 200"
+    expect(R.jobProgress(job)).toEqual({ processed: 120, total: 200, written: 120, notFinalised: 0, ceiling: 80 })
+  })
+
+  it('names the calls not finalised; OVERLAND\'s recompute: 4 written, 10 not finalised', () => {
+    const job = { kind: 'recompute', status: 'done', estimate: { calls: 14 }, counts: { written: 4, not_finalised: 10 } }
+    expect(R.jobProgress(job)).toEqual({ processed: 14, total: 14, written: 4, notFinalised: 10, ceiling: 0 })
+    expect(R.jobResult(job)).toEqual([{ key: 'written', count: 4 }, { key: 'not_finalised', count: 10 }])
+  })
+
+  it('a facts job (no estimate) has its calls examined and its result, by StarChat\'s own outcomes', () => {
+    const job = { kind: 'facts', status: 'done', counts: { written: 30, unchanged: 70, not_finalised: 2 } }
+    expect(R.jobProgress(job)).toEqual({ processed: 102, total: null, written: 30, notFinalised: 2, ceiling: 0 })
+    expect(R.jobResult(job)).toEqual([{ key: 'written', count: 30 }, { key: 'unchanged', count: 70 }, { key: 'not_finalised', count: 2 }])
+  })
+
+  it('no result for a report job, nor for a job without counts', () => {
+    expect(R.jobResult({ kind: 'report', status: 'done', counts: { requests: 1 } })).toEqual([])
+    expect(R.jobResult({ kind: 'recompute', status: 'running' })).toEqual([])
+  })
+})
+
+describe('m4: who asked, when StarChat did not record the role', () => {
+  const business = { owner: 'owner-1', ownerName: 'Anna Bianchi' }
+  it('the reader or the business\'s owner, read from requestedBy; anyone else a dash', () => {
+    expect(R.requester('me', null, { me: 'me', business })).toEqual({ kind: 'you' })
+    expect(R.requester('owner-1', null, { me: 'me', business })).toEqual({ kind: 'owner', name: 'Anna Bianchi' })
+    expect(R.requester('admin-uid', null, { me: 'me', business })).toBeNull()
+  })
+})

@@ -49,7 +49,12 @@
             {{ $t("components.callInsights.status." + statusOfJob(job)) }}<template v-if="reasonOfJob(job)"> · {{ $t("components.callInsights.admin.reason." + reasonOfJob(job)) }}</template>
           </span>
           <span class="recent-meta">{{ requesterName(job) }} · {{ dateTime(job.createdAt) }}</span>
-          <router-link v-if="jobReport(job)" :to="jobReport(job)" class="recent-open">{{ $t("components.callInsights.reportsTab.open") }}</router-link>
+          <router-link
+            v-if="jobReport(job)"
+            :to="jobReport(job)"
+            class="recent-open"
+            :aria-label="$t('components.callInsights.jobs.openReport', { period: jobReportPeriod(job) })"
+          >{{ $t("components.callInsights.reportsTab.open") }}</router-link>
         </li>
       </ul>
     </section>
@@ -339,7 +344,10 @@ export default {
     },
     jobWhat(job) {
       if (job.mode === "automatic_now") return this.$t("components.callInsights.reportsTab.jobAnticipate");
-      if (job.mode === "regenerate") return this.$t("components.callInsights.reportsTab.jobRegenerate");
+      if (job.mode === "regenerate") {
+        const n = Math.max(1, job.result && Array.isArray(job.result.reports) ? job.result.reports.length : 0);
+        return this.$t("components.callInsights.reportsTab.jobRegenerate", { period: InsightsReports.periodLabel(job.from, job.to, this.zone, this.locale) }, n);
+      }
       if (job.kind === "recompute") return this.$t("components.callInsights.reportsTab.jobRecompute", { period: InsightsReports.periodLabel(job.from, job.to, this.zone, this.locale) });
       return this.$t("components.callInsights.reportsTab.jobReport", { period: InsightsReports.periodLabel(job.from, job.to, this.zone, this.locale) });
     },
@@ -347,6 +355,10 @@ export default {
       const reports = job.result && Array.isArray(job.result.reports) ? job.result.reports : [];
       if (!reports.length) return null;
       return this.detailLink({ periodStart: reports[0].periodStart, requestId: reports[0].requestId });
+    },
+    jobReportPeriod(job) {
+      const r = job.result.reports[0];
+      return InsightsReports.periodLabel(r.periodStart, r.periodEnd, this.zone, this.locale);
     },
     // The report jobs of the business, newest first, followed while one is open.
     loadRecent() {

@@ -2195,7 +2195,7 @@
         "jobReport": "Bericht {period}",
         "jobRecompute": "Analyse der Anrufe {period}",
         "jobAnticipate": "Automatischer Bericht jetzt erstellt",
-        "jobRegenerate": "Bericht neu erstellt",
+        "jobRegenerate": "Neu erstellter Bericht {period} | Neu erstellte Berichte {period}",
         "jobRerun": "Automatischer Bericht {period} erneut versucht",
         "columns": {
           "period": "Zeitraum",
@@ -2206,7 +2206,8 @@
           "requestedBy": "Angefordert von",
           "createdAt": "Erstellt am",
           "actions": "Aktionen"
-        }
+        },
+        "jobFacts": "Aktualisierung der Anrufdaten, {period}"
       },
       "jobs": {
         "title": "Verarbeitung",
@@ -2221,6 +2222,34 @@
           "requestedBy": "Angefordert von",
           "createdAt": "Gestartet am",
           "result": "Ergebnis"
+        },
+        "filterKind": "Art",
+        "noneFiltered": "Keine Verarbeitung mit diesen Filtern.",
+        "kinds": {
+          "report": "Bericht",
+          "recompute": "Analyse der Anrufe",
+          "estimate": "Vorbereitung einer Anfrage",
+          "facts": "Aktualisierung der Anrufdaten"
+        },
+        "openReport": "Bericht {period} öffnen",
+        "examined": "{n} Anruf geprüft | {n} Anrufe geprüft",
+        "outcome": {
+          "recompute": {
+            "written": "{n} analysiert | {n} analysiert",
+            "reasoned": "{n} ohne Gespräch | {n} ohne Gespräch",
+            "skipped": "{n} bereits aktuell | {n} bereits aktuell",
+            "left": "{n} ohne etwas zu analysieren | {n} ohne etwas zu analysieren",
+            "not_finalised": "{n} nicht abgeschlossen | {n} nicht abgeschlossen",
+            "conflict": "{n} zwischenzeitlich geändert | {n} zwischenzeitlich geändert",
+            "failed": "{n} nicht erfolgreich | {n} nicht erfolgreich",
+            "ceiling": "{n} nicht analysiert: Grenze erreicht | {n} nicht analysiert: Grenze erreicht"
+          },
+          "facts": {
+            "written": "{n} aktualisiert | {n} aktualisiert",
+            "unchanged": "{n} bereits aktuell | {n} bereits aktuell",
+            "not_finalised": "{n} nicht abgeschlossen | {n} nicht abgeschlossen",
+            "conflict": "{n} zwischenzeitlich geändert | {n} zwischenzeitlich geändert"
+          }
         }
       },
       "reportDetail": {

@@ -2195,7 +2195,7 @@
         "jobReport": "Rapport {period}",
         "jobRecompute": "Analyse des appels {period}",
         "jobAnticipate": "Rapport automatique préparé maintenant",
-        "jobRegenerate": "Rapport régénéré",
+        "jobRegenerate": "Rapport régénéré {period} | Rapports régénérés {period}",
         "jobRerun": "Rapport automatique {period} retenté",
         "columns": {
           "period": "Période",
@@ -2206,7 +2206,8 @@
           "requestedBy": "Demandé par",
           "createdAt": "Créé le",
           "actions": "Actions"
-        }
+        },
+        "jobFacts": "Mise à jour des données des appels, {period}"
       },
       "jobs": {
         "title": "Traitements",
@@ -2221,6 +2222,34 @@
           "requestedBy": "Demandé par",
           "createdAt": "Commencé le",
           "result": "Résultat"
+        },
+        "filterKind": "Type",
+        "noneFiltered": "Aucun traitement avec ces filtres.",
+        "kinds": {
+          "report": "Rapport",
+          "recompute": "Analyse des appels",
+          "estimate": "Préparation d'une demande",
+          "facts": "Mise à jour des données des appels"
+        },
+        "openReport": "Ouvrir le rapport {period}",
+        "examined": "{n} appel examiné | {n} appels examinés",
+        "outcome": {
+          "recompute": {
+            "written": "{n} analysé | {n} analysés",
+            "reasoned": "{n} sans conversation | {n} sans conversation",
+            "skipped": "{n} déjà à jour | {n} déjà à jour",
+            "left": "{n} sans rien à analyser | {n} sans rien à analyser",
+            "not_finalised": "{n} non terminé | {n} non terminés",
+            "conflict": "{n} modifié entre-temps | {n} modifiés entre-temps",
+            "failed": "{n} échoué | {n} échoués",
+            "ceiling": "{n} non analysé : limite atteinte | {n} non analysés : limite atteinte"
+          },
+          "facts": {
+            "written": "{n} mis à jour | {n} mis à jour",
+            "unchanged": "{n} déjà à jour | {n} déjà à jour",
+            "not_finalised": "{n} non terminé | {n} non terminés",
+            "conflict": "{n} modifié entre-temps | {n} modifiés entre-temps"
+          }
         }
       },
       "reportDetail": {
