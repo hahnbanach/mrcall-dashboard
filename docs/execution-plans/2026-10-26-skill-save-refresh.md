@@ -86,3 +86,27 @@ retained in /tmp/mrcall-ui-save-refresh. Earlier11-case and two timing checks ar
 separate evidence, not added to47. No further source refinement is planned unless
 a required check/review finds a blocking failure. Closure/release follows the
 revised estimate14:00–14:03 UTC, retaining the missed original13:42 milestone.
+
+
+## Verified TEST delivery
+
+Reviewed commit `a1897a3dbb00d5c0eaf484c3c1af1e89ed0345da` is published under
+`v2.2.34-test`. Actual ff-only pulls of origin/v2.2.33 and then origin/v2.2.34
+precede the branch and tag pushes respectively; both are already up to date.
+No forced history, production tag or original-worktree WIP is included.
+
+[Workflow40335393257](https://github.com/hahnbanach/mrcall-dashboard/actions/runs/40335393257)
+completes successfully on that exact tag/commit. Observed at14:01:13 UTC, public
+TEST serves104 index JS/CSS assets, allHTTP200 and names matching the CI build.
+The new app is `/js/app.b0847d40.js`, SHA256
+`0513afff38c7674eda9bb2333eec424e9b861b1630715bf334a2fa9276268fdc`;
+its content includes skills-saved, skillRefreshPhases and both refresh warning
+markers. This is served filename/build association plus markers, not byte identity
+against a downloaded CI artifact. Receipts are deploy-completed.json/log and
+served-assets.json in /tmp/mrcall-ui-save-refresh.
+
+No new live Save, provider action, model trial or call is performed. Earlier real
+Save persistence is retained evidence, while repaired same-page behavior uses the
+47-case browser acceptance. Booking configuration/callback diagnosis belongs to
+the operator's separate session. This docs-only follow-up does not move the TEST
+tag or redeploy. The original13:42 milestone miss remains recorded above.
