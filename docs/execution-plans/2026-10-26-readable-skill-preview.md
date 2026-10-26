@@ -93,7 +93,8 @@ negative/malformed/other-business availability and refresh. The initial fixture
 failures came from route shadowing and a missing ordinary-field dependency array;
 those fixtures were corrected without weakening assertions or app workarounds.
 Command results and exact counts remain in retained scoped receipts outside the
-repository. No live consent, grant write, Save/activation or deployment is claimed.
+repository. The local checks claim no live consent, grant write or Save/activation; actual
+TEST publication is recorded separately below.
 
 
 Coordinator-directed M3 negative-case refinement keeps unresolved or changed
@@ -103,3 +104,39 @@ or status requests. Two actual in-app VueRouter tests cover missing and changed
 IDs without adding page reinitialization or changing backend policy. The source
 change requires affected M3 desktop/mobile checks and build/lint; unchanged
 summary and OAuth evidence is retained only with matching source hashes.
+
+
+## Authorized TEST release evidence
+
+The coordinator relayed explicit operator approval to publish dashboard TEST.
+Tag `v2.2.33-test` targets commit `8190c4b51bf3bbae1a9af189b4f09be802701c62`,
+tree `8e0674f785165351372fb44422f8d6d545662a8b`, identical to the frozen reviewed
+34-path package. The original dirty worktree is excluded. The branch push was
+already in flight when the operator requested pull first; before tag publication,
+actual `git pull --ff-only origin v2.2` and `origin v2.2.33` both reported already
+up to date. No forced history or deployment tag movement occurred.
+
+[Deployment 40318787864](https://github.com/hahnbanach/mrcall-dashboard/actions/runs/40318787864)
+completed successfully at 2026-10-26 11:58:56 UTC. Public TEST index references
+104 JS/CSS assets, all HTTP 200 and all names present in that CI build.
+The app is `app.c34fcf69.js`, SHA256
+`6ea8d3df406082cfe305475b890f09cc72cfacc1de0616bb98540a9eb8b026f4`.
+This binds observed served filenames to the CI build, not a byte comparison
+against a downloaded CI artifact.
+
+Read-only browser navigation uses the genuinely configured Support Firebase
+session with no API response mocks. Account renders clarified account-level
+copy with registry GET 200. The exact target assistant renders both separate
+status cards, unknown availability, registry GET 200 and exact business-scoped
+GET 200. This is Support's account metadata, not a Mario-authenticated browser
+check. An ID-token-only restoration first failed the client's forced refresh;
+the normal stored Support refresh session established the successful check.
+No consent, Connect, Disconnect or Save action ran. Receipts remain outside
+source in `/tmp/mrcall-assistant-google-test/`, including `served-assets.json`,
+`live-readonly-receipt.json` and `deploy-completed.log`.
+
+Real Google consent, Mario's live enabled Save/activation, actual booking,
+production/beta promotion and backend prompt publication remain open. The backend
+local guidance commits need separate disposition; this dashboard tag does not
+publish them. This documentation follow-up changes no application source and
+requires no new deployment tag.
