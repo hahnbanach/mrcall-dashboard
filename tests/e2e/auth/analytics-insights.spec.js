@@ -2,6 +2,7 @@
 const { expect } = require('@playwright/test')
 const { test } = require('../fixtures/auth')
 const { mockBusiness } = require('../fixtures/mock-data')
+const { reachFilterBar } = require('../fixtures/insights')
 
 /**
  * Call insights on the analytics page (brief `docs/briefs/2026-10-20-call-insights.md`, plan
@@ -408,8 +409,11 @@ test.describe('Analytics: the reseller\'s page says who (outcome 10)', () => {
     // the business page reads the business's own record, whose company name (the fixture's) wins over a table's
     await expect(bar.getByText('Test Restaurant')).toBeVisible()
     await section(page, 'Quality').scrollIntoViewIfNeeded()
-    await expect(bar).toBeInViewport()
-    await bar.getByRole('button', { name: 'Clear the business filter' }).click()
+    // on screen wider than a phone, reached at the top of the page on one (U19 m19, see `reachFilterBar`)
+    await reachFilterBar(page, bar)
+    const clearBusiness = bar.getByRole('button', { name: 'Clear the business filter' })
+    await expect(clearBusiness).toBeInViewport()
+    await clearBusiness.click()
     await expect(page).not.toHaveURL(/[?&]id=/)
     await expect(section(page, 'Assistants to review')).toBeVisible()
   })

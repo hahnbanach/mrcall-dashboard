@@ -9,6 +9,7 @@
  *
  * Days are the business's (Europe/Rome): 2026-10-01T00:00 in Rome is `rome(2026, 10, 1)`.
  */
+const { expect } = require('@playwright/test')
 const { mockBusiness, mockUser } = require('./mock-data')
 
 const BUSINESS_ID = mockBusiness.businessId
@@ -372,7 +373,25 @@ async function mockInsights (page, options = {}) {
   return asked
 }
 
+/**
+ * Brings the filter bar to where a reader undoes a filter, after the page scrolled down to a section, as the layout at
+ * the page's width promises. Wider than 640px the bar sticks to the top of the screen, so it is still on screen.
+ * On a phone it does not: since U19 m19 (StarChat's plan docs/execution-plans/2026-10-24-insights-reports-ux.md, U19r2)
+ * its chips wrap so that every one and its clear control is on screen, and a bar two or three lines tall stays at
+ * the top of the page instead of sticking over the heading a link scrolled to. What a phone promises is that the bar
+ * is reachable where it shows the filters, so the reader scrolls back to it, and that is what is asserted there.
+ */
+async function reachFilterBar (page, bar) {
+  if (page.viewportSize().width > 640) {
+    await expect(bar).toBeInViewport()
+    return
+  }
+  await bar.scrollIntoViewIfNeeded()
+  await expect(bar).toBeInViewport()
+}
+
 module.exports = {
   BUSINESS_ID, DAY, rome, historyRows, reportsPage, SCHEDULE, REPORT, REPORT_OUTCOMES, REPORT_QUALITY, OUTCOMES,
   job, estimateJob, JOBS, JOBS_U19, jobsPage, CATEGORIES, category, assistantRow, assistantsPage, mockInsights, sortBy,
+  reachFilterBar,
 }

@@ -2,7 +2,7 @@
 const { expect } = require('@playwright/test')
 const { test } = require('../fixtures/auth')
 const { mockBusiness } = require('../fixtures/mock-data')
-const { sortBy } = require('../fixtures/insights')
+const { sortBy, reachFilterBar } = require('../fixtures/insights')
 
 /**
  * Call insights on the admin's analytics pages, as StarChat's docs/briefs/2026-10-24-insights-reports-ux.md left them
@@ -262,7 +262,9 @@ test.describe('AnalyticsAdmin: a row chosen on a phone', () => {
 })
 
 test.describe('AnalyticsAdmin: the filter bar', () => {
-  test('stays visible while the page scrolls, and clears each filter from where it shows it', async ({ adminPage: page }) => {
+  // Sticky, and so on screen while the page scrolls, wider than a phone; on a phone it stays at the top of the page
+  // (U19 m19, see `reachFilterBar`) and is reached there. On both, each filter is cleared from the chip that shows it.
+  test('stays reachable while the page scrolls, and clears each filter from where it shows it', async ({ adminPage: page }) => {
     // No section of the page names the business or the owner: the bar asks for both. The owner is
     // named from the contact on its own business (`crm/business/search` by `owner`), since
     // StarChat's admin user record carries only the role.
@@ -286,12 +288,16 @@ test.describe('AnalyticsAdmin: the filter bar', () => {
     await expect(bar.getByText('Last 30 days')).toBeVisible()
 
     await section(page, 'Callers\' requests').scrollIntoViewIfNeeded()
-    await expect(bar).toBeInViewport()
+    await reachFilterBar(page, bar)
 
-    await bar.getByRole('button', { name: 'Clear the owner filter' }).click()
+    const clearOwner = bar.getByRole('button', { name: 'Clear the owner filter' })
+    await expect(clearOwner).toBeInViewport()
+    await clearOwner.click()
     await expect(page).not.toHaveURL(/ownerId=/)
     await expect(page).toHaveURL(new RegExp(`[?&]businessId=${BUSINESS_ID}(&|$)`))
-    await expect(bar).toBeInViewport()
+    await expect(bar.getByText('Demo Owner')).toHaveCount(0)
+    await expect(bar.getByText(mockBusiness.companyName)).toBeVisible()
+    await reachFilterBar(page, bar)
 
     await bar.getByRole('button', { name: 'Clear the plan filter' }).click()
     await expect(page).not.toHaveURL(/plan=/)
