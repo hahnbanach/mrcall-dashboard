@@ -100,4 +100,11 @@ test.describe('a number setting with bounds', () => {
     await expect.poll(() => writes.length).toBe(1)
     expect(writes[0].variables[NAME]).toBe('3')
   })
+
+  // U19 m16 (StarChat's plan docs/execution-plans/2026-10-24-insights-reports-ux.md, U19r2): the field had no name
+  test('the field is named by its label for assistive technology', async ({ authenticatedPage: page }) => {
+    await mockSettings(page)
+    await openField(page)
+    await expect(page.getByRole('spinbutton', { name: 'Call report' })).toBeVisible()
+  })
 })

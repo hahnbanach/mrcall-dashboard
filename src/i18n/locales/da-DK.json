@@ -2440,7 +2440,21 @@
       },
       "callers": {
         "web": "Webopkald"
-      }
+      },
+      "businessNotFound": "Denne virksomhed findes ikke eller er ikke blandt dem, du kan se."
+    },
+    "datePicker": {
+      "chooseDate": "Vælg dato",
+      "chooseMonth": "Vælg måned",
+      "chooseYear": "Vælg år",
+      "prevMonth": "Forrige måned",
+      "nextMonth": "Næste måned",
+      "prevYear": "Forrige år",
+      "nextYear": "Næste år",
+      "prevDecade": "Forrige årti",
+      "nextDecade": "Næste årti",
+      "today": "I dag",
+      "clear": "Ryd"
     }
   },
   "views": {

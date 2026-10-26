@@ -332,8 +332,10 @@
                           v-model="business[variable.name]"
                           class="w-full"
                 />
+                <!-- inputId: the label above names the field for assistive technology (U19 m16) -->
                 <InputNumber
                     v-else
+                    :inputId="variable.name"
                     class="w-full"
                     :disabled="businessVariablesUtils.checkIfDisabledByParentsDecorator(business, variable, isAdmin)"
                     :model-value="businessVariablesUtils.numberFieldModel(business.variables[variable.name])"

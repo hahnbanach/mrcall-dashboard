@@ -2440,7 +2440,21 @@
       },
       "callers": {
         "web": "Verkkopuhelu"
-      }
+      },
+      "businessNotFound": "Tätä yritystä ei ole tai se ei kuulu niihin, jotka voit nähdä."
+    },
+    "datePicker": {
+      "chooseDate": "Valitse päivämäärä",
+      "chooseMonth": "Valitse kuukausi",
+      "chooseYear": "Valitse vuosi",
+      "prevMonth": "Edellinen kuukausi",
+      "nextMonth": "Seuraava kuukausi",
+      "prevYear": "Edellinen vuosi",
+      "nextYear": "Seuraava vuosi",
+      "prevDecade": "Edellinen vuosikymmen",
+      "nextDecade": "Seuraava vuosikymmen",
+      "today": "Tänään",
+      "clear": "Tyhjennä"
     }
   },
   "views": {

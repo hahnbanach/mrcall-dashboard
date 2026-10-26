@@ -2440,7 +2440,21 @@
       },
       "callers": {
         "web": "Nettsamtale"
-      }
+      },
+      "businessNotFound": "Denne virksomheten finnes ikke eller er ikke blant dem du kan se."
+    },
+    "datePicker": {
+      "chooseDate": "Velg dato",
+      "chooseMonth": "Velg måned",
+      "chooseYear": "Velg år",
+      "prevMonth": "Forrige måned",
+      "nextMonth": "Neste måned",
+      "prevYear": "Forrige år",
+      "nextYear": "Neste år",
+      "prevDecade": "Forrige tiår",
+      "nextDecade": "Neste tiår",
+      "today": "I dag",
+      "clear": "Tøm"
     }
   },
   "views": {

@@ -2442,7 +2442,21 @@
       },
       "callers": {
         "web": "Webanruf"
-      }
+      },
+      "businessNotFound": "Dieses Unternehmen existiert nicht oder gehört nicht zu denen, die Sie sehen können."
+    },
+    "datePicker": {
+      "chooseDate": "Datum wählen",
+      "chooseMonth": "Monat wählen",
+      "chooseYear": "Jahr wählen",
+      "prevMonth": "Vorheriger Monat",
+      "nextMonth": "Nächster Monat",
+      "prevYear": "Vorheriges Jahr",
+      "nextYear": "Nächstes Jahr",
+      "prevDecade": "Vorheriges Jahrzehnt",
+      "nextDecade": "Nächstes Jahrzehnt",
+      "today": "Heute",
+      "clear": "Löschen"
     }
   },
   "views": {

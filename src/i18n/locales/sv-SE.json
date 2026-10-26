@@ -2440,7 +2440,21 @@
       },
       "callers": {
         "web": "Webbsamtal"
-      }
+      },
+      "businessNotFound": "Det här företaget finns inte eller hör inte till dem du kan se."
+    },
+    "datePicker": {
+      "chooseDate": "Välj datum",
+      "chooseMonth": "Välj månad",
+      "chooseYear": "Välj år",
+      "prevMonth": "Föregående månad",
+      "nextMonth": "Nästa månad",
+      "prevYear": "Föregående år",
+      "nextYear": "Nästa år",
+      "prevDecade": "Föregående decennium",
+      "nextDecade": "Nästa decennium",
+      "today": "Idag",
+      "clear": "Rensa"
     }
   },
   "views": {

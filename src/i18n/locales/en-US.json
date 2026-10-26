@@ -2445,7 +2445,21 @@
       },
       "callers": {
         "web": "Web call"
-      }
+      },
+      "businessNotFound": "This business does not exist or is not among those you can see."
+    },
+    "datePicker": {
+      "chooseDate": "Choose Date",
+      "chooseMonth": "Choose Month",
+      "chooseYear": "Choose Year",
+      "prevMonth": "Previous Month",
+      "nextMonth": "Next Month",
+      "prevYear": "Previous Year",
+      "nextYear": "Next Year",
+      "prevDecade": "Previous Decade",
+      "nextDecade": "Next Decade",
+      "today": "Today",
+      "clear": "Clear"
     }
   },
   "views": {

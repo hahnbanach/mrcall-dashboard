@@ -8,11 +8,17 @@
     <div v-if="user" class="analytics-container insights-ui">
 
       <!-- Reseller Owner Selector -->
-      <OwnerSelector v-if="isReseller" />
+      <!-- not over one business: the business is the filter, and the selector had nothing to show (U19 m23) -->
+      <OwnerSelector v-if="isReseller && !businessId" />
 
       <!-- The filters in force, each undone where it shows (brief outcome 10) -->
       <AnalyticsFilterBar :chips="filterChips" :scope-note="scopeNote" @clear="onClearFilter" />
 
+      <!-- A business the reader cannot see (a 404 from StarChat): said once, with nothing under it (U19 m13) -->
+      <section v-if="businessId && businessMissing" class="analytics-section insights-card overview-empty" role="status">
+        <p class="overview-empty-title">{{ $t("components.callInsights.businessNotFound") }}</p>
+      </section>
+      <template v-else>
       <!-- A business's page has three tabs, each with its own address (?tab=), insights-reports-ux -->
       <nav v-if="businessId" class="analytics-tabs" :aria-label="$t('components.callInsights.tabs.label')">
         <router-link
@@ -266,6 +272,7 @@
         </div>
       </div>
       </template>
+      </template>
 
     </div>
   </div>
@@ -344,6 +351,8 @@ export default {
       scopeBody: null,
       // the business of the page: its name, time zone, owner and plan (`CallInsights.business`)
       businessRecord: null,
+      // the business answered as absent: out of the reader's scope, or gone
+      businessMissing: false,
       recomputeVisible: false,
       // The role is known (see `establishRole`): the scope-wide lists wait for it.
       roleReady: false,
@@ -390,7 +399,7 @@ export default {
     },
     filterChips() {
       const chips = [];
-      if (this.businessId) {
+      if (this.businessId && !this.businessMissing) {
         chips.push({
           key: "business",
           name: this.$t("components.callInsights.filterBar.business"),
@@ -589,6 +598,7 @@ export default {
       if (id === this.businessId) return;
       this.businessId = id;
       this.businessRecord = null;
+      this.businessMissing = false;
       this.fetchAllData();
     },
   },
@@ -723,6 +733,7 @@ export default {
       CallInsights.business(user, id)
         .then((b) => {
           if (id !== this.businessId) return;
+          this.businessMissing = !b;
           this.businessRecord = b || { businessId: id, name: null, timeZone: null, owner: null, subscriptionStatus: null };
           if (b && b.name) this.rememberNames({ [id]: b.name });
         })

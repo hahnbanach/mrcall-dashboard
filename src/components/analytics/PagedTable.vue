@@ -277,8 +277,11 @@ export default {
       clip: rect(0 0 0 0);
     }
 
+    // A card holds its values two by two, each under its column's name; the first (what the row is) and the last
+    // (its actions) take the card's width. One value per line made a report's card eight lines tall (U19 m19).
     tbody tr {
-      display: block;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       background: @mrcall_white;
       border: 1px solid @mrcall_borders;
       border-radius: 12px;
@@ -287,11 +290,17 @@ export default {
     }
 
     td {
-      display: grid;
-      grid-template-columns: 40% 1fr;
-      gap: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      min-width: 0;
       border-bottom: none;
       padding: 6px 12px;
+
+      &:first-child,
+      &:last-child {
+        grid-column: 1 / -1;
+      }
 
       &::before {
         content: attr(data-label);

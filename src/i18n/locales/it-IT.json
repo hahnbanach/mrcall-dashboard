@@ -2446,7 +2446,21 @@
       },
       "callers": {
         "web": "Chiamata web"
-      }
+      },
+      "businessNotFound": "Questa attività non esiste o non è tra quelle che puoi vedere."
+    },
+    "datePicker": {
+      "chooseDate": "Scegli la data",
+      "chooseMonth": "Scegli il mese",
+      "chooseYear": "Scegli l'anno",
+      "prevMonth": "Mese precedente",
+      "nextMonth": "Mese successivo",
+      "prevYear": "Anno precedente",
+      "nextYear": "Anno successivo",
+      "prevDecade": "Decennio precedente",
+      "nextDecade": "Decennio successivo",
+      "today": "Oggi",
+      "clear": "Cancella"
     }
   },
   "views": {

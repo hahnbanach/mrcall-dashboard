@@ -300,14 +300,18 @@ test.describe('AnalyticsAdmin: the filter bar', () => {
     await expect(bar.getByRole('button', { name: /^Clear the/ })).toHaveCount(0)
   })
 
-  test('on a phone the bar stays one line, so a heading scrolled to is not hidden under it', async ({ adminPage: page }) => {
+  // On a phone the chips wrap, every one on the screen (U19 m19: in one line scrolling sideways they were cut), and the
+  // bar, two or three lines tall, stays at the top of the page rather than sticking over a heading a link scrolled to.
+  test('on a phone every chip is on the screen, and the bar does not stick over a heading scrolled to', async ({ adminPage: page }) => {
     await page.setViewportSize({ width: 375, height: 812 })
     await page.goto(`/analytics-admin?businessId=${BUSINESS_ID}&ownerId=owner-9&plan=restaurant`)
     const bar = page.getByRole('region', { name: 'Active filters' })
     await expect(bar.getByRole('button', { name: 'Clear the plan filter' })).toBeAttached({ timeout: 15000 })
-    const box = await bar.boundingBox()
-    // one line of chips: 24px controls in a padded bar; two lines measured 95px on the first review
-    expect(box.height).toBeLessThanOrEqual(56)
+    for (const chip of await bar.locator('.filter-chip').all()) {
+      const box = await chip.boundingBox()
+      expect(box.x + box.width).toBeLessThanOrEqual(375)
+    }
+    expect(await bar.evaluate((el) => getComputedStyle(el).position)).toBe('static')
   })
 
   test('over MrCall\'s configuration suggestions, which follow no filter, the bar says what they cover', async ({ adminPage: page }) => {

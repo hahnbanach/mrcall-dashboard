@@ -2440,7 +2440,21 @@
       },
       "callers": {
         "web": "Veebikõne"
-      }
+      },
+      "businessNotFound": "Seda ettevõtet pole olemas või see pole nende hulgas, mida saad näha."
+    },
+    "datePicker": {
+      "chooseDate": "Vali kuupäev",
+      "chooseMonth": "Vali kuu",
+      "chooseYear": "Vali aasta",
+      "prevMonth": "Eelmine kuu",
+      "nextMonth": "Järgmine kuu",
+      "prevYear": "Eelmine aasta",
+      "nextYear": "Järgmine aasta",
+      "prevDecade": "Eelmine kümnend",
+      "nextDecade": "Järgmine kümnend",
+      "today": "Täna",
+      "clear": "Tühjenda"
     }
   },
   "views": {

@@ -2440,7 +2440,21 @@
       },
       "callers": {
         "web": "Webgesprek"
-      }
+      },
+      "businessNotFound": "Dit bedrijf bestaat niet of hoort niet bij de bedrijven die u kunt zien."
+    },
+    "datePicker": {
+      "chooseDate": "Datum kiezen",
+      "chooseMonth": "Maand kiezen",
+      "chooseYear": "Jaar kiezen",
+      "prevMonth": "Vorige maand",
+      "nextMonth": "Volgende maand",
+      "prevYear": "Vorig jaar",
+      "nextYear": "Volgend jaar",
+      "prevDecade": "Vorig decennium",
+      "nextDecade": "Volgend decennium",
+      "today": "Vandaag",
+      "clear": "Wissen"
     }
   },
   "views": {

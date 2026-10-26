@@ -2454,7 +2454,21 @@
       },
       "callers": {
         "web": "Llamada web"
-      }
+      },
+      "businessNotFound": "Este negocio no existe o no está entre los que puedes ver."
+    },
+    "datePicker": {
+      "chooseDate": "Elegir fecha",
+      "chooseMonth": "Elegir mes",
+      "chooseYear": "Elegir año",
+      "prevMonth": "Mes anterior",
+      "nextMonth": "Mes siguiente",
+      "prevYear": "Año anterior",
+      "nextYear": "Año siguiente",
+      "prevDecade": "Década anterior",
+      "nextDecade": "Década siguiente",
+      "today": "Hoy",
+      "clear": "Borrar"
     }
   },
   "views": {

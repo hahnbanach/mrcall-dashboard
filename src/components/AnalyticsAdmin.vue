@@ -654,6 +654,13 @@ export default {
       // only what decides whether to ask for MrCall's own configuration suggestions at all, so the
       // scope-wide lists start (`roleReady`) strictly after the role resolves.
       await this.establishRole();
+      // The platform page is an admin's: anyone else is taken to their own statistics, never to a page titled for
+      // all businesses that shows their own or nothing (U19 m12). StarChat refuses the admin routes either way.
+      const role = this.store.state.role;
+      if (role && role !== "admin") {
+        this.$router.replace({ path: "/analytics" });
+        return;
+      }
       this.roleReady = true;
       this.fetchAllData();
       this.fetchTemplates();
