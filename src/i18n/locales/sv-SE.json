@@ -2415,7 +2415,15 @@
         },
         "hiddenExamples": "Dolda exempel",
         "hiddenAs": "Dolt den {date}: {reason}",
-        "restoreExampleOf": "Återställ exemplet ”{text}”"
+        "restoreExampleOf": "Återställ exemplet ”{text}”",
+        "whoAskedOf": "Vem frågade: {category}",
+        "dismissedBy": "Arkiverad den {date} av {who}: {reason}",
+        "who": {
+          "you": "dig",
+          "admin": "MrCall"
+        },
+        "archived": "{category} arkiverad.",
+        "undo": "Ångra"
       },
       "admin": {
         "reason": {

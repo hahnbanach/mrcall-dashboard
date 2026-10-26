@@ -337,8 +337,43 @@ function change(current, previous, previousBase) {
     return { available: true, value: (current - previous) / previous };
 }
 
+/*
+ * "RICHIESTE DEI CHIAMANTI", what the dashboard does to the rows StarChat orders: an example said by two businesses in
+ * near-identical words (case, ’ against ', a comma) is one example (U19 m9); and "other", which says least about what
+ * to build, comes after the categories it ties with, by the sort in force (m10), the rest of the order StarChat's.
+ */
+function foldText(text) {
+    return String(text || "").normalize("NFKC").replace(/[\u2018\u2019\u02BC`]/g, "'").toLocaleLowerCase()
+        .replace(/[^\p{L}\p{N}\s']/gu, " ").replace(/'/g, "").replace(/\s+/g, " ").trim();
+}
+
+function distinctExamples(examples) {
+    const seen = new Set();
+    return (Array.isArray(examples) ? examples : []).filter((e) => {
+        if (!e || typeof e.text !== "string") return false;
+        const key = foldText(e.text);
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+    });
+}
+
+function otherLast(rows, sort) {
+    const value = (r) => (sort === "businesses" ? r.businesses : r.score);
+    const list = [...rows];
+    for (let i = list.length - 1; i >= 0; i--) {
+        if (list[i].category !== "other") continue;
+        let j = i;
+        while (j + 1 < list.length && value(list[j + 1]) === value(list[i])) j++;
+        if (j > i) list.splice(j, 0, list.splice(i, 1)[0]);
+    }
+    return list;
+}
+
 export default {
     FALLBACK_ZONE,
+    distinctExamples,
+    otherLast,
     MIN_PREVIOUS_BASE,
     change,
     reportOutcome,

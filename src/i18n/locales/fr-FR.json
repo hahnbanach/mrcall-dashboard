@@ -2417,7 +2417,15 @@
         },
         "hiddenExamples": "Exemples masqués",
         "hiddenAs": "Masqué le {date} : {reason}",
-        "restoreExampleOf": "Rétablir l’exemple « {text} »"
+        "restoreExampleOf": "Rétablir l’exemple « {text} »",
+        "whoAskedOf": "Qui l'a demandé : {category}",
+        "dismissedBy": "Archivée le {date} par {who} : {reason}",
+        "who": {
+          "you": "vous",
+          "admin": "MrCall"
+        },
+        "archived": "{category} archivée.",
+        "undo": "Annuler"
       },
       "admin": {
         "reason": {

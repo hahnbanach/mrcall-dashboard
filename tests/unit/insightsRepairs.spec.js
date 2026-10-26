@@ -113,3 +113,18 @@ describe('M13: a change is said only over a previous base of at least 20 calls',
     expect(R.change(30, null, null)).toBeNull()
   })
 })
+
+describe('m9, m10: the examples and the order of the categories', () => {
+  it('folds near-duplicate examples (case, apostrophes, punctuation), keeping the first', () => {
+    const list = [{ text: 'Posso prenotare sul sito?' }, { text: 'posso prenotare sul sito' }, { text: 'Avete l’orario?' }, { text: "Avete l'orario ?" }]
+    expect(R.distinctExamples(list).map((e) => e.text)).toEqual(['Posso prenotare sul sito?', 'Avete l’orario?'])
+  })
+  it('puts "other" after the categories it ties with, and nowhere else changes the server\'s order', () => {
+    const rows = [
+      { category: 'other', score: 2, businesses: 3 }, { category: 'prices', score: 2, businesses: 1 },
+      { category: 'online_booking', score: 1, businesses: 9 },
+    ]
+    expect(R.otherLast(rows, 'score').map((r) => r.category)).toEqual(['prices', 'other', 'online_booking'])
+    expect(R.otherLast(rows, 'businesses').map((r) => r.category)).toEqual(['other', 'prices', 'online_booking'])
+  })
+})

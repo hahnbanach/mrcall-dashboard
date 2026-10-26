@@ -2421,7 +2421,15 @@
         },
         "hiddenExamples": "Esempi nascosti",
         "hiddenAs": "Nascosto il {date}: {reason}",
-        "restoreExampleOf": "Ripristina l'esempio “{text}”"
+        "restoreExampleOf": "Ripristina l'esempio “{text}”",
+        "whoAskedOf": "Chi l'ha chiesto: {category}",
+        "dismissedBy": "Archiviata il {date} da {who}: {reason}",
+        "who": {
+          "you": "te",
+          "admin": "MrCall"
+        },
+        "archived": "{category} archiviata.",
+        "undo": "Annulla"
       },
       "admin": {
         "reason": {

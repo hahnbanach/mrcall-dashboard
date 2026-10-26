@@ -2415,7 +2415,15 @@
         },
         "hiddenExamples": "Verborgen voorbeelden",
         "hiddenAs": "Verborgen op {date}: {reason}",
-        "restoreExampleOf": "Voorbeeld “{text}” herstellen"
+        "restoreExampleOf": "Voorbeeld “{text}” herstellen",
+        "whoAskedOf": "Wie vroeg erom: {category}",
+        "dismissedBy": "Gearchiveerd op {date} door {who}: {reason}",
+        "who": {
+          "you": "u",
+          "admin": "MrCall"
+        },
+        "archived": "{category} gearchiveerd.",
+        "undo": "Ongedaan maken"
       },
       "admin": {
         "reason": {

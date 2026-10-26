@@ -2429,7 +2429,15 @@
         },
         "hiddenExamples": "Ejemplos ocultos",
         "hiddenAs": "Ocultado el {date}: {reason}",
-        "restoreExampleOf": "Restaurar el ejemplo “{text}”"
+        "restoreExampleOf": "Restaurar el ejemplo “{text}”",
+        "whoAskedOf": "Quién lo pidió: {category}",
+        "dismissedBy": "Archivada el {date} por {who}: {reason}",
+        "who": {
+          "you": "ti",
+          "admin": "MrCall"
+        },
+        "archived": "{category} archivada.",
+        "undo": "Deshacer"
       },
       "admin": {
         "reason": {

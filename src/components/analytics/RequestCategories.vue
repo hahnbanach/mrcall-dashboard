@@ -20,6 +20,11 @@
       <p class="requests-score-help">{{ $t("components.callInsights.requests.scoreHelp") }}</p>
     </div>
 
+    <p v-if="archived" class="requests-archived" role="status">
+      {{ $t("components.callInsights.requests.archived", { category: archived.label }) }}
+      <Button type="button" text size="small" :label="$t('components.callInsights.requests.undo')" :disabled="busy" @click="undoArchive" />
+    </p>
+
     <InsightsState
       :status="status"
       :empty="status === 'ok' && rows.length === 0"
@@ -50,14 +55,13 @@
                   <span v-if="row.dismissal && row.dismissal.reopened" class="requests-reopened">
                     {{ $t("components.callInsights.requests.reopened", { n: row.dismissal.reopened.newBusinesses, date: day(row.dismissal.reopened.since) }) }}
                   </span>
-                  <span v-else-if="row.dismissal" class="requests-reopened">
-                    {{ $t("components.callInsights.requests.dismissedAs", { reason: $t("components.callInsights.requests.reason." + row.dismissal.reason), date: day(row.dismissal.at) }) }}
-                  </span>
+                  <span v-else-if="row.dismissal" class="requests-reopened">{{ dismissalText(row.dismissal) }}</span>
                   <span class="requests-row-actions">
                     <Button
                       type="button" text size="small"
                       :icon="expanded === row.category ? 'pi pi-chevron-up' : 'pi pi-chevron-down'"
                       :label="$t('components.callInsights.requests.whoAsked')"
+                      :aria-label="$t('components.callInsights.requests.whoAskedOf', { category: row.label })"
                       :aria-expanded="expanded === row.category ? 'true' : 'false'"
                       :aria-controls="'requests-businesses-' + row.category"
                       @click="toggle(row)"
@@ -114,8 +118,9 @@
                 <td :data-label="$t('components.callInsights.requests.nextAction')">{{ row.nextAction }}</td>
                 <td :data-label="$t('components.callInsights.requests.examples')">
                   <ul class="requests-examples">
-                    <li v-for="e in row.examples" :key="e.text + e.businessId">
-                      <q>{{ e.text }}</q>
+                    <!-- not quoted: an example may be what a caller asked or what the report suggests (U19 m9) -->
+                    <li v-for="e in examplesOf(row)" :key="e.text + e.businessId">
+                      <span>{{ e.text }}</span>
                       <router-link :to="reportLink(e.businessId, e.reportPeriodStart)" class="requests-sub">{{ businessName(e) }}</router-link>
                       <Button
                         v-if="isAdmin"
@@ -245,6 +250,8 @@ export default {
       // the hidden examples being restored, `category NUL text`: a second click on one waits for the first
       restoring: new Set(),
       actionFailed: false,
+      // the category just archived, offered back where it was archived (U19 m18)
+      archived: null,
       gate: CallInsights.latestOnly(),
     };
   },
@@ -253,7 +260,8 @@ export default {
       return this.role === "admin";
     },
     rows() {
-      return this.answer && Array.isArray(this.answer.items) ? this.answer.items : [];
+      const items = this.answer && Array.isArray(this.answer.items) ? this.answer.items : [];
+      return InsightsReports.otherLast(items, this.sort);
     },
     reasons() {
       return REASONS;
@@ -331,8 +339,9 @@ export default {
     bucketUnit(row) {
       return row.bucket === "month" ? "month" : "week";
     },
+    // Each bucket by the day it starts and its businesses, so a screen reader hears when, not only how many (U19 m16).
     histogramLabel(row) {
-      const values = (row.histogram || []).map((b) => b.businesses).join(", ");
+      const values = (row.histogram || []).map((b) => this.shortDay(b.start) + ": " + b.businesses).join(", ");
       return this.$t("components.callInsights.requests.histogramLabel", { bucket: this.$t("components.callInsights.requests.bucket." + this.bucketUnit(row)), values });
     },
     histogramWidth(row) {
@@ -341,6 +350,27 @@ export default {
     barHeight(row, bucket) {
       const max = Math.max(1, ...(row.histogram || []).map((b) => b.businesses));
       return bucket.businesses === 0 ? 1 : Math.max(3, Math.round((bucket.businesses / max) * 30));
+    },
+    shortDay(iso) {
+      const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(iso || ""));
+      if (!m) return String(iso || "");
+      return new Intl.DateTimeFormat(this.$i18n.locale, { month: "short", day: "numeric", timeZone: "UTC" }).format(new Date(Date.UTC(+m[1], +m[2] - 1, +m[3])));
+    },
+    examplesOf(row) {
+      return InsightsReports.distinctExamples(row.examples);
+    },
+    // "Archiviata il {date} da {who}: {reason}", and the note: who is the reader, or MrCall (only an admin archives).
+    dismissalText(dismissal) {
+      const me = this.$store.state.user && this.$store.state.user.uid;
+      const who = this.$t("components.callInsights.requests.who." + (dismissal.by && dismissal.by === me ? "you" : "admin"));
+      const text = this.$t("components.callInsights.requests.dismissedBy", { date: this.day(dismissal.at), who, reason: this.$t("components.callInsights.requests.reason." + dismissal.reason) });
+      return typeof dismissal.note === "string" && dismissal.note.trim() !== "" ? text + " · " + dismissal.note.trim() : text;
+    },
+    undoArchive() {
+      const row = this.archived;
+      if (!row) return;
+      this.archived = null;
+      this.restore(row);
     },
     isoDay(iso) {
       return InsightsReports.isoDayLabel(iso, this.$i18n.locale) || iso;
@@ -378,7 +408,11 @@ export default {
         ? CallInsights.dismissExample(this.user(), d.row.category, { text: d.example.text, reason: this.dismissReason, note })
         : CallInsights.dismissCategory(this.user(), d.row.category, { reason: this.dismissReason, note });
       action
-        .then(() => { this.dismissVisible = false; this.load(); })
+        .then(() => {
+          this.dismissVisible = false;
+          this.archived = d.example ? null : d.row;
+          this.load();
+        })
         .catch((error) => { if (!isSessionEnded(error)) this.actionFailed = true; })
         .finally(() => { this.busy = false; });
     },
@@ -420,6 +454,14 @@ export default {
   overflow: hidden;
   clip: rect(0 0 0 0);
   white-space: nowrap;
+}
+
+.requests-archived {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 10px 0;
+  font-size: 14px;
 }
 
 .requests-purpose, .requests-window, .requests-score-help {

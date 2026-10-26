@@ -2415,7 +2415,15 @@
         },
         "hiddenExamples": "Skjulte eksempler",
         "hiddenAs": "Skjult {date}: {reason}",
-        "restoreExampleOf": "Gjenopprett eksempelet «{text}»"
+        "restoreExampleOf": "Gjenopprett eksempelet «{text}»",
+        "whoAskedOf": "Hvem spurte: {category}",
+        "dismissedBy": "Arkivert {date} av {who}: {reason}",
+        "who": {
+          "you": "deg",
+          "admin": "MrCall"
+        },
+        "archived": "{category} arkivert.",
+        "undo": "Angre"
       },
       "admin": {
         "reason": {

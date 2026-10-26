@@ -2420,7 +2420,15 @@
         },
         "hiddenExamples": "Hidden examples",
         "hiddenAs": "Hidden on {date}: {reason}",
-        "restoreExampleOf": "Restore the example “{text}”"
+        "restoreExampleOf": "Restore the example “{text}”",
+        "whoAskedOf": "Who asked: {category}",
+        "dismissedBy": "Archived on {date} by {who}: {reason}",
+        "who": {
+          "you": "you",
+          "admin": "MrCall"
+        },
+        "archived": "{category} archived.",
+        "undo": "Undo"
       },
       "admin": {
         "reason": {

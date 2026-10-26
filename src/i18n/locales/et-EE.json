@@ -2415,7 +2415,15 @@
         },
         "hiddenExamples": "Peidetud näited",
         "hiddenAs": "Peidetud {date}: {reason}",
-        "restoreExampleOf": "Taasta näide „{text}“"
+        "restoreExampleOf": "Taasta näide „{text}“",
+        "whoAskedOf": "Kes küsis: {category}",
+        "dismissedBy": "Arhiveeris {who} {date}: {reason}",
+        "who": {
+          "you": "sina",
+          "admin": "MrCall"
+        },
+        "archived": "{category} arhiveeritud.",
+        "undo": "Võta tagasi"
       },
       "admin": {
         "reason": {

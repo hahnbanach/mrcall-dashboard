@@ -2415,7 +2415,15 @@
         },
         "hiddenExamples": "Κρυφά παραδείγματα",
         "hiddenAs": "Κρύφτηκε στις {date}: {reason}",
-        "restoreExampleOf": "Επαναφορά του παραδείγματος «{text}»"
+        "restoreExampleOf": "Επαναφορά του παραδείγματος «{text}»",
+        "whoAskedOf": "Ποιος το ζήτησε: {category}",
+        "dismissedBy": "Αρχειοθετήθηκε στις {date} από {who}: {reason}",
+        "who": {
+          "you": "εσάς",
+          "admin": "MrCall"
+        },
+        "archived": "{category}: αρχειοθετήθηκε.",
+        "undo": "Αναίρεση"
       },
       "admin": {
         "reason": {

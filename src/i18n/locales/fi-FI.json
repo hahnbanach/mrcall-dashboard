@@ -2415,7 +2415,15 @@
         },
         "hiddenExamples": "Piilotetut esimerkit",
         "hiddenAs": "Piilotettu {date}: {reason}",
-        "restoreExampleOf": "Palauta esimerkki ”{text}”"
+        "restoreExampleOf": "Palauta esimerkki ”{text}”",
+        "whoAskedOf": "Kuka kysyi: {category}",
+        "dismissedBy": "Arkistoinut {who} {date}: {reason}",
+        "who": {
+          "you": "sinä",
+          "admin": "MrCall"
+        },
+        "archived": "{category} arkistoitu.",
+        "undo": "Kumoa"
       },
       "admin": {
         "reason": {

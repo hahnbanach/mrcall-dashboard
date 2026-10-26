@@ -2415,7 +2415,15 @@
         },
         "hiddenExamples": "Skjulte eksempler",
         "hiddenAs": "Skjult den {date}: {reason}",
-        "restoreExampleOf": "Gendan eksemplet “{text}”"
+        "restoreExampleOf": "Gendan eksemplet “{text}”",
+        "whoAskedOf": "Hvem spurgte: {category}",
+        "dismissedBy": "Arkiveret den {date} af {who}: {reason}",
+        "who": {
+          "you": "dig",
+          "admin": "MrCall"
+        },
+        "archived": "{category} arkiveret.",
+        "undo": "Fortryd"
       },
       "admin": {
         "reason": {
