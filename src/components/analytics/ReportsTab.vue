@@ -6,16 +6,11 @@
       <InsightsState :status="history.status" :empty="!schedule" @retry="history.retry()">
         <div v-if="schedule" class="schedule-panel">
           <template v-if="schedule.cadenceDays > 0">
-            <p>{{ $t("components.callInsights.reports.panel.cadence", { days: schedule.cadenceDays }) }}</p>
+            <p>{{ $t("components.callInsights.reports.panel.cadence", { days: schedule.cadenceDays }, schedule.cadenceDays) }}</p>
             <p v-if="skipped" class="schedule-skipped" role="status">
-              {{ $t("components.callInsights.reports.panel.skipped", { period: skippedPeriod, days: schedule.cadenceDays }) }}
+              {{ $t("components.callInsights.reports.panel.skipped", { period: skippedPeriod, days: schedule.cadenceDays }, schedule.cadenceDays) }}
             </p>
-            <p v-else-if="next && next.retry">
-              {{ $t("components.callInsights.reports.panel.retry", { from: day(next.from), to: lastDay(next.from, next.to) }) }}
-            </p>
-            <p v-else-if="next">
-              {{ $t("components.callInsights.reports.panel.next", { date: day(next.to), from: day(next.from), to: lastDay(next.from, next.to) }) }}
-            </p>
+            <p v-else-if="next">{{ nextText }}</p>
             <p class="schedule-hint">
               {{ $t("components.callInsights.reports.panel.settings") }}
               <router-link :to="settingsLink">{{ $t("components.callInsights.reports.panel.settingsLink") }}</router-link>
@@ -29,7 +24,7 @@
             <template v-if="!isFreeOwner">
               <Button type="button" icon="pi pi-plus" :label="$t('components.callInsights.reportsTab.request')" @click="open('report')" />
               <Button
-                v-if="schedule.cadenceDays > 0 && next && !next.retry"
+                v-if="canAnticipate"
                 type="button" outlined icon="pi pi-forward"
                 :label="$t('components.callInsights.reportsTab.anticipate')"
                 @click="open('anticipate')"
@@ -100,7 +95,7 @@
         <template #cell-period="{ row }">
           <router-link v-if="row.status === 'done'" :to="detailLink(row)" class="history-period">{{ period(row) }}</router-link>
           <span v-else class="history-period">{{ period(row) }}</span>
-          <span class="history-days">{{ $t("components.callInsights.reportsTab.days", { days: row.days }) }}</span>
+          <span class="history-days">{{ daysText(row) }}</span>
         </template>
         <template #cell-type="{ row }">
           <span :title="row.type === 'requested' ? $t('components.callInsights.reports.type.onRequestHelp') : null">
@@ -155,6 +150,7 @@
       @started="onStarted"
       @ended="onEnded"
       @regenerate="openRegenerateRefs"
+      @recompute="openRecompute"
     />
 
     <ReportDeleteDialog
@@ -233,6 +229,26 @@ export default {
     next() {
       return this.schedule ? this.schedule.nextAutomatic || null : null;
     },
+    // "Anticipa" while an automatic cycle is in progress, not on a retry, and only when StarChat says the cycle holds a
+    // finished day (`anticipable`, the amendment's rule 6): an empty cycle would be refused (U19 M8). A server that
+    // does not say keeps the offer.
+    canAnticipate() {
+      const s = this.schedule;
+      return !!s && s.cadenceDays > 0 && !!this.next && !this.next.retry && this.next.anticipable !== false;
+    },
+    // The next automatic report: the day it arrives, StarChat's `arrivesAt` (the first nightly run that will write it,
+    // the amendment's rule 7), never the end of its period, which may already be past (U19 M9); and the days it
+    // covers, one day said once (m2). Without `arrivesAt` no day is promised.
+    nextText() {
+      const next = this.next;
+      const days = InsightsReports.inclusiveDays(next.from, next.to, this.zone, this.locale);
+      const one = days.days <= 1;
+      const p = "components.callInsights.reports.panel.";
+      if (next.retry) return one ? this.$t(p + "retryOneDay", { day: days.first }) : this.$t(p + "retry", { from: days.first, to: days.last });
+      if (typeof next.arrivesAt !== "number") return one ? this.$t(p + "coversOneDay", { day: days.first }) : this.$t(p + "covers", { from: days.first, to: days.last });
+      const date = this.day(next.arrivesAt);
+      return one ? this.$t(p + "nextOneDay", { date, day: days.first }) : this.$t(p + "next", { date, from: days.first, to: days.last });
+    },
     skipped() {
       return this.schedule ? this.schedule.skippedForCredit || null : null;
     },
@@ -282,8 +298,11 @@ export default {
     day(ms) {
       return InsightsReports.dayLabel(ms, this.zone, this.locale);
     },
-    lastDay(from, to) {
-      return InsightsReports.inclusiveDays(from, to, this.zone, this.locale).last;
+    // The days of a row counted from the dates it shows, never StarChat's `days` beside them: a period asked over the
+    // API at 01:00 local showed "19 mar – 21 mar · 2 giorni" (U19 m5).
+    daysText(row) {
+      const n = InsightsReports.inclusiveDays(row.periodStart, row.periodEnd, this.zone, this.locale).days;
+      return this.$t("components.callInsights.reportsTab.days", { days: n }, n);
     },
     dateTime(ms) {
       return InsightsReports.dateTimeLabel(ms, this.zone, this.locale);
@@ -352,6 +371,11 @@ export default {
     openRegenerateRefs(refs) {
       this.dialogVisible = false;
       this.$nextTick(() => this.open("regenerate", { regenerates: refs }));
+    },
+    // A report refused for calls not analysed yet offers their analysis, over the same days (the amendment's rule 5).
+    openRecompute(interval) {
+      this.dialogVisible = false;
+      this.$nextTick(() => this.open("recompute", { interval }));
     },
     openRerun(row) {
       this.open("rerun", { interval: { from: row.periodStart, to: row.periodEnd } });

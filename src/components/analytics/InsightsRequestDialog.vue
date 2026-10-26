@@ -49,9 +49,7 @@
         <p v-if="overlap.identical">{{ $t("components.callInsights.request.overlap.same") }}</p>
         <template v-else>
           <p v-if="overlap.cycle">{{ $t("components.callInsights.request.overlap.cycle") }}</p>
-          <p v-for="r in overlap.past" :key="r.periodStart + ':' + (r.requestId || '')">
-            {{ $t("components.callInsights.request.overlap.partial", { kind: $t("components.callInsights.request.kind." + r.type), period: period(r.periodStart, r.periodEnd) }) }}
-          </p>
+          <p v-if="overlapText">{{ overlapText }}</p>
           <label class="request-check">
             <input v-model="acknowledged" type="checkbox" />
             <span>{{ $t("components.callInsights.request.overlap.acknowledge") }}</span>
@@ -141,7 +139,14 @@
     <!-- Refusals, each with its own copy and offers -->
     <section v-else-if="step === 'refused'" class="request-step" role="alert">
       <p class="request-result">{{ refusalText }}</p>
+      <p v-if="refusalDetail" class="request-note">{{ refusalDetail }}</p>
       <div class="request-actions">
+        <Button
+          v-if="canOfferAnalysis"
+          type="button" outlined
+          :label="$t('components.callInsights.request.title.recompute')"
+          @click="offerAnalysis"
+        />
         <Button v-if="refusal === 'no_credit' && hasPeriod" type="button" outlined :label="$t('components.callInsights.request.shorter')" @click="tryShorter" />
         <!-- an admin refused for the business's credit can run the same work at MrCall's cost (the U17b review) -->
         <Button
@@ -206,7 +211,7 @@ export default {
     // the business's schedule, for "Anticipa"'s cycle
     schedule: { type: Object, default: null },
   },
-  emits: ["update:visible", "started", "ended", "regenerate"],
+  emits: ["update:visible", "started", "ended", "regenerate", "recompute"],
   data() {
     return {
       step: "period",
@@ -223,6 +228,7 @@ export default {
       cancelling: false,
       refusal: null,
       refusalJob: null,
+      refusalEstimate: null,
       topUpEffective: null,
       reEstimates: 0,
       now: Date.now(),
@@ -275,10 +281,24 @@ export default {
       const i = this.interval;
       if (!i) return "";
       const d = InsightsReports.inclusiveDays(i.from, i.to, this.zone, this.locale);
-      return this.$t("components.callInsights.request.selected", { from: d.first, to: d.last, days: d.days });
+      return this.$t("components.callInsights.request.selected", { from: d.first, to: d.last, days: d.days }, d.days);
     },
     regenerateText() {
       return this.regenerates.map((r) => this.period(r.periodStart, r.periodEnd)).join("; ");
+    },
+    // The reports the period overlaps: one by its kind and days, several in one sentence with the days they span, never
+    // one paragraph each (a 30-day request on a daily cadence printed eight, U19 M11).
+    overlapText() {
+      const past = (this.overlap && this.overlap.past) || [];
+      if (past.length === 0) return null;
+      if (past.length === 1) {
+        const r = past[0];
+        return this.$t("components.callInsights.request.overlap.partial", { kind: this.$t("components.callInsights.request.kind." + r.type), period: this.period(r.periodStart, r.periodEnd) });
+      }
+      const from = Math.min(...past.map((r) => r.periodStart));
+      const to = Math.max(...past.map((r) => r.periodEnd));
+      const d = InsightsReports.inclusiveDays(from, to, this.zone, this.locale);
+      return this.$t("components.callInsights.request.overlap.partialMany", { n: past.length, from: d.first, to: d.last });
     },
     needsAcknowledge() {
       return !!this.overlap && !this.overlap.identical && (!!this.overlap.cycle || (this.overlap.past || []).length > 0);
@@ -337,17 +357,43 @@ export default {
         case "report_exists": return this.$t("components.callInsights.request.overlap.same");
         case "retention": return this.$t("components.callInsights.request.retention");
         case "plan_required": return this.$t("components.callInsights.free.paidUnavailable");
-        case "no_calls": return this.$t("components.callInsights.request.noCalls");
+        // nothing to read, said before any word about credit (the amendment's rule 5, U19 M7)
+        case "no_calls": return this.$t("components.callInsights.request.noCallsPeriod");
+        case "no_analysis": {
+          const n = this.recomputable;
+          return n > 0 ? this.$t("components.callInsights.request.noAnalysis", { n }, n) : this.$t("components.callInsights.request.noAnalysisNone");
+        }
+        case "cycle_empty": return this.$t("components.callInsights.request.cycleEmpty");
         case "job_open": return this.busyText;
         default: return this.$t("components.callInsights.request.failed");
       }
     },
+    // The day of the business's last call, beside "no calls in this period": StarChat's `lastCallAt`, null when the
+    // business has had none.
+    refusalDetail() {
+      const e = this.refusalEstimate;
+      if (this.refusal !== "no_calls" || !e || !("lastCallAt" in e)) return null;
+      return typeof e.lastCallAt === "number"
+        ? this.$t("components.callInsights.request.lastCall", { date: InsightsReports.dayLabel(e.lastCallAt, this.zone, this.locale) })
+        : this.$t("components.callInsights.request.noCallEver");
+    },
+    recomputable() {
+      const e = this.refusalEstimate;
+      return e && typeof e.recomputable === "number" ? e.recomputable : 0;
+    },
+    // Their analysis is offered only for calls that can be analysed, and only from a report's own period.
+    canOfferAnalysis() {
+      return this.refusal === "no_analysis" && this.recomputable > 0 && this.mode === "report" && !!this.interval;
+    },
     busyText() {
       const job = this.refusalJob;
       if (!job) return this.$t("components.callInsights.request.busyUnknown");
-      const who = this.requesterName(job);
       const when = InsightsReports.dateTimeLabel(job.createdAt, this.zone, this.locale);
-      return this.$t("components.callInsights.request.busy", { who, when });
+      // "avviata da te", never "da Tu" (U19 m3)
+      const me = this.$store.state.user && this.$store.state.user.uid;
+      const r = InsightsReports.requester(job.requestedBy, job.requesterRole, { me, business: this.business });
+      if (r && r.kind === "you") return this.$t("components.callInsights.request.busyYou", { when });
+      return this.$t("components.callInsights.request.busy", { who: this.requesterName(job), when });
     },
     planLink() {
       return { path: "/plan", query: { id: this.business.businessId } };
@@ -399,6 +445,7 @@ export default {
       this.job = null;
       this.refusal = null;
       this.refusalJob = null;
+      this.refusalEstimate = null;
       this.reEstimates = 0;
       this.requestKey = null;
       this.choice = 30;
@@ -572,8 +619,14 @@ export default {
     // nothing to switch on.
     showRefusal(code, estimate = null) {
       this.refusal = code;
+      this.refusalEstimate = estimate;
       this.step = "refused";
       this.topUpEffective = estimate && typeof estimate.topUpEffective === "boolean" ? estimate.topUpEffective : null;
+    },
+    offerAnalysis() {
+      const interval = this.interval;
+      this.close();
+      this.$emit("recompute", { from: interval.from, to: interval.to });
     },
     runAtPlatformCost() {
       this.refusal = null;

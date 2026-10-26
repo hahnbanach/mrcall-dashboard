@@ -2007,13 +2007,17 @@
         "integrationTitle": "Un sistema para conectar",
         "mrcallConfigTitle": "Sugerencias de configuración de MrCall",
         "panel": {
-          "cadence": "Cada {days} días MrCall prepara un informe sobre las llamadas de tu negocio. Cada informe usa el crédito del negocio.",
+          "cadence": "Cada día MrCall prepara un informe sobre las llamadas de tu negocio. Cada informe usa el crédito del negocio. | Cada {days} días MrCall prepara un informe sobre las llamadas de tu negocio. Cada informe usa el crédito del negocio.",
           "next": "El próximo llegará el {date} y cubrirá del {from} al {to}.",
           "retry": "El informe que cubre del {from} al {to} no salió bien: se volverá a intentar esta noche.",
           "settings": "Puedes cambiar la frecuencia en los ajustes del negocio (0 = sin informes).",
           "settingsLink": "Abrir los ajustes del negocio",
           "off": "Los informes automáticos no están activos. Puedes activarlos en los ajustes del negocio o pedir un informe de un período a tu elección.",
-          "skipped": "El informe de {period} está aplazado: no hay crédito suficiente. Tras la próxima recarga prepararemos el informe de los últimos {days} días; los días anteriores se quedan en las estadísticas y se pueden analizar con un informe a petición."
+          "skipped": "El informe de {period} está aplazado: no hay crédito suficiente. Tras la próxima recarga prepararemos el informe del último día; los días anteriores se quedan en las estadísticas y se pueden analizar con un informe a petición. | El informe de {period} está aplazado: no hay crédito suficiente. Tras la próxima recarga prepararemos el informe de los últimos {days} días; los días anteriores se quedan en las estadísticas y se pueden analizar con un informe a petición.",
+          "nextOneDay": "El próximo llegará el {date} y cubrirá el {day}.",
+          "covers": "El próximo cubrirá del {from} al {to}.",
+          "coversOneDay": "El próximo cubrirá el {day}.",
+          "retryOneDay": "El informe del {day} no salió bien: se volverá a intentar esta noche."
         },
         "type": {
           "automatic": "Automático",
@@ -2190,7 +2194,7 @@
         "clearFilters": "Quitar los filtros",
         "none": "Todavía no hay informes.",
         "noneFiltered": "Ningún informe coincide con estos filtros.",
-        "days": "{days} días",
+        "days": "1 día | {days} días",
         "callsOfManaged": "{calls} de {managed} gestionadas",
         "callsAnalysed": "{calls} analizadas",
         "open": "Abrir",
@@ -2271,7 +2275,7 @@
         "preset": "Últimos {days} días",
         "custom": "Elegir los días",
         "periodHint": "Los días son los del negocio, hasta ayer incluido.",
-        "selected": "Del {from} al {to} ({days} días)",
+        "selected": "El {from} (1 día) | Del {from} al {to} ({days} días)",
         "continue": "Continuar",
         "cancel": "Cancelar",
         "close": "Cerrar",
@@ -2291,7 +2295,8 @@
           "cycle": "Estos días los volverá a leer el próximo informe automático y se usará de nuevo el crédito.",
           "partial": "Estos días ya están en parte en el informe {kind} {period}. Un informe nuevo los lee otra vez y usa de nuevo el crédito.",
           "acknowledge": "Lo entiendo: leerlos de nuevo igualmente",
-          "regenerateInstead": "Regenerar ese informe"
+          "regenerateInstead": "Regenerar ese informe",
+          "partialMany": "{n} informes ya cubren parte de estos días, del {from} al {to}. Un informe nuevo los lee otra vez y usa de nuevo el crédito."
         },
         "kind": {
           "automatic": "automático",
@@ -2316,7 +2321,14 @@
         "cancelRecompute": "Se detiene tras la llamada en curso; las llamadas ya analizadas se quedan y han usado el crédito del negocio.",
         "cancelled": "Proceso cancelado.",
         "keepOpen": "Puedes cerrar esta ventana: el proceso continúa y lo encontrarás en Procesos.",
-        "platformInstead": "Ejecutar a cargo de MrCall"
+        "platformInstead": "Ejecutar a cargo de MrCall",
+        "noCallsPeriod": "No hay llamadas en este período.",
+        "lastCall": "La última llamada fue el {date}.",
+        "noCallEver": "El negocio todavía no ha recibido ninguna llamada.",
+        "noAnalysis": "Hay 1 llamada en este período, pero aún no está analizada. | Hay {n} llamadas en este período, pero ninguna está analizada todavía.",
+        "noAnalysisNone": "Ninguna llamada de este período está analizada, y ninguna se puede analizar.",
+        "cycleEmpty": "El informe automático en curso aún no tiene ningún día terminado: por ahora no hay nada que preparar.",
+        "busyYou": "Ya hay un proceso en curso para este negocio, iniciado por ti el {when}."
       },
       "recompute": {
         "banner": "{n} llamadas gestionadas en este período aún no tienen el análisis automático, así que resultados, temas y calidad no las cuentan.",

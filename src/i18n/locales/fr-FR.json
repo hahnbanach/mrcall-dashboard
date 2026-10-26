@@ -1995,13 +1995,17 @@
         "integrationTitle": "Un système à connecter",
         "mrcallConfigTitle": "Suggestions de configuration MrCall",
         "panel": {
-          "cadence": "Tous les {days} jours, MrCall prépare un rapport sur les appels de votre entreprise. Chaque rapport utilise le crédit de l'entreprise.",
+          "cadence": "Chaque jour, MrCall prépare un rapport sur les appels de votre entreprise. Chaque rapport utilise le crédit de l'entreprise. | Tous les {days} jours, MrCall prépare un rapport sur les appels de votre entreprise. Chaque rapport utilise le crédit de l'entreprise.",
           "next": "Le prochain arrivera le {date} et couvrira du {from} au {to}.",
           "retry": "Le rapport couvrant du {from} au {to} n'a pas abouti : il sera retenté cette nuit.",
           "settings": "Vous pouvez changer la fréquence dans les paramètres de l'entreprise (0 = aucun rapport).",
           "settingsLink": "Ouvrir les paramètres de l'entreprise",
           "off": "Les rapports automatiques ne sont pas activés. Vous pouvez les activer dans les paramètres de l'entreprise ou demander un rapport pour la période de votre choix.",
-          "skipped": "Le rapport de {period} est reporté : le crédit est insuffisant. Après la prochaine recharge, nous préparerons le rapport des {days} derniers jours ; les jours précédents restent dans les statistiques et peuvent être analysés avec un rapport à la demande."
+          "skipped": "Le rapport de {period} est reporté : le crédit est insuffisant. Après la prochaine recharge, nous préparerons le rapport du dernier jour ; les jours précédents restent dans les statistiques et peuvent être analysés avec un rapport à la demande. | Le rapport de {period} est reporté : le crédit est insuffisant. Après la prochaine recharge, nous préparerons le rapport des {days} derniers jours ; les jours précédents restent dans les statistiques et peuvent être analysés avec un rapport à la demande.",
+          "nextOneDay": "Le prochain arrivera le {date} et couvrira le {day}.",
+          "covers": "Le prochain couvrira du {from} au {to}.",
+          "coversOneDay": "Le prochain couvrira le {day}.",
+          "retryOneDay": "Le rapport du {day} n'a pas abouti : il sera retenté cette nuit."
         },
         "type": {
           "automatic": "Automatique",
@@ -2178,7 +2182,7 @@
         "clearFilters": "Effacer les filtres",
         "none": "Aucun rapport pour le moment.",
         "noneFiltered": "Aucun rapport ne correspond à ces filtres.",
-        "days": "{days} jours",
+        "days": "1 jour | {days} jours",
         "callsOfManaged": "{calls} sur {managed} gérés",
         "callsAnalysed": "{calls} analysés",
         "open": "Ouvrir",
@@ -2259,7 +2263,7 @@
         "preset": "{days} derniers jours",
         "custom": "Choisir les jours",
         "periodHint": "Les jours sont ceux de l'entreprise, jusqu'à hier inclus.",
-        "selected": "Du {from} au {to} ({days} jours)",
+        "selected": "Le {from} (1 jour) | Du {from} au {to} ({days} jours)",
         "continue": "Continuer",
         "cancel": "Annuler",
         "close": "Fermer",
@@ -2279,7 +2283,8 @@
           "cycle": "Ces jours seront relus par le prochain rapport automatique et utiliseront de nouveau le crédit.",
           "partial": "Ces jours figurent déjà en partie dans le rapport {kind} {period}. Un nouveau rapport les relit et utilise de nouveau le crédit.",
           "acknowledge": "J'ai compris : les relire quand même",
-          "regenerateInstead": "Régénérer ce rapport"
+          "regenerateInstead": "Régénérer ce rapport",
+          "partialMany": "{n} rapports couvrent déjà une partie de ces jours, du {from} au {to}. Un nouveau rapport les relit et utilise de nouveau le crédit."
         },
         "kind": {
           "automatic": "automatique",
@@ -2304,7 +2309,14 @@
         "cancelRecompute": "Il s'arrête après l'appel en cours ; les appels déjà analysés restent acquis et ont utilisé le crédit de l'entreprise.",
         "cancelled": "Traitement annulé.",
         "keepOpen": "Vous pouvez fermer cette fenêtre : le traitement continue et vous le retrouverez dans Traitements.",
-        "platformInstead": "Lancer aux frais de MrCall"
+        "platformInstead": "Lancer aux frais de MrCall",
+        "noCallsPeriod": "Aucun appel sur cette période.",
+        "lastCall": "Le dernier appel date du {date}.",
+        "noCallEver": "L'entreprise n'a encore reçu aucun appel.",
+        "noAnalysis": "Il y a 1 appel sur cette période, mais il n'est pas encore analysé. | Il y a {n} appels sur cette période, mais aucun n'est encore analysé.",
+        "noAnalysisNone": "Aucun appel de cette période n'est analysé, et aucun ne peut l'être.",
+        "cycleEmpty": "Le rapport automatique en cours n'a encore aucun jour terminé : il n'y a rien à préparer pour l'instant.",
+        "busyYou": "Un traitement est déjà en cours pour cette entreprise, lancé par vous le {when}."
       },
       "recompute": {
         "banner": "{n} appels gérés sur cette période n'ont pas encore l'analyse automatique ; les issues, les sujets et la qualité ne les comptent donc pas.",

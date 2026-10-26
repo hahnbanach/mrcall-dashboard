@@ -1993,13 +1993,17 @@
         "integrationTitle": "Et system at forbinde",
         "mrcallConfigTitle": "MrCalls konfigurationsforslag",
         "panel": {
-          "cadence": "Hver {days}. dag udarbejder MrCall en rapport om din virksomheds opkald. Hver rapport bruger virksomhedens kredit.",
+          "cadence": "Hver dag udarbejder MrCall en rapport om din virksomheds opkald. Hver rapport bruger virksomhedens kredit. | Hver {days}. dag udarbejder MrCall en rapport om din virksomheds opkald. Hver rapport bruger virksomhedens kredit.",
           "next": "Den næste kommer den {date} og dækker fra {from} til {to}.",
           "retry": "Rapporten for perioden {from} til {to} lykkedes ikke: den prøves igen i nat.",
           "settings": "Du kan ændre, hvor ofte, i virksomhedens indstillinger (0 = ingen rapporter).",
           "settingsLink": "Åbn virksomhedens indstillinger",
           "off": "Automatiske rapporter er ikke aktive. Du kan slå dem til i virksomhedens indstillinger eller bestille en rapport for en periode, du selv vælger.",
-          "skipped": "Rapporten for {period} er udskudt: der er ikke nok kredit. Efter næste optankning udarbejder vi rapporten for de seneste {days} dage. Dagene før bliver i statistikken og kan analyseres med en rapport efter anmodning."
+          "skipped": "Rapporten for {period} er udskudt: der er ikke nok kredit. Efter næste optankning udarbejder vi rapporten for den seneste dag. Dagene før bliver i statistikken og kan analyseres med en rapport efter anmodning. | Rapporten for {period} er udskudt: der er ikke nok kredit. Efter næste optankning udarbejder vi rapporten for de seneste {days} dage. Dagene før bliver i statistikken og kan analyseres med en rapport efter anmodning.",
+          "nextOneDay": "Den næste kommer den {date} og dækker {day}.",
+          "covers": "Den næste dækker fra {from} til {to}.",
+          "coversOneDay": "Den næste dækker {day}.",
+          "retryOneDay": "Rapporten for {day} lykkedes ikke: den prøves igen i nat."
         },
         "type": {
           "automatic": "Automatisk",
@@ -2176,7 +2180,7 @@
         "clearFilters": "Ryd filtre",
         "none": "Ingen rapporter endnu.",
         "noneFiltered": "Ingen rapport passer til disse filtre.",
-        "days": "{days} dage",
+        "days": "1 dag | {days} dage",
         "callsOfManaged": "{calls} af {managed} håndterede",
         "callsAnalysed": "{calls} analyseret",
         "open": "Åbn",
@@ -2257,7 +2261,7 @@
         "preset": "Seneste {days} dage",
         "custom": "Vælg dagene",
         "periodHint": "Dagene er virksomhedens, til og med i går.",
-        "selected": "Fra {from} til {to} ({days} dage)",
+        "selected": "Den {from} (1 dag) | Fra {from} til {to} ({days} dage)",
         "continue": "Fortsæt",
         "cancel": "Annullér",
         "close": "Luk",
@@ -2277,7 +2281,8 @@
           "cycle": "Disse dage læses igen af den næste automatiske rapport og bruger kreditten igen.",
           "partial": "Disse dage indgår allerede delvist i rapporten {period} ({kind}). En ny rapport læser dem igen og bruger kreditten igen.",
           "acknowledge": "Jeg forstår: læs dem alligevel igen",
-          "regenerateInstead": "Lav den rapport igen"
+          "regenerateInstead": "Lav den rapport igen",
+          "partialMany": "{n} rapporter dækker allerede en del af disse dage, fra {from} til {to}. En ny rapport læser dem igen og bruger kreditten igen."
         },
         "kind": {
           "automatic": "automatisk",
@@ -2302,7 +2307,14 @@
         "cancelRecompute": "Den stopper efter det opkald, der er i gang. De opkald, der allerede er analyseret, bliver, og de har brugt virksomhedens kredit.",
         "cancelled": "Behandlingen er annulleret.",
         "keepOpen": "Du kan lukke dette vindue: behandlingen fortsætter, og du finder den under Behandling.",
-        "platformInstead": "Kør på MrCalls regning"
+        "platformInstead": "Kør på MrCalls regning",
+        "noCallsPeriod": "Ingen opkald i denne periode.",
+        "lastCall": "Det seneste opkald var den {date}.",
+        "noCallEver": "Virksomheden har endnu ikke modtaget nogen opkald.",
+        "noAnalysis": "Der er 1 opkald i perioden, men det er ikke analyseret endnu. | Der er {n} opkald i perioden, men ingen af dem er analyseret endnu.",
+        "noAnalysisNone": "Intet opkald i perioden er analyseret, og intet kan analyseres.",
+        "cycleEmpty": "Den igangværende automatiske rapport har endnu ingen afsluttet dag: der er intet at udarbejde lige nu.",
+        "busyYou": "Der er allerede en behandling i gang for denne virksomhed, startet af dig den {when}."
       },
       "recompute": {
         "banner": "{n} opkald håndteret i denne periode har endnu ikke den automatiske analyse, så udfald, emner og kvalitet tæller dem ikke med.",

@@ -1995,13 +1995,17 @@
         "integrationTitle": "Ein System zum Verbinden",
         "mrcallConfigTitle": "MrCall-Konfigurationsvorschläge",
         "panel": {
-          "cadence": "Alle {days} Tage erstellt MrCall einen Bericht über die Anrufe Ihres Unternehmens. Jeder Bericht verbraucht Guthaben des Unternehmens.",
+          "cadence": "Jeden Tag erstellt MrCall einen Bericht über die Anrufe Ihres Unternehmens. Jeder Bericht verbraucht Guthaben des Unternehmens. | Alle {days} Tage erstellt MrCall einen Bericht über die Anrufe Ihres Unternehmens. Jeder Bericht verbraucht Guthaben des Unternehmens.",
           "next": "Der nächste kommt am {date} und deckt den Zeitraum vom {from} bis {to} ab.",
           "retry": "Der Bericht für den Zeitraum vom {from} bis {to} war nicht erfolgreich: Er wird heute Nacht erneut versucht.",
           "settings": "Wie oft, können Sie in den Einstellungen des Unternehmens ändern (0 = keine Berichte).",
           "settingsLink": "Einstellungen des Unternehmens öffnen",
           "off": "Automatische Berichte sind nicht aktiv. Sie können sie in den Einstellungen des Unternehmens einschalten oder einen Bericht für einen Zeitraum Ihrer Wahl anfordern.",
-          "skipped": "Der Bericht für {period} ist verschoben: Es ist nicht genug Guthaben vorhanden. Nach der nächsten Aufladung erstellen wir den Bericht für die letzten {days} Tage; die Tage davor bleiben in der Statistik und können mit einem Bericht auf Anfrage analysiert werden."
+          "skipped": "Der Bericht für {period} ist verschoben: Es ist nicht genug Guthaben vorhanden. Nach der nächsten Aufladung erstellen wir den Bericht für den letzten Tag; die Tage davor bleiben in der Statistik und können mit einem Bericht auf Anfrage analysiert werden. | Der Bericht für {period} ist verschoben: Es ist nicht genug Guthaben vorhanden. Nach der nächsten Aufladung erstellen wir den Bericht für die letzten {days} Tage; die Tage davor bleiben in der Statistik und können mit einem Bericht auf Anfrage analysiert werden.",
+          "nextOneDay": "Der nächste kommt am {date} und deckt den {day} ab.",
+          "covers": "Der nächste deckt den Zeitraum vom {from} bis {to} ab.",
+          "coversOneDay": "Der nächste deckt den {day} ab.",
+          "retryOneDay": "Der Bericht für den {day} war nicht erfolgreich: Er wird heute Nacht erneut versucht."
         },
         "type": {
           "automatic": "Automatisch",
@@ -2178,7 +2182,7 @@
         "clearFilters": "Filter zurücksetzen",
         "none": "Noch keine Berichte.",
         "noneFiltered": "Kein Bericht entspricht diesen Filtern.",
-        "days": "{days} Tage",
+        "days": "1 Tag | {days} Tage",
         "callsOfManaged": "{calls} von {managed} bearbeitet",
         "callsAnalysed": "{calls} analysiert",
         "open": "Öffnen",
@@ -2259,7 +2263,7 @@
         "preset": "Letzte {days} Tage",
         "custom": "Tage auswählen",
         "periodHint": "Es gelten die Tage des Unternehmens, bis einschließlich gestern.",
-        "selected": "Vom {from} bis {to} ({days} Tage)",
+        "selected": "Am {from} (1 Tag) | Vom {from} bis {to} ({days} Tage)",
         "continue": "Weiter",
         "cancel": "Abbrechen",
         "close": "Schließen",
@@ -2279,7 +2283,8 @@
           "cycle": "Diese Tage werden vom nächsten automatischen Bericht erneut gelesen und verbrauchen erneut Guthaben.",
           "partial": "Diese Tage sind bereits teilweise im Bericht ({kind}) {period} enthalten. Ein neuer Bericht liest sie erneut und verbraucht erneut Guthaben.",
           "acknowledge": "Verstanden: trotzdem erneut lesen",
-          "regenerateInstead": "Diesen Bericht neu erstellen"
+          "regenerateInstead": "Diesen Bericht neu erstellen",
+          "partialMany": "{n} Berichte decken bereits einen Teil dieser Tage ab, vom {from} bis {to}. Ein neuer Bericht liest sie erneut und verbraucht erneut Guthaben."
         },
         "kind": {
           "automatic": "automatisch",
@@ -2304,7 +2309,14 @@
         "cancelRecompute": "Sie stoppt nach dem laufenden Anruf; die bereits analysierten Anrufe bleiben erhalten und haben Guthaben des Unternehmens verbraucht.",
         "cancelled": "Verarbeitung abgebrochen.",
         "keepOpen": "Sie können dieses Fenster schließen: Die Verarbeitung läuft weiter und Sie finden sie unter Verarbeitung.",
-        "platformInstead": "Auf Kosten von MrCall ausführen"
+        "platformInstead": "Auf Kosten von MrCall ausführen",
+        "noCallsPeriod": "Keine Anrufe in diesem Zeitraum.",
+        "lastCall": "Der letzte Anruf war am {date}.",
+        "noCallEver": "Das Unternehmen hat noch keinen Anruf erhalten.",
+        "noAnalysis": "In diesem Zeitraum gibt es 1 Anruf, aber er ist noch nicht analysiert. | In diesem Zeitraum gibt es {n} Anrufe, aber noch keiner ist analysiert.",
+        "noAnalysisNone": "Kein Anruf dieses Zeitraums ist analysiert, und keiner kann analysiert werden.",
+        "cycleEmpty": "Der laufende automatische Bericht hat noch keinen abgeschlossenen Tag: Im Moment gibt es nichts vorzubereiten.",
+        "busyYou": "Für dieses Unternehmen läuft bereits eine Verarbeitung, von Ihnen gestartet am {when}."
       },
       "recompute": {
         "banner": "{n} in diesem Zeitraum bearbeitete Anrufe haben noch keine automatische Analyse, daher zählen Ergebnisse, Themen und Qualität sie nicht mit.",

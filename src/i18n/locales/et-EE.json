@@ -1993,13 +1993,17 @@
         "integrationTitle": "Ühendatav süsteem",
         "mrcallConfigTitle": "MrCalli seadistussoovitused",
         "panel": {
-          "cadence": "MrCall koostab sinu ettevõtte kõnedest aruande iga {days} päeva järel. Iga aruanne kulutab ettevõtte krediiti.",
+          "cadence": "MrCall koostab sinu ettevõtte kõnedest aruande iga päev. Iga aruanne kulutab ettevõtte krediiti. | MrCall koostab sinu ettevõtte kõnedest aruande iga {days} päeva järel. Iga aruanne kulutab ettevõtte krediiti.",
           "next": "Järgmine saabub {date} ja katab ajavahemiku {from}–{to}.",
           "retry": "Aruanne perioodi {from}–{to} kohta ei õnnestunud: seda proovitakse uuesti täna öösel.",
           "settings": "Sagedust saad muuta ettevõtte seadetes (0 = aruandeid ei tehta).",
           "settingsLink": "Ava ettevõtte seaded",
           "off": "Automaatsed aruanded ei ole aktiivsed. Saad need ettevõtte seadetes sisse lülitada või tellida aruande enda valitud perioodi kohta.",
-          "skipped": "Aruanne perioodi {period} kohta on edasi lükatud: krediiti ei piisa. Pärast järgmist täiendust koostame aruande viimase {days} päeva kohta. Varasemad päevad jäävad statistikasse ja neid saab analüüsida tellitava aruandega."
+          "skipped": "Aruanne perioodi {period} kohta on edasi lükatud: krediiti ei piisa. Pärast järgmist täiendust koostame aruande viimase päeva kohta. Varasemad päevad jäävad statistikasse ja neid saab analüüsida tellitava aruandega. | Aruanne perioodi {period} kohta on edasi lükatud: krediiti ei piisa. Pärast järgmist täiendust koostame aruande viimase {days} päeva kohta. Varasemad päevad jäävad statistikasse ja neid saab analüüsida tellitava aruandega.",
+          "nextOneDay": "Järgmine saabub {date} ja katab päeva {day}.",
+          "covers": "Järgmine katab ajavahemiku {from}–{to}.",
+          "coversOneDay": "Järgmine katab päeva {day}.",
+          "retryOneDay": "Aruanne päeva {day} kohta ei õnnestunud: seda proovitakse uuesti täna öösel."
         },
         "type": {
           "automatic": "Automaatne",
@@ -2176,7 +2180,7 @@
         "clearFilters": "Tühjenda filtrid",
         "none": "Aruandeid veel pole.",
         "noneFiltered": "Ükski aruanne ei vasta nendele filtritele.",
-        "days": "{days} päeva",
+        "days": "1 päev | {days} päeva",
         "callsOfManaged": "{calls} / {managed} käsitletust",
         "callsAnalysed": "{calls} analüüsitud",
         "open": "Ava",
@@ -2257,7 +2261,7 @@
         "preset": "Viimased {days} päeva",
         "custom": "Vali päevad",
         "periodHint": "Päevad on ettevõtte omad, kuni eilse päevani kaasa arvatud.",
-        "selected": "Ajavahemik {from}–{to} ({days} päeva)",
+        "selected": "{from} (1 päev) | Ajavahemik {from}–{to} ({days} päeva)",
         "continue": "Jätka",
         "cancel": "Tühista",
         "close": "Sulge",
@@ -2277,7 +2281,8 @@
           "cycle": "Järgmine automaatne aruanne loeb need päevad uuesti ja kulutab krediiti uuesti.",
           "partial": "Need päevad on juba osaliselt aruandes {period} ({kind}). Uus aruanne loeb need uuesti ja kulutab krediiti uuesti.",
           "acknowledge": "Saan aru: loe need ikkagi uuesti",
-          "regenerateInstead": "Koosta see aruanne uuesti"
+          "regenerateInstead": "Koosta see aruanne uuesti",
+          "partialMany": "{n} aruannet katavad juba osa nendest päevadest, ajavahemikus {from}–{to}. Uus aruanne loeb need uuesti ja kulutab krediiti uuesti."
         },
         "kind": {
           "automatic": "automaatne",
@@ -2302,7 +2307,14 @@
         "cancelRecompute": "See peatub pärast pooleliolevat kõnet. Juba analüüsitud kõned jäävad alles ja need on kulutanud ettevõtte krediiti.",
         "cancelled": "Töötlus tühistatud.",
         "keepOpen": "Võid selle akna sulgeda: töötlus jätkub ja leiad selle jaotisest Töötlemine.",
-        "platformInstead": "Käivita MrCalli kulul"
+        "platformInstead": "Käivita MrCalli kulul",
+        "noCallsPeriod": "Selles perioodis pole kõnesid.",
+        "lastCall": "Viimane kõne oli {date}.",
+        "noCallEver": "Ettevõte pole veel ühtegi kõnet saanud.",
+        "noAnalysis": "Selles perioodis on 1 kõne, kuid seda pole veel analüüsitud. | Selles perioodis on {n} kõnet, kuid ühtegi pole veel analüüsitud.",
+        "noAnalysisNone": "Ühtegi selle perioodi kõnet pole analüüsitud ja ühtegi ei saa analüüsida.",
+        "cycleEmpty": "Käimasoleval automaatsel aruandel pole veel ühtegi lõppenud päeva: praegu pole midagi koostada.",
+        "busyYou": "Selle ettevõtte jaoks on juba töötlus pooleli, mille algatasid {when}."
       },
       "recompute": {
         "banner": "{n} sellel perioodil käsitletud kõnel ei ole veel automaatset analüüsi, mistõttu tulemused, teemad ja kvaliteet neid ei arvesta.",

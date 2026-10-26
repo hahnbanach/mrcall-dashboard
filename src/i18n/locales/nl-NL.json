@@ -1993,13 +1993,17 @@
         "integrationTitle": "Een systeem om te koppelen",
         "mrcallConfigTitle": "MrCall-configuratiesuggesties",
         "panel": {
-          "cadence": "Elke {days} dagen maakt MrCall een rapport over de gesprekken van uw bedrijf. Elk rapport gebruikt het tegoed van het bedrijf.",
+          "cadence": "Elke dag maakt MrCall een rapport over de gesprekken van uw bedrijf. Elk rapport gebruikt het tegoed van het bedrijf. | Elke {days} dagen maakt MrCall een rapport over de gesprekken van uw bedrijf. Elk rapport gebruikt het tegoed van het bedrijf.",
           "next": "Het volgende komt op {date} en beslaat {from} tot {to}.",
           "retry": "Het rapport voor {from} tot {to} is niet gelukt: het wordt vannacht opnieuw geprobeerd.",
           "settings": "U kunt de frequentie wijzigen in de instellingen van het bedrijf (0 = geen rapporten).",
           "settingsLink": "Instellingen van het bedrijf openen",
           "off": "Automatische rapporten zijn niet actief. U kunt ze inschakelen in de instellingen van het bedrijf of een rapport aanvragen voor een periode naar keuze.",
-          "skipped": "Het rapport over {period} is uitgesteld: er is onvoldoende tegoed. Na de volgende opwaardering maken we het rapport over de laatste {days} dagen; de dagen daarvoor blijven in de statistieken en kunnen met een rapport op verzoek worden geanalyseerd."
+          "skipped": "Het rapport over {period} is uitgesteld: er is onvoldoende tegoed. Na de volgende opwaardering maken we het rapport over de laatste dag; de dagen daarvoor blijven in de statistieken en kunnen met een rapport op verzoek worden geanalyseerd. | Het rapport over {period} is uitgesteld: er is onvoldoende tegoed. Na de volgende opwaardering maken we het rapport over de laatste {days} dagen; de dagen daarvoor blijven in de statistieken en kunnen met een rapport op verzoek worden geanalyseerd.",
+          "nextOneDay": "Het volgende komt op {date} en beslaat {day}.",
+          "covers": "Het volgende beslaat {from} tot {to}.",
+          "coversOneDay": "Het volgende beslaat {day}.",
+          "retryOneDay": "Het rapport voor {day} is niet gelukt: het wordt vannacht opnieuw geprobeerd."
         },
         "type": {
           "automatic": "Automatisch",
@@ -2176,7 +2180,7 @@
         "clearFilters": "Filters wissen",
         "none": "Nog geen rapporten.",
         "noneFiltered": "Geen enkel rapport past bij deze filters.",
-        "days": "{days} dagen",
+        "days": "1 dag | {days} dagen",
         "callsOfManaged": "{calls} van {managed} afgehandeld",
         "callsAnalysed": "{calls} geanalyseerd",
         "open": "Openen",
@@ -2257,7 +2261,7 @@
         "preset": "Laatste {days} dagen",
         "custom": "Dagen kiezen",
         "periodHint": "Het zijn de dagen van het bedrijf, tot en met gisteren.",
-        "selected": "Van {from} tot {to} ({days} dagen)",
+        "selected": "Op {from} (1 dag) | Van {from} tot {to} ({days} dagen)",
         "continue": "Doorgaan",
         "cancel": "Annuleren",
         "close": "Sluiten",
@@ -2277,7 +2281,8 @@
           "cycle": "Deze dagen worden opnieuw gelezen door het volgende automatische rapport en gebruiken opnieuw tegoed.",
           "partial": "Deze dagen zitten al deels in het rapport ({kind}) {period}. Een nieuw rapport leest ze opnieuw en gebruikt opnieuw tegoed.",
           "acknowledge": "Begrepen: toch opnieuw lezen",
-          "regenerateInstead": "Dat rapport opnieuw maken"
+          "regenerateInstead": "Dat rapport opnieuw maken",
+          "partialMany": "{n} rapporten beslaan al een deel van deze dagen, van {from} tot {to}. Een nieuw rapport leest ze opnieuw en gebruikt opnieuw tegoed."
         },
         "kind": {
           "automatic": "automatisch",
@@ -2302,7 +2307,14 @@
         "cancelRecompute": "Het stopt na het lopende gesprek; de al geanalyseerde gesprekken blijven staan en hebben tegoed van het bedrijf gebruikt.",
         "cancelled": "Verwerking geannuleerd.",
         "keepOpen": "U kunt dit venster sluiten: de verwerking gaat door en u vindt haar onder Verwerking.",
-        "platformInstead": "Uitvoeren op kosten van MrCall"
+        "platformInstead": "Uitvoeren op kosten van MrCall",
+        "noCallsPeriod": "Geen gesprekken in deze periode.",
+        "lastCall": "Het laatste gesprek was op {date}.",
+        "noCallEver": "Het bedrijf heeft nog geen gesprekken ontvangen.",
+        "noAnalysis": "Er is 1 gesprek in deze periode, maar het is nog niet geanalyseerd. | Er zijn {n} gesprekken in deze periode, maar geen enkel is al geanalyseerd.",
+        "noAnalysisNone": "Geen gesprek van deze periode is geanalyseerd, en geen enkel kan worden geanalyseerd.",
+        "cycleEmpty": "Het lopende automatische rapport heeft nog geen afgeronde dag: er is nu nog niets voor te bereiden.",
+        "busyYou": "Er loopt al een verwerking voor dit bedrijf, door u gestart op {when}."
       },
       "recompute": {
         "banner": "{n} in deze periode afgehandelde gesprekken hebben nog geen automatische analyse, dus afloop, onderwerpen en kwaliteit tellen ze niet mee.",

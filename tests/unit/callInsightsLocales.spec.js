@@ -269,7 +269,13 @@ describe('callInsights: the reports, requests and outcomes of 2026-10-24', () =>
 
   it('it-IT carries the brief\'s copy word for word', () => {
     const ci = itIT.components.callInsights
-    expect(ci.reports.panel.skipped).toBe('Il report di {period} è rimandato: il credito non basta. Dopo la prossima ricarica prepariamo il report degli ultimi {days} giorni; i giorni precedenti restano nelle statistiche e si possono analizzare con un report su richiesta.')
+    // the brief's copy is the plural form; the singular says "dell'ultimo giorno" (U19 m1)
+    expect(ci.reports.panel.skipped.split(' | ')[1]).toBe('Il report di {period} è rimandato: il credito non basta. Dopo la prossima ricarica prepariamo il report degli ultimi {days} giorni; i giorni precedenti restano nelle statistiche e si possono analizzare con un report su richiesta.')
+    expect(ci.reports.panel.cadence.split(' | ')[1]).toBe("Ogni {days} giorni MrCall prepara un report sulle chiamate della tua attività. Ogni report usa il credito dell'attività.")
+    // the amendment of 2026-10-26 (rule 5 and Dashboard)
+    expect(ci.request.noCallsPeriod).toBe('Nessuna chiamata in questo periodo.')
+    expect(ci.request.noAnalysis.split(' | ')[1]).toBe('Ci sono {n} chiamate in questo periodo, ma nessuna è ancora analizzata.')
+    expect(ci.request.overlap.partialMany).toMatch(/^\{n\} report coprono già parte di questi giorni, dal \{from\} al \{to\}/)
     expect(ci.request.confirm).toBe("Questa elaborazione usa il credito dell'attività {business}. Vuoi continuare?")
     expect(ci.request.automaticPending).toBe('Il report automatico di questo periodo è in preparazione: sarà pronto dopo la prossima elaborazione notturna.')
     expect(ci.outcome.resolved).toBe('Risolte in chiamata')

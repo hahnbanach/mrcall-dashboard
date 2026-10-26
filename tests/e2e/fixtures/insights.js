@@ -54,7 +54,9 @@ function historyRows () {
   return rows
 }
 
-const SCHEDULE = { cadenceDays: 7, nextAutomatic: { from: rome(2026, 10, 21), to: rome(2026, 10, 28), retry: false } }
+// The schedule's `next` (`nextAutomatic`) with the amendment's rules 6 and 7: `anticipable` (the cycle in progress holds a
+// finished day) and `arrivesAt`, the nightly run (05:00 UTC) that will write the period.
+const SCHEDULE = { cadenceDays: 7, nextAutomatic: { from: rome(2026, 10, 21), to: rome(2026, 10, 28), retry: false, anticipable: true, arrivesAt: Date.UTC(2026, 9, 28, 5) } }
 
 function reportsPage (url, { rows = historyRows(), schedule = SCHEDULE } = {}) {
   const q = new URL(url).searchParams

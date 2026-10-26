@@ -1993,13 +1993,17 @@
         "integrationTitle": "Et system å koble til",
         "mrcallConfigTitle": "MrCalls konfigurasjonsforslag",
         "panel": {
-          "cadence": "Hver {days}. dag lager MrCall en rapport om virksomhetens samtaler. Hver rapport bruker virksomhetens kreditt.",
+          "cadence": "Hver dag lager MrCall en rapport om virksomhetens samtaler. Hver rapport bruker virksomhetens kreditt. | Hver {days}. dag lager MrCall en rapport om virksomhetens samtaler. Hver rapport bruker virksomhetens kreditt.",
           "next": "Den neste kommer {date} og dekker {from} til {to}.",
           "retry": "Rapporten for perioden {from} til {to} lyktes ikke: den prøves på nytt i natt.",
           "settings": "Du kan endre hvor ofte i virksomhetens innstillinger (0 = ingen rapporter).",
           "settingsLink": "Åpne virksomhetens innstillinger",
           "off": "Automatiske rapporter er ikke aktive. Du kan slå dem på i virksomhetens innstillinger eller be om en rapport for en periode du velger selv.",
-          "skipped": "Rapporten for {period} er utsatt: det er ikke nok kreditt. Etter neste påfyll lager vi rapporten for de siste {days} dagene. Dagene før blir værende i statistikken og kan analyseres med en rapport på forespørsel."
+          "skipped": "Rapporten for {period} er utsatt: det er ikke nok kreditt. Etter neste påfyll lager vi rapporten for den siste dagen. Dagene før blir værende i statistikken og kan analyseres med en rapport på forespørsel. | Rapporten for {period} er utsatt: det er ikke nok kreditt. Etter neste påfyll lager vi rapporten for de siste {days} dagene. Dagene før blir værende i statistikken og kan analyseres med en rapport på forespørsel.",
+          "nextOneDay": "Den neste kommer {date} og dekker {day}.",
+          "covers": "Den neste dekker {from} til {to}.",
+          "coversOneDay": "Den neste dekker {day}.",
+          "retryOneDay": "Rapporten for {day} lyktes ikke: den prøves på nytt i natt."
         },
         "type": {
           "automatic": "Automatisk",
@@ -2176,7 +2180,7 @@
         "clearFilters": "Fjern filtre",
         "none": "Ingen rapporter ennå.",
         "noneFiltered": "Ingen rapport passer med disse filtrene.",
-        "days": "{days} dager",
+        "days": "1 dag | {days} dager",
         "callsOfManaged": "{calls} av {managed} behandlet",
         "callsAnalysed": "{calls} analysert",
         "open": "Åpne",
@@ -2257,7 +2261,7 @@
         "preset": "Siste {days} dager",
         "custom": "Velg dagene",
         "periodHint": "Dagene er virksomhetens, til og med i går.",
-        "selected": "Fra {from} til {to} ({days} dager)",
+        "selected": "{from} (1 dag) | Fra {from} til {to} ({days} dager)",
         "continue": "Fortsett",
         "cancel": "Avbryt",
         "close": "Lukk",
@@ -2277,7 +2281,8 @@
           "cycle": "Disse dagene leses på nytt av den neste automatiske rapporten og bruker kreditten på nytt.",
           "partial": "Disse dagene er allerede delvis med i rapporten {period} ({kind}). En ny rapport leser dem på nytt og bruker kreditten på nytt.",
           "acknowledge": "Jeg forstår: les dem på nytt likevel",
-          "regenerateInstead": "Lag den rapporten på nytt"
+          "regenerateInstead": "Lag den rapporten på nytt",
+          "partialMany": "{n} rapporter dekker allerede en del av disse dagene, fra {from} til {to}. En ny rapport leser dem på nytt og bruker kreditten på nytt."
         },
         "kind": {
           "automatic": "automatisk",
@@ -2302,7 +2307,14 @@
         "cancelRecompute": "Den stopper etter samtalen som pågår. Samtalene som allerede er analysert, blir værende, og de har brukt virksomhetens kreditt.",
         "cancelled": "Behandlingen er avbrutt.",
         "keepOpen": "Du kan lukke dette vinduet: behandlingen fortsetter, og du finner den under Behandling.",
-        "platformInstead": "Kjør for MrCalls regning"
+        "platformInstead": "Kjør for MrCalls regning",
+        "noCallsPeriod": "Ingen samtaler i denne perioden.",
+        "lastCall": "Den siste samtalen var {date}.",
+        "noCallEver": "Virksomheten har ikke mottatt noen samtaler ennå.",
+        "noAnalysis": "Det er 1 samtale i perioden, men den er ikke analysert ennå. | Det er {n} samtaler i perioden, men ingen er analysert ennå.",
+        "noAnalysisNone": "Ingen samtaler i perioden er analysert, og ingen kan analyseres.",
+        "cycleEmpty": "Den pågående automatiske rapporten har ennå ingen avsluttet dag: det er ingenting å lage nå.",
+        "busyYou": "Det pågår allerede en behandling for denne virksomheten, startet av deg {when}."
       },
       "recompute": {
         "banner": "{n} samtaler behandlet i denne perioden har ikke den automatiske analysen ennå, så utfall, emner og kvalitet tar dem ikke med.",

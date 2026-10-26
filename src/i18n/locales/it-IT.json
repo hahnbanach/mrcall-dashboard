@@ -1999,13 +1999,17 @@
         "integrationTitle": "Un sistema da collegare",
         "mrcallConfigTitle": "Suggerimenti di configurazione MrCall",
         "panel": {
-          "cadence": "Ogni {days} giorni MrCall prepara un report sulle chiamate della tua attività. Ogni report usa il credito dell'attività.",
+          "cadence": "Ogni giorno MrCall prepara un report sulle chiamate della tua attività. Ogni report usa il credito dell'attività. | Ogni {days} giorni MrCall prepara un report sulle chiamate della tua attività. Ogni report usa il credito dell'attività.",
           "next": "Il prossimo arriverà il {date} e coprirà dal {from} al {to}.",
           "retry": "Il report dal {from} al {to} non è riuscito: verrà riprovato questa notte.",
           "settings": "Puoi cambiare la frequenza nelle impostazioni dell'attività (0 = nessun report).",
           "settingsLink": "Apri le impostazioni dell'attività",
           "off": "I report automatici non sono attivi. Puoi attivarli nelle impostazioni dell'attività o richiedere un report per un periodo a scelta.",
-          "skipped": "Il report di {period} è rimandato: il credito non basta. Dopo la prossima ricarica prepariamo il report degli ultimi {days} giorni; i giorni precedenti restano nelle statistiche e si possono analizzare con un report su richiesta."
+          "skipped": "Il report di {period} è rimandato: il credito non basta. Dopo la prossima ricarica prepariamo il report dell'ultimo giorno; i giorni precedenti restano nelle statistiche e si possono analizzare con un report su richiesta. | Il report di {period} è rimandato: il credito non basta. Dopo la prossima ricarica prepariamo il report degli ultimi {days} giorni; i giorni precedenti restano nelle statistiche e si possono analizzare con un report su richiesta.",
+          "nextOneDay": "Il prossimo arriverà il {date} e coprirà il {day}.",
+          "covers": "Il prossimo coprirà dal {from} al {to}.",
+          "coversOneDay": "Il prossimo coprirà il {day}.",
+          "retryOneDay": "Il report del {day} non è riuscito: verrà riprovato questa notte."
         },
         "type": {
           "automatic": "Automatico",
@@ -2182,7 +2186,7 @@
         "clearFilters": "Togli i filtri",
         "none": "Ancora nessun report.",
         "noneFiltered": "Nessun report con questi filtri.",
-        "days": "{days} giorni",
+        "days": "1 giorno | {days} giorni",
         "callsOfManaged": "{calls} di {managed} gestite",
         "callsAnalysed": "{calls} analizzate",
         "open": "Apri",
@@ -2263,7 +2267,7 @@
         "preset": "Ultimi {days} giorni",
         "custom": "Scegli i giorni",
         "periodHint": "I giorni sono quelli dell'attività, fino a ieri compreso.",
-        "selected": "Dal {from} al {to} ({days} giorni)",
+        "selected": "Il {from} (1 giorno) | Dal {from} al {to} ({days} giorni)",
         "continue": "Continua",
         "cancel": "Annulla",
         "close": "Chiudi",
@@ -2283,7 +2287,8 @@
           "cycle": "Questi giorni saranno letti di nuovo dal prossimo report automatico e useranno di nuovo il credito.",
           "partial": "Questi giorni sono già in parte nel report {kind} {period}. Un nuovo report li rilegge e usa di nuovo il credito.",
           "acknowledge": "Ho capito: rileggili comunque",
-          "regenerateInstead": "Rigenera quel report"
+          "regenerateInstead": "Rigenera quel report",
+          "partialMany": "{n} report coprono già parte di questi giorni, dal {from} al {to}. Un nuovo report li rilegge e usa di nuovo il credito."
         },
         "kind": {
           "automatic": "automatico",
@@ -2308,7 +2313,14 @@
         "cancelRecompute": "Si ferma dopo la chiamata in corso; le chiamate già analizzate restano e hanno usato il credito dell'attività.",
         "cancelled": "Elaborazione annullata.",
         "keepOpen": "Puoi chiudere questa finestra: l'elaborazione continua e la trovi in Elaborazioni.",
-        "platformInstead": "Esegui a carico di MrCall"
+        "platformInstead": "Esegui a carico di MrCall",
+        "noCallsPeriod": "Nessuna chiamata in questo periodo.",
+        "lastCall": "L'ultima chiamata è del {date}.",
+        "noCallEver": "L'attività non ha ancora ricevuto chiamate.",
+        "noAnalysis": "C'è 1 chiamata in questo periodo, ma non è ancora analizzata. | Ci sono {n} chiamate in questo periodo, ma nessuna è ancora analizzata.",
+        "noAnalysisNone": "Nessuna chiamata di questo periodo è analizzata, e nessuna si può analizzare.",
+        "cycleEmpty": "Il report automatico in corso non ha ancora un giorno concluso: per ora non c'è niente da preparare.",
+        "busyYou": "C'è già un'elaborazione in corso per questa attività, avviata da te il {when}."
       },
       "recompute": {
         "banner": "{n} chiamate gestite in questo periodo non hanno ancora l'analisi automatica, quindi esiti, argomenti e qualità non le contano.",

@@ -1993,13 +1993,17 @@
         "integrationTitle": "Järjestelmä yhdistettäväksi",
         "mrcallConfigTitle": "MrCallin asetusehdotukset",
         "panel": {
-          "cadence": "MrCall laatii yrityksesi puheluista raportin {days} päivän välein. Jokainen raportti kuluttaa yrityksen saldoa.",
+          "cadence": "MrCall laatii yrityksesi puheluista raportin joka päivä. Jokainen raportti kuluttaa yrityksen saldoa. | MrCall laatii yrityksesi puheluista raportin {days} päivän välein. Jokainen raportti kuluttaa yrityksen saldoa.",
           "next": "Seuraava saapuu {date} ja kattaa ajan {from}–{to}.",
           "retry": "Raportti ajalta {from}–{to} ei onnistunut: sitä yritetään uudelleen tänä yönä.",
           "settings": "Voit muuttaa tiheyttä yrityksen asetuksissa (0 = ei raportteja).",
           "settingsLink": "Avaa yrityksen asetukset",
           "off": "Automaattiset raportit eivät ole käytössä. Voit ottaa ne käyttöön yrityksen asetuksissa tai pyytää raportin itse valitsemaltasi ajalta.",
-          "skipped": "Raportti ajalta {period} on lykätty: saldo ei riitä. Seuraavan latauksen jälkeen laadimme raportin viimeisiltä {days} päivältä. Sitä edeltävät päivät pysyvät tilastoissa, ja ne voi analysoida pyynnöstä tehtävällä raportilla."
+          "skipped": "Raportti ajalta {period} on lykätty: saldo ei riitä. Seuraavan latauksen jälkeen laadimme raportin viimeiseltä päivältä. Sitä edeltävät päivät pysyvät tilastoissa, ja ne voi analysoida pyynnöstä tehtävällä raportilla. | Raportti ajalta {period} on lykätty: saldo ei riitä. Seuraavan latauksen jälkeen laadimme raportin viimeisiltä {days} päivältä. Sitä edeltävät päivät pysyvät tilastoissa, ja ne voi analysoida pyynnöstä tehtävällä raportilla.",
+          "nextOneDay": "Seuraava saapuu {date} ja kattaa päivän {day}.",
+          "covers": "Seuraava kattaa ajan {from}–{to}.",
+          "coversOneDay": "Seuraava kattaa päivän {day}.",
+          "retryOneDay": "Raportti päivältä {day} ei onnistunut: sitä yritetään uudelleen tänä yönä."
         },
         "type": {
           "automatic": "Automaattinen",
@@ -2176,7 +2180,7 @@
         "clearFilters": "Tyhjennä suodattimet",
         "none": "Ei vielä raportteja.",
         "noneFiltered": "Mikään raportti ei vastaa näitä suodattimia.",
-        "days": "{days} päivää",
+        "days": "1 päivä | {days} päivää",
         "callsOfManaged": "{calls} / {managed} hoidetusta",
         "callsAnalysed": "{calls} analysoitu",
         "open": "Avaa",
@@ -2257,7 +2261,7 @@
         "preset": "Viimeiset {days} päivää",
         "custom": "Valitse päivät",
         "periodHint": "Päivät ovat yrityksen päiviä, eilinen mukaan lukien.",
-        "selected": "Ajalta {from}–{to} ({days} päivää)",
+        "selected": "{from} (1 päivä) | Ajalta {from}–{to} ({days} päivää)",
         "continue": "Jatka",
         "cancel": "Peruuta",
         "close": "Sulje",
@@ -2277,7 +2281,8 @@
           "cycle": "Seuraava automaattinen raportti lukee nämä päivät uudelleen ja kuluttaa saldoa uudelleen.",
           "partial": "Nämä päivät ovat jo osittain raportissa {period} ({kind}). Uusi raportti lukee ne uudelleen ja kuluttaa saldoa uudelleen.",
           "acknowledge": "Ymmärrän: lue ne silti uudelleen",
-          "regenerateInstead": "Laadi se raportti uudelleen"
+          "regenerateInstead": "Laadi se raportti uudelleen",
+          "partialMany": "{n} raporttia kattaa jo osan näistä päivistä, ajalta {from}–{to}. Uusi raportti lukee ne uudelleen ja kuluttaa saldoa uudelleen."
         },
         "kind": {
           "automatic": "automaattinen",
@@ -2302,7 +2307,14 @@
         "cancelRecompute": "Se pysähtyy käynnissä olevan puhelun jälkeen. Jo analysoidut puhelut säilyvät, ja ne ovat kuluttaneet yrityksen saldoa.",
         "cancelled": "Käsittely peruttu.",
         "keepOpen": "Voit sulkea tämän ikkunan: käsittely jatkuu, ja löydät sen kohdasta Käsittely.",
-        "platformInstead": "Suorita MrCallin kustannuksella"
+        "platformInstead": "Suorita MrCallin kustannuksella",
+        "noCallsPeriod": "Tällä jaksolla ei ole puheluita.",
+        "lastCall": "Viimeisin puhelu oli {date}.",
+        "noCallEver": "Yritys ei ole vielä saanut yhtään puhelua.",
+        "noAnalysis": "Jaksolla on 1 puhelu, mutta sitä ei ole vielä analysoitu. | Jaksolla on {n} puhelua, mutta yhtäkään ei ole vielä analysoitu.",
+        "noAnalysisNone": "Yhtäkään jakson puhelua ei ole analysoitu, eikä yhtäkään voi analysoida.",
+        "cycleEmpty": "Käynnissä olevalla automaattisella raportilla ei ole vielä yhtään päättynyttä päivää: nyt ei ole mitään laadittavaa.",
+        "busyYou": "Tälle yritykselle on jo käsittely käynnissä, jonka aloitit {when}."
       },
       "recompute": {
         "banner": "{n} tällä jaksolla hoidetulla puhelulla ei ole vielä automaattista analyysia, joten lopputulokset, aiheet ja laatu eivät laske niitä mukaan.",

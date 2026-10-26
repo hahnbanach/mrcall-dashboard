@@ -162,7 +162,8 @@ test.describe('requesting a report', () => {
     const asked = await mockInsights(page, { job: () => estimateJob({ estimate: { fits: true, calls: 0, requests: 0 } }) })
     const dialog = await openRequest(page)
     await dialog.getByRole('button', { name: 'Continue' }).click()
-    await expect(dialog.getByText('No calls to analyse in this period.')).toBeVisible({ timeout: 15000 })
+    // the brief's words for a period with no call (amendment of 2026-10-26, rule 5), from a server that answers it fits
+    await expect(dialog.getByText('No calls in this period.')).toBeVisible({ timeout: 15000 })
     expect(asked.create).toHaveLength(0)
   })
 

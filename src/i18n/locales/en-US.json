@@ -1998,13 +1998,17 @@
         "integrationTitle": "A system to connect",
         "mrcallConfigTitle": "MrCall configuration suggestions",
         "panel": {
-          "cadence": "Every {days} days MrCall prepares a report on your business's calls. Each report uses the business's credit.",
+          "cadence": "Every day MrCall prepares a report on your business's calls. Each report uses the business's credit. | Every {days} days MrCall prepares a report on your business's calls. Each report uses the business's credit.",
           "next": "The next one will arrive on {date} and will cover {from} to {to}.",
           "retry": "The report covering {from} to {to} did not succeed: it will be tried again tonight.",
           "settings": "You can change how often in the business settings (0 = no reports).",
           "settingsLink": "Open the business settings",
           "off": "Automatic reports are not active. You can turn them on in the business settings or request a report for a period of your choice.",
-          "skipped": "The report for {period} is postponed: there is not enough credit. After the next top-up we will prepare the report for the last {days} days; the days before stay in the statistics and can be analysed with a report on request."
+          "skipped": "The report for {period} is postponed: there is not enough credit. After the next top-up we will prepare the report for the last day; the days before stay in the statistics and can be analysed with a report on request. | The report for {period} is postponed: there is not enough credit. After the next top-up we will prepare the report for the last {days} days; the days before stay in the statistics and can be analysed with a report on request.",
+          "nextOneDay": "The next one will arrive on {date} and will cover {day}.",
+          "covers": "The next one will cover {from} to {to}.",
+          "coversOneDay": "The next one will cover {day}.",
+          "retryOneDay": "The report covering {day} did not succeed: it will be tried again tonight."
         },
         "type": {
           "automatic": "Automatic",
@@ -2181,7 +2185,7 @@
         "clearFilters": "Clear filters",
         "none": "No reports yet.",
         "noneFiltered": "No report matches these filters.",
-        "days": "{days} days",
+        "days": "1 day | {days} days",
         "callsOfManaged": "{calls} of {managed} managed",
         "callsAnalysed": "{calls} analysed",
         "open": "Open",
@@ -2262,7 +2266,7 @@
         "preset": "Last {days} days",
         "custom": "Choose the days",
         "periodHint": "Days are the business's, up to yesterday included.",
-        "selected": "From {from} to {to} ({days} days)",
+        "selected": "{from} (1 day) | From {from} to {to} ({days} days)",
         "continue": "Continue",
         "cancel": "Cancel",
         "close": "Close",
@@ -2282,7 +2286,8 @@
           "cycle": "These days will be read again by the next automatic report and will use the credit again.",
           "partial": "These days are already partly in the {kind} report {period}. A new report reads them again and uses the credit again.",
           "acknowledge": "I understand: read them again anyway",
-          "regenerateInstead": "Regenerate that report"
+          "regenerateInstead": "Regenerate that report",
+          "partialMany": "{n} reports already cover part of these days, from {from} to {to}. A new report reads them again and uses the credit again."
         },
         "kind": {
           "automatic": "automatic",
@@ -2307,7 +2312,14 @@
         "cancelRecompute": "It stops after the call in progress; the calls already analysed stay and have used the business's credit.",
         "cancelled": "Processing cancelled.",
         "keepOpen": "You can close this window: the processing continues and you will find it under Processing.",
-        "platformInstead": "Run it at MrCall's cost"
+        "platformInstead": "Run it at MrCall's cost",
+        "noCallsPeriod": "No calls in this period.",
+        "lastCall": "The last call was on {date}.",
+        "noCallEver": "The business has not received any call yet.",
+        "noAnalysis": "There is 1 call in this period, but it is not analysed yet. | There are {n} calls in this period, but none is analysed yet.",
+        "noAnalysisNone": "No call of this period is analysed, and none can be analysed.",
+        "cycleEmpty": "The automatic report in progress has no finished day yet: there is nothing to prepare now.",
+        "busyYou": "There is already a processing in progress for this business, started by you on {when}."
       },
       "recompute": {
         "banner": "{n} calls managed in this period do not have the automatic analysis yet, so outcomes, topics and quality do not count them.",
