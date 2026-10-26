@@ -165,7 +165,8 @@
       },
       "code": {
         "assistant_without_page": "L'assistente non può prendere prenotazioni mentre la pagina del ristorante è spenta: spegni l'assistente, o accendi la pagina.",
-        "allergies_required_unavailable": "Qui le allergie non possono ancora essere obbligatorie: chiederle a ogni chiamante aspetta che il punto legale sia chiarito."
+        "allergies_required_unavailable": "Qui le allergie non possono ancora essere obbligatorie: chiederle a ogni chiamante aspetta che il punto legale sia chiarito.",
+        "admin_only_skill": "Solo un amministratore può aggiungere questa skill. La pagina non era aggiornata: ricaricala. Le skill già configurate restano modificabili."
       }
     },
     "templatedVariable": {

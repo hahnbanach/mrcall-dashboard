@@ -163,7 +163,8 @@
       },
       "code": {
         "assistant_without_page": "Assistenten kan inte ta emot bokningar medan restaurangsidan är avstängd: stäng av assistenten, eller slå på sidan.",
-        "allergies_required_unavailable": "Allergier kan inte vara obligatoriska här ännu: att fråga alla som ringer väntar på att den juridiska frågan klaras ut."
+        "allergies_required_unavailable": "Allergier kan inte vara obligatoriska här ännu: att fråga alla som ringer väntar på att den juridiska frågan klaras ut.",
+        "admin_only_skill": "Endast en administratör kan lägga till den här skillen. Sidan var inte uppdaterad: ladda om den. Skills som redan är konfigurerade kan fortfarande redigeras."
       }
     }
   },

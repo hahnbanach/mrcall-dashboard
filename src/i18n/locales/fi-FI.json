@@ -163,7 +163,8 @@
       },
       "code": {
         "assistant_without_page": "Avustaja ei voi ottaa varauksia, kun ravintolasivu on pois päältä: kytke avustaja pois tai sivu päälle.",
-        "allergies_required_unavailable": "Allergiat eivät voi vielä olla pakollisia täällä: jokaiselta soittajalta kysyminen odottaa oikeudellisen kysymyksen ratkeamista."
+        "allergies_required_unavailable": "Allergiat eivät voi vielä olla pakollisia täällä: jokaiselta soittajalta kysyminen odottaa oikeudellisen kysymyksen ratkeamista.",
+        "admin_only_skill": "Vain ylläpitäjä voi lisätä tämän skillin. Sivu ei ollut ajan tasalla: lataa se uudelleen. Jo määritettyjä skillejä voi edelleen muokata."
       }
     }
   },

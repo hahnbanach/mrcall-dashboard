@@ -164,7 +164,8 @@
       },
       "code": {
         "assistant_without_page": "L'assistant ne peut pas prendre de réservations tant que la page du restaurant est désactivée : désactivez l'assistant, ou activez la page.",
-        "allergies_required_unavailable": "Les allergies ne peuvent pas encore être obligatoires ici : les demander à chaque appelant attend que le point juridique soit réglé."
+        "allergies_required_unavailable": "Les allergies ne peuvent pas encore être obligatoires ici : les demander à chaque appelant attend que le point juridique soit réglé.",
+        "admin_only_skill": "Seul un administrateur peut ajouter cette skill. La page n'était pas à jour : rechargez-la. Les skills déjà configurées restent modifiables."
       }
     }
   },

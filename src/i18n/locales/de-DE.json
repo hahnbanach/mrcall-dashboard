@@ -164,7 +164,8 @@
       },
       "code": {
         "assistant_without_page": "Der Assistent kann keine Reservierungen annehmen, solange die Restaurantseite aus ist: schalten Sie den Assistenten aus oder die Seite ein.",
-        "allergies_required_unavailable": "Allergien können hier noch nicht Pflicht sein: alle Anrufer danach zu fragen wartet auf die Klärung der rechtlichen Frage."
+        "allergies_required_unavailable": "Allergien können hier noch nicht Pflicht sein: alle Anrufer danach zu fragen wartet auf die Klärung der rechtlichen Frage.",
+        "admin_only_skill": "Nur ein Administrator kann diesen Skill hinzufügen. Die Seite war nicht aktuell: Laden Sie sie neu. Bereits konfigurierte Skills können weiterhin bearbeitet werden."
       }
     }
   },

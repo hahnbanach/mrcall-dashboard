@@ -163,7 +163,8 @@
       },
       "code": {
         "assistant_without_page": "Assistenten kan ikke tage imod bookinger, mens restaurantsiden er slået fra: slå assistenten fra, eller siden til.",
-        "allergies_required_unavailable": "Allergier kan ikke være obligatoriske her endnu: at spørge alle, der ringer, venter på, at det juridiske spørgsmål er afklaret."
+        "allergies_required_unavailable": "Allergier kan ikke være obligatoriske her endnu: at spørge alle, der ringer, venter på, at det juridiske spørgsmål er afklaret.",
+        "admin_only_skill": "Kun en administrator kan tilføje denne skill. Siden var ikke opdateret: genindlæs den. Skills, der allerede er konfigureret, kan stadig redigeres."
       }
     }
   },

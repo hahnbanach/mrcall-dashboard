@@ -163,7 +163,8 @@
       },
       "code": {
         "assistant_without_page": "Assistent ei saa broneeringuid võtta, kuni restorani leht on väljas: lülita assistent välja või leht sisse.",
-        "allergies_required_unavailable": "Allergiad ei saa siin veel kohustuslikud olla: igalt helistajalt küsimine ootab õigusliku küsimuse lahendamist."
+        "allergies_required_unavailable": "Allergiad ei saa siin veel kohustuslikud olla: igalt helistajalt küsimine ootab õigusliku küsimuse lahendamist.",
+        "admin_only_skill": "Seda skilli saab lisada ainult administraator. Leht ei olnud ajakohane: laadi see uuesti. Juba seadistatud skille saab endiselt muuta."
       }
     }
   },

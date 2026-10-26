@@ -163,7 +163,8 @@
       },
       "code": {
         "assistant_without_page": "El asistente no puede tomar reservas mientras la página del restaurante está apagada: apaga el asistente o activa la página.",
-        "allergies_required_unavailable": "Aquí las alergias todavía no pueden ser obligatorias: preguntarlas a cada persona que llama espera a que se aclare el punto legal."
+        "allergies_required_unavailable": "Aquí las alergias todavía no pueden ser obligatorias: preguntarlas a cada persona que llama espera a que se aclare el punto legal.",
+        "admin_only_skill": "Solo un administrador puede añadir esta skill. La página no estaba actualizada: recárgala. Las skills ya configuradas se pueden seguir editando."
       }
     }
   },

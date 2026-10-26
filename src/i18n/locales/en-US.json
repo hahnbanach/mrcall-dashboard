@@ -165,7 +165,8 @@
       },
       "code": {
         "assistant_without_page": "The assistant cannot take bookings while the restaurant page is off: switch the assistant off, or the page on.",
-        "allergies_required_unavailable": "Allergies cannot be made required here yet: asking every caller about them waits for the legal point to be settled."
+        "allergies_required_unavailable": "Allergies cannot be made required here yet: asking every caller about them waits for the legal point to be settled.",
+        "admin_only_skill": "Only an admin can add this skill. The page was out of date: reload it. The skills already configured can still be edited."
       }
     },
     "templatedVariable": {

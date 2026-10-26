@@ -163,7 +163,8 @@
       },
       "code": {
         "assistant_without_page": "De assistent kan geen reserveringen aannemen zolang de restaurantpagina uit staat: zet de assistent uit, of de pagina aan.",
-        "allergies_required_unavailable": "Allergieën kunnen hier nog niet verplicht zijn: elke beller ernaar vragen wacht tot het juridische punt is opgelost."
+        "allergies_required_unavailable": "Allergieën kunnen hier nog niet verplicht zijn: elke beller ernaar vragen wacht tot het juridische punt is opgelost.",
+        "admin_only_skill": "Alleen een beheerder kan deze skill toevoegen. De pagina was niet bijgewerkt: laad haar opnieuw. Skills die al zijn ingesteld blijven bewerkbaar."
       }
     }
   },
