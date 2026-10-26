@@ -284,6 +284,13 @@ business/default-grant calendar list establishes availability only; empty, faile
 or malformed results remain unknown. Business consent uses the bound context
 without the account-global disconnect control or an automatic skill Save.
 
+The confirmed skill refresh connects ConfigureAIPanel's confirmed
+saved-phase notices to BusinessConfiguration's guarded saved-configuration read.
+Only clean affected phase projections change; ordinary edits and dirty manual
+skill phases remain local. Outstanding saved phases coalesce across overlapping
+reads, including failures, with owner/business/generation protection. Warnings
+separate page refresh failure or retained edits from the confirmed Save outcome.
+
 ## Cross-Cutting Concerns
 
 ### Authentication

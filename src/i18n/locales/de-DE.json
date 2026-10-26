@@ -165,7 +165,9 @@
       "code": {
         "assistant_without_page": "Der Assistent kann keine Reservierungen annehmen, solange die Restaurantseite aus ist: schalten Sie den Assistenten aus oder die Seite ein.",
         "allergies_required_unavailable": "Allergien können hier noch nicht Pflicht sein: alle Anrufer danach zu fragen wartet auf die Klärung der rechtlichen Frage."
-      }
+      },
+      "savedRefreshFailed": "Die Skill wurde gespeichert, ihre Konfiguration konnte hier jedoch nicht aktualisiert werden. Sichern Sie Ihre Änderungen, bevor Sie die Seite neu laden.",
+      "savedRefreshConflict": "Die Skill wurde gespeichert. Ihre ungespeicherten Skill-Änderungen bleiben erhalten; sichern Sie sie, bevor Sie die gespeicherte Konfiguration neu laden."
     }
   },
   "components": {

@@ -164,7 +164,9 @@
       "code": {
         "assistant_without_page": "Assistent ei saa broneeringuid võtta, kuni restorani leht on väljas: lülita assistent välja või leht sisse.",
         "allergies_required_unavailable": "Allergiad ei saa siin veel kohustuslikud olla: igalt helistajalt küsimine ootab õigusliku küsimuse lahendamist."
-      }
+      },
+      "savedRefreshFailed": "Skill on salvestatud, kuid selle seadistust ei saanud siin värskendada. Säilitage oma muudatused enne lehe uuesti laadimist.",
+      "savedRefreshConflict": "Skill on salvestatud. Teie salvestamata skill-muudatused säilitati; hoidke need alles enne salvestatud seadistuse uuesti laadimist."
     }
   },
   "components": {

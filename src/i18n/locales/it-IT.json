@@ -166,7 +166,9 @@
       "code": {
         "assistant_without_page": "L'assistente non può prendere prenotazioni mentre la pagina del ristorante è spenta: spegni l'assistente, o accendi la pagina.",
         "allergies_required_unavailable": "Qui le allergie non possono ancora essere obbligatorie: chiederle a ogni chiamante aspetta che il punto legale sia chiarito."
-      }
+      },
+      "savedRefreshFailed": "La skill è stata salvata, ma la pagina non è riuscita ad aggiornare la configurazione. Conserva le modifiche prima di ricaricare.",
+      "savedRefreshConflict": "La skill è stata salvata. Le modifiche alle skill non ancora salvate sono state mantenute: conservale prima di ricaricare la configurazione salvata."
     },
     "templatedVariable": {
       "unavailable": "{option} non è disponibile con le impostazioni attuali: scegline un'altra."

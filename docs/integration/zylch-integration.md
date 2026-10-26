@@ -91,6 +91,16 @@ remaining_pending; a successful response does not erase concurrent proposals.
 Legacy responses without a snapshot cause a history reload. Chat edits and
 Save/discard/reconcile requests are mutually disabled while processing.
 
+The panel emits confirmed saved phases, bound to the original
+owner/business, to BusinessConfiguration. The parent reads authoritative saved
+configuration and updates only those phase projections in its existing business
+object; ordinary edits stay intact. Successive notices coalesce outstanding phases
+so a newer read cannot lose an earlier saved phase. Failed reads retain the queue;
+dirty local phases stay queued and unchanged with an explicit warning. Baseline,
+owner/route and unmount invalidation discard obsolete responses. Refresh never
+performs Save, activation or provider authorization. The plan records current
+verification and deployment status.
+
 Discard posts business/session, ordinary name/value matches and skill operation
 IDs. The returned snapshot retains active or uncertain work. An uncertain create
 is excluded from a new Save; the user can reread its outcome and then explicitly

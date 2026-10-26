@@ -166,7 +166,9 @@
       "code": {
         "assistant_without_page": "The assistant cannot take bookings while the restaurant page is off: switch the assistant off, or the page on.",
         "allergies_required_unavailable": "Allergies cannot be made required here yet: asking every caller about them waits for the legal point to be settled."
-      }
+      },
+      "savedRefreshFailed": "Skill saved, but its configuration could not be refreshed here. Preserve your edits before reloading the page.",
+      "savedRefreshConflict": "Skill saved. Your unsaved skill edits were kept; preserve them before reloading the saved configuration."
     },
     "templatedVariable": {
       "unavailable": "{option} is not available with the current settings: choose another one."

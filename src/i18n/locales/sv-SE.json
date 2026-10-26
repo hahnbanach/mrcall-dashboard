@@ -164,7 +164,9 @@
       "code": {
         "assistant_without_page": "Assistenten kan inte ta emot bokningar medan restaurangsidan är avstängd: stäng av assistenten, eller slå på sidan.",
         "allergies_required_unavailable": "Allergier kan inte vara obligatoriska här ännu: att fråga alla som ringer väntar på att den juridiska frågan klaras ut."
-      }
+      },
+      "savedRefreshFailed": "Skillen har sparats, men konfigurationen kunde inte uppdateras här. Spara dina ändringar innan du laddar om sidan.",
+      "savedRefreshConflict": "Skillen har sparats. Dina osparade skilländringar har behållits; spara dem innan du laddar om den sparade konfigurationen."
     }
   },
   "components": {

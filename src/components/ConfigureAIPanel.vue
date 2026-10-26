@@ -118,7 +118,7 @@ const QUICK_ACTION_ICONS = [
 export default {
   name: 'ConfigureAIPanel',
   components: { Button, ZylchChat, SkillPendingSummary, BusinessSkillConnection },
-  emits: ['open-skill'],
+  emits: ['open-skill', 'skills-saved'],
   props: {
     businessId: {
       type: String,
@@ -268,9 +268,16 @@ export default {
     };
     const saveChanges = async () => {
       const selected = [...saveableChanges.value];
+      const savedBusinessId = props.businessId;
+      const savedOwnerUid = user.value?.uid;
       const result = await runAction(() => zylchUtils.applyChanges(
         user.value, props.businessId, ordinaryValues(selected), configSessionId.value, operationIds(selected)
       ));
+      const savedPhases = [...new Set((result?.skill_outcomes || [])
+        .filter(outcome => outcome.status === 'saved')
+        .map(outcome => selected.find(item => item.kind === 'skill_instance' && item.operation_id === outcome.operation_id)?.phase)
+        .filter(phase => ['prefetch', 'during', 'final'].includes(phase)))];
+      if (savedPhases.length) emit('skills-saved', { businessId: savedBusinessId, ownerUid: savedOwnerUid, phases: savedPhases });
       if (result) handoffTargets.value = (result.skill_outcomes || []).filter(outcome => outcome.status === 'saved').flatMap(outcome => {
         const operation = selected.find(item => item.operation_id === outcome.operation_id);
         const instanceId = outcome.instance_id || operation?.instance_id;

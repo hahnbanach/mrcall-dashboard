@@ -1,5 +1,5 @@
 ---
-doc_baseline_commit: 8190c4b51bf3bbae1a9af189b4f09be802701c62
+doc_baseline_commit: a775f4d231bd91ce9905e39f051a100f7b96efeb
 doc_baseline_date: 2026-10-26
 ---
 
@@ -11,45 +11,46 @@ Scope: Current dashboard operating state, unresolved verification limits, and im
 
 ## State now
 
-The last successful deployment workflows observed by the lead report production
-v2.2.25 and TEST v2.2.33-test. TEST workflow 40318787864 succeeded on commit
-8190c4b; its 104 public index JS/CSS asset names match the CI build and return
-HTTP 200, including app.c34fcf69.js. This does not verify every deployed feature.
-The release starts from exact prior TEST commit c2b2a589, preserving the deployed
-session guard, manifest-driven editor and legacy callback/provider identity.
+Production remains v2.2.25 in the last observed delivery evidence. TEST runs
+v2.2.33-test on8190c4b (workflow40318787864, observed served app.c34fcf69.js).
+The local v2.2.34 refresh candidate starts from clean a775f4d and is unpublished.
+It refreshes confirmed saved skill phases in the mounted parent while preserving
+ordinary/dirty skill edits and owner/business identity. Coalesced reads protect
+successive saves; the [plan](execution-plans/2026-10-26-skill-save-refresh.md)
+tracks the remaining integration/final gates and actual verification.
 
-The TEST release has readable pending skill summaries and collapsed exact details,
-safe resource-refusal guidance, and explicit business-bound Google consent.
-Account retains its global flow with clarified wording. Assistant configuration
-separates account metadata from default business availability; negative or
-malformed checks remain unknown. Pending proposals and explicit Save/probe remain
-unchanged. See the [plan](execution-plans/2026-10-26-readable-skill-preview.md),
-[chat contract](integration/zylch-integration.md) and
-[Google contract](integration/google-oauth.md).
+The reported calendar draft is saved and enabled on TEST: authoritative skill and
+business reads agree, pending is cleared, and Save has confirmed readback. An
+existing subsequent call invokes the loaded skill and reads calendar availability.
+That is not proof of booking creation or an explanation of the earlier callback
+response. The initial account-only grant observation is historical: subsequent
+read-only metadata now includes an active exact-business/default grant.
 
-The released candidate's local scripted acceptance is recorded in its scoped
-receipts, separately from the historical dirty-tree 110-case candidate. Read-only
-TEST evidence identifies an account connection matching the requested calendar
-and no business grant; it does not establish fresh provider access. Real Google
-consent and live skill Save/activation remain open. Read-only authenticated
-browser verification is qualified separately in the release plan.
+The UI defect is reproduced locally on released source: confirmed Save leaves
+zero displayed instances until page reload, while mocked server state has one
+enabled instance. The final47 affected browser cases pass on the exact frozen build; independent
+integration review approves coalescing overlapping saves, failed-read recovery and
+unsaved-edit/identity guards.
+No live Save, consent, call or model trial is part of this UI repair verification.
 
-Session ownership remains with the deployed guard: every route requires a session
-unless public, the Axios interceptor alone ends it, and components suppress
-failure UI for isSessionEnded. The browser fixture retains mocked backend calls.
+Session ownership remains with the deployed guard: every nonpublic route needs a
+session, the Axios interceptor alone ends it, and components suppress failure UI
+for isSessionEnded. Local browser fixtures use mocked backend calls.
 
 ## Unresolved
 
-- The AI chat SSE client uses native fetch and bypasses the Axios interceptor;
-  see [harness-backlog](harness-backlog.md).
-- WebSocket connections do not pass through that interceptor.
-- Real model quality, Google consent/provider grants and actual enabled skill
-  Save/activation are unverified. A positive availability check is not a booking.
-- The retained unit-test timing and repeated mobile OAuth enable-wait instability
-  remain unresolved; one passing candidate run does not establish their cause.
+- Outside this Save assignment, the first callback response remains unexplained. Retained runtime
+  correlation exists, but available exact-ID and bounded-time call-history reads
+  return no record under the available identity; archived trace access is unknown.
+- The refresh repair needs final approval and authorized TEST publication.
+- Actual booking creation is unverified; availability and Save are separate facts.
+- AI chat SSE uses native fetch and bypasses the Axios interceptor; WebSockets do
+  not pass through it either. See [harness-backlog](harness-backlog.md).
+- Retained unit-test timing and mobile OAuth enable-wait instability remain open.
 
 ## Next
 
-Complete the separately bounded provider-consent and live Save acceptance when
-authorized. Preserve unknown pending operations and exact business grant boundaries.
-Production/beta promotion and actual provider consent require their own authority.
+Finish final review and authorized TEST rollout for Save and its consistent view.
+Preserve unsaved edits, pending operations and exact business grant boundaries.
+The operator assigns booking setup and first callback diagnosis to another session; no new
+provider/model action or production promotion is authorized by this UI work.

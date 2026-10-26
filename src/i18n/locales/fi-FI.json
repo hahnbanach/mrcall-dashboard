@@ -164,7 +164,9 @@
       "code": {
         "assistant_without_page": "Avustaja ei voi ottaa varauksia, kun ravintolasivu on pois päältä: kytke avustaja pois tai sivu päälle.",
         "allergies_required_unavailable": "Allergiat eivät voi vielä olla pakollisia täällä: jokaiselta soittajalta kysyminen odottaa oikeudellisen kysymyksen ratkeamista."
-      }
+      },
+      "savedRefreshFailed": "Skill on tallennettu, mutta sen asetuksia ei voitu päivittää tässä. Säilytä muutoksesi ennen sivun lataamista uudelleen.",
+      "savedRefreshConflict": "Skill on tallennettu. Tallentamattomat skill-muutoksesi on säilytetty; ota ne talteen ennen tallennettujen asetusten lataamista uudelleen."
     }
   },
   "components": {
