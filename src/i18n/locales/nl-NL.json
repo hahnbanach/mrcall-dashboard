@@ -812,20 +812,6 @@
         "revokeFailed": "Failed to disconnect WhatsApp Cloud API"
       }
     },
-    "connectCalendar": {
-      "title": "Google Agenda verbinden",
-      "description": "Verbind Google Agenda om automatisch afspraken te beheren. MrCall leest uw bezette tijden en maakt afspraken aan. Uw gegevens blijven in uw agenda.",
-      "connectButton": "Agenda verbinden",
-      "disconnectButton": "Agenda ontkoppelen",
-      "selectCalendarHint": "Afspraken van deze assistent worden hier geschreven.",
-      "primaryCalendar": "Hoofdagenda",
-      "selectCalendarTitle": "Selecteer een agenda",
-      "confirmButton": "Bevestigen",
-      "connectedTo": "Verbonden met:",
-      "changeCalendar": "Agenda wijzigen",
-      "loadingCalendars": "Agenda's laden...",
-      "noCalendarsFound": "Geen beschrijfbare agenda's gevonden"
-    },
     "analytics": {
       "title": "Analyse",
       "overview": "Overzicht",

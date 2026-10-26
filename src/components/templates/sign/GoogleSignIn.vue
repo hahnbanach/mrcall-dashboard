@@ -22,9 +22,6 @@ export default {
       try {
         console.debug('Initiating Google OAuth flow with PKCE...')
         
-        // A fresh login is never a calendar-connect: clear any stale flag left by
-        // an abandoned ConnectCalendar redirect, else this login gets misrouted.
-        localStorage.removeItem('oauthFlow')
         const { state, codeChallenge } = await GoogleAuthFlow.begin()
 
         const authUrl = new URL('https://accounts.google.com/o/oauth2/v2/auth')
@@ -45,7 +42,7 @@ export default {
         // authorization, which is the documented way to earn the unverified-app
         // screen on a request that reads as harmless. It also fed a calendar-capable
         // token into the login record and caused two production bugs on the return
-        // leg (see the comment in GoogleCallback.vue).
+        // leg (see docs/integration/google-oauth.md).
         //
         // access_type=offline asked for a refresh token the login has no use for:
         // Firebase owns the session, and nothing in the app reads it. Google caps
@@ -54,8 +51,8 @@ export default {
         //
         // prompt was 'consent', which re-showed the consent screen on every single
         // login. select_account keeps the part that was worth having, choosing
-        // which account to sign in with, without re-consenting. Calendar and skills
-        // still send 'consent': they need a refresh token StarChat can renew, and
+        // which account to sign in with, without re-consenting. The skill
+        // authorizations still send 'consent': they need a refresh token StarChat can renew, and
         // Google returns one only on a first grant.
         authUrl.searchParams.set('prompt', 'select_account')
         authUrl.searchParams.set('state', state)

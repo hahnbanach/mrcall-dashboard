@@ -812,20 +812,6 @@
         "revokeFailed": "Failed to disconnect WhatsApp Cloud API"
       }
     },
-    "connectCalendar": {
-      "title": "Ühenda Google Calendar",
-      "description": "Ühendage Google Calendar, et automaatselt kohtumisi hallata. MrCall loeb teie hõivatud aegu ja loob kohtumisi. Teie andmed jäävad teie kalendrisse.",
-      "connectButton": "Ühenda kalender",
-      "disconnectButton": "Katkesta kalendri ühendus",
-      "selectCalendarHint": "Selle assistendi broneeritud kohtumised kirjutatakse siia.",
-      "primaryCalendar": "Peakalender",
-      "selectCalendarTitle": "Vali kalender",
-      "confirmButton": "Kinnita",
-      "connectedTo": "Ühendatud:",
-      "changeCalendar": "Muuda kalendrit",
-      "loadingCalendars": "Kalendrite laadimine...",
-      "noCalendarsFound": "Kirjutatavaid kalendreid ei leitud"
-    },
     "analytics": {
       "title": "Analüütika",
       "overview": "Ülevaade",

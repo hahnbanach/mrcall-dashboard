@@ -18,7 +18,6 @@ import {
 } from 'firebase/auth'
 import { stopTokenRefresh } from '@/firebase/authUtils'
 
-import calendar from './modules/calendar'  // Import the calendar module
 import tracking from './modules/tracking'  // Import the tracking module
 import ResellerApi from '@/utils/Reseller'
 
@@ -280,7 +279,6 @@ const store = createStore({
     }
   },
   modules: {
-    calendar,  // Register the calendar module
     tracking   // Register the tracking module
   }
 })

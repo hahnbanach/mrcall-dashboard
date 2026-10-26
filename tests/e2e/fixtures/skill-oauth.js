@@ -45,7 +45,6 @@ async function setupOAuthPage(page, options = {}) {
     if (route.request().method() === 'PUT') model.registryWrites.push(route.request().postDataJSON())
     return json(route, { data: {} })
   })
-  await page.route('**/www.googleapis.com/calendar/v3/users/me/calendarList*', route => json(route, { items: [{ id: 'legacy-calendar', summary: 'Legacy calendar', primary: true }] }))
   await page.route('**/accounts.google.com/o/oauth2/v2/auth*', route => {
     model.authorizationUrls.push(route.request().url())
     return route.fulfill({ status: 200, contentType: 'text/html', body: `<html><script>window.location.replace("${ORIGIN}/__oauth_capture__")</script></html>` })

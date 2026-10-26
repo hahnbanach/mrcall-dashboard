@@ -145,18 +145,6 @@ test('callback refuses broader returned scopes after mocked exchange without con
   expect(model.mutations).toEqual([])
 })
 
-test('legacy calendar callback keeps calendar selection and registry path without skill binding', async ({ page }) => {
-  const model = await setupOAuthPage(page, { pending: false })
-  await page.evaluate(() => { localStorage.setItem('codeVerifier', 'legacy-verifier'); localStorage.setItem('oauthState', 'legacy-state'); localStorage.setItem('oauthFlow', 'calendar'); localStorage.removeItem('oauthSkillContext') })
-  await page.goto('/callback?code=fake-code&state=legacy-state')
-  await expect(page.locator('.calendar-selector')).toBeVisible()
-  await expect(page.locator('.calendar-selector')).toContainText('Legacy calendar')
-  expect(model.exchanges).toHaveLength(1)
-  expect(model.connects).toEqual([])
-  expect(model.mutations).toEqual([])
-  expect(await page.evaluate(() => localStorage.getItem('oauthSkillContext'))).toBeNull()
-})
-
 for (const malformed of [[{}], [{ id: '' }], { items: [{ id: 'calendar' }] }]) {
   test(`malformed availability ${JSON.stringify(malformed)} remains unknown`, async ({ page }) => {
     const model = await setupOAuthPage(page, { calendars: malformed })

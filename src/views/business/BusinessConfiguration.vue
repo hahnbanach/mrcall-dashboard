@@ -49,9 +49,6 @@
           :business-id="businessId"
           :user="user"
       />
-      <div v-if="selectedMenupage?.collection.id === '__SEND_DATA__'" class="mb-4">
-        <ConnectCalendar />
-      </div>
       <template v-for="(page, index) in selectedMenupage?.variables" :key="index">
         <div v-if="hasVisibleVariables(page)" :class="page.length > 1 ? 'pageblock' : 'pageblock-noborder'">
           <template v-for="(variable, index) in page" :key="index">
@@ -490,12 +487,11 @@ import AgentSkillsConfigurator from "@/components/widgets/AgentSkillsConfigurato
 import RetentionSettings from "@/components/widgets/RetentionSettings.vue";
 import RestaurantBook from "@/components/widgets/RestaurantBook.vue";
 import { SKILL_NAMES as RESTAURANT_SKILLS, SKILL_PHASE as RESTAURANT_PHASE, pageOffIn } from "@/utils/Restaurant";
-import ConnectCalendar from "@/components/ConnectCalendar.vue";
 import ActionPanel from "@/components/ActionPanel.vue";
 import ConfigureAIPanel from "@/components/ConfigureAIPanel.vue";
 
 export default {
-  components: { TimeSlotsEditor, AgentSkillsConfigurator, TupleVariable, TemplatedVariable, MultiselectVariable, BusinessFrame, ConnectCalendar, ActionPanel, ConfigureAIPanel, RetentionSettings, RestaurantBook},
+  components: { TimeSlotsEditor, AgentSkillsConfigurator, TupleVariable, TemplatedVariable, MultiselectVariable, BusinessFrame, ActionPanel, ConfigureAIPanel, RetentionSettings, RestaurantBook},
   name: "OnboardingChooseDevice",
   setup: function () {
     const store = useStore();

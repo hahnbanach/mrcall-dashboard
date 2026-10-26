@@ -46,14 +46,6 @@
           <i class="pi pi-link"></i> {{ $t('components.account.integrationsSectionTitle') }}
         </h2>
         <Card class="account-card">
-          <template #title>{{ $t('components.connectCalendar.title') }}</template>
-          <template #subtitle>{{ $t('components.connectCalendar.description') }}</template>
-          <template #content>
-            <ConnectCalendar></ConnectCalendar>
-          </template>
-        </Card>
-
-        <Card class="account-card">
           <template #title>{{ $t('components.account.mcpConnectors.title') }}</template>
           <template #subtitle>{{ $t('components.account.mcpConnectors.description') }}</template>
           <template #content>
@@ -89,7 +81,6 @@
 import ChangePassword from "@/components/ChangePassword";
 import ChangeEmail from "@/components/ChangeEmail";
 import DeleteAccount from "@/components/DeleteAccount";
-import ConnectCalendar from "@/components/ConnectCalendar";
 import PreFooterRequireAssistance from "@/components/PreFooterRequireAssistance";
 import { useStore } from 'vuex'
 
@@ -98,7 +89,6 @@ export default {
     ChangePassword,
     ChangeEmail,
     DeleteAccount,
-    ConnectCalendar,
     PreFooterRequireAssistance
   },
   setup() {

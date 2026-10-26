@@ -30,12 +30,15 @@ test.describe('Account Page (Authenticated)', () => {
     await expect(content).toBeVisible()
   })
 
-  test('should display ConnectCalendar section', async ({ authenticatedPage }) => {
-    const basePage = new BasePage(authenticatedPage)
+  // Google Calendar is connected per skill, from the business configuration; the account no
+  // longer offers a connection of its own.
+  test('Integrations offers the MCP connectors and no calendar connection', async ({ authenticatedPage: page }) => {
+    const basePage = new BasePage(page)
     await basePage.goto('/account')
 
-    const content = authenticatedPage.locator('.content')
-    await expect(content).toBeVisible()
+    await expect(page.getByRole('button', { name: 'Manage MCP connectors' })).toBeVisible()
+    await expect(page.getByText('Connect Google Calendar')).toHaveCount(0)
+    await expect(page.getByRole('button', { name: /calendar/i })).toHaveCount(0)
   })
 
   test('should display DeleteAccount section', async ({ authenticatedPage }) => {

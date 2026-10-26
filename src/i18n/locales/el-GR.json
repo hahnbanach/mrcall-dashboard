@@ -812,20 +812,6 @@
         "revokeFailed": "Failed to disconnect WhatsApp Cloud API"
       }
     },
-    "connectCalendar": {
-      "title": "Σύνδεση με το Ημερολόγιο Google",
-      "description": "Συνδέστε το Ημερολόγιο Google για αυτόματη διαχείριση ραντεβού. Το MrCall θα διαβάζει τις κατειλημμένες ώρες σας και θα δημιουργεί ραντεβού. Τα δεδομένα σας παραμένουν στο ημερολόγιό σας.",
-      "connectButton": "Σύνδεση Ημερολογίου",
-      "disconnectButton": "Αποσύνδεση Ημερολογίου",
-      "selectCalendarHint": "Τα ραντεβού αυτού του βοηθού θα γράφονται εδώ.",
-      "primaryCalendar": "Κύριο ημερολόγιο",
-      "selectCalendarTitle": "Επιλογή ημερολογίου",
-      "confirmButton": "Επιβεβαίωση",
-      "connectedTo": "Συνδεδεμένο με:",
-      "changeCalendar": "Αλλαγή ημερολογίου",
-      "loadingCalendars": "Φόρτωση ημερολογίων...",
-      "noCalendarsFound": "Δεν βρέθηκαν εγγράψιμα ημερολόγια"
-    },
     "analytics": {
       "title": "Αναλυτικά Στοιχεία",
       "overview": "Επισκόπηση",

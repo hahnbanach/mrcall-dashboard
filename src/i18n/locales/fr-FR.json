@@ -814,20 +814,6 @@
         "revokeFailed": "Failed to disconnect WhatsApp Cloud API"
       }
     },
-    "connectCalendar": {
-      "title": "Connecter Google Calendar",
-      "description": "Connectez Google Calendar pour gérer automatiquement les rendez-vous MrCall lira vos horaires occupés et créera des rendez-vous. Vos données restent dans votre calendrier.",
-      "connectButton": "Connecter Calendar",
-      "disconnectButton": "Déconnecter Calendar",
-      "selectCalendarHint": "Les rendez-vous pris par cet assistant seront ecrits ici.",
-      "primaryCalendar": "Agenda principal",
-      "selectCalendarTitle": "Choisir un calendrier",
-      "confirmButton": "Confirmer",
-      "connectedTo": "Connecté à :",
-      "changeCalendar": "Changer de calendrier",
-      "loadingCalendars": "Chargement des calendriers...",
-      "noCalendarsFound": "Aucun calendrier modifiable trouvé"
-    },
     "analytics": {
       "title": "Statistiques",
       "overview": "Aperçu",

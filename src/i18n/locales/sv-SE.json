@@ -812,20 +812,6 @@
         "revokeFailed": "Failed to disconnect WhatsApp Cloud API"
       }
     },
-    "connectCalendar": {
-      "title": "Koppla Google Kalender",
-      "description": "Koppla Google Kalender för att automatiskt hantera bokningar. MrCall läser dina upptagna tider och skapar bokningar. Dina uppgifter stannar i din kalender.",
-      "connectButton": "Koppla kalender",
-      "disconnectButton": "Koppla från kalender",
-      "selectCalendarHint": "Bokningar fran denna assistent skrivs har.",
-      "primaryCalendar": "Huvudkalender",
-      "selectCalendarTitle": "Välj en kalender",
-      "confirmButton": "Bekräfta",
-      "connectedTo": "Ansluten till:",
-      "changeCalendar": "Byt kalender",
-      "loadingCalendars": "Laddar kalendrar...",
-      "noCalendarsFound": "Inga skrivbara kalendrar hittades"
-    },
     "analytics": {
       "title": "Analys",
       "overview": "Översikt",

@@ -812,20 +812,6 @@
         "revokeFailed": "Failed to disconnect WhatsApp Cloud API"
       }
     },
-    "connectCalendar": {
-      "title": "Yhdistä Google-kalenteri",
-      "description": "Yhdistä Google-kalenteri hallitaksesi tapaamisia automaattisesti. MrCall lukee varatut aikasi ja luo tapaamisia. Tietosi pysyvät kalenterissasi.",
-      "connectButton": "Yhdistä kalenteri",
-      "disconnectButton": "Katkaise kalenterin yhteys",
-      "selectCalendarHint": "Taman avustajan varaamat tapaamiset kirjataan tanne.",
-      "primaryCalendar": "Paakalenteri",
-      "selectCalendarTitle": "Valitse kalenteri",
-      "confirmButton": "Vahvista",
-      "connectedTo": "Yhdistetty:",
-      "changeCalendar": "Vaihda kalenteri",
-      "loadingCalendars": "Ladataan kalentereita...",
-      "noCalendarsFound": "Kirjoitettavia kalentereita ei löytynyt"
-    },
     "analytics": {
       "title": "Analytiikka",
       "overview": "Yleiskatsaus",

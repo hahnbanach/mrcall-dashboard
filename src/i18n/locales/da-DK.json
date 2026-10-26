@@ -812,20 +812,6 @@
         "revokeFailed": "Failed to disconnect WhatsApp Cloud API"
       }
     },
-    "connectCalendar": {
-      "title": "Forbind Google Kalender",
-      "description": "Forbind Google Kalender for automatisk at administrere aftaler. MrCall læser dine optagne tidspunkter og opretter aftaler. Dine data forbliver i din kalender.",
-      "connectButton": "Forbind kalender",
-      "disconnectButton": "Afbryd kalender",
-      "selectCalendarHint": "Aftaler booket af denne assistent skrives her.",
-      "primaryCalendar": "Hovedkalender",
-      "selectCalendarTitle": "Vælg en kalender",
-      "confirmButton": "Bekræft",
-      "connectedTo": "Forbundet til:",
-      "changeCalendar": "Skift kalender",
-      "loadingCalendars": "Indlæser kalendere...",
-      "noCalendarsFound": "Ingen skrivbare kalendere fundet"
-    },
     "analytics": {
       "title": "Analyser",
       "overview": "Oversigt",
