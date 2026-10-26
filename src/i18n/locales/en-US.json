@@ -2236,7 +2236,13 @@
         "qualityBase": "Calls counted over the {calls} calls with this check recorded.",
         "draftAdded": "We added the question to your questions and answers: write the answer and save.",
         "draftPresent": "This question is already among your questions and answers.",
-        "version": "Version {n}"
+        "version": "Version {n}",
+        "calls": "{n} call | {n} calls",
+        "booked": "{n} call with a booking taken | {n} calls with a booking taken",
+        "transferred": "{n} call transferred to a person | {n} calls transferred to a person",
+        "themeOutcome": "Outcome of the calls of {topic}",
+        "callBackTitle": "Calls to call back",
+        "callBackNote": "Calls not resolved, or passed to the business with an incomplete message."
       },
       "deleteReport": {
         "title": "Delete the report",

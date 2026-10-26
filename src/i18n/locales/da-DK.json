@@ -2231,7 +2231,13 @@
         "qualityBase": "Opkald talt ud af de {calls} opkald, hvor denne kontrol er registreret.",
         "draftAdded": "Vi har føjet spørgsmålet til dine spørgsmål og svar: skriv svaret og gem.",
         "draftPresent": "Dette spørgsmål findes allerede blandt dine spørgsmål og svar.",
-        "version": "Version {n}"
+        "version": "Version {n}",
+        "calls": "{n} opkald | {n} opkald",
+        "booked": "{n} opkald med en booking foretaget | {n} opkald med en booking foretaget",
+        "transferred": "{n} opkald stillet videre til en person | {n} opkald stillet videre til en person",
+        "themeOutcome": "Udfald af opkaldene om {topic}",
+        "callBackTitle": "Opkald der skal ringes tilbage",
+        "callBackNote": "Opkald, der ikke blev løst, eller som blev givet videre til virksomheden med en ufuldstændig besked."
       },
       "deleteReport": {
         "title": "Slet rapporten",

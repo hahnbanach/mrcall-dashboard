@@ -2233,7 +2233,13 @@
         "qualityBase": "Anrufe gezählt von den {calls} Anrufen, bei denen diese Prüfung erfasst wurde.",
         "draftAdded": "Wir haben die Frage zu Ihren Fragen und Antworten hinzugefügt: Schreiben Sie die Antwort und speichern Sie.",
         "draftPresent": "Diese Frage steht bereits in Ihren Fragen und Antworten.",
-        "version": "Version {n}"
+        "version": "Version {n}",
+        "calls": "{n} Anruf | {n} Anrufe",
+        "booked": "{n} Anruf mit aufgenommener Buchung | {n} Anrufe mit aufgenommener Buchung",
+        "transferred": "{n} Anruf an eine Person weitergeleitet | {n} Anrufe an eine Person weitergeleitet",
+        "themeOutcome": "Ergebnis der Anrufe zu {topic}",
+        "callBackTitle": "Anrufe zum Zurückrufen",
+        "callBackNote": "Nicht gelöste Anrufe oder solche, die mit unvollständiger Nachricht an das Unternehmen weitergegeben wurden."
       },
       "deleteReport": {
         "title": "Bericht löschen",

@@ -2231,7 +2231,13 @@
         "qualityBase": "Kõned loetud nendest {calls} kõnest, mille kohta see kontroll on salvestatud.",
         "draftAdded": "Lisasime küsimuse sinu küsimuste ja vastuste hulka: kirjuta vastus ja salvesta.",
         "draftPresent": "See küsimus on juba sinu küsimuste ja vastuste hulgas.",
-        "version": "Versioon {n}"
+        "version": "Versioon {n}",
+        "calls": "{n} kõne | {n} kõnet",
+        "booked": "{n} kõne, milles tehti broneering | {n} kõnet, milles tehti broneering",
+        "transferred": "{n} kõne suunati inimesele | {n} kõnet suunati inimesele",
+        "themeOutcome": "Teema {topic} kõnede tulemus",
+        "callBackTitle": "Kõned, millele tagasi helistada",
+        "callBackNote": "Lahendamata kõned või ettevõttele puuduliku sõnumiga edastatud kõned."
       },
       "deleteReport": {
         "title": "Kustuta aruanne",

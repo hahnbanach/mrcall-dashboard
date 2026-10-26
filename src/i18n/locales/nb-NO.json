@@ -2231,7 +2231,13 @@
         "qualityBase": "Samtaler regnet av de {calls} samtalene der denne kontrollen er registrert.",
         "draftAdded": "Vi har lagt spørsmålet til i spørsmålene og svarene dine: skriv svaret og lagre.",
         "draftPresent": "Dette spørsmålet finnes allerede blant spørsmålene og svarene dine.",
-        "version": "Versjon {n}"
+        "version": "Versjon {n}",
+        "calls": "{n} samtale | {n} samtaler",
+        "booked": "{n} samtale med en bestilling tatt | {n} samtaler med en bestilling tatt",
+        "transferred": "{n} samtale satt over til en person | {n} samtaler satt over til en person",
+        "themeOutcome": "Utfall av samtalene om {topic}",
+        "callBackTitle": "Samtaler å ringe tilbake",
+        "callBackNote": "Samtaler som ikke ble løst, eller som ble gitt videre til bedriften med en ufullstendig melding."
       },
       "deleteReport": {
         "title": "Slett rapporten",

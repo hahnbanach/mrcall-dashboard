@@ -84,14 +84,25 @@ const REPORT = {
     period: { from: '2026-09-30T22:00:00Z', to: '2026-10-07T22:00:00Z' },
     calls: 120,
     callsManaged: 130,
+    // the calls' own counts, as `CallInsightsReportBuilder.content` writes them: resolution by value (the four lines
+    // where the caller asked, and the two beside them), booked and transferred as counts of calls
+    resolution: { resolved: 50, forwarded: 30, handed_over: 10, unresolved: 20, caller_left: 6, spam_wrong_number: 4 },
+    message: { complete: 60, incomplete: 10, none: 50 },
+    booked: 31,
+    transferred: 1,
+    // each theme with its calls and their resolution; written here in the order the screen must not rely on
     topics: [
-      { topic: 'Bookings', labels: ['booking', 'table for four'], new: false },
-      { topic: 'Parking', labels: ['parking'], new: true },
+      { topic: 'Parking', calls: 12, labels: ['parking'], resolution: { resolved: 4, unresolved: 8 }, with_unanswered: 8, new: true },
+      { topic: 'Bookings', calls: 70, labels: ['booking', 'table for four'], resolution: { resolved: 40, forwarded: 20, handed_over: 5, unresolved: 5 }, with_unanswered: 2, new: false },
     ],
+    // gaps carry their examples resolved from their cites (amendment rule 2) and, classified, their category (rule 3)
     gaps: [
       { group: 'missing_info', summary: 'Is there parking near the restaurant?', examples: ['CON-1', 'CON-2'] },
       { group: 'needs_integration', summary: 'Can I book online?', examples: ['CON-3'] },
+      { group: 'out_of_scope', summary: 'Which pill should I take for my blood pressure?', examples: ['CON-4'], category: 'clinical_advice' },
     ],
+    // unresolved, and forwarded with a message not complete: the calls to call back
+    flagged_calls: ['CON-1', 'CON-5'],
     suggestions: {
       business_info: ['Add where to park and how much it costs.'],
       integration: ['Online booking from the website.'],

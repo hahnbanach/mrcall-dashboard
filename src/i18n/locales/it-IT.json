@@ -2237,7 +2237,13 @@
         "qualityBase": "Chiamate contate sulle {calls} chiamate con questo controllo registrato.",
         "draftAdded": "Abbiamo aggiunto la domanda alle tue domande e risposte: scrivi la risposta e salva.",
         "draftPresent": "Questa domanda è già tra le tue domande e risposte.",
-        "version": "Versione {n}"
+        "version": "Versione {n}",
+        "calls": "{n} chiamata | {n} chiamate",
+        "booked": "{n} chiamata con una prenotazione presa | {n} chiamate con una prenotazione presa",
+        "transferred": "{n} chiamata trasferita a una persona | {n} chiamate trasferite a una persona",
+        "themeOutcome": "Esito delle chiamate di {topic}",
+        "callBackTitle": "Chiamate da richiamare",
+        "callBackNote": "Chiamate non risolte, o passate all'attività con un messaggio incompleto."
       },
       "deleteReport": {
         "title": "Elimina il report",

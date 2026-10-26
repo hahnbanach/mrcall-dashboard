@@ -132,7 +132,7 @@ test.describe('the report\'s own page', () => {
     // the analytics count 125 calls of these days with insights now, the report read 120
     await expect(page.getByText('Since this report was written, 5 more calls of these days have been analysed: regenerate it to include them.')).toBeVisible()
     await expect(page.getByText('Parking', { exact: true })).toBeVisible()
-    await expect(page.getByRole('link', { name: /Giulia Verdi/ })).toHaveAttribute('href', `/conversations?id=${BUSINESS_ID}&conversation=CON-1`)
+    await expect(page.getByRole('region', { name: 'Questions left unanswered' }).getByRole('link', { name: /Giulia Verdi/ })).toHaveAttribute('href', `/conversations?id=${BUSINESS_ID}&conversation=CON-1`)
     await expect(page.getByText('Shorten the greeting.')).toHaveCount(0)
     const quality = page.getByRole('table', { name: 'Questions without an answer, compared with the period before' })
     await expect(quality.getByRole('row', { name: /Missing information 6 9/ })).toBeVisible()

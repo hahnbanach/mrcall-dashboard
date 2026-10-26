@@ -2233,7 +2233,13 @@
         "qualityBase": "Appels comptés sur les {calls} appels pour lesquels ce contrôle a été enregistré.",
         "draftAdded": "Nous avons ajouté la question à vos questions et réponses : écrivez la réponse et enregistrez.",
         "draftPresent": "Cette question figure déjà parmi vos questions et réponses.",
-        "version": "Version {n}"
+        "version": "Version {n}",
+        "calls": "{n} appel | {n} appels",
+        "booked": "{n} appel avec une réservation prise | {n} appels avec une réservation prise",
+        "transferred": "{n} appel transféré à une personne | {n} appels transférés à une personne",
+        "themeOutcome": "Issue des appels de {topic}",
+        "callBackTitle": "Appels à rappeler",
+        "callBackNote": "Appels non résolus, ou transmis à l'entreprise avec un message incomplet."
       },
       "deleteReport": {
         "title": "Supprimer le rapport",

@@ -2231,7 +2231,13 @@
         "qualityBase": "Gesprekken geteld over de {calls} gesprekken waarvoor deze controle is vastgelegd.",
         "draftAdded": "We hebben de vraag toegevoegd aan uw vragen en antwoorden: schrijf het antwoord en sla op.",
         "draftPresent": "Deze vraag staat al bij uw vragen en antwoorden.",
-        "version": "Versie {n}"
+        "version": "Versie {n}",
+        "calls": "{n} gesprek | {n} gesprekken",
+        "booked": "{n} gesprek met een genoteerde boeking | {n} gesprekken met een genoteerde boeking",
+        "transferred": "{n} gesprek doorverbonden met een persoon | {n} gesprekken doorverbonden met een persoon",
+        "themeOutcome": "Uitkomst van de gesprekken over {topic}",
+        "callBackTitle": "Gesprekken om terug te bellen",
+        "callBackNote": "Gesprekken die niet zijn opgelost, of met een onvolledig bericht aan het bedrijf zijn doorgegeven."
       },
       "deleteReport": {
         "title": "Het rapport verwijderen",

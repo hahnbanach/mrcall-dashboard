@@ -226,8 +226,67 @@ function reportBase(content) {
     return { kind: "old", analysed };
 }
 
+/*
+ * A REPORT'S OUTCOME, from the report's own counts (`content.resolution`, by value, as StarChat's
+ * `CallInsightsReportBuilder.content` writes them): the four lines of the calls where the caller asked something, over
+ * their sum, as the analytics show them (StarChat's docs/briefs/2026-10-24-call-resolution-forwarded.md, "Outcome lines").
+ * A report is a document of its days: its lines are its own, never the analytics' of today, which may count calls
+ * analysed after it. `caller_left` and `spam_wrong_number` stay outside the base, as in the analytics.
+ * The forwarded line is not split by message here: the report's content has no resolution-by-message count to split it
+ * with, and borrowing today's analytics for it would put two sources in one line.
+ */
+const REPORT_OUTCOME_KEYS = ["resolved", "forwarded", "handed_over", "unresolved"];
+
+function percentOf(count, base) {
+    return base > 0 ? Math.round((count / base) * 100) : 0;
+}
+
+function reportOutcome(content) {
+    const r = content && content.resolution;
+    if (!r || typeof r !== "object") return null;
+    const counts = REPORT_OUTCOME_KEYS.map((key) => (typeof r[key] === "number" ? r[key] : 0));
+    const base = counts.reduce((a, b) => a + b, 0);
+    if (base === 0) return null;
+    return { base, lines: REPORT_OUTCOME_KEYS.map((key, i) => ({ key, count: counts[i], percent: percentOf(counts[i], base) })) };
+}
+
+// The words of a label as a reader compares them: case and surrounding spaces aside.
+function sameWords(a, b) {
+    return String(a).trim().toLocaleLowerCase() === String(b).trim().toLocaleLowerCase();
+}
+
+// A report's themes, the most called first (a theme without its count, from a report before counts, last): each with
+// its calls, the outcome lines that have calls (in line order), and its labels without one that repeats its name.
+function reportThemes(content) {
+    const topics = content && Array.isArray(content.topics) ? content.topics : [];
+    return topics
+        .filter((t) => t && typeof t.topic === "string" && t.topic.trim() !== "")
+        .map((t) => {
+            const r = t.resolution && typeof t.resolution === "object" ? t.resolution : {};
+            return {
+                topic: t.topic,
+                calls: typeof t.calls === "number" ? t.calls : null,
+                new: t.new === true,
+                outcome: REPORT_OUTCOME_KEYS.filter((key) => r[key] > 0).map((key) => ({ key, count: r[key] })),
+                labels: (Array.isArray(t.labels) ? t.labels : [])
+                    .filter((l) => typeof l === "string" && l.trim() !== "" && !sameWords(l, t.topic)),
+            };
+        })
+        .sort((a, b) => (b.calls === null ? -1 : b.calls) - (a.calls === null ? -1 : a.calls));
+}
+
+// "Aggiungi la risposta" pre-fills the knowledge base with the question: never for a question about the caller's own
+// medical case (StarChat's amendment of 2026-10-26, rule 3: the knowledge base is never pre-filled with a clinical
+// answer), and never for a gap without words.
+function answerable(gap) {
+    return !!gap && typeof gap.summary === "string" && gap.summary.trim() !== "" && gap.category !== "clinical_advice";
+}
+
 export default {
     FALLBACK_ZONE,
+    reportOutcome,
+    reportThemes,
+    answerable,
     zonedParts,
     zonedMidnight,
     lastMidnight,

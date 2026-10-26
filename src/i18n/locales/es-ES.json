@@ -2245,7 +2245,13 @@
         "qualityBase": "Llamadas contadas sobre las {calls} llamadas con esta comprobación registrada.",
         "draftAdded": "Hemos añadido la pregunta a tus preguntas y respuestas: escribe la respuesta y guarda.",
         "draftPresent": "Esta pregunta ya está entre tus preguntas y respuestas.",
-        "version": "Versión {n}"
+        "version": "Versión {n}",
+        "calls": "{n} llamada | {n} llamadas",
+        "booked": "{n} llamada con una reserva tomada | {n} llamadas con una reserva tomada",
+        "transferred": "{n} llamada transferida a una persona | {n} llamadas transferidas a una persona",
+        "themeOutcome": "Resultado de las llamadas de {topic}",
+        "callBackTitle": "Llamadas que devolver",
+        "callBackNote": "Llamadas no resueltas, o pasadas al negocio con un mensaje incompleto."
       },
       "deleteReport": {
         "title": "Eliminar el informe",

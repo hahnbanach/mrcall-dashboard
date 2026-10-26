@@ -43,15 +43,54 @@
           </p>
         </section>
 
-        <section v-if="topics.length > 0" class="report-section" aria-labelledby="themes-title">
+        <!-- How the calls went, from the report's own counts: four lines over the calls where the caller asked -->
+        <section v-if="outcome || hasFacts" class="report-section" aria-labelledby="outcome-title">
+          <h3 id="outcome-title" class="report-section-title">{{ $t("components.callInsights.outcome.title") }}</h3>
+          <template v-if="outcome">
+            <p class="report-note">{{ $t("components.callInsights.howCallsWent.shareBase", { count: outcome.base }) }}</p>
+            <ul class="report-list report-outcome" :aria-label="$t('components.callInsights.outcome.title')">
+              <li v-for="line in outcome.lines" :key="line.key" class="report-outcome-line">
+                <span class="report-outcome-label">{{ $t("components.callInsights.outcome." + line.key) }}</span>
+                <span class="report-outcome-count">{{ line.count }}</span>
+                <span class="report-note">{{ $t("components.callInsights.howCallsWent.shareOfBase", { percent: line.percent, base: outcome.base }) }}</span>
+              </li>
+            </ul>
+          </template>
+          <p v-if="typeof content.booked === 'number'">{{ $t("components.callInsights.reportDetail.booked", { n: content.booked }, content.booked) }}</p>
+          <p v-if="typeof content.transferred === 'number'">{{ $t("components.callInsights.reportDetail.transferred", { n: content.transferred }, content.transferred) }}</p>
+        </section>
+
+        <section v-if="themes.length > 0" class="report-section" aria-labelledby="themes-title">
           <h3 id="themes-title" class="report-section-title">{{ $t("components.callInsights.reports.topicsTitle") }}</h3>
           <ul class="report-list">
-            <li v-for="topic in topics" :key="topic.topic" class="report-topic">
-              <span class="report-topic-name">{{ topic.topic }}</span>
-              <Tag v-if="topic.new" severity="info" :value="$t('components.callInsights.reports.newTopic')" />
-              <p v-if="labelsOf(topic).length > 0" class="report-note">
-                {{ $t("components.callInsights.reports.themeIncludes", { labels: labelsOf(topic).join(", ") }) }}
+            <li v-for="theme in themes" :key="theme.topic" class="report-topic">
+              <span class="report-topic-name">{{ theme.topic }}</span>
+              <span v-if="theme.calls !== null" class="report-topic-calls">{{ $t("components.callInsights.reportDetail.calls", { n: theme.calls }, theme.calls) }}</span>
+              <Tag v-if="theme.new" severity="info" :value="$t('components.callInsights.reports.newTopic')" />
+              <ul
+                v-if="theme.outcome.length > 0"
+                class="report-topic-outcome"
+                :aria-label="$t('components.callInsights.reportDetail.themeOutcome', { topic: theme.topic })"
+              >
+                <li v-for="part in theme.outcome" :key="part.key">
+                  <span>{{ $t("components.callInsights.outcome." + part.key) }}</span>{{ " " }}<span class="report-outcome-count">{{ part.count }}</span>
+                </li>
+              </ul>
+              <p v-if="theme.labels.length > 0" class="report-note">
+                {{ $t("components.callInsights.reports.themeIncludes", { labels: theme.labels.join(", ") }) }}
               </p>
+            </li>
+          </ul>
+        </section>
+
+        <!-- The calls to call back: not resolved, or passed on with a message that is not complete -->
+        <section v-if="flagged.length > 0" class="report-section" aria-labelledby="callback-title">
+          <h3 id="callback-title" class="report-section-title">{{ $t("components.callInsights.reportDetail.callBackTitle") }}</h3>
+          <p class="report-note">{{ $t("components.callInsights.reportDetail.callBackNote") }}</p>
+          <ul class="report-calls">
+            <li v-for="id in flagged" :key="id">
+              <router-link v-if="isOwner" :to="conversationLink(id)">{{ exampleName(id) }}</router-link>
+              <span v-else>{{ exampleName(id) }}</span>
             </li>
           </ul>
         </section>
@@ -67,11 +106,11 @@
                   <span>{{ $t("components.callInsights.reports.examples") }}</span>{{ " " }}
                   <template v-for="(id, k) in gap.examples" :key="id">
                     <span v-if="k > 0">, </span>
-                    <router-link v-if="isOwner" :to="conversationLink(id)">{{ exampleName(id, k) }}</router-link>
-                    <span v-else>{{ exampleName(id, k) }}</span>
+                    <router-link v-if="isOwner" :to="conversationLink(id)">{{ exampleName(id) }}</router-link>
+                    <span v-else>{{ exampleName(id) }}</span>
                   </template>
                 </p>
-                <router-link :to="answerLink(gap)" class="report-answer">
+                <router-link v-if="answerable(gap)" :to="answerLink(gap)" class="report-answer">
                   <i class="pi pi-pencil" aria-hidden="true"></i> {{ $t("components.callInsights.reportDetail.addAnswer") }}
                 </router-link>
               </li>
@@ -151,10 +190,14 @@ import ReportDeleteDialog from "@/components/analytics/ReportDeleteDialog.vue";
 /**
  * One report, on its own route (`/analytics/report?id=&start=&requestId=`; docs/briefs/2026-10-24-insights-reports-ux.md
  * in StarChat, "The report detail"): its base (the calls it read over the calls the assistant managed, and the calls it
- * did not read, named by why), a note when more calls of its days were analysed after it was written, its themes, the
- * questions left without an answer by reason with example calls and "Aggiungi la risposta", its suggestions, and the
- * quality section's gaps of its days beside the period before. The counts of the base and of quality are the
- * analytics' own (`outcomes`, `quality` over the report's days), never recomputed here.
+ * did not read, named by why), a note when more calls of its days were analysed after it was written, how its calls went
+ * (the four outcome lines, booked and transferred, from its own counts), its themes by calls with their outcome, the
+ * calls to call back, the questions left without an answer by reason with example calls and "Aggiungi la risposta"
+ * (never on a question about the caller's own medical case), its suggestions, and the quality section's gaps of its
+ * days beside the period before. The counts of the exclusions, newer calls and quality are the analytics' own
+ * (`outcomes`, `quality` over the report's days); the outcome and themes are the report's own, never recomputed here.
+ * Calls open their conversation for the business's owner; for anyone else they are named, not linked, since a
+ * reseller or an admin cannot open a managed owner's call.
  */
 export default {
   components: { InsightsState, InsightsRequestDialog, ReportDeleteDialog },
@@ -205,7 +248,9 @@ export default {
     excluded() {
       const n = this.outcomes && this.outcomes.noConversation;
       if (!n) return null;
-      return { silent: n.caller_silent || 0, credit: n.no_credit || 0 };
+      const counts = { silent: n.caller_silent || 0, credit: n.no_credit || 0 };
+      // a line of zeros says nothing (U19 m7)
+      return counts.silent + counts.credit > 0 ? counts : null;
     },
     // Calls of the report's days analysed since it was written: the analytics count more than the report read.
     newerCalls() {
@@ -213,8 +258,32 @@ export default {
       if (typeof now !== "number" || !this.base) return 0;
       return Math.max(0, now - this.base.analysed);
     },
-    topics() {
-      return Array.isArray(this.content.topics) ? this.content.topics : [];
+    outcome() {
+      return InsightsReports.reportOutcome(this.content);
+    },
+    hasFacts() {
+      return typeof this.content.booked === "number" || typeof this.content.transferred === "number";
+    },
+    themes() {
+      return InsightsReports.reportThemes(this.content);
+    },
+    // The report's calls StarChat did not name, numbered in the order the page shows them: the gaps' examples, then the
+    // calls to call back.
+    unnamedNumbers() {
+      const gaps = Array.isArray(this.content.gaps) ? this.content.gaps : [];
+      const ids = [...gaps.flatMap((g) => (g && Array.isArray(g.examples) ? g.examples : [])), ...this.flagged];
+      const numbers = {};
+      let n = 0;
+      for (const id of ids) {
+        if (numbers[id] || CallInsights.exampleCallName(this.report, id, this.$i18n.locale)) continue;
+        numbers[id] = ++n;
+      }
+      return numbers;
+    },
+    // StarChat's `flagged_calls`: ids of the report's days, each listed once
+    flagged() {
+      const list = Array.isArray(this.content.flagged_calls) ? this.content.flagged_calls : [];
+      return [...new Set(list.filter((id) => typeof id === "string" && id !== ""))];
     },
     gapGroups() {
       const gaps = Array.isArray(this.content.gaps) ? this.content.gaps : [];
@@ -287,12 +356,14 @@ export default {
         .then((q) => { this.quality = q && !q.unavailable ? q : null; })
         .catch(() => { this.quality = null; });
     },
-    labelsOf(topic) {
-      return Array.isArray(topic.labels) ? topic.labels.filter((l) => typeof l === "string" && l.trim() !== "") : [];
+    answerable(gap) {
+      return InsightsReports.answerable(gap);
     },
-    exampleName(id, index) {
+    // A call StarChat named, by its caller and start; one it did not, by its number among the report's unnamed calls,
+    // the same number wherever it appears, so two different calls never share a name.
+    exampleName(id) {
       return CallInsights.exampleCallName(this.report, id, this.$i18n.locale) ||
-        this.$t("components.callInsights.reports.exampleCall", { n: index + 1 });
+        this.$t("components.callInsights.reports.exampleCall", { n: this.unnamedNumbers[id] || 1 });
     },
     conversationLink(conversationId) {
       return { path: "/conversations", query: { id: this.businessId, conversation: conversationId } };
@@ -410,6 +481,50 @@ export default {
 .report-topic-name {
   font-weight: 600;
   margin-right: 8px;
+}
+
+.report-topic-calls {
+  margin-right: 8px;
+  color: @mrcall_grey_text;
+}
+
+.report-topic-outcome {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  list-style: none;
+  margin: 4px 0;
+  padding: 0;
+  font-size: 13px;
+}
+
+.report-outcome {
+  gap: 4px;
+  margin-bottom: 8px;
+}
+
+.report-outcome-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.report-outcome-label {
+  min-width: 14rem;
+}
+
+.report-outcome-count {
+  font-weight: 600;
+}
+
+.report-calls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .report-gap-group {

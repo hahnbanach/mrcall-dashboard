@@ -2231,7 +2231,13 @@
         "qualityBase": "Puhelut lasketaan niistä {calls} puhelusta, joille tämä tarkistus on tallennettu.",
         "draftAdded": "Lisäsimme kysymyksen kysymyksiisi ja vastauksiisi: kirjoita vastaus ja tallenna.",
         "draftPresent": "Tämä kysymys on jo kysymyksissäsi ja vastauksissasi.",
-        "version": "Versio {n}"
+        "version": "Versio {n}",
+        "calls": "{n} puhelu | {n} puhelua",
+        "booked": "{n} puhelu, jossa tehtiin varaus | {n} puhelua, joissa tehtiin varaus",
+        "transferred": "{n} puhelu siirretty henkilölle | {n} puhelua siirretty henkilölle",
+        "themeOutcome": "Aiheen {topic} puheluiden tulos",
+        "callBackTitle": "Takaisin soitettavat puhelut",
+        "callBackNote": "Ratkaisemattomat puhelut tai yritykselle puutteellisen viestin kanssa välitetyt puhelut."
       },
       "deleteReport": {
         "title": "Poista raportti",
