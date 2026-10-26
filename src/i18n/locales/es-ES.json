@@ -2436,6 +2436,16 @@
           "reserve": "Reserva para las llamadas",
           "over_ceiling": "Más grande de lo que permitía la estimación"
         }
+      },
+      "change": {
+        "notAvailable": "n/d",
+        "notAvailableHelp": "El período anterior tuvo menos de 20 llamadas: la variación no es significativa."
+      },
+      "overview": {
+        "noCallsDays": "Ninguna llamada en el último día. | Ninguna llamada en los últimos {days} días."
+      },
+      "callers": {
+        "web": "Llamada web"
       }
     }
   },

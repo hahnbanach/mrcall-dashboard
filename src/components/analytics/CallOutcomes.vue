@@ -37,9 +37,10 @@
                 <span class="legend-count">{{ formatNumber(line.count) }}</span>
                 <span class="legend-share">{{ $t("components.callInsights.howCallsWent.shareOfBase", { percent: line.percent, base: formatNumber(outcome.base) }) }}</span>
                 <!-- neutral: a rise is good news on one line and bad on another, so colour would mislead -->
-                <span v-if="lineDelta(line) !== null" class="legend-delta delta-neutral">
-                  <i :class="deltaIcon(lineDelta(line))" aria-hidden="true"></i>
-                  {{ formatDeltaPercentage(lineDelta(line)) }}
+                <span v-if="lineChange(line) && !lineChange(line).available" class="legend-delta delta-neutral"><abbr :title="$t('components.callInsights.change.notAvailableHelp')">{{ $t("components.callInsights.change.notAvailable") }}</abbr></span>
+                <span v-else-if="lineChange(line)" class="legend-delta delta-neutral">
+                  <i :class="deltaIcon(lineChange(line).value)" aria-hidden="true"></i>
+                  {{ formatDeltaPercentage(lineChange(line).value) }}
                 </span>
               </span>
               <span v-if="line.key === 'forwarded'" class="outcome-help">{{ $t("components.callInsights.outcome.forwardedHelp") }}</span>
@@ -81,9 +82,10 @@
             <span class="legend-swatch" :style="{ background: colorOf(key) }" aria-hidden="true"></span>
             <InsightLabel :dimension="dim.name" :value="key" />
             <span class="legend-count">{{ formatNumber(dim.totals[key] || 0) }}</span>
-            <span v-if="delta(dim, key) !== null" class="legend-delta" :class="deltaClass(delta(dim, key))">
-              <i :class="deltaIcon(delta(dim, key))"></i>
-              {{ formatDeltaPercentage(delta(dim, key)) }}
+            <span v-if="delta(dim, key) && !delta(dim, key).available" class="legend-delta delta-neutral"><abbr :title="$t('components.callInsights.change.notAvailableHelp')">{{ $t("components.callInsights.change.notAvailable") }}</abbr></span>
+            <span v-else-if="delta(dim, key)" class="legend-delta" :class="deltaClass(delta(dim, key).value)">
+              <i :class="deltaIcon(delta(dim, key).value)"></i>
+              {{ formatDeltaPercentage(delta(dim, key).value) }}
             </span>
           </li>
         </ul>
@@ -116,6 +118,7 @@
 
 <script>
 import CallInsights from "@/utils/CallInsights";
+import InsightsReports from "@/utils/InsightsReports";
 import InsightLabel from "@/components/analytics/InsightLabel.vue";
 
 /**
@@ -222,15 +225,16 @@ export default {
     colorOf(key) {
       return COLORS[key] || "#9CA3AF";
     },
-    lineDelta(line) {
-      if (!line.previous) return null;
-      return (line.count - line.previous) / line.previous;
+    // Each line's change over the period before, counted on the calls with a request then: under 20 of them it is
+    // "n.d." (U19 M13).
+    lineChange(line) {
+      const base = this.outcome.lines.reduce((sum, l) => sum + (l.previous || 0), 0);
+      return InsightsReports.change(line.count, line.previous || 0, base);
     },
     delta(dim, key) {
+      const base = Object.values(dim.previousTotals).reduce((sum, v) => sum + (v || 0), 0);
       const prev = dim.previousTotals[key];
-      if (prev == null || prev === 0) return null;
-      const current = dim.totals[key] || 0;
-      return (current - prev) / prev;
+      return InsightsReports.change(dim.totals[key] || 0, prev == null ? null : prev, base);
     },
     deltaClass(delta) {
       if (delta > 0) return "delta-positive";

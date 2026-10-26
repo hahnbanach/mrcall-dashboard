@@ -2422,6 +2422,16 @@
           "reserve": "Reserve voor gesprekken",
           "over_ceiling": "Groter dan de schatting toestond"
         }
+      },
+      "change": {
+        "notAvailable": "n.v.t.",
+        "notAvailableHelp": "De vorige periode had minder dan 20 gesprekken: de verandering is niet zinvol."
+      },
+      "overview": {
+        "noCallsDays": "Geen gesprekken op de laatste dag. | Geen gesprekken in de laatste {days} dagen."
+      },
+      "callers": {
+        "web": "Webgesprek"
       }
     }
   },

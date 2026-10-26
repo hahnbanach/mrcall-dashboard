@@ -226,8 +226,8 @@ function assistantRow (i) {
     callsWithChecks: 80, checks: { caller_repeated: 2 }, callsWithUnansweredRecorded: 80, callsWithUnanswered: 8, gaps: {}, callsWithSkillErrors: 1,
     extractionsNotOk: 0, extractionsRun: 80, callsManaged: 80, noConversation: { caller_silent: 4 }, callsAnswered: 84, callsOffered: 90,
     callsWithRequest: 60, notSolved: 30 - i, callsWithAnyCheck: 2,
-    // the period before (StarChat U13c): row 1 at 20 of 50, row 2 with no request then
-    previousCallsWithRequest: i === 2 ? 0 : 50, previousNotSolved: i === 2 ? 0 : 20,
+    // the period before (StarChat U13c): row 1 at 20 of 50, row 2 with no request then, row 5 on 8 calls (U19 M13)
+    previousCallsWithRequest: i === 2 ? 0 : i === 5 ? 8 : 50, previousNotSolved: i === 2 ? 0 : i === 5 ? 3 : 20,
     accountHealth: i === 1 ? { subscriptionStatus: 'ACTIVE', creditLow: true, inDebt: false } : i === 2 ? { subscriptionStatus: 'UNPAID', creditLow: false, inDebt: true } : { subscriptionStatus: 'ACTIVE', creditLow: false, inDebt: false },
   }
 }

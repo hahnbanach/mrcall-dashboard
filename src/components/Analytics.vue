@@ -63,7 +63,7 @@
       </div>
 
       <!-- Panoramica: the calls the analysis has not read yet, said before any number that leaves them out -->
-      <section v-if="businessId && recomputeCount" class="analytics-section insights-banner" role="status">
+      <section v-if="businessId && recomputeCount && !noCallsInRange" class="analytics-section insights-banner" role="status">
         <p>{{ $t("components.callInsights.recompute.banner", { n: recomputeCount }) }}</p>
         <p class="insights-banner-note">{{ $t("components.callInsights.recompute.cannotChange") }}</p>
         <Button
@@ -77,40 +77,28 @@
           <router-link :to="{ path: '/plan', query: { id: businessId } }">{{ $t("components.callInsights.free.seePlans") }}</router-link>
         </p>
       </section>
+      <!-- Panoramica: a period with no call is one empty state, with the day of the last call (U19 M12) -->
+      <section v-if="businessId && noCallsInRange" class="analytics-section insights-card overview-empty" role="status">
+        <p class="overview-empty-title">{{ noCallsText }}</p>
+        <p v-if="lastCallText">{{ lastCallText }}</p>
+      </section>
+      <template v-if="!(businessId && noCallsInRange)">
       <!-- KPI Cards -->
       <div v-if="dashboardData" class="analytics-section">
         <h3 class="section-title">{{ $t('components.analytics.overview') }}</h3>
         <div class="kpi-grid">
-          <div class="kpi-card">
-            <div class="kpi-label">{{ $t('components.analytics.kpi.totalCalls') }}</div>
-            <div class="kpi-value">{{ formatNumber(dashboardData.totalCalls) }}</div>
-            <div v-if="dashboardData.totalCallsDelta != null" class="kpi-delta" :class="deltaClass(dashboardData.totalCallsDelta)">
-              <i :class="deltaIcon(dashboardData.totalCallsDelta)"></i>
-              {{ formatDeltaPercentage(dashboardData.totalCallsDelta) }}
-            </div>
-          </div>
-          <div class="kpi-card">
-            <div class="kpi-label">{{ $t('components.analytics.kpi.avgDuration') }}</div>
-            <div class="kpi-value">{{ formatDuration(dashboardData.avgCallDurationMs) }}</div>
-            <div v-if="dashboardData.avgDurationDelta != null" class="kpi-delta" :class="deltaClass(dashboardData.avgDurationDelta)">
-              <i :class="deltaIcon(dashboardData.avgDurationDelta)"></i>
-              {{ formatDeltaPercentage(dashboardData.avgDurationDelta) }}
-            </div>
-          </div>
-          <div class="kpi-card">
-            <div class="kpi-label">{{ $t('components.analytics.kpi.totalDuration') }}</div>
-            <div class="kpi-value">{{ formatDuration(dashboardData.totalCallDurationMs) }}</div>
-            <div v-if="dashboardData.totalDurationDelta != null" class="kpi-delta" :class="deltaClass(dashboardData.totalDurationDelta)">
-              <i :class="deltaIcon(dashboardData.totalDurationDelta)"></i>
-              {{ formatDeltaPercentage(dashboardData.totalDurationDelta) }}
-            </div>
-          </div>
-          <div class="kpi-card">
-            <div class="kpi-label">{{ $t('components.analytics.kpi.uniqueCallers') }}</div>
-            <div class="kpi-value">{{ formatNumber(dashboardData.uniqueCallers) }}</div>
-            <div v-if="dashboardData.uniqueCallersDelta != null" class="kpi-delta" :class="deltaClass(dashboardData.uniqueCallersDelta)">
-              <i :class="deltaIcon(dashboardData.uniqueCallersDelta)"></i>
-              {{ formatDeltaPercentage(dashboardData.uniqueCallersDelta) }}
+          <div v-for="kpi in kpis" :key="kpi.key" class="kpi-card">
+            <div class="kpi-label">{{ $t('components.analytics.kpi.' + kpi.key) }}</div>
+            <div class="kpi-value">{{ kpi.text }}</div>
+            <!-- a change over a period before of fewer than 20 calls says nothing: "n.d." (U19 M13) -->
+            <div
+              v-if="kpi.change && !kpi.change.available"
+              class="kpi-delta delta-neutral"
+              :title="$t('components.callInsights.change.notAvailableHelp')"
+            ><abbr :title="$t('components.callInsights.change.notAvailableHelp')">{{ $t('components.callInsights.change.notAvailable') }}</abbr></div>
+            <div v-else-if="kpi.change" class="kpi-delta" :class="deltaClass(kpi.change.value)">
+              <i :class="deltaIcon(kpi.change.value)"></i>
+              {{ formatDeltaPercentage(kpi.change.value) }}
             </div>
           </div>
         </div>
@@ -267,6 +255,8 @@
         @error="handleApiError"
       />
 
+      </template>
+
       <!-- Empty state -->
       <div v-if="allDataReady && noData && !showScopePage" class="analytics-section">
         <div class="empty-state">
@@ -417,8 +407,38 @@ export default {
           clearLabel: this.$t("components.callInsights.filterBar.clearOwner"),
         });
       }
-      chips.push(this.periodChip());
+      // the period applies to Overview only: the Report and Processing tabs list every period (U19 M14)
+      if (!this.businessId || this.currentTab === "overview") chips.push(this.periodChip());
       return chips;
+    },
+    // The period holds no call: the KPI says 0 calls (StarChat's dashboard answer).
+    noCallsInRange() {
+      return !!this.dashboardData && this.dashboardData.totalCalls === 0;
+    },
+    noCallsText() {
+      const days = { '7d': 7, '30d': 30, '90d': 90 }[this.selectedPreset];
+      return days
+        ? this.$t("components.callInsights.overview.noCallsDays", { days }, days)
+        : this.$t("components.callInsights.request.noCallsPeriod");
+    },
+    // The business's latest call, StarChat's `lastCallAt` on outcomes (the amendment's rule 10); null when it has had
+    // none, and nothing said when the server does not answer it.
+    lastCallText() {
+      const o = this.outcomesStatus === "ok" ? this.outcomesData : null;
+      if (!o || !("lastCallAt" in o)) return null;
+      if (typeof o.lastCallAt !== "number") return this.$t("components.callInsights.request.noCallEver");
+      const zone = (this.businessRecord && this.businessRecord.timeZone) || InsightsReports.FALLBACK_ZONE;
+      return this.$t("components.callInsights.request.lastCall", { date: InsightsReports.dayLabel(o.lastCallAt, zone, this.$i18n.locale) });
+    },
+    kpis() {
+      const d = this.dashboardData;
+      if (!d) return [];
+      return [
+        { key: "totalCalls", text: this.formatNumber(d.totalCalls), change: d.totalCallsChange },
+        { key: "avgDuration", text: this.formatDuration(d.avgCallDurationMs), change: d.avgDurationChange },
+        { key: "totalDuration", text: this.formatDuration(d.totalCallDurationMs), change: d.totalDurationChange },
+        { key: "uniqueCallers", text: this.formatNumber(d.uniqueCallers), change: d.uniqueCallersChange },
+      ];
     },
     anyLoading() {
       return this.loadingDashboard || this.loadingTimeseries || this.loadingDuration ||
@@ -866,10 +886,6 @@ export default {
       const intensity = value / max;
       return `rgba(0, 104, 255, ${0.15 + intensity * 0.75})`;
     },
-    computeDelta(current, previous) {
-      if (previous == null || previous === 0 || current == null) return null;
-      return (current - previous) / previous;
-    },
     deltaClass(delta) {
       if (delta > 0) return 'delta-positive';
       if (delta < 0) return 'delta-negative';
@@ -912,12 +928,14 @@ export default {
     transformDashboard(data) {
       if (!data) return data;
       const prev = data.previousPeriod;
+      // every KPI's change is over the previous period's calls: under 20 of them it is "n.d." (U19 M13)
+      const change = (current, previous) => (prev ? InsightsReports.change(current, previous, prev.totalCalls) : null);
       return {
         ...data,
-        totalCallsDelta: prev ? this.computeDelta(data.totalCalls, prev.totalCalls) : null,
-        avgDurationDelta: prev ? this.computeDelta(data.avgCallDurationMs, prev.avgCallDurationMs) : null,
-        totalDurationDelta: prev ? this.computeDelta(data.totalCallDurationMs, prev.totalCallDurationMs) : null,
-        uniqueCallersDelta: prev ? this.computeDelta(data.uniqueCallers, prev.uniqueCallers) : null,
+        totalCallsChange: prev ? change(data.totalCalls, prev.totalCalls) : null,
+        avgDurationChange: prev ? change(data.avgCallDurationMs, prev.avgCallDurationMs) : null,
+        totalDurationChange: prev ? change(data.totalCallDurationMs, prev.totalCallDurationMs) : null,
+        uniqueCallersChange: prev ? change(data.uniqueCallers, prev.uniqueCallers) : null,
       };
     },
     transformTimeseries(data) {
@@ -964,8 +982,10 @@ export default {
       if (!data) return data;
       const result = { ...data };
       if (data.topCallers) {
+        // a web or test call is one row with `web: true` and no identifier (StarChat, the amendment's rule 9): it is
+        // labelled, never shown as a number (U19 M16)
         result.topCallers = data.topCallers.map(c => ({
-          number: c.contactNumber || c.number || '',
+          number: c.web === true ? this.$t('components.callInsights.callers.web') : (c.contactNumber || c.number || ''),
           callCount: c.callCount || 0,
           totalDuration: c.totalDurationMs || c.totalDuration || 0,
           lastCall: c.lastCallTimestamp || c.lastCall || null,
@@ -1036,6 +1056,16 @@ export default {
   p {
     margin: 0 0 8px 0;
   }
+}
+
+.overview-empty {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.overview-empty-title {
+  font-size: 1.1rem;
+  font-weight: 600;
 }
 
 .insights-banner {

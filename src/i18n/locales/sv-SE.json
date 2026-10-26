@@ -2422,6 +2422,16 @@
           "reserve": "Reserv för samtal",
           "over_ceiling": "Större än uppskattningen tillät"
         }
+      },
+      "change": {
+        "notAvailable": "e.t.",
+        "notAvailableHelp": "Föregående period hade färre än 20 samtal: förändringen säger inget."
+      },
+      "overview": {
+        "noCallsDays": "Inga samtal den senaste dagen. | Inga samtal de senaste {days} dagarna."
+      },
+      "callers": {
+        "web": "Webbsamtal"
       }
     }
   },

@@ -321,8 +321,26 @@ function answerable(gap) {
     return !!gap && typeof gap.summary === "string" && gap.summary.trim() !== "" && gap.category !== "clinical_advice";
 }
 
+/*
+ * A CHANGE against the period before is said only over a previous base of at least MIN_PREVIOUS_BASE calls: over 8
+ * calls the KPI read "+24725.0%" (U19 M13), which says nothing about the business. Below it the change is "not
+ * available" ("n.d."), shown as such; with nothing to compare (no value before, or 0) there is no change at all.
+ * `previousBase` is the calls the previous value is counted over (the previous period's calls for a KPI, the previous
+ * calls with a request for an outcome line).
+ */
+const MIN_PREVIOUS_BASE = 20;
+
+function change(current, previous, previousBase) {
+    if (previous == null || current == null) return null;
+    if (typeof previousBase === "number" && previousBase < MIN_PREVIOUS_BASE) return { available: false };
+    if (previous === 0) return null;
+    return { available: true, value: (current - previous) / previous };
+}
+
 export default {
     FALLBACK_ZONE,
+    MIN_PREVIOUS_BASE,
+    change,
     reportOutcome,
     reportThemes,
     answerable,

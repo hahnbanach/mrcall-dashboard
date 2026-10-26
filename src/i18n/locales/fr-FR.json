@@ -2424,6 +2424,16 @@
           "reserve": "Réserve pour les appels",
           "over_ceiling": "Plus important que ce que l'estimation permettait"
         }
+      },
+      "change": {
+        "notAvailable": "n.d.",
+        "notAvailableHelp": "La période précédente comptait moins de 20 appels : la variation n'est pas significative."
+      },
+      "overview": {
+        "noCallsDays": "Aucun appel le dernier jour. | Aucun appel ces {days} derniers jours."
+      },
+      "callers": {
+        "web": "Appel web"
       }
     }
   },

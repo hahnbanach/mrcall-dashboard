@@ -101,3 +101,15 @@ describe('m4: who asked, when StarChat did not record the role', () => {
     expect(R.requester('admin-uid', null, { me: 'me', business })).toBeNull()
   })
 })
+
+describe('M13: a change is said only over a previous base of at least 20 calls', () => {
+  it('a smaller base is "not available", never a percentage on 8 calls', () => {
+    expect(R.change(1986, 8, 8)).toEqual({ available: false })
+    expect(R.change(30, 10, 19)).toEqual({ available: false })
+  })
+  it('a base of 20 or more gives the relative change; nothing to compare gives none', () => {
+    expect(R.change(30, 20, 20)).toEqual({ available: true, value: 0.5 })
+    expect(R.change(30, 0, 40)).toBeNull()
+    expect(R.change(30, null, null)).toBeNull()
+  })
+})

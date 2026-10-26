@@ -2422,6 +2422,16 @@
           "reserve": "Puheluille varattu saldo",
           "over_ceiling": "Suurempi kuin arvio salli"
         }
+      },
+      "change": {
+        "notAvailable": "ei tiedossa",
+        "notAvailableHelp": "Edellisellä jaksolla oli alle 20 puhelua: muutos ei ole merkitsevä."
+      },
+      "overview": {
+        "noCallsDays": "Ei puheluita viimeisen päivän aikana. | Ei puheluita viimeisten {days} päivän aikana."
+      },
+      "callers": {
+        "web": "Verkkopuhelu"
       }
     }
   },

@@ -78,6 +78,7 @@
 
 <script>
 import CallInsights from "@/utils/CallInsights";
+import InsightsReports from "@/utils/InsightsReports";
 import PagedTable from "@/components/analytics/PagedTable.vue";
 
 /**
@@ -173,6 +174,9 @@ export default {
       return this.$t("components.callInsights.assistants.shareOfTotal", { percent, count, total: base });
     },
     changeOf(row) {
+      // over fewer than 20 calls with a request before, the change says nothing: "n.d." (U19 M13)
+      const before = row.previousCallsWithRequest;
+      if (typeof before === "number" && before > 0 && before < InsightsReports.MIN_PREVIOUS_BASE) return this.$t("components.callInsights.change.notAvailable");
       const points = CallInsights.notSolvedChange(row);
       if (points === null) return "–";
       const sign = points > 0 ? "+" : points < 0 ? "−" : "±";

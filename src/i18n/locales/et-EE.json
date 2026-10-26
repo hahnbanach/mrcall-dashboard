@@ -2422,6 +2422,16 @@
           "reserve": "Kõnede reserv",
           "over_ceiling": "Suurem, kui hinnang lubas"
         }
+      },
+      "change": {
+        "notAvailable": "puudub",
+        "notAvailableHelp": "Eelmises perioodis oli alla 20 kõne: muutus pole tähenduslik."
+      },
+      "overview": {
+        "noCallsDays": "Viimasel päeval kõnesid pole. | Viimase {days} päeva jooksul kõnesid pole."
+      },
+      "callers": {
+        "web": "Veebikõne"
       }
     }
   },

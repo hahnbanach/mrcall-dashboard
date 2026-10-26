@@ -2422,6 +2422,16 @@
           "reserve": "Reserve for samtaler",
           "over_ceiling": "Større enn estimatet tillot"
         }
+      },
+      "change": {
+        "notAvailable": "i.t.",
+        "notAvailableHelp": "Forrige periode hadde færre enn 20 samtaler: endringen er ikke meningsfull."
+      },
+      "overview": {
+        "noCallsDays": "Ingen samtaler den siste dagen. | Ingen samtaler de siste {days} dagene."
+      },
+      "callers": {
+        "web": "Nettsamtale"
       }
     }
   },

@@ -2422,6 +2422,16 @@
           "reserve": "Reserve til opkald",
           "over_ceiling": "Større end estimatet tillod"
         }
+      },
+      "change": {
+        "notAvailable": "i.t.",
+        "notAvailableHelp": "Den forrige periode havde færre end 20 opkald: ændringen er ikke meningsfuld."
+      },
+      "overview": {
+        "noCallsDays": "Ingen opkald den seneste dag. | Ingen opkald de seneste {days} dage."
+      },
+      "callers": {
+        "web": "Webopkald"
       }
     }
   },

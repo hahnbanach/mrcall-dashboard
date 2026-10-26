@@ -2427,6 +2427,16 @@
           "reserve": "Reserve for calls",
           "over_ceiling": "Larger than its estimate allowed"
         }
+      },
+      "change": {
+        "notAvailable": "n/a",
+        "notAvailableHelp": "The period before had fewer than 20 calls: the change is not meaningful."
+      },
+      "overview": {
+        "noCallsDays": "No calls in the last day. | No calls in the last {days} days."
+      },
+      "callers": {
+        "web": "Web call"
       }
     }
   },

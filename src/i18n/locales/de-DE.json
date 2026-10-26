@@ -2424,6 +2424,16 @@
           "reserve": "Reserve für Anrufe",
           "over_ceiling": "Größer, als die Schätzung erlaubte"
         }
+      },
+      "change": {
+        "notAvailable": "k. A.",
+        "notAvailableHelp": "Der vorherige Zeitraum hatte weniger als 20 Anrufe: Die Veränderung ist nicht aussagekräftig."
+      },
+      "overview": {
+        "noCallsDays": "Keine Anrufe am letzten Tag. | Keine Anrufe in den letzten {days} Tagen."
+      },
+      "callers": {
+        "web": "Webanruf"
       }
     }
   },
