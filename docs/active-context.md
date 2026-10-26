@@ -1,5 +1,5 @@
 ---
-doc_baseline_commit: a1897a3dbb00d5c0eaf484c3c1af1e89ed0345da
+doc_baseline_commit: 12b077136e8de34e2f72bb038a771ae5318a9e9e
 doc_baseline_date: 2026-10-26
 ---
 
@@ -11,7 +11,11 @@ Scope: Current dashboard operating state, unresolved verification limits, and im
 
 ## State now
 
-Production remains v2.2.25 in the last observed delivery evidence. TEST runs
+Production runs v2.2.34-production on the same tested a1897a3 commit
+(successful workflow40336664459, served app.2fa78ebf.js). All104 index JS/CSS
+assets returnHTTP200 with names matching production CI; refresh markers and
+production backend references are present. The operator reports TEST passed and
+explicitly authorizes this production promotion. TEST runs
 v2.2.34-test on a1897a3 (successful workflow40335393257). The observed served
 app.b0847d40.js contains the refresh markers; all104 index JS/CSS assets return
 HTTP200 with filenames matching CI. The release starts from clean a775f4d.
@@ -44,8 +48,9 @@ for isSessionEnded. Local browser fixtures use mocked backend calls.
 - Outside this Save assignment, the first callback response remains unexplained. Retained runtime
   correlation exists, but available exact-ID and bounded-time call-history reads
   return no record under the available identity; archived trace access is unknown.
-- The repaired UI has local mocked-browser acceptance and published-artifact
-  checks; a new live user Save on this release was not performed.
+- The repaired UI has local mocked-browser acceptance, the operator's reported
+  TEST acceptance and both environments' published-artifact checks. No new live
+  production Save is performed by this deployment task.
 - Actual booking creation is unverified; availability and Save are separate facts.
 - AI chat SSE uses native fetch and bypasses the Axios interceptor; WebSockets do
   not pass through it either. See [harness-backlog](harness-backlog.md).
@@ -56,5 +61,6 @@ for isSessionEnded. Local browser fixtures use mocked backend calls.
 Keep Save and its consistent view within the reviewed boundary; use the retained
 regressions for subsequent changes.
 Preserve unsaved edits, pending operations and exact business grant boundaries.
-The operator assigns booking setup and first callback diagnosis to another session; no new
-provider/model action or production promotion is authorized by this UI work.
+Booking setup and first callback diagnosis remain assigned to another session.
+This same-code dashboard promotion changes no backend deployment, provider grant
+or saved customer configuration.

@@ -110,3 +110,28 @@ Save persistence is retained evidence, while repaired same-page behavior uses th
 47-case browser acceptance. Booking configuration/callback diagnosis belongs to
 the operator's separate session. This docs-only follow-up does not move the TEST
 tag or redeploy. The original13:42 milestone miss remains recorded above.
+
+
+## Operator-authorized production promotion
+
+After reporting TEST passed, the operator explicitly requests production delivery.
+The immutable `v2.2.34-production` tag targets the exact TEST commit
+`a1897a3dbb00d5c0eaf484c3c1af1e89ed0345da`, not the later docs-only branch tip.
+An actual ff-only pull precedes tag push. Prior production0515932 is an ancestor,
+no concurrent production run is observed, and the workflow binds this tag to the
+production environment/mode and mrcall-dashboard bucket. No code, backend,
+StarChat deployment, grant, customer configuration or booking setup changes.
+
+[Workflow40336664459](https://github.com/hahnbanach/mrcall-dashboard/actions/runs/40336664459)
+succeeds on that exact tag/commit. Observed at14:10:14 UTC, public production
+serves104 index JS/CSS assets, allHTTP200 and filenames matching its CI build.
+The new app is `/js/app.2fa78ebf.js`, SHA256
+`3c45dbcc308ae6ea944d8ff10cd94b62bb530ca627512bbeda0f7aa6ca2a877b`.
+All four Save-refresh markers and production API/agent hostname references are
+present. This proves served filename/build association and markers, not byte
+identity against a downloaded CI artifact or a new live production Save.
+
+Receipts are retained in /tmp/mrcall-ui-save-refresh/production: promoted-commit.txt,
+pull-version.log, recent-workflows.json, deploy-completed.json/log and
+served-assets.json. This docs-only reconciliation does not move either tag or
+redeploy. Booking/callback investigation remains in the operator's separate session.
