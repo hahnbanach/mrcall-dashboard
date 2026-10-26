@@ -51,3 +51,19 @@ describe('rule 3: no "Aggiungi la risposta" on a question about the caller\'s ow
     expect(R.answerable({ group: 'missing_info', summary: '  ' })).toBe(false)
   })
 })
+
+describe('M1: an analysed count is never printed above its managed base', () => {
+  it('says "of managed" only when the base holds the count', () => {
+    expect(R.reportBase({ calls: 120, callsManaged: 130 })).toEqual({ kind: 'managed', analysed: 120, managed: 130 })
+    expect(R.reportBase({ calls: 38, callsManaged: 38 })).toEqual({ kind: 'managed', analysed: 38, managed: 38 })
+  })
+
+  it('a base smaller than the count (the copies of managedCall missing, U19: "168 di 38 gestite") is "analysed" alone', () => {
+    expect(R.reportBase({ calls: 168, callsManaged: 38 })).toEqual({ kind: 'analysed', analysed: 168 })
+    expect(R.reportBase({ calls: 96, callsManaged: 0 })).toEqual({ kind: 'analysed', analysed: 96 })
+  })
+
+  it('a missing base (a report of before 10 October) is the old wording, with its note', () => {
+    expect(R.reportBase({ calls: 120 })).toEqual({ kind: 'old', analysed: 120 })
+  })
+})

@@ -35,7 +35,7 @@
           <p v-if="base && base.kind === 'managed'">{{ $t("components.callInsights.reports.base", { analysed: base.analysed, managed: base.managed }) }}</p>
           <template v-else-if="base">
             <p>{{ $t("components.callInsights.reports.baseOld", { analysed: base.analysed }) }}</p>
-            <p class="report-note">{{ $t("components.callInsights.reports.baseOldNote") }}</p>
+            <p v-if="base.kind === 'old'" class="report-note">{{ $t("components.callInsights.reports.baseOldNote") }}</p>
           </template>
           <p v-if="excluded">{{ $t("components.callInsights.reports.excluded", excluded) }}</p>
           <p v-if="newerCalls > 0" class="report-newer" role="status">

@@ -217,13 +217,16 @@ function newRequestKey() {
 }
 
 // A report's base (`calls` analysed, `callsManaged` the calls the assistant managed in the period, absent before
-// 2026-10-10): which sentence to say, and its numbers.
+// 2026-10-10), for its page and its history row alike: which sentence to say, and its numbers. An analysed count is
+// never said over a smaller managed base ("168 di 38 gestite", U19 M1: the copies of `managedCall` were missing from
+// calls before 22 October on test): such a base says nothing true, and the calls analysed are said alone.
 function reportBase(content) {
     const c = content || {};
     const analysed = typeof c.calls === "number" ? c.calls : null;
     if (analysed === null) return null;
-    if (typeof c.callsManaged === "number") return { kind: "managed", analysed, managed: c.callsManaged };
-    return { kind: "old", analysed };
+    if (typeof c.callsManaged !== "number") return { kind: "old", analysed };
+    if (c.callsManaged < analysed) return { kind: "analysed", analysed };
+    return { kind: "managed", analysed, managed: c.callsManaged };
 }
 
 /*

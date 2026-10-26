@@ -303,10 +303,12 @@ export default {
     reasonOfJob(job) {
       return InsightsReports.refusalReason(job);
     },
+    // The row's calls by the same rule as the report's page: never an analysed count over a smaller managed base.
     callsText(row) {
-      if (typeof row.calls !== "number") return "–";
-      if (typeof row.callsManaged === "number") return this.$t("components.callInsights.reportsTab.callsOfManaged", { calls: row.calls, managed: row.callsManaged });
-      return this.$t("components.callInsights.reportsTab.callsAnalysed", { calls: row.calls });
+      const base = InsightsReports.reportBase(row);
+      if (!base) return "–";
+      if (base.kind === "managed") return this.$t("components.callInsights.reportsTab.callsOfManaged", { calls: base.analysed, managed: base.managed });
+      return this.$t("components.callInsights.reportsTab.callsAnalysed", { calls: base.analysed });
     },
     requesterName(item) {
       return InsightsReports.requesterLabel(this.$t, item, { me: this.$store.state.user && this.$store.state.user.uid, business: this.business });
