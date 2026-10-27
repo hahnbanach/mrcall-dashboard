@@ -1,4 +1,17 @@
 
+## 2026-10-27 — Sheets source candidate before authorized TEST publication
+
+The v2.2.37 Sheets candidate adds a Google Sheets OAuth action and verified return
+to column review in the chat. Intercepted browser, unit, lint and build checks pass;
+source integration is approved. It is not released. See the
+[Sheets plan](execution-plans/2026-10-27-sheets-oauth-call-log.md).
+
+TEST retains v2.2.36-test at 3c19137, successful workflow40492024562, with the
+booking routing backend dev-3db594b4. The operator confirms booking works. Production
+retains v2.2.34; the dirty v2.1 checkout is untouched.
+
+- Review the OAuth Sheets candidate and authorize a separate TEST release when ready.
+
 ## 2026-10-27 — Booking handoff before operator confirmation and Sheets work
 
 TEST serves v2.2.36-test at 3c19137 through successful workflow40492024562.

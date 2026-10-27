@@ -1,5 +1,5 @@
 ---
-doc_baseline_commit: 837652a963a8e6a271ecb4cd1323308a1d389aad
+doc_baseline_commit: e5ce20e3751374825c0242b44db1f48fe327407b
 doc_baseline_date: 2026-10-27
 ---
 
@@ -11,14 +11,17 @@ Scope: Current dashboard operating state, unresolved verification limits, and im
 
 ## State now
 
-The v2.2.37 Sheets candidate adds a Google Sheets OAuth action and verified return
-to column review in the chat. Intercepted browser, unit, lint and build checks pass;
-source integration is approved. It is not released. See the
-[Sheets plan](execution-plans/2026-10-27-sheets-oauth-call-log.md).
+TEST serves v2.2.37-test at e5ce20e3, successful workflow40546056223.
+All 104 published JS/CSS assets answer HTTP200 and match the CI build names;
+served code contains the Sheets intent, provider, write scope and get_call_log_setup
+continuation, retaining prior booking paths and the TEST backend reference.
+The companion backend dev-69223983 is ready with matching source hashes and health.
+See the [Sheets plan](execution-plans/2026-10-27-sheets-oauth-call-log.md).
 
-TEST retains v2.2.36-test at 3c19137, successful workflow40492024562, with the
-booking routing backend dev-3db594b4. The operator confirms booking works. Production
-retains v2.2.34; the dirty v2.1 checkout is untouched.
+The Sheets button authorizes the account and returns to actual column review before
+explicit Save. Customer consent, real model review/language and an actual append
+remain operator-owned. No customer configuration or conversation is changed by this
+release. Production and beta receive no promotion; the dirty v2.1 checkout is untouched.
 
 The five-skill review is compact, the existing connection flow continues to calendar
 selection by name and scoped activation, and fixed English booking summaries are suppressed.
@@ -52,7 +55,7 @@ mrcall-agent.
 
 ## Next
 
-- Review the OAuth Sheets candidate and authorize a separate TEST release when ready.
+- Operator: reload TEST and verify Sheets consent, actual column review/editing and post-call append.
 - Remove `__BOOKING__` from `menuGroups` after StarChat's move is on test.
 - Classification feedback (StarChat plan step C8) is being built on a branch from `v2.2` and
   lands by fast-forward after review.

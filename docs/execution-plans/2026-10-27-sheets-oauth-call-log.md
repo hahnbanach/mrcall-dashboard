@@ -89,3 +89,25 @@ The continuation request is localized to UI locale and explicitly preserves prio
 chat language; actual model compliance remains unverified. No deployment, customer
 configuration, live consent or append is part of this source task. Release needs
 separate authorization. Evidence is retained outside source in the task cache.
+
+## Authorized TEST publication
+
+The operator separately authorized publication after source completion. Backend
+main→dev promotion publishes 69223983722e4ee771b736d2007a74cd73d1ac4d through successful pipeline2995603142.
+Ready image digest sha256:475d13cd1ed9df0adf3d7c522b4c5e07507ef06665edbe2e578fde41f470dd25, nineteen deployed source hashes, actual
+get_call_log_setup registration and HTTP200 health are verified. Dashboard
+v2.2.37-test at e5ce20e3751374825c0242b44db1f48fe327407b succeeds in workflow40546056223; all
+104 served JS/CSS assets return HTTP200 and match CI names, including the new Sheets
+intent/provider/write-scope/review-turn markers and retained booking paths.
+
+The initial pipeline2995577615 refused an obsolete assembled-prompt assertion that
+still required service-account sharing. A test-only corrective commit aligns that
+expectation with the already-reviewed OAuth flow; twelve focused prompt checks and
+exact CI lint/format pass. Runtime implementation is unchanged from f8713820.
+
+The authorized release performs no customer Google consent, model trial, append,
+configuration write or conversation reset. Actual consent/column-review quality,
+write permission/tab and runtime append remain operator-owned. No production/beta
+promotion occurs. Runtime/workflow/asset receipts are retained in the external task
+cache's release directory; operational documentation closure and separate final
+release review bind readiness without changing the source acceptance boundary.
