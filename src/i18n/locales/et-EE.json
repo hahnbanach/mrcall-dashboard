@@ -3089,6 +3089,12 @@
         "select": "Vali kalender",
         "unnamed": "Kalender",
         "primary": "peamine"
+      },
+      "sheetsConnection": {
+        "explanation": "Ühenda Google Sheets, et assistent saaks kirjutada pakutud kõnelogi. Pärast volitamist vaata vestluses veerud üle ja vali Salvesta.",
+        "connect": "Volita Google Sheets",
+        "unverifiedHelp": "Kui Google kuvab kinnitamata rakenduse hoiatuse, vali Täpsemad seaded → Ava MrCalli rakendus (ebaturvaline), vaata õigused üle ja vali Jätka. Kui administraator blokeerib juurdepääsu, võta temaga ühendust.",
+        "resumeCommand": "Google Sheetsi volitamine on lõppenud. Kutsu get_call_log_setup, et lugeda kõnelogi praegust seadistust ja saadaolevaid eraldatud muutujaid. Selgita veerge vestluses enne volitamist kasutatud keeles ning küsi kinnitust või muudatusi. Ära salvesta ega lisa ridu."
       }
     },
     "aladminConfigurator": {

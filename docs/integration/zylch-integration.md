@@ -144,8 +144,8 @@ The editor uses the exact saved grant reference; it does not invent one from
 instanceId or silently change configuration. Empty references are shared
 rather than per-instance authorization.
 
-The supported flow is Google Calendar with the existing allowed scopes. Other
-providers/scopes remain unavailable. GoogleAuthFlow.begin accepts a normalized
+The supported chat providers are Google Calendar and Google Sheets, each with its
+separate allowed scopes. Other providers/scopes remain unavailable. GoogleAuthFlow.begin accepts a normalized
 skill context containing provider, business, grant, phase, instance, owner UID,
 local return destination and scopes. Its single-use state includes a digest of
 that context. consumeWithContext clears verifier/state/context, verifies the
@@ -202,6 +202,26 @@ collapsed by default; runtime instruction/template fields remain only in exact d
 The chat/composer has a usable minimum size and the panel scrolls when constrained, keeping
 connection, review and Save controls separate. New UI copy is translated in all 12 locales.
 Advanced settings is a fallback only when the supported booking connection action is unavailable.
+
+## Post-call Sheets review
+
+For a call-log request, agent asks for the copied link of a blank Google spreadsheet
+and proposes one final `google_sheets_write` instance. The new default mapping is
+Timestamp, Phone, Contact, Reason and ConversationId, with headers enabled. It offers
+the Sheets OAuth button without requiring a public document link. Authorization
+returns through the bound, single-use Sheets intent described in
+[Google OAuth](google-oauth.md#post-call-sheets-consent-from-chat).
+
+After verified consent, the ready panel sends one silent read/check/explain turn.
+The backend's `get_call_log_setup` reads actual effective mappings and
+`ASSISTANT_TOOL_VARIABLE_EXTRACTION`; extracted fields map to
+`crm.contact.variables.<name>`. The model explains fields, asks approval or changes,
+and edits the same draft through existing generic skill tools. The customer then
+presses Save; consent itself neither saves nor appends. The backend reports read-only
+probe evidence with write permission/tab explicitly unchecked until a real call writes.
+Fixed English booking/Sheets proposal summaries are suppressed while pending metadata
+and the model's closing reply remain intact. Existing custom mappings and saved grants
+are preserved; Calendar controls remain usable beside a Sheets proposal.
 
 ## Credits display
 

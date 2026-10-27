@@ -49,11 +49,13 @@
     </div>
     <BookingCalendarConnection :business-id="businessId" :session-id="configSessionId" :changes="pendingChanges"
                                :ready="agentReady && historyState === 'ready'"
-                               :disabled="externalActionsDisabled || recoveryRequired"
+                               :disabled="actionsDisabled || recoveryRequired"
                                @available="bookingConnectionAvailable = $event"
                                @busy-change="connectionBusy = $event" @result="onBookingResult" />
-    <BusinessSkillConnection v-if="hasPendingChanges && !bookingConnectionAvailable && !hasBookingGroup" :business-id="businessId" :changes="pendingChanges"
-                             :disabled="externalActionsDisabled || recoveryRequired" @busy-change="connectionBusy = $event" />
+    <BusinessSkillConnection :business-id="businessId" :changes="pendingChanges"
+                             :session-id="configSessionId" :ready="agentReady && historyState === 'ready' && !actionsDisabled && !recoveryRequired"
+                             :hide-calendar="bookingConnectionAvailable || hasBookingGroup" @sheets-connected="onSheetsConnected"
+                             :disabled="actionsDisabled || recoveryRequired" @busy-change="connectionBusy = $event" />
     <details v-if="hasPendingChanges" class="pending-review" :open="!hasBookingGroup">
       <summary>{{ $t('views.configureAI.bookingConnection.review', { count: pendingChanges.length }) }}</summary>
       <div class="pending-preview" data-testid="pending-preview">
@@ -325,26 +327,45 @@ export default {
       }
     };
 
+    const onSheetsConnected = async ({ ownerUid, businessId, sessionId }) => {
+      if (user.value?.uid !== ownerUid || props.businessId !== businessId || configSessionId.value !== sessionId ||
+          !agentReady.value || historyState.value !== 'ready' || actionsDisabled.value || recoveryRequired.value) return;
+      try {
+        await chatComponent.value?.sendSilent(`/agent mrcall run "${t('views.configureAI.sheetsConnection.resumeCommand')}"`);
+      } catch {
+        if (user.value?.uid === ownerUid && props.businessId === businessId && configSessionId.value === sessionId) {
+          actionMessage.value = t('views.configureAI.pending.responseLost');
+        }
+      }
+    };
+
     onMounted(async () => {
       if (!props.businessId || !chatComponent.value) return;
       await nextTick();
       await new Promise(resolve => setTimeout(resolve, 500));
       if (!chatComponent.value) return;
 
+      const openedBusiness = props.businessId;
+      const openedOwner = user.value?.uid;
+      const openedSession = configSessionId.value;
+      const sameContext = () => props.businessId === openedBusiness && user.value?.uid === openedOwner &&
+        configSessionId.value === openedSession;
       isLoading.value = true;
       try {
-        await chatComponent.value.sendSilent(`/mrcall open ${props.businessId}`, { hideResponse: true });
-        agentReady.value = true;
+        await chatComponent.value.sendSilent(`/mrcall open ${openedBusiness}`, { hideResponse: true });
+        if (sameContext()) agentReady.value = true;
       } catch (err) {
         console.error('Failed to open mrcall config mode:', err);
       } finally {
-        isLoading.value = false;
-        if (chatComponent.value) chatComponent.value.currentMessage = '';
+        if (sameContext()) {
+          isLoading.value = false;
+          if (chatComponent.value) chatComponent.value.currentMessage = '';
+        }
       }
     });
 
     return {
-      bookingConnectionAvailable, hasBookingGroup, onBookingResult,
+      bookingConnectionAvailable, hasBookingGroup, onBookingResult, onSheetsConnected,
       connectionBusy, externalActionsDisabled, handoffTargets, emitSkillTarget, onHistoryState, historyState, chatProcessing, recoveryRequired, actionMessage, outcomes, readOperations, actionsDisabled, saveableChanges,
       localized, displayValue, outcomeLabel, outcomeMessage, statusLabel, refreshPending, reconcile,
       chatComponent,

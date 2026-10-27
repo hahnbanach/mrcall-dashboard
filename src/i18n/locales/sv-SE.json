@@ -3089,6 +3089,12 @@
         "select": "Välj en kalender",
         "unnamed": "Kalender",
         "primary": "primär"
+      },
+      "sheetsConnection": {
+        "explanation": "Anslut Google Sheets så att assistenten kan skriva den föreslagna samtalsloggen. Granska kolumnerna i chatten efter godkännande och välj Spara.",
+        "connect": "Auktorisera Google Sheets",
+        "unverifiedHelp": "Om Google varnar för en overifierad app, välj Avancerat → Öppna MrCall-appen (osäker), granska behörigheterna och välj Fortsätt. Kontakta administratören om åtkomsten blockeras.",
+        "resumeCommand": "Google Sheets-auktoriseringen är klar. Anropa get_call_log_setup för att läsa den aktuella samtalsloggens konfiguration och tillgängliga extraherade variabler. Förklara kolumnerna på samtalets språk före auktoriseringen och fråga om godkännande eller ändringar. Spara inte och lägg inte till rader."
       }
     },
     "aladminConfigurator": {

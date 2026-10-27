@@ -3063,6 +3063,12 @@
         "select": "Select a calendar",
         "unnamed": "Calendar",
         "primary": "primary"
+      },
+      "sheetsConnection": {
+        "explanation": "Connect Google Sheets to let this assistant write the proposed call log. After authorization, review the columns in chat and use Save when ready.",
+        "connect": "Authorize Google Sheets",
+        "unverifiedHelp": "If Google shows an unverified-app warning, select Advanced → Go to the MrCall app (unsafe), then review the permissions and Continue. If your administrator blocks access, contact them.",
+        "resumeCommand": "Google Sheets authorization returned. Call get_call_log_setup to read the actual current call-log setup and available extracted variables. Explain the current columns in the language used in this conversation before authorization, then ask whether to approve or change them. Do not save or append any rows."
       }
     },
     "aladminConfigurator": {

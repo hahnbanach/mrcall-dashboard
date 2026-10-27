@@ -1,5 +1,5 @@
 ---
-doc_baseline_commit: 3c19137f1584e6c846ad4fbee3cbf23d62b639ea
+doc_baseline_commit: 837652a963a8e6a271ecb4cd1323308a1d389aad
 doc_baseline_date: 2026-10-27
 ---
 
@@ -11,13 +11,14 @@ Scope: Current dashboard operating state, unresolved verification limits, and im
 
 ## State now
 
-TEST serves v2.2.36-test at 3c19137 through successful workflow40492024562.
-All 104 published JavaScript/CSS assets answer HTTP200 and match the CI asset names;
-served code contains the booking setup/activation and bound connection-intent paths.
-The companion backend runs dev-9c482083 with a successful authenticated setup check.
-The authorized conversation is empty and its five saved skills are preserved.
-See the [plan](execution-plans/2026-10-27-booking-connect-activate.md) and
-[evidence](evaluations/2026-10-27-booking-connect-activate.md).
+The v2.2.37 Sheets candidate adds a Google Sheets OAuth action and verified return
+to column review in the chat. Intercepted browser, unit, lint and build checks pass;
+source integration is approved. It is not released. See the
+[Sheets plan](execution-plans/2026-10-27-sheets-oauth-call-log.md).
+
+TEST retains v2.2.36-test at 3c19137, successful workflow40492024562, with the
+booking routing backend dev-3db594b4. The operator confirms booking works. Production
+retains v2.2.34; the dirty v2.1 checkout is untouched.
 
 The five-skill review is compact, the existing connection flow continues to calendar
 selection by name and scoped activation, and fixed English booking summaries are suppressed.
@@ -34,8 +35,8 @@ mrcall-agent.
 - The AI chat SSE client uses native fetch and bypasses the Axios interceptor; WebSockets
   (Whatsappweb, the Aladdin configurator, TestChat, the webcall text chat and voice button) do
   not pass through it either. See [harness-backlog](harness-backlog.md).
-- Real model quality, actual Google consent and provider grants, and booking creation through a
-  calendar skill remain unverified live.
+- Actual Sheets consent, model column-review quality and post-call append remain
+  operator-owned acceptance; the operator confirms the existing booking flow works.
 - On `v2.2.34`, the first callback response of the reported calendar Save is unexplained; the
   call-history reads available returned no record for it.
 - `tests/unit/skillsOwnerSave.spec.js` takes 3.5 to 5.3 s against a 5 s timeout in a fresh
@@ -51,8 +52,7 @@ mrcall-agent.
 
 ## Next
 
-- Operator: reload TEST and verify the actual conversation, Google consent when needed,
-  calendar selection and booking. Existing accessible calendars can be selected directly.
+- Review the OAuth Sheets candidate and authorize a separate TEST release when ready.
 - Remove `__BOOKING__` from `menuGroups` after StarChat's move is on test.
 - Classification feedback (StarChat plan step C8) is being built on a branch from `v2.2` and
   lands by fast-forward after review.

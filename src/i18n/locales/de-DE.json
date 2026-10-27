@@ -3088,6 +3088,12 @@
         "select": "Kalender auswählen",
         "unnamed": "Kalender",
         "primary": "primär"
+      },
+      "sheetsConnection": {
+        "explanation": "Verbinde Google Sheets, damit der Assistent das vorgeschlagene Anrufprotokoll schreiben kann. Prüfe danach die Spalten im Chat und klicke auf Speichern.",
+        "connect": "Google Sheets autorisieren",
+        "unverifiedHelp": "Falls Google vor einer ungeprüften App warnt, wähle Erweitert → Zur MrCall-App (unsicher), prüfe die Berechtigungen und wähle Weiter. Wenn dein Administrator den Zugriff blockiert, kontaktiere ihn.",
+        "resumeCommand": "Die Google-Sheets-Autorisierung ist abgeschlossen. Rufe get_call_log_setup auf, um die aktuelle Anrufprotokoll-Konfiguration und verfügbare extrahierte Variablen zu lesen. Erkläre die aktuellen Spalten in der vor der Autorisierung verwendeten Gesprächssprache und frage nach Zustimmung oder Änderungen. Nichts speichern und keine Zeilen anhängen."
       }
     },
     "aladminConfigurator": {

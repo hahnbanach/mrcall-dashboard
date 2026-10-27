@@ -33,11 +33,15 @@ export const SIGN_IN_SCOPES = ['openid', 'email', 'profile']
  */
 
 
-const CHAT_SKILL_SCOPES = [...SIGN_IN_SCOPES, 'https://www.googleapis.com/auth/calendar']
+export const GOOGLE_SKILL_SCOPES = {
+  google_calendar: 'https://www.googleapis.com/auth/calendar',
+  google_sheets: 'https://www.googleapis.com/auth/spreadsheets'
+}
 
-export function assertScopesAllowed(scopes, context) {
+export function assertScopesAllowed(scopes, context, provider = 'google_calendar') {
+  const allowed = [...SIGN_IN_SCOPES, GOOGLE_SKILL_SCOPES[provider]].filter(Boolean)
   const cleaned = (Array.isArray(scopes) ? scopes : String(scopes || '').split(' ')).map(s => s.trim()).filter(Boolean)
-  if (!cleaned.length || cleaned.some(s => !CHAT_SKILL_SCOPES.includes(s))) throw new Error(`${context}: unsupported chat skill scope`)
+  if (!cleaned.length || cleaned.some(s => !allowed.includes(s))) throw new Error(`${context}: unsupported chat skill scope`)
   return cleaned.join(' ')
 }
 
@@ -45,7 +49,7 @@ const SKILL_CONTEXT_KEY = 'oauthSkillContext'
 
 export function skillOAuthContext(value) {
   if (value?.target === 'business') {
-    if (value.provider !== 'google_calendar' || value.grantName !== '' ||
+    if (!Object.hasOwn(GOOGLE_SKILL_SCOPES, value.provider) || value.grantName !== '' ||
         !['businessId', 'ownerUid'].every(key => typeof value[key] === 'string' && value[key]) ||
         ['instanceId', 'phase', 'operationId'].some(key => value[key] !== undefined) ||
         typeof value.returnUrl !== 'string') throw new Error('invalid_business_oauth_context')
@@ -56,13 +60,13 @@ export function skillOAuthContext(value) {
         destination.searchParams.get('id') !== value.businessId ||
         destination.searchParams.get('skillBusinessConnection') !== value.provider ||
         [...destination.searchParams.keys()].length !== 2) throw new Error('unsafe_business_oauth_return')
-    const scopes = assertScopesAllowed(value.scopes, 'business-skill-oauth').split(' ').sort()
-    if (!scopes.includes('https://www.googleapis.com/auth/calendar')) throw new Error('unsupported_skill_oauth_scope')
+    const scopes = assertScopesAllowed(value.scopes, 'business-skill-oauth', value.provider).split(' ').sort()
+    if (!scopes.includes(GOOGLE_SKILL_SCOPES[value.provider])) throw new Error('unsupported_skill_oauth_scope')
     return { provider: value.provider, businessId: value.businessId, grantName: '', target: 'business',
       ownerUid: value.ownerUid, returnUrl: destination.pathname + destination.search, scopes }
   }
   if (value?.target !== undefined) throw new Error('invalid_skill_oauth_target')
-  if (!value || value.provider !== 'google_calendar' ||
+  if (!value || !Object.hasOwn(GOOGLE_SKILL_SCOPES, value.provider) ||
       !['prefetch', 'during', 'final'].includes(value.phase) ||
       !['businessId', 'instanceId', 'ownerUid'].every(key => typeof value[key] === 'string' && value[key]) ||
       typeof value.grantName !== 'string' || typeof value.returnUrl !== 'string') {
@@ -77,8 +81,8 @@ export function skillOAuthContext(value) {
       destination.searchParams.get('skillInstance') !== value.instanceId) {
     throw new Error('unsafe_skill_oauth_return')
   }
-  const scopes = assertScopesAllowed(value.scopes, 'skill-oauth').split(' ').sort()
-  if (!scopes.includes('https://www.googleapis.com/auth/calendar')) throw new Error('unsupported_skill_oauth_scope')
+  const scopes = assertScopesAllowed(value.scopes, 'skill-oauth', value.provider).split(' ').sort()
+  if (!scopes.includes(GOOGLE_SKILL_SCOPES[value.provider])) throw new Error('unsupported_skill_oauth_scope')
   return { provider: value.provider, businessId: value.businessId, grantName: value.grantName,
     phase: value.phase, instanceId: value.instanceId, ownerUid: value.ownerUid,
     returnUrl: destination.pathname + destination.search, scopes }

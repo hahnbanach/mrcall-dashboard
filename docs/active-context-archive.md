@@ -1,4 +1,20 @@
 
+## 2026-10-27 — Booking handoff before operator confirmation and Sheets work
+
+TEST serves v2.2.36-test at 3c19137 through successful workflow40492024562.
+All 104 published JavaScript/CSS assets answer HTTP200 and match the CI asset names;
+served code contains the booking setup/activation and bound connection-intent paths.
+The companion backend runs dev-9c482083 with a successful authenticated setup check.
+The authorized conversation is empty and its five saved skills are preserved.
+See the [plan](execution-plans/2026-10-27-booking-connect-activate.md) and
+[evidence](evaluations/2026-10-27-booking-connect-activate.md).
+
+
+- Operator: reload TEST and verify the actual conversation, Google consent when needed,
+  calendar selection and booking. Existing accessible calendars can be selected directly.
+- Real model quality, actual Google consent and provider grants, and booking creation through a
+  calendar skill remain unverified live.
+
 ## 2026-10-27 — Booking source candidate before TEST publication
 
 The v2.2.36 booking-connect candidate implements the existing Google consent button,

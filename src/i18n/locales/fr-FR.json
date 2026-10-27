@@ -3088,6 +3088,12 @@
         "select": "Sélectionner un agenda",
         "unnamed": "Agenda",
         "primary": "principal"
+      },
+      "sheetsConnection": {
+        "explanation": "Connectez Google Sheets pour permettre à l’assistant d’écrire le journal d’appels proposé. Après autorisation, vérifiez les colonnes dans le chat puis cliquez sur Enregistrer.",
+        "connect": "Autoriser Google Sheets",
+        "unverifiedHelp": "Si Google affiche un avertissement d’application non validée, choisissez Paramètres avancés → Accéder à l’application MrCall (non sécurisé), vérifiez les autorisations puis Continuer. Si votre administrateur bloque l’accès, contactez-le.",
+        "resumeCommand": "L’autorisation Google Sheets est terminée. Appelle get_call_log_setup pour lire la configuration actuelle du journal d’appels et les variables extraites disponibles. Explique les colonnes dans la langue de la conversation avant autorisation, puis demande de les approuver ou de les modifier. Ne sauvegarde rien et n’ajoute aucune ligne."
       }
     },
     "aladminConfigurator": {

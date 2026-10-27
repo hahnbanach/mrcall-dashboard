@@ -3089,6 +3089,12 @@
         "select": "Velg en kalender",
         "unnamed": "Kalender",
         "primary": "primær"
+      },
+      "sheetsConnection": {
+        "explanation": "Koble til Google Sheets slik at assistenten kan skrive den foreslåtte anropsloggen. Etter godkjenning, se gjennom kolonnene i chatten og velg Lagre.",
+        "connect": "Godkjenn Google Sheets",
+        "unverifiedHelp": "Hvis Google viser en advarsel om en ubekreftet app, velg Avansert → Gå til MrCall-appen (usikker), se gjennom tillatelsene og velg Fortsett. Kontakt administratoren hvis tilgangen er blokkert.",
+        "resumeCommand": "Google Sheets-godkjenningen er fullført. Kall get_call_log_setup for å lese gjeldende anropsloggoppsett og tilgjengelige uthentede variabler. Forklar kolonnene på samtalens språk før godkjenningen, og spør om godkjenning eller endringer. Ikke lagre eller legg til rader."
       }
     },
     "aladminConfigurator": {

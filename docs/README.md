@@ -41,6 +41,9 @@ guide, both in the StarChat repository. No copy of either lives here.
 - [Readable review and assistant Google connection](briefs/2026-10-26-readable-skill-preview.md)
   — [clean TEST delivery plan](execution-plans/2026-10-26-readable-skill-preview.md).
 
+- [OAuth Google Sheets call log](briefs/2026-10-27-sheets-oauth-call-log.md) —
+  [source plan](execution-plans/2026-10-27-sheets-oauth-call-log.md), account consent and editable post-call columns.
+
 ## Quick context
 
 - **Stack**: Vue 3, PrimeVue 4, Vuex, Firebase Auth, Axios, vue-i18n (12 locales)

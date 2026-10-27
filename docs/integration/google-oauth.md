@@ -47,14 +47,15 @@ carries an error diagnostic. It does not maintain a dashboard copy of every regi
 |---|---|---|
 | `openid`, `email`, `profile` | non-sensitive | `GoogleSignIn.vue` (sign-in) |
 | `https://www.googleapis.com/auth/calendar` | **sensitive** | The chat skill handoff, and the manual skill editor when the calendar manifest declares it |
+| `https://www.googleapis.com/auth/spreadsheets` | **sensitive** | Chat Google Sheets call-log consent, when the installed write manifest declares it |
 | Manifest-declared provider scopes | Provider-dependent | Manual skill editor, subject to catalogue diagnostics |
 
-The chat handoff deliberately supports only Google Calendar. Its local
-`CHAT_SKILL_SCOPES` and `assertScopesAllowed` restrict that integration to identity
-and calendar scopes; they are not an inventory of all scopes registered for the
-Google client. Bound callback processing also rejects scopes outside that supported
-set or missing requested calendar permission. Manual editor authorization and its
-callback retain the catalogue-driven behavior.
+The chat handoff supports Google Calendar and Google Sheets through separate
+provider-specific scope sets in `OAuth.js`. Calendar accepts identity/calendar;
+Sheets accepts identity/spreadsheets write. One provider cannot request the other's
+permission. `assertScopesAllowed` and bound callback validation use the exact provider
+and reject missing requested scopes. Sign-in retains only its three identity scopes;
+manual editor authorization retains its separate catalogue-driven callback path.
 
 There is no account-level calendar connection. Google Calendar is authorized per
 skill, for a business and a grant name, and nothing in the dashboard asks for the
@@ -62,7 +63,7 @@ calendar scope outside those two skill flows.
 
 Changing provider registrations requires the owning StarChat deployment and
 provider console to agree. The dashboard receives diagnostics rather than claiming
-to have verified console registration. Chat support for another provider or scope
+to have verified console registration. Chat support for any further provider or scope
 requires a separate implementation.
 
 ### Why the sign-in stays inside the non-sensitive set
@@ -153,6 +154,35 @@ No token is copied from an account-level row.
 A saved skill whose reference is empty is re-authorized from its own card: the
 chat handoff's Manage connection keeps the saved empty reference, so it reconnects
 the shared row.
+
+## Post-call Sheets consent from chat
+
+`BusinessSkillConnection.vue` offers Sheets consent for supported pending final
+`google_sheets_write` proposals, including the exact `skill_` canonical alias. A new
+unnamed create authorizes the business grant with an empty reference; a saved edit
+requires its actual saved opaque reference. The helper does not invent an instance
+or grant name. Installed metadata supplies the OAuth field, provider and write scope.
+The file can remain restricted/private: the customer authorizes an account able to
+edit it rather than sharing the document with a platform email.
+
+`SheetsConnection.js` holds a 15-minute sessionStorage intent binding owner, business,
+configuration session, complete pending-target fingerprint and exact OAuth state.
+The callback confirms it only after existing state/digest/owner/scope checks and
+successful authenticated provider connect. Denial clears it. Query text alone never
+resumes a turn. Only the same ready chat with confirmed history and loaded catalogue
+can consume it once; changed identity/session/target refuses continuation. The
+catalogue-ready guard prevents consuming it against an initially empty target list.
+
+Successful return sends a localized silent request to `get_call_log_setup`, read
+actual mappings/extracted variables, explain and ask approval or changes. It never
+saves configuration or appends a row. The request uses UI locale and explicitly asks
+to preserve the preceding chat language; actual model compliance is a live acceptance
+limit. Final Save stays explicit. Calendar, booking and ordinary sign-in remain separate.
+
+Conditional unverified-app help describes Advanced → Go to the MrCall app (unsafe) →
+review permissions/Continue. This is not a claim of Google verification or a way around
+an administrator block. Google's official procedure is documented in
+[Workspace authorization troubleshooting](https://developers.google.com/apps-script/api/troubleshoot-authentication-authorization).
 
 ## Secrets
 

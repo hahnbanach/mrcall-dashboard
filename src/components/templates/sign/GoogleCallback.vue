@@ -16,6 +16,7 @@ import { GoogleAuthFlow, assertScopesAllowed } from '@/utils/OAuth'
 import store from '@/store'
 import businessUtils from '@/utils/Business'
 import { confirmBookingConnection, clearBookingIntent } from '@/utils/BookingConnection'
+import { confirmSheetsConnection, clearSheetsIntent } from '@/utils/SheetsConnection'
 
 export default {
   name: 'GoogleCallback',
@@ -46,7 +47,7 @@ export default {
         // plant their own code and the victim ends up signed into the attacker's
         // Google account. Consumes both values, they are single use.
         const { codeVerifier, context } = await GoogleAuthFlow.consumeWithContext(urlParams.get('state'))
-        if (!code) throw new Error('Missing authorization code')
+        if (urlParams.has('error') || !code) throw new Error('Missing authorization code')
         if (boundSkillFlow && !context) throw new Error('missing_skill_oauth_context')
         // StarChat stores a connect without a business as the owner's account-level row, which no
         // skill reads; refused before the code is exchanged, so no token is minted for it.
@@ -68,7 +69,7 @@ export default {
 
         if (context) {
           skillStatus.value = t('widgets.agentSkills.handoff.connecting')
-          const grantedScopes = assertScopesAllowed(scopes, 'skill-callback').split(' ')
+          const grantedScopes = assertScopesAllowed(scopes, 'skill-callback', context.provider).split(' ')
           if (!context.scopes.every(item => grantedScopes.includes(item))) throw new Error('skill_oauth_scope_missing')
           const firebaseToken = await skillUser.getIdToken()
           if (auth.currentUser?.uid !== context.ownerUid) throw new Error('skill_oauth_owner_changed')
@@ -82,7 +83,9 @@ export default {
           }, { headers: { 'Content-type': 'application/json; charset=UTF-8', auth: firebaseToken } })
           localStorage.removeItem('oauthProvider')
           localStorage.removeItem('oauthReturnUrl')
+          if (auth.currentUser?.uid !== context.ownerUid) throw new Error('skill_oauth_owner_changed')
           confirmBookingConnection(context, urlParams.get('state'))
+          confirmSheetsConnection(context, urlParams.get('state'))
           await router.replace(context.returnUrl)
           return
         }
@@ -130,6 +133,7 @@ export default {
         console.error('Error processing callback:', error.response?.status || 'oauth_callback_failed')
         if (isSkillFlow.value) {
           clearBookingIntent()
+          clearSheetsIntent()
           if (!boundSkillFlow) { returnToConfiguration(); return }
           localStorage.removeItem('oauthProvider')
           localStorage.removeItem('oauthReturnUrl')

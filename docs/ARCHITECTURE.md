@@ -82,7 +82,8 @@ API clients and business logic:
 - `Reseller.js` — Reseller API endpoints
 - `Contact.js` — Contact management API
 - `Conversation.js` — Conversation utilities
-- `OAuth.js` — Google authorization flow (PKCE, state, code exchange), the sign-in and chat-skill scope sets, and the single-use skill authorization context
+- `OAuth.js` — Google authorization flow (PKCE, state, code exchange), sign-in and provider-specific Calendar/Sheets chat scopes, and single-use skill authorization context
+- `SheetsConnection.js` — verified Sheets consent intent bound to owner/business/session/target; resumes read/review only, never Save
 - `AgentSkills.js` — skill catalogue, saved configuration and scoped effective availability
 - `Restaurant.js` — StarChat restaurant book client and answer shapes; `RestaurantModel.js` — what the restaurant page computes from them
 - `PKCE.js` — PKCE flow for OAuth 2.0

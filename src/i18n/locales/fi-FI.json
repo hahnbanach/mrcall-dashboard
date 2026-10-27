@@ -3089,6 +3089,12 @@
         "select": "Valitse kalenteri",
         "unnamed": "Kalenteri",
         "primary": "ensisijainen"
+      },
+      "sheetsConnection": {
+        "explanation": "Yhdistä Google Sheets, jotta avustaja voi kirjoittaa ehdotetun puhelulokin. Tarkista valtuutuksen jälkeen sarakkeet chatissa ja valitse Tallenna.",
+        "connect": "Valtuuta Google Sheets",
+        "unverifiedHelp": "Jos Google varoittaa vahvistamattomasta sovelluksesta, valitse Lisäasetukset → Siirry MrCall-sovellukseen (ei turvallinen), tarkista käyttöoikeudet ja valitse Jatka. Jos ylläpitäjä estää pääsyn, ota häneen yhteyttä.",
+        "resumeCommand": "Google Sheetsin valtuutus on päättynyt. Kutsu get_call_log_setup lukeaksesi nykyisen puhelulokin asetukset ja saatavilla olevat poimitut muuttujat. Selitä sarakkeet keskustelussa ennen valtuutusta käytetyllä kielellä ja pyydä hyväksyntää tai muutoksia. Älä tallenna tai lisää rivejä."
       }
     },
     "aladminConfigurator": {

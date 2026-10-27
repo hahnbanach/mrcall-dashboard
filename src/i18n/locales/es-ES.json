@@ -3090,6 +3090,12 @@
         "select": "Selecciona un calendario",
         "unnamed": "Calendario",
         "primary": "principal"
+      },
+      "sheetsConnection": {
+        "explanation": "Conecta Google Sheets para que el asistente escriba el registro de llamadas propuesto. Tras autorizarlo, revisa las columnas en el chat y pulsa Guardar.",
+        "connect": "Autorizar Google Sheets",
+        "unverifiedHelp": "Si Google muestra un aviso de aplicación no verificada, selecciona Configuración avanzada → Ir a la aplicación MrCall (no seguro), revisa los permisos y pulsa Continuar. Si tu administrador bloquea el acceso, contacta con él.",
+        "resumeCommand": "La autorización de Google Sheets ha finalizado. Llama a get_call_log_setup para leer la configuración actual del registro de llamadas y las variables extraídas disponibles. Explica las columnas en el idioma de la conversación anterior a la autorización y pregunta si se aprueban o se modifican. No guardes ni añadas filas."
       }
     },
     "activation": {

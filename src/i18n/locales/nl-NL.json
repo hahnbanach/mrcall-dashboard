@@ -3089,6 +3089,12 @@
         "select": "Selecteer een agenda",
         "unnamed": "Agenda",
         "primary": "primair"
+      },
+      "sheetsConnection": {
+        "explanation": "Verbind Google Sheets zodat de assistent het voorgestelde oproeplogboek kan schrijven. Controleer na toestemming de kolommen in de chat en kies Opslaan.",
+        "connect": "Google Sheets autoriseren",
+        "unverifiedHelp": "Als Google een waarschuwing voor een niet-geverifieerde app toont, kies Geavanceerd → Naar de MrCall-app (onveilig), controleer de machtigingen en kies Doorgaan. Neem contact op met je beheerder als die de toegang blokkeert.",
+        "resumeCommand": "De Google Sheets-autorisatie is voltooid. Roep get_call_log_setup aan om de huidige oproeplogconfiguratie en beschikbare geëxtraheerde variabelen te lezen. Leg de kolommen uit in de taal van het gesprek vóór de autorisatie en vraag om goedkeuring of wijzigingen. Sla niets op en voeg geen rijen toe."
       }
     },
     "aladminConfigurator": {
