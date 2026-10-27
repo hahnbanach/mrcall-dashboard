@@ -109,6 +109,14 @@ async function mockClassifications (page, options = {}) {
     if (!call && a.subject === 'call' && a.conversationId) {
       call = state.calls[a.conversationId] = judged({ conversationId: a.conversationId, resolution: { model: a.valueFrom, value: a.valueFrom, corrected: false }, requests: [] })
     }
+    // a request of a list the spec did not describe (a category's requests): its values are what the list showed
+    if (!call && a.subject === 'request' && a.conversationId) {
+      call = state.calls[a.conversationId] = state.calls[a.conversationId] || judged({ conversationId: a.conversationId, requests: [] })
+    }
+    if (call && a.subject === 'request' && !call.requests.some((r) => r.requestId === a.requestId)) {
+      const v = (field) => (a.field === field ? a.valueFrom : null)
+      call.requests.push({ requestId: a.requestId, ordinal: call.requests.length + 1, text: '', outcome: { model: v('outcome'), value: v('outcome'), corrected: false }, category: { model: v('category'), value: v('category'), corrected: false }, excluded: false })
+    }
     if (!call) return { status: 404 }
     if (a.signal === 'fact_wrong') {
       const id = state.nextId++

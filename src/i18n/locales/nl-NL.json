@@ -2346,13 +2346,13 @@
       },
       "requests": {
         "title": "Verzoeken van bellers",
-        "purpose": "Wat bellers vragen en de assistenten niet kunnen, gegroepeerd per categorie over alle bedrijven: om te beslissen wat er gebouwd moet worden en wat in de abonnementen moet komen.",
+        "purpose": "Wat bellers vragen en hoeveel daarvan de assistent afhandelt, per categorie over alle bedrijven.",
         "window": "Periode: {period}",
         "sortLabel": "Sorteren op",
         "sortScore": "Meest recent en wijdverbreid",
         "sortBusinesses": "Aantal bedrijven",
         "showDismissed": "Gearchiveerde tonen",
-        "scoreHelp": "Elk bedrijf telt voor 1 als het erom vroeg in de laatste dagen die zijn rapporten beslaan, voor de helft als dat twee weken eerder was, voor een kwart als dat vier weken eerder was.",
+        "scoreHelp": "Elk bedrijf telt 1 als het aan het eind van de periode vroeg, de helft twee weken eerder, een kwart vier weken eerder.",
         "none": "Geen verzoeken in deze periode.",
         "columns": {
           "category": "Categorie",
@@ -2362,7 +2362,7 @@
         },
         "businesses": "{n} bedrijven",
         "trend": "{sign}{n} ten opzichte van de vorige periode",
-        "share": "{pct}% van de bedrijven met rapporten",
+        "share": "{pct}% van de bedrijven met geanalyseerde oproepen",
         "histogramLabel": "Bedrijven per {bucket}, vanaf de oudste: {values}",
         "bucket": {
           "week": "week",
@@ -2543,12 +2543,46 @@
           "spam": "Als spam markeren",
           "confirm": "Bevestigen",
           "clear": "Selectie wissen",
-          "leftOut": "{n} oproep zonder beoordeelde uitkomst is weggelaten. | {n} oproepen zonder beoordeelde uitkomst zijn weggelaten."
+          "leftOut": "{n} oproep zonder beoordeelde uitkomst is weggelaten. | {n} oproepen zonder beoordeelde uitkomst zijn weggelaten.",
+          "selectRequest": "Verzoek selecteren: {text}",
+          "labelRequests": "Geselecteerde verzoeken",
+          "move": "Naar categorie verplaatsen",
+          "proposed": "{n} voorstel verzonden: een beheerder beslist. | {n} voorstellen verzonden: een beheerder beslist."
         },
         "fact": {
           "report": "Fout melden",
           "reportOf": "Fout melden: {fact}",
           "reported": "Gemeld aan MrCall"
+        },
+        "links": {
+          "open": "De oproep openen: {label} | De {n} oproepen openen: {label}",
+          "openAll": "De oproepen openen: {label}",
+          "calls": "Oproepen"
+        },
+        "report": {
+          "corrected": "{n} verzoek uit dit rapport is gecorrigeerd nadat het was geschreven. | {n} verzoeken uit dit rapport zijn gecorrigeerd nadat het was geschreven.",
+          "correctedTag": "Gecorrigeerd na het rapport"
+        },
+        "categories": {
+          "all": "Alle verzoeken, ook die de assistent afhandelde",
+          "manyRequests": "Een oproep met meerdere verzoeken staat in elke categorie van zijn verzoeken.",
+          "backlog": "{n} oproep wacht nog op de analyse en telt nog niet mee. | {n} oproepen wachten nog op de analyse en tellen nog niet mee.",
+          "columns": {
+            "calls": "Oproepen",
+            "select": "Selecteren",
+            "text": "Verzoek",
+            "business": "Bedrijf",
+            "outcome": "Uitkomst",
+            "category": "Categorie",
+            "call": "Oproep"
+          },
+          "calls": "{n} oproep | {n} oproepen",
+          "showRequests": "Verzoeken van {category} tonen ({n} oproep) | Verzoeken van {category} tonen ({n} oproepen)",
+          "showOutcome": "Verzoeken van {category} met uitkomst {outcome} tonen ({n})",
+          "openCall": "Oproep openen: {text}",
+          "call": "Oproep openen",
+          "requestsOf": "Verzoeken van {category}",
+          "noRequests": "Geen verzoek in deze periode."
         }
       }
     },

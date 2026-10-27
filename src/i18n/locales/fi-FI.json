@@ -2346,13 +2346,13 @@
       },
       "requests": {
         "title": "Soittajien pyynnöt",
-        "purpose": "Mitä soittajat pyytävät, mihin avustajat eivät pysty, ryhmiteltynä luokittain kaikissa yrityksissä: päättääksesi, mitä rakennetaan ja mitä lisätään tilauksiin.",
+        "purpose": "Mitä soittajat kysyvät ja kuinka paljon siitä avustaja hoitaa, luokittain kaikissa yrityksissä.",
         "window": "Jakso: {period}",
         "sortLabel": "Järjestys",
         "sortScore": "Tuoreimmat ja yleisimmät",
         "sortBusinesses": "Yritysten määrä",
         "showDismissed": "Näytä arkistoidut",
-        "scoreHelp": "Jokainen yritys lasketaan yhtenä, jos se kysyi raporttien kattamina viimeisinä päivinä, puolena, jos kaksi viikkoa aiemmin, neljänneksenä, jos neljä viikkoa aiemmin.",
+        "scoreHelp": "Jokainen yritys lasketaan 1:ksi, jos se kysyi jakson lopussa, puoleksi kaksi viikkoa aiemmin, neljännekseksi neljä viikkoa aiemmin.",
         "none": "Ei pyyntöjä tällä jaksolla.",
         "columns": {
           "category": "Luokka",
@@ -2362,7 +2362,7 @@
         },
         "businesses": "{n} yritystä",
         "trend": "{sign}{n} edelliseen jaksoon verrattuna",
-        "share": "{pct} % raportillisista yrityksistä",
+        "share": "{pct} % yrityksistä, joilla on analysoituja puheluita",
         "histogramLabel": "Yritykset per {bucket}, vanhimmasta alkaen: {values}",
         "bucket": {
           "week": "viikko",
@@ -2543,12 +2543,46 @@
           "spam": "Merkitse roskapuheluksi",
           "confirm": "Vahvista",
           "clear": "Tyhjennä valinta",
-          "leftOut": "{n} puhelu ilman arvioitua lopputulosta jätettiin pois. | {n} puhelua ilman arvioitua lopputulosta jätettiin pois."
+          "leftOut": "{n} puhelu ilman arvioitua lopputulosta jätettiin pois. | {n} puhelua ilman arvioitua lopputulosta jätettiin pois.",
+          "selectRequest": "Valitse pyyntö: {text}",
+          "labelRequests": "Valitut pyynnöt",
+          "move": "Siirrä luokkaan",
+          "proposed": "{n} ehdotus lähetetty: ylläpitäjä päättää. | {n} ehdotusta lähetetty: ylläpitäjä päättää."
         },
         "fact": {
           "report": "Ilmoita virheestä",
           "reportOf": "Ilmoita virheestä: {fact}",
           "reported": "Ilmoitettu MrCallille"
+        },
+        "links": {
+          "open": "Avaa puhelu: {label} | Avaa {n} puhelua: {label}",
+          "openAll": "Avaa puhelut: {label}",
+          "calls": "Puhelut"
+        },
+        "report": {
+          "corrected": "Raportin {n} pyyntöä korjattiin raportin laatimisen jälkeen. | Raportin {n} pyyntöä korjattiin raportin laatimisen jälkeen.",
+          "correctedTag": "Korjattu raportin jälkeen"
+        },
+        "categories": {
+          "all": "Kaikki pyynnöt, myös avustajan hoitamat",
+          "manyRequests": "Puhelu, jossa on useita pyyntöjä, näkyy jokaisessa pyyntöjensä luokassa.",
+          "backlog": "{n} puhelu odottaa vielä analyysia eikä ole vielä mukana. | {n} puhelua odottaa vielä analyysia eikä niitä ole vielä laskettu.",
+          "columns": {
+            "calls": "Puhelut",
+            "select": "Valitse",
+            "text": "Pyyntö",
+            "business": "Yritys",
+            "outcome": "Lopputulos",
+            "category": "Luokka",
+            "call": "Puhelu"
+          },
+          "calls": "{n} puhelu | {n} puhelua",
+          "showRequests": "Näytä luokan {category} pyynnöt ({n} puhelu) | Näytä luokan {category} pyynnöt ({n} puhelua)",
+          "showOutcome": "Näytä luokan {category} pyynnöt, lopputulos {outcome} ({n})",
+          "openCall": "Avaa puhelu: {text}",
+          "call": "Avaa puhelu",
+          "requestsOf": "Luokan {category} pyynnöt",
+          "noRequests": "Ei pyyntöjä tällä jaksolla."
         }
       }
     },

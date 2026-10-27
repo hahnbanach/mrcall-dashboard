@@ -2348,13 +2348,13 @@
       },
       "requests": {
         "title": "Demandes des appelants",
-        "purpose": "Ce que demandent les appelants et que les assistants ne peuvent pas faire, regroupé par catégorie sur toutes les entreprises : pour décider quoi développer et quoi ajouter aux forfaits.",
+        "purpose": "Ce que demandent les appelants et la part que l'assistant en traite, par catégorie sur toutes les entreprises.",
         "window": "Période : {period}",
         "sortLabel": "Trier par",
         "sortScore": "Les plus récentes et répandues",
         "sortBusinesses": "Nombre d'entreprises",
         "showDismissed": "Afficher les archivées",
-        "scoreHelp": "Chaque entreprise compte 1 si elle l'a demandé dans les derniers jours couverts par ses rapports, la moitié si c'était deux semaines avant, un quart si c'était quatre semaines avant.",
+        "scoreHelp": "Chaque entreprise compte 1 si elle l'a demandé à la fin de la période, la moitié deux semaines plus tôt, un quart quatre semaines plus tôt.",
         "none": "Aucune demande sur cette période.",
         "columns": {
           "category": "Catégorie",
@@ -2364,7 +2364,7 @@
         },
         "businesses": "{n} entreprises",
         "trend": "{sign}{n} par rapport à la période précédente",
-        "share": "{pct} % des entreprises ayant des rapports",
+        "share": "{pct} % des entreprises avec des appels analysés",
         "histogramLabel": "Entreprises par {bucket}, de la plus ancienne : {values}",
         "bucket": {
           "week": "semaine",
@@ -2545,12 +2545,46 @@
           "spam": "Marquer comme indésirable",
           "confirm": "Confirmer",
           "clear": "Effacer la sélection",
-          "leftOut": "{n} appel sans issue évaluée a été laissé de côté. | {n} appels sans issue évaluée ont été laissés de côté."
+          "leftOut": "{n} appel sans issue évaluée a été laissé de côté. | {n} appels sans issue évaluée ont été laissés de côté.",
+          "selectRequest": "Sélectionner la demande : {text}",
+          "labelRequests": "Demandes sélectionnées",
+          "move": "Déplacer vers une catégorie",
+          "proposed": "{n} proposition envoyée : un administrateur décide. | {n} propositions envoyées : un administrateur décide."
         },
         "fact": {
           "report": "Signaler une erreur",
           "reportOf": "Signaler une erreur : {fact}",
           "reported": "Signalé à MrCall"
+        },
+        "links": {
+          "open": "Ouvrir l'appel : {label} | Ouvrir les {n} appels : {label}",
+          "openAll": "Ouvrir les appels : {label}",
+          "calls": "Appels"
+        },
+        "report": {
+          "corrected": "{n} demande de ce rapport a été corrigée après sa rédaction. | {n} demandes de ce rapport ont été corrigées après sa rédaction.",
+          "correctedTag": "Corrigée après le rapport"
+        },
+        "categories": {
+          "all": "Toutes les demandes, y compris celles que l'assistant a traitées",
+          "manyRequests": "Un appel avec plusieurs demandes figure dans chaque catégorie de ses demandes.",
+          "backlog": "{n} appel attend encore son analyse et n'est pas encore compté. | {n} appels attendent encore leur analyse et ne sont pas encore comptés.",
+          "columns": {
+            "calls": "Appels",
+            "select": "Sélectionner",
+            "text": "Demande",
+            "business": "Entreprise",
+            "outcome": "Issue",
+            "category": "Catégorie",
+            "call": "Appel"
+          },
+          "calls": "{n} appel | {n} appels",
+          "showRequests": "Afficher les demandes de {category} ({n} appel) | Afficher les demandes de {category} ({n} appels)",
+          "showOutcome": "Afficher les demandes de {category} avec l'issue {outcome} ({n})",
+          "openCall": "Ouvrir l'appel : {text}",
+          "call": "Ouvrir l'appel",
+          "requestsOf": "Demandes de {category}",
+          "noRequests": "Aucune demande sur cette période."
         }
       }
     },

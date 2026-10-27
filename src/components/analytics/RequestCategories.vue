@@ -13,6 +13,11 @@
           :ariaLabel="$t('components.callInsights.requests.sortLabel')"
         />
       </label>
+      <!-- by default the requests the assistant did not fulfil by itself (StarChat's brief, decision 13) -->
+      <label class="requests-control requests-toggle">
+        <input v-model="all" type="checkbox" />
+        <span>{{ $t("components.callInsights.feedback.categories.all") }}</span>
+      </label>
       <label v-if="isAdmin" class="requests-control requests-toggle">
         <input v-model="includeDismissed" type="checkbox" />
         <span>{{ $t("components.callInsights.requests.showDismissed") }}</span>
@@ -33,12 +38,15 @@
       @retry="load"
     >
       <p class="requests-window">{{ windowText }}</p>
+      <p class="requests-note">{{ $t("components.callInsights.feedback.categories.manyRequests") }}</p>
+      <p v-if="backlog > 0" class="requests-note" role="status">{{ $t("components.callInsights.feedback.categories.backlog", { n: backlog }, backlog) }}</p>
       <div class="requests-scroll">
         <table class="requests-table">
           <caption class="visually-hidden">{{ $t("components.callInsights.requests.title") }}</caption>
           <thead>
             <tr>
               <th scope="col">{{ $t("components.callInsights.requests.columns.category") }}</th>
+              <th scope="col">{{ $t("components.callInsights.feedback.categories.columns.calls") }}</th>
               <th scope="col" :aria-sort="sort === 'businesses' ? 'descending' : 'none'">{{ $t("components.callInsights.requests.columns.businesses") }}</th>
               <th scope="col">{{ $t("components.callInsights.requests.columns.trend") }}</th>
               <th scope="col">{{ $t("components.callInsights.requests.columns.freshness") }}</th>
@@ -47,16 +55,16 @@
             </tr>
           </thead>
           <tbody>
-            <template v-for="row in rows" :key="row.category">
+            <template v-for="row in rows" :key="rowKey(row)">
               <tr :class="{ 'requests-dismissed': row.dismissal && !row.dismissal.reopened }">
                 <td :data-label="$t('components.callInsights.requests.columns.category')">
-                  <span class="requests-category">{{ row.label }}</span>
+                  <span class="requests-category">{{ rowLabel(row) }}</span>
                   <span class="requests-status" :class="'requests-status-' + row.status">{{ $t("components.callInsights.requests.status." + row.status) }}</span>
                   <span v-if="row.dismissal && row.dismissal.reopened" class="requests-reopened">
                     {{ $t("components.callInsights.requests.reopened", { n: row.dismissal.reopened.newBusinesses, date: day(row.dismissal.reopened.since) }) }}
                   </span>
                   <span v-else-if="row.dismissal" class="requests-reopened">{{ dismissalText(row.dismissal) }}</span>
-                  <span class="requests-row-actions">
+                  <span v-if="row.category != null" class="requests-row-actions">
                     <Button
                       type="button" text size="small"
                       :icon="expanded === row.category ? 'pi pi-chevron-up' : 'pi pi-chevron-down'"
@@ -84,6 +92,28 @@
                       />
                     </template>
                   </span>
+                </td>
+                <!-- the row's calls and its outcome split, each opening the category's requests (decision 13, decision 9) -->
+                <td :data-label="$t('components.callInsights.feedback.categories.columns.calls')">
+                  <Button
+                    v-if="typeof row.calls === 'number'"
+                    type="button" text size="small"
+                    :label="$t('components.callInsights.feedback.categories.calls', { n: row.calls }, row.calls)"
+                    :aria-label="$t('components.callInsights.feedback.categories.showRequests', { category: rowLabel(row), n: row.calls }, row.calls)"
+                    :aria-expanded="isListOpen(row, null) ? 'true' : 'false'"
+                    @click="openList(row, null)"
+                  />
+                  <ul v-if="outcomeSplit(row).length" class="requests-outcomes">
+                    <li v-for="o in outcomeSplit(row)" :key="o.key">
+                      <button
+                        type="button"
+                        class="requests-outcome"
+                        :aria-label="$t('components.callInsights.feedback.categories.showOutcome', { category: rowLabel(row), outcome: outcomeLabel(o.key), n: o.count })"
+                        :aria-expanded="isListOpen(row, o.key) ? 'true' : 'false'"
+                        @click="openList(row, o.key)"
+                      >{{ outcomeLabel(o.key) }} <strong>{{ o.count }}</strong></button>
+                    </li>
+                  </ul>
                 </td>
                 <td :data-label="$t('components.callInsights.requests.columns.businesses')">
                   <span class="requests-count">{{ $t("components.callInsights.requests.businesses", { n: row.businesses }) }}</span>
@@ -121,7 +151,14 @@
                     <!-- not quoted: an example may be what a caller asked or what the report suggests (U19 m9) -->
                     <li v-for="e in examplesOf(row)" :key="e.text + e.businessId">
                       <span>{{ e.text }}</span>
-                      <router-link :to="reportLink(e.businessId, e.reportPeriodStart)" class="requests-sub">{{ businessName(e) }}</router-link>
+                      <router-link v-if="e.reportPeriodStart != null" :to="reportLink(e.businessId, e.reportPeriodStart)" class="requests-sub">{{ businessName(e) }}</router-link>
+                      <span v-else class="requests-sub">{{ businessName(e) }}</span>
+                      <router-link
+                        v-if="e.conversationId"
+                        :to="{ path: '/conversations', query: { id: e.businessId, conversation: e.conversationId } }"
+                        class="requests-sub"
+                        :aria-label="$t('components.callInsights.feedback.categories.openCall', { text: e.text })"
+                      >{{ $t("components.callInsights.feedback.categories.call") }}</router-link>
                       <Button
                         v-if="isAdmin"
                         type="button" text size="small" severity="secondary"
@@ -150,8 +187,20 @@
                   </ul>
                 </td>
               </tr>
+              <tr v-if="list && list.key === rowKey(row)" class="requests-expansion">
+                <td colspan="7">
+                  <CategoryRequests
+                    :category="row.category"
+                    :label="rowLabel(row)"
+                    :body="body"
+                    :outcome="list.outcome"
+                    :all="all"
+                    :categories="categories"
+                  />
+                </td>
+              </tr>
               <tr v-if="expanded === row.category" class="requests-expansion">
-                <td colspan="6" :id="'requests-businesses-' + row.category">
+                <td colspan="7" :id="'requests-businesses-' + row.category">
                   <PagedTable
                     :state="businesses"
                     :columns="businessColumns"
@@ -209,6 +258,8 @@ import CallInsights from "@/utils/CallInsights";
 import InsightsReports from "@/utils/InsightsReports";
 import InsightsState from "@/components/analytics/InsightsState.vue";
 import PagedTable from "@/components/analytics/PagedTable.vue";
+import CategoryRequests from "@/components/analytics/CategoryRequests.vue";
+import Classifications from "@/utils/Classifications";
 import { isSessionEnded } from "@/firebase/session";
 
 const REASONS = ["done", "not_relevant", "already_integrated"];
@@ -225,7 +276,7 @@ const REASONS = ["done", "not_relevant", "already_integrated"];
  * are at most the active categories, so the answer is not paged; the businesses of a row are.
  */
 export default {
-  components: { InsightsState, PagedTable },
+  components: { InsightsState, PagedTable, CategoryRequests },
   props: {
     // the page's window and plan: {timestampGte, timestampLte, plan?}
     body: { type: Object, default: null },
@@ -239,6 +290,12 @@ export default {
       answer: null,
       sort: "score",
       includeDismissed: false,
+      // all the requests, the ones the assistant fulfilled too (`all`); by default the others only (decision 13)
+      all: false,
+      // the category's requests shown under a row: {key, outcome}
+      list: null,
+      // StarChat's configured categories with their labels (the brief's proposed read), null while it answers none
+      categories: null,
       expanded: null,
       businesses: CallInsights.serverPage(({ offset, size, asOf }) =>
         CallInsights.requestBusinesses(user(), this.expanded, this.body || {}, { from: offset, size, asOf: asOf || (this.answer && this.answer.asOf) })),
@@ -266,6 +323,10 @@ export default {
     reasons() {
       return REASONS;
     },
+    backlog() {
+      const b = this.answer && this.answer.backlog;
+      return b && typeof b.calls === "number" ? b.calls : 0;
+    },
     sortOptions() {
       return [
         { value: "score", label: this.$t("components.callInsights.requests.sortScore") },
@@ -292,9 +353,13 @@ export default {
     body: { deep: true, handler(value) { if (value) this.load(); } },
     sort() { this.load(); },
     includeDismissed() { this.load(); },
+    all() { this.load(); },
   },
   mounted() {
     if (this.body) this.load();
+    Classifications.categories(this.$store.state.user, this.$i18n.locale)
+      .then((answer) => { this.categories = answer && Array.isArray(answer.items) ? answer.items : null; })
+      .catch(() => { this.categories = null; });
   },
   methods: {
     user() {
@@ -304,7 +369,7 @@ export default {
       const isCurrent = this.gate.begin();
       this.status = "loading";
       CallInsights.requestCategories(this.user(), this.body || {}, {
-        includeDismissed: this.isAdmin && this.includeDismissed, sort: this.sort, language: this.$i18n.locale,
+        includeDismissed: this.isAdmin && this.includeDismissed, sort: this.sort, language: this.$i18n.locale, all: this.all,
       })
         .then((answer) => {
           if (!isCurrent()) return;
@@ -323,6 +388,28 @@ export default {
           this.status = "error";
           this.$emit("error", error, "requests");
         });
+    },
+    // A row by its category; "Da classificare" has none (`unclassified`).
+    rowKey(row) {
+      return row.category == null ? Classifications.UNCLASSIFIED : row.category;
+    },
+    rowLabel(row) {
+      if (row.category == null || row.unclassified) return this.$t("components.callInsights.feedback.unset");
+      return row.label || row.category;
+    },
+    outcomeLabel(key) {
+      return this.$t("components.callInsights.feedback.outcome." + key);
+    },
+    // The outcomes of a row's requests, as StarChat counts them (distinct calls), in the outcomes' order.
+    outcomeSplit(row) {
+      const o = row.outcomes && typeof row.outcomes === "object" ? row.outcomes : {};
+      return Classifications.REQUEST_OUTCOME_KEYS.filter((k) => o[k] > 0).map((k) => ({ key: k, count: o[k] }));
+    },
+    isListOpen(row, outcome) {
+      return !!this.list && this.list.key === this.rowKey(row) && this.list.outcome === outcome;
+    },
+    openList(row, outcome) {
+      this.list = this.isListOpen(row, outcome) ? null : { key: this.rowKey(row), outcome };
     },
     toggle(row) {
       this.expanded = this.expanded === row.category ? null : row.category;
@@ -663,5 +750,31 @@ export default {
       }
     }
   }
+}
+
+.requests-note {
+  margin: 0 0 6px;
+  font-size: 13px;
+  color: @mrcall_grey_text;
+}
+
+.requests-outcomes {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.requests-outcome {
+  background: none;
+  border: none;
+  padding: 2px 0;
+  text-align: left;
+  font-size: 13px;
+  color: @mrcall_blue;
+  cursor: pointer;
+  text-decoration: underline;
 }
 </style>

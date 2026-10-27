@@ -2346,13 +2346,13 @@
       },
       "requests": {
         "title": "Helistajate soovid",
-        "purpose": "Mida helistajad paluvad, millega assistendid hakkama ei saa, rühmitatud kategooria järgi kõigi ettevõtete lõikes: et otsustada, mida ehitada ja mida pakettidesse lisada.",
+        "purpose": "Mida helistajad küsivad ja kui palju sellest assistent ise lahendab, kategooriate kaupa kõigi ettevõtete lõikes.",
         "window": "Periood: {period}",
         "sortLabel": "Järjesta",
         "sortScore": "Viimased ja levinuimad",
         "sortBusinesses": "Ettevõtete arv",
         "showDismissed": "Näita arhiveeritud",
-        "scoreHelp": "Iga ettevõte loeb 1, kui küsis aruannetega kaetud viimastel päevadel, poole, kui kaks nädalat varem, veerandi, kui neli nädalat varem.",
+        "scoreHelp": "Iga ettevõte loeb 1, kui ta küsis perioodi lõpus, pool kaks nädalat varem, veerand neli nädalat varem.",
         "none": "Selles perioodis soove pole.",
         "columns": {
           "category": "Kategooria",
@@ -2362,7 +2362,7 @@
         },
         "businesses": "{n} ettevõtet",
         "trend": "{sign}{n} võrreldes eelmise perioodiga",
-        "share": "{pct} % aruannetega ettevõtetest",
+        "share": "{pct}% analüüsitud kõnedega ettevõtetest",
         "histogramLabel": "Ettevõtted {bucket} kohta, vanimast alates: {values}",
         "bucket": {
           "week": "nädal",
@@ -2543,12 +2543,46 @@
           "spam": "Märgi rämpskõneks",
           "confirm": "Kinnita",
           "clear": "Tühista valik",
-          "leftOut": "{n} hinnatud tulemuseta kõne jäeti välja. | {n} hinnatud tulemuseta kõnet jäeti välja."
+          "leftOut": "{n} hinnatud tulemuseta kõne jäeti välja. | {n} hinnatud tulemuseta kõnet jäeti välja.",
+          "selectRequest": "Vali päring: {text}",
+          "labelRequests": "Valitud päringud",
+          "move": "Teisalda kategooriasse",
+          "proposed": "{n} ettepanek saadetud: otsustab administraator. | {n} ettepanekut saadetud: otsustab administraator."
         },
         "fact": {
           "report": "Teata veast",
           "reportOf": "Teata veast: {fact}",
           "reported": "MrCallile teatatud"
+        },
+        "links": {
+          "open": "Ava kõne: {label} | Ava {n} kõnet: {label}",
+          "openAll": "Ava kõned: {label}",
+          "calls": "Kõned"
+        },
+        "report": {
+          "corrected": "Aruande {n} päringut parandati pärast selle koostamist. | Aruande {n} päringut parandati pärast selle koostamist.",
+          "correctedTag": "Parandatud pärast aruannet"
+        },
+        "categories": {
+          "all": "Kõik päringud, ka need, mille assistent lahendas",
+          "manyRequests": "Mitme päringuga kõne on iga oma päringu kategoorias.",
+          "backlog": "{n} kõne ootab veel analüüsi ja seda ei ole veel loetud. | {n} kõnet ootab veel analüüsi ja neid ei ole veel loetud.",
+          "columns": {
+            "calls": "Kõned",
+            "select": "Vali",
+            "text": "Päring",
+            "business": "Ettevõte",
+            "outcome": "Tulemus",
+            "category": "Kategooria",
+            "call": "Kõne"
+          },
+          "calls": "{n} kõne | {n} kõnet",
+          "showRequests": "Näita kategooria {category} päringuid ({n} kõne) | Näita kategooria {category} päringuid ({n} kõnet)",
+          "showOutcome": "Näita kategooria {category} päringuid tulemusega {outcome} ({n})",
+          "openCall": "Ava kõne: {text}",
+          "call": "Ava kõne",
+          "requestsOf": "Kategooria {category} päringud",
+          "noRequests": "Sel perioodil päringuid pole."
         }
       }
     },

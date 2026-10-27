@@ -38,6 +38,10 @@
             <p v-if="base.kind === 'old'" class="report-note">{{ $t("components.callInsights.reports.baseOldNote") }}</p>
           </template>
           <p v-if="excluded">{{ $t("components.callInsights.reports.excluded", excluded) }}</p>
+          <!-- Requests corrected after the report was written: its counts stay as written; a regeneration reads the corrections -->
+          <p v-if="correctedCount > 0" class="report-newer" role="status">
+            {{ $t("components.callInsights.feedback.report.corrected", { n: correctedCount }, correctedCount) }}
+          </p>
           <p v-if="newerCalls > 0" class="report-newer" role="status">
             {{ $t("components.callInsights.reportDetail.newerCalls", { n: newerCalls }) }}
           </p>
@@ -51,13 +55,17 @@
             <ul class="report-list report-outcome" :aria-label="$t('components.callInsights.outcome.title')">
               <li v-for="line in outcome.lines" :key="line.key" class="report-outcome-line">
                 <span class="report-outcome-label">{{ $t("components.callInsights.outcome." + line.key) }}</span>
-                <span class="report-outcome-count">{{ line.count }}</span>
+                <span class="report-outcome-count"><CountLink :to="lineLink(line.key)" :count="line.count" :label="$t('components.callInsights.outcome.' + line.key)" /></span>
                 <span class="report-note">{{ $t("components.callInsights.howCallsWent.shareOfBase", { percent: line.percent, base: outcome.base }) }}</span>
               </li>
             </ul>
           </template>
-          <p v-if="typeof content.booked === 'number'">{{ $t("components.callInsights.reportDetail.booked", { n: content.booked }, content.booked) }}</p>
-          <p v-if="typeof content.transferred === 'number'">{{ $t("components.callInsights.reportDetail.transferred", { n: content.transferred }, content.transferred) }}</p>
+          <i18n-t v-if="typeof content.booked === 'number'" keypath="components.callInsights.reportDetail.booked" :plural="content.booked" tag="p" scope="global">
+            <template #n><CountLink :to="link('booked', true)" :count="content.booked" :label="$t('components.callInsights.dimensions.booked')" /></template>
+          </i18n-t>
+          <i18n-t v-if="typeof content.transferred === 'number'" keypath="components.callInsights.reportDetail.transferred" :plural="content.transferred" tag="p" scope="global">
+            <template #n><CountLink :to="link('transferred', true)" :count="content.transferred" :label="$t('components.callInsights.dimensions.transferred')" /></template>
+          </i18n-t>
         </section>
 
         <section v-if="themes.length > 0" class="report-section" aria-labelledby="themes-title">
@@ -65,7 +73,9 @@
           <ul class="report-list">
             <li v-for="theme in themes" :key="theme.topic" class="report-topic">
               <span class="report-topic-name">{{ theme.topic }}</span>
-              <span v-if="theme.calls !== null" class="report-topic-calls">{{ $t("components.callInsights.reportDetail.calls", { n: theme.calls }, theme.calls) }}</span>
+              <i18n-t v-if="theme.calls !== null" keypath="components.callInsights.reportDetail.calls" :plural="theme.calls" tag="span" class="report-topic-calls" scope="global">
+                <template #n><CountLink :to="link('topicLabels', themeLabels(theme))" :count="theme.calls" :label="theme.topic" /></template>
+              </i18n-t>
               <Tag v-if="theme.new" severity="info" :value="$t('components.callInsights.reports.newTopic')" />
               <ul
                 v-if="theme.outcome.length > 0"
@@ -89,8 +99,7 @@
           <p class="report-note">{{ $t("components.callInsights.reportDetail.callBackNote") }}</p>
           <ul class="report-calls">
             <li v-for="id in flagged" :key="id">
-              <router-link v-if="isOwner" :to="conversationLink(id)">{{ exampleName(id) }}</router-link>
-              <span v-else>{{ exampleName(id) }}</span>
+              <router-link :to="conversationLink(id)">{{ exampleName(id) }}</router-link>
             </li>
           </ul>
         </section>
@@ -98,16 +107,24 @@
         <section v-if="gapGroups.length > 0" class="report-section" aria-labelledby="gaps-title">
           <h3 id="gaps-title" class="report-section-title">{{ $t("components.callInsights.reports.gapsTitle") }}</h3>
           <div v-for="group in gapGroups" :key="group.key" class="report-gap-group">
-            <h4 class="report-gap-reason">{{ $t("components.callInsights.gaps." + group.key) }}</h4>
+            <h4 class="report-gap-reason">
+              {{ $t("components.callInsights.gaps." + group.key) }}
+              <router-link
+                v-if="link('gap', group.key)"
+                :to="link('gap', group.key)"
+                class="report-gap-calls"
+                :aria-label="$t('components.callInsights.feedback.links.openAll', { label: $t('components.callInsights.gaps.' + group.key) })"
+              >{{ $t("components.callInsights.feedback.links.calls") }}</router-link>
+            </h4>
             <ul class="report-list">
               <li v-for="(gap, i) in group.gaps" :key="i" class="report-gap">
                 <p class="report-gap-summary">{{ gap.summary }}</p>
+                <Tag v-if="correctedSince(gap)" severity="info" :value="$t('components.callInsights.feedback.report.correctedTag')" class="report-corrected-tag" />
                 <p v-if="gap.examples && gap.examples.length > 0" class="report-note">
                   <span>{{ $t("components.callInsights.reports.examples") }}</span>{{ " " }}
                   <template v-for="(id, k) in gap.examples" :key="id">
                     <span v-if="k > 0">, </span>
-                    <router-link v-if="isOwner" :to="conversationLink(id)">{{ exampleName(id) }}</router-link>
-                    <span v-else>{{ exampleName(id) }}</span>
+                    <router-link :to="conversationLink(id)">{{ exampleName(id) }}</router-link>
                   </template>
                 </p>
                 <router-link v-if="answerable(gap)" :to="answerLink(gap)" class="report-answer">
@@ -186,6 +203,8 @@ import { isSessionEnded } from "@/firebase/session";
 import InsightsState from "@/components/analytics/InsightsState.vue";
 import InsightsRequestDialog from "@/components/analytics/InsightsRequestDialog.vue";
 import ReportDeleteDialog from "@/components/analytics/ReportDeleteDialog.vue";
+import CountLink from "@/components/analytics/CountLink.vue";
+import Classifications from "@/utils/Classifications";
 
 /**
  * One report, on its own route (`/analytics/report?id=&start=&requestId=`; docs/briefs/2026-10-24-insights-reports-ux.md
@@ -196,11 +215,14 @@ import ReportDeleteDialog from "@/components/analytics/ReportDeleteDialog.vue";
  * (never on a question about the caller's own medical case), its suggestions, and the quality section's gaps of its
  * days beside the period before. The counts of the exclusions, newer calls and quality are the analytics' own
  * (`outcomes`, `quality` over the report's days); the outcome and themes are the report's own, never recomputed here.
- * Calls open their conversation for the business's owner; for anyone else they are named, not linked, since a
- * reseller or an admin cannot open a managed owner's call.
+ * Every count opens its calls, and every call is a link, for every role that reads the report (StarChat's brief
+ * docs/briefs/2026-10-26-classification-feedback.md, decisions 9 and 14: a reseller or an admin opens a call of its
+ * scope read-only, recorded). A count's list is the conversations list over the report's days, filtered as the count
+ * was counted (`Classifications.countLink`); the count itself stays as the report wrote it. The requests corrected
+ * after the report was written (`correctedAfterReport`) are said, and marked on the gaps resting on them.
  */
 export default {
-  components: { InsightsState, InsightsRequestDialog, ReportDeleteDialog },
+  components: { InsightsState, InsightsRequestDialog, ReportDeleteDialog, CountLink },
   props: {
     businessId: { type: String, required: true },
     periodStart: { type: Number, required: true },
@@ -224,8 +246,13 @@ export default {
     isAdmin() {
       return this.role === "admin";
     },
-    isOwner() {
-      return this.role === "owner";
+    // the requests StarChat says were corrected after this report was written
+    correctedIds() {
+      const ids = this.report && Array.isArray(this.report.correctedAfterReport) ? this.report.correctedAfterReport : [];
+      return new Set(ids);
+    },
+    correctedCount() {
+      return this.correctedIds.size;
     },
     freeOwner() {
       return InsightsReports.freeOwner(this.role, this.businessRecord);
@@ -365,6 +392,29 @@ export default {
       return CallInsights.exampleCallName(this.report, id, this.$i18n.locale) ||
         this.$t("components.callInsights.reports.exampleCall", { n: this.unnamedNumbers[id] || 1 });
     },
+    // The list of a count of the report: its days, from its start to the instant before its exclusive end.
+    link(kind, key) {
+      if (!this.report) return null;
+      try {
+        return Classifications.countLink(this.businessId, { from: this.report.periodStart, to: this.report.periodEnd - 1 }, kind, key);
+      } catch (error) {
+        console.debug("No list for this count:", kind, error.message);
+        return null;
+      }
+    },
+    // the passed-on line is resolution `forwarded`, both its messages together
+    lineLink(key) {
+      return key === "forwarded" ? this.link("resolution", "forwarded") : this.link("outcomeLine", key);
+    },
+    // A theme's calls carry its raw labels (the topics the calls were given), its name only when it has none.
+    themeLabels(theme) {
+      const raw = (Array.isArray(this.content.topics) ? this.content.topics : []).find((t) => t && t.topic === theme.topic);
+      const labels = raw && Array.isArray(raw.labels) ? raw.labels.filter((l) => typeof l === "string" && l.trim() !== "") : [];
+      return labels.length ? labels : [theme.topic];
+    },
+    correctedSince(gap) {
+      return Array.isArray(gap.requests) && gap.requests.some((id) => this.correctedIds.has(id));
+    },
     conversationLink(conversationId) {
       return { path: "/conversations", query: { id: this.businessId, conversation: conversationId } };
     },
@@ -395,6 +445,16 @@ export default {
   margin: 0 auto;
   padding: 16px 16px 32px;
   color: @mrcall_dark_grey_text;
+}
+
+.report-gap-calls {
+  margin-left: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.report-corrected-tag {
+  margin-top: 4px;
 }
 
 .report-back {

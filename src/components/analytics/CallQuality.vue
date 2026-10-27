@@ -9,13 +9,17 @@
     <template v-else-if="(status === 'ok' || status === 'loading') && data">
       <div class="quality-group">
         <h4 class="quality-group-title">{{ $t("components.callInsights.quality.unansweredTitle") }}</h4>
-        <p class="quality-row quality-row-total">
-          {{ $t("components.callInsights.quality.countOfTotal", { count: data.callsWithUnanswered, total: data.callsWithUnansweredRecorded }) }}
-        </p>
+        <i18n-t keypath="components.callInsights.quality.countOfTotal" tag="p" class="quality-row quality-row-total" scope="global">
+          <template #count><CountLink :to="linkTo('unanswered', true)" :count="data.callsWithUnanswered || 0" :label="$t('components.callInsights.filters.unansweredLabel')" /></template>
+          <template #total>{{ data.callsWithUnansweredRecorded }}</template>
+        </i18n-t>
         <ul class="quality-breakdown">
           <li v-for="key in gapKeys" :key="key">
             <span>{{ $t("components.callInsights.gaps." + key) }}</span>
-            <span class="quality-count">{{ countOfTotal(gaps[key], data.callsWithUnansweredRecorded) }}</span>
+            <i18n-t keypath="components.callInsights.quality.countOfTotal" tag="span" class="quality-count" scope="global">
+              <template #count><CountLink :to="linkTo('gap', key)" :count="gaps[key] || 0" :label="$t('components.callInsights.gaps.' + key)" /></template>
+              <template #total>{{ data.callsWithUnansweredRecorded }}</template>
+            </i18n-t>
           </li>
         </ul>
       </div>
@@ -25,7 +29,10 @@
         <ul class="quality-breakdown">
           <li v-for="key in checkKeys" :key="key">
             <span>{{ $t("components.callInsights.checks." + key) }}</span>
-            <span class="quality-count">{{ countOfTotal(checks[key], data.callsWithChecks) }}</span>
+            <i18n-t keypath="components.callInsights.quality.countOfTotal" tag="span" class="quality-count" scope="global">
+              <template #count><CountLink :to="linkTo('check', key)" :count="checks[key] || 0" :label="$t('components.callInsights.checks.' + key)" /></template>
+              <template #total>{{ data.callsWithChecks }}</template>
+            </i18n-t>
           </li>
         </ul>
       </div>
@@ -45,6 +52,7 @@
 
 <script>
 import CallInsights from "@/utils/CallInsights";
+import CountLink from "@/components/analytics/CountLink.vue";
 
 /**
  * The quality signals of the calls in the period (brief outcome 3), each beside the number of
@@ -55,10 +63,13 @@ import CallInsights from "@/utils/CallInsights";
  * (brief outcome 9: `http_error` and `failed` only).
  */
 export default {
+  components: { CountLink },
   props: {
     status: { type: String, required: true },
     data: { type: Object, default: null },
     totalCalls: { type: Number, default: null },
+    // (kind, key) => the conversations list of the counted calls, or null (CallOutcomes.vue's `linkFor`)
+    linkFor: { type: Function, default: null },
   },
   computed: {
     gapKeys() {
@@ -82,6 +93,9 @@ export default {
     },
   },
   methods: {
+    linkTo(kind, key) {
+      return this.linkFor ? this.linkFor(kind, key) : null;
+    },
     countOfTotal(count, total) {
       const safeCount = count || 0;
       if (total == null) return String(safeCount);

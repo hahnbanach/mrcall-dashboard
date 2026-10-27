@@ -229,19 +229,21 @@
 
       <!-- How the calls went (brief outcomes 3 and 9): the business page (any role, via its id) or,
            for a reseller with no business chosen, its whole scope -->
-      <CallOutcomes v-if="businessId || showScopePage" :status="outcomesStatus" :data="outcomesData" />
+      <CallOutcomes v-if="businessId || showScopePage" :status="outcomesStatus" :data="outcomesData" :link-for="countLinkFor" />
       <!-- What the calls were about (brief outcome 9): one business's topics; the scope page, over
            several businesses, says to choose one and never asks -->
       <CallTopics
         v-if="businessId || showScopePage"
         :status="businessId ? topicsStatus : 'needsBusiness'"
         :data="topicsData"
+        :link-for="countLinkFor"
       />
       <CallQuality
         v-if="businessId || showScopePage"
         :status="qualityStatus"
         :data="qualityData"
         :total-calls="outcomesData && outcomesData.totalCalls"
+        :link-for="countLinkFor"
       />
 
       <!-- Assistants to review and the callers' requests: the reseller's scope page only, both following the
@@ -275,6 +277,8 @@
       </template>
 
     </div>
+    <!-- The one undo of a gesture on callers' requests (brief docs/briefs/2026-10-27-classification-feedback.md, scope 2) -->
+    <UndoBar />
   </div>
 </template>
 
@@ -288,6 +292,8 @@ import { auth } from "@/firebase/config";
 import { isSessionEnded } from "@/firebase/axiosConfig";
 import AnalyticsApi from "@/utils/Analytics";
 import CallInsights from "@/utils/CallInsights";
+import Classifications from "@/utils/Classifications";
+import UndoBar from "@/components/feedback/UndoBar.vue";
 import businessUtils from "@/utils/Business";
 import OwnerSelector from "@/components/reseller/OwnerSelector.vue";
 import CallOutcomes from "@/components/analytics/CallOutcomes.vue";
@@ -304,7 +310,7 @@ import InsightsReports from "@/utils/InsightsReports";
 const TABS = ["overview", "reports", "jobs"];
 
 export default {
-  components: { OwnerSelector, CallOutcomes, CallTopics, CallQuality, AssistantsToReview, RequestCategories, ReportsTab, JobsTab, InsightsRequestDialog, AnalyticsFilterBar },
+  components: { OwnerSelector, CallOutcomes, CallTopics, CallQuality, AssistantsToReview, RequestCategories, ReportsTab, JobsTab, InsightsRequestDialog, AnalyticsFilterBar, UndoBar },
   setup() {
     const store = useStore();
     const toast = useToast();
@@ -361,6 +367,22 @@ export default {
     };
   },
   computed: {
+    // Each count of one business's calls opens them (brief docs/briefs/2026-10-27-classification-feedback.md, scope 6):
+    // the conversations list of the business, in the page's window, filtered as the count was counted. Over several
+    // businesses there is no such list, and the counts stay numbers.
+    countLinkFor() {
+      if (!(this.businessId && !this.businessMissing)) return null;
+      const businessId = this.businessId;
+      const window = { from: this.timestampGte, to: this.timestampLte };
+      return (kind, key) => {
+        try {
+          return Classifications.countLink(businessId, window, kind, key);
+        } catch (error) {
+          console.debug("No list for this count:", kind, key, error.message);
+          return null;
+        }
+      };
+    },
     // A reseller with no business chosen (the entry a bookmark or the reseller dashboard takes,
     // `ResellerDashboard.vue:87`) reads its whole scope instead of one business.
     showScopePage() {

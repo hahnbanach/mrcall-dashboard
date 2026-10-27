@@ -2351,13 +2351,13 @@
       },
       "requests": {
         "title": "Callers' requests",
-        "purpose": "What callers ask that the assistants cannot do, grouped by category across all businesses: to decide what to build and what to add to the plans.",
+        "purpose": "What callers ask and how much of it the assistant handles, by category across all businesses.",
         "window": "Period: {period}",
         "sortLabel": "Order by",
         "sortScore": "Most recent and widespread",
         "sortBusinesses": "Number of businesses",
         "showDismissed": "Show archived",
-        "scoreHelp": "Each business counts 1 if it asked in the last days covered by its reports, half if two weeks earlier, a quarter if four weeks earlier.",
+        "scoreHelp": "Each business counts 1 if it asked at the end of the period, half if two weeks earlier, a quarter if four weeks earlier.",
         "none": "No requests in this period.",
         "columns": {
           "category": "Category",
@@ -2367,7 +2367,7 @@
         },
         "businesses": "{n} businesses",
         "trend": "{sign}{n} compared with the previous period",
-        "share": "{pct}% of the businesses with reports",
+        "share": "{pct}% of the businesses with analysed calls",
         "histogramLabel": "Businesses per {bucket}, from the oldest: {values}",
         "bucket": {
           "week": "week",
@@ -2548,12 +2548,46 @@
           "spam": "Mark as spam",
           "confirm": "Confirm",
           "clear": "Clear selection",
-          "leftOut": "{n} call without a judged outcome was left out. | {n} calls without a judged outcome were left out."
+          "leftOut": "{n} call without a judged outcome was left out. | {n} calls without a judged outcome were left out.",
+          "selectRequest": "Select the request: {text}",
+          "labelRequests": "Selected requests",
+          "move": "Move to category",
+          "proposed": "{n} proposal sent: an admin decides. | {n} proposals sent: an admin decides."
         },
         "fact": {
           "report": "Report an error",
           "reportOf": "Report an error: {fact}",
           "reported": "Reported to MrCall"
+        },
+        "links": {
+          "open": "Open the call: {label} | Open the {n} calls: {label}",
+          "openAll": "Open the calls: {label}",
+          "calls": "Calls"
+        },
+        "report": {
+          "corrected": "{n} request of this report was corrected after it was written. | {n} requests of this report were corrected after it was written.",
+          "correctedTag": "Corrected after the report"
+        },
+        "categories": {
+          "all": "All requests, the ones the assistant handled too",
+          "manyRequests": "A call with several requests appears in every category of its requests.",
+          "backlog": "{n} call is still waiting for its analysis and is not counted yet. | {n} calls are still waiting for their analysis and are not counted yet.",
+          "columns": {
+            "calls": "Calls",
+            "select": "Select",
+            "text": "Request",
+            "business": "Business",
+            "outcome": "Outcome",
+            "category": "Category",
+            "call": "Call"
+          },
+          "calls": "{n} call | {n} calls",
+          "showRequests": "Show the requests of {category} ({n} call) | Show the requests of {category} ({n} calls)",
+          "showOutcome": "Show the requests of {category} with outcome {outcome} ({n})",
+          "openCall": "Open the call: {text}",
+          "call": "Open the call",
+          "requestsOf": "Requests of {category}",
+          "noRequests": "No request in this period."
         }
       }
     },

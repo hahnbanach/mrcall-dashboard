@@ -47,7 +47,7 @@
           </thead>
           <tbody>
             <template v-for="row in state.items" :key="rowKey(row)">
-              <tr :class="rowClass ? rowClass(row) : null">
+              <tr :class="rowClass ? rowClass(row) : null" v-bind="rowAttrs ? rowAttrs(row) : {}">
                 <td v-for="column in columns" :key="column.key" :data-label="column.label" :class="column.class">
                   <div class="paged-table-cell"><slot :name="'cell-' + column.key" :row="row">{{ row[column.key] }}</slot></div>
                 </td>
@@ -105,6 +105,8 @@ export default {
     columns: { type: Array, required: true },
     rowKey: { type: Function, required: true },
     rowClass: { type: Function, default: null },
+    // attributes and listeners of a row (a list that selects rows by a long press)
+    rowAttrs: { type: Function, default: null },
     caption: { type: String, required: true },
     emptyText: { type: String, default: "" },
   },

@@ -372,22 +372,22 @@
               :class="{
                 'unread': !readOnly && !isRead(conversation),
                 'animating-out': animatingOut.has(key),
-                'selected-card': selected.has(key)
+                'selected-card': selection.has(key)
               }"
-              @pointerdown="pressStart(key, $event)"
-              @pointerup="pressEnd"
-              @pointerleave="pressEnd"
-              @pointercancel="pressEnd"
+              @pointerdown="selection.pressStart(key, $event)"
+              @pointerup="selection.pressEnd()"
+              @pointerleave="selection.pressEnd()"
+              @pointercancel="selection.pressEnd()"
             >
               <div class="card-header">
                 <!-- the selection: always on a wide screen, after a long press on a narrow one -->
                 <input
-                  v-if="!narrow || selectionMode"
+                  v-if="selection.showChecks"
                   type="checkbox"
                   class="select-check"
-                  :checked="selected.has(key)"
+                  :checked="selection.has(key)"
                   :aria-label="$t('components.callInsights.feedback.bulk.select', { name: callerName(conversation) })"
-                  @change="toggleSelected(key, $event.target.checked)"
+                  @change="selectRow(key, $event.target.checked)"
                 />
                 <div class="contact-info">
                   <span class="contact-name">
@@ -572,16 +572,14 @@
 
     <!-- Mobile TieredMenu -->
     <TieredMenu ref="mobileMenu" :model="mobileMenuItems" popup />
-    <!-- The selected calls' judgements, corrected in one gesture (StarChat decision 9, "In lists"): a bar above the
-         list on a wide screen, at the bottom of the screen on a narrow one -->
-    <div
-      v-if="selected.size > 0"
-      class="bulk-bar insights-ui"
-      :class="{ 'bulk-bar-bottom': narrow }"
-      role="toolbar"
-      :aria-label="$t('components.callInsights.feedback.bulk.label')"
+    <!-- The selected calls' judgements, corrected in one gesture (StarChat decision 9, "In lists"): a bar at the
+         bottom of the screen, across its whole width on a narrow one -->
+    <BulkBar
+      v-if="selection.size > 0"
+      :label="$t('components.callInsights.feedback.bulk.label')"
+      :count="selection.size"
+      :narrow="selection.narrow"
     >
-      <span class="bulk-count">{{ $t("components.callInsights.feedback.bulk.count", { n: selected.size }, selected.size) }}</span>
       <JudgementChip
         :field-label="$t('components.callInsights.feedback.bulk.changeOutcome')"
         :value-label="$t('components.callInsights.feedback.bulk.changeOutcome')"
@@ -593,13 +591,11 @@
       />
       <Button type="button" size="small" outlined :label="$t('components.callInsights.feedback.bulk.spam')" :disabled="bulkBusy" @click="bulkResolution('wrong_value', 'spam_wrong_number')" />
       <Button type="button" size="small" outlined :label="$t('components.callInsights.feedback.bulk.confirm')" :disabled="bulkBusy" @click="bulkResolution('right')" />
-      <Button type="button" size="small" text :label="$t('components.callInsights.feedback.bulk.clear')" @click="clearSelection" />
-    </div>
+      <Button type="button" size="small" text :label="$t('components.callInsights.feedback.bulk.clear')" @click="selection.clear()" />
+    </BulkBar>
     <p v-if="bulkNote" class="bulk-note conversation-table-container" role="status">{{ bulkNote }}</p>
-    <!-- room under the last card for the bar fixed at the bottom -->
-    <div v-if="selected.size > 0" class="bulk-bar-room" aria-hidden="true"></div>
     <!-- The one undo of a gesture on the calls' judgements -->
-    <UndoBar :raised="selected.size > 0" />
+    <UndoBar :raised="selection.size > 0" />
   </div>
 </template>
 
@@ -621,7 +617,9 @@ import UndoBar from "@/components/feedback/UndoBar.vue";
 import Classifications from "@/utils/Classifications";
 import businessUtils from "@/utils/Business";
 import UndoGesture from "@/utils/UndoGesture";
+import { createSelection } from "@/utils/Selection";
 import JudgementChip from "@/components/feedback/JudgementChip.vue";
+import BulkBar from "@/components/feedback/BulkBar.vue";
 import { isSessionEnded } from "@/firebase/session";
 
 // The search filters a link carried (a count opening its calls, brief docs/briefs/2026-10-27-classification-feedback.md
@@ -649,7 +647,7 @@ function readAddress(query) {
 }
 
 export default {
-  components: { CallDetailsPanel, UndoBar, JudgementChip },
+  components: { CallDetailsPanel, UndoBar, JudgementChip, BulkBar },
   setup() {
     const store = useStore();
     const toast = useToast();
@@ -713,10 +711,8 @@ export default {
       addressUnknown: address.unknown,
       counted: address.counted,
       categoryLabels: null,
-      // the calls selected for a gesture, by id; on a narrow screen the selection is a mode a long press enters
-      selected: new Set(),
-      selectionMode: false,
-      narrow: typeof window !== "undefined" && !!window.matchMedia && window.matchMedia("(max-width: 599px)").matches,
+      // the calls selected for a gesture, by id (`createSelection`: a long-press mode on a narrow screen)
+      selection: createSelection(),
       bulkBusy: false,
       bulkNote: null,
     };
@@ -913,39 +909,16 @@ export default {
       this.router.replace({ path: this.$route.path, query: Classifications.withoutFilter(this.$route.query, key) });
       this.resetAndReload();
     },
-    // A long press (600 ms) on a card enters the selection mode on a narrow screen, selecting that card.
-    pressStart(key, event) {
-      if (!this.narrow || this.selectionMode) return;
-      if (event.target && event.target.closest && event.target.closest("button, a, input, audio, [role=listbox]")) return;
-      this.pressEnd();
-      this.pressTimer = setTimeout(() => {
-        this.pressTimer = null;
-        this.selectionMode = true;
-        this.toggleSelected(key, true);
-      }, 600);
-    },
-    pressEnd() {
-      if (this.pressTimer) {
-        clearTimeout(this.pressTimer);
-        this.pressTimer = null;
-      }
-    },
-    toggleSelected(key, on) {
-      const next = new Set(this.selected);
-      if (on) next.add(key); else next.delete(key);
-      this.selected = next;
+    selectRow(key, on) {
+      this.selection.toggle(key, on);
       this.bulkNote = null;
-    },
-    clearSelection() {
-      this.selected = new Set();
-      this.selectionMode = false;
     },
     // One gesture over the selected calls' resolution (`POST insights/feedback/bulk`, all or nothing, one undo): a new
     // value, or "right". A call without a judged resolution, or already at the value asked, is left out, and said.
     async bulkResolution(signal, valueTo) {
       const asks = [];
       let leftOut = 0;
-      for (const key of this.selected) {
+      for (const key of this.selection.selected) {
         const conversation = this.items.get(key);
         const current = conversation && conversation.details ? conversation.details.resolution : null;
         if (!current) { leftOut += 1; continue; }
@@ -959,7 +932,7 @@ export default {
       try {
         await Classifications.bulk(this.user, asks, gestureId);
         UndoGesture.record(gestureId, asks.map((a) => a.conversationId), () => this.conversationList());
-        this.clearSelection();
+        this.selection.clear();
       } catch (error) {
         if (isSessionEnded(error)) return;
         const refusal = CallInsights.refusalOf(error);
@@ -1659,19 +1632,13 @@ export default {
     },
   },
   beforeUnmount() {
-    if (this.narrowQuery) this.narrowQuery.removeEventListener("change", this.onNarrow);
-    this.pressEnd();
+    this.selection.dispose();
     console.debug("Before Unmount");
     if (this.periodicEvent) {
       this.periodicEvent.unsubscribe();
     }
   },
   mounted() {
-    if (window.matchMedia) {
-      this.narrowQuery = window.matchMedia("(max-width: 599px)");
-      this.onNarrow = (e) => { this.narrow = e.matches; if (!e.matches) this.selectionMode = false; };
-      this.narrowQuery.addEventListener("change", this.onNarrow);
-    }
     this.businessId = this.$route.query.id;
     if (this.$route.query.lang) {
       this.langCode = this.$route.query.lang.replace("_", "-");
@@ -2282,44 +2249,8 @@ export default {
   flex: none;
 }
 
-.bulk-bar {
-  position: fixed;
-  left: 50%;
-  bottom: 16px;
-  transform: translateX(-50%);
-  width: calc(100% - 32px);
-  z-index: 900;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  max-width: 700px;
-  margin: 8px auto;
-  padding: 8px 12px;
-  border: 1px solid @mrcall_borders;
-  border-radius: 10px;
-  background: @mrcall_white;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 
-  &.bulk-bar-bottom {
-    left: 0;
-    bottom: 0;
-    transform: none;
-    width: 100%;
-    max-width: none;
-    margin: 0;
-    border-radius: 12px 12px 0 0;
-  }
-}
 
-.bulk-bar-room {
-  height: 96px;
-}
-
-.bulk-count {
-  font-weight: 700;
-  font-size: 14px;
-}
 
 .bulk-note {
   font-size: 13px;

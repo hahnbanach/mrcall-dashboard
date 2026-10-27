@@ -2346,13 +2346,13 @@
       },
       "requests": {
         "title": "Uppringarnas önskemål",
-        "purpose": "Vad uppringare ber om som assistenterna inte kan göra, grupperat per kategori över alla företag: för att avgöra vad som ska byggas och vad som ska in i abonnemangen.",
+        "purpose": "Vad uppringare frågar efter och hur mycket assistenten hanterar, per kategori över alla företag.",
         "window": "Period: {period}",
         "sortLabel": "Sortera efter",
         "sortScore": "Senaste och mest utbredda",
         "sortBusinesses": "Antal företag",
         "showDismissed": "Visa arkiverade",
-        "scoreHelp": "Varje företag räknas som 1 om det bad om det under de senaste dagarna som dess rapporter täcker, som en halv om det var två veckor tidigare, som en fjärdedel om det var fyra veckor tidigare.",
+        "scoreHelp": "Varje företag räknas som 1 om det frågade i slutet av perioden, hälften två veckor tidigare, en fjärdedel fyra veckor tidigare.",
         "none": "Inga önskemål under den här perioden.",
         "columns": {
           "category": "Kategori",
@@ -2362,7 +2362,7 @@
         },
         "businesses": "{n} företag",
         "trend": "{sign}{n} jämfört med föregående period",
-        "share": "{pct}% av företagen med rapporter",
+        "share": "{pct} % av företagen med analyserade samtal",
         "histogramLabel": "Företag per {bucket}, från den äldsta: {values}",
         "bucket": {
           "week": "vecka",
@@ -2543,12 +2543,46 @@
           "spam": "Markera som spam",
           "confirm": "Bekräfta",
           "clear": "Rensa urvalet",
-          "leftOut": "{n} samtal utan bedömt utfall utelämnades. | {n} samtal utan bedömt utfall utelämnades."
+          "leftOut": "{n} samtal utan bedömt utfall utelämnades. | {n} samtal utan bedömt utfall utelämnades.",
+          "selectRequest": "Välj begäran: {text}",
+          "labelRequests": "Valda begäranden",
+          "move": "Flytta till kategori",
+          "proposed": "{n} förslag skickat: en administratör beslutar. | {n} förslag skickade: en administratör beslutar."
         },
         "fact": {
           "report": "Rapportera ett fel",
           "reportOf": "Rapportera ett fel: {fact}",
           "reported": "Rapporterat till MrCall"
+        },
+        "links": {
+          "open": "Öppna samtalet: {label} | Öppna de {n} samtalen: {label}",
+          "openAll": "Öppna samtalen: {label}",
+          "calls": "Samtal"
+        },
+        "report": {
+          "corrected": "{n} begäran i rapporten korrigerades efter att den skrevs. | {n} begäranden i rapporten korrigerades efter att den skrevs.",
+          "correctedTag": "Korrigerad efter rapporten"
+        },
+        "categories": {
+          "all": "Alla begäranden, även de som assistenten hanterade",
+          "manyRequests": "Ett samtal med flera begäranden visas i varje kategori för sina begäranden.",
+          "backlog": "{n} samtal väntar fortfarande på analys och räknas inte än. | {n} samtal väntar fortfarande på analys och räknas inte än.",
+          "columns": {
+            "calls": "Samtal",
+            "select": "Välj",
+            "text": "Begäran",
+            "business": "Företag",
+            "outcome": "Utfall",
+            "category": "Kategori",
+            "call": "Samtal"
+          },
+          "calls": "{n} samtal | {n} samtal",
+          "showRequests": "Visa begärandena för {category} ({n} samtal) | Visa begärandena för {category} ({n} samtal)",
+          "showOutcome": "Visa begärandena för {category} med utfallet {outcome} ({n})",
+          "openCall": "Öppna samtalet: {text}",
+          "call": "Öppna samtalet",
+          "requestsOf": "Begäranden för {category}",
+          "noRequests": "Ingen begäran under perioden."
         }
       }
     },

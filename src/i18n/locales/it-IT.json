@@ -2352,13 +2352,13 @@
       },
       "requests": {
         "title": "Richieste dei chiamanti",
-        "purpose": "Cosa chiedono i chiamanti che gli assistenti non sanno fare, raggruppato per categoria su tutte le attività: per decidere cosa costruire e cosa aggiungere ai piani.",
+        "purpose": "Cosa chiedono i chiamanti e quanto ne gestisce l'assistente, raggruppato per categoria su tutte le attività.",
         "window": "Periodo: {period}",
         "sortLabel": "Ordina per",
         "sortScore": "Più recenti e diffuse",
         "sortBusinesses": "Numero di attività",
         "showDismissed": "Mostra archiviate",
-        "scoreHelp": "Ogni attività conta 1 se l'ha chiesto negli ultimi giorni coperti dai suoi report, la metà se due settimane prima, un quarto se quattro settimane prima.",
+        "scoreHelp": "Ogni attività conta 1 se l'ha chiesto alla fine del periodo, la metà se due settimane prima, un quarto se quattro settimane prima.",
         "none": "Nessuna richiesta in questo periodo.",
         "columns": {
           "category": "Categoria",
@@ -2368,7 +2368,7 @@
         },
         "businesses": "{n} attività",
         "trend": "{sign}{n} rispetto al periodo precedente",
-        "share": "il {pct}% delle attività con report",
+        "share": "il {pct}% delle attività con chiamate analizzate",
         "histogramLabel": "Attività per {bucket}, dalla più vecchia: {values}",
         "bucket": {
           "week": "settimana",
@@ -2549,12 +2549,46 @@
           "spam": "Segna come spam",
           "confirm": "Conferma",
           "clear": "Annulla la selezione",
-          "leftOut": "{n} chiamata senza esito valutato è stata esclusa. | {n} chiamate senza esito valutato sono state escluse."
+          "leftOut": "{n} chiamata senza esito valutato è stata esclusa. | {n} chiamate senza esito valutato sono state escluse.",
+          "selectRequest": "Seleziona la richiesta: {text}",
+          "labelRequests": "Richieste selezionate",
+          "move": "Sposta in categoria",
+          "proposed": "{n} proposta inviata: decide un amministratore. | {n} proposte inviate: decide un amministratore."
         },
         "fact": {
           "report": "Segnala un errore",
           "reportOf": "Segnala un errore: {fact}",
           "reported": "Segnalato a MrCall"
+        },
+        "links": {
+          "open": "Apri la chiamata: {label} | Apri le {n} chiamate: {label}",
+          "openAll": "Apri le chiamate: {label}",
+          "calls": "Chiamate"
+        },
+        "report": {
+          "corrected": "{n} richiesta di questo report è stata corretta dopo che è stato scritto. | {n} richieste di questo report sono state corrette dopo che è stato scritto.",
+          "correctedTag": "Corretta dopo il report"
+        },
+        "categories": {
+          "all": "Tutte le richieste, anche quelle gestite dall'assistente",
+          "manyRequests": "Una chiamata con più richieste compare in ogni categoria delle sue richieste.",
+          "backlog": "{n} chiamata aspetta ancora la sua analisi e non è ancora contata. | {n} chiamate aspettano ancora la loro analisi e non sono ancora contate.",
+          "columns": {
+            "calls": "Chiamate",
+            "select": "Seleziona",
+            "text": "Richiesta",
+            "business": "Attività",
+            "outcome": "Esito",
+            "category": "Categoria",
+            "call": "Chiamata"
+          },
+          "calls": "{n} chiamata | {n} chiamate",
+          "showRequests": "Mostra le richieste di {category} ({n} chiamata) | Mostra le richieste di {category} ({n} chiamate)",
+          "showOutcome": "Mostra le richieste di {category} con esito {outcome} ({n})",
+          "openCall": "Apri la chiamata: {text}",
+          "call": "Apri la chiamata",
+          "requestsOf": "Richieste di {category}",
+          "noRequests": "Nessuna richiesta in questo periodo."
         }
       }
     },

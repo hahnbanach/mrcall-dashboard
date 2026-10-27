@@ -263,11 +263,11 @@
 
       <!-- How the calls went, across the platform or narrowed by the filters above (brief outcomes 3
            and 9) -->
-      <CallOutcomes :status="outcomesStatus" :data="outcomesData" />
+      <CallOutcomes :status="outcomesStatus" :data="outcomesData" :link-for="countLinkFor" />
       <!-- What the calls were about (brief outcome 9): only with the business filter set; across
            several businesses it says to choose one and never asks -->
-      <CallTopics :status="businessId ? topicsStatus : 'needsBusiness'" :data="topicsData" />
-      <CallQuality :status="qualityStatus" :data="qualityData" :total-calls="outcomesData && outcomesData.totalCalls" />
+      <CallTopics :status="businessId ? topicsStatus : 'needsBusiness'" :data="topicsData" :link-for="countLinkFor" />
+      <CallQuality :status="qualityStatus" :data="qualityData" :total-calls="outcomesData && outcomesData.totalCalls" :link-for="countLinkFor" />
 
       <!-- Assistants to review and the callers' requests, following the filters above; MrCall's own configuration
            suggestions across the platform -->
@@ -305,6 +305,8 @@
       </div>
 
     </div>
+    <!-- The one undo of a gesture on callers' requests (brief docs/briefs/2026-10-27-classification-feedback.md, scope 2) -->
+    <UndoBar />
   </div>
 </template>
 
@@ -319,6 +321,8 @@ import { isSessionEnded } from "@/firebase/axiosConfig";
 import AnalyticsApi from "@/utils/Analytics";
 import TemplatesApi from "@/utils/Templates";
 import CallInsights from "@/utils/CallInsights";
+import Classifications from "@/utils/Classifications";
+import UndoBar from "@/components/feedback/UndoBar.vue";
 import { scrollBelowBar } from "@/utils/scrollBelowBar";
 import businessUtils from "@/utils/Business";
 import CallOutcomes from "@/components/analytics/CallOutcomes.vue";
@@ -331,7 +335,7 @@ import BusinessAutocomplete from "@/components/analytics/BusinessAutocomplete.vu
 import AnalyticsFilterBar from "@/components/analytics/AnalyticsFilterBar.vue";
 
 export default {
-  components: { CallOutcomes, CallTopics, CallQuality, AssistantsToReview, RequestCategories, ConfigSuggestions, BusinessAutocomplete, AnalyticsFilterBar },
+  components: { CallOutcomes, CallTopics, CallQuality, AssistantsToReview, RequestCategories, ConfigSuggestions, BusinessAutocomplete, AnalyticsFilterBar, UndoBar },
   setup() {
     const store = useStore();
     const toast = useToast();
@@ -394,6 +398,22 @@ export default {
     };
   },
   computed: {
+    // Each count of one business's calls opens them (brief docs/briefs/2026-10-27-classification-feedback.md, scope 6):
+    // the conversations list of the business, in the page's window, filtered as the count was counted. Over several
+    // businesses there is no such list, and the counts stay numbers.
+    countLinkFor() {
+      if (!(this.businessId)) return null;
+      const businessId = this.businessId;
+      const window = { from: this.timestampGte, to: this.timestampLte };
+      return (kind, key) => {
+        try {
+          return Classifications.countLink(businessId, window, kind, key);
+        } catch (error) {
+          console.debug("No list for this count:", kind, key, error.message);
+          return null;
+        }
+      };
+    },
     businessId() {
       return this.queryValue('businessId');
     },

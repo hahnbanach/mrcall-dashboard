@@ -349,7 +349,10 @@ test.describe('AnalyticsAdmin: the filter bar', () => {
 })
 
 test.describe('Analytics: an admin reading one business\'s report', () => {
-  test('MrCall\'s own configuration suggestions show, and an example call is named but does not link (out of scope: reading an owner\'s call as an admin)', async ({ adminPage: page }) => {
+  // An admin opens a call of any business, read-only and recorded (StarChat's brief docs/briefs/2026-10-26-classification-
+  // feedback.md, decisions 9 and 14): the example call that was named without a link is now a link (the dashboard's
+  // brief docs/briefs/2026-10-27-classification-feedback.md, scope 6).
+  test('MrCall\'s own configuration suggestions show, and an example call is named and opens the call, for an admin too', async ({ adminPage: page }) => {
     await page.route('**/customer/insights/reports/*', (route) => route.fulfill({
       status: 200,
       contentType: 'application/json',
@@ -367,11 +370,10 @@ test.describe('Analytics: an admin reading one business\'s report', () => {
     await page.goto(`/analytics/report?id=${BUSINESS_ID}&start=1700000000000`)
     await expect(page.getByText('Turn on the restaurant skill.')).toBeVisible({ timeout: 15000 })
     await expect(page.getByText('Ask about parking.')).toBeVisible()
-    // named by when it started, the caller being the owner's alone, and not a link
+    // named by when it started, the caller being the owner's alone, and a link to the call
     const name = await page.evaluate((t) => new Date(t).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }),
       Date.UTC(2026, 9, 14, 9, 30))
-    await expect(page.getByRole('link', { name })).toHaveCount(0)
-    await expect(page.getByText(name, { exact: true })).toBeVisible()
+    await expect(page.getByRole('link', { name })).toHaveAttribute('href', `/conversations?id=${BUSINESS_ID}&conversation=CON-9`)
     await expect(page.getByText('CON-9')).toHaveCount(0)
   })
 })

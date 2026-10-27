@@ -2346,13 +2346,13 @@
       },
       "requests": {
         "title": "Opkalderes ønsker",
-        "purpose": "Hvad opkaldere beder om, som assistenterne ikke kan, grupperet efter kategori på tværs af alle virksomheder: til at beslutte, hvad der skal bygges, og hvad der skal med i abonnementerne.",
+        "purpose": "Hvad dem, der ringer, beder om, og hvor meget assistenten klarer, efter kategori på tværs af alle virksomheder.",
         "window": "Periode: {period}",
         "sortLabel": "Sortér efter",
         "sortScore": "Seneste og mest udbredte",
         "sortBusinesses": "Antal virksomheder",
         "showDismissed": "Vis arkiverede",
-        "scoreHelp": "Hver virksomhed tæller 1, hvis den spurgte i de seneste dage, rapporterne dækker, en halv, hvis to uger tidligere, en kvart, hvis fire uger tidligere.",
+        "scoreHelp": "Hver virksomhed tæller 1, hvis den spurgte i slutningen af perioden, det halve to uger før, en fjerdedel fire uger før.",
         "none": "Ingen ønsker i denne periode.",
         "columns": {
           "category": "Kategori",
@@ -2362,7 +2362,7 @@
         },
         "businesses": "{n} virksomheder",
         "trend": "{sign}{n} i forhold til den forrige periode",
-        "share": "{pct} % af virksomhederne med rapporter",
+        "share": "{pct} % af virksomhederne med analyserede opkald",
         "histogramLabel": "Virksomheder pr. {bucket}, fra den ældste: {values}",
         "bucket": {
           "week": "uge",
@@ -2543,12 +2543,46 @@
           "spam": "Markér som spam",
           "confirm": "Bekræft",
           "clear": "Ryd valget",
-          "leftOut": "{n} opkald uden vurderet udfald blev udeladt. | {n} opkald uden vurderet udfald blev udeladt."
+          "leftOut": "{n} opkald uden vurderet udfald blev udeladt. | {n} opkald uden vurderet udfald blev udeladt.",
+          "selectRequest": "Vælg anmodningen: {text}",
+          "labelRequests": "Valgte anmodninger",
+          "move": "Flyt til kategori",
+          "proposed": "{n} forslag sendt: en administrator beslutter. | {n} forslag sendt: en administrator beslutter."
         },
         "fact": {
           "report": "Rapportér en fejl",
           "reportOf": "Rapportér en fejl: {fact}",
           "reported": "Rapporteret til MrCall"
+        },
+        "links": {
+          "open": "Åbn opkaldet: {label} | Åbn de {n} opkald: {label}",
+          "openAll": "Åbn opkaldene: {label}",
+          "calls": "Opkald"
+        },
+        "report": {
+          "corrected": "{n} anmodning i rapporten blev rettet, efter den blev skrevet. | {n} anmodninger i rapporten blev rettet, efter den blev skrevet.",
+          "correctedTag": "Rettet efter rapporten"
+        },
+        "categories": {
+          "all": "Alle anmodninger, også dem assistenten klarede",
+          "manyRequests": "Et opkald med flere anmodninger vises i hver kategori for sine anmodninger.",
+          "backlog": "{n} opkald venter stadig på analyse og tælles ikke endnu. | {n} opkald venter stadig på analyse og tælles ikke endnu.",
+          "columns": {
+            "calls": "Opkald",
+            "select": "Vælg",
+            "text": "Anmodning",
+            "business": "Virksomhed",
+            "outcome": "Udfald",
+            "category": "Kategori",
+            "call": "Opkald"
+          },
+          "calls": "{n} opkald | {n} opkald",
+          "showRequests": "Vis anmodningerne i {category} ({n} opkald) | Vis anmodningerne i {category} ({n} opkald)",
+          "showOutcome": "Vis anmodningerne i {category} med udfaldet {outcome} ({n})",
+          "openCall": "Åbn opkaldet: {text}",
+          "call": "Åbn opkaldet",
+          "requestsOf": "Anmodninger i {category}",
+          "noRequests": "Ingen anmodning i perioden."
         }
       }
     },

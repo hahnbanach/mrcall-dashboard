@@ -554,8 +554,10 @@ export default {
 
     // The categories of the window `body` names (`timestampGte`, `timestampLte`, `plan`): `{total, asOf, from, to,
     // items}`, one row per category, at most the active categories, so the answer is never paged.
-    requestCategories: function (user, body, { includeDismissed = false, sort = "score", asOf, language } = {}) {
-        return unwrap(axios.post(INSIGHTS_BASE + "/integrations" + query({ view: "categories", includeDismissed, sort, asOf, language }),
+    // `all`: every request, the ones the assistant fulfilled too; without it StarChat counts the others only (its brief
+    // docs/briefs/2026-10-26-classification-feedback.md, decision 13).
+    requestCategories: function (user, body, { includeDismissed = false, sort = "score", asOf, language, all = false } = {}) {
+        return unwrap(axios.post(INSIGHTS_BASE + "/integrations" + query({ view: "categories", includeDismissed, sort, asOf, language, all: all ? "true" : undefined }),
             body, { headers: getHeaders(user) }));
     },
     // The businesses that asked in a category: `{total, asOf, items}`, a page of them.

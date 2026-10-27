@@ -120,7 +120,9 @@ test.describe('Callers\' requests', () => {
     await expect(booking.getByText('Rising', { exact: true })).toBeVisible()
     await expect(booking.getByText('3 businesses')).toBeVisible()
     await expect(booking.getByText('+2 compared with the previous period')).toBeVisible()
-    await expect(booking.getByText('25% of the businesses with reports')).toBeVisible()
+    // the share is over the businesses with analysed calls, since the view counts request records, not reports
+    // (StarChat's brief docs/briefs/2026-10-26-classification-feedback.md, decision 13)
+    await expect(booking.getByText('25% of the businesses with analysed calls')).toBeVisible()
     // each bucket by the day it starts (U19 m16)
     await expect(booking.getByRole('img', { name: 'Businesses per week, from the oldest: Sep 28: 0, Oct 5: 1, Oct 12: 3, Oct 19: 2' })).toBeVisible()
     await expect(booking.getByText('Last request on Oct 21, 2026 · 67% in the last week')).toBeVisible()

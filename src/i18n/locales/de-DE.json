@@ -2348,13 +2348,13 @@
       },
       "requests": {
         "title": "Anliegen der Anrufer",
-        "purpose": "Was Anrufer wollen und die Assistenten nicht können, nach Kategorie über alle Unternehmen gruppiert: um zu entscheiden, was entwickelt und in die Tarife aufgenommen werden soll.",
+        "purpose": "Was Anrufer wollen und wie viel davon der Assistent erledigt, nach Kategorie über alle Unternehmen.",
         "window": "Zeitraum: {period}",
         "sortLabel": "Sortieren nach",
         "sortScore": "Neueste und am weitesten verbreitete",
         "sortBusinesses": "Anzahl der Unternehmen",
         "showDismissed": "Archivierte anzeigen",
-        "scoreHelp": "Jedes Unternehmen zählt 1, wenn es in den letzten von seinen Berichten abgedeckten Tagen danach gefragt hat, die Hälfte bei zwei Wochen davor, ein Viertel bei vier Wochen davor.",
+        "scoreHelp": "Jedes Unternehmen zählt 1, wenn es am Ende des Zeitraums danach gefragt hat, die Hälfte zwei Wochen davor, ein Viertel vier Wochen davor.",
         "none": "Keine Anliegen in diesem Zeitraum.",
         "columns": {
           "category": "Kategorie",
@@ -2364,7 +2364,7 @@
         },
         "businesses": "{n} Unternehmen",
         "trend": "{sign}{n} gegenüber dem vorherigen Zeitraum",
-        "share": "{pct} % der Unternehmen mit Berichten",
+        "share": "{pct} % der Unternehmen mit analysierten Anrufen",
         "histogramLabel": "Unternehmen pro {bucket}, beginnend mit dem ältesten: {values}",
         "bucket": {
           "week": "Woche",
@@ -2545,12 +2545,46 @@
           "spam": "Als Spam markieren",
           "confirm": "Bestätigen",
           "clear": "Auswahl aufheben",
-          "leftOut": "{n} Anruf ohne bewertetes Ergebnis wurde ausgelassen. | {n} Anrufe ohne bewertetes Ergebnis wurden ausgelassen."
+          "leftOut": "{n} Anruf ohne bewertetes Ergebnis wurde ausgelassen. | {n} Anrufe ohne bewertetes Ergebnis wurden ausgelassen.",
+          "selectRequest": "Anfrage auswählen: {text}",
+          "labelRequests": "Ausgewählte Anfragen",
+          "move": "In Kategorie verschieben",
+          "proposed": "{n} Vorschlag gesendet: ein Administrator entscheidet. | {n} Vorschläge gesendet: ein Administrator entscheidet."
         },
         "fact": {
           "report": "Fehler melden",
           "reportOf": "Fehler melden: {fact}",
           "reported": "An MrCall gemeldet"
+        },
+        "links": {
+          "open": "Anruf öffnen: {label} | Die {n} Anrufe öffnen: {label}",
+          "openAll": "Die Anrufe öffnen: {label}",
+          "calls": "Anrufe"
+        },
+        "report": {
+          "corrected": "{n} Anfrage dieses Berichts wurde nach seiner Erstellung korrigiert. | {n} Anfragen dieses Berichts wurden nach seiner Erstellung korrigiert.",
+          "correctedTag": "Nach dem Bericht korrigiert"
+        },
+        "categories": {
+          "all": "Alle Anfragen, auch die vom Assistenten erledigten",
+          "manyRequests": "Ein Anruf mit mehreren Anfragen erscheint in jeder Kategorie seiner Anfragen.",
+          "backlog": "{n} Anruf wartet noch auf seine Analyse und ist noch nicht gezählt. | {n} Anrufe warten noch auf ihre Analyse und sind noch nicht gezählt.",
+          "columns": {
+            "calls": "Anrufe",
+            "select": "Auswählen",
+            "text": "Anfrage",
+            "business": "Unternehmen",
+            "outcome": "Ergebnis",
+            "category": "Kategorie",
+            "call": "Anruf"
+          },
+          "calls": "{n} Anruf | {n} Anrufe",
+          "showRequests": "Anfragen von {category} anzeigen ({n} Anruf) | Anfragen von {category} anzeigen ({n} Anrufe)",
+          "showOutcome": "Anfragen von {category} mit Ergebnis {outcome} anzeigen ({n})",
+          "openCall": "Anruf öffnen: {text}",
+          "call": "Anruf öffnen",
+          "requestsOf": "Anfragen von {category}",
+          "noRequests": "Keine Anfrage in diesem Zeitraum."
         }
       }
     },
