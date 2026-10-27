@@ -2586,6 +2586,39 @@
           "call": "Anruf öffnen",
           "requestsOf": "Anfragen von {category}",
           "noRequests": "Keine Anfrage in diesem Zeitraum."
+        },
+        "queue": {
+          "title": "Zu prüfende Korrekturen",
+          "purpose": "Vorschläge, Korrekturen, deren Anfrage nicht mehr existiert, als falsch markierte Werte und gemeldete Fakten, nach Kategorie und Unternehmen gruppiert, zuerst die Gruppen, die die meisten Anrufe betreffen.",
+          "empty": "Nichts zu prüfen.",
+          "selectedLabel": "Ausgewählte Korrekturen",
+          "applySelected": "Auswahl übernehmen ({n})",
+          "rejectSelected": "Auswahl ablehnen ({n})",
+          "select": "Auswählen: {text}",
+          "apply": "Übernehmen",
+          "reject": "Ablehnen",
+          "handled": "Als erledigt markieren",
+          "reattach": "Neu zuordnen",
+          "requestOfCall": "Anfrage des Anrufs",
+          "reattachHere": "Hier zuordnen",
+          "close": "Schließen",
+          "applied": "{n} übernommen. | {n} übernommen.",
+          "rejected": "{n} abgelehnt. | {n} abgelehnt.",
+          "failedN": "{n} fehlgeschlagen. | {n} fehlgeschlagen.",
+          "change": "{field}: {from} → {to}",
+          "wrong": "{field}: {from} ist falsch, zu prüfen",
+          "right": "{field}: {from} bestätigt",
+          "fact": "{field} als falsch gemeldet"
+        },
+        "mine": {
+          "title": "Meine Vorschläge",
+          "empty": "Noch keine Vorschläge."
+        },
+        "facts": {
+          "no_conversation": "Kein Gespräch",
+          "managed_call": "Vom Assistenten bearbeitet",
+          "skill_errors": "Skill-Fehler",
+          "unkept": "Nicht gehaltene Zusagen"
         }
       }
     },

@@ -2584,6 +2584,39 @@
           "call": "Åbn opkaldet",
           "requestsOf": "Anmodninger i {category}",
           "noRequests": "Ingen anmodning i perioden."
+        },
+        "queue": {
+          "title": "Rettelser til gennemsyn",
+          "purpose": "Forslag, rettelser hvis anmodning ikke længere findes, værdier markeret som forkerte og rapporterede fakta, grupperet efter kategori og virksomhed, først de grupper der flytter flest opkald.",
+          "empty": "Intet at gennemse.",
+          "selectedLabel": "Valgte rettelser",
+          "applySelected": "Anvend de valgte ({n})",
+          "rejectSelected": "Afvis de valgte ({n})",
+          "select": "Vælg: {text}",
+          "apply": "Anvend",
+          "reject": "Afvis",
+          "handled": "Markér som håndteret",
+          "reattach": "Tilknyt igen",
+          "requestOfCall": "Opkaldets anmodning",
+          "reattachHere": "Tilknyt her",
+          "close": "Luk",
+          "applied": "{n} anvendt. | {n} anvendt.",
+          "rejected": "{n} afvist. | {n} afvist.",
+          "failedN": "{n} mislykkedes. | {n} mislykkedes.",
+          "change": "{field}: {from} → {to}",
+          "wrong": "{field}: {from} er forkert, til gennemsyn",
+          "right": "{field}: {from} bekræftet",
+          "fact": "{field} rapporteret som forkert"
+        },
+        "mine": {
+          "title": "Mine forslag",
+          "empty": "Ingen forslag endnu."
+        },
+        "facts": {
+          "no_conversation": "Ingen samtale",
+          "managed_call": "Håndteret af assistenten",
+          "skill_errors": "Skill-fejl",
+          "unkept": "Løfter der ikke blev holdt"
         }
       }
     },

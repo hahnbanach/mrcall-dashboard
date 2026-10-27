@@ -2584,6 +2584,39 @@
           "call": "Avaa puhelu",
           "requestsOf": "Luokan {category} pyynnöt",
           "noRequests": "Ei pyyntöjä tällä jaksolla."
+        },
+        "queue": {
+          "title": "Tarkistettavat korjaukset",
+          "purpose": "Ehdotukset, korjaukset joiden pyyntöä ei enää ole, vääriksi merkityt arvot ja ilmoitetut tosiasiat, ryhmiteltyinä luokan ja yrityksen mukaan, ensin ryhmät jotka koskevat eniten puheluita.",
+          "empty": "Ei tarkistettavaa.",
+          "selectedLabel": "Valitut korjaukset",
+          "applySelected": "Ota valitut käyttöön ({n})",
+          "rejectSelected": "Hylkää valitut ({n})",
+          "select": "Valitse: {text}",
+          "apply": "Ota käyttöön",
+          "reject": "Hylkää",
+          "handled": "Merkitse käsitellyksi",
+          "reattach": "Liitä uudelleen",
+          "requestOfCall": "Puhelun pyyntö",
+          "reattachHere": "Liitä tähän",
+          "close": "Sulje",
+          "applied": "{n} otettu käyttöön. | {n} otettu käyttöön.",
+          "rejected": "{n} hylätty. | {n} hylätty.",
+          "failedN": "{n} epäonnistui. | {n} epäonnistui.",
+          "change": "{field}: {from} → {to}",
+          "wrong": "{field}: {from} on väärin, tarkistettavana",
+          "right": "{field}: {from} vahvistettu",
+          "fact": "{field} ilmoitettu vääräksi"
+        },
+        "mine": {
+          "title": "Omat ehdotukset",
+          "empty": "Ei vielä ehdotuksia."
+        },
+        "facts": {
+          "no_conversation": "Ei keskustelua",
+          "managed_call": "Avustajan hoitama",
+          "skill_errors": "Skill-virheet",
+          "unkept": "Pitämättömät lupaukset"
         }
       }
     },

@@ -2590,6 +2590,39 @@
           "call": "Apri la chiamata",
           "requestsOf": "Richieste di {category}",
           "noRequests": "Nessuna richiesta in questo periodo."
+        },
+        "queue": {
+          "title": "Correzioni da rivedere",
+          "purpose": "Proposte, correzioni la cui richiesta non c'è più, valori segnalati come sbagliati e fatti segnalati, raggruppati per categoria e attività, prima i gruppi che spostano più chiamate.",
+          "empty": "Niente da rivedere.",
+          "selectedLabel": "Correzioni selezionate",
+          "applySelected": "Applica le selezionate ({n})",
+          "rejectSelected": "Respingi le selezionate ({n})",
+          "select": "Seleziona: {text}",
+          "apply": "Applica",
+          "reject": "Respingi",
+          "handled": "Segna come gestita",
+          "reattach": "Ricollega",
+          "requestOfCall": "Richiesta della chiamata",
+          "reattachHere": "Ricollega qui",
+          "close": "Chiudi",
+          "applied": "{n} applicata. | {n} applicate.",
+          "rejected": "{n} respinta. | {n} respinte.",
+          "failedN": "{n} non riuscita. | {n} non riuscite.",
+          "change": "{field}: {from} → {to}",
+          "wrong": "{field}: {from} è sbagliato, da rivedere",
+          "right": "{field}: {from} confermato",
+          "fact": "{field} segnalato come sbagliato"
+        },
+        "mine": {
+          "title": "Le mie proposte",
+          "empty": "Ancora nessuna proposta."
+        },
+        "facts": {
+          "no_conversation": "Nessuna conversazione",
+          "managed_call": "Gestita dall'assistente",
+          "skill_errors": "Errori delle skill",
+          "unkept": "Promesse non mantenute"
         }
       }
     },

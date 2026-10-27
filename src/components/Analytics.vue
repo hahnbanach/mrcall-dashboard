@@ -262,6 +262,9 @@
         @names="rememberNames"
         @error="handleApiError"
       />
+      <!-- The reader's own proposals on the calls' judgements: of this business, or of the reseller's scope (brief
+           docs/briefs/2026-10-27-classification-feedback.md, scope 9) -->
+      <MyProposals v-if="(businessId && !businessMissing) || (showScopePage && roleReady)" :business-id="businessId || null" />
 
       </template>
 
@@ -294,6 +297,7 @@ import AnalyticsApi from "@/utils/Analytics";
 import CallInsights from "@/utils/CallInsights";
 import Classifications from "@/utils/Classifications";
 import UndoBar from "@/components/feedback/UndoBar.vue";
+import MyProposals from "@/components/feedback/MyProposals.vue";
 import businessUtils from "@/utils/Business";
 import OwnerSelector from "@/components/reseller/OwnerSelector.vue";
 import CallOutcomes from "@/components/analytics/CallOutcomes.vue";
@@ -310,7 +314,7 @@ import InsightsReports from "@/utils/InsightsReports";
 const TABS = ["overview", "reports", "jobs"];
 
 export default {
-  components: { OwnerSelector, CallOutcomes, CallTopics, CallQuality, AssistantsToReview, RequestCategories, ReportsTab, JobsTab, InsightsRequestDialog, AnalyticsFilterBar, UndoBar },
+  components: { OwnerSelector, CallOutcomes, CallTopics, CallQuality, AssistantsToReview, RequestCategories, ReportsTab, JobsTab, InsightsRequestDialog, AnalyticsFilterBar, UndoBar, MyProposals },
   setup() {
     const store = useStore();
     const toast = useToast();

@@ -2584,6 +2584,39 @@
           "call": "Oproep openen",
           "requestsOf": "Verzoeken van {category}",
           "noRequests": "Geen verzoek in deze periode."
+        },
+        "queue": {
+          "title": "Te beoordelen correcties",
+          "purpose": "Voorstellen, correcties waarvan het verzoek niet meer bestaat, als fout gemarkeerde waarden en gemelde feiten, gegroepeerd per categorie en bedrijf, eerst de groepen die de meeste oproepen raken.",
+          "empty": "Niets te beoordelen.",
+          "selectedLabel": "Geselecteerde correcties",
+          "applySelected": "Selectie toepassen ({n})",
+          "rejectSelected": "Selectie afwijzen ({n})",
+          "select": "Selecteren: {text}",
+          "apply": "Toepassen",
+          "reject": "Afwijzen",
+          "handled": "Als afgehandeld markeren",
+          "reattach": "Opnieuw koppelen",
+          "requestOfCall": "Verzoek van de oproep",
+          "reattachHere": "Hier koppelen",
+          "close": "Sluiten",
+          "applied": "{n} toegepast. | {n} toegepast.",
+          "rejected": "{n} afgewezen. | {n} afgewezen.",
+          "failedN": "{n} mislukt. | {n} mislukt.",
+          "change": "{field}: {from} → {to}",
+          "wrong": "{field}: {from} is fout, te beoordelen",
+          "right": "{field}: {from} bevestigd",
+          "fact": "{field} als fout gemeld"
+        },
+        "mine": {
+          "title": "Mijn voorstellen",
+          "empty": "Nog geen voorstellen."
+        },
+        "facts": {
+          "no_conversation": "Geen gesprek",
+          "managed_call": "Afgehandeld door de assistent",
+          "skill_errors": "Skillfouten",
+          "unkept": "Niet nagekomen toezeggingen"
         }
       }
     },

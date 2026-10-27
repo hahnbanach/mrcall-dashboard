@@ -103,6 +103,7 @@ import CallInsights from "@/utils/CallInsights";
 import UndoGesture from "@/utils/UndoGesture";
 import JudgementChip from "@/components/feedback/JudgementChip.vue";
 import JudgementHistory from "@/components/feedback/JudgementHistory.vue";
+import { judgementLabels } from "@/components/feedback/labels";
 import { isSessionEnded } from "@/firebase/session";
 
 // The configured categories, read once per language for the page (StarChat answers 404 until it serves the list the
@@ -163,6 +164,9 @@ export default {
     };
   },
   computed: {
+    labels() {
+      return judgementLabels(this.$t, this.categories, this.$i18n.locale);
+    },
     role() {
       return this.$store.state.role || "owner";
     },
@@ -266,25 +270,19 @@ export default {
       else this.load().then(open);
     },
     fieldLabel(field) {
-      if (field === "resolution" || field === "message") return this.$t("components.callInsights.dimensions." + field);
-      return this.$t("components.callInsights.feedback.fields." + field);
+      return this.labels.field(field);
     },
     valueLabel(field, value) {
-      if (value === null || value === undefined) return this.$t("components.callInsights.feedback.unset");
-      if (field === "resolution") return this.$t("components.callInsights.resolution." + value);
-      if (field === "message") return this.$t("components.callInsights.message." + value);
-      if (field === "outcome") return this.$t("components.callInsights.feedback.outcome." + value);
-      const c = (this.categories || []).find((x) => x.key === value);
-      return c ? c.label : this.$t("components.callInsights.feedback.otherCategory");
+      return this.labels.value(field, value);
     },
     stateLabel(state) {
       return state.kind && state.kind !== "model" ? this.$t("components.callInsights.feedback.state." + state.kind) : null;
     },
     who(entry) {
-      return (entry && entry.who) || this.$t("components.callInsights.feedback.who." + ((entry && entry.role) || "unknown"));
+      return this.labels.who(entry);
     },
     when(ms) {
-      return ms ? new Date(ms).toLocaleString(this.$i18n.locale, { dateStyle: "medium", timeStyle: "short" }) : "";
+      return this.labels.when(ms);
     },
     detail(field, state) {
       const c = state.correction;

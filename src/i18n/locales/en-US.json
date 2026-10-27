@@ -2589,6 +2589,39 @@
           "call": "Open the call",
           "requestsOf": "Requests of {category}",
           "noRequests": "No request in this period."
+        },
+        "queue": {
+          "title": "Corrections to review",
+          "purpose": "Proposals, corrections whose request is gone, values marked wrong and facts reported, grouped by category and business, the groups that move the most calls first.",
+          "empty": "Nothing to review.",
+          "selectedLabel": "Selected corrections",
+          "applySelected": "Apply the selected ({n})",
+          "rejectSelected": "Reject the selected ({n})",
+          "select": "Select: {text}",
+          "apply": "Apply",
+          "reject": "Reject",
+          "handled": "Mark as handled",
+          "reattach": "Re-attach",
+          "requestOfCall": "Request of the call",
+          "reattachHere": "Re-attach here",
+          "close": "Close",
+          "applied": "{n} applied. | {n} applied.",
+          "rejected": "{n} rejected. | {n} rejected.",
+          "failedN": "{n} failed. | {n} failed.",
+          "change": "{field}: {from} → {to}",
+          "wrong": "{field}: {from} is wrong, to review",
+          "right": "{field}: {from} confirmed",
+          "fact": "{field} reported wrong"
+        },
+        "mine": {
+          "title": "My proposals",
+          "empty": "No proposal yet."
+        },
+        "facts": {
+          "no_conversation": "No conversation",
+          "managed_call": "Managed by the assistant",
+          "skill_errors": "Skill errors",
+          "unkept": "Promises not kept"
         }
       }
     },

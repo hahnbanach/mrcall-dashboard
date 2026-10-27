@@ -2586,6 +2586,39 @@
           "call": "Ouvrir l'appel",
           "requestsOf": "Demandes de {category}",
           "noRequests": "Aucune demande sur cette période."
+        },
+        "queue": {
+          "title": "Corrections à revoir",
+          "purpose": "Propositions, corrections dont la demande n'existe plus, valeurs signalées fausses et faits signalés, groupés par catégorie et entreprise, d'abord les groupes qui déplacent le plus d'appels.",
+          "empty": "Rien à revoir.",
+          "selectedLabel": "Corrections sélectionnées",
+          "applySelected": "Appliquer la sélection ({n})",
+          "rejectSelected": "Refuser la sélection ({n})",
+          "select": "Sélectionner : {text}",
+          "apply": "Appliquer",
+          "reject": "Refuser",
+          "handled": "Marquer comme traité",
+          "reattach": "Rattacher",
+          "requestOfCall": "Demande de l'appel",
+          "reattachHere": "Rattacher ici",
+          "close": "Fermer",
+          "applied": "{n} appliquée. | {n} appliquées.",
+          "rejected": "{n} refusée. | {n} refusées.",
+          "failedN": "{n} en échec. | {n} en échec.",
+          "change": "{field} : {from} → {to}",
+          "wrong": "{field} : {from} est faux, à revoir",
+          "right": "{field} : {from} confirmé",
+          "fact": "{field} signalé faux"
+        },
+        "mine": {
+          "title": "Mes propositions",
+          "empty": "Aucune proposition pour l'instant."
+        },
+        "facts": {
+          "no_conversation": "Sans conversation",
+          "managed_call": "Géré par l'assistant",
+          "skill_errors": "Erreurs des skills",
+          "unkept": "Promesses non tenues"
         }
       }
     },

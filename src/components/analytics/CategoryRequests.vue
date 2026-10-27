@@ -90,6 +90,7 @@ import { createSelection } from "@/utils/Selection";
 import PagedTable from "@/components/analytics/PagedTable.vue";
 import JudgementChip from "@/components/feedback/JudgementChip.vue";
 import BulkBar from "@/components/feedback/BulkBar.vue";
+import { judgementLabels } from "@/components/feedback/labels";
 import { isSessionEnded } from "@/firebase/session";
 
 /**
@@ -167,12 +168,10 @@ export default {
       return CallInsights.businessLabel(r.name, r.businessId);
     },
     outcomeLabel(v) {
-      return v ? this.$t("components.callInsights.feedback.outcome." + v) : this.$t("components.callInsights.feedback.unset");
+      return judgementLabels(this.$t, this.categories, this.$i18n.locale).value("outcome", v);
     },
     categoryLabel(v) {
-      if (!v) return this.$t("components.callInsights.feedback.unset");
-      const c = (this.categories || []).find((x) => x.key === v);
-      return c ? c.label : this.$t("components.callInsights.feedback.otherCategory");
+      return judgementLabels(this.$t, this.categories, this.$i18n.locale).value("category", v);
     },
     valueEntries(field) {
       return Classifications.valuesOf(field, this.categories).map((value) => ({

@@ -2584,6 +2584,39 @@
           "call": "Öppna samtalet",
           "requestsOf": "Begäranden för {category}",
           "noRequests": "Ingen begäran under perioden."
+        },
+        "queue": {
+          "title": "Korrigeringar att granska",
+          "purpose": "Förslag, korrigeringar vars begäran inte längre finns, värden markerade som fel och rapporterade fakta, grupperade per kategori och företag, först de grupper som påverkar flest samtal.",
+          "empty": "Inget att granska.",
+          "selectedLabel": "Valda korrigeringar",
+          "applySelected": "Tillämpa de valda ({n})",
+          "rejectSelected": "Avvisa de valda ({n})",
+          "select": "Välj: {text}",
+          "apply": "Tillämpa",
+          "reject": "Avvisa",
+          "handled": "Markera som hanterad",
+          "reattach": "Koppla igen",
+          "requestOfCall": "Samtalets begäran",
+          "reattachHere": "Koppla här",
+          "close": "Stäng",
+          "applied": "{n} tillämpad. | {n} tillämpade.",
+          "rejected": "{n} avvisad. | {n} avvisade.",
+          "failedN": "{n} misslyckades. | {n} misslyckades.",
+          "change": "{field}: {from} → {to}",
+          "wrong": "{field}: {from} är fel, att granska",
+          "right": "{field}: {from} bekräftad",
+          "fact": "{field} rapporterad som fel"
+        },
+        "mine": {
+          "title": "Mina förslag",
+          "empty": "Inga förslag än."
+        },
+        "facts": {
+          "no_conversation": "Inget samtal",
+          "managed_call": "Hanterat av assistenten",
+          "skill_errors": "Skillfel",
+          "unkept": "Löften som inte hölls"
         }
       }
     },

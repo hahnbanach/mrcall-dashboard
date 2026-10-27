@@ -1,0 +1,132 @@
+<template>
+  <section v-if="page.status !== 'absent'" class="analytics-section call-insights-section my-proposals" aria-labelledby="my-proposals-title">
+    <h3 id="my-proposals-title" class="section-title">{{ $t("components.callInsights.feedback.mine.title") }}</h3>
+    <InsightsState
+      :status="page.status"
+      :empty="page.status === 'ok' && signals.length === 0"
+      :empty-text="$t('components.callInsights.feedback.mine.empty')"
+      :keep-content="page.status === 'loading' && signals.length > 0"
+      @retry="page.retry()"
+    >
+      <ul class="my-proposals-list">
+        <li v-for="s in signals" :key="s.feedbackId" class="my-proposal">
+          <p class="my-proposal-what">{{ labels.signal(s) }}</p>
+          <p v-if="s.requestText" class="my-proposal-text">{{ s.requestText }}</p>
+          <p class="my-proposal-meta">
+            <span class="my-proposal-state">{{ stateLabel(s) }}</span> · {{ labels.when(s.createdAt) }} ·
+            <router-link :to="{ path: '/conversations', query: { id: s.businessId, conversation: s.conversationId } }">{{ $t("components.callInsights.feedback.categories.call") }}</router-link>
+          </p>
+        </li>
+      </ul>
+      <nav v-if="page.total > page.size" class="my-proposals-pager" :aria-label="$t('components.callInsights.pager.label', { name: $t('components.callInsights.feedback.mine.title') })">
+        <span>{{ $t("components.callInsights.pager.range", { from: page.offset + 1, to: page.offset + page.items.length, total: page.total }) }}</span>
+        <Button type="button" size="small" text icon="pi pi-angle-left" :disabled="page.offset === 0" :aria-label="$t('components.callInsights.pager.previous')" @click="page.goTo(page.offset - page.size)" />
+        <Button type="button" size="small" text icon="pi pi-angle-right" :disabled="page.offset + page.size >= page.total" :aria-label="$t('components.callInsights.pager.next')" @click="page.goTo(page.offset + page.size)" />
+      </nav>
+    </InsightsState>
+  </section>
+</template>
+
+<script>
+import CallInsights from "@/utils/CallInsights";
+import Classifications from "@/utils/Classifications";
+import InsightsState from "@/components/analytics/InsightsState.vue";
+import { judgementLabels } from "@/components/feedback/labels";
+
+// the states of the reader's own signals: waiting, applied, rejected, a fact report handled
+const STATUSES = "proposed,applied,rejected,closed";
+
+/**
+ * "Le mie proposte" (brief docs/briefs/2026-10-27-classification-feedback.md, scope 9; StarChat's brief, decision 9):
+ * the reader's own proposals and where they stand ("Proposta inviata", "Applicata", "Respinta", a fact report handled),
+ * of one business (`businessId`, an owner's page) or of every business the reader reaches (a reseller's scope page, the
+ * admin page), as StarChat's queue answers them grouped, paged over groups (`GET insights/feedback?mine=true`).
+ */
+export default {
+  components: { InsightsState },
+  props: {
+    businessId: { type: String, default: null },
+  },
+  data() {
+    const user = () => this.$store.state.user;
+    return {
+      page: CallInsights.serverPage(({ offset, size, asOf }) =>
+        Classifications.queue(user(), { mine: true, businessId: this.businessId || undefined, status: STATUSES, from: offset, size, asOf }), {
+        read: (a) => ({ items: a && Array.isArray(a.groups) ? a.groups : [], total: a && typeof a.total === "number" ? a.total : 0, asOf: a && a.asOf }),
+      }),
+      categories: null,
+    };
+  },
+  computed: {
+    labels() {
+      return judgementLabels(this.$t, this.categories, this.$i18n.locale);
+    },
+    signals() {
+      return this.page.items.flatMap((g) => (Array.isArray(g.signals) ? g.signals : []));
+    },
+  },
+  watch: {
+    businessId() { this.page.refresh(); },
+  },
+  mounted() {
+    this.page.refresh();
+    Classifications.categories(this.$store.state.user, this.$i18n.locale)
+      .then((a) => { this.categories = a && Array.isArray(a.items) ? a.items : null; })
+      .catch(() => { this.categories = null; });
+  },
+  methods: {
+    stateLabel(s) {
+      const key = s.status === "proposed" ? "proposed" : s.status === "applied" ? "applied" : s.status === "rejected" ? "rejected" : "closed";
+      return key === "closed" ? this.$t("components.callInsights.feedback.history.status.closed") : this.$t("components.callInsights.feedback.state." + key);
+    },
+  },
+};
+</script>
+
+<style lang="less" scoped>
+@import "../../assets/style/colors";
+
+.my-proposals-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.my-proposal {
+  padding: 8px 10px;
+  border: 1px solid @mrcall_borders;
+  border-radius: 10px;
+
+  p {
+    margin: 0;
+  }
+}
+
+.my-proposal-what {
+  font-weight: 600;
+}
+
+.my-proposal-text {
+  font-style: italic;
+}
+
+.my-proposal-meta {
+  font-size: 13px;
+  color: @mrcall_grey_text2;
+}
+
+.my-proposal-state {
+  font-weight: 700;
+  color: @mrcall_grey_text;
+}
+
+.my-proposals-pager {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+</style>

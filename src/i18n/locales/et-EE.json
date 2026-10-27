@@ -2584,6 +2584,39 @@
           "call": "Ava kõne",
           "requestsOf": "Kategooria {category} päringud",
           "noRequests": "Sel perioodil päringuid pole."
+        },
+        "queue": {
+          "title": "Ülevaatamist vajavad parandused",
+          "purpose": "Ettepanekud, parandused, mille päringut enam pole, valeks märgitud väärtused ja teatatud faktid, rühmitatud kategooria ja ettevõtte kaupa, esmalt rühmad, mis puudutavad kõige rohkem kõnesid.",
+          "empty": "Pole midagi üle vaadata.",
+          "selectedLabel": "Valitud parandused",
+          "applySelected": "Rakenda valitud ({n})",
+          "rejectSelected": "Lükka valitud tagasi ({n})",
+          "select": "Vali: {text}",
+          "apply": "Rakenda",
+          "reject": "Lükka tagasi",
+          "handled": "Märgi käsitletuks",
+          "reattach": "Seo uuesti",
+          "requestOfCall": "Kõne päring",
+          "reattachHere": "Seo siia",
+          "close": "Sulge",
+          "applied": "{n} rakendatud. | {n} rakendatud.",
+          "rejected": "{n} tagasi lükatud. | {n} tagasi lükatud.",
+          "failedN": "{n} ebaõnnestus. | {n} ebaõnnestus.",
+          "change": "{field}: {from} → {to}",
+          "wrong": "{field}: {from} on vale, ülevaatamiseks",
+          "right": "{field}: {from} kinnitatud",
+          "fact": "{field} teatatud valeks"
+        },
+        "mine": {
+          "title": "Minu ettepanekud",
+          "empty": "Ettepanekuid veel pole."
+        },
+        "facts": {
+          "no_conversation": "Vestlust pole",
+          "managed_call": "Assistent käsitles",
+          "skill_errors": "Skillide vead",
+          "unkept": "Pidamata lubadused"
         }
       }
     },

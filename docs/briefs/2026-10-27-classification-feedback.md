@@ -231,7 +231,8 @@ dashboard behind on some of them. Where this amendment differs from the sections
    summary's raw values for them, which no route serves to the dashboard.
 3. **The queue is grouped by StarChat.** `GET insights/feedback` answers groups (`category`, `businessId`,
    `businessName`, `calls`, `items`, `signals`) ordered by the calls each moves and paged over groups, beside the flat
-   `items`. The dashboard draws the groups as served. Apply and reject stay one call per signal (no bulk route).
+   `items`; a group carries its newest 50 signals (`items` counts all of them). The dashboard draws the groups as
+   served. Apply and reject stay one call per signal (no bulk route).
 4. **Caller numbers are masked by StarChat** in a non-owner's list hits (`ConversationAccess.reduced`) and in the
    caller rules' answers (a rule on a call to anyone but the call's owner, the rules' numbers to anyone but the
    business's owner); an opened call carries its full number to whoever opens it (the opening is recorded). The offer

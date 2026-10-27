@@ -287,6 +287,10 @@
         @names="rememberNames"
         @error="handleApiError"
       />
+      <!-- The corrections waiting for an admin, and the admin's own proposals (brief
+           docs/briefs/2026-10-27-classification-feedback.md, scope 9) -->
+      <FeedbackQueue v-if="isAdminRole && roleReady" />
+      <MyProposals v-if="roleReady" />
       <ConfigSuggestions
         v-if="isAdminRole"
         :ready="roleReady"
@@ -323,6 +327,8 @@ import TemplatesApi from "@/utils/Templates";
 import CallInsights from "@/utils/CallInsights";
 import Classifications from "@/utils/Classifications";
 import UndoBar from "@/components/feedback/UndoBar.vue";
+import FeedbackQueue from "@/components/feedback/FeedbackQueue.vue";
+import MyProposals from "@/components/feedback/MyProposals.vue";
 import { scrollBelowBar } from "@/utils/scrollBelowBar";
 import businessUtils from "@/utils/Business";
 import CallOutcomes from "@/components/analytics/CallOutcomes.vue";
@@ -335,7 +341,7 @@ import BusinessAutocomplete from "@/components/analytics/BusinessAutocomplete.vu
 import AnalyticsFilterBar from "@/components/analytics/AnalyticsFilterBar.vue";
 
 export default {
-  components: { CallOutcomes, CallTopics, CallQuality, AssistantsToReview, RequestCategories, ConfigSuggestions, BusinessAutocomplete, AnalyticsFilterBar, UndoBar },
+  components: { CallOutcomes, CallTopics, CallQuality, AssistantsToReview, RequestCategories, ConfigSuggestions, BusinessAutocomplete, AnalyticsFilterBar, UndoBar, FeedbackQueue, MyProposals },
   setup() {
     const store = useStore();
     const toast = useToast();

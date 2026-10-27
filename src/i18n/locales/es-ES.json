@@ -2598,6 +2598,39 @@
           "call": "Abrir la llamada",
           "requestsOf": "Solicitudes de {category}",
           "noRequests": "Ninguna solicitud en este periodo."
+        },
+        "queue": {
+          "title": "Correcciones por revisar",
+          "purpose": "Propuestas, correcciones cuya solicitud ya no existe, valores marcados como incorrectos y hechos señalados, agrupados por categoría y negocio, primero los grupos que mueven más llamadas.",
+          "empty": "Nada que revisar.",
+          "selectedLabel": "Correcciones seleccionadas",
+          "applySelected": "Aplicar las seleccionadas ({n})",
+          "rejectSelected": "Rechazar las seleccionadas ({n})",
+          "select": "Seleccionar: {text}",
+          "apply": "Aplicar",
+          "reject": "Rechazar",
+          "handled": "Marcar como gestionada",
+          "reattach": "Volver a vincular",
+          "requestOfCall": "Solicitud de la llamada",
+          "reattachHere": "Vincular aquí",
+          "close": "Cerrar",
+          "applied": "{n} aplicada. | {n} aplicadas.",
+          "rejected": "{n} rechazada. | {n} rechazadas.",
+          "failedN": "{n} fallida. | {n} fallidas.",
+          "change": "{field}: {from} → {to}",
+          "wrong": "{field}: {from} es incorrecto, por revisar",
+          "right": "{field}: {from} confirmado",
+          "fact": "{field} señalado como incorrecto"
+        },
+        "mine": {
+          "title": "Mis propuestas",
+          "empty": "Todavía no hay propuestas."
+        },
+        "facts": {
+          "no_conversation": "Sin conversación",
+          "managed_call": "Gestionada por el asistente",
+          "skill_errors": "Errores de skills",
+          "unkept": "Promesas no cumplidas"
         }
       }
     },

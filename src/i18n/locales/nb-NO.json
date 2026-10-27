@@ -2584,6 +2584,39 @@
           "call": "Åpne samtalen",
           "requestsOf": "Forespørsler i {category}",
           "noRequests": "Ingen forespørsel i perioden."
+        },
+        "queue": {
+          "title": "Rettelser til gjennomgang",
+          "purpose": "Forslag, rettelser der forespørselen ikke lenger finnes, verdier markert som feil og rapporterte fakta, gruppert etter kategori og bedrift, først gruppene som flytter flest samtaler.",
+          "empty": "Ingenting å gå gjennom.",
+          "selectedLabel": "Valgte rettelser",
+          "applySelected": "Bruk de valgte ({n})",
+          "rejectSelected": "Avvis de valgte ({n})",
+          "select": "Velg: {text}",
+          "apply": "Bruk",
+          "reject": "Avvis",
+          "handled": "Merk som håndtert",
+          "reattach": "Koble på nytt",
+          "requestOfCall": "Samtalens forespørsel",
+          "reattachHere": "Koble her",
+          "close": "Lukk",
+          "applied": "{n} brukt. | {n} brukt.",
+          "rejected": "{n} avvist. | {n} avvist.",
+          "failedN": "{n} mislyktes. | {n} mislyktes.",
+          "change": "{field}: {from} → {to}",
+          "wrong": "{field}: {from} er feil, til gjennomgang",
+          "right": "{field}: {from} bekreftet",
+          "fact": "{field} rapportert som feil"
+        },
+        "mine": {
+          "title": "Mine forslag",
+          "empty": "Ingen forslag ennå."
+        },
+        "facts": {
+          "no_conversation": "Ingen samtale",
+          "managed_call": "Håndtert av assistenten",
+          "skill_errors": "Skill-feil",
+          "unkept": "Løfter som ikke ble holdt"
         }
       }
     },
