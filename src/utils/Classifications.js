@@ -255,8 +255,12 @@ const COUNT_KINDS = {
  * The conversations list of exactly the calls a count counts: the business, the count's window (`{from, to}`, epoch
  * milliseconds, the analytics' `timestampGte`/`timestampLte`), the analytics' scope and the count's filter. Throws on a
  * kind or a key the table does not know, so that no count links to a list that is not its own.
+ *
+ * `report`: the count is frozen into a generated report, never rescoped on read (StarChat's brief, amendment of
+ * 2026-10-27): its list asks StarChat how many of the counted calls it leaves out for the reader (`leftOut=true`,
+ * StarChat dc4d7f7f6), and says so.
  */
-function countLink(businessId, window, kind, key) {
+function countLink(businessId, window, kind, key, { report = false } = {}) {
     const of = COUNT_KINDS[kind];
     if (!of) throw new Error("Classifications.countLink: no filter for " + kind);
     const filter = of(key);
@@ -266,7 +270,9 @@ function countLink(businessId, window, kind, key) {
     if (w.from != null) query.from = String(w.from);
     if (w.to != null) query.to = String(w.to);
     query.counted = "true";
-    return { path: "/conversations", query: { ...query, ...filter } };
+    const link = { path: "/conversations", query: { ...query, ...filter } };
+    if (report) link.query.leftOut = "true";
+    return link;
 }
 
 /**

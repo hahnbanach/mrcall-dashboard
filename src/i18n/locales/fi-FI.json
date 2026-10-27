@@ -2533,7 +2533,8 @@
             "noConversation": "Ei keskustelua",
             "corrected": "Korjattu"
           },
-          "counted": "Puhelut: kuten tilastot ne laskevat, arkistoidut mukaan lukien"
+          "counted": "Puhelut: kuten tilastot ne laskevat, arkistoidut mukaan lukien",
+          "leftOut": "{n} puhelu ei näy käyttöoikeuksillasi | {n} puhelua ei näy käyttöoikeuksillasi"
         },
         "bulk": {
           "label": "Valitut puhelut",

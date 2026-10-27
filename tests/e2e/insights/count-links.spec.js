@@ -84,7 +84,8 @@ test.describe('every count opens its calls', () => {
     await mockInsights(page, { report, role: 'reseller' })
     await mockClassifications(page, { role: 'reseller' })
     await page.goto(`/analytics/report?id=${BUSINESS_ID}&start=${REPORT.periodStart}&requestId=job-req-1`)
-    const window = { from: String(REPORT.periodStart), to: String(REPORT.periodEnd - 1) }
+    // a report's counts are frozen: their lists ask how many calls they leave out for the reader (StarChat dc4d7f7f6)
+    const window = { from: String(REPORT.periodStart), to: String(REPORT.periodEnd - 1), leftOut: 'true' }
     expect(await linkParams(page, 'Open the 50 calls: Resolved in the call')).toMatchObject({ ...window, counted: 'true', outcomeLine: 'resolved' })
     expect(await linkParams(page, 'Open the 31 calls: Booking')).toMatchObject({ ...window, booked: 'true' })
     expect(await linkParams(page, 'Open the 70 calls: Bookings')).toMatchObject({ ...window, topicLabel: ['booking', 'table for four'] })

@@ -56,6 +56,14 @@ test.describe('the conversations list: a count\'s filters and corrections in bul
     expect(searches.filter((s) => !s.id).pop().requestCategory).toBe('prices')
   })
 
+  test('a report count\'s list says how many of its calls the reader cannot open (StarChat dc4d7f7f6)', async ({ authenticatedPage: page }) => {
+    const searches = await mockConversations(page, calls, { leftOut: 3 })
+    await mockClassifications(page)
+    await page.goto(`/conversations?id=${BUSINESS_ID}&from=1000&to=2000&counted=true&gap=missing_info&leftOut=true`)
+    await expect(page.getByText('3 calls not visible with your access')).toBeVisible({ timeout: 15000 })
+    expect(searches.filter((s) => !s.id).pop()).toMatchObject({ __leftOut: true, gap: 'missing_info' })
+  })
+
   test('a value the list does not know is not applied, and said', async ({ authenticatedPage: page }) => {
     const searches = await mockConversations(page, calls)
     await mockClassifications(page)

@@ -2533,7 +2533,8 @@
             "noConversation": "Ingen samtale",
             "corrected": "Rettet"
           },
-          "counted": "Opkald: som statistikken tæller dem, arkiverede medregnet"
+          "counted": "Opkald: som statistikken tæller dem, arkiverede medregnet",
+          "leftOut": "{n} opkald er ikke synligt med din adgang | {n} opkald er ikke synlige med din adgang"
         },
         "bulk": {
           "label": "Valgte opkald",

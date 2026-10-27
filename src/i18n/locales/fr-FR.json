@@ -2535,7 +2535,8 @@
             "noConversation": "Sans conversation",
             "corrected": "Corrigé"
           },
-          "counted": "Appels : comme les comptent les statistiques, archivés compris"
+          "counted": "Appels : comme les comptent les statistiques, archivés compris",
+          "leftOut": "{n} appel non visible avec votre accès | {n} appels non visibles avec votre accès"
         },
         "bulk": {
           "label": "Appels sélectionnés",

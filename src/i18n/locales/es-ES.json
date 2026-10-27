@@ -2547,7 +2547,8 @@
             "noConversation": "Sin conversación",
             "corrected": "Corregida"
           },
-          "counted": "Llamadas: como las cuentan las estadísticas, archivadas incluidas"
+          "counted": "Llamadas: como las cuentan las estadísticas, archivadas incluidas",
+          "leftOut": "{n} llamada no visible con tu acceso | {n} llamadas no visibles con tu acceso"
         },
         "bulk": {
           "label": "Llamadas seleccionadas",

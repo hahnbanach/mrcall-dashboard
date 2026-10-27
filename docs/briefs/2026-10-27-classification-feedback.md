@@ -238,8 +238,10 @@ dashboard behind on some of them. Where this amendment differs from the sections
    to delete a rule stays the business's owner's: a rule judges every call of a number for the whole business, a
    decision for whoever owns its calls.
 5. **A report's counts stay as generated** (`bc67b6c8b`); the list a report count opens shows the calls the reader can
-   open now, and is to say how many it leaves out ("N non visibili con il tuo accesso") from a server field StarChat
-   has not named yet. Until it is named that line is not drawn; it goes back to the lead as pending.
+   open now and says how many it leaves out ("N non visibili con il tuo accesso"): the link carries `leftOut=true`, the
+   list asks the conversation search with it, and StarChat answers `leftOut` beside the hits (`dc4d7f7f6`), absent for
+   a search by id, without a business or outside the reader's scope. A live count (Panoramica) does not ask it: it is
+   scoped as opening is.
 6. **A count's list keeps archived calls.** The statistics count finalised calls that are not deleted, archived or not
    (StarChat's `counted`); the list of a count drops the inbox's narrowing, and says so in a chip that undoes it.
 7. **The chips are drawn wherever a call is opened on purpose**: the conversations page and the call a restaurant

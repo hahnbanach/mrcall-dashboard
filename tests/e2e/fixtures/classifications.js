@@ -254,11 +254,16 @@ async function mockClassifications (page, options = {}) {
 }
 
 /** The conversation search, answering `docs` for a list and the doc with the asked id for a read by id. */
-async function mockConversations (page, docs, { byId } = {}) {
+async function mockConversations (page, docs, { byId, leftOut } = {}) {
   const searches = []
   await page.route('**/customer/conversation/search*', (route) => {
     const body = route.request().postDataJSON() || {}
-    searches.push(body)
+    // the query's `leftOut=true` (a report count's link, StarChat dc4d7f7f6) recorded beside the body
+    const asksLeftOut = new URL(route.request().url()).searchParams.get('leftOut') === 'true'
+    searches.push(asksLeftOut ? { ...body, __leftOut: true } : body)
+    if (asksLeftOut && !body.id && leftOut !== undefined) {
+      return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ...searchAnswer(docs), leftOut }) })
+    }
     if (body.id) {
       const found = (byId || docs).find((d) => d.id === body.id)
       return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(searchAnswer(found ? [found] : [])) })

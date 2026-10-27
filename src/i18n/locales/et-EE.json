@@ -2533,7 +2533,8 @@
             "noConversation": "Vestlust pole",
             "corrected": "Parandatud"
           },
-          "counted": "Kõned: nagu statistika neid loeb, arhiveeritud kaasa arvatud"
+          "counted": "Kõned: nagu statistika neid loeb, arhiveeritud kaasa arvatud",
+          "leftOut": "{n} kõne pole sinu juurdepääsuga nähtav | {n} kõnet pole sinu juurdepääsuga nähtavad"
         },
         "bulk": {
           "label": "Valitud kõned",

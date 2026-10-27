@@ -2538,7 +2538,8 @@
             "noConversation": "No conversation",
             "corrected": "Corrected"
           },
-          "counted": "Calls: as the statistics count them, archived included"
+          "counted": "Calls: as the statistics count them, archived included",
+          "leftOut": "{n} call not visible with your access | {n} calls not visible with your access"
         },
         "bulk": {
           "label": "Selected calls",

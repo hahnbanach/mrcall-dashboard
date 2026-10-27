@@ -2533,7 +2533,8 @@
             "noConversation": "Inget samtal",
             "corrected": "Korrigerad"
           },
-          "counted": "Samtal: som statistiken räknar dem, arkiverade inräknade"
+          "counted": "Samtal: som statistiken räknar dem, arkiverade inräknade",
+          "leftOut": "{n} samtal syns inte med din behörighet | {n} samtal syns inte med din behörighet"
         },
         "bulk": {
           "label": "Valda samtal",

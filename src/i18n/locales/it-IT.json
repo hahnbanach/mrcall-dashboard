@@ -2539,7 +2539,8 @@
             "noConversation": "Nessuna conversazione",
             "corrected": "Corretta"
           },
-          "counted": "Chiamate: come le contano le statistiche, archiviate comprese"
+          "counted": "Chiamate: come le contano le statistiche, archiviate comprese",
+          "leftOut": "{n} chiamata non visibile con il tuo accesso | {n} chiamate non visibili con il tuo accesso"
         },
         "bulk": {
           "label": "Chiamate selezionate",

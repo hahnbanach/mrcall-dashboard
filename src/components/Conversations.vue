@@ -70,6 +70,7 @@
             </button>
           </span>
           <p v-if="addressUnknown.length > 0" class="address-unknown" role="status">{{ $t("components.callInsights.feedback.filters.unknown") }}</p>
+          <p v-if="leftOut > 0" class="address-unknown" role="status">{{ $t("components.callInsights.feedback.filters.leftOut", { n: leftOut }, leftOut) }}</p>
         </div>
       </div>
 
@@ -710,6 +711,9 @@ export default {
       addressFilters: address.filters,
       addressUnknown: address.unknown,
       counted: address.counted,
+      // a report count's list (`leftOut=true`): how many of its calls the reader cannot open, as StarChat counts them
+      asksLeftOut: router.currentRoute.value.query.leftOut === "true",
+      leftOut: 0,
       categoryLabels: null,
       // the calls selected for a gesture, by id (`createSelection`: a long-press mode on a narrow screen)
       selection: createSelection(),
@@ -1114,11 +1118,12 @@ export default {
       };
       // the recordings stay out of the list: CallDetailsPanel reads one when it is played
       const request = self.searchBody({ lightweight: true, from: self.first, size: self.size });
+      const leftOutQuery = self.asksLeftOut ? "&leftOut=true" : "";
       self.showProgressBar = true;
       axios
         .post(
           process.env.VUE_APP_STARCHAT_URL +
-            "/mrcall/v1/mrcall0/customer/conversation/search?enableDataMap=true",
+            "/mrcall/v1/mrcall0/customer/conversation/search?enableDataMap=true" + leftOutQuery,
           request,
           {
             headers: headers,
@@ -1126,6 +1131,7 @@ export default {
         )
         .then((response) => {
           self.queryConvResultReady = true;
+          self.leftOut = response.data && typeof response.data.leftOut === "number" ? response.data.leftOut : 0;
           const map = new Map();
           let unread = 0;
           let newest = null;

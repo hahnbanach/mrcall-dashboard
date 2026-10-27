@@ -2533,7 +2533,8 @@
             "noConversation": "Geen gesprek",
             "corrected": "Gecorrigeerd"
           },
-          "counted": "Oproepen: zoals de statistieken ze tellen, gearchiveerde inbegrepen"
+          "counted": "Oproepen: zoals de statistieken ze tellen, gearchiveerde inbegrepen",
+          "leftOut": "{n} oproep niet zichtbaar met uw toegang | {n} oproepen niet zichtbaar met uw toegang"
         },
         "bulk": {
           "label": "Geselecteerde oproepen",

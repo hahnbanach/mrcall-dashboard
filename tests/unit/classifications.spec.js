@@ -215,6 +215,11 @@ describe('the one filter table: a count, its link, and the list it opens (StarCh
     expect(link('outcomeLine', 'resolved').path).toBe('/conversations')
   })
 
+  it('a count frozen into a report asks its list how many calls it leaves out for the reader (StarChat dc4d7f7f6)', () => {
+    expect(Classifications.countLink('biz-1', window, 'gap', 'missing_info', { report: true }).query).toEqual({ ...base, gap: 'missing_info', leftOut: 'true' })
+    expect(Classifications.countLink('biz-1', window, 'gap', 'missing_info').query.leftOut).toBeUndefined()
+  })
+
   it('refuses a value outside its closed set, and a kind it does not know', () => {
     expect(() => link('outcomeLine', 'forwarded')).toThrow()
     expect(() => link('gap', 'nope')).toThrow()

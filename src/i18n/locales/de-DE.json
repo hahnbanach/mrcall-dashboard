@@ -2535,7 +2535,8 @@
             "noConversation": "Kein Gespräch",
             "corrected": "Korrigiert"
           },
-          "counted": "Anrufe: wie die Statistik sie zählt, archivierte eingeschlossen"
+          "counted": "Anrufe: wie die Statistik sie zählt, archivierte eingeschlossen",
+          "leftOut": "{n} Anruf mit Ihrem Zugang nicht sichtbar | {n} Anrufe mit Ihrem Zugang nicht sichtbar"
         },
         "bulk": {
           "label": "Ausgewählte Anrufe",

@@ -396,7 +396,7 @@ export default {
     link(kind, key) {
       if (!this.report) return null;
       try {
-        return Classifications.countLink(this.businessId, { from: this.report.periodStart, to: this.report.periodEnd - 1 }, kind, key);
+        return Classifications.countLink(this.businessId, { from: this.report.periodStart, to: this.report.periodEnd - 1 }, kind, key, { report: true });
       } catch (error) {
         console.debug("No list for this count:", kind, error.message);
         return null;
