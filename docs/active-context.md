@@ -35,8 +35,8 @@ corrections, every count opening its calls, callers' requests on request records
 access record, a non-owner's read-only call ([brief](briefs/2026-10-27-classification-feedback.md),
 [plan](execution-plans/2026-10-27-classification-feedback.md)). Verified on the repository's mocks only (vitest and
 the full Playwright run); it needs StarChat with the routes of that plan's C5, C5b, C6 and C7 and the commits named in
-the brief's amendment, and its live check comes with StarChat's C11. The category chip waits for the category list
-read the brief proposes to StarChat.
+the brief's amendments (the second one: `a012b6926`, `f87578328`, on test with StarChat's next tag), and its live check
+comes with StarChat's C11.
 
 ## Unresolved
 

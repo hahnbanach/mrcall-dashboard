@@ -82,8 +82,9 @@ API clients and business logic:
   reader's own proposal), a chip's menu, the asks of a gesture (`valueFrom` always sent, `fact_wrong` for a fact), THE
   FILTER TABLE from every count kind to its conversation-search filter (`countLink`, `searchFromQuery`), whether the
   reader owns a business (`isOwnerOf`: true, false or unknown), and the clients of StarChat's judgements, signals and
-  their undo, queues, caller rules, a category's requests, the category list (a read the brief proposes to
-  StarChat; absent today), the access record and the one-time audio link. Pinned by `tests/unit/classifications.spec.js`
+  their undo, queues, caller rules, a category's requests, the category list, the access record and the one-time
+  audio link; and how a gesture's answer becomes the call's judgements (`withCallState`, `withSignal`,
+  `withReverted`, `withDecision`, `withCurrent`). Pinned by `tests/unit/classifications.spec.js`
 - `UndoGesture.js` — the last gesture on judgements, for the page's one undo bar, and the panels to read again when a
   gesture is made or undone
 - `Selection.js` — the selection of a list's rows (a checkbox on a wide screen, a long-press mode under 600 px)
@@ -205,9 +206,10 @@ for the four dimensions lives in `src/utils/CallInsights.js`.
   call's panel, on the pages that ask for it (`with-judgements`: the conversations page, the restaurant call dialog),
   draws the resolution, the message and each request's outcome and category as `JudgementChip.vue` (a button naming
   value and state; a listbox, a bottom sheet under 600 px), with the history under a chip (`JudgementHistory.vue`);
-  an owner's call reads its judgements when opened or in view, a non-owner's only when the person opens a chip, and
-  every gesture, undo, restore and refusal reads them again. `UndoBar.vue` is the page's one undo (a live region, no
-  time limit); `BulkBar.vue` the bar of a list's selected rows. Booked and transferred carry "Report an error". The
+  an owner's call reads its judgements when opened or in view, a non-owner's only when the person opens a chip; after
+  a gesture, an undo or a restore every panel of the call takes the state the answer carries, with no read of the
+  call. `UndoBar.vue` is the page's one undo (a live region, no time limit); `BulkBar.vue` the bar of a list's
+  selected rows. One chip reports any of the call's six facts wrong. The
   words of a judgement are `labels.js`. A non-owner's page (`Classifications.isOwnerOf` on the business's owner) is
   read-only: reduced rows opened on request, no owner-only control, the recording from the one-time link.
   `FeedbackQueue.vue` ("Corrections to review", an admin's) and `MyProposals.vue` ("My proposals") draw StarChat's
