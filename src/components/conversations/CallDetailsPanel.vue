@@ -233,6 +233,9 @@ export default {
     },
     dialable() {
       const number = this.details.callerNumber || this.conversation.contactNumber || "";
+      // A non-owner's list row carries the number masked by StarChat (`ConversationAccess.maskedNumber`: three
+      // characters, "****", three): stripped to its digits it would dial somebody else. No action for it.
+      if (number.includes("*")) return null;
       const digits = number.replace(/[^+0-9]/g, "");
       return digits.length < 5 ? null : digits;
     },

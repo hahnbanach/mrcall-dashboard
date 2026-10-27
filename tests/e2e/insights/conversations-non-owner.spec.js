@@ -13,7 +13,8 @@ const { mockClassifications, mockConversations, conversation, BUSINESS_ID } = re
  * owned by the owner `test-uid-12345`; the admin and the reseller are not it.
  *
  * Seen failing, 2026-10-27, before the non-owner view existed in Conversations.vue and CallDetailsPanel.vue: every case
- * (the owner-only controls drawn; no "Open the call"; the recording read by id).
+ * (the owner-only controls drawn; no "Open the call"; the recording read by id). The masked number's dial and WhatsApp
+ * actions, found by the final review, failed on e4f77d2.
  */
 const reduced = (id, name) => ({
   id, businessId: BUSINESS_ID, startTimestamp: Date.UTC(2026, 9, 20, 9, 30), contactNumber: '+39****001', duration: 61000,
@@ -38,6 +39,8 @@ for (const role of ['admin', 'reseller']) {
       for (const name of ['Archive All', 'Delete All', 'Mark as read', 'Mark as unread', 'TSV', 'JSON']) {
         await expect(page.getByRole('button', { name, exact: true })).toHaveCount(0)
       }
+      // a masked number is never dialled: no call-back or WhatsApp action on a reduced row (P13 final review)
+      await expect(page.locator('.conversations-list').getByRole('link', { name: /Call back|WhatsApp/ })).toHaveCount(0)
       await page.waitForTimeout(1500)
       expect(searches.filter((s) => s.id)).toEqual([])
       expect(sent.filter((s) => s.path === 'classifications')).toEqual([])
