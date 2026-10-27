@@ -86,8 +86,10 @@ function chipState(judgement, history, where, role) {
     const mine = historyOf(history, where);
     const inForce = newest(mine.filter((h) => h.status === "applied"));
     const ownLatest = newest(mine.filter((h) => h.byMe && h.status !== "reverted"));
+    // a proposal of the reader still waiting is said first, whatever was decided on its older ones
+    const waiting = mine.some((h) => h.byMe && h.status === "proposed");
     let kind = "model";
-    if (ownLatest && ownLatest.status === "proposed") kind = "proposed";
+    if (waiting) kind = "proposed";
     else if (ownLatest && ownLatest.status === "rejected" && (!inForce || movedAt(ownLatest) >= movedAt(inForce))) kind = "rejected";
     else if (inForce && inForce.signal === "right") kind = "confirmed";
     else if (inForce && inForce.byMe && statusFor(where.field, inForce.signal, role) === "proposed") kind = "applied";

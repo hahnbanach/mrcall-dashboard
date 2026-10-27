@@ -11,7 +11,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
  * `countLink` (2), an admin's restore removed (1), an unknown address value applied (1, once the body was compared
  * strictly), the `valueFrom` refusal removed (1), the reader's proposal state removed (2). The three cases the R1 review
  * added (a rejection older than a later-applied correction, "right" on an unset value, ownership not yet known) and
- * `unanswered=false` failed on the reviewed module before its repair.
+ * `unanswered=false` failed on the reviewed module before its repair; the waiting proposal behind an older rejection, its
+ * second round, failed on 6bb4c92.
  */
 vi.mock('axios', () => ({ default: { get: vi.fn(), post: vi.fn(), delete: vi.fn() } }))
 const axios = (await import('axios')).default
@@ -103,6 +104,13 @@ describe('a chip\'s state, from the judgement and the call\'s history', () => {
     expect(Classifications.chipState({ model: 'prices', value: 'hours', corrected: true }, [mineRejected, othersApplied], where, 'owner').kind).toBe('corrected')
     // and the rejection stays said while it is the newer decision
     expect(Classifications.chipState({ model: 'prices', value: 'hours', corrected: true }, [{ ...mineRejected, decidedAt: 500 }, othersApplied], where, 'owner').kind).toBe('rejected')
+  })
+
+  it('a proposal of the reader still waiting is said, whatever was decided on its older ones (R1, second round)', () => {
+    const where = { field: 'category', requestId: 7 }
+    const older = entry({ field: 'category', subject: 'request', requestId: 7, status: 'rejected', createdAt: 100, decidedAt: 300 })
+    const waiting = entry({ feedbackId: 3, field: 'category', subject: 'request', requestId: 7, status: 'proposed', createdAt: 200 })
+    expect(Classifications.chipState({ model: 'prices', value: 'prices', corrected: false }, [older, waiting], where, 'owner').kind).toBe('proposed')
   })
 
   it('reads only the history of its own field and subject', () => {
