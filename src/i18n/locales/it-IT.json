@@ -2514,6 +2514,39 @@
           "delete": "Elimina la regola",
           "keep": "Mantienila",
           "deleted": "La regola è eliminata; le chiamate che aveva segnato tornano nei conteggi."
+        },
+        "readOnly": {
+          "title": "Visualizzazione in sola lettura",
+          "note": "Non sei il titolare di queste chiamate: ogni chiamata che apri viene registrata, e il titolare può vedere chi l'ha aperta.",
+          "open": "Apri la chiamata"
+        },
+        "filters": {
+          "title": "Filtri dal link",
+          "remove": "Togli il filtro {filter}",
+          "unknown": "Un filtro del link non è stato riconosciuto e non è applicato.",
+          "chip": "{name}: {value}",
+          "yes": "sì",
+          "no": "no",
+          "names": {
+            "outcomeLine": "Esito",
+            "topic": "Argomento",
+            "gap": "Domanda senza risposta",
+            "check": "Controllo",
+            "category": "Categoria della richiesta",
+            "requestOutcome": "Esito della richiesta",
+            "noConversation": "Nessuna conversazione",
+            "corrected": "Corretta"
+          }
+        },
+        "bulk": {
+          "label": "Chiamate selezionate",
+          "count": "{n} selezionata | {n} selezionate",
+          "select": "Seleziona la chiamata di {name}",
+          "changeOutcome": "Cambia esito",
+          "spam": "Segna come spam",
+          "confirm": "Conferma",
+          "clear": "Annulla la selezione",
+          "leftOut": "{n} chiamata senza esito valutato è stata esclusa. | {n} chiamate senza esito valutato sono state escluse."
         }
       }
     },

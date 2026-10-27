@@ -2513,6 +2513,39 @@
           "delete": "Delete the rule",
           "keep": "Keep it",
           "deleted": "The rule is deleted; the calls it marked are counted again."
+        },
+        "readOnly": {
+          "title": "Read-only view",
+          "note": "You are not the owner of these calls: each call you open is recorded, and its owner can see who opened it.",
+          "open": "Open the call"
+        },
+        "filters": {
+          "title": "Filters from the link",
+          "remove": "Remove the filter {filter}",
+          "unknown": "A filter in the link was not recognised and is not applied.",
+          "chip": "{name}: {value}",
+          "yes": "yes",
+          "no": "no",
+          "names": {
+            "outcomeLine": "Outcome",
+            "topic": "Topic",
+            "gap": "Unanswered question",
+            "check": "Check",
+            "category": "Request category",
+            "requestOutcome": "Request outcome",
+            "noConversation": "No conversation",
+            "corrected": "Corrected"
+          }
+        },
+        "bulk": {
+          "label": "Selected calls",
+          "count": "{n} selected",
+          "select": "Select the call of {name}",
+          "changeOutcome": "Change outcome",
+          "spam": "Mark as spam",
+          "confirm": "Confirm",
+          "clear": "Clear selection",
+          "leftOut": "{n} call without a judged outcome was left out. | {n} calls without a judged outcome were left out."
         }
       }
     },

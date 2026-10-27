@@ -16,6 +16,7 @@
             <span v-if="opened.deleted" class="opened-state">{{ $t("components.conversations.details.inTrash") }}</span>
             <span v-else-if="opened.archived" class="opened-state">{{ $t("components.conversations.details.inArchive") }}</span>
           </div>
+          <p v-if="readOnly" class="read-only-note">{{ $t("components.callInsights.feedback.readOnly.title") }}</p>
           <div class="card-header">
             <div class="contact-info">
               <span class="contact-name">{{ callerName(opened) }}</span>
@@ -47,6 +48,27 @@
         </div>
         <div v-else-if="openedState === 'missing'" class="conversation-card opened-card">
           <p class="opened-missing">{{ $t("components.conversations.details.openedMissing") }}</p>
+        </div>
+      </div>
+
+      <!-- A non-owner's page (an admin, a reseller): read-only, every call opened recorded (StarChat decision 14) -->
+      <div v-if="readerKnown && readOnly" class="conversation-table-container">
+        <div class="read-only-banner" role="note">
+          <i class="pi pi-eye" aria-hidden="true"></i>
+          <span><strong>{{ $t("components.callInsights.feedback.readOnly.title") }}</strong> · {{ $t("components.callInsights.feedback.readOnly.note") }}</span>
+        </div>
+      </div>
+
+      <!-- The filters a count's link carried, each undone by its own chip; a value not recognised is said, not applied -->
+      <div v-if="addressChips.length > 0 || addressUnknown.length > 0" class="conversation-table-container">
+        <div class="address-filters" :aria-label="$t('components.callInsights.feedback.filters.title')" role="group">
+          <span v-for="c in addressChips" :key="c.key" class="address-chip">
+            <span>{{ c.text }}</span>
+            <button type="button" class="address-chip-clear" :aria-label="$t('components.callInsights.feedback.filters.remove', { filter: c.text })" @click="removeAddressFilter(c.key)">
+              <i class="pi pi-times" aria-hidden="true"></i>
+            </button>
+          </span>
+          <p v-if="addressUnknown.length > 0" class="address-unknown" role="status">{{ $t("components.callInsights.feedback.filters.unknown") }}</p>
         </div>
       </div>
 
@@ -244,8 +266,8 @@
               </div>
             </div>
 
-            <!-- Export Row -->
-            <div class="filter-row">
+            <!-- Export Row: the owner's only (StarChat answers 403 owner_only to anyone else) -->
+            <div v-if="!readOnly" class="filter-row">
               <label class="filter-label">
                 <i class="pi pi-download"></i>
                 {{ $t("components.conversations.exportLabel") }}
@@ -268,8 +290,8 @@
               </div>
             </div>
 
-            <!-- Bulk Actions Row -->
-            <div class="filter-row">
+            <!-- Bulk Actions Row: archive and delete are the owner's only -->
+            <div v-if="!readOnly" class="filter-row">
               <label class="filter-label">
                 <i class="pi pi-list-check"></i>
                 {{ $t("components.conversations.bulkActionsLabel") }}
@@ -347,14 +369,28 @@
               :key="key"
               class="conversation-card"
               :class="{
-                'unread': !isRead(conversation),
-                'animating-out': animatingOut.has(key)
+                'unread': !readOnly && !isRead(conversation),
+                'animating-out': animatingOut.has(key),
+                'selected-card': selected.has(key)
               }"
+              @pointerdown="pressStart(key, $event)"
+              @pointerup="pressEnd"
+              @pointerleave="pressEnd"
+              @pointercancel="pressEnd"
             >
               <div class="card-header">
+                <!-- the selection: always on a wide screen, after a long press on a narrow one -->
+                <input
+                  v-if="!narrow || selectionMode"
+                  type="checkbox"
+                  class="select-check"
+                  :checked="selected.has(key)"
+                  :aria-label="$t('components.callInsights.feedback.bulk.select', { name: callerName(conversation) })"
+                  @change="toggleSelected(key, $event.target.checked)"
+                />
                 <div class="contact-info">
                   <span class="contact-name">
-                    <span v-if="!isRead(conversation)" class="unread-dot"></span>
+                    <span v-if="!readOnly && !isRead(conversation)" class="unread-dot"></span>
                     {{ callerName(conversation) }}
                   </span>
                   <span
@@ -374,8 +410,18 @@
                   </span>
                 </div>
 
+                <!-- A non-owner's row is reduced: the call is opened, and recorded, only when asked -->
+                <Button
+                  v-if="readOnly"
+                  type="button" size="small" outlined
+                  class="open-call-btn"
+                  :label="$t('components.callInsights.feedback.readOnly.open')"
+                  @click.stop="openFromList(key)"
+                />
+
                 <!-- Read/Unread toggle (always visible) -->
                 <button
+                  v-if="!readOnly"
                   type="button"
                   class="action-btn action-btn-read"
                   :title="isRead(conversation)
@@ -388,7 +434,7 @@
                 </button>
 
                 <!-- Desktop Actions (hover reveal) -->
-                <div class="desktop-actions">
+                <div v-if="!readOnly" class="desktop-actions">
                   <template v-if="activeView === 'inbox'">
                     <button
                       type="button"
@@ -443,7 +489,7 @@
                 </div>
 
                 <!-- Mobile Actions (3-dot menu) -->
-                <div class="mobile-action-trigger">
+                <div v-if="!readOnly" class="mobile-action-trigger">
                   <button
                     type="button"
                     class="action-btn"
@@ -524,8 +570,31 @@
 
     <!-- Mobile TieredMenu -->
     <TieredMenu ref="mobileMenu" :model="mobileMenuItems" popup />
+    <!-- The selected calls' judgements, corrected in one gesture (StarChat decision 9, "In lists"): a bar above the
+         list on a wide screen, at the bottom of the screen on a narrow one -->
+    <div
+      v-if="selected.size > 0"
+      class="bulk-bar insights-ui"
+      :class="{ 'bulk-bar-bottom': narrow }"
+      role="toolbar"
+      :aria-label="$t('components.callInsights.feedback.bulk.label')"
+    >
+      <span class="bulk-count">{{ $t("components.callInsights.feedback.bulk.count", { n: selected.size }, selected.size) }}</span>
+      <JudgementChip
+        :field-label="$t('components.callInsights.feedback.bulk.changeOutcome')"
+        :value-label="$t('components.callInsights.feedback.bulk.changeOutcome')"
+        :name="$t('components.callInsights.feedback.bulk.changeOutcome')"
+        :entries="bulkOutcomeEntries"
+        :busy="bulkBusy"
+        @choose="bulkResolution('wrong_value', $event.value)"
+      />
+      <Button type="button" size="small" outlined :label="$t('components.callInsights.feedback.bulk.spam')" :disabled="bulkBusy" @click="bulkResolution('wrong_value', 'spam_wrong_number')" />
+      <Button type="button" size="small" outlined :label="$t('components.callInsights.feedback.bulk.confirm')" :disabled="bulkBusy" @click="bulkResolution('right')" />
+      <Button type="button" size="small" text :label="$t('components.callInsights.feedback.bulk.clear')" @click="clearSelection" />
+    </div>
+    <p v-if="bulkNote" class="bulk-note conversation-table-container" role="status">{{ bulkNote }}</p>
     <!-- The one undo of a gesture on the calls' judgements -->
-    <UndoBar />
+    <UndoBar :raised="selected.size > 0 && narrow" />
   </div>
 </template>
 
@@ -546,9 +615,36 @@ import CallInsights from "@/utils/CallInsights";
 import UndoBar from "@/components/feedback/UndoBar.vue";
 import Classifications from "@/utils/Classifications";
 import businessUtils from "@/utils/Business";
+import UndoGesture from "@/utils/UndoGesture";
+import JudgementChip from "@/components/feedback/JudgementChip.vue";
+import { isSessionEnded } from "@/firebase/session";
+
+// The search filters a link carried (a count opening its calls, brief docs/briefs/2026-10-27-classification-feedback.md
+// scope 6): those with a control of their own on this page set the control; the window sets the range; the others are
+// sent as they are and shown as chips. Read once, when the page opens.
+const CONTROLLED = ["resolution", "message", "booked", "transferred", "hasUnanswered"];
+const WINDOW = ["timestampGte", "timestampLte"];
+function readAddress(query) {
+  const read = Classifications.searchFromQuery(query);
+  const controls = {};
+  const window = {};
+  const extra = {};
+  for (const [key, value] of Object.entries(read.body)) {
+    if (CONTROLLED.includes(key)) controls[key] = value;
+    else if (WINDOW.includes(key)) window[key] = value;
+    else if (key !== "counted") extra[key] = value;
+  }
+  const controlledKeys = ["resolution", "message", "booked", "transferred", "unanswered"];
+  return {
+    controls, window, extra,
+    counted: read.body.counted === true,
+    filters: read.filters.filter((f) => !controlledKeys.includes(f.key)),
+    unknown: read.unknown,
+  };
+}
 
 export default {
-  components: { CallDetailsPanel, UndoBar },
+  components: { CallDetailsPanel, UndoBar, JudgementChip },
   setup() {
     const store = useStore();
     const toast = useToast();
@@ -564,13 +660,16 @@ export default {
   },
   data() {
     const locale = Tr.getLocale();
+    const address = readAddress(router.currentRoute.value.query);
     return {
       locale,
       periodicEvent: null,
-      rangeValue: null,
+      rangeValue: address.window.timestampGte != null
+        ? [new Date(address.window.timestampGte), address.window.timestampLte != null ? new Date(address.window.timestampLte) : null]
+        : null,
       businessId: null,
-      timestampGte: null,
-      timestampLte: null,
+      timestampGte: address.window.timestampGte != null ? address.window.timestampGte : null,
+      timestampLte: address.window.timestampLte != null ? address.window.timestampLte : null,
       router,
       langCode: locale,
       items: new Map(),
@@ -595,14 +694,26 @@ export default {
       // What the call said (brief outcome 2): null/false means no filter. `bookedFilter` is
       // "booked" or "not_booked"; `transferredFilter` has no "not transferred" (StarChat refuses it:
       // the carrier writes only a true).
-      resolutionFilter: null,
-      messageFilter: null,
-      bookedFilter: null,
-      transferredFilter: false,
-      unansweredFilter: false,
+      resolutionFilter: address.controls.resolution || null,
+      messageFilter: address.controls.message || null,
+      bookedFilter: address.controls.booked === true ? "booked" : address.controls.booked === false ? "not_booked" : null,
+      transferredFilter: address.controls.transferred === true,
+      unansweredFilter: address.controls.hasUnanswered === true,
       // the business as StarChat answers it (`CallInsights.business`): its owner says whose calls these are
       business: null,
       readerKnown: false,
+      // the filters a count's link carried that have no control of their own (`Classifications.searchFromQuery`)
+      addressBody: address.extra,
+      addressFilters: address.filters,
+      addressUnknown: address.unknown,
+      counted: address.counted,
+      categoryLabels: null,
+      // the calls selected for a gesture, by id; on a narrow screen the selection is a mode a long press enters
+      selected: new Set(),
+      selectionMode: false,
+      narrow: typeof window !== "undefined" && !!window.matchMedia && window.matchMedia("(max-width: 599px)").matches,
+      bulkBusy: false,
+      bulkNote: null,
     };
   },
   computed: {
@@ -613,6 +724,12 @@ export default {
     },
     readOnly() {
       return !this.isOwner;
+    },
+    addressChips() {
+      return this.addressFilters.map((f) => ({ key: f.key, text: this.addressFilterText(f) }));
+    },
+    bulkOutcomeEntries() {
+      return CallInsights.RESOLUTION_KEYS.map((key) => ({ key, value: key, kind: "value", label: this.$t("components.callInsights.resolution." + key) }));
     },
     resolutionOptions() {
       return CallInsights.RESOLUTION_KEYS.map((key) => ({
@@ -753,6 +870,103 @@ export default {
         this.business = null;
       }
       this.readerKnown = true;
+      if (this.addressFilters.some((f) => f.key === "category")) {
+        Classifications.categories(user, this.$i18n.locale)
+          .then((answer) => { this.categoryLabels = answer && Array.isArray(answer.items) ? answer.items : null; })
+          .catch(() => { this.categoryLabels = null; });
+      }
+    },
+    addressFilterText(f) {
+      const t = (k, v) => this.$t("components.callInsights.feedback.filters.chip", { name: this.$t("components.callInsights.feedback.filters.names." + k), value: v });
+      const v = f.value;
+      switch (f.key) {
+        case "outcomeLine": return t(f.key, this.$t("components.callInsights.outcome." + (v.startsWith("forwarded_") ? "forwarded" : v)) +
+          (v.startsWith("forwarded_") ? " " + this.$t("components.callInsights.outcome." + v) : ""));
+        case "noConversation": return t(f.key, this.$t("components.callInsights.noConversation.reasons." + v));
+        case "gap": return t(f.key, this.$t("components.callInsights.gaps." + v));
+        case "check": return t(f.key, this.$t("components.callInsights.checks." + v));
+        case "requestOutcome": return t(f.key, v.map((o) => this.$t("components.callInsights.feedback.outcome." + o)).join(", "));
+        case "corrected": return t(f.key, this.$t("components.callInsights.feedback.filters." + (v ? "yes" : "no")));
+        case "topicLabel": return t("topic", v.join(", "));
+        case "category": {
+          if (v === Classifications.UNCLASSIFIED) return t(f.key, this.$t("components.callInsights.feedback.unset"));
+          const c = (this.categoryLabels || []).find((x) => x.key === v);
+          return c ? t(f.key, c.label) : this.$t("components.callInsights.feedback.filters.names.category");
+        }
+        default: return t(f.key, String(v));
+      }
+    },
+    removeAddressFilter(key) {
+      const f = Classifications.ADDRESS_FILTERS.find((x) => x.key === key);
+      this.addressFilters = this.addressFilters.filter((x) => x.key !== key);
+      const body = { ...this.addressBody };
+      if (f) delete body[f.body];
+      this.addressBody = body;
+      this.router.replace({ path: this.$route.path, query: Classifications.withoutFilter(this.$route.query, key) });
+      this.resetAndReload();
+    },
+    // A long press (600 ms) on a card enters the selection mode on a narrow screen, selecting that card.
+    pressStart(key, event) {
+      if (!this.narrow || this.selectionMode) return;
+      if (event.target && event.target.closest && event.target.closest("button, a, input, audio, [role=listbox]")) return;
+      this.pressEnd();
+      this.pressTimer = setTimeout(() => {
+        this.pressTimer = null;
+        this.selectionMode = true;
+        this.toggleSelected(key, true);
+      }, 600);
+    },
+    pressEnd() {
+      if (this.pressTimer) {
+        clearTimeout(this.pressTimer);
+        this.pressTimer = null;
+      }
+    },
+    toggleSelected(key, on) {
+      const next = new Set(this.selected);
+      if (on) next.add(key); else next.delete(key);
+      this.selected = next;
+      this.bulkNote = null;
+    },
+    clearSelection() {
+      this.selected = new Set();
+      this.selectionMode = false;
+    },
+    // One gesture over the selected calls' resolution (`POST insights/feedback/bulk`, all or nothing, one undo): a new
+    // value, or "right". A call without a judged resolution, or already at the value asked, is left out, and said.
+    async bulkResolution(signal, valueTo) {
+      const asks = [];
+      let leftOut = 0;
+      for (const key of this.selected) {
+        const conversation = this.items.get(key);
+        const current = conversation && conversation.details ? conversation.details.resolution : null;
+        if (!current) { leftOut += 1; continue; }
+        if (signal === "wrong_value" && current === valueTo) continue;
+        asks.push(Classifications.ask({ conversationId: key, field: "resolution", signal, valueFrom: current, valueTo }));
+      }
+      this.bulkNote = leftOut > 0 ? this.$t("components.callInsights.feedback.bulk.leftOut", { n: leftOut }, leftOut) : null;
+      if (asks.length === 0) return;
+      const gestureId = Classifications.newGestureId();
+      this.bulkBusy = true;
+      try {
+        await Classifications.bulk(this.user, asks, gestureId);
+        UndoGesture.record(gestureId, asks.map((a) => a.conversationId), () => this.conversationList());
+        this.clearSelection();
+      } catch (error) {
+        if (isSessionEnded(error)) return;
+        const refusal = CallInsights.refusalOf(error);
+        this.bulkNote = this.$t(refusal && refusal.code === "stale_value"
+          ? "components.callInsights.feedback.stale"
+          : "components.callInsights.feedback.failed");
+      } finally {
+        this.bulkBusy = false;
+      }
+      this.conversationList();
+    },
+    openFromList(key) {
+      this.router.replace({ path: this.$route.path, query: { ...this.$route.query, conversation: key } });
+      this.openConversation(key);
+      window.scrollTo(0, 0);
     },
     callerName(conversation) {
       const details = conversation.details || {};
@@ -823,6 +1037,8 @@ export default {
       if (this.bookedFilter) body.booked = this.bookedFilter === "booked";
       if (this.transferredFilter) body.transferred = true;
       if (this.unansweredFilter) body.hasUnanswered = true;
+      if (this.counted) body.counted = true;
+      Object.assign(body, this.addressBody);
       return { ...body, ...extra };
     },
     // A changed view or filter invalidates the page shown: start over from the first one, as
@@ -1433,12 +1649,19 @@ export default {
     },
   },
   beforeUnmount() {
+    if (this.narrowQuery) this.narrowQuery.removeEventListener("change", this.onNarrow);
+    this.pressEnd();
     console.debug("Before Unmount");
     if (this.periodicEvent) {
       this.periodicEvent.unsubscribe();
     }
   },
   mounted() {
+    if (window.matchMedia) {
+      this.narrowQuery = window.matchMedia("(max-width: 599px)");
+      this.onNarrow = (e) => { this.narrow = e.matches; if (!e.matches) this.selectionMode = false; };
+      this.narrowQuery.addEventListener("change", this.onNarrow);
+    }
     this.businessId = this.$route.query.id;
     if (this.$route.query.lang) {
       this.langCode = this.$route.query.lang.replace("_", "-");
@@ -1971,5 +2194,119 @@ export default {
   50% {
     opacity: 0.5;
   }
+}
+
+.read-only-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 8px 0;
+  padding: 10px 12px;
+  border: 1px solid @mrcall_borders;
+  border-radius: 10px;
+  background: @mrcall_light_grey_2;
+  font-size: 14px;
+  color: @mrcall_dark_grey_text;
+}
+
+.read-only-note {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: @mrcall_grey_text;
+}
+
+.address-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0;
+}
+
+.address-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 4px 4px 10px;
+  border: 1px solid @mrcall_blue;
+  border-radius: 16px;
+  font-size: 13px;
+  color: @mrcall_blue;
+  background: @mrcall_white;
+}
+
+.address-chip-clear {
+  border: none;
+  background: none;
+  color: @mrcall_blue;
+  cursor: pointer;
+  min-width: 28px;
+  min-height: 28px;
+  border-radius: 14px;
+
+  &:focus-visible {
+    outline: 2px solid @mrcall_blue;
+  }
+}
+
+.address-unknown {
+  margin: 0;
+  font-size: 13px;
+  color: @mrcall_grey_text;
+}
+
+.select-check {
+  width: 20px;
+  height: 20px;
+  margin: 0 8px 0 0;
+  flex: none;
+  accent-color: @mrcall_blue;
+}
+
+.selected-card {
+  outline: 2px solid @mrcall_blue;
+}
+
+.open-call-btn {
+  flex: none;
+}
+
+.bulk-bar {
+  position: sticky;
+  top: 0;
+  z-index: 900;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  max-width: 700px;
+  margin: 8px auto;
+  padding: 8px 12px;
+  border: 1px solid @mrcall_borders;
+  border-radius: 10px;
+  background: @mrcall_white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+
+  &.bulk-bar-bottom {
+    position: fixed;
+    top: auto;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-width: none;
+    margin: 0;
+    border-radius: 12px 12px 0 0;
+  }
+}
+
+.bulk-count {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.bulk-note {
+  font-size: 13px;
+  color: @mrcall_grey_text;
 }
 </style>

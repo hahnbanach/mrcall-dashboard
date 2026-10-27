@@ -2522,6 +2522,39 @@
           "delete": "Eliminar la regla",
           "keep": "Mantenerla",
           "deleted": "La regla se ha eliminado; las llamadas que marcó vuelven a contarse."
+        },
+        "readOnly": {
+          "title": "Vista de solo lectura",
+          "note": "No eres el titular de estas llamadas: cada llamada que abres queda registrada y el titular puede ver quién la abrió.",
+          "open": "Abrir la llamada"
+        },
+        "filters": {
+          "title": "Filtros del enlace",
+          "remove": "Quitar el filtro {filter}",
+          "unknown": "Un filtro del enlace no se ha reconocido y no se aplica.",
+          "chip": "{name}: {value}",
+          "yes": "sí",
+          "no": "no",
+          "names": {
+            "outcomeLine": "Resultado",
+            "topic": "Tema",
+            "gap": "Pregunta sin respuesta",
+            "check": "Control",
+            "category": "Categoría de la solicitud",
+            "requestOutcome": "Resultado de la solicitud",
+            "noConversation": "Sin conversación",
+            "corrected": "Corregida"
+          }
+        },
+        "bulk": {
+          "label": "Llamadas seleccionadas",
+          "count": "{n} seleccionada | {n} seleccionadas",
+          "select": "Seleccionar la llamada de {name}",
+          "changeOutcome": "Cambiar resultado",
+          "spam": "Marcar como spam",
+          "confirm": "Confirmar",
+          "clear": "Quitar la selección",
+          "leftOut": "Se dejó fuera {n} llamada sin resultado evaluado. | Se dejaron fuera {n} llamadas sin resultado evaluado."
         }
       }
     },

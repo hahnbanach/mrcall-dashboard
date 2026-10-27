@@ -2508,6 +2508,39 @@
           "delete": "Ta bort regeln",
           "keep": "Behåll den",
           "deleted": "Regeln är borttagen; samtalen den markerade räknas igen."
+        },
+        "readOnly": {
+          "title": "Skrivskyddad vy",
+          "note": "Du äger inte de här samtalen: varje samtal du öppnar registreras, och ägaren ser vem som öppnade det.",
+          "open": "Öppna samtalet"
+        },
+        "filters": {
+          "title": "Filter från länken",
+          "remove": "Ta bort filtret {filter}",
+          "unknown": "Ett filter i länken kändes inte igen och tillämpas inte.",
+          "chip": "{name}: {value}",
+          "yes": "ja",
+          "no": "nej",
+          "names": {
+            "outcomeLine": "Utfall",
+            "topic": "Ämne",
+            "gap": "Obesvarad fråga",
+            "check": "Kontroll",
+            "category": "Kategori för begäran",
+            "requestOutcome": "Utfall för begäran",
+            "noConversation": "Inget samtal",
+            "corrected": "Korrigerad"
+          }
+        },
+        "bulk": {
+          "label": "Valda samtal",
+          "count": "{n} vald | {n} valda",
+          "select": "Välj samtalet från {name}",
+          "changeOutcome": "Ändra utfall",
+          "spam": "Markera som spam",
+          "confirm": "Bekräfta",
+          "clear": "Rensa urvalet",
+          "leftOut": "{n} samtal utan bedömt utfall utelämnades. | {n} samtal utan bedömt utfall utelämnades."
         }
       }
     },

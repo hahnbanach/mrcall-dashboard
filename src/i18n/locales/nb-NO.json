@@ -2508,6 +2508,39 @@
           "delete": "Slett regelen",
           "keep": "Behold den",
           "deleted": "Regelen er slettet; samtalene den markerte telles igjen."
+        },
+        "readOnly": {
+          "title": "Skrivebeskyttet visning",
+          "note": "Du er ikke eier av disse samtalene: hver samtale du åpner registreres, og eieren ser hvem som åpnet den.",
+          "open": "Åpne samtalen"
+        },
+        "filters": {
+          "title": "Filtre fra lenken",
+          "remove": "Fjern filteret {filter}",
+          "unknown": "Et filter i lenken ble ikke gjenkjent og brukes ikke.",
+          "chip": "{name}: {value}",
+          "yes": "ja",
+          "no": "nei",
+          "names": {
+            "outcomeLine": "Utfall",
+            "topic": "Emne",
+            "gap": "Ubesvart spørsmål",
+            "check": "Kontroll",
+            "category": "Kategori for forespørselen",
+            "requestOutcome": "Utfall av forespørselen",
+            "noConversation": "Ingen samtale",
+            "corrected": "Rettet"
+          }
+        },
+        "bulk": {
+          "label": "Valgte samtaler",
+          "count": "{n} valgt | {n} valgt",
+          "select": "Velg samtalen fra {name}",
+          "changeOutcome": "Endre utfall",
+          "spam": "Merk som spam",
+          "confirm": "Bekreft",
+          "clear": "Fjern valget",
+          "leftOut": "{n} samtale uten vurdert utfall ble utelatt. | {n} samtaler uten vurdert utfall ble utelatt."
         }
       }
     },

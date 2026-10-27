@@ -2508,6 +2508,39 @@
           "delete": "Poista sääntö",
           "keep": "Säilytä",
           "deleted": "Sääntö on poistettu; sen merkitsemät puhelut lasketaan taas mukaan."
+        },
+        "readOnly": {
+          "title": "Vain luku -näkymä",
+          "note": "Et omista näitä puheluita: jokainen avaamasi puhelu kirjataan, ja omistaja näkee, kuka sen avasi.",
+          "open": "Avaa puhelu"
+        },
+        "filters": {
+          "title": "Linkin suodattimet",
+          "remove": "Poista suodatin {filter}",
+          "unknown": "Linkin suodatinta ei tunnistettu, eikä sitä käytetä.",
+          "chip": "{name}: {value}",
+          "yes": "kyllä",
+          "no": "ei",
+          "names": {
+            "outcomeLine": "Lopputulos",
+            "topic": "Aihe",
+            "gap": "Vastaamaton kysymys",
+            "check": "Tarkistus",
+            "category": "Pyynnön luokka",
+            "requestOutcome": "Pyynnön lopputulos",
+            "noConversation": "Ei keskustelua",
+            "corrected": "Korjattu"
+          }
+        },
+        "bulk": {
+          "label": "Valitut puhelut",
+          "count": "{n} valittu | {n} valittu",
+          "select": "Valitse puhelu: {name}",
+          "changeOutcome": "Muuta lopputulosta",
+          "spam": "Merkitse roskapuheluksi",
+          "confirm": "Vahvista",
+          "clear": "Tyhjennä valinta",
+          "leftOut": "{n} puhelu ilman arvioitua lopputulosta jätettiin pois. | {n} puhelua ilman arvioitua lopputulosta jätettiin pois."
         }
       }
     },

@@ -76,6 +76,8 @@ export default {
     entries: { type: Array, default: () => [] },
     busy: { type: Boolean, default: false },
     deferred: { type: Boolean, default: false },
+    // an accessible name of its own, for a chip that is an action rather than a value ("Cambia esito")
+    name: { type: String, default: null },
   },
   emits: ["choose", "opening"],
   data() {
@@ -87,6 +89,7 @@ export default {
       return this.uid + "-list";
     },
     accessibleName() {
+      if (this.name) return this.name;
       let name = this.$t("components.callInsights.feedback.chip.name", { field: this.fieldLabel, value: this.valueLabel });
       if (this.stateLabel) name += ", " + this.stateLabel;
       if (this.detail) name += " (" + this.detail + ")";

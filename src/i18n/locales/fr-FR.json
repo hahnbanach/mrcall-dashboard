@@ -2510,6 +2510,39 @@
           "delete": "Supprimer la règle",
           "keep": "La garder",
           "deleted": "La règle est supprimée ; les appels qu'elle avait marqués sont de nouveau comptés."
+        },
+        "readOnly": {
+          "title": "Affichage en lecture seule",
+          "note": "Vous n'êtes pas le titulaire de ces appels : chaque appel que vous ouvrez est enregistré, et son titulaire voit qui l'a ouvert.",
+          "open": "Ouvrir l'appel"
+        },
+        "filters": {
+          "title": "Filtres du lien",
+          "remove": "Retirer le filtre {filter}",
+          "unknown": "Un filtre du lien n'a pas été reconnu et n'est pas appliqué.",
+          "chip": "{name} : {value}",
+          "yes": "oui",
+          "no": "non",
+          "names": {
+            "outcomeLine": "Issue",
+            "topic": "Sujet",
+            "gap": "Question sans réponse",
+            "check": "Contrôle",
+            "category": "Catégorie de la demande",
+            "requestOutcome": "Issue de la demande",
+            "noConversation": "Sans conversation",
+            "corrected": "Corrigé"
+          }
+        },
+        "bulk": {
+          "label": "Appels sélectionnés",
+          "count": "{n} sélectionné | {n} sélectionnés",
+          "select": "Sélectionner l'appel de {name}",
+          "changeOutcome": "Changer l'issue",
+          "spam": "Marquer comme indésirable",
+          "confirm": "Confirmer",
+          "clear": "Effacer la sélection",
+          "leftOut": "{n} appel sans issue évaluée a été laissé de côté. | {n} appels sans issue évaluée ont été laissés de côté."
         }
       }
     },

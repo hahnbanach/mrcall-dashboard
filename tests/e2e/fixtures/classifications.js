@@ -104,7 +104,11 @@ async function mockClassifications (page, options = {}) {
   }
 
   function write (a, gestureId) {
-    const call = state.calls[a.conversationId] || Object.values(state.calls).find((c) => c.requests.some((r) => r.requestId === a.requestId))
+    let call = state.calls[a.conversationId] || Object.values(state.calls).find((c) => c.requests.some((r) => r.requestId === a.requestId))
+    // a call of a list the spec did not describe: its judgements are what the list showed
+    if (!call && a.subject === 'call' && a.conversationId) {
+      call = state.calls[a.conversationId] = judged({ conversationId: a.conversationId, resolution: { model: a.valueFrom, value: a.valueFrom, corrected: false }, requests: [] })
+    }
     if (!call) return { status: 404 }
     const j = judgementOf(call, a)
     if (!j) return { status: 404 }

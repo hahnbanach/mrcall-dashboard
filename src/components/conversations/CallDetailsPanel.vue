@@ -145,8 +145,12 @@
       </div>
     </section>
 
-    <section class="call-section">
-      <audio v-if="audio" controls autoplay class="call-audio">
+    <!-- A non-owner's recording comes from a one-time link, and only on a call opened on purpose (StarChat decision 14) -->
+    <section v-if="!readOnly || eager" class="call-section">
+      <audio v-if="audioUrl" controls autoplay class="call-audio" :src="audioUrl">
+        {{ $t("components.conversations.table.audioNotSupported") }}
+      </audio>
+      <audio v-else-if="audio" controls autoplay class="call-audio">
         <source :src="'data:audio/mpeg;base64,' + audio" />
         {{ $t("components.conversations.table.audioNotSupported") }}
       </audio>
@@ -169,6 +173,7 @@
 import ConversationApi from "@/utils/Conversation";
 import CallInsights from "@/utils/CallInsights";
 import CallJudgements from "@/components/feedback/CallJudgements.vue";
+import Classifications from "@/utils/Classifications";
 
 /**
  * The body of a call on the conversations page: what the business has to do about it, what the
@@ -196,6 +201,7 @@ export default {
       showTranscript: this.expanded,
       showPrevious: this.expanded,
       audio: this.conversation.audio || null,
+      audioUrl: null,
       recordingState: "idle",
       // the judgements are drawn as chips: the plain resolution and message rows step aside
       chips: false,
@@ -288,6 +294,7 @@ export default {
     },
     async loadRecording() {
       this.recordingState = "loading";
+      if (this.readOnly) return this.loadRecordingLink();
       try {
         const call = await ConversationApi.get(this.user, this.businessId, this.conversation.id);
         if (call && call.audio) {
@@ -298,6 +305,24 @@ export default {
         }
       } catch (error) {
         console.error("Recording not loaded:", this.conversation.id, error.response ? error.response.status : "");
+        this.recordingState = "idle";
+        this.$emit("error");
+      }
+    },
+    // A non-owner's recording: StarChat issues a one-time link (and records it as `conversation.audio`); a 404 is no
+    // recording, or a call out of reach.
+    async loadRecordingLink() {
+      try {
+        const link = await Classifications.audioLink(this.user, this.conversation.id);
+        if (link && link.url) {
+          this.audioUrl = link.url;
+          this.recordingState = "loaded";
+        } else {
+          this.recordingState = "missing";
+        }
+      } catch (error) {
+        if (error && error.response && error.response.status === 404) { this.recordingState = "missing"; return; }
+        console.error("Recording link not issued:", this.conversation.id, error && error.response ? error.response.status : "");
         this.recordingState = "idle";
         this.$emit("error");
       }

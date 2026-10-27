@@ -32,6 +32,7 @@ test.describe('a call\'s judgements as chips', () => {
     await expect(chip(page, /^Resolution: Resolved/)).toBeVisible({ timeout: 15000 })
     const before = reads(sent)
     await choose(page, /^Resolution: Resolved/, 'Unresolved')
+    await expect.poll(() => sent.filter((s) => s.path === 'feedback' && s.method === 'POST').length).toBe(1)
     const signal = sent.find((s) => s.path === 'feedback' && s.method === 'POST')
     expect(signal.body).toMatchObject({ subject: 'call', conversationId: CALL_ID, field: 'resolution', signal: 'wrong_value', valueFrom: 'resolved', valueTo: 'unresolved' })
     expect(signal.body.gestureId).toMatch(/^[0-9a-f-]{20,}$/)
@@ -58,6 +59,7 @@ test.describe('a call\'s judgements as chips', () => {
     await choose(page, /^Request outcome: Not met/, 'Taken for the business')
     await expect(chip(page, /^Request outcome: Taken for the business, Corrected/)).toBeVisible()
     await choose(page, /^Category: Prices and quotes/, 'Opening hours')
+    await expect.poll(() => sent.filter((s) => s.path === 'feedback' && s.method === 'POST').length).toBe(2)
     const proposal = sent.filter((s) => s.path === 'feedback' && s.method === 'POST').pop()
     expect(proposal.body).toMatchObject({ subject: 'request', requestId: 102, field: 'category', valueFrom: 'prices', valueTo: 'opening_hours' })
     // the value stays until an admin applies it; the chip says the proposal went
@@ -85,6 +87,7 @@ test.describe('a call\'s judgements as chips', () => {
     const { sent } = await mockClassifications(page)
     await open(page)
     await choose(page, /^Message: No message/, 'It is wrong, I don\'t know which')
+    await expect.poll(() => sent.filter((s) => s.path === 'feedback').length).toBe(1)
     expect(sent.filter((s) => s.path === 'feedback').pop().body).toMatchObject({ field: 'message', signal: 'wrong', valueFrom: 'none' })
     expect(sent.filter((s) => s.path === 'feedback').pop().body.valueTo).toBeUndefined()
     await expect(chip(page, /^Message: No message, Proposal sent/)).toBeVisible()
@@ -95,6 +98,7 @@ test.describe('a call\'s judgements as chips', () => {
     const { sent } = await mockClassifications(page)
     await open(page)
     await choose(page, /^Resolution: Resolved/, 'It is correct')
+    await expect.poll(() => sent.filter((s) => s.path === 'feedback').length).toBe(1)
     expect(sent.filter((s) => s.path === 'feedback').pop().body).toMatchObject({ field: 'resolution', signal: 'right', valueFrom: 'resolved' })
     await expect(chip(page, /^Resolution: Resolved, Confirmed/)).toBeVisible()
   })
@@ -112,6 +116,7 @@ test.describe('a call\'s judgements as chips', () => {
     const history = opened(page).getByRole('list', { name: 'History of Resolution' })
     await expect(history.getByRole('listitem')).toHaveText([/Resolved → Unresolved, Mario Rossi, .*Applied/])
     await choose(page, /^Resolution: Unresolved, Corrected/, 'Restore the analysis\'s value')
+    await expect.poll(() => sent.filter((s) => s.path === 'decide').length).toBe(1)
     expect(sent.find((s) => s.path === 'decide')).toMatchObject({ id: 77, move: 'revert' })
     await expect(chip(page, /^Resolution: Resolved$/)).toBeVisible()
   })
@@ -159,6 +164,7 @@ test.describe('a call\'s judgements as chips', () => {
     // the current value is the active option; one down is the next value
     await page.keyboard.press('ArrowDown')
     await page.keyboard.press('Enter')
+    await expect.poll(() => sent.filter((s) => s.path === 'feedback').length).toBe(1)
     expect(sent.filter((s) => s.path === 'feedback').pop().body).toMatchObject({ field: 'message', valueFrom: 'none' })
   })
 

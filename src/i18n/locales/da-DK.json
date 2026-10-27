@@ -2508,6 +2508,39 @@
           "delete": "Slet reglen",
           "keep": "Behold den",
           "deleted": "Reglen er slettet; de opkald, den markerede, tælles igen."
+        },
+        "readOnly": {
+          "title": "Skrivebeskyttet visning",
+          "note": "Du er ikke ejer af disse opkald: hvert opkald, du åbner, registreres, og ejeren kan se, hvem der åbnede det.",
+          "open": "Åbn opkaldet"
+        },
+        "filters": {
+          "title": "Filtre fra linket",
+          "remove": "Fjern filteret {filter}",
+          "unknown": "Et filter i linket blev ikke genkendt og anvendes ikke.",
+          "chip": "{name}: {value}",
+          "yes": "ja",
+          "no": "nej",
+          "names": {
+            "outcomeLine": "Udfald",
+            "topic": "Emne",
+            "gap": "Ubesvaret spørgsmål",
+            "check": "Kontrol",
+            "category": "Kategori for anmodningen",
+            "requestOutcome": "Udfald af anmodningen",
+            "noConversation": "Ingen samtale",
+            "corrected": "Rettet"
+          }
+        },
+        "bulk": {
+          "label": "Valgte opkald",
+          "count": "{n} valgt | {n} valgt",
+          "select": "Vælg opkaldet fra {name}",
+          "changeOutcome": "Skift udfald",
+          "spam": "Markér som spam",
+          "confirm": "Bekræft",
+          "clear": "Ryd valget",
+          "leftOut": "{n} opkald uden vurderet udfald blev udeladt. | {n} opkald uden vurderet udfald blev udeladt."
         }
       }
     },

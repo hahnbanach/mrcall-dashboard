@@ -2508,6 +2508,39 @@
           "delete": "Regel verwijderen",
           "keep": "Behouden",
           "deleted": "De regel is verwijderd; de gemarkeerde oproepen tellen weer mee."
+        },
+        "readOnly": {
+          "title": "Alleen-lezen weergave",
+          "note": "U bent niet de eigenaar van deze oproepen: elke oproep die u opent wordt vastgelegd, en de eigenaar ziet wie hem opende.",
+          "open": "Oproep openen"
+        },
+        "filters": {
+          "title": "Filters uit de link",
+          "remove": "Filter {filter} verwijderen",
+          "unknown": "Een filter in de link werd niet herkend en wordt niet toegepast.",
+          "chip": "{name}: {value}",
+          "yes": "ja",
+          "no": "nee",
+          "names": {
+            "outcomeLine": "Uitkomst",
+            "topic": "Onderwerp",
+            "gap": "Onbeantwoorde vraag",
+            "check": "Controle",
+            "category": "Categorie van het verzoek",
+            "requestOutcome": "Uitkomst van het verzoek",
+            "noConversation": "Geen gesprek",
+            "corrected": "Gecorrigeerd"
+          }
+        },
+        "bulk": {
+          "label": "Geselecteerde oproepen",
+          "count": "{n} geselecteerd | {n} geselecteerd",
+          "select": "Oproep van {name} selecteren",
+          "changeOutcome": "Uitkomst wijzigen",
+          "spam": "Als spam markeren",
+          "confirm": "Bevestigen",
+          "clear": "Selectie wissen",
+          "leftOut": "{n} oproep zonder beoordeelde uitkomst is weggelaten. | {n} oproepen zonder beoordeelde uitkomst zijn weggelaten."
         }
       }
     },

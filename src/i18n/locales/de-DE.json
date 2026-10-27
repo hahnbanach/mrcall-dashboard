@@ -2510,6 +2510,39 @@
           "delete": "Regel löschen",
           "keep": "Behalten",
           "deleted": "Die Regel ist gelöscht; die markierten Anrufe werden wieder gezählt."
+        },
+        "readOnly": {
+          "title": "Nur-Lese-Ansicht",
+          "note": "Sie sind nicht Inhaber dieser Anrufe: Jeder Anruf, den Sie öffnen, wird protokolliert, und der Inhaber sieht, wer ihn geöffnet hat.",
+          "open": "Anruf öffnen"
+        },
+        "filters": {
+          "title": "Filter aus dem Link",
+          "remove": "Filter {filter} entfernen",
+          "unknown": "Ein Filter im Link wurde nicht erkannt und wird nicht angewendet.",
+          "chip": "{name}: {value}",
+          "yes": "ja",
+          "no": "nein",
+          "names": {
+            "outcomeLine": "Ergebnis",
+            "topic": "Thema",
+            "gap": "Unbeantwortete Frage",
+            "check": "Prüfung",
+            "category": "Kategorie der Anfrage",
+            "requestOutcome": "Ergebnis der Anfrage",
+            "noConversation": "Kein Gespräch",
+            "corrected": "Korrigiert"
+          }
+        },
+        "bulk": {
+          "label": "Ausgewählte Anrufe",
+          "count": "{n} ausgewählt | {n} ausgewählt",
+          "select": "Anruf von {name} auswählen",
+          "changeOutcome": "Ergebnis ändern",
+          "spam": "Als Spam markieren",
+          "confirm": "Bestätigen",
+          "clear": "Auswahl aufheben",
+          "leftOut": "{n} Anruf ohne bewertetes Ergebnis wurde ausgelassen. | {n} Anrufe ohne bewertetes Ergebnis wurden ausgelassen."
         }
       }
     },

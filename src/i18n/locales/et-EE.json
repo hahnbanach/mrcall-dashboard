@@ -2508,6 +2508,39 @@
           "delete": "Kustuta reegel",
           "keep": "Jäta alles",
           "deleted": "Reegel on kustutatud; selle märgitud kõnesid loetakse taas."
+        },
+        "readOnly": {
+          "title": "Ainult lugemiseks",
+          "note": "Sa ei ole nende kõnede omanik: iga avatud kõne registreeritakse ja omanik näeb, kes selle avas.",
+          "open": "Ava kõne"
+        },
+        "filters": {
+          "title": "Lingi filtrid",
+          "remove": "Eemalda filter {filter}",
+          "unknown": "Lingi filtrit ei tuntud ära ja seda ei rakendata.",
+          "chip": "{name}: {value}",
+          "yes": "jah",
+          "no": "ei",
+          "names": {
+            "outcomeLine": "Tulemus",
+            "topic": "Teema",
+            "gap": "Vastamata küsimus",
+            "check": "Kontroll",
+            "category": "Päringu kategooria",
+            "requestOutcome": "Päringu tulemus",
+            "noConversation": "Vestlust pole",
+            "corrected": "Parandatud"
+          }
+        },
+        "bulk": {
+          "label": "Valitud kõned",
+          "count": "{n} valitud | {n} valitud",
+          "select": "Vali kõne: {name}",
+          "changeOutcome": "Muuda tulemust",
+          "spam": "Märgi rämpskõneks",
+          "confirm": "Kinnita",
+          "clear": "Tühista valik",
+          "leftOut": "{n} hinnatud tulemuseta kõne jäeti välja. | {n} hinnatud tulemuseta kõnet jäeti välja."
         }
       }
     },
