@@ -65,7 +65,8 @@ export default {
     // outcome, an admin's category), which are not proposals (`Classifications.statusFor`)
     signals() {
       return this.page.items.flatMap((g) => (Array.isArray(g.signals) ? g.signals : []))
-        .filter((s) => Classifications.statusFor(s.field, s.signal, s.actorRole) === "proposed");
+        // an agent's signal (a delegated token, an MCP tool) is always a proposal, whatever its role
+        .filter((s) => s.source === "agent" || Classifications.statusFor(s.field, s.signal, s.actorRole) === "proposed");
     },
   },
   watch: {
