@@ -232,15 +232,19 @@ dashboard behind on some of them. Where this amendment differs from the sections
 3. **The queue is grouped by StarChat.** `GET insights/feedback` answers groups (`category`, `businessId`,
    `businessName`, `calls`, `items`, `signals`) ordered by the calls each moves and paged over groups, beside the flat
    `items`. The dashboard draws the groups as served. Apply and reject stay one call per signal (no bulk route).
-4. **Caller numbers are masked by StarChat** to anyone but the call's owner, and the rules' numbers to anyone but the
-   business's owner. The offer to delete a rule (which needs the number) is the owner's only.
+4. **Caller numbers are masked by StarChat** in a non-owner's list hits (`ConversationAccess.reduced`) and in the
+   caller rules' answers (a rule on a call to anyone but the call's owner, the rules' numbers to anyone but the
+   business's owner); an opened call carries its full number to whoever opens it (the opening is recorded). The offer
+   to delete a rule stays the business's owner's: a rule judges every call of a number for the whole business, a
+   decision for whoever owns its calls.
 5. **A report's counts stay as generated** (`bc67b6c8b`); the list a report count opens shows the calls the reader can
    open now, and is to say how many it leaves out ("N non visibili con il tuo accesso") from a server field StarChat
    has not named yet. Until it is named that line is not drawn; it goes back to the lead as pending.
 6. **A count's list keeps archived calls.** The statistics count finalised calls that are not deleted, archived or not
    (StarChat's `counted`); the list of a count drops the inbox's narrowing, and says so in a chip that undoes it.
-7. **The chips are drawn on the conversations page only**, the page that carries the undo bar and knows the reader's
-   ownership. The restaurant call dialog (reached by admins and resellers from the configuration) keeps today's panel:
-   drawing chips there would read the judgements on its own, a recorded opening nobody asked for, with no undo. This
-   is a limit of this release, recorded for the lead.
-
+7. **The chips are drawn wherever a call is opened on purpose**: the conversations page and the call a restaurant
+   booking carries, read from the bookings page (reached by the business's owner, and by admins and resellers). Both
+   carry the undo bar and decide the reader's ownership from the business's owner before anything is read: an owner's
+   opened call reads its judgements at once (an owner's reads are never recorded); a non-owner's is read-only, its
+   judgements read when the person opens one, its recording from the one-time link. A panel drawn by any other page
+   draws no chips.

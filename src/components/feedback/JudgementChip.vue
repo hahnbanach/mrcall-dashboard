@@ -112,6 +112,7 @@ export default {
       else this.show();
     },
     show() {
+      if (this.busy) return;
       if (this.deferred) {
         this.$emit("opening");
         return;

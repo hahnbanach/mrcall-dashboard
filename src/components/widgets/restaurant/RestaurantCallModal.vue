@@ -11,8 +11,21 @@
     <p v-else-if="state === 'error'" class="err">{{ $t("components.restaurant.calls.error") }}</p>
     <template v-else-if="conversation">
       <p class="muted call-when">{{ when }}</p>
-      <CallDetailsPanel :key="conversation.id" :conversation="conversation" :business-id="businessId" :user="user" :expanded="true" />
+      <p v-if="readOnly" class="muted read-only-note">{{ $t("components.callInsights.feedback.readOnly.title") }}</p>
+      <!-- opened on purpose, as the conversations page's opened call: its judgements as chips, read at once for the
+           owner; read-only for anyone else (brief docs/briefs/2026-10-27-classification-feedback.md, amendment item 7) -->
+      <CallDetailsPanel
+        :key="conversation.id"
+        :conversation="conversation"
+        :business-id="businessId"
+        :user="user"
+        :expanded="true"
+        :eager="true"
+        :read-only="readOnly"
+        :with-judgements="true"
+      />
     </template>
+    <UndoBar />
   </Dialog>
 </template>
 
@@ -20,15 +33,19 @@
 import { isSessionEnded } from "@/firebase/session";
 import ConversationApi from "@/utils/Conversation";
 import CallDetailsPanel from "@/components/conversations/CallDetailsPanel.vue";
+import UndoBar from "@/components/feedback/UndoBar.vue";
+import CallInsights from "@/utils/CallInsights";
+import Classifications from "@/utils/Classifications";
 
 /**
  * "Leggi la chiamata": the call a booking carries, read through Conversation.get and drawn by the same
  * panel the conversations page uses (the details in the order of the call's notification, the transcript,
  * the recording played on request). When later calls changed or cancelled the booking, every call is
- * listed, newest first. Closing returns to the page as it was.
+ * listed, newest first. Closing returns to the page as it was. The business's owner is read once, before the first
+ * call, to tell an owner's dialog from a non-owner's.
  */
 export default {
-  components: { CallDetailsPanel },
+  components: { CallDetailsPanel, UndoBar },
   props: {
     visible: { type: Boolean, default: false },
     ids: { type: Array, default: () => [] },
@@ -38,11 +55,16 @@ export default {
   },
   emits: ["update:visible"],
   data() {
-    return { current: null, conversation: null, state: "idle" };
+    return { current: null, conversation: null, state: "idle", business: undefined };
   },
   computed: {
     header() {
       return this.title ? this.$t("components.restaurant.calls.titleOf", { name: this.title }) : this.$t("components.restaurant.calls.title");
+    },
+    // read-only unless the reader is known to own the business (`Classifications.isOwnerOf`): a non-owner's read of the
+    // call's judgements and of its recording are recorded by StarChat, and are made only on the person's request
+    readOnly() {
+      return Classifications.isOwnerOf(this.business, this.user) !== true;
     },
     when() {
       const ts = this.conversation && this.conversation.startTimestamp;
@@ -56,6 +78,9 @@ export default {
       this.conversation = null;
       this.state = "loading";
       try {
+        if (this.business === undefined) {
+          this.business = await CallInsights.business(this.user, this.businessId).catch(() => null);
+        }
         const found = await ConversationApi.get(this.user, this.businessId, id);
         if (this.current !== id) return;
         this.conversation = found;

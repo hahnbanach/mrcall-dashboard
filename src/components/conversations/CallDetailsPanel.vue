@@ -40,7 +40,9 @@
     <!-- What the call said: StarChat's call insights, version 2 (the four dimensions under the
          dashboard's one value table, the topics, the questions the assistant could not answer, the
          checks that fired). Absent on a call from before the feature, exactly like today. -->
-    <section v-if="hasInsights" class="call-box call-insights-box">
+    <!-- drawn while the call has insights, or while its judgements are chips (a call whose details carry none, read
+         on a page that asks for its judgements) -->
+    <section v-if="hasInsights || withJudgements" v-show="hasInsights || chips" class="call-box call-insights-box">
       <h3 class="call-box-title">{{ $t("components.callInsights.panel.title") }}</h3>
 
       <!-- The judgements as chips a person corrects (CallJudgements); while they are not drawn, today's rows -->
