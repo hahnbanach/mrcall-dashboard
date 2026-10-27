@@ -50,6 +50,11 @@
           :business-id="businessId"
           :user="user"
       />
+      <CallsAccessSettings
+          v-if="selectedMenupage?.collection.id === CALLS_ACCESS_ID && businessId && user && ownsBusiness"
+          :business-id="businessId"
+          :user="user"
+      />
       <template v-for="(page, index) in selectedMenupage?.variables" :key="index">
         <div v-if="hasVisibleVariables(page)" :class="page.length > 1 ? 'pageblock' : 'pageblock-noborder'">
           <template v-for="(variable, index) in page" :key="index">
@@ -489,13 +494,18 @@ import MultiselectVariable from "../../components/widgets/MultiselectVariable.vu
 import TimeSlotsEditor from "@/components/widgets/TimeSlotsEditor.vue";
 import AgentSkillsConfigurator from "@/components/widgets/AgentSkillsConfigurator.vue";
 import RetentionSettings from "@/components/widgets/RetentionSettings.vue";
+import CallsAccessSettings from "@/components/widgets/CallsAccessSettings.vue";
+
+// a page of its own, the business's owner's: the numbers treated as spam and who opened the calls
+// (docs/briefs/2026-10-27-classification-feedback.md, scope 10)
+const CALLS_ACCESS_ID = '__CALLS_ACCESS__';
 import RestaurantBook from "@/components/widgets/RestaurantBook.vue";
 import { SKILL_NAMES as RESTAURANT_SKILLS, SKILL_PHASE as RESTAURANT_PHASE, pageOffIn } from "@/utils/Restaurant";
 import ActionPanel from "@/components/ActionPanel.vue";
 import ConfigureAIPanel from "@/components/ConfigureAIPanel.vue";
 
 export default {
-  components: { TimeSlotsEditor, AgentSkillsConfigurator, TupleVariable, TemplatedVariable, MultiselectVariable, BusinessFrame, ActionPanel, ConfigureAIPanel, RetentionSettings, RestaurantBook},
+  components: { TimeSlotsEditor, AgentSkillsConfigurator, TupleVariable, TemplatedVariable, MultiselectVariable, BusinessFrame, ActionPanel, ConfigureAIPanel, RetentionSettings, RestaurantBook, CallsAccessSettings},
   name: "OnboardingChooseDevice",
   setup: function () {
     const store = useStore();
@@ -545,7 +555,14 @@ export default {
     /** A synthetic page that saves through its own API and button, where the footer's Save has no place. */
     ownSavePage() {
       const id = this.selectedMenupage?.collection?.id
-      return id === '__DATA_RETENTION__' || id === '__RESTAURANT_BOOKING__'
+      return id === '__DATA_RETENTION__' || id === '__RESTAURANT_BOOKING__' || id === CALLS_ACCESS_ID
+    },
+    CALLS_ACCESS_ID() {
+      return CALLS_ACCESS_ID
+    },
+    /** The reader owns this business: its spam numbers and its calls' openings are the owner's to read. */
+    ownsBusiness() {
+      return !!(this.business && this.user && this.business.owner && this.business.owner === this.user.uid)
     },
     /** The business runs the restaurant_booking skill: only then has it a book to show. */
     hasRestaurant() {
@@ -943,7 +960,8 @@ export default {
         && this.variablesAnnotations.some((obj) => obj.collection.id === requested)
       // The restaurant page only while the business has it with its page on (R8); otherwise the default, like any
       // section this business does not have.
-      const resolvedId = (requested === CONFIGURE_AI_ID || requested === RETENTION_ID || (requested === RESTAURANT_ID && this.hasRestaurant) || known)
+      const resolvedId = (requested === CONFIGURE_AI_ID || requested === RETENTION_ID || (requested === RESTAURANT_ID && this.hasRestaurant)
+        || (requested === CALLS_ACCESS_ID && this.ownsBusiness) || known)
         ? requested : CONFIGURE_AI_ID
       if (resolvedId !== requested) {
         console.warn("Unknown configuration section, falling back to the default:", requested)
@@ -965,6 +983,11 @@ export default {
             humanName: this.t('components.restaurant.menu'),
             description: '',
           },
+          variables: [],
+        }
+      } else if (resolvedId === CALLS_ACCESS_ID) {
+        this.pageSelection = {
+          collection: { id: CALLS_ACCESS_ID, humanName: this.t('components.callInsights.feedback.access.menu'), description: '' },
           variables: [],
         }
       } else if (resolvedId === RETENTION_ID) {
@@ -1098,7 +1121,17 @@ export default {
         },
         visible: () => true,
       }
-      const extra = this.hasRestaurant ? [restaurantItem, retentionItem] : [retentionItem]
+      const callsAccessItem = {
+        label: this.t('components.callInsights.feedback.access.menu'),
+        icon: 'pi pi-fw pi-shield',
+        _collectionId: CALLS_ACCESS_ID,
+        class: selectedId === CALLS_ACCESS_ID ? 'active-menu-item' : undefined,
+        command: () => {
+          this.switchToMenupage(CALLS_ACCESS_ID)
+        },
+        visible: () => true,
+      }
+      const extra = (this.hasRestaurant ? [restaurantItem, retentionItem] : [retentionItem]).concat(this.ownsBusiness ? [callsAccessItem] : [])
       const lastBusiness = result.map((item) => menuGroups[item._collectionId]).lastIndexOf('business')
       if (lastBusiness >= 0) {
         result.splice(lastBusiness + 1, 0, ...extra)

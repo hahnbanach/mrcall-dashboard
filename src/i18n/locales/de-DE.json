@@ -2619,6 +2619,35 @@
           "managed_call": "Vom Assistenten bearbeitet",
           "skill_errors": "Skill-Fehler",
           "unkept": "Nicht gehaltene Zusagen"
+        },
+        "access": {
+          "menu": "Spam-Nummern und Zugriff auf Anrufe",
+          "rulesTitle": "Als Spam behandelte Nummern",
+          "rulesNote": "Anrufe von diesen Nummern zählen als Spam. Wird eine Regel gelöscht, zählen ihre Anrufe wieder.",
+          "rulesEmpty": "Keine Nummer wird als Spam behandelt.",
+          "since": "seit {date}",
+          "delete": "Löschen",
+          "deleteOf": "Regel für {number} löschen",
+          "deleted": "Regel gelöscht: {n} Anruf zählt wieder. | Regel gelöscht: {n} Anrufe zählen wieder.",
+          "logTitle": "Wer Ihre Anrufe geöffnet hat",
+          "logNote": "Ihr Partner und MrCall können Ihre Anrufe öffnen, um Ihnen zu helfen; jedes Öffnen wird hier protokolliert und 12 Monate aufbewahrt.",
+          "logEmpty": "Niemand sonst hat Ihre Anrufe geöffnet.",
+          "columns": {
+            "at": "Wann",
+            "who": "Wer",
+            "event": "Was",
+            "call": "Anruf"
+          },
+          "roles": {
+            "admin": "Administrator",
+            "reseller": "Partner",
+            "service": "MrCall",
+            "unknown": "Jemand"
+          },
+          "events": {
+            "opened": "Anruf geöffnet",
+            "audio": "Aufnahme angehört"
+          }
         }
       }
     },

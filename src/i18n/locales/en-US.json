@@ -2622,6 +2622,35 @@
           "managed_call": "Managed by the assistant",
           "skill_errors": "Skill errors",
           "unkept": "Promises not kept"
+        },
+        "access": {
+          "menu": "Spam numbers and call access",
+          "rulesTitle": "Numbers treated as spam",
+          "rulesNote": "Calls from these numbers are counted as spam. Deleting a rule counts its calls again.",
+          "rulesEmpty": "No number is treated as spam.",
+          "since": "since {date}",
+          "delete": "Delete",
+          "deleteOf": "Delete the rule for {number}",
+          "deleted": "Rule deleted: {n} call counted again. | Rule deleted: {n} calls counted again.",
+          "logTitle": "Who opened your calls",
+          "logNote": "Your partner and MrCall can open your calls to help you; every opening is recorded here and kept for 12 months.",
+          "logEmpty": "Nobody else has opened your calls.",
+          "columns": {
+            "at": "When",
+            "who": "Who",
+            "event": "What",
+            "call": "Call"
+          },
+          "roles": {
+            "admin": "Admin",
+            "reseller": "Partner",
+            "service": "MrCall",
+            "unknown": "Someone"
+          },
+          "events": {
+            "opened": "Call opened",
+            "audio": "Recording heard"
+          }
         }
       }
     },

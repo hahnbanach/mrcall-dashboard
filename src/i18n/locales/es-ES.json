@@ -2631,6 +2631,35 @@
           "managed_call": "Gestionada por el asistente",
           "skill_errors": "Errores de skills",
           "unkept": "Promesas no cumplidas"
+        },
+        "access": {
+          "menu": "Números de spam y acceso a las llamadas",
+          "rulesTitle": "Números tratados como spam",
+          "rulesNote": "Las llamadas de estos números se cuentan como spam. Al eliminar una regla, sus llamadas vuelven a contarse.",
+          "rulesEmpty": "Ningún número se trata como spam.",
+          "since": "desde el {date}",
+          "delete": "Eliminar",
+          "deleteOf": "Eliminar la regla de {number}",
+          "deleted": "Regla eliminada: {n} llamada vuelve a contarse. | Regla eliminada: {n} llamadas vuelven a contarse.",
+          "logTitle": "Quién abrió tus llamadas",
+          "logNote": "Tu partner y MrCall pueden abrir tus llamadas para ayudarte; cada apertura queda registrada aquí y se conserva 12 meses.",
+          "logEmpty": "Nadie más ha abierto tus llamadas.",
+          "columns": {
+            "at": "Cuándo",
+            "who": "Quién",
+            "event": "Qué",
+            "call": "Llamada"
+          },
+          "roles": {
+            "admin": "Administrador",
+            "reseller": "Partner",
+            "service": "MrCall",
+            "unknown": "Alguien"
+          },
+          "events": {
+            "opened": "Llamada abierta",
+            "audio": "Grabación escuchada"
+          }
         }
       }
     },

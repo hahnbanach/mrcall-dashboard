@@ -2619,6 +2619,35 @@
           "managed_call": "Géré par l'assistant",
           "skill_errors": "Erreurs des skills",
           "unkept": "Promesses non tenues"
+        },
+        "access": {
+          "menu": "Numéros indésirables et accès aux appels",
+          "rulesTitle": "Numéros traités comme indésirables",
+          "rulesNote": "Les appels de ces numéros sont comptés comme indésirables. Supprimer une règle recompte ses appels.",
+          "rulesEmpty": "Aucun numéro n'est traité comme indésirable.",
+          "since": "depuis le {date}",
+          "delete": "Supprimer",
+          "deleteOf": "Supprimer la règle pour {number}",
+          "deleted": "Règle supprimée : {n} appel recompté. | Règle supprimée : {n} appels recomptés.",
+          "logTitle": "Qui a ouvert vos appels",
+          "logNote": "Votre partenaire et MrCall peuvent ouvrir vos appels pour vous aider ; chaque ouverture est enregistrée ici et conservée 12 mois.",
+          "logEmpty": "Personne d'autre n'a ouvert vos appels.",
+          "columns": {
+            "at": "Quand",
+            "who": "Qui",
+            "event": "Quoi",
+            "call": "Appel"
+          },
+          "roles": {
+            "admin": "Administrateur",
+            "reseller": "Partenaire",
+            "service": "MrCall",
+            "unknown": "Quelqu'un"
+          },
+          "events": {
+            "opened": "Appel ouvert",
+            "audio": "Enregistrement écouté"
+          }
         }
       }
     },

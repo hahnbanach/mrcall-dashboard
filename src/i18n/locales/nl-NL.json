@@ -2617,6 +2617,35 @@
           "managed_call": "Afgehandeld door de assistent",
           "skill_errors": "Skillfouten",
           "unkept": "Niet nagekomen toezeggingen"
+        },
+        "access": {
+          "menu": "Spamnummers en toegang tot oproepen",
+          "rulesTitle": "Als spam behandelde nummers",
+          "rulesNote": "Oproepen van deze nummers tellen als spam. Een regel verwijderen telt de oproepen weer mee.",
+          "rulesEmpty": "Geen nummer wordt als spam behandeld.",
+          "since": "sinds {date}",
+          "delete": "Verwijderen",
+          "deleteOf": "De regel voor {number} verwijderen",
+          "deleted": "Regel verwijderd: {n} oproep telt weer mee. | Regel verwijderd: {n} oproepen tellen weer mee.",
+          "logTitle": "Wie uw oproepen opende",
+          "logNote": "Uw partner en MrCall kunnen uw oproepen openen om u te helpen; elke keer wordt hier vastgelegd en 12 maanden bewaard.",
+          "logEmpty": "Niemand anders heeft uw oproepen geopend.",
+          "columns": {
+            "at": "Wanneer",
+            "who": "Wie",
+            "event": "Wat",
+            "call": "Oproep"
+          },
+          "roles": {
+            "admin": "Beheerder",
+            "reseller": "Partner",
+            "service": "MrCall",
+            "unknown": "Iemand"
+          },
+          "events": {
+            "opened": "Oproep geopend",
+            "audio": "Opname beluisterd"
+          }
         }
       }
     },

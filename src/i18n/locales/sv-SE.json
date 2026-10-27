@@ -2617,6 +2617,35 @@
           "managed_call": "Hanterat av assistenten",
           "skill_errors": "Skillfel",
           "unkept": "Löften som inte hölls"
+        },
+        "access": {
+          "menu": "Spamnummer och åtkomst till samtal",
+          "rulesTitle": "Nummer som behandlas som spam",
+          "rulesNote": "Samtal från dessa nummer räknas som spam. Tar du bort en regel räknas samtalen igen.",
+          "rulesEmpty": "Inget nummer behandlas som spam.",
+          "since": "sedan {date}",
+          "delete": "Ta bort",
+          "deleteOf": "Ta bort regeln för {number}",
+          "deleted": "Regeln borttagen: {n} samtal räknas igen. | Regeln borttagen: {n} samtal räknas igen.",
+          "logTitle": "Vem som öppnade dina samtal",
+          "logNote": "Din partner och MrCall kan öppna dina samtal för att hjälpa dig; varje öppning registreras här och sparas i 12 månader.",
+          "logEmpty": "Ingen annan har öppnat dina samtal.",
+          "columns": {
+            "at": "När",
+            "who": "Vem",
+            "event": "Vad",
+            "call": "Samtal"
+          },
+          "roles": {
+            "admin": "Administratör",
+            "reseller": "Partner",
+            "service": "MrCall",
+            "unknown": "Någon"
+          },
+          "events": {
+            "opened": "Samtal öppnat",
+            "audio": "Inspelning lyssnad"
+          }
         }
       }
     },

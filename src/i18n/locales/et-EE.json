@@ -2617,6 +2617,35 @@
           "managed_call": "Assistent käsitles",
           "skill_errors": "Skillide vead",
           "unkept": "Pidamata lubadused"
+        },
+        "access": {
+          "menu": "Rämpsnumbrid ja juurdepääs kõnedele",
+          "rulesTitle": "Rämpsuna käsitletavad numbrid",
+          "rulesNote": "Nende numbrite kõnesid loetakse rämpskõnedeks. Reegli kustutamisel loetakse selle kõned uuesti.",
+          "rulesEmpty": "Ühtegi numbrit ei käsitleta rämpsuna.",
+          "since": "alates {date}",
+          "delete": "Kustuta",
+          "deleteOf": "Kustuta numbri {number} reegel",
+          "deleted": "Reegel kustutatud: {n} kõne loetakse uuesti. | Reegel kustutatud: {n} kõnet loetakse uuesti.",
+          "logTitle": "Kes avas sinu kõnesid",
+          "logNote": "Sinu partner ja MrCall võivad sinu kõnesid avada, et sind aidata; iga avamine registreeritakse siin ja seda hoitakse 12 kuud.",
+          "logEmpty": "Keegi teine pole sinu kõnesid avanud.",
+          "columns": {
+            "at": "Millal",
+            "who": "Kes",
+            "event": "Mida",
+            "call": "Kõne"
+          },
+          "roles": {
+            "admin": "Administraator",
+            "reseller": "Partner",
+            "service": "MrCall",
+            "unknown": "Keegi"
+          },
+          "events": {
+            "opened": "Kõne avatud",
+            "audio": "Salvestist kuulati"
+          }
         }
       }
     },

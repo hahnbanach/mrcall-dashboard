@@ -2623,6 +2623,35 @@
           "managed_call": "Gestita dall'assistente",
           "skill_errors": "Errori delle skill",
           "unkept": "Promesse non mantenute"
+        },
+        "access": {
+          "menu": "Numeri spam e accessi alle chiamate",
+          "rulesTitle": "Numeri trattati come spam",
+          "rulesNote": "Le chiamate da questi numeri sono contate come spam. Eliminando una regola le sue chiamate tornano nei conteggi.",
+          "rulesEmpty": "Nessun numero è trattato come spam.",
+          "since": "dal {date}",
+          "delete": "Elimina",
+          "deleteOf": "Elimina la regola per {number}",
+          "deleted": "Regola eliminata: {n} chiamata torna nei conteggi. | Regola eliminata: {n} chiamate tornano nei conteggi.",
+          "logTitle": "Chi ha aperto le tue chiamate",
+          "logNote": "Il tuo partner e MrCall possono aprire le tue chiamate per aiutarti; ogni apertura è registrata qui e conservata 12 mesi.",
+          "logEmpty": "Nessun altro ha aperto le tue chiamate.",
+          "columns": {
+            "at": "Quando",
+            "who": "Chi",
+            "event": "Cosa",
+            "call": "Chiamata"
+          },
+          "roles": {
+            "admin": "Amministratore",
+            "reseller": "Partner",
+            "service": "MrCall",
+            "unknown": "Qualcuno"
+          },
+          "events": {
+            "opened": "Chiamata aperta",
+            "audio": "Registrazione ascoltata"
+          }
         }
       }
     },

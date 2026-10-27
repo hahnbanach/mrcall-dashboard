@@ -2617,6 +2617,35 @@
           "managed_call": "Avustajan hoitama",
           "skill_errors": "Skill-virheet",
           "unkept": "Pitämättömät lupaukset"
+        },
+        "access": {
+          "menu": "Roskanumerot ja pääsy puheluihin",
+          "rulesTitle": "Roskaksi käsitellyt numerot",
+          "rulesNote": "Näiden numeroiden puhelut lasketaan roskapuheluiksi. Säännön poistaminen laskee sen puhelut taas mukaan.",
+          "rulesEmpty": "Mitään numeroa ei käsitellä roskana.",
+          "since": "{date} alkaen",
+          "delete": "Poista",
+          "deleteOf": "Poista numeron {number} sääntö",
+          "deleted": "Sääntö poistettu: {n} puhelu lasketaan taas. | Sääntö poistettu: {n} puhelua lasketaan taas.",
+          "logTitle": "Kuka avasi puhelusi",
+          "logNote": "Kumppanisi ja MrCall voivat avata puhelusi auttaakseen sinua; jokainen avaus kirjataan tähän ja säilytetään 12 kuukautta.",
+          "logEmpty": "Kukaan muu ei ole avannut puheluitasi.",
+          "columns": {
+            "at": "Milloin",
+            "who": "Kuka",
+            "event": "Mitä",
+            "call": "Puhelu"
+          },
+          "roles": {
+            "admin": "Ylläpitäjä",
+            "reseller": "Kumppani",
+            "service": "MrCall",
+            "unknown": "Joku"
+          },
+          "events": {
+            "opened": "Puhelu avattu",
+            "audio": "Tallenne kuunneltu"
+          }
         }
       }
     },
