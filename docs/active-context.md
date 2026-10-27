@@ -29,13 +29,14 @@ Session ownership: every nonpublic route needs a session, the Axios interceptor 
 and components suppress their failure UI for `isSessionEnded`. Browser tests mock StarChat and
 mrcall-agent.
 
-Branch `classification-feedback` (built on `v2.2`, not merged, not deployed) carries the dashboard side of StarChat's
-classification feedback (its plan's step C8): a call's judgements as chips with one undo, bulk corrections, every
-count opening its calls, callers' requests on request records, the queues, caller rules and the access record, a
-non-owner's read-only call ([brief](briefs/2026-10-27-classification-feedback.md),
-[plan](execution-plans/2026-10-27-classification-feedback.md)). It needs StarChat with the routes of that plan's C5,
-C5b, C6 and C7 and the commits named in the brief's amendment; the category chip waits for the category list read
-the brief proposes to StarChat.
+Branch `classification-feedback` (a fast-forward from `fd4c94d`, not merged, not deployed) carries the dashboard side
+of StarChat's classification feedback (its plan's step C8): a call's judgements as chips with one undo, bulk
+corrections, every count opening its calls, callers' requests on request records, the queues, caller rules and the
+access record, a non-owner's read-only call ([brief](briefs/2026-10-27-classification-feedback.md),
+[plan](execution-plans/2026-10-27-classification-feedback.md)). Verified on the repository's mocks only (vitest and
+the full Playwright run); it needs StarChat with the routes of that plan's C5, C5b, C6 and C7 and the commits named in
+the brief's amendment, and its live check comes with StarChat's C11. The category chip waits for the category list
+read the brief proposes to StarChat.
 
 ## Unresolved
 
@@ -61,5 +62,5 @@ the brief proposes to StarChat.
 
 - Operator: verify the production flow and actual call results with the chosen account.
 - Remove `__BOOKING__` from `menuGroups` after StarChat's move is on test.
-- Classification feedback (StarChat plan step C8) is being built on a branch from `v2.2` and
-  lands by fast-forward after review.
+- Classification feedback (StarChat plan step C8) is built and reviewed on branch
+  `classification-feedback`, a fast-forward from `de91ac6`; the line holder lands it.
