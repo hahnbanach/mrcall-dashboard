@@ -182,6 +182,12 @@ intent binding owner, business, session, setup token and exact OAuth state. Goog
 marks it connected only after the existing context/state/owner/scope checks and successful
 provider/connect. Failure clears it. A query marker alone never authorizes activation.
 
+The additive configured flag describes five saved enabled skills, one accessible calendar
+and no pending booking edit, separately from strict managed-prompt alignment state.
+The passive setup card is hidden for configured/active groups, including markerless
+custom prompts. Explicit local activation failure keeps recovery controls through refresh;
+disabled groups and pending edits retain their setup UI. Activation safeguards are unchanged.
+
 Returning to the same chat consumes the successful intent once. A matching unchanged setup
 with one verified calendar can finish automatically; multiple calendars require a choice by
 name. Already-connected configurations require an explicit destination/activation action.

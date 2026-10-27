@@ -1,5 +1,5 @@
 ---
-doc_baseline_commit: e5ce20e3751374825c0242b44db1f48fe327407b
+doc_baseline_commit: 2ac966bbf8ac786ec09a7e7752a7135a9d8e8df4
 doc_baseline_date: 2026-10-27
 ---
 
@@ -10,6 +10,11 @@ Scope: Current dashboard operating state, unresolved verification limits, and im
 <!-- doc-scope:end -->
 
 ## State now
+
+The booking-card visibility candidate separates saved skill readiness from managed
+prompt alignment. It hides passive setup for five already-configured skills while
+retaining pending/disabled/failure controls. Focused checks and build pass; it is not
+yet deployed. See the [plan](execution-plans/2026-10-27-booking-card-visibility.md).
 
 TEST serves v2.2.37-test at e5ce20e3, successful workflow40546056223.
 All 104 published JS/CSS assets answer HTTP200 and match the CI build names;

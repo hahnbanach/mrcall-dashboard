@@ -1,5 +1,5 @@
 <template>
-  <section v-if="available || failed" class="booking-calendar-connection" data-testid="booking-connection">
+  <section v-if="failed || (available && (recovering || (setup.configured !== true && setup.state !== 'active')))" class="booking-calendar-connection" data-testid="booking-connection">
     <strong>{{ $t('views.configureAI.bookingConnection.title') }}</strong>
     <p v-if="setup.state === 'active'" role="status">{{ $t('views.configureAI.bookingConnection.active') }}</p>
     <template v-else>
@@ -44,6 +44,7 @@ const setup = ref({});
 const available = ref(false);
 const selected = ref(null);
 const failed = ref('');
+const recovering = ref(false);
 const loading = ref(false);
 const busy = ref(false);
 let generation = 0;
@@ -75,6 +76,7 @@ async function refresh(resetFailure = false) {
     available.value = false;
     consumedReturn = false;
     failed.value = '';
+    recovering.value = false;
     emit('available', false);
   }
   const request = ++generation;
@@ -94,6 +96,7 @@ async function refresh(resetFailure = false) {
       throw new Error('invalid_calendar_list');
     }
     setup.value = data;
+    if (data.state === 'active') recovering.value = false;
     available.value = data.available === true && typeof data.setup_token === 'string';
     emit('available', available.value);
     selected.value = rows.some(row => row.id === selected.value) ? selected.value : null;
@@ -149,11 +152,14 @@ async function activate(fromReturn = false) {
         !Array.isArray(result.remaining_pending) || !Array.isArray(result.skill_outcomes) ||
         (result.booking_active && !result.success)) throw new Error('invalid_activation_response');
     emit('result', { ...target, result });
-    if (result.booking_active === true && result.success === true) setup.value = { ...setup.value, state: 'active' };
-    else failed.value = 'partial';
+    if (result.booking_active === true && result.success === true) {
+      recovering.value = false;
+      setup.value = { ...setup.value, state: 'active', configured: true };
+    } else { recovering.value = true; failed.value = 'partial'; }
   } catch (error) {
     if (isSessionEnded(error)) return;
     if (current(target)) {
+      recovering.value = true;
       failed.value = error.response?.status === 409 ? 'stale' : 'failed';
       emit('result', { ...target, lost: true, refused: !!error.response });
     }

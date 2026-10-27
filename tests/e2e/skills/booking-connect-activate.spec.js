@@ -18,7 +18,7 @@ const five = () => names.map((name, index) => operation(`booking-${index}`, {
 async function setup(page, options = {}) {
   const model = await setupOAuthPage(page, options)
   model.pending = options.saved ? [] : [...five(), ...(options.sibling ? [ordinary] : [])]
-  model.booking = { available: true, state: 'prepared', setup_token: token,
+  model.booking = { available: true, state: options.active ? 'active' : 'prepared', configured: options.configured, setup_token: token,
     connection_status: 'unknown', calendars: options.connected ? [calendar] : [], oauth_scopes: [calendarScope] }
   model.activations = []
   await page.route('**/api/mrcall/booking/setup*', route => json(route, model.booking))
@@ -36,7 +36,12 @@ async function setup(page, options = {}) {
       instance_id: `saved-${index}`, status: options.partial && index ? 'pending' : 'saved' }))
     model.pending = model.pending.filter(p => p.kind !== 'skill_instance' ||
       (options.partial && p.operation_id !== 'booking-0'))
-    if (!options.partial) model.booking.state = 'active'
+    if (!options.partial) { model.booking.state = 'active'; model.booking.configured = true }
+    if (options.promptFailure) {
+      model.booking.state = 'prepared'; model.booking.configured = true
+      return json(route, { success: false, booking_active: false, applied: 5, skill_outcomes: outcomes,
+        errors: ['booking_conversation_write_failed'], remaining_pending: model.pending })
+    }
     return json(route, { success: !options.partial, applied: options.partial ? 1 : 5,
       booking_active: !options.partial, skill_outcomes: outcomes, errors: [], remaining_pending: model.pending })
   })
@@ -44,7 +49,8 @@ async function setup(page, options = {}) {
   await expect(page.locator('.message-input')).toBeEnabled()
   const support = page.locator('#support-small:not(.collapsed) .panel-toggle-btn-small')
   if (await support.isVisible()) await support.click()
-  await expect(page.getByTestId('booking-connection')).toBeVisible()
+  if (options.configured || options.active) await expect(page.getByTestId('booking-connection')).toHaveCount(0)
+  else await expect(page.getByTestId('booking-connection')).toBeVisible()
   return model
 }
 async function start(page) {
@@ -61,7 +67,8 @@ test('verified single-calendar return activates exactly five and preserves unrel
   const reads = model.configurationReads
   const state = await start(page)
   await callback(page, state)
-  await expect(page.getByTestId('booking-connection')).toContainText('Booking is active.')
+  await expect(page.locator('.action-message')).toContainText('Booking is active.')
+  await expect(page.getByTestId('booking-connection')).toHaveCount(0)
   expect(model.activations).toEqual([{ business_id: businessId, session_id: sessionId,
     setup_token: token, calendar_id: calendar.id }])
   expect(model.pending).toEqual([ordinary])
@@ -82,7 +89,8 @@ test('multiple calendars require an explicit named choice after successful retur
   await page.locator('.booking-calendar-picker').click()
   await page.getByRole('option', { name: 'Studio', exact: true }).click()
   await page.locator('.booking-activate').click()
-  await expect(page.getByTestId('booking-connection')).toContainText('Booking is active.')
+  await expect(page.locator('.action-message')).toContainText('Booking is active.')
+  await expect(page.getByTestId('booking-connection')).toHaveCount(0)
   expect(model.activations[0].calendar_id).toBe('second-private-id')
   await expect(page.locator('.booking-calendar-picker')).toHaveCount(0)
 })
@@ -94,7 +102,8 @@ test('already-connected saved disabled setup needs an explicit activation action
   await page.locator('.booking-calendar-picker').click()
   await page.getByRole('option', { name: 'Appointments (primary)', exact: true }).click()
   await page.locator('.booking-activate').click()
-  await expect(page.getByTestId('booking-connection')).toContainText('Booking is active.')
+  await expect(page.locator('.action-message')).toContainText('Booking is active.')
+  await expect(page.getByTestId('booking-connection')).toHaveCount(0)
   expect(model.activations).toHaveLength(1)
 })
 
@@ -220,3 +229,30 @@ for (const viewport of [{ width: 1440, height: 900 }, { width: 964, height: 640 
     await page.screenshot({ path: testInfo.outputPath('booking-layout.png'), fullPage: true })
   })
 }
+
+
+for (const active of [false, true]) {
+  test(`saved configured booking never shows the setup wizard (active=${active})`, async ({ page }) => {
+    const model = await setup(page, { saved: true, connected: true, configured: true, active })
+    await expect(page.locator('.booking-calendar-picker')).toHaveCount(0)
+    await expect(page.locator('.booking-activate')).toHaveCount(0)
+    await page.reload()
+    await expect(page.locator('.message-input')).toBeEnabled()
+    await expect(page.getByTestId('booking-connection')).toHaveCount(0)
+    expect(model.activations).toEqual([])
+    expect(model.saves).toEqual([])
+  })
+}
+
+test('explicit failed prompt activation retains recovery even after status refresh', async ({ page }) => {
+  const model = await setup(page, { saved: true, connected: true, promptFailure: true })
+  await page.locator('.booking-calendar-picker').click()
+  await page.getByRole('option', { name: 'Appointments (primary)', exact: true }).click()
+  await page.locator('.booking-activate').click()
+  await expect(page.locator('.booking-refresh')).toBeVisible()
+  expect(model.booking.configured).toBe(true)
+  await page.locator('.booking-refresh').click()
+  await expect(page.getByTestId('booking-connection')).toBeVisible()
+  await expect(page.locator('.booking-calendar-picker')).toBeVisible()
+  expect(model.activations).toHaveLength(1)
+})
