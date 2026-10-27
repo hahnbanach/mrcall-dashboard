@@ -43,7 +43,17 @@
     <section v-if="hasInsights" class="call-box call-insights-box">
       <h3 class="call-box-title">{{ $t("components.callInsights.panel.title") }}</h3>
 
-      <dl v-for="row in insightRows" :key="row.dimension" class="call-facts insight-fact">
+      <!-- The judgements as chips a person corrects (CallJudgements); while they are not drawn, today's rows -->
+      <CallJudgements
+        :conversation="conversation"
+        :business-id="businessId"
+        :user="user"
+        :read-only="readOnly"
+        :eager="eager"
+        @chips="chips = $event"
+      />
+
+      <dl v-for="row in plainRows" :key="row.dimension" class="call-facts insight-fact">
         <dt>{{ $t("components.callInsights.dimensions." + row.dimension) }}</dt>
         <dd>
           {{ $t("components.callInsights." + row.dimension + "." + row.value) }}
@@ -158,6 +168,7 @@
 <script>
 import ConversationApi from "@/utils/Conversation";
 import CallInsights from "@/utils/CallInsights";
+import CallJudgements from "@/components/feedback/CallJudgements.vue";
 
 /**
  * The body of a call on the conversations page: what the business has to do about it, what the
@@ -169,11 +180,16 @@ import CallInsights from "@/utils/CallInsights";
  * fetched when the owner asks to listen.
  */
 export default {
+  components: { CallJudgements },
   props: {
     conversation: { type: Object, required: true },
     businessId: { type: String, required: true },
     user: { type: Object, required: true },
     expanded: { type: Boolean, default: false },
+    // a call of a business the reader does not own (an admin, a reseller): read-only, recorded by StarChat
+    readOnly: { type: Boolean, default: false },
+    // the call was opened on purpose (its link): its judgements are read at once rather than when in view
+    eager: { type: Boolean, default: false },
   },
   data() {
     return {
@@ -181,6 +197,8 @@ export default {
       showPrevious: this.expanded,
       audio: this.conversation.audio || null,
       recordingState: "idle",
+      // the judgements are drawn as chips: the plain resolution and message rows step aside
+      chips: false,
     };
   },
   computed: {
@@ -239,6 +257,9 @@ export default {
     },
     insightRows() {
       return CallInsights.insightRows(this.details);
+    },
+    plainRows() {
+      return this.chips ? this.insightRows.filter((r) => r.dimension !== "resolution" && r.dimension !== "message") : this.insightRows;
     },
     hasInsights() {
       return this.topics.length > 0 || this.unanswered.length > 0 || this.unkept.length > 0 ||

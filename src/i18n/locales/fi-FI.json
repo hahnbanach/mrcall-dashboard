@@ -2430,7 +2430,86 @@
       "callers": {
         "web": "Verkkopuhelu"
       },
-      "businessNotFound": "Tätä yritystä ei ole tai se ei kuulu niihin, jotka voit nähdä."
+      "businessNotFound": "Tätä yritystä ei ole tai se ei kuulu niihin, jotka voit nähdä.",
+      "feedback": {
+        "fields": {
+          "outcome": "Pyynnön lopputulos",
+          "category": "Luokka"
+        },
+        "outcome": {
+          "met": "Avustaja hoiti",
+          "taken": "Otettu vastaan yritykselle",
+          "handed_over": "Siirretty henkilölle",
+          "neither": "Ei hoidettu",
+          "withdrawn": "Soittaja perui"
+        },
+        "unset": "Ei vielä luokiteltu",
+        "otherCategory": "Luokka, jota ei enää ole luettelossa",
+        "state": {
+          "corrected": "Korjattu",
+          "confirmed": "Vahvistettu",
+          "proposed": "Ehdotus lähetetty",
+          "applied": "Otettu käyttöön",
+          "rejected": "Hylätty"
+        },
+        "chip": {
+          "name": "{field}: {value}",
+          "detail": "{from} → {to}, {who}, {when}"
+        },
+        "menu": {
+          "label": "Muuta: {field}",
+          "right": "Tämä on oikein",
+          "wrong": "Tämä on väärin, en tiedä mikä on oikein",
+          "restore": "Palauta analyysin arvo",
+          "history": "Historia"
+        },
+        "who": {
+          "owner": "omistaja",
+          "reseller": "kumppani",
+          "admin": "MrCall",
+          "service": "MrCall",
+          "unknown": "joku"
+        },
+        "history": {
+          "title": "Historia: {field}",
+          "entry": "{from} → {to}, {who}, {when}",
+          "right": "{from} vahvistettu, {who}, {when}",
+          "wrong": "{from} merkitty vääräksi, {who}, {when}",
+          "empty": "Ei muutoksia vielä.",
+          "status": {
+            "proposed": "Ehdotettu",
+            "applied": "Otettu käyttöön",
+            "rejected": "Hylätty",
+            "reverted": "Peruttu",
+            "orphaned": "Pyyntöä ei enää löydy"
+          }
+        },
+        "undo": {
+          "changed": "Muutettu",
+          "undo": "Kumoa",
+          "close": "Sulje",
+          "undone": "Muutos kumottu.",
+          "failed": "Muutosta ei voitu kumota."
+        },
+        "stale": "Arvo muuttui sillä välin: nykyinen näytetään.",
+        "failed": "Muutosta ei tallennettu.",
+        "requests": {
+          "title": "Pyynnöt",
+          "excluded": "Ei mukana laskuissa: roskapuhelu."
+        },
+        "rules": {
+          "offer": "Käsitelläänkö tämä numero aina roskapuheluna?",
+          "earlier": "Myös {n} aiempi puhelu | Myös {n} aiempaa puhelua",
+          "earlierMore": "Myös {n} viimeisintä aiempaa puhelua",
+          "always": "Käsittele roskapuheluna",
+          "noThanks": "Ei kiitos",
+          "created": "Tästä lähtien numero käsitellään roskapuheluna. | Tästä lähtien numero käsitellään roskapuheluna, ja {n} aiempi puhelu korjattiin. | Tästä lähtien numero käsitellään roskapuheluna, ja {n} aiempaa puhelua korjattiin.",
+          "byRule": "Numeroa koskeva sääntö arvioi tämän puhelun roskapuheluksi. Poistetaanko sääntö?",
+          "delete": "Poista sääntö",
+          "keep": "Säilytä",
+          "deleted": "Sääntö on poistettu; sen merkitsemät puhelut lasketaan taas mukaan."
+        }
+      }
     },
     "datePicker": {
       "chooseDate": "Valitse päivämäärä",

@@ -2432,7 +2432,86 @@
       "callers": {
         "web": "Webanruf"
       },
-      "businessNotFound": "Dieses Unternehmen existiert nicht oder gehört nicht zu denen, die Sie sehen können."
+      "businessNotFound": "Dieses Unternehmen existiert nicht oder gehört nicht zu denen, die Sie sehen können.",
+      "feedback": {
+        "fields": {
+          "outcome": "Ergebnis der Anfrage",
+          "category": "Kategorie"
+        },
+        "outcome": {
+          "met": "Vom Assistenten erfüllt",
+          "taken": "Für das Unternehmen aufgenommen",
+          "handed_over": "An eine Person übergeben",
+          "neither": "Nicht erfüllt",
+          "withdrawn": "Vom Anrufer zurückgezogen"
+        },
+        "unset": "Noch nicht eingeordnet",
+        "otherCategory": "Eine Kategorie, die nicht mehr aufgeführt ist",
+        "state": {
+          "corrected": "Korrigiert",
+          "confirmed": "Bestätigt",
+          "proposed": "Vorschlag gesendet",
+          "applied": "Übernommen",
+          "rejected": "Abgelehnt"
+        },
+        "chip": {
+          "name": "{field}: {value}",
+          "detail": "von {from} zu {to}, {who}, {when}"
+        },
+        "menu": {
+          "label": "{field} ändern",
+          "right": "Das ist richtig",
+          "wrong": "Das ist falsch, ich weiß nicht, was stimmt",
+          "restore": "Wert der Analyse wiederherstellen",
+          "history": "Verlauf"
+        },
+        "who": {
+          "owner": "der Inhaber",
+          "reseller": "ein Partner",
+          "admin": "MrCall",
+          "service": "MrCall",
+          "unknown": "jemand"
+        },
+        "history": {
+          "title": "Verlauf von {field}",
+          "entry": "{from} → {to}, {who}, {when}",
+          "right": "{from} bestätigt, {who}, {when}",
+          "wrong": "{from} als falsch gemeldet, {who}, {when}",
+          "empty": "Noch keine Änderung.",
+          "status": {
+            "proposed": "Vorgeschlagen",
+            "applied": "Übernommen",
+            "rejected": "Abgelehnt",
+            "reverted": "Rückgängig gemacht",
+            "orphaned": "Anfrage nicht mehr gefunden"
+          }
+        },
+        "undo": {
+          "changed": "Geändert",
+          "undo": "Rückgängig",
+          "close": "Schließen",
+          "undone": "Änderung rückgängig gemacht.",
+          "failed": "Die Änderung konnte nicht rückgängig gemacht werden."
+        },
+        "stale": "Dieser Wert hat sich inzwischen geändert: Der aktuelle wird angezeigt.",
+        "failed": "Die Änderung wurde nicht gespeichert.",
+        "requests": {
+          "title": "Anfragen",
+          "excluded": "Nicht mitgezählt: ein Spam-Anruf."
+        },
+        "rules": {
+          "offer": "Diese Nummer immer als Spam behandeln?",
+          "earlier": "Auch den {n} früheren Anruf | Auch die {n} früheren Anrufe",
+          "earlierMore": "Auch die {n} jüngsten früheren Anrufe",
+          "always": "Als Spam behandeln",
+          "noThanks": "Nein danke",
+          "created": "Ab jetzt wird diese Nummer als Spam behandelt. | Ab jetzt wird diese Nummer als Spam behandelt, und {n} früherer Anruf wurde korrigiert. | Ab jetzt wird diese Nummer als Spam behandelt, und {n} frühere Anrufe wurden korrigiert.",
+          "byRule": "Dieser Anruf wurde durch eine Regel für seine Nummer als Spam eingestuft. Regel löschen?",
+          "delete": "Regel löschen",
+          "keep": "Behalten",
+          "deleted": "Die Regel ist gelöscht; die markierten Anrufe werden wieder gezählt."
+        }
+      }
     },
     "datePicker": {
       "chooseDate": "Datum wählen",

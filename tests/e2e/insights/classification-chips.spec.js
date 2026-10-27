@@ -1,0 +1,177 @@
+// @ts-check
+const { expect } = require('@playwright/test')
+const { test } = require('../fixtures/auth')
+const { mockClassifications, mockConversations, conversation, judged, CALL_ID, BUSINESS_ID } = require('../fixtures/classifications')
+
+/**
+ * Brief docs/briefs/2026-10-27-classification-feedback.md, scope 1 and 2 (StarChat's brief, decisions 6, 9 and 12):
+ * every judgement of a call is a chip naming its value and state; a tap opens a listbox of the other values and of
+ * "right", "wrong", "restore", "history"; a choice applies at once or proposes; one undo bar per gesture, no time
+ * limit; the call's judgements read again after every gesture, undo and refusal. The call is opened by its deep link
+ * (`?conversation=`), the owner's own.
+ *
+ * Seen failing, 2026-10-27, before CallJudgements.vue, JudgementChip.vue and UndoBar.vue existed: every case, on the
+ * missing chip buttons (the panel drew today's plain rows), except "classifications 404", which passed on the old
+ * panel by construction and was then seen failing by perturbation (the panel drawing chips from `details` alone).
+ */
+const open = (page) => page.goto(`/conversations?id=${BUSINESS_ID}&conversation=${CALL_ID}`)
+const opened = (page) => page.locator('.opened-card')
+const chip = (page, name) => opened(page).getByRole('button', { name })
+const reads = (sent) => sent.filter((s) => s.path === 'classifications').length
+
+async function choose (page, chipName, option) {
+  await chip(page, chipName).click()
+  await page.getByRole('listbox').getByRole('option', { name: option, exact: true }).click()
+}
+
+test.describe('a call\'s judgements as chips', () => {
+  test('the resolution is corrected at once, said on its chip, and undone from the bar', async ({ authenticatedPage: page }) => {
+    await mockConversations(page, [conversation()])
+    const { sent } = await mockClassifications(page)
+    await open(page)
+    await expect(chip(page, /^Resolution: Resolved/)).toBeVisible({ timeout: 15000 })
+    const before = reads(sent)
+    await choose(page, /^Resolution: Resolved/, 'Unresolved')
+    const signal = sent.find((s) => s.path === 'feedback' && s.method === 'POST')
+    expect(signal.body).toMatchObject({ subject: 'call', conversationId: CALL_ID, field: 'resolution', signal: 'wrong_value', valueFrom: 'resolved', valueTo: 'unresolved' })
+    expect(signal.body.gestureId).toMatch(/^[0-9a-f-]{20,}$/)
+    await expect(chip(page, /^Resolution: Unresolved, Corrected \(from Resolved to Unresolved, Mario Rossi, /)).toBeVisible()
+    // the judgements are read again after the gesture: a correction can change others on the server
+    expect(reads(sent)).toBeGreaterThan(before)
+    const bar = page.getByRole('status').filter({ hasText: 'Changed' })
+    await expect(bar).toBeVisible()
+    // no time limit: still there well past a toast's life
+    await page.waitForTimeout(6000)
+    await expect(bar).toBeVisible()
+    await bar.getByRole('button', { name: 'Undo' }).click()
+    expect(sent.find((s) => s.path === 'gesture-revert').gestureId).toBe(signal.body.gestureId)
+    await expect(chip(page, /^Resolution: Resolved$/)).toBeVisible()
+  })
+
+  test('each request shows its outcome and its category; an owner\'s category is a proposal, its outcome applies', async ({ authenticatedPage: page }) => {
+    await mockConversations(page, [conversation()])
+    const { sent } = await mockClassifications(page)
+    await open(page)
+    const requests = opened(page).getByRole('list', { name: 'Requests' })
+    await expect(requests.getByRole('listitem')).toHaveCount(2, { timeout: 15000 })
+    await expect(requests.getByRole('listitem').nth(1)).toContainText('Asks how much a whitening costs')
+    await choose(page, /^Request outcome: Not met/, 'Taken for the business')
+    await expect(chip(page, /^Request outcome: Taken for the business, Corrected/)).toBeVisible()
+    await choose(page, /^Category: Prices and quotes/, 'Opening hours')
+    const proposal = sent.filter((s) => s.path === 'feedback' && s.method === 'POST').pop()
+    expect(proposal.body).toMatchObject({ subject: 'request', requestId: 102, field: 'category', valueFrom: 'prices', valueTo: 'opening_hours' })
+    // the value stays until an admin applies it; the chip says the proposal went
+    await expect(chip(page, /^Category: Prices and quotes, Proposal sent/)).toBeVisible()
+  })
+
+  test('an admin (not the owner) reads the judgements only when opening one; its category applies at once', async ({ adminPage: page }) => {
+    await mockConversations(page, [conversation()])
+    const { sent } = await mockClassifications(page, { role: 'admin' })
+    await open(page)
+    // the chips come from the call's own details: no judgements read, which StarChat would record as an opening
+    await expect(chip(page, /^Resolution: Resolved/)).toBeVisible({ timeout: 15000 })
+    await expect(chip(page, /^Request outcome: Not met/)).toBeVisible()
+    expect(reads(sent)).toBe(0)
+    await chip(page, /^Resolution: Resolved/).click()
+    await expect(page.getByRole('listbox')).toBeVisible()
+    expect(reads(sent)).toBe(1)
+    await page.keyboard.press('Escape')
+    await choose(page, /^Category: Prices and quotes/, 'Opening hours')
+    await expect(chip(page, /^Category: Opening hours, Corrected/)).toBeVisible({ timeout: 15000 })
+  })
+
+  test('"wrong, I don\'t know which" is a proposal and changes no value', async ({ authenticatedPage: page }) => {
+    await mockConversations(page, [conversation()])
+    const { sent } = await mockClassifications(page)
+    await open(page)
+    await choose(page, /^Message: No message/, 'It is wrong, I don\'t know which')
+    expect(sent.filter((s) => s.path === 'feedback').pop().body).toMatchObject({ field: 'message', signal: 'wrong', valueFrom: 'none' })
+    expect(sent.filter((s) => s.path === 'feedback').pop().body.valueTo).toBeUndefined()
+    await expect(chip(page, /^Message: No message, Proposal sent/)).toBeVisible()
+  })
+
+  test('"right" confirms the value', async ({ authenticatedPage: page }) => {
+    await mockConversations(page, [conversation()])
+    const { sent } = await mockClassifications(page)
+    await open(page)
+    await choose(page, /^Resolution: Resolved/, 'It is correct')
+    expect(sent.filter((s) => s.path === 'feedback').pop().body).toMatchObject({ field: 'resolution', signal: 'right', valueFrom: 'resolved' })
+    await expect(chip(page, /^Resolution: Resolved, Confirmed/)).toBeVisible()
+  })
+
+  test('the author restores the analysis\'s value, and reads the history', async ({ authenticatedPage: page }) => {
+    await mockConversations(page, [conversation()])
+    const call = judged({
+      resolution: { model: 'resolved', value: 'unresolved', corrected: true, previous: ['resolved'] },
+      history: [{ feedbackId: 77, subject: 'call', field: 'resolution', signal: 'wrong_value', valueFrom: 'resolved', valueTo: 'unresolved', source: 'person', status: 'applied', actorRole: 'owner', actorName: 'Mario Rossi', byMe: true, createdAt: Date.UTC(2026, 9, 21, 8) }],
+    })
+    const { sent } = await mockClassifications(page, { calls: { [CALL_ID]: call } })
+    await open(page)
+    await chip(page, /^Resolution: Unresolved, Corrected/).click()
+    await page.getByRole('listbox').getByRole('option', { name: 'History' }).click()
+    const history = opened(page).getByRole('list', { name: 'History of Resolution' })
+    await expect(history.getByRole('listitem')).toHaveText([/Resolved → Unresolved, Mario Rossi, .*Applied/])
+    await choose(page, /^Resolution: Unresolved, Corrected/, 'Restore the analysis\'s value')
+    expect(sent.find((s) => s.path === 'decide')).toMatchObject({ id: 77, move: 'revert' })
+    await expect(chip(page, /^Resolution: Resolved$/)).toBeVisible()
+  })
+
+  test('a value changed meanwhile is said, and the chip shows the current one', async ({ authenticatedPage: page }) => {
+    await mockConversations(page, [conversation()])
+    await mockClassifications(page, { staleOnce: { field: 'resolution', value: 'handed_over' } })
+    await open(page)
+    await choose(page, /^Resolution: Resolved/, 'Unresolved')
+    await expect(opened(page).getByRole('alert')).toContainText('This value changed meanwhile')
+    await expect(chip(page, /^Resolution: Handed over/)).toBeVisible()
+  })
+
+  test('without the category list, no category chip and never a raw key', async ({ authenticatedPage: page }) => {
+    await mockConversations(page, [conversation()])
+    await mockClassifications(page, { categories: null })
+    await open(page)
+    await expect(chip(page, /^Request outcome: Met by the assistant/)).toBeVisible({ timeout: 15000 })
+    await expect(chip(page, /^Category:/)).toHaveCount(0)
+    await expect(opened(page).getByText('online_booking')).toHaveCount(0)
+    await expect(opened(page).getByText('prices', { exact: true })).toHaveCount(0)
+  })
+
+  test('without the judgements route (404), the panel is today\'s', async ({ authenticatedPage: page }) => {
+    await mockConversations(page, [conversation()])
+    await mockClassifications(page, { classificationsStatus: 404 })
+    await open(page)
+    await expect(opened(page).locator('.insight-fact').filter({ hasText: 'Resolution' })).toContainText('Resolved', { timeout: 15000 })
+    await expect(chip(page, /^Resolution:/)).toHaveCount(0)
+  })
+
+  test('the chip works by keyboard: Enter opens, arrows move, Enter chooses, Escape closes', async ({ authenticatedPage: page }) => {
+    await mockConversations(page, [conversation()])
+    const { sent } = await mockClassifications(page)
+    await open(page)
+    const c = chip(page, /^Message: No message/)
+    await expect(c).toBeVisible({ timeout: 15000 })
+    await c.focus()
+    await page.keyboard.press('Enter')
+    await expect(page.getByRole('listbox')).toBeVisible()
+    await page.keyboard.press('Escape')
+    await expect(page.getByRole('listbox')).toHaveCount(0)
+    await expect(c).toBeFocused()
+    await page.keyboard.press('Enter')
+    // the current value is the active option; one down is the next value
+    await page.keyboard.press('ArrowDown')
+    await page.keyboard.press('Enter')
+    expect(sent.filter((s) => s.path === 'feedback').pop().body).toMatchObject({ field: 'message', valueFrom: 'none' })
+  })
+
+  test('under 600 px the listbox opens as a bottom sheet', async ({ authenticatedPage: page }) => {
+    await page.setViewportSize({ width: 375, height: 812 })
+    await mockConversations(page, [conversation()])
+    await mockClassifications(page)
+    await open(page)
+    await chip(page, /^Resolution: Resolved/).click()
+    const sheet = page.locator('.judgement-sheet')
+    await expect(sheet).toBeVisible()
+    await expect(sheet.getByRole('listbox')).toBeVisible()
+    const box = await sheet.boundingBox()
+    expect(Math.round(box.y + box.height)).toBe(812)
+  })
+})

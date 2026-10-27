@@ -2430,7 +2430,86 @@
       "callers": {
         "web": "Webbsamtal"
       },
-      "businessNotFound": "Det här företaget finns inte eller hör inte till dem du kan se."
+      "businessNotFound": "Det här företaget finns inte eller hör inte till dem du kan se.",
+      "feedback": {
+        "fields": {
+          "outcome": "Utfall för begäran",
+          "category": "Kategori"
+        },
+        "outcome": {
+          "met": "Uppfylld av assistenten",
+          "taken": "Mottagen för företaget",
+          "handed_over": "Överlämnad till en person",
+          "neither": "Inte uppfylld",
+          "withdrawn": "Återkallad av den som ringer"
+        },
+        "unset": "Inte klassificerad än",
+        "otherCategory": "En kategori som inte längre finns i listan",
+        "state": {
+          "corrected": "Korrigerad",
+          "confirmed": "Bekräftad",
+          "proposed": "Förslag skickat",
+          "applied": "Tillämpad",
+          "rejected": "Avvisad"
+        },
+        "chip": {
+          "name": "{field}: {value}",
+          "detail": "från {from} till {to}, {who}, {when}"
+        },
+        "menu": {
+          "label": "Ändra {field}",
+          "right": "Det stämmer",
+          "wrong": "Det är fel, jag vet inte vad som stämmer",
+          "restore": "Återställ analysens värde",
+          "history": "Historik"
+        },
+        "who": {
+          "owner": "ägaren",
+          "reseller": "en partner",
+          "admin": "MrCall",
+          "service": "MrCall",
+          "unknown": "någon"
+        },
+        "history": {
+          "title": "Historik för {field}",
+          "entry": "{from} → {to}, {who}, {when}",
+          "right": "{from} bekräftad, {who}, {when}",
+          "wrong": "{from} markerad som fel, {who}, {when}",
+          "empty": "Inga ändringar än.",
+          "status": {
+            "proposed": "Föreslagen",
+            "applied": "Tillämpad",
+            "rejected": "Avvisad",
+            "reverted": "Ångrad",
+            "orphaned": "Begäran hittas inte längre"
+          }
+        },
+        "undo": {
+          "changed": "Ändrat",
+          "undo": "Ångra",
+          "close": "Stäng",
+          "undone": "Ändringen är ångrad.",
+          "failed": "Ändringen kunde inte ångras."
+        },
+        "stale": "Det här värdet har ändrats under tiden: det aktuella visas.",
+        "failed": "Ändringen sparades inte.",
+        "requests": {
+          "title": "Begäranden",
+          "excluded": "Räknas inte: ett spamsamtal."
+        },
+        "rules": {
+          "offer": "Behandla alltid det här numret som spam?",
+          "earlier": "Även det {n} tidigare samtalet | Även de {n} tidigare samtalen",
+          "earlierMore": "Även de {n} senaste tidigare samtalen",
+          "always": "Behandla som spam",
+          "noThanks": "Nej tack",
+          "created": "Från och med nu behandlas numret som spam. | Från och med nu behandlas numret som spam, och {n} tidigare samtal korrigerades. | Från och med nu behandlas numret som spam, och {n} tidigare samtal korrigerades.",
+          "byRule": "Samtalet bedömdes som spam av en regel för numret. Ta bort regeln?",
+          "delete": "Ta bort regeln",
+          "keep": "Behåll den",
+          "deleted": "Regeln är borttagen; samtalen den markerade räknas igen."
+        }
+      }
     },
     "datePicker": {
       "chooseDate": "Välj datum",

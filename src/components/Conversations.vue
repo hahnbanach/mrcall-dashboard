@@ -40,6 +40,8 @@
             :business-id="businessId"
             :user="user"
             :expanded="true"
+            :eager="true"
+            :read-only="readOnly"
             @error="recordingFailed"
           />
         </div>
@@ -458,6 +460,7 @@
                 :business-id="businessId"
                 :user="user"
                 :expanded="messagesExpanded"
+                :read-only="readOnly"
                 @error="recordingFailed"
               />
             </div>
@@ -521,6 +524,8 @@
 
     <!-- Mobile TieredMenu -->
     <TieredMenu ref="mobileMenu" :model="mobileMenuItems" popup />
+    <!-- The one undo of a gesture on the calls' judgements -->
+    <UndoBar />
   </div>
 </template>
 
@@ -538,9 +543,12 @@ import Tr from "@/i18n/translation";
 import ConversationApi from "@/utils/Conversation";
 import CallDetailsPanel from "@/components/conversations/CallDetailsPanel";
 import CallInsights from "@/utils/CallInsights";
+import UndoBar from "@/components/feedback/UndoBar.vue";
+import Classifications from "@/utils/Classifications";
+import businessUtils from "@/utils/Business";
 
 export default {
-  components: { CallDetailsPanel },
+  components: { CallDetailsPanel, UndoBar },
   setup() {
     const store = useStore();
     const toast = useToast();
@@ -592,9 +600,20 @@ export default {
       bookedFilter: null,
       transferredFilter: false,
       unansweredFilter: false,
+      // the business as StarChat answers it (`CallInsights.business`): its owner says whose calls these are
+      business: null,
+      readerKnown: false,
     };
   },
   computed: {
+    // the reader owns these calls: true only when known (`Classifications.isOwnerOf`), so that an unknown reader never
+    // reads a call's judgements on its own nor sees an owner-only control
+    isOwner() {
+      return Classifications.isOwnerOf(this.business, this.user) === true;
+    },
+    readOnly() {
+      return !this.isOwner;
+    },
     resolutionOptions() {
       return CallInsights.RESOLUTION_KEYS.map((key) => ({
         label: this.$t("components.callInsights.resolution." + key),
@@ -716,6 +735,24 @@ export default {
       const minutes = Math.floor(totalSeconds / 60);
       const seconds = totalSeconds % 60;
       return this.$t("components.conversations.duration", { minutes, seconds });
+    },
+    // The reader's role (the same business search that sets it on the analytics pages) and the business's owner, to
+    // tell an owner's page from a non-owner's. Unknown (a failed read) is read-only: the safe side of a recorded read.
+    async establishReader() {
+      const user = this.store.state.user;
+      if (!user || !user.accessToken) return;
+      try {
+        await businessUtils.checkUserHasBusinesses(user, this.store);
+      } catch (error) {
+        console.debug("Role not read:", error && error.response ? error.response.status : "");
+      }
+      try {
+        this.business = this.businessId ? await CallInsights.business(user, this.businessId) : null;
+      } catch (error) {
+        console.debug("Business not read:", error && error.response ? error.response.status : "");
+        this.business = null;
+      }
+      this.readerKnown = true;
     },
     callerName(conversation) {
       const details = conversation.details || {};
@@ -1410,23 +1447,26 @@ export default {
       console.debug("Store not ready");
       return;
     }
-    if (!this.store.state.user) {
-      onAuthStateChanged(auth, (user) => {
-        if (user && user.emailVerified && !user.isAnonymous) {
-          console.debug("UserStateChanged:", user);
-          if (this.$route.query.conversation) this.openConversation(this.$route.query.conversation);
-          this.conversationList();
-          this.periodicEvent = interval(10000).subscribe(() => {
-            this.pollForNewConversations();
-          });
-        }
-      });
-    } else if (this.store.state.user.accessToken) {
+    // The reader's role and whether it owns the business's calls, known before anything is read: a non-owner's read of
+    // a call by id is recorded by StarChat, and its page shows no owner-only control (brief
+    // docs/briefs/2026-10-27-classification-feedback.md, scope 11).
+    const proceed = async () => {
+      await this.establishReader();
       if (this.$route.query.conversation) this.openConversation(this.$route.query.conversation);
       this.conversationList();
       this.periodicEvent = interval(10000).subscribe(() => {
         this.pollForNewConversations();
       });
+    };
+    if (!this.store.state.user) {
+      onAuthStateChanged(auth, (user) => {
+        if (user && user.emailVerified && !user.isAnonymous) {
+          console.debug("UserStateChanged:", user);
+          proceed();
+        }
+      });
+    } else if (this.store.state.user.accessToken) {
+      proceed();
     }
   },
 };

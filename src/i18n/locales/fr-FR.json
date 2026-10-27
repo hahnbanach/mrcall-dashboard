@@ -2432,7 +2432,86 @@
       "callers": {
         "web": "Appel web"
       },
-      "businessNotFound": "Cette entreprise n'existe pas ou ne fait pas partie de celles que vous pouvez voir."
+      "businessNotFound": "Cette entreprise n'existe pas ou ne fait pas partie de celles que vous pouvez voir.",
+      "feedback": {
+        "fields": {
+          "outcome": "Issue de la demande",
+          "category": "Catégorie"
+        },
+        "outcome": {
+          "met": "Satisfaite par l'assistant",
+          "taken": "Prise en charge pour l'entreprise",
+          "handed_over": "Transmise à une personne",
+          "neither": "Non satisfaite",
+          "withdrawn": "Retirée par l'appelant"
+        },
+        "unset": "Pas encore classée",
+        "otherCategory": "Une catégorie qui n'est plus dans la liste",
+        "state": {
+          "corrected": "Corrigée",
+          "confirmed": "Confirmée",
+          "proposed": "Proposition envoyée",
+          "applied": "Appliquée",
+          "rejected": "Refusée"
+        },
+        "chip": {
+          "name": "{field} : {value}",
+          "detail": "de {from} à {to}, {who}, {when}"
+        },
+        "menu": {
+          "label": "Modifier {field}",
+          "right": "C'est correct",
+          "wrong": "C'est faux, je ne sais pas quelle valeur",
+          "restore": "Rétablir la valeur de l'analyse",
+          "history": "Historique"
+        },
+        "who": {
+          "owner": "le titulaire",
+          "reseller": "un partenaire",
+          "admin": "MrCall",
+          "service": "MrCall",
+          "unknown": "quelqu'un"
+        },
+        "history": {
+          "title": "Historique de {field}",
+          "entry": "{from} → {to}, {who}, {when}",
+          "right": "{from} confirmée, {who}, {when}",
+          "wrong": "{from} signalée comme fausse, {who}, {when}",
+          "empty": "Aucune modification pour l'instant.",
+          "status": {
+            "proposed": "Proposée",
+            "applied": "Appliquée",
+            "rejected": "Refusée",
+            "reverted": "Annulée",
+            "orphaned": "Demande introuvable"
+          }
+        },
+        "undo": {
+          "changed": "Modifié",
+          "undo": "Annuler",
+          "close": "Fermer",
+          "undone": "Modification annulée.",
+          "failed": "La modification n'a pas pu être annulée."
+        },
+        "stale": "Cette valeur a changé entre-temps : la valeur actuelle est affichée.",
+        "failed": "La modification n'a pas été enregistrée.",
+        "requests": {
+          "title": "Demandes",
+          "excluded": "Exclue des comptages : appel indésirable."
+        },
+        "rules": {
+          "offer": "Toujours traiter ce numéro comme indésirable ?",
+          "earlier": "Aussi {n} appel précédent | Aussi les {n} appels précédents",
+          "earlierMore": "Aussi les {n} appels précédents les plus récents",
+          "always": "Traiter comme indésirable",
+          "noThanks": "Non merci",
+          "created": "Désormais ce numéro est traité comme indésirable. | Désormais ce numéro est traité comme indésirable, et {n} appel précédent a été corrigé. | Désormais ce numéro est traité comme indésirable, et {n} appels précédents ont été corrigés.",
+          "byRule": "Cet appel a été jugé indésirable par une règle sur son numéro. Supprimer la règle ?",
+          "delete": "Supprimer la règle",
+          "keep": "La garder",
+          "deleted": "La règle est supprimée ; les appels qu'elle avait marqués sont de nouveau comptés."
+        }
+      }
     },
     "datePicker": {
       "chooseDate": "Choisir la date",

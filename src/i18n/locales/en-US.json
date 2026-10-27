@@ -2435,7 +2435,86 @@
       "callers": {
         "web": "Web call"
       },
-      "businessNotFound": "This business does not exist or is not among those you can see."
+      "businessNotFound": "This business does not exist or is not among those you can see.",
+      "feedback": {
+        "fields": {
+          "outcome": "Request outcome",
+          "category": "Category"
+        },
+        "outcome": {
+          "met": "Met by the assistant",
+          "taken": "Taken for the business",
+          "handed_over": "Passed to a person",
+          "neither": "Not met",
+          "withdrawn": "Withdrawn by the caller"
+        },
+        "unset": "Not classified yet",
+        "otherCategory": "A category no longer listed",
+        "state": {
+          "corrected": "Corrected",
+          "confirmed": "Confirmed",
+          "proposed": "Proposal sent",
+          "applied": "Applied",
+          "rejected": "Rejected"
+        },
+        "chip": {
+          "name": "{field}: {value}",
+          "detail": "from {from} to {to}, {who}, {when}"
+        },
+        "menu": {
+          "label": "Change {field}",
+          "right": "It is correct",
+          "wrong": "It is wrong, I don't know which",
+          "restore": "Restore the analysis's value",
+          "history": "History"
+        },
+        "who": {
+          "owner": "the owner",
+          "reseller": "a partner",
+          "admin": "MrCall",
+          "service": "MrCall",
+          "unknown": "someone"
+        },
+        "history": {
+          "title": "History of {field}",
+          "entry": "{from} → {to}, {who}, {when}",
+          "right": "{from} confirmed, {who}, {when}",
+          "wrong": "{from} marked wrong, {who}, {when}",
+          "empty": "No change yet.",
+          "status": {
+            "proposed": "Proposed",
+            "applied": "Applied",
+            "rejected": "Rejected",
+            "reverted": "Undone",
+            "orphaned": "Request no longer found"
+          }
+        },
+        "undo": {
+          "changed": "Changed",
+          "undo": "Undo",
+          "close": "Close",
+          "undone": "Change undone.",
+          "failed": "The change could not be undone."
+        },
+        "stale": "This value changed meanwhile: the current one is shown.",
+        "failed": "The change was not saved.",
+        "requests": {
+          "title": "Requests",
+          "excluded": "Left out of the counts: a spam call."
+        },
+        "rules": {
+          "offer": "Always treat this number as spam?",
+          "earlier": "Also the {n} earlier call | Also the {n} earlier calls",
+          "earlierMore": "Also the {n} most recent earlier calls",
+          "always": "Treat as spam",
+          "noThanks": "No thanks",
+          "created": "From now on this number is treated as spam. | From now on this number is treated as spam, and {n} earlier call was corrected. | From now on this number is treated as spam, and {n} earlier calls were corrected.",
+          "byRule": "This call was judged spam by a rule on its number. Delete the rule?",
+          "delete": "Delete the rule",
+          "keep": "Keep it",
+          "deleted": "The rule is deleted; the calls it marked are counted again."
+        }
+      }
     },
     "datePicker": {
       "chooseDate": "Choose Date",

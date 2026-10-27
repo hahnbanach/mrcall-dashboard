@@ -2430,7 +2430,86 @@
       "callers": {
         "web": "Webgesprek"
       },
-      "businessNotFound": "Dit bedrijf bestaat niet of hoort niet bij de bedrijven die u kunt zien."
+      "businessNotFound": "Dit bedrijf bestaat niet of hoort niet bij de bedrijven die u kunt zien.",
+      "feedback": {
+        "fields": {
+          "outcome": "Uitkomst van het verzoek",
+          "category": "Categorie"
+        },
+        "outcome": {
+          "met": "Door de assistent afgehandeld",
+          "taken": "Genoteerd voor het bedrijf",
+          "handed_over": "Doorgegeven aan een persoon",
+          "neither": "Niet afgehandeld",
+          "withdrawn": "Ingetrokken door de beller"
+        },
+        "unset": "Nog niet ingedeeld",
+        "otherCategory": "Een categorie die niet meer in de lijst staat",
+        "state": {
+          "corrected": "Gecorrigeerd",
+          "confirmed": "Bevestigd",
+          "proposed": "Voorstel verzonden",
+          "applied": "Toegepast",
+          "rejected": "Afgewezen"
+        },
+        "chip": {
+          "name": "{field}: {value}",
+          "detail": "van {from} naar {to}, {who}, {when}"
+        },
+        "menu": {
+          "label": "{field} wijzigen",
+          "right": "Dit klopt",
+          "wrong": "Dit klopt niet, ik weet niet wat wel",
+          "restore": "Waarde van de analyse herstellen",
+          "history": "Geschiedenis"
+        },
+        "who": {
+          "owner": "de eigenaar",
+          "reseller": "een partner",
+          "admin": "MrCall",
+          "service": "MrCall",
+          "unknown": "iemand"
+        },
+        "history": {
+          "title": "Geschiedenis van {field}",
+          "entry": "{from} → {to}, {who}, {when}",
+          "right": "{from} bevestigd, {who}, {when}",
+          "wrong": "{from} als fout gemeld, {who}, {when}",
+          "empty": "Nog geen wijziging.",
+          "status": {
+            "proposed": "Voorgesteld",
+            "applied": "Toegepast",
+            "rejected": "Afgewezen",
+            "reverted": "Ongedaan gemaakt",
+            "orphaned": "Verzoek niet meer gevonden"
+          }
+        },
+        "undo": {
+          "changed": "Gewijzigd",
+          "undo": "Ongedaan maken",
+          "close": "Sluiten",
+          "undone": "Wijziging ongedaan gemaakt.",
+          "failed": "De wijziging kon niet ongedaan worden gemaakt."
+        },
+        "stale": "Deze waarde is intussen gewijzigd: de huidige wordt getoond.",
+        "failed": "De wijziging is niet opgeslagen.",
+        "requests": {
+          "title": "Verzoeken",
+          "excluded": "Niet meegeteld: een spamoproep."
+        },
+        "rules": {
+          "offer": "Dit nummer altijd als spam behandelen?",
+          "earlier": "Ook de {n} eerdere oproep | Ook de {n} eerdere oproepen",
+          "earlierMore": "Ook de {n} meest recente eerdere oproepen",
+          "always": "Als spam behandelen",
+          "noThanks": "Nee, bedankt",
+          "created": "Vanaf nu wordt dit nummer als spam behandeld. | Vanaf nu wordt dit nummer als spam behandeld, en {n} eerdere oproep is gecorrigeerd. | Vanaf nu wordt dit nummer als spam behandeld, en {n} eerdere oproepen zijn gecorrigeerd.",
+          "byRule": "Deze oproep is als spam beoordeeld door een regel op het nummer. De regel verwijderen?",
+          "delete": "Regel verwijderen",
+          "keep": "Behouden",
+          "deleted": "De regel is verwijderd; de gemarkeerde oproepen tellen weer mee."
+        }
+      }
     },
     "datePicker": {
       "chooseDate": "Datum kiezen",

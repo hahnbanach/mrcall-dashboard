@@ -2430,7 +2430,86 @@
       "callers": {
         "web": "Webopkald"
       },
-      "businessNotFound": "Denne virksomhed findes ikke eller er ikke blandt dem, du kan se."
+      "businessNotFound": "Denne virksomhed findes ikke eller er ikke blandt dem, du kan se.",
+      "feedback": {
+        "fields": {
+          "outcome": "Udfald af anmodningen",
+          "category": "Kategori"
+        },
+        "outcome": {
+          "met": "Opfyldt af assistenten",
+          "taken": "Modtaget til virksomheden",
+          "handed_over": "Givet videre til en person",
+          "neither": "Ikke opfyldt",
+          "withdrawn": "Trukket tilbage af den, der ringer"
+        },
+        "unset": "Ikke klassificeret endnu",
+        "otherCategory": "En kategori, der ikke længere er på listen",
+        "state": {
+          "corrected": "Rettet",
+          "confirmed": "Bekræftet",
+          "proposed": "Forslag sendt",
+          "applied": "Anvendt",
+          "rejected": "Afvist"
+        },
+        "chip": {
+          "name": "{field}: {value}",
+          "detail": "fra {from} til {to}, {who}, {when}"
+        },
+        "menu": {
+          "label": "Skift {field}",
+          "right": "Det er korrekt",
+          "wrong": "Det er forkert, jeg ved ikke hvad der er rigtigt",
+          "restore": "Gendan analysens værdi",
+          "history": "Historik"
+        },
+        "who": {
+          "owner": "ejeren",
+          "reseller": "en partner",
+          "admin": "MrCall",
+          "service": "MrCall",
+          "unknown": "nogen"
+        },
+        "history": {
+          "title": "Historik for {field}",
+          "entry": "{from} → {to}, {who}, {when}",
+          "right": "{from} bekræftet, {who}, {when}",
+          "wrong": "{from} markeret som forkert, {who}, {when}",
+          "empty": "Ingen ændringer endnu.",
+          "status": {
+            "proposed": "Foreslået",
+            "applied": "Anvendt",
+            "rejected": "Afvist",
+            "reverted": "Fortrudt",
+            "orphaned": "Anmodningen findes ikke længere"
+          }
+        },
+        "undo": {
+          "changed": "Ændret",
+          "undo": "Fortryd",
+          "close": "Luk",
+          "undone": "Ændringen er fortrudt.",
+          "failed": "Ændringen kunne ikke fortrydes."
+        },
+        "stale": "Værdien er ændret i mellemtiden: den aktuelle vises.",
+        "failed": "Ændringen blev ikke gemt.",
+        "requests": {
+          "title": "Anmodninger",
+          "excluded": "Tælles ikke med: et spamopkald."
+        },
+        "rules": {
+          "offer": "Behandl altid dette nummer som spam?",
+          "earlier": "Også det {n} tidligere opkald | Også de {n} tidligere opkald",
+          "earlierMore": "Også de {n} seneste tidligere opkald",
+          "always": "Behandl som spam",
+          "noThanks": "Nej tak",
+          "created": "Fra nu af behandles nummeret som spam. | Fra nu af behandles nummeret som spam, og {n} tidligere opkald blev rettet. | Fra nu af behandles nummeret som spam, og {n} tidligere opkald blev rettet.",
+          "byRule": "Opkaldet blev vurderet som spam af en regel for nummeret. Slet reglen?",
+          "delete": "Slet reglen",
+          "keep": "Behold den",
+          "deleted": "Reglen er slettet; de opkald, den markerede, tælles igen."
+        }
+      }
     },
     "datePicker": {
       "chooseDate": "Vælg dato",

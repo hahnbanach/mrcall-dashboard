@@ -2430,7 +2430,86 @@
       "callers": {
         "web": "Veebikõne"
       },
-      "businessNotFound": "Seda ettevõtet pole olemas või see pole nende hulgas, mida saad näha."
+      "businessNotFound": "Seda ettevõtet pole olemas või see pole nende hulgas, mida saad näha.",
+      "feedback": {
+        "fields": {
+          "outcome": "Päringu tulemus",
+          "category": "Kategooria"
+        },
+        "outcome": {
+          "met": "Assistent täitis",
+          "taken": "Võetud ettevõttele vastu",
+          "handed_over": "Antud inimesele üle",
+          "neither": "Täitmata",
+          "withdrawn": "Helistaja võttis tagasi"
+        },
+        "unset": "Veel liigitamata",
+        "otherCategory": "Kategooria, mida enam loendis pole",
+        "state": {
+          "corrected": "Parandatud",
+          "confirmed": "Kinnitatud",
+          "proposed": "Ettepanek saadetud",
+          "applied": "Rakendatud",
+          "rejected": "Tagasi lükatud"
+        },
+        "chip": {
+          "name": "{field}: {value}",
+          "detail": "{from} → {to}, {who}, {when}"
+        },
+        "menu": {
+          "label": "Muuda: {field}",
+          "right": "See on õige",
+          "wrong": "See on vale, ma ei tea, mis on õige",
+          "restore": "Taasta analüüsi väärtus",
+          "history": "Ajalugu"
+        },
+        "who": {
+          "owner": "omanik",
+          "reseller": "partner",
+          "admin": "MrCall",
+          "service": "MrCall",
+          "unknown": "keegi"
+        },
+        "history": {
+          "title": "Ajalugu: {field}",
+          "entry": "{from} → {to}, {who}, {when}",
+          "right": "{from} kinnitatud, {who}, {when}",
+          "wrong": "{from} märgitud valeks, {who}, {when}",
+          "empty": "Muudatusi veel pole.",
+          "status": {
+            "proposed": "Ettepanek",
+            "applied": "Rakendatud",
+            "rejected": "Tagasi lükatud",
+            "reverted": "Tagasi võetud",
+            "orphaned": "Päringut enam ei leita"
+          }
+        },
+        "undo": {
+          "changed": "Muudetud",
+          "undo": "Võta tagasi",
+          "close": "Sulge",
+          "undone": "Muudatus võeti tagasi.",
+          "failed": "Muudatust ei õnnestunud tagasi võtta."
+        },
+        "stale": "See väärtus muutus vahepeal: näidatakse praegust.",
+        "failed": "Muudatust ei salvestatud.",
+        "requests": {
+          "title": "Päringud",
+          "excluded": "Loendustest välja jäetud: rämpskõne."
+        },
+        "rules": {
+          "offer": "Kas käsitleda seda numbrit alati rämpskõnena?",
+          "earlier": "Ka {n} varasem kõne | Ka {n} varasemat kõnet",
+          "earlierMore": "Ka {n} viimast varasemat kõnet",
+          "always": "Käsitle rämpskõnena",
+          "noThanks": "Ei, aitäh",
+          "created": "Edaspidi käsitletakse seda numbrit rämpskõnena. | Edaspidi käsitletakse seda numbrit rämpskõnena ja {n} varasem kõne parandati. | Edaspidi käsitletakse seda numbrit rämpskõnena ja {n} varasemat kõnet parandati.",
+          "byRule": "Numbri reegel hindas selle kõne rämpskõneks. Kas kustutada reegel?",
+          "delete": "Kustuta reegel",
+          "keep": "Jäta alles",
+          "deleted": "Reegel on kustutatud; selle märgitud kõnesid loetakse taas."
+        }
+      }
     },
     "datePicker": {
       "chooseDate": "Vali kuupäev",
