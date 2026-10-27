@@ -162,12 +162,47 @@ function withSignal(history, answer, a, gestureId, role, now = Date.now()) {
     const list = Array.isArray(history) ? history : [];
     if (!answer || answer.feedbackId == null || list.some((h) => h.feedbackId === answer.feedbackId)) return list;
     const decided = answer.status === "applied" || answer.status === "confirmed";
-    return list.concat([{
+    // dated after every row the history holds: the browser's clock may run behind the server's
+    const latest = list.reduce((m, h) => Math.max(m, h.createdAt || 0, h.decidedAt || 0), 0);
+    const at = Math.max(now, latest + 1);
+    const same = (h) => h.field === a.field && (onRequest(a.field) ? h.requestId === a.requestId : h.subject !== "request");
+    // an applied correction replaces the one in force on the same judgement, which StarChat marks reverted
+    const kept = answer.status === "applied"
+        ? list.map((h) => (h.status === "applied" && same(h) ? { ...h, status: "reverted", decidedAt: at } : h))
+        : list;
+    return kept.concat([{
         feedbackId: answer.feedbackId, subject: a.subject, conversationId: a.conversationId, requestId: a.requestId,
         field: a.field, signal: a.signal, valueFrom: a.valueFrom, valueTo: a.signal === "right" ? a.valueFrom : (a.valueTo != null ? a.valueTo : null),
-        source: "person", status: answer.status, actorRole: role, byMe: true, createdAt: now,
-        decidedAt: decided ? now : undefined, gestureId,
+        source: "person", status: answer.status, actorRole: role, byMe: true, createdAt: at,
+        decidedAt: decided ? at : undefined, gestureId,
     }]);
+}
+
+/**
+ * A gesture made elsewhere (another panel of the call, a list) as `UndoGesture` carries it: the touched calls' state
+ * (`calls`) and the signals it wrote (`entries`: `{ask, answer}`), applied to this call's judgements; the same object
+ * when the gesture did not touch this call.
+ */
+function withGesture(data, gesture, now = Date.now()) {
+    if (!data || !gesture) return data;
+    const mine = (Array.isArray(gesture.calls) ? gesture.calls : []).find((c) => c && c.conversationId === data.conversationId);
+    if (!mine) return data;
+    let history = Array.isArray(data.history) ? data.history : [];
+    for (const e of Array.isArray(gesture.entries) ? gesture.entries : []) {
+        if (e && e.ask && e.ask.conversationId === data.conversationId) history = withSignal(history, e.answer, e.ask, gesture.gestureId, gesture.role, now);
+    }
+    return { ...withCallState(data, mine), history };
+}
+
+/**
+ * A bulk answer's `items` paired with the asks that wrote them, as `withGesture` takes them. StarChat answers the items
+ * grouped by call, not in the order asked, so they are matched by call, field and request.
+ */
+function bulkEntries(asks, items) {
+    const list = Array.isArray(items) ? items : [];
+    const key = (x) => [x.conversationId, x.field, x.requestId == null ? "" : x.requestId].join("|");
+    const byKey = new Map(list.map((i) => [key(i), i]));
+    return (Array.isArray(asks) ? asks : []).map((ask) => ({ ask, answer: byKey.get(key(ask)) })).filter((e) => e.answer);
 }
 
 /** The signals an undo reverted (`reverted` ids), marked so in the history. */
@@ -380,6 +415,8 @@ export default {
     newGestureId,
     withCallState,
     withSignal,
+    withGesture,
+    bulkEntries,
     withReverted,
     withDecision,
     withCurrent,

@@ -97,7 +97,7 @@ function searchAnswer (docs) {
  * - `role`: the reader's role as StarChat resolves it (owner, reseller, admin), deciding apply or propose;
  * - `calls`: `{[conversationId]: judged(...)}`; `categories`: the proposed list, or null for 404;
  * - `classificationsStatus`: answer the judgements read with this status instead (404, 503);
- * - `staleOnce`: the next signal answers 409 `stale_value`, after the state moved to `staleValue`;
+ * - `staleOnce`: the next signal answers 409 `stale_value`, after another person (Partner Srl) moved the value;
  * - `rules`, `ruleCall`: the caller rules and what a rule on a call's number would be;
  * - `queue`, `categoryRequests`, `accessLog`: page answers for those routes.
  */
@@ -191,7 +191,9 @@ async function mockClassifications (page, options = {}) {
       const s = staleOnce
       staleOnce = null
       const call = state.calls[body.conversationId]
-      call[s.field].value = s.value
+      const at = Date.now() - 60000
+      call.history = (call.history || []).concat([{ feedbackId: state.nextId++, subject: 'call', field: s.field, signal: 'wrong_value', valueFrom: call[s.field].value, valueTo: s.value, source: 'person', status: 'applied', actorRole: 'reseller', actorName: 'Partner Srl', byMe: false, createdAt: at, decidedAt: at }])
+      call[s.field] = { ...call[s.field], value: s.value, corrected: s.value !== call[s.field].model }
       return json(route, 409, { code: 'stale_value', message: 'a value changed since it was read', current: [{ conversationId: body.conversationId, field: s.field, value: s.value }] })
     }
     const out = write(body, body.gestureId)

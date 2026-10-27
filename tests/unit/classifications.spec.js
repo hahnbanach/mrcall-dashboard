@@ -373,6 +373,46 @@ describe('a call\'s judgements from a gesture\'s answer, with no re-read', () =>
     expect(Classifications.chipState({ model: 'resolved', value: 'resolved', corrected: true }, [], { field: 'resolution' }, 'owner').kind).toBe('model')
   })
 
+  it('a correction replacing another marks it reverted, as StarChat does, and the undo of the second leaves neither (C10, second round)', () => {
+    const A = entry({ feedbackId: 1, valueFrom: 'resolved', valueTo: 'unresolved', status: 'applied', createdAt: 9000, decidedAt: 9000 })
+    const askB = Classifications.ask({ conversationId: 'CON-1', field: 'resolution', signal: 'wrong_value', valueFrom: 'unresolved', valueTo: 'handed_over' })
+    // a browser clock behind the server's still dates the new row after the rows it has
+    const h = Classifications.withSignal([A], { feedbackId: 2, status: 'applied' }, askB, 'g-B', 'owner', 1000)
+    expect(h.map((x) => [x.feedbackId, x.status])).toEqual([[1, 'reverted'], [2, 'applied']])
+    expect(h[1].createdAt).toBeGreaterThan(9000)
+    const afterUndo = Classifications.withReverted(h, [2], 1500)
+    const settled = { model: 'resolved', value: 'resolved', corrected: false }
+    expect(Classifications.chipState(settled, afterUndo, { field: 'resolution' }, 'owner')).toMatchObject({ kind: 'model', canRestore: false, correction: null })
+  })
+
+  it('a gesture made in another panel brings its signals, so this panel\'s chip says the same (C10, second round)', () => {
+    const A = entry({ feedbackId: 1, valueFrom: 'resolved', valueTo: 'unresolved', status: 'applied', createdAt: 9000, decidedAt: 9000 })
+    const data = { ...read, resolution: { model: 'resolved', value: 'unresolved', corrected: true }, history: [A] }
+    const askB = Classifications.ask({ conversationId: 'CON-1', field: 'resolution', signal: 'wrong_value', valueFrom: 'unresolved', valueTo: 'handed_over' })
+    const gesture = { gestureId: 'g-B', role: 'owner', calls: [{ ...state, resolution: { model: 'resolved', value: 'handed_over', corrected: true } }], entries: [{ ask: askB, answer: { feedbackId: 2, status: 'applied' } }] }
+    const next = Classifications.withGesture(data, gesture, 2000)
+    const s = Classifications.chipState(next.resolution, next.history, { field: 'resolution' }, 'owner')
+    expect(s).toMatchObject({ value: 'handed_over', kind: 'corrected' })
+    expect(s.correction).toMatchObject({ from: 'unresolved', to: 'handed_over', feedbackId: 2 })
+    // a gesture on another call changes nothing here
+    expect(Classifications.withGesture(data, { ...gesture, calls: [{ ...state, conversationId: 'CON-9' }], entries: [{ ask: { ...askB, conversationId: 'CON-9' }, answer: { feedbackId: 3, status: 'applied' } }] }, 2000)).toBe(data)
+  })
+
+  it('a bulk answer\'s items pair with their asks by call, field and request, whatever order StarChat answers them in (C10, second round)', () => {
+    const asks = [
+      Classifications.ask({ conversationId: 'CON-1', field: 'resolution', signal: 'wrong_value', valueFrom: 'resolved', valueTo: 'spam_wrong_number' }),
+      Classifications.ask({ conversationId: 'CON-2', field: 'resolution', signal: 'wrong_value', valueFrom: 'unresolved', valueTo: 'spam_wrong_number' }),
+      Classifications.ask({ conversationId: 'CON-2', requestId: 7, field: 'category', signal: 'wrong_value', valueFrom: 'hours', valueTo: 'prices' }),
+    ]
+    const items = [
+      { feedbackId: 12, conversationId: 'CON-2', requestId: 7, field: 'category', status: 'applied' },
+      { feedbackId: 11, conversationId: 'CON-2', field: 'resolution', status: 'applied' },
+      { feedbackId: 10, conversationId: 'CON-1', field: 'resolution', status: 'proposed' },
+    ]
+    expect(Classifications.bulkEntries(asks, items).map((e) => [e.ask.conversationId, e.ask.field, e.answer.feedbackId])).toEqual([['CON-1', 'resolution', 10], ['CON-2', 'resolution', 11], ['CON-2', 'category', 12]])
+    expect(Classifications.bulkEntries(asks, undefined)).toEqual([])
+  })
+
   it('a stale value (409) takes the current values the refusal carries', () => {
     const next = Classifications.withCurrent(read, [{ conversationId: 'CON-1', field: 'resolution', value: 'handed_over' }, { conversationId: 'CON-1', requestId: 7, field: 'category', value: 'hours' }, { conversationId: 'CON-1', field: 'booked', value: 'false' }])
     expect(next.resolution.value).toBe('handed_over')

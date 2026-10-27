@@ -942,7 +942,8 @@ export default {
       this.bulkBusy = true;
       try {
         const answer = await Classifications.bulk(this.user, asks, gestureId);
-        UndoGesture.record(gestureId, asks.map((a) => a.conversationId), () => this.conversationList(), null, answer && answer.calls);
+        UndoGesture.record(gestureId, asks.map((a) => a.conversationId), () => this.conversationList(), null, answer && answer.calls,
+          Classifications.bulkEntries(asks, answer && answer.items), this.$store.state.role || "owner");
         this.selection.clear();
       } catch (error) {
         if (isSessionEnded(error)) return;

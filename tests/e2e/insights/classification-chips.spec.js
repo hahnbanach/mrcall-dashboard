@@ -15,7 +15,8 @@ const { mockClassifications, mockConversations, conversation, judged, CALL_ID, B
  * missing chip buttons (the panel drew today's plain rows), except "classifications 404", which passed on the old
  * panel by construction and was then seen failing by perturbation (the panel drawing chips from `details` alone).
  * Later cases, each seen failing on the commit before its code: the fact report (perturbation), focus back on the chip
- * and a confirmation in the history (dec211e), no read after a gesture or an undo and the six facts (2d39e13).
+ * and a confirmation in the history (dec211e), no read after a gesture or an undo and the six facts (2d39e13), the
+ * single read after a stale value (0cc7469).
  */
 const open = (page) => page.goto(`/conversations?id=${BUSINESS_ID}&conversation=${CALL_ID}`)
 const opened = (page) => page.locator('.opened-card')
@@ -149,14 +150,18 @@ test.describe('a call\'s judgements as chips', () => {
     await expect(chip(page, /^Resolution: Resolved$/)).toBeVisible()
   })
 
-  test('a value changed meanwhile is said, and the chip shows the current one', async ({ authenticatedPage: page }) => {
+  test('a value changed meanwhile is said, and the chip shows the current one and who changed it', async ({ authenticatedPage: page }) => {
     await mockConversations(page, [conversation()])
-    await mockClassifications(page, { staleOnce: { field: 'resolution', value: 'handed_over' } })
+    const { sent } = await mockClassifications(page, { staleOnce: { field: 'resolution', value: 'handed_over' } })
     await open(page)
+    await expect(chip(page, /^Resolution: Resolved/)).toBeVisible({ timeout: 15000 })
+    const before = reads(sent)
     await choose(page, /^Resolution: Resolved/, 'Unresolved')
     await expect(opened(page).getByRole('alert')).toContainText('This value changed meanwhile')
-    // the refusal carries the current value: the chip takes it, with no read of the call
-    await expect(chip(page, /^Resolution: Handed over/)).toBeVisible()
+    // the refusal carries only the current value; the judgements are then read once, for the history the other person
+    // wrote (brief, second amendment, item 10)
+    await expect(chip(page, /^Resolution: Handed over, Corrected \(from Resolved to Handed over, Partner Srl, /)).toBeVisible()
+    expect(reads(sent)).toBe(before + 1)
   })
 
   test('without the category list, no category chip and never a raw key', async ({ authenticatedPage: page }) => {

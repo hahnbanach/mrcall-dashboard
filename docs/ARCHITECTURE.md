@@ -83,10 +83,12 @@ API clients and business logic:
   FILTER TABLE from every count kind to its conversation-search filter (`countLink`, `searchFromQuery`), whether the
   reader owns a business (`isOwnerOf`: true, false or unknown), and the clients of StarChat's judgements, signals and
   their undo, queues, caller rules, a category's requests, the category list, the access record and the one-time
-  audio link; and how a gesture's answer becomes the call's judgements (`withCallState`, `withSignal`,
-  `withReverted`, `withDecision`, `withCurrent`). Pinned by `tests/unit/classifications.spec.js`
-- `UndoGesture.js` — the last gesture on judgements, for the page's one undo bar, and the panels to read again when a
-  gesture is made or undone
+  audio link; and how a gesture's answer becomes the call's judgements (`withCallState`, `withSignal`, which marks
+  the correction an applied one replaces as reverted, `withGesture` for a gesture made in another panel, `bulkEntries`,
+  `withReverted`, `withDecision`, `withCurrent`; a stale value's refusal is taken and then the call read once).
+  Pinned by `tests/unit/classifications.spec.js`
+- `UndoGesture.js` — the last gesture on judgements, for the page's one undo bar, with the touched calls' state and
+  the signals it wrote, which every other panel of those calls takes when the gesture is made or undone
 - `Selection.js` — the selection of a list's rows (a checkbox on a wide screen, a long-press mode under 600 px)
 - `KnowledgeBase.js` — "Add the answer": one question/answer pair added to the business's knowledge base
   (`?section=__KNOWLEDGE_BASE__&draftQuestion=`), unsaved until the person saves

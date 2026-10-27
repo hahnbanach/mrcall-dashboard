@@ -247,10 +247,16 @@ export default {
       immediate: true,
       handler(value) { this.$emit("chips", value); },
     },
-    // another panel or a list changed this call's judgements: read them again (a bulk gesture, the same call drawn twice)
+    // another panel or a list changed this call's judgements (a bulk gesture, the same call drawn twice): take the state
+    // and the signals the gesture's answer carries, as the panel that made it did
     "undo.recorded"() {
       const last = this.undo.lastRecorded;
-      if (last && last.origin !== this.uid && last.affected.includes(this.conversation.id) && this.loaded) this.takeCalls(last.calls, []);
+      if (!last || last.origin === this.uid || !last.affected.includes(this.conversation.id) || !this.loaded) return;
+      const mine = (last.calls || []).find((c) => c && c.conversationId === this.conversation.id);
+      if (!mine) { this.load(); return; }
+      this.gate.begin();
+      this.data = Classifications.withGesture(this.data, last);
+      this.status = "ok";
     },
     "undo.undone"() {
       const last = this.undo.lastUndone;
@@ -378,7 +384,7 @@ export default {
       try {
         const answer = await Classifications.signal(this.user, ask, gestureId);
         this.takeAnswer(answer, ask, gestureId);
-        UndoGesture.record(gestureId, [this.conversation.id], null, this.uid, answer && answer.call ? [answer.call] : []);
+        UndoGesture.record(gestureId, [this.conversation.id], null, this.uid, answer && answer.call ? [answer.call] : [], [{ ask, answer }], this.role);
         if (field === "resolution" && answer && answer.status === "applied") {
           if (ask.valueTo === "spam_wrong_number") this.offerRule();
           // a rule is the business's owner's: StarChat masks its number to anyone else (a700131a4)
@@ -392,21 +398,26 @@ export default {
       }
     },
     // The signal's answer: its call's state (`call`), and the signal itself recorded in the history so the chip says it.
+    // An answer without the call's state (a StarChat older than a012b6926) reads the call again.
     takeAnswer(answer, ask, gestureId) {
       if (!answer) return;
+      if (!answer.call) { this.load(); return; }
       this.gate.begin();
-      const next = answer.call ? Classifications.withCallState(this.data, answer.call) : { ...this.data };
+      const next = Classifications.withCallState(this.data, answer.call);
       next.history = Classifications.withSignal(this.data && this.data.history, answer, ask, gestureId, this.role);
       this.data = next;
       this.status = "ok";
     },
-    // A refusal: a stale value (409) carries the current values, which the chips take; anything else is said.
+    // A refusal: a stale value (409) carries only the stale fields' current values, which the chips take at once; the
+    // judgements are then read once, since whoever changed them also wrote history this panel has not seen. Anything
+    // else is said.
     refused(error) {
       const refusal = CallInsights.refusalOf(error);
       if (refusal && refusal.code === "stale_value") {
         const body = error.response && error.response.data;
         this.data = Classifications.withCurrent(this.data, body && body.current);
         this.alert = this.$t("components.callInsights.feedback.stale");
+        this.load();
       } else {
         this.alert = this.$t("components.callInsights.feedback.failed");
       }

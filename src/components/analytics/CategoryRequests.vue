@@ -256,7 +256,8 @@ export default {
           ? await Classifications.bulk(user, asks, gestureId)
           : await Classifications.signal(user, asks[0], gestureId);
         UndoGesture.record(gestureId, asks.map((a) => a.conversationId), () => this.page.retry(), null,
-          many ? answer && answer.calls : (answer && answer.call ? [answer.call] : []));
+          many ? answer && answer.calls : (answer && answer.call ? [answer.call] : []),
+          many ? Classifications.bulkEntries(asks, answer && answer.items) : [{ ask: asks[0], answer }], this.$store.state.role || "owner");
         const proposed = many ? answer.proposed || 0 : (answer.status === "proposed" ? 1 : 0);
         if (proposed > 0) this.note = this.$t("components.callInsights.feedback.bulk.proposed", { n: proposed }, proposed);
         if (many) this.selection.clear();

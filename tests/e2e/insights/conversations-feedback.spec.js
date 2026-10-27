@@ -11,7 +11,7 @@ const { mockClassifications, mockConversations, conversation, judged, BUSINESS_I
  *
  * Seen failing, 2026-10-27, before the address filters and the selection existed in Conversations.vue: every case.
  * The R2 review's cases (a count's list keeping archived calls, the bar on screen, an opened call's chips after a bulk
- * gesture) failed on dec211e.
+ * gesture) failed on dec211e. The bulk gesture's signal in the opened call's chip and history failed on 0cc7469.
  */
 const calls = [
   conversation({ id: 'CON-a', contactName: 'Anna', details: { callerName: 'Anna', summary: 'A', resolution: 'resolved', message: 'none', booked: false } }),
@@ -137,6 +137,33 @@ test.describe('the conversations list: a count\'s filters and corrections in bul
     await expect(opened.getByRole('button', { name: /^Resolution: Spam or wrong number, Corrected/ })).toBeVisible()
     // from the bulk answer's `calls` (StarChat a012b6926), not from a read of the call
     expect(sent.filter((s) => s.path === 'classifications' && s.id === 'CON-a').length).toBe(readsBefore)
+  })
+
+  test('a bulk gesture brings the opened call the signal it wrote: the chip names it, the history replaces the older one (C10, second round)', async ({ authenticatedPage: page }) => {
+    const rows = [conversation({ id: 'CON-a', contactName: 'Anna', details: { callerName: 'Anna', summary: 'A', resolution: 'unresolved', message: 'none', booked: false } })]
+    await mockConversations(page, rows)
+    const earlier = { feedbackId: 77, subject: 'call', field: 'resolution', signal: 'wrong_value', valueFrom: 'resolved', valueTo: 'unresolved', source: 'person', status: 'applied', actorRole: 'reseller', actorName: 'Partner Srl', byMe: false, createdAt: Date.UTC(2026, 9, 21, 8), decidedAt: Date.UTC(2026, 9, 21, 8) }
+    const { sent } = await mockClassifications(page, { calls: { 'CON-a': judged({ conversationId: 'CON-a', requests: [], resolution: { model: 'resolved', value: 'unresolved', corrected: true }, history: [earlier] }) } })
+    await page.goto(`/conversations?id=${BUSINESS_ID}&conversation=CON-a`)
+    const opened = page.locator('.opened-card')
+    await expect(opened.getByRole('button', { name: /^Resolution: Unresolved, Corrected \(from Resolved to Unresolved, Partner Srl, / })).toBeVisible({ timeout: 15000 })
+    // the same call drawn twice: the opened card and its row in the list, each panel with its first read done
+    const row = page.locator('.conversation-card:not(.opened-card)').filter({ hasText: 'Anna' }).first()
+    await row.scrollIntoViewIfNeeded()
+    await expect(row.getByRole('button', { name: /^Resolution: Unresolved, Corrected/ })).toBeVisible()
+    await select(page, 'Anna')
+    const readsBefore = sent.filter((s) => s.path === 'classifications' && s.id === 'CON-a').length
+    await page.getByRole('toolbar', { name: 'Selected calls' }).getByRole('button', { name: 'Mark as spam' }).click()
+    // both chips name the bulk gesture's correction, as the panel that made it would, with no read of the call
+    const named = /^Resolution: Spam or wrong number, Corrected \(from Unresolved to Spam or wrong number, you, /
+    const corrected = opened.getByRole('button', { name: named })
+    await expect(corrected).toBeVisible()
+    await expect(row.getByRole('button', { name: named })).toBeVisible()
+    expect(sent.filter((s) => s.path === 'classifications' && s.id === 'CON-a').length).toBe(readsBefore)
+    await corrected.click()
+    await page.getByRole('listbox').getByRole('option', { name: 'History' }).click()
+    await expect(opened.getByRole('list', { name: 'History of Resolution' }).getByRole('listitem'))
+      .toHaveText([/Unresolved → Spam or wrong number, you, .*Applied/, /Resolved → Unresolved, Partner Srl, .*Undone/])
   })
 
   test('"change outcome" offers the values; "confirm" confirms; a call without a judged outcome is left out and said', async ({ authenticatedPage: page }) => {
