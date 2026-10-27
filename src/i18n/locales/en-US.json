@@ -2539,7 +2539,7 @@
         },
         "bulk": {
           "label": "Selected calls",
-          "count": "{n} selected",
+          "count": "{n} selected | {n} selected",
           "select": "Select the call of {name}",
           "changeOutcome": "Change outcome",
           "spam": "Mark as spam",
