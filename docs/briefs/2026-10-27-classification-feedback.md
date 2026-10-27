@@ -5,10 +5,10 @@ chip that a person marks right or wrong and corrects, with one undo; lists selec
 opens the calls behind it; corrections queue for an admin and proposals for their author; caller rules and the call
 access record sit in the business settings; a non-owner opens a call read-only and recorded. It states what StarChat
 9.34.118 serves for this, what it does not (and is therefore not built here), the scope, the alternatives rejected,
-the acceptance and the rollback.
+the acceptance and the rollback, and an amendment for the contract changes StarChat made while it was built.
 
-Date: 2026-10-27. Line: `v2.2` (held by another session); built on a temporary branch off `a837d56`, handed over to
-be fast-forwarded. Authority: StarChat's brief `docs/briefs/2026-10-26-classification-feedback.md` (decisions 6, 9,
+Date: 2026-10-27. Line: `v2.2` (held by another session); built on a temporary branch off `a837d56`, rebased onto
+`fd4c94d` when the line moved, handed over to be fast-forwarded. Authority: StarChat's brief `docs/briefs/2026-10-26-classification-feedback.md` (decisions 6, 9,
 11, 12, 13, 14 and "What this changes in the reports brief"), approved, and its plan
 `docs/execution-plans/2026-10-26-classification-feedback.md`, rows C8 and C10; the reports brief
 `docs/briefs/2026-10-24-insights-reports-ux.md` with its amendment of 2026-10-26 for the screens that exist. All
@@ -87,13 +87,13 @@ Paths are StarChat's, under `src/main/scala/com/hahnbanach/starchat/`.
 | A category's name outside the categories view (the category chip, "Sposta in categoria…") | No route lists the configured categories with their labels in a language; `classifications` and the request list give the key only, and the categories view lists only categories with requests in its window (`RequestCategoryRows`), and answers 404 to an owner | Built against one read, `GET insights/categories?language` answering `{items[{key, label, active}]}`, proposed to StarChat. The StarChat lead decides on it before C9's tag; while it answers 404 (and if the answer is no) the category is not drawn as a chip and no "move" is offered, never shown as a raw key, and the rest of this scope ships unchanged |
 | "Segna come spam" over a category's requests | The request list carries no call resolution, and every signal needs its `valueFrom` (`InsightsFeedbackPsql:188`); reading each call's judgements would be a recorded opening for the admins and resellers who are that list's readers | Not built there; a call is marked spam from its own chips or from the conversations list |
 | "Sposta in categoria…" in the conversations list | Nothing missing: a category belongs to a request and a call can have several, so a call-level gesture has no single subject | Not offered there; offered on a call's request chips and in a category's request list |
-| "Segnala un errore" on a fact | No `fact_wrong` signal is accepted (StarChat plan, C5: the field CHECK has no fact value) | Not built |
+| "Segnala un errore" on a fact | No `fact_wrong` signal is accepted (StarChat plan, C5: the field CHECK has no fact value) | Not built. *Superseded by the amendment below, item 2* |
 | The similar panel | The job is off (`similarEnabled` is configuration only, gated by StarChat's C4b); a signal does not return the job it seeded; its proposals are shown to admins only | Not built; an admin sees them in "Correzioni da rivedere" as proposals by MrCall |
-| The admin queue ordered by how many calls a correction moves, and applied or rejected in bulk | `GET insights/feedback` is a flat page newest first; `/apply` and `/reject` take one id | Grouped by category and business within the page shown; "apply" and "reject" on the selected rows are sent one by one, each result reported; ordering by calls moved and a bulk route are gaps |
+| The admin queue ordered by how many calls a correction moves, and applied or rejected in bulk | `GET insights/feedback` is a flat page newest first; `/apply` and `/reject` take one id | Grouped by category and business within the page shown; "apply" and "reject" on the selected rows are sent one by one, each result reported; ordering by calls moved and a bulk route are gaps. *Grouping and ordering superseded by the amendment below, item 3; the bulk route stays a gap* |
 | Counts on a page over several businesses (a reseller's scope page, the admin page without a business) opening their calls | The conversation search lists one business's calls | Those counts stay numbers; the same count on a business's page is a link |
 | The counts of "Assistenti da rivedere" opening their calls | The row names one business, but most columns have no matching search filter (`not_solved` spans two outcome lines, "any check", skill errors, extraction failures) | The row keeps its link to the business's page, where each count is a link; the columns stay numbers |
 | A non-owner's opening recorded once, and a gesture's answer carrying the call's effective values | Each classifications read by a non-owner is recorded as an opening, as is the search by id, with no dedupe (`ConversationAccess.readable`); the signal answer carries only its own field, bulk and undo none | The dashboard reads a non-owner's judgements first when the person opens a judgement, and again after each gesture and undo (scope 1); each read is recorded. Both server changes go back to the lead |
-| Caller rules shown to a non-owner with masked numbers | `GET insights/caller-rules` answers full numbers to resellers and admins, unrecorded, while decision 14 shows them masked numbers | The rules list in the settings is the owner's; the spam offer names no number. The server side goes back to the lead |
+| Caller rules shown to a non-owner with masked numbers | `GET insights/caller-rules` answers full numbers to resellers and admins, unrecorded, while decision 14 shows them masked numbers | The rules list in the settings is the owner's; the spam offer names no number. The server side goes back to the lead. *Server side superseded by the amendment below, item 4* |
 | The admin's platform jobs (`classify`, `audit`, `categories`) and the daily budget | Served (`insights/jobs/{kind}`, `/confirm`, `insights/platform-settings`), but not in C8's row, and the budget is an amount in US dollars while the reports brief shows no amount to anyone, admins included | Not built; the conflict goes back to the lead |
 
 ## Scope (what is built)
@@ -211,3 +211,36 @@ locales, under `components.callInsights` so the existing parity test covers it.
   function.
 - Labels in languages other than Italian and English are the session's translations; a native check is not part of
   this work.
+
+## Amendment 2026-10-27: the contract moved while this was built
+
+StarChat changed what this brief builds against after it was approved (commits `bdc036f6e`, `a700131a4`, `6d13718c6`,
+`a76ff0ffb`, `087eedc34`, `bc67b6c8b`, read in its code); the second milestone review (R2 of the plan) found the
+dashboard behind on some of them. Where this amendment differs from the sections above, it wins; they stay as written.
+
+1. **A confirmation is not a correction.** "È corretta" is recorded `confirmed` (`InsightsFeedback.status`): it never
+   becomes the correction in force, and an undo of it changes no value. The chip says "Confermata" only while the
+   confirmed value is the current one; a correction in force is said first; the history names confirmations, and a
+   confirmation offers no "Ripristina".
+2. **"Segnala un errore" on a fact is built, for the two facts a call's details carry.** StarChat accepts `fact_wrong`
+   on six facts (booked, transferred, no_conversation, managed_call, skill_errors, unkept), each checked against the
+   value the summary holds, as a proposal an admin closes or rejects. The call's details carry `booked` and
+   `transferred` in the shape the summary holds them ("true", "false"; transferred absent is unset), so those two rows
+   carry the report; the other four are not in the details (or not in the summary's shape), and a report with a value
+   the dashboard cannot read exactly would be refused as stale. They are not offered here. Rejected: reading the
+   summary's raw values for them, which no route serves to the dashboard.
+3. **The queue is grouped by StarChat.** `GET insights/feedback` answers groups (`category`, `businessId`,
+   `businessName`, `calls`, `items`, `signals`) ordered by the calls each moves and paged over groups, beside the flat
+   `items`. The dashboard draws the groups as served. Apply and reject stay one call per signal (no bulk route).
+4. **Caller numbers are masked by StarChat** to anyone but the call's owner, and the rules' numbers to anyone but the
+   business's owner. The offer to delete a rule (which needs the number) is the owner's only.
+5. **A report's counts stay as generated** (`bc67b6c8b`); the list a report count opens shows the calls the reader can
+   open now, and is to say how many it leaves out ("N non visibili con il tuo accesso") from a server field StarChat
+   has not named yet. Until it is named that line is not drawn; it goes back to the lead as pending.
+6. **A count's list keeps archived calls.** The statistics count finalised calls that are not deleted, archived or not
+   (StarChat's `counted`); the list of a count drops the inbox's narrowing, and says so in a chip that undoes it.
+7. **The chips are drawn on the conversations page only**, the page that carries the undo bar and knows the reader's
+   ownership. The restaurant call dialog (reached by admins and resellers from the configuration) keeps today's panel:
+   drawing chips there would read the judgements on its own, a recorded opening nobody asked for, with no undo. This
+   is a limit of this release, recorded for the lead.
+
