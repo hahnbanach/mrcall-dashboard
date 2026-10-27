@@ -2470,7 +2470,8 @@
           "reseller": "un partenaire",
           "admin": "MrCall",
           "service": "MrCall",
-          "unknown": "quelqu'un"
+          "unknown": "quelqu'un",
+          "me": "vous"
         },
         "history": {
           "title": "Historique de {field}",
@@ -2554,9 +2555,9 @@
           "proposed": "{n} proposition envoyée : un administrateur décide. | {n} propositions envoyées : un administrateur décide."
         },
         "fact": {
-          "report": "Signaler une erreur",
-          "reportOf": "Signaler une erreur : {fact}",
-          "reported": "Signalé à MrCall"
+          "chip": "Signaler une erreur sur un fait",
+          "reportedOf": "Signalé à MrCall : {fact}",
+          "option": "{fact} : {value}"
         },
         "links": {
           "open": "Ouvrir l'appel : {label} | Ouvrir les {n} appels : {label}",
@@ -2619,7 +2620,11 @@
           "no_conversation": "Sans conversation",
           "managed_call": "Géré par l'assistant",
           "skill_errors": "Erreurs des skills",
-          "unkept": "Promesses non tenues"
+          "unkept": "Promesses non tenues",
+          "none": "non enregistré",
+          "yes": "oui",
+          "no": "non",
+          "recorded": "enregistré"
         },
         "access": {
           "menu": "Numéros indésirables et accès aux appels",

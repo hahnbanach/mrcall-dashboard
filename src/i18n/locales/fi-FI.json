@@ -2468,7 +2468,8 @@
           "reseller": "kumppani",
           "admin": "MrCall",
           "service": "MrCall",
-          "unknown": "joku"
+          "unknown": "joku",
+          "me": "sinä"
         },
         "history": {
           "title": "Historia: {field}",
@@ -2552,9 +2553,9 @@
           "proposed": "{n} ehdotus lähetetty: ylläpitäjä päättää. | {n} ehdotusta lähetetty: ylläpitäjä päättää."
         },
         "fact": {
-          "report": "Ilmoita virheestä",
-          "reportOf": "Ilmoita virheestä: {fact}",
-          "reported": "Ilmoitettu MrCallille"
+          "chip": "Ilmoita tosiasian virheestä",
+          "reportedOf": "Ilmoitettu MrCallille: {fact}",
+          "option": "{fact}: {value}"
         },
         "links": {
           "open": "Avaa puhelu: {label} | Avaa {n} puhelua: {label}",
@@ -2617,7 +2618,11 @@
           "no_conversation": "Ei keskustelua",
           "managed_call": "Avustajan hoitama",
           "skill_errors": "Skill-virheet",
-          "unkept": "Pitämättömät lupaukset"
+          "unkept": "Pitämättömät lupaukset",
+          "none": "ei kirjattu",
+          "yes": "kyllä",
+          "no": "ei",
+          "recorded": "kirjattu"
         },
         "access": {
           "menu": "Roskanumerot ja pääsy puheluihin",

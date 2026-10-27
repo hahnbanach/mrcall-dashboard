@@ -23,7 +23,7 @@ export default {
   },
   methods: {
     line(h) {
-      const who = h.actorName || this.$t("components.callInsights.feedback.who." + (h.actorRole || "unknown"));
+      const who = h.actorName || this.$t("components.callInsights.feedback.who." + (h.byMe ? "me" : (h.actorRole || "unknown")));
       const when = h.createdAt ? new Date(h.createdAt).toLocaleString(this.$i18n.locale, { dateStyle: "medium", timeStyle: "short" }) : "";
       const from = this.labelOf(h.valueFrom);
       if (h.signal === "right") return this.$t("components.callInsights.feedback.history.right", { from, who, when });

@@ -321,6 +321,67 @@ describe('the clients', () => {
   })
 })
 
+/**
+ * A gesture's answer carries the touched call's state (StarChat a012b6926), so a call's judgements are never read again
+ * after a gesture: the state replaces the judgements, and the history (which the state does not carry) is kept and
+ * updated from what the gesture wrote. Seen failing on 2d39e13, where none of these existed.
+ */
+describe('a call\'s judgements from a gesture\'s answer, with no re-read', () => {
+  const read = judgedRead()
+  function judgedRead () {
+    return {
+      conversationId: 'CON-1', businessId: 'b', callStart: 1, version: 7,
+      resolution: { model: 'resolved', value: 'resolved', corrected: false }, message: { model: 'none', value: 'none', corrected: false },
+      requests: [{ requestId: 7, ordinal: 1, text: 't', outcome: { model: 'met', value: 'met', corrected: false }, category: { model: 'prices', value: 'prices', corrected: false } }],
+      facts: { booked: 'true' },
+      history: [entry({ feedbackId: 1, status: 'reverted' })],
+    }
+  }
+  const state = { ...read, resolution: { model: 'resolved', value: 'unresolved', corrected: true }, history: undefined }
+
+  it('takes the answer\'s state and keeps the history it does not carry', () => {
+    const next = Classifications.withCallState(read, state)
+    expect(next.resolution.value).toBe('unresolved')
+    expect(next.history).toEqual(read.history)
+    expect(next.facts).toEqual({ booked: 'true' })
+  })
+
+  it('records what the gesture wrote in the history, so the chip says it at once', () => {
+    const a = Classifications.ask({ conversationId: 'CON-1', field: 'resolution', signal: 'wrong_value', valueFrom: 'resolved', valueTo: 'unresolved' })
+    const h = Classifications.withSignal(read.history, { feedbackId: 9, status: 'applied' }, a, 'g-1', 'owner', 5000)
+    expect(h).toHaveLength(2)
+    expect(h[1]).toMatchObject({ feedbackId: 9, subject: 'call', field: 'resolution', signal: 'wrong_value', valueFrom: 'resolved', valueTo: 'unresolved', status: 'applied', byMe: true, actorRole: 'owner', createdAt: 5000, decidedAt: 5000, gestureId: 'g-1' })
+    const s = Classifications.chipState(state.resolution, h, { field: 'resolution' }, 'owner')
+    expect(s.kind).toBe('corrected')
+    expect(s.correction).toMatchObject({ from: 'resolved', to: 'unresolved', byMe: true })
+    // a proposal is said as one
+    const p = Classifications.withSignal(read.history, { feedbackId: 10, status: 'proposed' }, Classifications.ask({ conversationId: 'CON-1', requestId: 7, field: 'category', signal: 'wrong_value', valueFrom: 'prices', valueTo: 'hours' }), 'g-2', 'owner', 6000)
+    expect(Classifications.chipState(read.requests[0].category, p, { field: 'category', requestId: 7 }, 'owner').kind).toBe('proposed')
+    // a replay of a gesture already in the history adds nothing
+    expect(Classifications.withSignal(h, { feedbackId: 9, status: 'applied', replayed: true }, a, 'g-1', 'owner', 7000)).toHaveLength(2)
+  })
+
+  it('marks an undone gesture\'s signals reverted, and a decision in place', () => {
+    const h = [entry({ feedbackId: 9, gestureId: 'g-1' }), entry({ feedbackId: 10, gestureId: 'g-2' })]
+    expect(Classifications.withReverted(h, [9], 8000).map((x) => x.status)).toEqual(['reverted', 'applied'])
+    expect(Classifications.withDecision(h, { feedbackId: 10, status: 'rejected', decidedAt: 9000, call: {} })[1]).toMatchObject({ feedbackId: 10, status: 'rejected', decidedAt: 9000 })
+    expect(Classifications.withDecision(h, { feedbackId: 10, status: 'rejected', call: {} })[1].call).toBeUndefined()
+  })
+
+  it('a value corrected by a gesture made elsewhere says so, though this reader has not read its history', () => {
+    expect(Classifications.chipState({ model: 'resolved', value: 'spam_wrong_number', corrected: true }, [], { field: 'resolution' }, 'owner').kind).toBe('corrected')
+    expect(Classifications.chipState({ model: 'resolved', value: 'resolved', corrected: true }, [], { field: 'resolution' }, 'owner').kind).toBe('model')
+  })
+
+  it('a stale value (409) takes the current values the refusal carries', () => {
+    const next = Classifications.withCurrent(read, [{ conversationId: 'CON-1', field: 'resolution', value: 'handed_over' }, { conversationId: 'CON-1', requestId: 7, field: 'category', value: 'hours' }, { conversationId: 'CON-1', field: 'booked', value: 'false' }])
+    expect(next.resolution.value).toBe('handed_over')
+    expect(next.requests[0].category.value).toBe('hours')
+    expect(next.facts.booked).toBe('false')
+    expect(read.resolution.value).toBe('resolved')
+  })
+})
+
 describe('who reads a call as its owner (StarChat ConversationAccess: no answer says it)', () => {
   it('the reader owns the business\'s calls when it is the business\'s owner', () => {
     expect(Classifications.isOwnerOf({ owner: 'u1' }, { uid: 'u1' })).toBe(true)

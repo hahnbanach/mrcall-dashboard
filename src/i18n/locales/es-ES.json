@@ -2482,7 +2482,8 @@
           "reseller": "un partner",
           "admin": "MrCall",
           "service": "MrCall",
-          "unknown": "alguien"
+          "unknown": "alguien",
+          "me": "tú"
         },
         "history": {
           "title": "Historial de {field}",
@@ -2566,9 +2567,9 @@
           "proposed": "{n} propuesta enviada: decide un administrador. | {n} propuestas enviadas: decide un administrador."
         },
         "fact": {
-          "report": "Informar de un error",
-          "reportOf": "Informar de un error: {fact}",
-          "reported": "Informado a MrCall"
+          "chip": "Informar de un error en un hecho",
+          "reportedOf": "Informado a MrCall: {fact}",
+          "option": "{fact}: {value}"
         },
         "links": {
           "open": "Abrir la llamada: {label} | Abrir las {n} llamadas: {label}",
@@ -2631,7 +2632,11 @@
           "no_conversation": "Sin conversación",
           "managed_call": "Gestionada por el asistente",
           "skill_errors": "Errores de skills",
-          "unkept": "Promesas no cumplidas"
+          "unkept": "Promesas no cumplidas",
+          "none": "no registrado",
+          "yes": "sí",
+          "no": "no",
+          "recorded": "registrado"
         },
         "access": {
           "menu": "Números de spam y acceso a las llamadas",

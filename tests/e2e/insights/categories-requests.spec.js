@@ -12,7 +12,8 @@ const { mockClassifications } = require('../fixtures/classifications')
  * backlog, the examples linked to their calls; and the requests' list correcting in one gesture. StarChat answered as
  * `CallInsightsReportService.requestCategories` and `.categoryRequests` do at 087eedc34.
  *
- * Seen failing, 2026-10-27, before the view on requests and CategoryRequests.vue existed: every case.
+ * Seen failing, 2026-10-27, before the view on requests and CategoryRequests.vue existed: every case. The spam case
+ * (each request's call resolution, StarChat a012b6926) failed on 2d39e13.
  */
 const WINDOW = { from: rome(2026, 9, 24), to: rome(2026, 10, 24) }
 const VIEW = {
@@ -34,8 +35,8 @@ const VIEW = {
 const REQUESTS = {
   total: 2, calls: 2, asOf: 1761300000001,
   items: [
-    { requestId: 301, conversationId: 'CON-p1', callStart: rome(2026, 10, 20), businessId: 'biz-2', name: 'Studio Bianchi', text: 'How much is a whitening?', outcome: 'taken', outcomeModel: 'taken', category: 'prices', categoryModel: 'prices', corrected: false },
-    { requestId: 302, conversationId: 'CON-p2', callStart: rome(2026, 10, 21), businessId: 'biz-3', name: 'Studio Verdi', text: 'Are you open on Saturday?', outcome: 'neither', outcomeModel: 'neither', category: 'prices', categoryModel: 'prices', corrected: false },
+    { requestId: 301, conversationId: 'CON-p1', callStart: rome(2026, 10, 20), businessId: 'biz-2', name: 'Studio Bianchi', text: 'How much is a whitening?', outcome: 'taken', outcomeModel: 'taken', category: 'prices', categoryModel: 'prices', corrected: false, resolution: 'forwarded' },
+    { requestId: 302, conversationId: 'CON-p2', callStart: rome(2026, 10, 21), businessId: 'biz-3', name: 'Studio Verdi', text: 'Are you open on Saturday?', outcome: 'neither', outcomeModel: 'neither', category: 'prices', categoryModel: 'prices', corrected: false, resolution: 'unresolved' },
   ],
 }
 
@@ -133,6 +134,20 @@ test.describe('callers\' requests on request records', () => {
     await page.getByRole('status').filter({ hasText: 'Changed' }).getByRole('button', { name: 'Undo' }).click()
     await expect.poll(() => sent.filter((s) => s.path === 'gesture-revert').length).toBe(1)
     expect(sent.find((s) => s.path === 'gesture-revert').gestureId).toBe(bulk.body.gestureId)
+  })
+
+  test('selected requests mark their calls as spam, with each call\'s resolution read (StarChat a012b6926)', async ({ adminPage: page }) => {
+    const { sent } = await open(page)
+    await section(page).getByRole('button', { name: 'Show the requests of Prices and rates (14 calls)' }).click()
+    const list = page.getByRole('table', { name: 'Requests of Prices and rates' })
+    await expect(list.getByRole('row').filter({ hasText: 'How much is a whitening?' })).toBeVisible({ timeout: 15000 })
+    for (const text of ['How much is a whitening?', 'Are you open on Saturday?']) await selectRequest(page, list, text)
+    await page.getByRole('toolbar', { name: 'Selected requests' }).getByRole('button', { name: 'Mark as spam' }).click()
+    await expect.poll(() => sent.filter((s) => s.path === 'bulk').length).toBe(1)
+    expect(sent.find((s) => s.path === 'bulk').body.items).toEqual([
+      { subject: 'call', conversationId: 'CON-p1', field: 'resolution', signal: 'wrong_value', valueFrom: 'forwarded', valueTo: 'spam_wrong_number' },
+      { subject: 'call', conversationId: 'CON-p2', field: 'resolution', signal: 'wrong_value', valueFrom: 'unresolved', valueTo: 'spam_wrong_number' },
+    ])
   })
 
   test('without the category list, no category chip and no "Move to category"', async ({ adminPage: page }) => {

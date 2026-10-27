@@ -10,8 +10,8 @@
  * `mockClassifications(page, options)` keeps one state per call: a signal changes it as StarChat would (a person's
  * resolution, message and outcome applied; a category applied by an admin, proposed by anyone else; "wrong" proposed;
  * `valueFrom` checked, 409 `stale_value` with `current` otherwise), a message or outcome correction re-derives nothing
- * here (the fixture keeps derivation out: the dashboard re-reads, whatever the server derived). `calls` records every
- * request, so a spec asserts what was sent and what was not.
+ * here (the fixture keeps derivation out). Every gesture's answer carries the touched calls' state (`call`, `calls`), as
+ * StarChat a012b6926 answers it. `sent` records every request, so a spec asserts what was sent and what was not.
  */
 const { mockBusiness, mockUser } = require('./mock-data')
 
@@ -50,7 +50,20 @@ function judged (over = {}) {
       },
     ],
     history: [],
+    // the call's facts as the summary holds them (StarChat a012b6926): a string, or null when unset
+    facts: { booked: 'true', transferred: null, no_conversation: null, managed_call: 'true', skill_errors: null, unkept: null },
     ...over,
+  }
+}
+
+// A call's state as a gesture's answer carries it (StarChat a012b6926): the judgements read without the history.
+function stateOf (call) {
+  const strip = (j) => (j ? { model: j.model, value: j.value, corrected: !!j.corrected } : j)
+  return {
+    conversationId: call.conversationId, businessId: call.businessId, callStart: call.callStart, version: call.version,
+    resolution: strip(call.resolution), message: strip(call.message),
+    requests: call.requests.map((r) => ({ requestId: r.requestId, ordinal: r.ordinal, text: r.text, outcome: strip(r.outcome), category: strip(r.category), gap: r.gap, excluded: r.excluded })),
+    facts: call.facts,
   }
 }
 
@@ -119,9 +132,10 @@ async function mockClassifications (page, options = {}) {
     }
     if (!call) return { status: 404 }
     if (a.signal === 'fact_wrong') {
+      if ((call.facts || {})[a.field] !== a.valueFrom) return { status: 409, current: { conversationId: call.conversationId, field: a.field, value: (call.facts || {})[a.field] } }
       const id = state.nextId++
       call.history.push({ feedbackId: id, subject: 'call', field: a.field, signal: 'fact_wrong', valueFrom: a.valueFrom, valueTo: null, source: 'person', status: 'proposed', actorRole: role, actorName, byMe: true, createdAt: Date.now(), gestureId })
-      return { status: 200, body: { feedbackId: id, conversationId: call.conversationId, field: a.field, status: 'proposed', value: a.valueFrom, replayed: false } }
+      return { status: 200, call, body: { feedbackId: id, conversationId: call.conversationId, field: a.field, status: 'proposed', value: a.valueFrom, replayed: false } }
     }
     const j = judgementOf(call, a)
     if (!j) return { status: 404 }
@@ -145,7 +159,7 @@ async function mockClassifications (page, options = {}) {
       subject: a.subject, requestId: a.requestId, field: a.field, signal: a.signal, valueFrom: a.valueFrom, valueTo: to,
       source: 'person', status, actorRole: role, actorName, byMe: true, createdAt: Date.now(), gestureId,
     })
-    return { status: 200, body: { feedbackId: id, conversationId: call.conversationId, requestId: a.requestId, field: a.field, status, value: j.value, replayed: false } }
+    return { status: 200, call, body: { feedbackId: id, conversationId: call.conversationId, requestId: a.requestId, field: a.field, status, value: j.value, replayed: false } }
   }
 
   function revertEntry (call, h) {
@@ -183,7 +197,7 @@ async function mockClassifications (page, options = {}) {
     const out = write(body, body.gestureId)
     state.gestures[body.gestureId] = (state.gestures[body.gestureId] || []).concat(out.body ? [out.body.feedbackId] : [])
     if (out.status !== 200) return json(route, out.status, out.status === 409 ? { code: 'stale_value', current: [out.current] } : 'Not found')
-    json(route, 200, out.body)
+    json(route, 200, { ...out.body, call: stateOf(out.call) })
   })
   await page.route('**/customer/insights/feedback/bulk', (route) => {
     const body = route.request().postDataJSON() || {}
@@ -191,20 +205,22 @@ async function mockClassifications (page, options = {}) {
     const results = body.items.map((a) => write(a, body.gestureId))
     if (results.some((r) => r.status !== 200)) return json(route, 409, { code: 'stale_value', current: results.filter((r) => r.current).map((r) => r.current) })
     state.gestures[body.gestureId] = results.map((r) => r.body.feedbackId)
-    json(route, 200, { gestureId: body.gestureId, applied: results.filter((r) => r.body.status === 'applied').length, proposed: results.filter((r) => r.body.status === 'proposed').length, items: results.map((r) => r.body) })
+    const touched = [...new Set(results.map((r) => r.call))]
+    json(route, 200, { gestureId: body.gestureId, applied: results.filter((r) => r.body.status === 'applied').length, proposed: results.filter((r) => r.body.status === 'proposed').length, items: results.map((r) => r.body), calls: touched.map(stateOf) })
   })
   await page.route('**/customer/insights/feedback/gestures/*/revert', (route) => {
     const g = decodeURIComponent(new URL(route.request().url()).pathname.split('/gestures/')[1].split('/')[0])
     sent.push({ method: 'POST', path: 'gesture-revert', gestureId: g })
     const reverted = []
+    const touched = new Set()
     for (const call of Object.values(state.calls)) {
       for (const h of [...call.history].reverse()) {
         // StarChat reverts a gesture's corrections and confirmations (6d13718c6); a confirmation undone changes no value
-        if (h.gestureId === g && h.status === 'applied') { revertEntry(call, h); reverted.push(h.feedbackId) }
-        else if (h.gestureId === g && h.status === 'confirmed') { h.status = 'reverted'; reverted.push(h.feedbackId) }
+        if (h.gestureId === g && h.status === 'applied') { revertEntry(call, h); reverted.push(h.feedbackId); touched.add(call) }
+        else if (h.gestureId === g && h.status === 'confirmed') { h.status = 'reverted'; reverted.push(h.feedbackId); touched.add(call) }
       }
     }
-    json(route, 200, { gestureId: g, reverted })
+    json(route, 200, { gestureId: g, reverted, calls: [...touched].map(stateOf) })
   })
   await page.route(/\/customer\/insights\/feedback\/\d+\/(revert|apply|reject)$/, (route) => {
     const [, id, move] = new URL(route.request().url()).pathname.match(/feedback\/(\d+)\/(\w+)$/)
@@ -216,7 +232,7 @@ async function mockClassifications (page, options = {}) {
       if (move === 'revert') revertEntry(call, h)
       else h.status = move === 'apply' ? 'applied' : 'rejected'
       h.decidedAt = Date.now()
-      return json(route, 200, h)
+      return json(route, 200, { ...h, call: stateOf(call) })
     }
     json(route, 200, { feedbackId: Number(id), status: move === 'apply' ? 'applied' : move === 'reject' ? 'rejected' : 'reverted' })
   })
@@ -273,4 +289,4 @@ async function mockConversations (page, docs, { byId, leftOut } = {}) {
   return searches
 }
 
-module.exports = { mockClassifications, mockConversations, judged, conversation, searchAnswer, CATEGORIES, CALL_ID, BUSINESS_ID, START }
+module.exports = { mockClassifications, mockConversations, judged, stateOf, conversation, searchAnswer, CATEGORIES, CALL_ID, BUSINESS_ID, START }

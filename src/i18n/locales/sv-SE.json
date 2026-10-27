@@ -2468,7 +2468,8 @@
           "reseller": "en partner",
           "admin": "MrCall",
           "service": "MrCall",
-          "unknown": "någon"
+          "unknown": "någon",
+          "me": "du"
         },
         "history": {
           "title": "Historik för {field}",
@@ -2552,9 +2553,9 @@
           "proposed": "{n} förslag skickat: en administratör beslutar. | {n} förslag skickade: en administratör beslutar."
         },
         "fact": {
-          "report": "Rapportera ett fel",
-          "reportOf": "Rapportera ett fel: {fact}",
-          "reported": "Rapporterat till MrCall"
+          "chip": "Rapportera ett fel i ett faktum",
+          "reportedOf": "Rapporterat till MrCall: {fact}",
+          "option": "{fact}: {value}"
         },
         "links": {
           "open": "Öppna samtalet: {label} | Öppna de {n} samtalen: {label}",
@@ -2617,7 +2618,11 @@
           "no_conversation": "Inget samtal",
           "managed_call": "Hanterat av assistenten",
           "skill_errors": "Skillfel",
-          "unkept": "Löften som inte hölls"
+          "unkept": "Löften som inte hölls",
+          "none": "inte registrerat",
+          "yes": "ja",
+          "no": "nej",
+          "recorded": "registrerat"
         },
         "access": {
           "menu": "Spamnummer och åtkomst till samtal",

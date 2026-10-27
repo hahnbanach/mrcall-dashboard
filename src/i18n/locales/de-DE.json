@@ -2470,7 +2470,8 @@
           "reseller": "ein Partner",
           "admin": "MrCall",
           "service": "MrCall",
-          "unknown": "jemand"
+          "unknown": "jemand",
+          "me": "Sie"
         },
         "history": {
           "title": "Verlauf von {field}",
@@ -2554,9 +2555,9 @@
           "proposed": "{n} Vorschlag gesendet: ein Administrator entscheidet. | {n} Vorschläge gesendet: ein Administrator entscheidet."
         },
         "fact": {
-          "report": "Fehler melden",
-          "reportOf": "Fehler melden: {fact}",
-          "reported": "An MrCall gemeldet"
+          "chip": "Einen Fehler bei einer Tatsache melden",
+          "reportedOf": "An MrCall gemeldet: {fact}",
+          "option": "{fact}: {value}"
         },
         "links": {
           "open": "Anruf öffnen: {label} | Die {n} Anrufe öffnen: {label}",
@@ -2619,7 +2620,11 @@
           "no_conversation": "Kein Gespräch",
           "managed_call": "Vom Assistenten bearbeitet",
           "skill_errors": "Skill-Fehler",
-          "unkept": "Nicht gehaltene Zusagen"
+          "unkept": "Nicht gehaltene Zusagen",
+          "none": "nicht erfasst",
+          "yes": "ja",
+          "no": "nein",
+          "recorded": "erfasst"
         },
         "access": {
           "menu": "Spam-Nummern und Zugriff auf Anrufe",

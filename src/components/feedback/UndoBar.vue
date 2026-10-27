@@ -57,8 +57,8 @@ export default {
       if (!user || !gestureId) return;
       this.busy = true;
       try {
-        await Classifications.revertGesture(user, gestureId);
-        UndoGesture.undone();
+        const answer = await Classifications.revertGesture(user, gestureId);
+        UndoGesture.undone(answer && answer.calls, answer && answer.reverted);
         this.message = this.$t("components.callInsights.feedback.undo.undone");
       } catch (error) {
         if (isSessionEnded(error)) return;

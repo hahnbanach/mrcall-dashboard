@@ -101,6 +101,8 @@ function chipState(judgement, history, where, role) {
     else if (inForce && inForce.byMe && statusFor(where.field, inForce.signal, role) === "proposed") kind = "applied";
     else if (inForce) kind = "corrected";
     else if (confirmation) kind = "confirmed";
+    // corrected by a gesture made elsewhere (another panel, a list), whose history this reader has not read
+    else if (j.corrected === true && j.value !== j.model) kind = "corrected";
     const correction = inForce ? {
         feedbackId: inForce.feedbackId, from: inForce.valueFrom, to: inForce.valueTo,
         who: inForce.actorName || null, role: inForce.actorRole || null, when: inForce.createdAt, byMe: !!inForce.byMe,
@@ -142,6 +144,61 @@ function ask({ conversationId, requestId, field, signal, valueFrom, valueTo, not
     if (valueTo !== undefined && valueTo !== null) a.valueTo = valueTo;
     if (note) a.note = note;
     return a;
+}
+
+// ---- a call's judgements from a gesture's answer (StarChat a012b6926), never read again after a gesture ----
+
+/** The judgements a gesture's answer carries (`call`, or one of `calls`), with the history kept: the answer has none. */
+function withCallState(data, call) {
+    if (!call || typeof call !== "object") return data;
+    return { ...call, history: data && Array.isArray(data.history) ? data.history : [] };
+}
+
+/**
+ * What a gesture wrote, added to the call's history so a chip says it at once (the reader's own: `byMe`, its role, now).
+ * `answer` is the signal's answer (`feedbackId`, `status`, `replayed`); a signal already in the history adds nothing.
+ */
+function withSignal(history, answer, a, gestureId, role, now = Date.now()) {
+    const list = Array.isArray(history) ? history : [];
+    if (!answer || answer.feedbackId == null || list.some((h) => h.feedbackId === answer.feedbackId)) return list;
+    const decided = answer.status === "applied" || answer.status === "confirmed";
+    return list.concat([{
+        feedbackId: answer.feedbackId, subject: a.subject, conversationId: a.conversationId, requestId: a.requestId,
+        field: a.field, signal: a.signal, valueFrom: a.valueFrom, valueTo: a.signal === "right" ? a.valueFrom : (a.valueTo != null ? a.valueTo : null),
+        source: "person", status: answer.status, actorRole: role, byMe: true, createdAt: now,
+        decidedAt: decided ? now : undefined, gestureId,
+    }]);
+}
+
+/** The signals an undo reverted (`reverted` ids), marked so in the history. */
+function withReverted(history, ids, now = Date.now()) {
+    const set = new Set(ids || []);
+    return (Array.isArray(history) ? history : []).map((h) => (set.has(h.feedbackId) ? { ...h, status: "reverted", decidedAt: now } : h));
+}
+
+/** A decision's answer (the signal as it now stands, with its call's state beside it) put in place in the history. */
+function withDecision(history, row) {
+    const { call, ...entry } = row || {};
+    void call;
+    return (Array.isArray(history) ? history : []).map((h) => (h.feedbackId === entry.feedbackId ? { ...h, ...entry } : h));
+}
+
+/** The current values a stale-value refusal (409) carries, put in place of the ones read. */
+function withCurrent(data, current) {
+    if (!data) return data;
+    const next = {
+        ...data,
+        requests: Array.isArray(data.requests) ? data.requests.map((r) => ({ ...r })) : [],
+        facts: { ...(data.facts || {}) },
+    };
+    for (const c of Array.isArray(current) ? current : []) {
+        if (FACT_FIELDS.includes(c.field)) next.facts[c.field] = c.value == null ? null : c.value;
+        else if (onRequest(c.field)) {
+            const r = next.requests.find((x) => x.requestId === c.requestId);
+            if (r) r[c.field] = { ...(r[c.field] || {}), value: c.value == null ? null : c.value };
+        } else if (next[c.field]) next[c.field] = { ...next[c.field], value: c.value == null ? null : c.value };
+    }
+    return next;
 }
 
 function newGestureId() {
@@ -321,6 +378,11 @@ export default {
     menuEntries,
     ask,
     newGestureId,
+    withCallState,
+    withSignal,
+    withReverted,
+    withDecision,
+    withCurrent,
     searchFromQuery,
     withoutFilter,
     countLink,

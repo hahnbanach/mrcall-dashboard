@@ -2473,7 +2473,8 @@
           "reseller": "a partner",
           "admin": "MrCall",
           "service": "MrCall",
-          "unknown": "someone"
+          "unknown": "someone",
+          "me": "you"
         },
         "history": {
           "title": "History of {field}",
@@ -2557,9 +2558,9 @@
           "proposed": "{n} proposal sent: an admin decides. | {n} proposals sent: an admin decides."
         },
         "fact": {
-          "report": "Report an error",
-          "reportOf": "Report an error: {fact}",
-          "reported": "Reported to MrCall"
+          "chip": "Report an error on a fact",
+          "reportedOf": "Reported to MrCall: {fact}",
+          "option": "{fact}: {value}"
         },
         "links": {
           "open": "Open the call: {label} | Open the {n} calls: {label}",
@@ -2622,7 +2623,11 @@
           "no_conversation": "No conversation",
           "managed_call": "Managed by the assistant",
           "skill_errors": "Skill errors",
-          "unkept": "Promises not kept"
+          "unkept": "Promises not kept",
+          "none": "not recorded",
+          "yes": "yes",
+          "no": "no",
+          "recorded": "recorded"
         },
         "access": {
           "menu": "Spam numbers and call access",

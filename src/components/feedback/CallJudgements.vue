@@ -30,6 +30,25 @@
         </template>
       </dl>
 
+      <!-- A fact is not a label: "this is wrong" is a report to MrCall on any of the six facts StarChat reads (its brief,
+           decision 1; a012b6926), with the value read, null included -->
+      <div class="judgement-facts">
+        <JudgementChip
+          ref="chip-facts"
+          :field-label="$t('components.callInsights.feedback.fact.chip')"
+          :value-label="$t('components.callInsights.feedback.fact.chip')"
+          :name="$t('components.callInsights.feedback.fact.chip')"
+          :entries="factEntries"
+          :busy="busyKey === 'facts' || status === 'loading'"
+          :deferred="!loaded"
+          @opening="loadThenOpen('chip-facts')"
+          @choose="reportFact($event.value)"
+        />
+        <span v-for="f in reportedFacts" :key="f" class="judgement-note" role="status">
+          {{ $t("components.callInsights.feedback.fact.reportedOf", { fact: fieldLabel(f) }) }}
+        </span>
+      </div>
+
       <!-- What the caller asked: each request with its outcome and, while StarChat names the categories, its category -->
       <div v-if="requests.length > 0" class="judgement-requests-block">
         <h4 class="insight-subtitle" :id="uid + '-requests'">{{ $t("components.callInsights.feedback.requests.title") }}</h4>
@@ -128,8 +147,9 @@ let seq = 0;
  *
  * WHEN IT READS. A call's judgements are read (`GET insights/calls/{id}/classifications`) for the owner when the call is
  * opened (`eager`) or comes into view; for a non-owner only when the person first opens one of its chips, since
- * StarChat records every such read as an opening. After every gesture, undo, restore and refusal they are read again:
- * a correction changes other judgements on the server (decision 5) and no answer carries them.
+ * StarChat records every such read as an opening. After a gesture, an undo or a restore they are not read again: the
+ * answer carries the call's state, which the server derived (StarChat a012b6926); a stale value takes the current
+ * values its refusal carries.
  *
  * Until the read answers, and when it answers 404 or 503, the parent's own rows stay (`chips` false). A non-owner sees
  * chips at once, drawn from the call's own details, which open after the read.
@@ -161,6 +181,8 @@ export default {
       ruleDone: null,
       offered: false,
       undo: UndoGesture.state,
+      // the facts reported wrong from this panel
+      reportedFacts: [],
       // reads overlap (a gesture's re-read, an undo's): only the latest one's answer is drawn
       gate: CallInsights.latestOnly(),
     };
@@ -201,6 +223,15 @@ export default {
         category: { state: { value: null, model: null, kind: "model", correction: null, canRestore: false } },
       }));
     },
+    // The six facts with the value read, each an entry of the report's menu.
+    factEntries() {
+      if (!this.loaded) return [];
+      const facts = (this.data && this.data.facts) || {};
+      return Classifications.FACT_FIELDS.map((f) => ({
+        key: "fact:" + f, value: f, kind: "value",
+        label: this.$t("components.callInsights.feedback.fact.option", { fact: this.fieldLabel(f), value: this.factValue(f, facts[f]) }),
+      }));
+    },
     requests() {
       if (!this.loaded) return this.readOnly && this.status !== "absent" && this.status !== "unavailable" ? this.detailRequests : [];
       if (!Array.isArray(this.data.requests)) return [];
@@ -219,11 +250,11 @@ export default {
     // another panel or a list changed this call's judgements: read them again (a bulk gesture, the same call drawn twice)
     "undo.recorded"() {
       const last = this.undo.lastRecorded;
-      if (last && last.origin !== this.uid && last.affected.includes(this.conversation.id) && this.loaded) this.load();
+      if (last && last.origin !== this.uid && last.affected.includes(this.conversation.id) && this.loaded) this.takeCalls(last.calls, []);
     },
     "undo.undone"() {
       const last = this.undo.lastUndone;
-      if (last && last.affected.includes(this.conversation.id) && this.status !== "idle") this.load();
+      if (last && last.affected.includes(this.conversation.id) && this.loaded) this.takeCalls(last.calls, last.reverted);
     },
   },
   mounted() {
@@ -242,6 +273,17 @@ export default {
     if (this.observer) this.observer.disconnect();
   },
   methods: {
+    // A gesture's or an undo's answer carries the touched calls' state (StarChat a012b6926): this call's is taken as it
+    // is, the history kept and the reverted signals marked. Only an answer without it (an older StarChat) reads again.
+    takeCalls(calls, reverted) {
+      const mine = (Array.isArray(calls) ? calls : []).find((c) => c && c.conversationId === this.conversation.id);
+      if (!mine) { this.load(); return; }
+      this.gate.begin();
+      const next = Classifications.withCallState(this.data, mine);
+      next.history = Classifications.withReverted(next.history, reverted);
+      this.data = next;
+      this.status = "ok";
+    },
     load() {
       this.status = this.data ? this.status : "loading";
       const language = this.$i18n.locale;
@@ -335,7 +377,8 @@ export default {
       this.busyKey = key;
       try {
         const answer = await Classifications.signal(this.user, ask, gestureId);
-        UndoGesture.record(gestureId, [this.conversation.id], null, this.uid);
+        this.takeAnswer(answer, ask, gestureId);
+        UndoGesture.record(gestureId, [this.conversation.id], null, this.uid, answer && answer.call ? [answer.call] : []);
         if (field === "resolution" && answer && answer.status === "applied") {
           if (ask.valueTo === "spam_wrong_number") this.offerRule();
           // a rule is the business's owner's: StarChat masks its number to anyone else (a700131a4)
@@ -343,16 +386,61 @@ export default {
         }
       } catch (error) {
         if (isSessionEnded(error)) return;
-        const refusal = CallInsights.refusalOf(error);
-        this.alert = this.$t(refusal && refusal.code === "stale_value"
-          ? "components.callInsights.feedback.stale"
-          : "components.callInsights.feedback.failed");
+        this.refused(error);
       } finally {
         this.busyKey = null;
       }
-      await this.load();
+    },
+    // The signal's answer: its call's state (`call`), and the signal itself recorded in the history so the chip says it.
+    takeAnswer(answer, ask, gestureId) {
+      if (!answer) return;
+      this.gate.begin();
+      const next = answer.call ? Classifications.withCallState(this.data, answer.call) : { ...this.data };
+      next.history = Classifications.withSignal(this.data && this.data.history, answer, ask, gestureId, this.role);
+      this.data = next;
+      this.status = "ok";
+    },
+    // A refusal: a stale value (409) carries the current values, which the chips take; anything else is said.
+    refused(error) {
+      const refusal = CallInsights.refusalOf(error);
+      if (refusal && refusal.code === "stale_value") {
+        const body = error.response && error.response.data;
+        this.data = Classifications.withCurrent(this.data, body && body.current);
+        this.alert = this.$t("components.callInsights.feedback.stale");
+      } else {
+        this.alert = this.$t("components.callInsights.feedback.failed");
+      }
     },
     // who put the correction in force: the newest applied one, dated by its decision as `chipState` dates it
+    // A fact's value in words: the labels the call's panel uses, "not recorded" for a fact the summary does not hold.
+    factValue(f, v) {
+      const p = "components.callInsights.";
+      if (v === null || v === undefined) return f === "transferred" ? this.$t(p + "transferred.unknown") : this.$t(p + "feedback.facts.none");
+      if (f === "booked" && (v === "true" || v === "false")) return this.$t(p + "booked." + v);
+      if (f === "transferred" && v === "true") return this.$t(p + "transferred.true");
+      if (f === "no_conversation" && CallInsights.NO_CONVERSATION_KEYS.includes(v)) return this.$t(p + "noConversation.reasons." + v);
+      if (v === "true" || v === "false") return this.$t(p + "feedback.facts." + (v === "true" ? "yes" : "no"));
+      return this.$t(p + "feedback.facts.recorded");
+    },
+    async reportFact(field) {
+      const facts = (this.data && this.data.facts) || {};
+      const ask = Classifications.ask({
+        conversationId: this.conversation.id, field, signal: "fact_wrong", valueFrom: facts[field] === undefined ? null : facts[field],
+      });
+      const gestureId = Classifications.newGestureId();
+      this.alert = null;
+      this.busyKey = "facts";
+      try {
+        const answer = await Classifications.signal(this.user, ask, gestureId);
+        this.takeAnswer(answer, ask, gestureId);
+        if (!this.reportedFacts.includes(field)) this.reportedFacts = this.reportedFacts.concat([field]);
+      } catch (error) {
+        if (isSessionEnded(error)) return;
+        this.refused(error);
+      } finally {
+        this.busyKey = null;
+      }
+    },
     inForceSource(field) {
       const applied = Classifications.historyOf(this.data && this.data.history, { field }).filter((h) => h.status === "applied");
       const at = (h) => h.decidedAt || h.createdAt || 0;
@@ -362,14 +450,17 @@ export default {
     async restore(key, feedbackId) {
       this.busyKey = key;
       try {
-        await Classifications.revert(this.user, feedbackId);
+        const row = await Classifications.revert(this.user, feedbackId);
+        this.gate.begin();
+        const next = row && row.call ? Classifications.withCallState(this.data, row.call) : { ...this.data };
+        next.history = Classifications.withDecision(this.data.history, row);
+        this.data = next;
       } catch (error) {
         if (isSessionEnded(error)) return;
         this.alert = this.$t("components.callInsights.feedback.failed");
       } finally {
         this.busyKey = null;
       }
-      await this.load();
     },
     async offerRule() {
       if (this.offered) return;
@@ -475,6 +566,13 @@ export default {
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: @mrcall_grey_text2;
+}
+
+.judgement-facts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
 }
 
 .judgement-requests {

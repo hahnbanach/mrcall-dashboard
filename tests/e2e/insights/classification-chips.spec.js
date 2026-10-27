@@ -7,12 +7,15 @@ const { mockClassifications, mockConversations, conversation, judged, CALL_ID, B
  * Brief docs/briefs/2026-10-27-classification-feedback.md, scope 1 and 2 (StarChat's brief, decisions 6, 9 and 12):
  * every judgement of a call is a chip naming its value and state; a tap opens a listbox of the other values and of
  * "right", "wrong", "restore", "history"; a choice applies at once or proposes; one undo bar per gesture, no time
- * limit; the call's judgements read again after every gesture, undo and refusal. The call is opened by its deep link
+ * limit; after a gesture, an undo or a refusal the chips take the call's state the answer carries, with no read of the
+ * call (StarChat a012b6926). The call is opened by its deep link
  * (`?conversation=`), the owner's own.
  *
  * Seen failing, 2026-10-27, before CallJudgements.vue, JudgementChip.vue and UndoBar.vue existed: every case, on the
  * missing chip buttons (the panel drew today's plain rows), except "classifications 404", which passed on the old
  * panel by construction and was then seen failing by perturbation (the panel drawing chips from `details` alone).
+ * Later cases, each seen failing on the commit before its code: the fact report (perturbation), focus back on the chip
+ * and a confirmation in the history (dec211e), no read after a gesture or an undo and the six facts (2d39e13).
  */
 const open = (page) => page.goto(`/conversations?id=${BUSINESS_ID}&conversation=${CALL_ID}`)
 const opened = (page) => page.locator('.opened-card')
@@ -36,9 +39,9 @@ test.describe('a call\'s judgements as chips', () => {
     const signal = sent.find((s) => s.path === 'feedback' && s.method === 'POST')
     expect(signal.body).toMatchObject({ subject: 'call', conversationId: CALL_ID, field: 'resolution', signal: 'wrong_value', valueFrom: 'resolved', valueTo: 'unresolved' })
     expect(signal.body.gestureId).toMatch(/^[0-9a-f-]{20,}$/)
-    await expect(chip(page, /^Resolution: Unresolved, Corrected \(from Resolved to Unresolved, Mario Rossi, /)).toBeVisible()
-    // the judgements are read again after the gesture: a correction can change others on the server
-    expect(reads(sent)).toBeGreaterThan(before)
+    await expect(chip(page, /^Resolution: Unresolved, Corrected \(from Resolved to Unresolved, you, /)).toBeVisible()
+    // the gesture's answer carries the call's state (StarChat a012b6926): the judgements are not read again
+    expect(reads(sent)).toBe(before)
     const bar = page.getByRole('status').filter({ hasText: 'Changed' })
     await expect(bar).toBeVisible()
     // no time limit: still there well past a toast's life
@@ -47,6 +50,8 @@ test.describe('a call\'s judgements as chips', () => {
     await bar.getByRole('button', { name: 'Undo' }).click()
     expect(sent.find((s) => s.path === 'gesture-revert').gestureId).toBe(signal.body.gestureId)
     await expect(chip(page, /^Resolution: Resolved$/)).toBeVisible()
+    // the undo's answer carries the call's state too
+    expect(reads(sent)).toBe(before)
   })
 
   test('each request shows its outcome and its category; an owner\'s category is a proposal, its outcome applies', async ({ authenticatedPage: page }) => {
@@ -108,11 +113,18 @@ test.describe('a call\'s judgements as chips', () => {
     const { sent } = await mockClassifications(page)
     await open(page)
     await expect(chip(page, /^Resolution: Resolved/)).toBeVisible({ timeout: 15000 })
-    await opened(page).getByRole('button', { name: 'Report an error: Booking' }).click()
+    // the six facts StarChat reads (a012b6926), each with the value read, null included
+    await chip(page, 'Report an error on a fact').click()
+    await expect(page.getByRole('listbox').getByRole('option')).toHaveCount(6)
+    await page.getByRole('listbox').getByRole('option', { name: 'Transfer: not known' }).click()
     await expect.poll(() => sent.filter((s) => s.path === 'feedback' && s.method === 'POST').length).toBe(1)
-    expect(sent.filter((s) => s.path === 'feedback').pop().body).toMatchObject({ subject: 'call', conversationId: CALL_ID, field: 'booked', signal: 'fact_wrong', valueFrom: 'true' })
+    expect(sent.filter((s) => s.path === 'feedback').pop().body).toMatchObject({ subject: 'call', conversationId: CALL_ID, field: 'transferred', signal: 'fact_wrong', valueFrom: null })
     expect(sent.filter((s) => s.path === 'feedback').pop().body.valueTo).toBeUndefined()
-    await expect(opened(page).getByText('Reported to MrCall (Booking)')).toBeVisible()
+    await expect(opened(page).getByText('Reported to MrCall: Transfer')).toBeVisible()
+    await chip(page, 'Report an error on a fact').click()
+    await page.getByRole('listbox').getByRole('option', { name: 'Booking: Booked' }).click()
+    await expect.poll(() => sent.filter((s) => s.path === 'feedback' && s.method === 'POST').length).toBe(2)
+    expect(sent.filter((s) => s.path === 'feedback').pop().body).toMatchObject({ field: 'booked', signal: 'fact_wrong', valueFrom: 'true' })
   })
 
   test('the author restores the analysis\'s value, and reads the history', async ({ authenticatedPage: page }) => {
@@ -143,6 +155,7 @@ test.describe('a call\'s judgements as chips', () => {
     await open(page)
     await choose(page, /^Resolution: Resolved/, 'Unresolved')
     await expect(opened(page).getByRole('alert')).toContainText('This value changed meanwhile')
+    // the refusal carries the current value: the chip takes it, with no read of the call
     await expect(chip(page, /^Resolution: Handed over/)).toBeVisible()
   })
 

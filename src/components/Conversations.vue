@@ -941,8 +941,8 @@ export default {
       const gestureId = Classifications.newGestureId();
       this.bulkBusy = true;
       try {
-        await Classifications.bulk(this.user, asks, gestureId);
-        UndoGesture.record(gestureId, asks.map((a) => a.conversationId), () => this.conversationList());
+        const answer = await Classifications.bulk(this.user, asks, gestureId);
+        UndoGesture.record(gestureId, asks.map((a) => a.conversationId), () => this.conversationList(), null, answer && answer.calls);
         this.selection.clear();
       } catch (error) {
         if (isSessionEnded(error)) return;

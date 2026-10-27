@@ -77,6 +77,7 @@
         @choose="bulk('category', 'wrong_value', $event.value)"
       />
       <Button v-if="categories" type="button" size="small" outlined :label="$t('components.callInsights.feedback.bulk.confirm')" :disabled="bulkBusy" @click="bulk('category', 'right')" />
+      <Button type="button" size="small" outlined :label="$t('components.callInsights.feedback.bulk.spam')" :disabled="bulkBusy" @click="spam" />
       <Button type="button" size="small" text :label="$t('components.callInsights.feedback.bulk.clear')" @click="selection.clear()" />
     </BulkBar>
   </div>
@@ -100,7 +101,8 @@ import { isSessionEnded } from "@/firebase/session";
  * business, a link to its call and its outcome and category as chips. Selected requests change outcome, move to another
  * category or are confirmed in one gesture, with one undo. A reader who is not an admin proposes categories (decision
  * 6): its gesture says how many were applied and how many proposed. Without StarChat's category list (the brief's gap
- * table) no category chip and no move are drawn. The list's rows carry no call resolution, so spam is not offered here.
+ * table) no category chip and no move are drawn. Each row carries its call's resolution (StarChat a012b6926), which the
+ * spam gesture sends as the value read.
  * Nor do they carry a history: a chip says "Corretta" when the effective value differs from the model's, which is all
  * a row knows; the call's own chips (its link) carry the history, the proposals and the restore.
  */
@@ -229,6 +231,22 @@ export default {
       await this.send(asks, true);
       this.bulkBusy = false;
     },
+    // The selected requests' calls marked spam: one signal per call, on its resolution as the row reads it
+    // (`resolution`, StarChat a012b6926); a call already spam or without a judged resolution is left out.
+    async spam() {
+      const seen = new Set();
+      const asks = [];
+      for (const r of this.page.items) {
+        if (!this.selection.has(r.requestId) || seen.has(r.conversationId)) continue;
+        seen.add(r.conversationId);
+        if (!r.resolution || r.resolution === "spam_wrong_number") continue;
+        asks.push(Classifications.ask({ conversationId: r.conversationId, field: "resolution", signal: "wrong_value", valueFrom: r.resolution, valueTo: "spam_wrong_number" }));
+      }
+      if (asks.length === 0) return;
+      this.bulkBusy = true;
+      await this.send(asks, true);
+      this.bulkBusy = false;
+    },
     async send(asks, many) {
       const user = this.$store.state.user;
       const gestureId = Classifications.newGestureId();
@@ -237,7 +255,8 @@ export default {
         const answer = many
           ? await Classifications.bulk(user, asks, gestureId)
           : await Classifications.signal(user, asks[0], gestureId);
-        UndoGesture.record(gestureId, asks.map((a) => a.conversationId), () => this.page.retry());
+        UndoGesture.record(gestureId, asks.map((a) => a.conversationId), () => this.page.retry(), null,
+          many ? answer && answer.calls : (answer && answer.call ? [answer.call] : []));
         const proposed = many ? answer.proposed || 0 : (answer.status === "proposed" ? 1 : 0);
         if (proposed > 0) this.note = this.$t("components.callInsights.feedback.bulk.proposed", { n: proposed }, proposed);
         if (many) this.selection.clear();

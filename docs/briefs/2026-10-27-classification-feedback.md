@@ -5,7 +5,7 @@ chip that a person marks right or wrong and corrects, with one undo; lists selec
 opens the calls behind it; corrections queue for an admin and proposals for their author; caller rules and the call
 access record sit in the business settings; a non-owner opens a call read-only and recorded. It states what StarChat
 9.34.118 serves for this, what it does not (and is therefore not built here), the scope, the alternatives rejected,
-the acceptance and the rollback, and an amendment for the contract changes StarChat made while it was built.
+the acceptance and the rollback, and two amendments for the contract changes StarChat made while it was built.
 
 Date: 2026-10-27. Line: `v2.2` (held by another session); built on a temporary branch off `a837d56`, rebased onto
 `fd4c94d` when the line moved, handed over to be fast-forwarded. Authority: StarChat's brief `docs/briefs/2026-10-26-classification-feedback.md` (decisions 6, 9,
@@ -251,3 +251,29 @@ dashboard behind on some of them. Where this amendment differs from the sections
    opened call reads its judgements at once (an owner's reads are never recorded); a non-owner's is read-only, its
    judgements read when the person opens one, its recording from the one-time link. A panel drawn by any other page
    draws no chips.
+
+## Amendment 2026-10-27 (second): what StarChat added for this work
+
+StarChat built what the hand-over asked of it (commits `a012b6926` and `f87578328`, on test with its next tag). The
+gap table's rows they close are marked here, not rewritten; this amendment wins where it differs from the sections
+above.
+
+8. **The category list** (`GET insights/categories?language`, every configured category with its key, its label in
+   the language asked, English when none, and whether it is active; never `unclassified`): the category chip and
+   "Sposta in categoria…" are drawn, offering the active categories only and naming any by its label. Closes the gap
+   row "A category's name outside the categories view".
+9. **Facts in a call's judgements** (`facts`: booked, transferred, no_conversation, managed_call, skill_errors,
+   unkept, each the summary's value or null): "Segnala un errore" is offered on all six, from one chip of the call,
+   each report sending the value read, null included. Supersedes amendment item 2's limit to booked and transferred.
+10. **Every gesture's answer carries the touched calls' state** (`call` on a signal and on a revert, apply or reject;
+   `calls` on a bulk gesture and a gesture's undo): the chips take it, and the call's judgements are no longer read
+   again after a gesture or an undo; the history (which the state does not carry) is kept and updated from what the
+   gesture wrote. A stale value takes the current values its refusal carries. Supersedes scope 1's re-read and the gap
+   row on recorded openings, with StarChat recording one opening per actor and call within 10 minutes (`f87578328`).
+11. **A category's requests carry their call's resolution** (`resolution`): "Segna come spam" is offered on the
+   selected requests, one signal per call with that resolution as the value read. Closes the gap row "Segna come spam
+   over a category's requests".
+
+Still not built: the similar panel, the admin's platform jobs and budget, a bulk decision route, counts over several
+businesses opening their calls (unchanged from the gap table).
+

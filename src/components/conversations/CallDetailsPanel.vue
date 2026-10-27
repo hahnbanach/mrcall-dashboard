@@ -69,17 +69,6 @@
         </dd>
       </dl>
 
-      <!-- A fact is not a label: "this is wrong" is a report to MrCall (StarChat's brief, decision 1) -->
-      <div v-if="reportableRows.length > 0" class="fact-reports">
-        <template v-for="row in reportableRows" :key="row.dimension">
-          <span v-if="reported[row.dimension]" class="fact-reported" role="status">
-            {{ $t("components.callInsights.feedback.fact.reported") }} ({{ $t("components.callInsights.dimensions." + row.dimension) }})
-          </span>
-          <button v-else type="button" class="fact-report" :disabled="reporting === row.dimension" @click="reportFact(row)">
-            {{ $t("components.callInsights.feedback.fact.reportOf", { fact: $t("components.callInsights.dimensions." + row.dimension) }) }}
-          </button>
-        </template>
-      </div>
 
       <div v-if="topics.length > 0" class="insight-topics">
         <Tag v-for="topic in topics" :key="topic" :value="topic" class="insight-topic-tag" />
@@ -222,9 +211,6 @@ export default {
       recordingState: "idle",
       // the judgements are drawn as chips: the plain resolution and message rows step aside
       chips: false,
-      // the facts reported wrong in this view, and the one being sent
-      reported: {},
-      reporting: null,
     };
   },
   computed: {
@@ -287,9 +273,6 @@ export default {
     insightRows() {
       return CallInsights.insightRows(this.details);
     },
-    reportableRows() {
-      return this.insightRows.filter((r) => this.reportable(r));
-    },
     plainRows() {
       return this.chips ? this.insightRows.filter((r) => r.dimension !== "resolution" && r.dimension !== "message") : this.insightRows;
     },
@@ -309,26 +292,6 @@ export default {
     },
   },
   methods: {
-    // Booked and transferred are reported with the value the summary holds ("true", "false"; transferred absent is
-    // unset), which StarChat checks; the other facts are not in a call's details, so they are not offered here.
-    reportable(row) {
-      return row.dimension === "booked" || row.dimension === "transferred";
-    },
-    async reportFact(row) {
-      const valueFrom = row.dimension === "booked" ? String(this.details.booked) : (this.details.transferred === true ? "true" : null);
-      this.reporting = row.dimension;
-      try {
-        await Classifications.signal(this.user, Classifications.ask({
-          conversationId: this.conversation.id, field: row.dimension, signal: "fact_wrong", valueFrom,
-        }), Classifications.newGestureId());
-        this.reported = { ...this.reported, [row.dimension]: true };
-      } catch (error) {
-        console.error("Fact not reported:", this.conversation.id, error && error.response ? error.response.status : "");
-        this.$emit("error");
-      } finally {
-        this.reporting = null;
-      }
-    },
     gapLabel(gap) {
       return this.$t("components.callInsights.gaps." + gap);
     },
@@ -583,27 +546,8 @@ export default {
   }
 }
 
-.fact-reports {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 12px;
-  margin: -4px 0 10px;
-}
 
-.fact-report {
-  background: none;
-  border: none;
-  padding: 2px 4px;
-  font-size: 13px;
-  color: @mrcall_blue;
-  text-decoration: underline;
-  cursor: pointer;
-}
 
-.fact-reported {
-  font-size: 13px;
-  color: @mrcall_grey_text2;
-}
 
 .insight-assessed-tag {
   font-size: 11px;

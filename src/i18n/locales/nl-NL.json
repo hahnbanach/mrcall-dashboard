@@ -2468,7 +2468,8 @@
           "reseller": "een partner",
           "admin": "MrCall",
           "service": "MrCall",
-          "unknown": "iemand"
+          "unknown": "iemand",
+          "me": "u"
         },
         "history": {
           "title": "Geschiedenis van {field}",
@@ -2552,9 +2553,9 @@
           "proposed": "{n} voorstel verzonden: een beheerder beslist. | {n} voorstellen verzonden: een beheerder beslist."
         },
         "fact": {
-          "report": "Fout melden",
-          "reportOf": "Fout melden: {fact}",
-          "reported": "Gemeld aan MrCall"
+          "chip": "Een fout in een feit melden",
+          "reportedOf": "Gemeld aan MrCall: {fact}",
+          "option": "{fact}: {value}"
         },
         "links": {
           "open": "De oproep openen: {label} | De {n} oproepen openen: {label}",
@@ -2617,7 +2618,11 @@
           "no_conversation": "Geen gesprek",
           "managed_call": "Afgehandeld door de assistent",
           "skill_errors": "Skillfouten",
-          "unkept": "Niet nagekomen toezeggingen"
+          "unkept": "Niet nagekomen toezeggingen",
+          "none": "niet vastgelegd",
+          "yes": "ja",
+          "no": "nee",
+          "recorded": "vastgelegd"
         },
         "access": {
           "menu": "Spamnummers en toegang tot oproepen",

@@ -127,13 +127,16 @@ test.describe('the conversations list: a count\'s filters and corrections in bul
 
   test('after a bulk gesture an opened call\'s chips show the new value (R2 review, finding 1)', async ({ authenticatedPage: page }) => {
     await mockConversations(page, calls)
-    await mockClassifications(page, { calls: { 'CON-a': judged({ conversationId: 'CON-a', requests: [] }) } })
+    const { sent } = await mockClassifications(page, { calls: { 'CON-a': judged({ conversationId: 'CON-a', requests: [] }) } })
     await page.goto(`/conversations?id=${BUSINESS_ID}&conversation=CON-a`)
     const opened = page.locator('.opened-card')
     await expect(opened.getByRole('button', { name: /^Resolution: Resolved/ })).toBeVisible({ timeout: 15000 })
     await select(page, 'Anna')
+    const readsBefore = sent.filter((s) => s.path === 'classifications' && s.id === 'CON-a').length
     await page.getByRole('toolbar', { name: 'Selected calls' }).getByRole('button', { name: 'Mark as spam' }).click()
     await expect(opened.getByRole('button', { name: /^Resolution: Spam or wrong number, Corrected/ })).toBeVisible()
+    // from the bulk answer's `calls` (StarChat a012b6926), not from a read of the call
+    expect(sent.filter((s) => s.path === 'classifications' && s.id === 'CON-a').length).toBe(readsBefore)
   })
 
   test('"change outcome" offers the values; "confirm" confirms; a call without a judged outcome is left out and said', async ({ authenticatedPage: page }) => {

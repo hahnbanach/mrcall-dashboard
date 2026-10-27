@@ -28,6 +28,8 @@ export function judgementLabels(t, categories, locale) {
             return String(v);
         },
         who(entry) {
+            // the reader's own signal, recorded from its answer, carries no name: "you"
+            if (entry && entry.byMe && !(entry.actorName || entry.who)) return t(p + "feedback.who.me");
             const name = entry && (entry.actorName || entry.who);
             const role = entry && (entry.actorRole || entry.role);
             return name || t(p + "feedback.who." + (role || "unknown"));

@@ -2468,7 +2468,8 @@
           "reseller": "partner",
           "admin": "MrCall",
           "service": "MrCall",
-          "unknown": "keegi"
+          "unknown": "keegi",
+          "me": "sina"
         },
         "history": {
           "title": "Ajalugu: {field}",
@@ -2552,9 +2553,9 @@
           "proposed": "{n} ettepanek saadetud: otsustab administraator. | {n} ettepanekut saadetud: otsustab administraator."
         },
         "fact": {
-          "report": "Teata veast",
-          "reportOf": "Teata veast: {fact}",
-          "reported": "MrCallile teatatud"
+          "chip": "Teata fakti veast",
+          "reportedOf": "MrCallile teatatud: {fact}",
+          "option": "{fact}: {value}"
         },
         "links": {
           "open": "Ava kõne: {label} | Ava {n} kõnet: {label}",
@@ -2617,7 +2618,11 @@
           "no_conversation": "Vestlust pole",
           "managed_call": "Assistent käsitles",
           "skill_errors": "Skillide vead",
-          "unkept": "Pidamata lubadused"
+          "unkept": "Pidamata lubadused",
+          "none": "registreerimata",
+          "yes": "jah",
+          "no": "ei",
+          "recorded": "registreeritud"
         },
         "access": {
           "menu": "Rämpsnumbrid ja juurdepääs kõnedele",

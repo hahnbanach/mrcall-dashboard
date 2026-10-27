@@ -2468,7 +2468,8 @@
           "reseller": "en partner",
           "admin": "MrCall",
           "service": "MrCall",
-          "unknown": "noen"
+          "unknown": "noen",
+          "me": "deg"
         },
         "history": {
           "title": "Historikk for {field}",
@@ -2552,9 +2553,9 @@
           "proposed": "{n} forslag sendt: en administrator bestemmer. | {n} forslag sendt: en administrator bestemmer."
         },
         "fact": {
-          "report": "Rapporter en feil",
-          "reportOf": "Rapporter en feil: {fact}",
-          "reported": "Rapportert til MrCall"
+          "chip": "Rapporter en feil i et faktum",
+          "reportedOf": "Rapportert til MrCall: {fact}",
+          "option": "{fact}: {value}"
         },
         "links": {
           "open": "Åpne samtalen: {label} | Åpne de {n} samtalene: {label}",
@@ -2617,7 +2618,11 @@
           "no_conversation": "Ingen samtale",
           "managed_call": "Håndtert av assistenten",
           "skill_errors": "Skill-feil",
-          "unkept": "Løfter som ikke ble holdt"
+          "unkept": "Løfter som ikke ble holdt",
+          "none": "ikke registrert",
+          "yes": "ja",
+          "no": "nei",
+          "recorded": "registrert"
         },
         "access": {
           "menu": "Spamnumre og tilgang til samtaler",
