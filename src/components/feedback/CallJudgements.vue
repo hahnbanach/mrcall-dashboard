@@ -331,7 +331,8 @@ export default {
         UndoGesture.record(gestureId, [this.conversation.id]);
         if (field === "resolution" && answer && answer.status === "applied") {
           if (ask.valueTo === "spam_wrong_number") this.offerRule();
-          else if (ruleJudged && signal === "wrong_value") this.offerRuleRemoval();
+          // a rule is the business's owner's: StarChat masks its number to anyone else (a700131a4)
+          else if (ruleJudged && signal === "wrong_value" && !this.readOnly) this.offerRuleRemoval();
         }
       } catch (error) {
         if (isSessionEnded(error)) return;

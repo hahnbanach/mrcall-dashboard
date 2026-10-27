@@ -2546,6 +2546,11 @@
           "confirm": "Confirm",
           "clear": "Clear selection",
           "leftOut": "{n} call without a judged outcome was left out. | {n} calls without a judged outcome were left out."
+        },
+        "fact": {
+          "report": "Report an error",
+          "reportOf": "Report an error: {fact}",
+          "reported": "Reported to MrCall"
         }
       }
     },

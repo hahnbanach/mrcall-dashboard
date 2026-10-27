@@ -2541,6 +2541,11 @@
           "confirm": "Vahvista",
           "clear": "Tyhjennä valinta",
           "leftOut": "{n} puhelu ilman arvioitua lopputulosta jätettiin pois. | {n} puhelua ilman arvioitua lopputulosta jätettiin pois."
+        },
+        "fact": {
+          "report": "Ilmoita virheestä",
+          "reportOf": "Ilmoita virheestä: {fact}",
+          "reported": "Ilmoitettu MrCallille"
         }
       }
     },

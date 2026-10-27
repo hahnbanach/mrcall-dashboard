@@ -2541,6 +2541,11 @@
           "confirm": "Bevestigen",
           "clear": "Selectie wissen",
           "leftOut": "{n} oproep zonder beoordeelde uitkomst is weggelaten. | {n} oproepen zonder beoordeelde uitkomst zijn weggelaten."
+        },
+        "fact": {
+          "report": "Fout melden",
+          "reportOf": "Fout melden: {fact}",
+          "reported": "Gemeld aan MrCall"
         }
       }
     },

@@ -2541,6 +2541,11 @@
           "confirm": "Bekreft",
           "clear": "Fjern valget",
           "leftOut": "{n} samtale uten vurdert utfall ble utelatt. | {n} samtaler uten vurdert utfall ble utelatt."
+        },
+        "fact": {
+          "report": "Rapporter en feil",
+          "reportOf": "Rapporter en feil: {fact}",
+          "reported": "Rapportert til MrCall"
         }
       }
     },

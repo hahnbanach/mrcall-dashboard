@@ -2547,6 +2547,11 @@
           "confirm": "Conferma",
           "clear": "Annulla la selezione",
           "leftOut": "{n} chiamata senza esito valutato è stata esclusa. | {n} chiamate senza esito valutato sono state escluse."
+        },
+        "fact": {
+          "report": "Segnala un errore",
+          "reportOf": "Segnala un errore: {fact}",
+          "reported": "Segnalato a MrCall"
         }
       }
     },

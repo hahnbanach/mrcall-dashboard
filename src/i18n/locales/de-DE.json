@@ -2543,6 +2543,11 @@
           "confirm": "Bestätigen",
           "clear": "Auswahl aufheben",
           "leftOut": "{n} Anruf ohne bewertetes Ergebnis wurde ausgelassen. | {n} Anrufe ohne bewertetes Ergebnis wurden ausgelassen."
+        },
+        "fact": {
+          "report": "Fehler melden",
+          "reportOf": "Fehler melden: {fact}",
+          "reported": "An MrCall gemeldet"
         }
       }
     },

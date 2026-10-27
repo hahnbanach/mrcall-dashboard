@@ -12,7 +12,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
  * strictly), the `valueFrom` refusal removed (1), the reader's proposal state removed (2). The three cases the R1 review
  * added (a rejection older than a later-applied correction, "right" on an unset value, ownership not yet known) and
  * `unanswered=false` failed on the reviewed module before its repair; the waiting proposal behind an older rejection, its
- * second round, failed on 6bb4c92.
+ * second round, failed on 6bb4c92. The confirmation and fact cases (StarChat 6d13718c6) failed on a77364f.
  */
 vi.mock('axios', () => ({ default: { get: vi.fn(), post: vi.fn(), delete: vi.fn() } }))
 const axios = (await import('axios')).default
@@ -51,7 +51,8 @@ describe('who applies and who proposes (StarChat decision 6, InsightsFeedback.st
   it('a person applies a call\'s judgements and a request\'s outcome, in every role', () => {
     for (const role of ['owner', 'reseller', 'admin']) {
       expect(Classifications.statusFor('resolution', 'wrong_value', role)).toBe('applied')
-      expect(Classifications.statusFor('message', 'right', role)).toBe('applied')
+      // a confirmation is recorded as one, never as the correction in force (StarChat 6d13718c6)
+      expect(Classifications.statusFor('message', 'right', role)).toBe('confirmed')
       expect(Classifications.statusFor('outcome', 'wrong_value', role)).toBe('applied')
     }
   })
@@ -59,8 +60,10 @@ describe('who applies and who proposes (StarChat decision 6, InsightsFeedback.st
   it('a category is applied by an admin and proposed by anyone else; "wrong" is always proposed', () => {
     expect(Classifications.statusFor('category', 'wrong_value', 'admin')).toBe('applied')
     expect(Classifications.statusFor('category', 'wrong_value', 'owner')).toBe('proposed')
-    expect(Classifications.statusFor('category', 'right', 'reseller')).toBe('proposed')
+    expect(Classifications.statusFor('category', 'right', 'reseller')).toBe('confirmed')
     expect(Classifications.statusFor('resolution', 'wrong', 'admin')).toBe('proposed')
+    // a fact is reported, never corrected: a proposal for an admin to close
+    expect(Classifications.statusFor('booked', 'fact_wrong', 'admin')).toBe('proposed')
   })
 })
 
@@ -82,9 +85,16 @@ describe('a chip\'s state, from the judgement and the call\'s history', () => {
     expect(Classifications.chipState(judgement, [entry({ byMe: false })], { field: 'resolution' }, 'admin').canRestore).toBe(true)
   })
 
-  it('a confirmation in force says "confirmed", not "corrected"', () => {
-    const s = Classifications.chipState({ model: 'resolved', value: 'resolved', corrected: true }, [entry({ signal: 'right', valueFrom: 'resolved', valueTo: 'resolved' })], { field: 'resolution' }, 'owner')
+  it('a confirmation says "confirmed"; it is never the correction in force, which stays (StarChat 6d13718c6)', () => {
+    const confirmation = entry({ feedbackId: 5, signal: 'right', valueFrom: 'resolved', valueTo: 'resolved', status: 'confirmed', createdAt: 3000, decidedAt: 3000 })
+    const s = Classifications.chipState({ model: 'resolved', value: 'resolved', corrected: false }, [confirmation], { field: 'resolution' }, 'owner')
     expect(s.kind).toBe('confirmed')
+    expect(s.canRestore).toBe(false)
+    const correction = entry({ feedbackId: 4, createdAt: 1000, decidedAt: 1000 })
+    const both = Classifications.chipState({ model: 'resolved', value: 'unresolved', corrected: true }, [correction, { ...confirmation, valueFrom: 'unresolved', valueTo: 'unresolved' }], { field: 'resolution' }, 'owner')
+    expect(both.kind).toBe('corrected')
+    expect(both.correction.feedbackId).toBe(4)
+    expect(Classifications.chipState({ model: 'resolved', value: 'resolved', corrected: false }, [{ ...confirmation, status: 'reverted' }], { field: 'resolution' }, 'owner').kind).toBe('model')
   })
 
   it('the reader\'s own proposal: sent, then applied or rejected, on the same chip', () => {
@@ -159,6 +169,13 @@ describe('the asks a gesture sends', () => {
     expect(Classifications.ask({ conversationId: 'CON-1', requestId: 7, field: 'category', signal: 'wrong', valueFrom: null }))
       .toEqual({ subject: 'request', conversationId: 'CON-1', requestId: 7, field: 'category', signal: 'wrong', valueFrom: null })
     expect(() => Classifications.ask({ conversationId: 'CON-1', field: 'resolution', signal: 'right' })).toThrow(/valueFrom/)
+  })
+
+  it('a fact is reported wrong with the value read, and names no value of its own', () => {
+    expect(Classifications.FACT_FIELDS).toEqual(['booked', 'transferred', 'no_conversation', 'managed_call', 'skill_errors', 'unkept'])
+    expect(Classifications.ask({ conversationId: 'CON-1', field: 'booked', signal: 'fact_wrong', valueFrom: 'true' }))
+      .toEqual({ subject: 'call', conversationId: 'CON-1', field: 'booked', signal: 'fact_wrong', valueFrom: 'true' })
+    expect(() => Classifications.ask({ conversationId: 'CON-1', field: 'booked', signal: 'wrong_value', valueFrom: 'true', valueTo: 'false' })).toThrow(/fact/)
   })
 
   it('a gesture id is new each time', () => {

@@ -103,6 +103,18 @@ test.describe('a call\'s judgements as chips', () => {
     await expect(chip(page, /^Resolution: Resolved, Confirmed/)).toBeVisible()
   })
 
+  test('a fact is reported wrong to MrCall, never corrected (StarChat 6d13718c6)', async ({ authenticatedPage: page }) => {
+    await mockConversations(page, [conversation()])
+    const { sent } = await mockClassifications(page)
+    await open(page)
+    await expect(chip(page, /^Resolution: Resolved/)).toBeVisible({ timeout: 15000 })
+    await opened(page).getByRole('button', { name: 'Report an error: Booking' }).click()
+    await expect.poll(() => sent.filter((s) => s.path === 'feedback' && s.method === 'POST').length).toBe(1)
+    expect(sent.filter((s) => s.path === 'feedback').pop().body).toMatchObject({ subject: 'call', conversationId: CALL_ID, field: 'booked', signal: 'fact_wrong', valueFrom: 'true' })
+    expect(sent.filter((s) => s.path === 'feedback').pop().body.valueTo).toBeUndefined()
+    await expect(opened(page).getByText('Reported to MrCall (Booking)')).toBeVisible()
+  })
+
   test('the author restores the analysis\'s value, and reads the history', async ({ authenticatedPage: page }) => {
     await mockConversations(page, [conversation()])
     const call = judged({

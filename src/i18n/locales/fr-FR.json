@@ -2543,6 +2543,11 @@
           "confirm": "Confirmer",
           "clear": "Effacer la sélection",
           "leftOut": "{n} appel sans issue évaluée a été laissé de côté. | {n} appels sans issue évaluée ont été laissés de côté."
+        },
+        "fact": {
+          "report": "Signaler une erreur",
+          "reportOf": "Signaler une erreur : {fact}",
+          "reported": "Signalé à MrCall"
         }
       }
     },

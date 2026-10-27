@@ -110,10 +110,17 @@ async function mockClassifications (page, options = {}) {
       call = state.calls[a.conversationId] = judged({ conversationId: a.conversationId, resolution: { model: a.valueFrom, value: a.valueFrom, corrected: false }, requests: [] })
     }
     if (!call) return { status: 404 }
+    if (a.signal === 'fact_wrong') {
+      const id = state.nextId++
+      call.history.push({ feedbackId: id, subject: 'call', field: a.field, signal: 'fact_wrong', valueFrom: a.valueFrom, valueTo: null, source: 'person', status: 'proposed', actorRole: role, actorName, byMe: true, createdAt: Date.now(), gestureId })
+      return { status: 200, body: { feedbackId: id, conversationId: call.conversationId, field: a.field, status: 'proposed', value: a.valueFrom, replayed: false } }
+    }
     const j = judgementOf(call, a)
     if (!j) return { status: 404 }
     if (a.valueFrom !== j.value) return { status: 409, current: { conversationId: call.conversationId, requestId: a.requestId, field: a.field, value: j.value } }
-    const status = a.signal === 'wrong' ? 'proposed' : (a.field === 'category' && role !== 'admin') ? 'proposed' : 'applied'
+    // StarChat `InsightsFeedback.status` as of 6d13718c6: a confirmation is recorded as one, a fact report is proposed
+    const status = (a.signal === 'wrong' || a.signal === 'fact_wrong') ? 'proposed' : a.signal === 'right' ? 'confirmed'
+      : (a.field === 'category' && role !== 'admin') ? 'proposed' : 'applied'
     const id = state.nextId++
     const to = a.signal === 'right' ? j.value : a.valueTo || null
     if (status === 'applied') {

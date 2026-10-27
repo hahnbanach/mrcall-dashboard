@@ -2541,6 +2541,11 @@
           "confirm": "Kinnita",
           "clear": "Tühista valik",
           "leftOut": "{n} hinnatud tulemuseta kõne jäeti välja. | {n} hinnatud tulemuseta kõnet jäeti välja."
+        },
+        "fact": {
+          "report": "Teata veast",
+          "reportOf": "Teata veast: {fact}",
+          "reported": "MrCallile teatatud"
         }
       }
     },

@@ -2541,6 +2541,11 @@
           "confirm": "Bekræft",
           "clear": "Ryd valget",
           "leftOut": "{n} opkald uden vurderet udfald blev udeladt. | {n} opkald uden vurderet udfald blev udeladt."
+        },
+        "fact": {
+          "report": "Rapportér en fejl",
+          "reportOf": "Rapportér en fejl: {fact}",
+          "reported": "Rapporteret til MrCall"
         }
       }
     },

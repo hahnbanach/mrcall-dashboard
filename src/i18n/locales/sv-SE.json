@@ -2541,6 +2541,11 @@
           "confirm": "Bekräfta",
           "clear": "Rensa urvalet",
           "leftOut": "{n} samtal utan bedömt utfall utelämnades. | {n} samtal utan bedömt utfall utelämnades."
+        },
+        "fact": {
+          "report": "Rapportera ett fel",
+          "reportOf": "Rapportera ett fel: {fact}",
+          "reported": "Rapporterat till MrCall"
         }
       }
     },

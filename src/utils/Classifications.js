@@ -24,6 +24,9 @@ const REQUEST_OUTCOME_KEYS = ["met", "taken", "handed_over", "neither", "withdra
 // the outcomes the assistant did not fulfil by itself: the categories view's default (decision 13)
 const NOT_FULFILLED = ["taken", "handed_over", "neither"];
 const FIELDS = ["resolution", "message", "outcome", "category"];
+// the facts of a call's own record (StarChat `FeedbackField`, 6d13718c6): reported wrong (`fact_wrong`, "Segnala un
+// errore"), never corrected; a report changes no value and waits for an admin to close or reject it
+const FACT_FIELDS = ["booked", "transferred", "no_conversation", "managed_call", "skill_errors", "unkept"];
 const REQUEST_FIELDS = ["outcome", "category"];
 // StarChat's `RequestCategories.Unclassified`: the requests no category was given yet ("Da classificare")
 const UNCLASSIFIED = "unclassified";
@@ -42,12 +45,14 @@ function valuesOf(field, categories) {
 }
 
 /**
- * What a signed-in person's signal becomes (StarChat `InsightsFeedback.status`): "wrong" without a value is always a
- * proposal; a category is applied by an admin and proposed by anyone else; the rest is applied. The dashboard's every
- * reader is a signed-in person: an agent (an API key, a delegated token) never reaches these screens.
+ * What a signed-in person's signal becomes (StarChat `InsightsFeedback.status`): "wrong" without a value and a fact's
+ * report are always proposals; "right" is a confirmation, never the correction in force; a category is applied by an
+ * admin and proposed by anyone else; the rest is applied. The dashboard's every reader is a signed-in person: an agent
+ * (an API key, a delegated token) never reaches these screens.
  */
 function statusFor(field, signal, role) {
-    if (signal === "wrong") return "proposed";
+    if (signal === "wrong" || signal === "fact_wrong") return "proposed";
+    if (signal === "right") return "confirmed";
     if (field === "category" && role !== "admin") return "proposed";
     return "applied";
 }
@@ -85,15 +90,17 @@ function chipState(judgement, history, where, role) {
     const j = judgement || {};
     const mine = historyOf(history, where);
     const inForce = newest(mine.filter((h) => h.status === "applied"));
+    // a confirmation is recorded beside the value and is never the correction in force (StarChat 6d13718c6)
+    const confirmation = newest(mine.filter((h) => h.status === "confirmed"));
     const ownLatest = newest(mine.filter((h) => h.byMe && h.status !== "reverted"));
     // a proposal of the reader still waiting is said first, whatever was decided on its older ones
     const waiting = mine.some((h) => h.byMe && h.status === "proposed");
     let kind = "model";
     if (waiting) kind = "proposed";
     else if (ownLatest && ownLatest.status === "rejected" && (!inForce || movedAt(ownLatest) >= movedAt(inForce))) kind = "rejected";
-    else if (inForce && inForce.signal === "right") kind = "confirmed";
     else if (inForce && inForce.byMe && statusFor(where.field, inForce.signal, role) === "proposed") kind = "applied";
     else if (inForce) kind = "corrected";
+    else if (confirmation) kind = "confirmed";
     const correction = inForce ? {
         feedbackId: inForce.feedbackId, from: inForce.valueFrom, to: inForce.valueTo,
         who: inForce.actorName || null, role: inForce.actorRole || null, when: inForce.createdAt, byMe: !!inForce.byMe,
@@ -125,7 +132,9 @@ function menuEntries(field, state, categories) {
 /** One signal as StarChat's `POST insights/feedback` reads it. `valueFrom` is the value read (null when unset) and is
  * always sent: StarChat refuses a blind write. */
 function ask({ conversationId, requestId, field, signal, valueFrom, valueTo, note }) {
-    if (!FIELDS.includes(field)) throw new Error("Classifications.ask: " + field + " is not a judgement");
+    const fact = FACT_FIELDS.includes(field);
+    if (!FIELDS.includes(field) && !fact) throw new Error("Classifications.ask: " + field + " is not a judgement nor a fact");
+    if (fact !== (signal === "fact_wrong")) throw new Error("Classifications.ask: a fact is reported wrong (fact_wrong), and only a fact is");
     if (valueFrom === undefined) throw new Error("Classifications.ask: valueFrom is the value read, null when unset");
     const a = { subject: onRequest(field) ? "request" : "call", conversationId };
     if (onRequest(field)) a.requestId = requestId;
@@ -295,6 +304,7 @@ export default {
     REQUEST_OUTCOME_KEYS,
     NOT_FULFILLED,
     FIELDS,
+    FACT_FIELDS,
     UNCLASSIFIED,
     ADDRESS_FILTERS,
     onRequest,

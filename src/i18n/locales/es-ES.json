@@ -2555,6 +2555,11 @@
           "confirm": "Confirmar",
           "clear": "Quitar la selección",
           "leftOut": "Se dejó fuera {n} llamada sin resultado evaluado. | Se dejaron fuera {n} llamadas sin resultado evaluado."
+        },
+        "fact": {
+          "report": "Informar de un error",
+          "reportOf": "Informar de un error: {fact}",
+          "reported": "Informado a MrCall"
         }
       }
     },
