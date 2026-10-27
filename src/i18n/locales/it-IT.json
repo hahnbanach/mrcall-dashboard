@@ -2556,7 +2556,8 @@
           "selectRequest": "Seleziona la richiesta: {text}",
           "labelRequests": "Richieste selezionate",
           "move": "Sposta in categoria",
-          "proposed": "{n} proposta inviata: decide un amministratore. | {n} proposte inviate: decide un amministratore."
+          "proposed": "{n} proposta inviata: decide un amministratore. | {n} proposte inviate: decide un amministratore.",
+          "alreadySpam": "{n} chiamata già segnata come spam è stata esclusa. | {n} chiamate già segnate come spam sono state escluse."
         },
         "fact": {
           "chip": "Segnala un errore su un fatto",

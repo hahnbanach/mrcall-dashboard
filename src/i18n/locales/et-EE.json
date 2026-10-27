@@ -2550,7 +2550,8 @@
           "selectRequest": "Vali päring: {text}",
           "labelRequests": "Valitud päringud",
           "move": "Teisalda kategooriasse",
-          "proposed": "{n} ettepanek saadetud: otsustab administraator. | {n} ettepanekut saadetud: otsustab administraator."
+          "proposed": "{n} ettepanek saadetud: otsustab administraator. | {n} ettepanekut saadetud: otsustab administraator.",
+          "alreadySpam": "{n} juba rämpskõneks märgitud kõne jäeti välja. | {n} juba rämpskõneks märgitud kõnet jäeti välja."
         },
         "fact": {
           "chip": "Teata fakti veast",

@@ -359,6 +359,16 @@ describe('a call\'s judgements from a gesture\'s answer, with no re-read', () =>
     expect(Classifications.withGesture(read, gesture)).toBe(read)
   })
 
+  it('a gesture with no call state still brings this call the values and signals it wrote (the read that follows may be refused)', () => {
+    const ask = Classifications.ask({ conversationId: 'CON-1', field: 'resolution', signal: 'wrong_value', valueFrom: 'resolved', valueTo: 'unresolved' })
+    const next = Classifications.withGesture(read, { gestureId: 'g', role: 'owner', calls: [], entries: [{ ask, answer: { feedbackId: 5, status: 'applied', value: 'unresolved' } }] }, 2000)
+    expect(next.resolution).toMatchObject({ model: 'resolved', value: 'unresolved' })
+    expect(next.requests).toEqual(read.requests)
+    const s = Classifications.chipState(next.resolution, next.history, { field: 'resolution' }, 'owner')
+    expect(s).toMatchObject({ value: 'unresolved', kind: 'corrected' })
+    expect(s.correction).toMatchObject({ from: 'resolved', to: 'unresolved', feedbackId: 5 })
+  })
+
   it('records what the gesture wrote in the history, so the chip says it at once', () => {
     const a = Classifications.ask({ conversationId: 'CON-1', field: 'resolution', signal: 'wrong_value', valueFrom: 'resolved', valueTo: 'unresolved' })
     const h = Classifications.withSignal(read.history, { feedbackId: 9, status: 'applied' }, a, 'g-1', 'owner', 5000)

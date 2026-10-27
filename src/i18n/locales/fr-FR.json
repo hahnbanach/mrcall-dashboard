@@ -2552,7 +2552,8 @@
           "selectRequest": "Sélectionner la demande : {text}",
           "labelRequests": "Demandes sélectionnées",
           "move": "Déplacer vers une catégorie",
-          "proposed": "{n} proposition envoyée : un administrateur décide. | {n} propositions envoyées : un administrateur décide."
+          "proposed": "{n} proposition envoyée : un administrateur décide. | {n} propositions envoyées : un administrateur décide.",
+          "alreadySpam": "{n} appel déjà marqué comme spam a été exclu. | {n} appels déjà marqués comme spam ont été exclus."
         },
         "fact": {
           "chip": "Signaler une erreur sur un fait",

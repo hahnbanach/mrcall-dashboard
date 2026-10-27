@@ -232,25 +232,32 @@ export default {
       this.bulkBusy = false;
     },
     // The selected requests' calls marked spam: one signal per call, on its resolution as the row reads it
-    // (`resolution`, StarChat a012b6926); a call already spam or without a judged resolution is left out.
+    // (`resolution`, StarChat a012b6926); a call already spam or without a judged resolution is left out, and said.
     async spam() {
       const seen = new Set();
       const asks = [];
+      let spam = 0;
+      let unjudged = 0;
       for (const r of this.page.items) {
         if (!this.selection.has(r.requestId) || seen.has(r.conversationId)) continue;
         seen.add(r.conversationId);
-        if (!r.resolution || r.resolution === "spam_wrong_number") continue;
+        if (!r.resolution) { unjudged += 1; continue; }
+        if (r.resolution === "spam_wrong_number") { spam += 1; continue; }
         asks.push(Classifications.ask({ conversationId: r.conversationId, field: "resolution", signal: "wrong_value", valueFrom: r.resolution, valueTo: "spam_wrong_number" }));
       }
-      if (asks.length === 0) return;
+      const said = [];
+      if (spam > 0) said.push(this.$t("components.callInsights.feedback.bulk.alreadySpam", { n: spam }, spam));
+      if (unjudged > 0) said.push(this.$t("components.callInsights.feedback.bulk.leftOut", { n: unjudged }, unjudged));
+      if (asks.length === 0) { this.note = said.length > 0 ? said.join(" ") : null; return; }
       this.bulkBusy = true;
-      await this.send(asks, true);
+      await this.send(asks, true, said);
       this.bulkBusy = false;
     },
-    async send(asks, many) {
+    // `said`: what the gesture left out, said before what its answer says
+    async send(asks, many, said = []) {
       const user = this.$store.state.user;
       const gestureId = Classifications.newGestureId();
-      this.note = null;
+      this.note = said.length > 0 ? said.join(" ") : null;
       try {
         const answer = many
           ? await Classifications.bulk(user, asks, gestureId)
@@ -259,7 +266,7 @@ export default {
           many ? answer && answer.calls : (answer && answer.call ? [answer.call] : []),
           many ? Classifications.bulkEntries(asks, answer && answer.items) : [{ ask: asks[0], answer }], this.$store.state.role || "owner");
         const proposed = many ? answer.proposed || 0 : (answer.status === "proposed" ? 1 : 0);
-        if (proposed > 0) this.note = this.$t("components.callInsights.feedback.bulk.proposed", { n: proposed }, proposed);
+        if (proposed > 0) this.note = said.concat([this.$t("components.callInsights.feedback.bulk.proposed", { n: proposed }, proposed)]).join(" ");
         if (many) this.selection.clear();
       } catch (error) {
         if (isSessionEnded(error)) return;

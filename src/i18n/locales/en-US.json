@@ -2555,7 +2555,8 @@
           "selectRequest": "Select the request: {text}",
           "labelRequests": "Selected requests",
           "move": "Move to category",
-          "proposed": "{n} proposal sent: an admin decides. | {n} proposals sent: an admin decides."
+          "proposed": "{n} proposal sent: an admin decides. | {n} proposals sent: an admin decides.",
+          "alreadySpam": "{n} call already marked as spam was left out. | {n} calls already marked as spam were left out."
         },
         "fact": {
           "chip": "Report an error on a fact",

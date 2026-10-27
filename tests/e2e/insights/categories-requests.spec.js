@@ -13,7 +13,8 @@ const { mockClassifications } = require('../fixtures/classifications')
  * `CallInsightsReportService.requestCategories` and `.categoryRequests` do at 087eedc34.
  *
  * Seen failing, 2026-10-27, before the view on requests and CategoryRequests.vue existed: every case. The spam case
- * (each request's call resolution, StarChat a012b6926) failed on 2d39e13.
+ * (each request's call resolution, StarChat a012b6926) failed on 2d39e13; the calls left out of it said (a call already
+ * spam, one without a resolution) failed on 259ff67.
  */
 const WINDOW = { from: rome(2026, 9, 24), to: rome(2026, 10, 24) }
 const VIEW = {
@@ -57,12 +58,12 @@ async function selectRequest (page, list, text) {
   await box.check()
 }
 
-async function open (page, { categories, requestsStatus } = {}) {
+async function open (page, { categories, requestsStatus, requests } = {}) {
   const asked = await mockInsights(page, { role: 'admin', categories: VIEW })
   const { sent } = await mockClassifications(page, {
     role: 'admin',
     categories,
-    categoryRequests: () => REQUESTS,
+    categoryRequests: () => requests || REQUESTS,
   })
   if (requestsStatus) {
     await page.route('**/customer/insights/categories/*/requests*', (route) => route.fulfill({ status: requestsStatus, contentType: 'application/json', body: '"Unavailable"' }))
@@ -148,6 +149,19 @@ test.describe('callers\' requests on request records', () => {
       { subject: 'call', conversationId: 'CON-p1', field: 'resolution', signal: 'wrong_value', valueFrom: 'forwarded', valueTo: 'spam_wrong_number' },
       { subject: 'call', conversationId: 'CON-p2', field: 'resolution', signal: 'wrong_value', valueFrom: 'unresolved', valueTo: 'spam_wrong_number' },
     ])
+  })
+
+  test('a call already spam, or without a resolution, is left out of "Mark as spam", and said', async ({ adminPage: page }) => {
+    const requests = { ...REQUESTS, items: [{ ...REQUESTS.items[0], resolution: 'spam_wrong_number' }, { ...REQUESTS.items[1], resolution: undefined }] }
+    const { sent } = await open(page, { requests })
+    await section(page).getByRole('button', { name: 'Show the requests of Prices and rates (14 calls)' }).click()
+    const list = page.getByRole('table', { name: 'Requests of Prices and rates' })
+    await expect(list.getByRole('row').filter({ hasText: 'How much is a whitening?' })).toBeVisible({ timeout: 15000 })
+    for (const text of ['How much is a whitening?', 'Are you open on Saturday?']) await selectRequest(page, list, text)
+    await page.getByRole('toolbar', { name: 'Selected requests' }).getByRole('button', { name: 'Mark as spam' }).click()
+    await expect(page.getByRole('status').filter({ hasText: '1 call already marked as spam was left out.' })).toBeVisible()
+    await expect(page.getByRole('status').filter({ hasText: '1 call without a judged outcome was left out.' })).toBeVisible()
+    expect(sent.filter((s) => s.path === 'bulk' || (s.path === 'feedback' && s.method === 'POST'))).toHaveLength(0)
   })
 
   test('without the category list, no category chip and no "Move to category"', async ({ adminPage: page }) => {

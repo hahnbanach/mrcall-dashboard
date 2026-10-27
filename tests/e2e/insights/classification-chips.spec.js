@@ -16,7 +16,8 @@ const { mockClassifications, mockConversations, conversation, judged, CALL_ID, B
  * panel by construction and was then seen failing by perturbation (the panel drawing chips from `details` alone).
  * Later cases, each seen failing on the commit before its code: the fact report (perturbation), focus back on the chip
  * and a confirmation in the history (dec211e), no read after a gesture or an undo and the six facts (2d39e13), the
- * single read after a stale value (0cc7469), the read after an answer carrying the judged field alone (0fed030).
+ * single read after a stale value (0cc7469); an answer without the call's state, a refused read after it and no facts
+ * served (259ff67).
  */
 const open = (page) => page.goto(`/conversations?id=${BUSINESS_ID}&conversation=${CALL_ID}`)
 const opened = (page) => page.locator('.opened-card')
@@ -55,7 +56,7 @@ test.describe('a call\'s judgements as chips', () => {
     expect(reads(sent)).toBe(before)
   })
 
-  test('an answer carrying the judged field alone (a reader who may not open the call now) reads the call again', async ({ authenticatedPage: page }) => {
+  test('an answer without the call\'s state (a reader who may not open the call now) takes the judged value and reads the call again', async ({ authenticatedPage: page }) => {
     await mockConversations(page, [conversation()])
     const { sent } = await mockClassifications(page, { partialState: true })
     await open(page)
@@ -63,12 +64,31 @@ test.describe('a call\'s judgements as chips', () => {
     const before = reads(sent)
     await choose(page, /^Resolution: Resolved/, 'Unresolved')
     await expect(chip(page, /^Resolution: Unresolved, Corrected \(from Resolved to Unresolved, /)).toBeVisible()
-    // the partial answer is never merged over the judgements: they are read once, and the other chips stay drawn
     await expect.poll(() => reads(sent)).toBe(before + 1)
     await expect(chip(page, /^Message: /)).toBeVisible()
     await page.getByRole('status').filter({ hasText: 'Changed' }).getByRole('button', { name: 'Undo' }).click()
     await expect(chip(page, /^Resolution: Resolved$/)).toBeVisible()
     await expect.poll(() => reads(sent)).toBe(before + 2)
+  })
+
+  test('when that read is refused (404), the chips stay as the answer left them', async ({ authenticatedPage: page }) => {
+    await mockConversations(page, [conversation()])
+    const { sent } = await mockClassifications(page, { partialState: true, unreadable: true })
+    await open(page)
+    await expect(chip(page, /^Resolution: Resolved/)).toBeVisible({ timeout: 15000 })
+    const before = reads(sent)
+    await choose(page, /^Resolution: Resolved/, 'Unresolved')
+    await expect.poll(() => reads(sent)).toBe(before + 1)
+    await expect(chip(page, /^Resolution: Unresolved, Corrected \(from Resolved to Unresolved, /)).toBeVisible()
+    await expect(chip(page, /^Message: /)).toBeVisible()
+  })
+
+  test('against a StarChat that serves no facts, no fact is offered for a report', async ({ authenticatedPage: page }) => {
+    await mockConversations(page, [conversation()])
+    await mockClassifications(page, { calls: { [CALL_ID]: judged({ facts: undefined }) } })
+    await open(page)
+    await expect(chip(page, /^Resolution: Resolved/)).toBeVisible({ timeout: 15000 })
+    await expect(chip(page, /^Report an error on a fact/)).toHaveCount(0)
   })
 
   test('each request shows its outcome and its category; an owner\'s category is a proposal, its outcome applies', async ({ authenticatedPage: page }) => {

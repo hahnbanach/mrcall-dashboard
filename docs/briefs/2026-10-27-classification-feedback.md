@@ -156,7 +156,8 @@ locales, under `components.callInsights` so the existing parity test covers it.
 ## Constraints
 
 - No StarChat edit. The contract is 9.34.118 plus commits `3abdd92d1` (category counts follow the reader's current
-  audit state) and `1c6629964` (business writes refused 422 with codes, which this work does not touch).
+  audit state) and `1c6629964` (business writes refused 422 with codes, which this work does not touch). *(Extended by
+  the amendments: see the second amendment, item 12.)*
 - One API module for these routes; the value lists are the server's closed sets in one place; one mechanism for
   loading, empty and error states (`InsightsState.vue`); the configured Axios instance, its 401 interceptor and
   `isSessionEnded` as everywhere.
@@ -270,27 +271,43 @@ above.
    again after a gesture or an undo; the history (which the state does not carry) is kept and updated from what the
    gesture wrote, in every panel of the touched calls (the signals travel with the gesture, a bulk answer's items
    paired with their asks by call, field and request), an applied correction marking the one it replaces reverted as
-   StarChat does. StarChat answers the full state only to a reader who may open the call now; anyone else gets the
-   judged field's effective value alone, which is never merged over the judgements read: that panel reads the call
-   again (one recorded opening per actor and call within 10 minutes). A stale value (409) carries only the stale fields' current values, with no model value and no
-   history: the chips take them at once and the call's judgements are then read once, so the chip says truly what is
-   in force (StarChat now records one opening per actor and call within 10 minutes, `f87578328`, so that read adds no
-   record to a non-owner's recent opening). Supersedes, and they stay as written above: scope 1's re-read after every
-   gesture and undo; the rejected alternative "Keeping a chip's state from the signal's answer alone", whose reason
-   (the answer names only its own field) no longer holds; the acceptance line "and then one after each gesture or
-   undo", which now reads "and then one after a stale value"; the gap row on recorded openings.
+   StarChat does.
+   - *Pending on StarChat (announced, not committed when this was written):* the state is answered only for a call
+     the reader may open now (`ConversationAccess.readable`) and omitted for any other; a signal's answer keeps the
+     judged field's effective `value`. A panel whose call's state is absent (or not a full state) takes that `value`
+     for the judged field, records the signal in its history, and reads the call's judgements again; if that read is
+     refused (404, the reader may not open the call now) the chips stay as the answer left them instead of
+     disappearing. Deciding "may open now" records an opening for a non-owner (once per actor and call within 10
+     minutes, `f87578328`), so a non-owner's bulk gesture records one for every touched call they may open, opened
+     on screen or not. That record is StarChat's, made on the person's own gesture on those calls; the Constraint on
+     calls opened "without a person asking" is about reads the dashboard makes on its own and none is added here.
+     It is named to StarChat's lead, whose decision it is.
+   - A stale value (409) carries only the stale fields' current values, with no model value and no history: the
+     chips take them at once and the call's judgements are then read once, so the chip says truly what is in force.
+   - Supersedes, and they stay as written above: scope 1's re-read after every gesture and undo; the rejected
+     alternative "Keeping a chip's state from the signal's answer alone", whose reason (the answer names only its own
+     field) no longer holds; the acceptance line "and then one after each gesture or undo", which now reads "and then
+     one after a stale value, or after an answer without the call's state"; the gap row on recorded openings.
 11. **A category's requests carry their call's resolution** (`resolution`): "Segna come spam" is offered on the
    selected requests, one signal per call with that resolution as the value read. Closes the gap row "Segna come spam
    over a category's requests".
-12. **The release depends on StarChat's.** `a012b6926` and `f87578328` are on StarChat's line 9.34 and in no tag yet:
-   the dashboard's test tag goes after the StarChat tag that carries them, and production with it. Against an older
-   StarChat: the category list answers 404 and no category chip or move is drawn (as before); a gesture's answer
-   without `call` or `calls` makes the panel read the call's judgements again (the earlier behaviour); a request row
-   without `resolution` is left out of "Segna come spam" and said, as any row without a judged resolution (StarChat
-   drops a null `resolution`, so absent cannot be told from an older server); `facts` absent offers the six facts
-   with "not recorded". The Rollback section's "existing screens work as before" holds with these fallbacks.
-   Supersedes the Assumption that StarChat "accepts, or shapes differently, the proposed category list read": it
-   built it as proposed.
+12. **The release depends on StarChat's.** `a012b6926` and `f87578328` are on StarChat's line 9.34 and in no tag yet,
+   and item 10's pending change is not committed: the dashboard's test tag goes after the StarChat tag that carries
+   them, and production with it. Without the pending change StarChat answers the full state to every reader in the
+   feedback scope, which the dashboard takes as it is. Against an older StarChat:
+   - the category list answers 404 and no category chip or move is drawn (as before);
+   - a gesture's answer without `call` or `calls` makes the panel read the call's judgements again (the earlier
+     behaviour);
+   - a request row without `resolution` is left out of "Segna come spam" and said, as any row without a judged
+     resolution and any call already spam (StarChat drops a null `resolution`, so absent cannot be told from an older
+     server);
+   - `facts` absent: no fact is offered for a report, since every fact would read "not recorded" and a report on one
+     the summary holds would be refused as stale.
+
+   The Rollback section's "existing screens work as before" holds with these fallbacks. Supersedes the Assumption
+   that StarChat "accepts, or shapes differently, the proposed category list read": it built it as proposed; and the
+   Constraint "The contract is 9.34.118 plus `3abdd92d1` and `1c6629964`", which now also holds the two amendments'
+   commits and item 10's pending change.
 
 Still not built: the similar panel, the admin's platform jobs and budget, a bulk decision route, counts over several
 businesses opening their calls, and the "Assistenti da rivedere" columns opening their calls (unchanged from the gap

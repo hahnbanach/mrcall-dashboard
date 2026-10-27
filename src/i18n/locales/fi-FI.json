@@ -2550,7 +2550,8 @@
           "selectRequest": "Valitse pyyntö: {text}",
           "labelRequests": "Valitut pyynnöt",
           "move": "Siirrä luokkaan",
-          "proposed": "{n} ehdotus lähetetty: ylläpitäjä päättää. | {n} ehdotusta lähetetty: ylläpitäjä päättää."
+          "proposed": "{n} ehdotus lähetetty: ylläpitäjä päättää. | {n} ehdotusta lähetetty: ylläpitäjä päättää.",
+          "alreadySpam": "{n} jo roskapuheluksi merkitty puhelu jätettiin pois. | {n} jo roskapuheluksi merkittyä puhelua jätettiin pois."
         },
         "fact": {
           "chip": "Ilmoita tosiasian virheestä",

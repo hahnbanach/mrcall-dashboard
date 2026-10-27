@@ -97,8 +97,8 @@ function searchAnswer (docs) {
  * - `role`: the reader's role as StarChat resolves it (owner, reseller, admin), deciding apply or propose;
  * - `calls`: `{[conversationId]: judged(...)}`; `categories`: the proposed list, or null for 404;
  * - `classificationsStatus`: answer the judgements read with this status instead (404, 503);
- * - `partialState`: the gestures' answers carry each call's judged field alone (`{conversationId, field, value}`), as
- *   StarChat answers a reader who may not open the call now, never its full state;
+ * - `partialState`: the gestures' answers carry no call's state (a signal's answer keeps the judged field's `value`), as
+ *   StarChat answers a reader who may not open the call now; `unreadable`: and every read after the first answers 404;
  * - `staleOnce`: the next signal answers 409 `stale_value`, after another person (Partner Srl) moved the value;
  * - `rules`, `ruleCall`: the caller rules and what a rule on a call's number would be;
  * - `queue`, `categoryRequests`, `accessLog`: page answers for those routes.
@@ -108,11 +108,9 @@ async function mockClassifications (page, options = {}) {
   const state = { calls: options.calls || { [CALL_ID]: judged() }, gestures: {}, nextId: 500 }
   const sent = []
   let staleOnce = options.staleOnce || null
-  const answered = (call, a) => {
-    if (!options.partialState) return stateOf(call)
-    const j = a ? judgementOf(call, a) : null
-    return { conversationId: call.conversationId, field: a ? a.field : undefined, value: j ? j.value : undefined }
-  }
+  // a call's state in a gesture's answer, or undefined where StarChat omits it (`partialState`)
+  const answered = (call) => (options.partialState ? undefined : stateOf(call))
+  let readsAnswered = 0
 
   const json = (route, status, body) => route.fulfill({ status, contentType: 'application/json', body: JSON.stringify(body) })
   const actorName = role === 'owner' ? 'Mario Rossi' : role === 'reseller' ? 'Partner Srl' : 'MrCall'
@@ -181,6 +179,7 @@ async function mockClassifications (page, options = {}) {
     const id = decodeURIComponent(new URL(route.request().url()).pathname.split('/calls/')[1].split('/')[0])
     sent.push({ method: 'GET', path: 'classifications', id })
     if (options.classificationsStatus) return json(route, options.classificationsStatus, 'Not found')
+    if (options.unreadable && readsAnswered++ > 0) return json(route, 404, 'Not found')
     const call = state.calls[id]
     if (!call) return json(route, 404, 'Not found')
     json(route, 200, call)
@@ -206,7 +205,7 @@ async function mockClassifications (page, options = {}) {
     const out = write(body, body.gestureId)
     state.gestures[body.gestureId] = (state.gestures[body.gestureId] || []).concat(out.body ? [out.body.feedbackId] : [])
     if (out.status !== 200) return json(route, out.status, out.status === 409 ? { code: 'stale_value', current: [out.current] } : 'Not found')
-    json(route, 200, { ...out.body, call: answered(out.call, body) })
+    json(route, 200, { ...out.body, call: answered(out.call) })
   })
   await page.route('**/customer/insights/feedback/bulk', (route) => {
     const body = route.request().postDataJSON() || {}
@@ -215,7 +214,7 @@ async function mockClassifications (page, options = {}) {
     if (results.some((r) => r.status !== 200)) return json(route, 409, { code: 'stale_value', current: results.filter((r) => r.current).map((r) => r.current) })
     state.gestures[body.gestureId] = results.map((r) => r.body.feedbackId)
     const touched = [...new Set(results.map((r) => r.call))]
-    json(route, 200, { gestureId: body.gestureId, applied: results.filter((r) => r.body.status === 'applied').length, proposed: results.filter((r) => r.body.status === 'proposed').length, items: results.map((r) => r.body), calls: touched.map((c) => answered(c)) })
+    json(route, 200, { gestureId: body.gestureId, applied: results.filter((r) => r.body.status === 'applied').length, proposed: results.filter((r) => r.body.status === 'proposed').length, items: results.map((r) => r.body), calls: touched.map(answered).filter(Boolean) })
   })
   await page.route('**/customer/insights/feedback/gestures/*/revert', (route) => {
     const g = decodeURIComponent(new URL(route.request().url()).pathname.split('/gestures/')[1].split('/')[0])
@@ -229,7 +228,7 @@ async function mockClassifications (page, options = {}) {
         else if (h.gestureId === g && h.status === 'confirmed') { h.status = 'reverted'; reverted.push(h.feedbackId); touched.add(call) }
       }
     }
-    json(route, 200, { gestureId: g, reverted, calls: [...touched].map((c) => answered(c)) })
+    json(route, 200, { gestureId: g, reverted, calls: [...touched].map(answered).filter(Boolean) })
   })
   await page.route(/\/customer\/insights\/feedback\/\d+\/(revert|apply|reject)$/, (route) => {
     const [, id, move] = new URL(route.request().url()).pathname.match(/feedback\/(\d+)\/(\w+)$/)
@@ -241,7 +240,7 @@ async function mockClassifications (page, options = {}) {
       if (move === 'revert') revertEntry(call, h)
       else h.status = move === 'apply' ? 'applied' : 'rejected'
       h.decidedAt = Date.now()
-      return json(route, 200, { ...h, call: answered(call, h) })
+      return json(route, 200, { ...h, call: answered(call) })
     }
     json(route, 200, { feedbackId: Number(id), status: move === 'apply' ? 'applied' : move === 'reject' ? 'rejected' : 'reverted' })
   })

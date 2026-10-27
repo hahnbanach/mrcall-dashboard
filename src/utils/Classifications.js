@@ -148,11 +148,10 @@ function ask({ conversationId, requestId, field, signal, valueFrom, valueTo, not
 
 // ---- a call's judgements from a gesture's answer (StarChat a012b6926), never read again after a gesture ----
 
-/** The judgements a gesture's answer carries (`call`, or one of `calls`), with the history kept: the answer has none. */
 /**
- * Whether a gesture's answer carries a call's full state (its judgements: `resolution`, `message`, `requests`), which
- * StarChat answers only to a reader who may open the call now; anyone else gets the judged field's effective value
- * alone, which is never merged over what was read: the panel reads the call again (one recorded opening per 10 minutes).
+ * Whether a gesture's answer carries a call's full state (its judgements: `resolution`, `message`, `requests`). StarChat
+ * omits it for a call the reader may not open now (and an older StarChat never sends it); a partial object is not taken
+ * either. Without it the panel takes the judged field's `value` the signal answered and reads the call again.
  */
 function isCallState(c) {
     return !!c && typeof c === "object" && typeof c.conversationId === "string"
@@ -165,6 +164,7 @@ function stateIn(calls, conversationId) {
     return isCallState(c) ? c : null;
 }
 
+/** The judgements a gesture's answer carries (`call`, or one of `calls`), with the history kept: the answer has none. */
 function withCallState(data, call) {
     if (!isCallState(call)) return data;
     return { ...call, history: data && Array.isArray(data.history) ? data.history : [] };
@@ -195,19 +195,22 @@ function withSignal(history, answer, a, gestureId, role, now = Date.now()) {
 }
 
 /**
- * A gesture made elsewhere (another panel of the call, a list) as `UndoGesture` carries it: the touched calls' state
- * (`calls`) and the signals it wrote (`entries`: `{ask, answer}`), applied to this call's judgements; the same object
- * when the gesture did not touch this call.
+ * A gesture as `UndoGesture` carries it (made in this panel, another panel of the call, or a list): the touched calls'
+ * state (`calls`) and the signals it wrote (`entries`: `{ask, answer}`), applied to this call's judgements. Without this
+ * call's state, each signal's answered `value` stands for its field; the same object when the gesture did not touch
+ * this call.
  */
 function withGesture(data, gesture, now = Date.now()) {
     if (!data || !gesture) return data;
     const mine = stateIn(gesture.calls, data.conversationId);
-    if (!mine) return data;
+    const entries = (Array.isArray(gesture.entries) ? gesture.entries : [])
+        .filter((e) => e && e.ask && e.answer && e.ask.conversationId === data.conversationId);
+    if (!mine && entries.length === 0) return data;
     let history = Array.isArray(data.history) ? data.history : [];
-    for (const e of Array.isArray(gesture.entries) ? gesture.entries : []) {
-        if (e && e.ask && e.ask.conversationId === data.conversationId) history = withSignal(history, e.answer, e.ask, gesture.gestureId, gesture.role, now);
-    }
-    return { ...withCallState(data, mine), history };
+    for (const e of entries) history = withSignal(history, e.answer, e.ask, gesture.gestureId, gesture.role, now);
+    const base = mine ? withCallState(data, mine) : withCurrent(data, entries.filter((e) => e.answer.value !== undefined)
+        .map((e) => ({ conversationId: e.ask.conversationId, requestId: e.ask.requestId, field: e.ask.field, value: e.answer.value })));
+    return { ...base, history };
 }
 
 /**

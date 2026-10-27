@@ -2552,7 +2552,8 @@
           "selectRequest": "Anfrage auswählen: {text}",
           "labelRequests": "Ausgewählte Anfragen",
           "move": "In Kategorie verschieben",
-          "proposed": "{n} Vorschlag gesendet: ein Administrator entscheidet. | {n} Vorschläge gesendet: ein Administrator entscheidet."
+          "proposed": "{n} Vorschlag gesendet: ein Administrator entscheidet. | {n} Vorschläge gesendet: ein Administrator entscheidet.",
+          "alreadySpam": "{n} bereits als Spam markierter Anruf wurde ausgelassen. | {n} bereits als Spam markierte Anrufe wurden ausgelassen."
         },
         "fact": {
           "chip": "Einen Fehler bei einer Tatsache melden",

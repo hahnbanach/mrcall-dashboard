@@ -2550,7 +2550,8 @@
           "selectRequest": "Vælg anmodningen: {text}",
           "labelRequests": "Valgte anmodninger",
           "move": "Flyt til kategori",
-          "proposed": "{n} forslag sendt: en administrator beslutter. | {n} forslag sendt: en administrator beslutter."
+          "proposed": "{n} forslag sendt: en administrator beslutter. | {n} forslag sendt: en administrator beslutter.",
+          "alreadySpam": "{n} opkald, der allerede var markeret som spam, blev udeladt. | {n} opkald, der allerede var markeret som spam, blev udeladt."
         },
         "fact": {
           "chip": "Rapportér en fejl i et faktum",

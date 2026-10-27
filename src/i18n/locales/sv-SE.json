@@ -2550,7 +2550,8 @@
           "selectRequest": "Välj begäran: {text}",
           "labelRequests": "Valda begäranden",
           "move": "Flytta till kategori",
-          "proposed": "{n} förslag skickat: en administratör beslutar. | {n} förslag skickade: en administratör beslutar."
+          "proposed": "{n} förslag skickat: en administratör beslutar. | {n} förslag skickade: en administratör beslutar.",
+          "alreadySpam": "{n} samtal som redan var markerat som spam hoppades över. | {n} samtal som redan var markerade som spam hoppades över."
         },
         "fact": {
           "chip": "Rapportera ett fel i ett faktum",

@@ -131,6 +131,10 @@ test.describe('the conversations list: a count\'s filters and corrections in bul
     await page.goto(`/conversations?id=${BUSINESS_ID}&conversation=CON-a`)
     const opened = page.locator('.opened-card')
     await expect(opened.getByRole('button', { name: /^Resolution: Resolved/ })).toBeVisible({ timeout: 15000 })
+    // the row's own panel has made its first read (it reads when scrolled into view), so only later reads are counted
+    const row = page.locator('.conversation-card:not(.opened-card)').filter({ hasText: 'Anna' }).first()
+    await row.scrollIntoViewIfNeeded()
+    await expect(row.getByRole('button', { name: /^Resolution: Resolved/ })).toBeVisible()
     await select(page, 'Anna')
     const readsBefore = sent.filter((s) => s.path === 'classifications' && s.id === 'CON-a').length
     await page.getByRole('toolbar', { name: 'Selected calls' }).getByRole('button', { name: 'Mark as spam' }).click()

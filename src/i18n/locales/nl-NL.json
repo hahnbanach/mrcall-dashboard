@@ -2550,7 +2550,8 @@
           "selectRequest": "Verzoek selecteren: {text}",
           "labelRequests": "Geselecteerde verzoeken",
           "move": "Naar categorie verplaatsen",
-          "proposed": "{n} voorstel verzonden: een beheerder beslist. | {n} voorstellen verzonden: een beheerder beslist."
+          "proposed": "{n} voorstel verzonden: een beheerder beslist. | {n} voorstellen verzonden: een beheerder beslist.",
+          "alreadySpam": "{n} gesprek dat al als spam was gemarkeerd, is overgeslagen. | {n} gesprekken die al als spam waren gemarkeerd, zijn overgeslagen."
         },
         "fact": {
           "chip": "Een fout in een feit melden",

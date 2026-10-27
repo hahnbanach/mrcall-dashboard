@@ -32,7 +32,7 @@
 
       <!-- A fact is not a label: "this is wrong" is a report to MrCall on any of the six facts StarChat reads (its brief,
            decision 1; a012b6926), with the value read, null included -->
-      <div class="judgement-facts">
+      <div v-if="factsServed" class="judgement-facts">
         <JudgementChip
           ref="chip-facts"
           :field-label="$t('components.callInsights.feedback.fact.chip')"
@@ -172,6 +172,8 @@ export default {
       data: null,
       categories: null,
       busyKey: null,
+      // gestures of this panel waiting for their answer: an answer arriving while another is out may be the older one
+      pending: 0,
       historyOpen: null,
       alert: null,
       ruleOffer: null,
@@ -223,6 +225,11 @@ export default {
         category: { state: { value: null, model: null, kind: "model", correction: null, canRestore: false } },
       }));
     },
+    // A StarChat older than a012b6926 serves no `facts`: nothing is offered for a report then, since every fact would
+    // read "not recorded" and a report on one the summary holds would be refused as stale.
+    factsServed() {
+      return !this.loaded || (!!this.data.facts && typeof this.data.facts === "object");
+    },
     // The six facts with the value read, each an entry of the report's menu.
     factEntries() {
       if (!this.loaded) return [];
@@ -252,10 +259,10 @@ export default {
     "undo.recorded"() {
       const last = this.undo.lastRecorded;
       if (!last || last.origin === this.uid || !last.affected.includes(this.conversation.id) || !this.loaded) return;
-      if (!Classifications.stateIn(last.calls, this.conversation.id)) { this.load(); return; }
       this.gate.begin();
       this.data = Classifications.withGesture(this.data, last);
       this.status = "ok";
+      if (!Classifications.stateIn(last.calls, this.conversation.id)) this.load({ keep: true });
     },
     "undo.undone"() {
       const last = this.undo.lastUndone;
@@ -283,14 +290,16 @@ export default {
     // field alone (a reader who may not open the call now) reads the call again.
     takeCalls(calls, reverted) {
       const mine = Classifications.stateIn(calls, this.conversation.id);
-      if (!mine) { this.load(); return; }
+      if (!mine) { this.load({ keep: true }); return; }
       this.gate.begin();
       const next = Classifications.withCallState(this.data, mine);
       next.history = Classifications.withReverted(next.history, reverted);
       this.data = next;
       this.status = "ok";
     },
-    load() {
+    // `keep`: a read after a gesture, which keeps the chips as the answer left them if StarChat refuses it (a reader who
+    // may not open the call now is answered 404)
+    load({ keep = false } = {}) {
       this.status = this.data ? this.status : "loading";
       const language = this.$i18n.locale;
       const isCurrent = this.gate.begin();
@@ -299,6 +308,7 @@ export default {
         categoryList(this.user, language),
       ]).then(([answer, categories]) => {
         if (!isCurrent()) return;
+        if (keep && this.data && (answer === null || (answer && answer.unavailable))) { this.status = "ok"; return; }
         this.categories = categories;
         // an answer that is not a call's judgements (no judgement, no request list) is read as none: never chips drawn
         // off a shape this code does not know
@@ -381,6 +391,7 @@ export default {
       const gestureId = Classifications.newGestureId();
       const ruleJudged = field === "resolution" && state.value === "spam_wrong_number" && this.inForceSource("resolution") === "rule";
       this.busyKey = key;
+      this.pending += 1;
       try {
         const answer = await Classifications.signal(this.user, ask, gestureId);
         this.takeAnswer(answer, ask, gestureId);
@@ -395,19 +406,20 @@ export default {
         this.refused(error);
       } finally {
         this.busyKey = null;
+        this.pending -= 1;
       }
     },
     // The signal's answer: its call's state (`call`), and the signal itself recorded in the history so the chip says it.
-    // An answer without the call's full state (a StarChat older than a012b6926, or a reader who may not open the call
-    // now, answered the judged field alone) reads the call again.
+    // Without the call's state (a reader who may not open the call now, or a StarChat older than a012b6926) the judged
+    // field takes the answered `value` and the call is read again; so it is when another gesture of this panel is still
+    // out, since this answer may then be the older one.
     takeAnswer(answer, ask, gestureId) {
       if (!answer) return;
-      if (!Classifications.isCallState(answer.call)) { this.load(); return; }
+      const full = Classifications.isCallState(answer.call);
       this.gate.begin();
-      const next = Classifications.withCallState(this.data, answer.call);
-      next.history = Classifications.withSignal(this.data && this.data.history, answer, ask, gestureId, this.role);
-      this.data = next;
+      this.data = Classifications.withGesture(this.data, { gestureId, role: this.role, calls: full ? [answer.call] : [], entries: [{ ask, answer }] });
       this.status = "ok";
+      if (!full || this.pending > 1) this.load({ keep: true });
     },
     // A refusal: a stale value (409) carries only the stale fields' current values, which the chips take at once; the
     // judgements are then read once, since whoever changed them also wrote history this panel has not seen. Anything
@@ -418,12 +430,11 @@ export default {
         const body = error.response && error.response.data;
         this.data = Classifications.withCurrent(this.data, body && body.current);
         this.alert = this.$t("components.callInsights.feedback.stale");
-        this.load();
+        this.load({ keep: true });
       } else {
         this.alert = this.$t("components.callInsights.feedback.failed");
       }
     },
-    // who put the correction in force: the newest applied one, dated by its decision as `chipState` dates it
     // A fact's value in words: the labels the call's panel uses, "not recorded" for a fact the summary does not hold.
     factValue(f, v) {
       const p = "components.callInsights.";
@@ -442,6 +453,7 @@ export default {
       const gestureId = Classifications.newGestureId();
       this.alert = null;
       this.busyKey = "facts";
+      this.pending += 1;
       try {
         const answer = await Classifications.signal(this.user, ask, gestureId);
         this.takeAnswer(answer, ask, gestureId);
@@ -451,8 +463,10 @@ export default {
         this.refused(error);
       } finally {
         this.busyKey = null;
+        this.pending -= 1;
       }
     },
+    // who put the correction in force: the newest applied one, dated by its decision as `chipState` dates it
     inForceSource(field) {
       const applied = Classifications.historyOf(this.data && this.data.history, { field }).filter((h) => h.status === "applied");
       const at = (h) => h.decidedAt || h.createdAt || 0;
@@ -464,7 +478,7 @@ export default {
       try {
         const row = await Classifications.revert(this.user, feedbackId);
         this.gate.begin();
-        if (!row || !Classifications.isCallState(row.call)) { await this.load(); return; }
+        if (!row || !Classifications.isCallState(row.call)) { await this.load({ keep: true }); return; }
         const next = Classifications.withCallState(this.data, row.call);
         next.history = Classifications.withDecision(this.data.history, row);
         this.data = next;

@@ -2550,7 +2550,8 @@
           "selectRequest": "Velg forespørselen: {text}",
           "labelRequests": "Valgte forespørsler",
           "move": "Flytt til kategori",
-          "proposed": "{n} forslag sendt: en administrator bestemmer. | {n} forslag sendt: en administrator bestemmer."
+          "proposed": "{n} forslag sendt: en administrator bestemmer. | {n} forslag sendt: en administrator bestemmer.",
+          "alreadySpam": "{n} samtale som allerede var merket som spam, ble utelatt. | {n} samtaler som allerede var merket som spam, ble utelatt."
         },
         "fact": {
           "chip": "Rapporter en feil i et faktum",
