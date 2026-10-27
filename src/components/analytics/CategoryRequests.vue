@@ -101,6 +101,8 @@ import { isSessionEnded } from "@/firebase/session";
  * category or are confirmed in one gesture, with one undo. A reader who is not an admin proposes categories (decision
  * 6): its gesture says how many were applied and how many proposed. Without StarChat's category list (the brief's gap
  * table) no category chip and no move are drawn. The list's rows carry no call resolution, so spam is not offered here.
+ * Nor do they carry a history: a chip says "Corretta" when the effective value differs from the model's, which is all
+ * a row knows; the call's own chips (its link) carry the history, the proposals and the restore.
  */
 export default {
   components: { PagedTable, JudgementChip, BulkBar },
