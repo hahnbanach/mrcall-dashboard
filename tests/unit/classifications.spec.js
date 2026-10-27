@@ -9,7 +9,9 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
  * Seen failing, 2026-10-27: the whole file on the missing module, before it was written; then each rule by
  * perturbing `Classifications.js` alone: the category rule of `statusFor` removed (2 failed), `counted` dropped from
  * `countLink` (2), an admin's restore removed (1), an unknown address value applied (1, once the body was compared
- * strictly), the `valueFrom` refusal removed (1), the reader's proposal state removed (2).
+ * strictly), the `valueFrom` refusal removed (1), the reader's proposal state removed (2). The three cases the R1 review
+ * added (a rejection older than a later-applied correction, "right" on an unset value, ownership not yet known) and
+ * `unanswered=false` failed on the reviewed module before its repair.
  */
 vi.mock('axios', () => ({ default: { get: vi.fn(), post: vi.fn(), delete: vi.fn() } }))
 const axios = (await import('axios')).default
@@ -94,6 +96,15 @@ describe('a chip\'s state, from the judgement and the call\'s history', () => {
     expect(Classifications.chipState({ model: 'prices', value: 'online_booking', corrected: true }, [{ ...proposal, status: 'applied', decidedAt: 2000 }], where, 'admin').kind).toBe('corrected')
   })
 
+  it('a correction applied after the reader\'s rejection wins: an applied row is dated by its decision (R1, finding 1)', () => {
+    const where = { field: 'category', requestId: 7 }
+    const mineRejected = entry({ field: 'category', subject: 'request', requestId: 7, status: 'rejected', createdAt: 100, decidedAt: 300 })
+    const othersApplied = entry({ feedbackId: 2, field: 'category', subject: 'request', requestId: 7, byMe: false, status: 'applied', createdAt: 50, decidedAt: 400, valueTo: 'hours' })
+    expect(Classifications.chipState({ model: 'prices', value: 'hours', corrected: true }, [mineRejected, othersApplied], where, 'owner').kind).toBe('corrected')
+    // and the rejection stays said while it is the newer decision
+    expect(Classifications.chipState({ model: 'prices', value: 'hours', corrected: true }, [{ ...mineRejected, decidedAt: 500 }, othersApplied], where, 'owner').kind).toBe('rejected')
+  })
+
   it('reads only the history of its own field and subject', () => {
     const other = entry({ field: 'category', subject: 'request', requestId: 8, status: 'proposed' })
     expect(Classifications.chipState({ model: 'prices', value: 'prices', corrected: false }, [other], { field: 'category', requestId: 7 }, 'owner').kind).toBe('model')
@@ -115,6 +126,11 @@ describe('the entries of a chip\'s menu', () => {
     ])
     expect(entries.filter((e) => e.kind !== 'value').map((e) => e.kind)).toEqual(['right', 'wrong', 'restore', 'history'])
     expect(entries.find((e) => e.kind === 'restore').feedbackId).toBe(9)
+  })
+
+  it('no "right" on a value that is not set: StarChat has nothing to confirm (R1, finding 2)', () => {
+    const categories = [{ key: 'prices', label: 'Prezzi', active: true }]
+    expect(Classifications.menuEntries('category', { value: null, kind: 'model' }, categories).map((e) => e.kind)).toEqual(['value', 'wrong', 'history'])
   })
 
   it('no restore when nothing is in force or the reader may not restore it', () => {
@@ -187,6 +203,7 @@ describe('the one filter table: a count, its link, and the list it opens (StarCh
     })
     expect(Classifications.searchFromQuery({ id: 'biz-1', topicLabel: 'parking', gap: 'missing_info', check: 'caller_repeated', corrected: 'true', booked: 'false' }).body)
       .toEqual({ topicLabels: ['parking'], gap: 'missing_info', check: 'caller_repeated', corrected: true, booked: false })
+    expect(Classifications.searchFromQuery({ unanswered: 'false' }).body).toEqual({ hasUnanswered: false })
     expect(Classifications.searchFromQuery({ resolution: 'resolved', message: 'none', transferred: 'true', unanswered: 'true', noConversation: 'not_answered', outcomeLine: 'unresolved', topic: 'Parking' }).body)
       .toEqual({ resolution: 'resolved', message: 'none', transferred: true, hasUnanswered: true, noConversation: 'not_answered', outcomeLine: 'unresolved', topic: 'Parking' })
   })
@@ -276,7 +293,10 @@ describe('who reads a call as its owner (StarChat ConversationAccess: no answer 
   it('the reader owns the business\'s calls when it is the business\'s owner', () => {
     expect(Classifications.isOwnerOf({ owner: 'u1' }, { uid: 'u1' })).toBe(true)
     expect(Classifications.isOwnerOf({ owner: 'u2' }, { uid: 'u1' })).toBe(false)
-    // a business not read yet is not assumed foreign: the server is the gate, and owner-only controls stay
-    expect(Classifications.isOwnerOf(null, { uid: 'u1' })).toBe(true)
+    // not known until the business is read: a caller waits, since a non-owner's read is recorded and never refused
+    // (R1, finding 3)
+    expect(Classifications.isOwnerOf(null, { uid: 'u1' })).toBeNull()
+    expect(Classifications.isOwnerOf({ owner: null }, { uid: 'u1' })).toBeNull()
+    expect(Classifications.isOwnerOf({ owner: 'u1' }, null)).toBeNull()
   })
 })

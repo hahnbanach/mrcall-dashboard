@@ -62,8 +62,15 @@ function historyOf(history, where) {
     return (Array.isArray(history) ? history : []).filter(about(where));
 }
 
+// When an entry last moved: a decision (an admin's apply or reject, a revert) is dated by `decidedAt`, which StarChat
+// sets on every decided row; a proposal still waiting only by `createdAt`. An admin applying an old proposal makes it
+// the newest correction, whenever it was made.
+function movedAt(h) {
+    return (h && (h.decidedAt || h.createdAt)) || 0;
+}
+
 function newest(list) {
-    return list.reduce((best, h) => (!best || (h.createdAt || 0) > (best.createdAt || 0) ? h : best), null);
+    return list.reduce((best, h) => (!best || movedAt(h) > movedAt(best) ? h : best), null);
 }
 
 /**
@@ -81,7 +88,7 @@ function chipState(judgement, history, where, role) {
     const ownLatest = newest(mine.filter((h) => h.byMe && h.status !== "reverted"));
     let kind = "model";
     if (ownLatest && ownLatest.status === "proposed") kind = "proposed";
-    else if (ownLatest && ownLatest.status === "rejected" && (!inForce || (ownLatest.decidedAt || 0) >= (inForce.createdAt || 0))) kind = "rejected";
+    else if (ownLatest && ownLatest.status === "rejected" && (!inForce || movedAt(ownLatest) >= movedAt(inForce))) kind = "rejected";
     else if (inForce && inForce.signal === "right") kind = "confirmed";
     else if (inForce && inForce.byMe && statusFor(where.field, inForce.signal, role) === "proposed") kind = "applied";
     else if (inForce) kind = "corrected";
@@ -105,7 +112,9 @@ function menuEntries(field, state, categories) {
     if (values.length === 0) return [];
     const s = state || {};
     const entries = values.map((value) => ({ kind: "value", value, current: value === s.value }));
-    entries.push({ kind: "right" }, { kind: "wrong" });
+    // "right" confirms a value: StarChat refuses it on one that is not set (a request not classified yet)
+    if (s.value != null) entries.push({ kind: "right" });
+    entries.push({ kind: "wrong" });
     if (s.canRestore && s.correction) entries.push({ kind: "restore", feedbackId: s.correction.feedbackId });
     entries.push({ kind: "history" });
     return entries;
@@ -159,7 +168,7 @@ const ADDRESS_FILTERS = [
     { key: "booked", body: "booked", read: bool },
     // StarChat refuses `transferred: false` (the carrier writes only true)
     { key: "transferred", body: "transferred", read: onlyTrue },
-    { key: "unanswered", body: "hasUnanswered", read: onlyTrue },
+    { key: "unanswered", body: "hasUnanswered", read: bool },
     { key: "noConversation", body: "noConversation", read: oneOf(NO_CONVERSATION_KEYS) },
     { key: "topic", body: "topic", read: text },
     { key: "topicLabel", body: "topicLabels", read: list(text) },
@@ -250,14 +259,15 @@ function countLink(businessId, window, kind, key) {
 }
 
 /**
- * Whether the reader owns the calls of `business` (`{owner}`, as `CallInsights.business` reads it). No StarChat answer
- * says "read-only": an owner's own search returns only its own calls, and a non-owner (an admin, a reseller) reads
- * another owner's business's calls (`ConversationAccess`). A business not read yet is not assumed foreign: the server
- * remains the gate, answering 403 `owner_only`.
+ * Whether the reader owns the calls of `business` (`{owner}`, as `CallInsights.business` reads it): true, false, or
+ * null while not known. No StarChat answer says "read-only": an owner's own search returns only its own calls, and a
+ * non-owner (an admin, a reseller) reads another owner's business's calls (`ConversationAccess`), each read by id
+ * recorded and never refused. So a caller waits for a known answer before reading a call or its judgements on its
+ * own, and before drawing an owner-only control.
  */
 function isOwnerOf(business, user) {
-    if (!business || !business.owner) return true;
-    return !!user && business.owner === user.uid;
+    if (!business || !business.owner || !user || !user.uid) return null;
+    return business.owner === user.uid;
 }
 
 // ---- clients ----
