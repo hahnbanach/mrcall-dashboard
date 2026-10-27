@@ -3073,6 +3073,22 @@
         "connect": "Anslut Google för den här assistenten",
         "explanation": "Detta auktoriserar Google för den här assistenten utan att aktivera bokningar. Kalenderåtkomsten kontrolleras igen när du sparar.",
         "failed": "Anslutningen kunde inte startas. Uppdatera och försök igen."
+      },
+      "bookingConnection": {
+        "title": "Slutför bokningsinställningen",
+        "connect": "Anslut Google Kalender och aktivera bokningar",
+        "explanation": "Anslut Google och välj sedan kalendern för dina möten.",
+        "choose": "Välj kalendern för dina möten",
+        "activate": "Använd denna kalender och aktivera bokningar",
+        "active": "Bokningar är aktiva.",
+        "failed": "Aktiveringen kunde inte slutföras. Uppdatera inställningen och försök igen.",
+        "partial": "Aktiveringen är ofullständig. Granska återstående ändringar.",
+        "stale": "Inställningen har ändrats. Granska ändringarna innan du ansluter igen.",
+        "refresh": "Uppdatera kalenderanslutningen",
+        "review": "Granska föreslagna ändringar ({count})",
+        "select": "Välj en kalender",
+        "unnamed": "Kalender",
+        "primary": "primär"
       }
     },
     "aladminConfigurator": {

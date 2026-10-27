@@ -3073,6 +3073,22 @@
         "connect": "Ühenda Google selle assistendiga",
         "explanation": "See annab Google’ile loa selle assistendi jaoks ega aktiveeri broneerimist. Salvestamisel kontrollitakse kalendri juurdepääsu uuesti.",
         "failed": "Ühendust ei saanud alustada. Värskendage ja proovige uuesti."
+      },
+      "bookingConnection": {
+        "title": "Lõpeta broneeringute seadistamine",
+        "connect": "Ühenda Google Calendar ja aktiveeri broneeringud",
+        "explanation": "Ühenda Google ja vali seejärel kohtumiste kalender.",
+        "choose": "Vali kohtumiste kalender",
+        "activate": "Kasuta seda kalendrit ja aktiveeri broneeringud",
+        "active": "Broneeringud on aktiivsed.",
+        "failed": "Aktiveerimist ei saanud lõpule viia. Värskenda seadistust ja proovi uuesti.",
+        "partial": "Aktiveerimine on pooleli. Vaata üle ülejäänud muudatused.",
+        "stale": "Seadistus on muutunud. Vaata muudatused enne uuesti ühendamist üle.",
+        "refresh": "Värskenda kalendriühendust",
+        "review": "Vaata pakutud muudatused üle ({count})",
+        "select": "Vali kalender",
+        "unnamed": "Kalender",
+        "primary": "peamine"
       }
     },
     "aladminConfigurator": {

@@ -3073,6 +3073,22 @@
         "connect": "Tilslut Google for denne assistent",
         "explanation": "Dette godkender Google for denne assistent uden at aktivere booking. Kalenderadgangen kontrolleres igen, når du gemmer.",
         "failed": "Forbindelsen kunne ikke startes. Opdater og prøv igen."
+      },
+      "bookingConnection": {
+        "title": "Afslut bookingopsætning",
+        "connect": "Forbind Google Kalender og aktivér bookinger",
+        "explanation": "Forbind Google, og vælg derefter kalenderen til dine aftaler.",
+        "choose": "Vælg kalenderen til dine aftaler",
+        "activate": "Brug denne kalender og aktivér bookinger",
+        "active": "Bookinger er aktive.",
+        "failed": "Aktiveringen kunne ikke gennemføres. Opdatér opsætningen, og prøv igen.",
+        "partial": "Aktiveringen er ufuldstændig. Gennemse de resterende ændringer.",
+        "stale": "Opsætningen er ændret. Gennemse ændringerne, før du forbinder igen.",
+        "refresh": "Opdatér kalenderforbindelsen",
+        "review": "Gennemse foreslåede ændringer ({count})",
+        "select": "Vælg en kalender",
+        "unnamed": "Kalender",
+        "primary": "primær"
       }
     },
     "aladminConfigurator": {

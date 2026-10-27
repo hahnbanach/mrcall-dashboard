@@ -3073,6 +3073,22 @@
         "connect": "Google verbinden voor deze assistent",
         "explanation": "Dit geeft Google toestemming voor deze assistent en activeert geen boekingen. Bij het opslaan wordt de kalendertoegang opnieuw gecontroleerd.",
         "failed": "De verbinding kon niet worden gestart. Vernieuw en probeer opnieuw."
+      },
+      "bookingConnection": {
+        "title": "Boekingsinstellingen voltooien",
+        "connect": "Google Agenda koppelen en boekingen activeren",
+        "explanation": "Koppel Google en kies daarna de agenda voor uw afspraken.",
+        "choose": "Kies de agenda voor uw afspraken",
+        "activate": "Deze agenda gebruiken en boekingen activeren",
+        "active": "Boekingen zijn actief.",
+        "failed": "De activering kon niet worden voltooid. Vernieuw de instellingen en probeer het opnieuw.",
+        "partial": "De activering is onvolledig. Controleer de resterende wijzigingen.",
+        "stale": "De instellingen zijn gewijzigd. Controleer de wijzigingen voordat u opnieuw koppelt.",
+        "refresh": "Agendakoppeling vernieuwen",
+        "review": "Voorgestelde wijzigingen bekijken ({count})",
+        "select": "Selecteer een agenda",
+        "unnamed": "Agenda",
+        "primary": "primair"
       }
     },
     "aladminConfigurator": {

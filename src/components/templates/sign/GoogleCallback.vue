@@ -15,6 +15,7 @@ import { isSessionEnded } from '@/firebase/axiosConfig'
 import { GoogleAuthFlow, assertScopesAllowed } from '@/utils/OAuth'
 import store from '@/store'
 import businessUtils from '@/utils/Business'
+import { confirmBookingConnection, clearBookingIntent } from '@/utils/BookingConnection'
 
 export default {
   name: 'GoogleCallback',
@@ -81,6 +82,7 @@ export default {
           }, { headers: { 'Content-type': 'application/json; charset=UTF-8', auth: firebaseToken } })
           localStorage.removeItem('oauthProvider')
           localStorage.removeItem('oauthReturnUrl')
+          confirmBookingConnection(context, urlParams.get('state'))
           await router.replace(context.returnUrl)
           return
         }
@@ -127,6 +129,7 @@ export default {
       } catch (error) {
         console.error('Error processing callback:', error.response?.status || 'oauth_callback_failed')
         if (isSkillFlow.value) {
+          clearBookingIntent()
           if (!boundSkillFlow) { returnToConfiguration(); return }
           localStorage.removeItem('oauthProvider')
           localStorage.removeItem('oauthReturnUrl')

@@ -1,6 +1,6 @@
 ---
-doc_baseline_commit: d52785ef965c256ebb192c7e9484602d350a5e15
-doc_baseline_date: 2026-10-08
+doc_baseline_commit: fd4c94d1e5b9dd2cd693b0ee24a282926c7fd4ce
+doc_baseline_date: 2026-10-27
 ---
 
 # Active Context
@@ -11,26 +11,19 @@ Scope: Current dashboard operating state, unresolved verification limits, and im
 
 ## State now
 
-Production and test run `v2.2.34-production` and `v2.2.34-test`, both on `a1897a3`. That commit
-sits on branch `v2.2.34`, cut from `v2.2` at `c2b2a58`, not on the `v2.2` line. It carries
-readable skill previews, the refresh of saved skills after a confirmed Save
-([brief](briefs/2026-10-26-skill-save-refresh.md),
-[plan](execution-plans/2026-10-26-skill-save-refresh.md)), and the business-wide calendar
-consent beside a chat proposal. It still shows the account-level calendar connect on `/account`
-and a calendar block in `__SEND_DATA__`.
+The v2.2.36 booking-connect candidate implements the existing Google consent button,
+calendar selection by name and scoped activation of five prepared skills. Local acceptance
+passes 46 affected browser cases, 19 booking cases, two component identity checks, five
+final browser reruns and three layout sizes. Production-mode TEST build and lint pass.
+M1 integration is approved; source closure and final publication approval remain pending.
+See the [plan](execution-plans/2026-10-27-booking-connect-activate.md) and
+[evidence](evaluations/2026-10-27-booking-connect-activate.md).
 
-Branch `v2.2` (not deployed) now merges `v2.2.34`, so the line contains what production runs,
-together with:
-
-- the call-insights reports and their review screens, and the skill catalogue's `addable` flag;
-- a new skill instance taking its phase's default;
-- the removal of every calendar connection outside the skills: none on `/account`, none in
-  `__SEND_DATA__`, and the manual skill callback refuses a connect without a business
-  ([brief](briefs/2026-10-26-remove-account-calendar-connect.md),
-  [plan](execution-plans/2026-10-26-remove-account-calendar-connect.md)). The business-wide
-  consent from the chat stays; see [Google OAuth](integration/google-oauth.md);
-- the dashboard load brief and plan, not yet implemented
-  ([plan](execution-plans/2026-10-23-dashboard-load.md)).
+The source baseline is fd4c94d, matching successful TEST workflow40482572038 for
+v2.2.35-test. This candidate is not yet deployed. Production retains the separately
+published v2.2.34 release; this work authorizes only TEST. The baseline includes readable
+skill previews, confirmed Save refresh, business-wide consent, call-insights screens and
+removal of the account-level connection. The dirty v2.1 checkout is untouched.
 
 Session ownership: every nonpublic route needs a session, the Axios interceptor alone ends it,
 and components suppress their failure UI for `isSessionEnded`. Browser tests mock StarChat and
@@ -58,8 +51,9 @@ mrcall-agent.
 
 ## Next
 
-- Push `v2.2`; deploying it to test needs its own authorization, and it is the release that
-  removes the calendar connect from `/account` on the live domains.
+- Complete source closure/review and publish this booking continuation to TEST, verify
+  the actual served artifact and coordinate the backend/chat cleanup. Real consent/model
+  verification belongs to the operator.
 - Remove `__BOOKING__` from `menuGroups` after StarChat's move is on test.
 - Classification feedback (StarChat plan step C8) is being built on a branch from `v2.2` and
   lands by fast-forward after review.

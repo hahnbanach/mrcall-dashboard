@@ -351,6 +351,7 @@ export default {
               },
               onToolResult: (toolUsed, result) => {
                 assistantMessage.progress = '';
+                if (result?.display_summary === false) return;
                 if (toolUsed === 'configure_skill_instance') {
                   if (result?.success === false) {
                     assistantMessage.content += (assistantMessage.content ? '\n\n' : '') + t('views.configureAI.pending.proposalRefused');
@@ -746,6 +747,7 @@ export default {
 }
 
 .chat-input-container {
+  flex: 0 0 auto;
   padding: 1.5rem;
   border-top: 1px solid var(--surface-border);
   background: var(--surface-card);

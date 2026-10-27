@@ -144,8 +144,11 @@ a `target: 'business'` context (owner, state digest, allowed calendar scopes, a
 return to the same business's configuration page, checked by `skillOAuthContext`
 in `src/utils/OAuth.js`). The callback connects the shared row of that business
 (`grant_name = ''`) through the provider endpoint. Pending proposals survive the
-round trip and Save still performs its own resource probe; no token is copied from
-an account-level row.
+round trip; generic Save retains its resource probe. The explicit five-skill booking
+continuation can select a calendar and activate only that group through the backend
+Save/probe path, as described in the [chat contract](zylch-integration.md#five-skill-booking-connection).
+Its successful intent is bound to the exact verified OAuth state and consumed once.
+No token is copied from an account-level row.
 
 A saved skill whose reference is empty is re-authorized from its own card: the
 chat handoff's Manage connection keeps the saved empty reference, so it reconnects

@@ -3,6 +3,32 @@
 Historical snapshots preserved verbatim, newest first. This cold storage is not
 startup context; it records prior state without making current capability claims.
 
+## 2026-10-27 — Baseline before booking continuation
+
+- Push `v2.2`; deploying it to test needs its own authorization, and it is the release that
+  removes the calendar connect from `/account` on the live domains.
+
+Production and test run `v2.2.34-production` and `v2.2.34-test`, both on `a1897a3`. That commit
+sits on branch `v2.2.34`, cut from `v2.2` at `c2b2a58`, not on the `v2.2` line. It carries
+readable skill previews, the refresh of saved skills after a confirmed Save
+([brief](briefs/2026-10-26-skill-save-refresh.md),
+[plan](execution-plans/2026-10-26-skill-save-refresh.md)), and the business-wide calendar
+consent beside a chat proposal. It still shows the account-level calendar connect on `/account`
+and a calendar block in `__SEND_DATA__`.
+
+Branch `v2.2` (not deployed) now merges `v2.2.34`, so the line contains what production runs,
+together with:
+
+- the call-insights reports and their review screens, and the skill catalogue's `addable` flag;
+- a new skill instance taking its phase's default;
+- the removal of every calendar connection outside the skills: none on `/account`, none in
+  `__SEND_DATA__`, and the manual skill callback refuses a connect without a business
+  ([brief](briefs/2026-10-26-remove-account-calendar-connect.md),
+  [plan](execution-plans/2026-10-26-remove-account-calendar-connect.md)). The business-wide
+  consent from the chat stays; see [Google OAuth](integration/google-oauth.md);
+- the dashboard load brief and plan, not yet implemented
+  ([plan](execution-plans/2026-10-23-dashboard-load.md)).
+
 ## 2026-10-27 — v2.2.34 line, before it merged into v2.2
 
 # Active Context

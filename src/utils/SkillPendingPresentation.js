@@ -55,6 +55,7 @@ export function skillSummary(change, locale, t) {
   const rows = [];
   for (const key of fields) {
     if (key === 'enabled') continue;
+    if (/^(trigger|prompt.*|descriptionTemplate|variables|title|exportAs|slotsFrom)$/i.test(key)) continue;
     const label = localizedSkillLabel(change.preview?.field_labels?.[key], locale);
     const before = readableSkillValue(change.preview?.before?.[key], t);
     const after = readableSkillValue(change.preview?.after?.[key], t);

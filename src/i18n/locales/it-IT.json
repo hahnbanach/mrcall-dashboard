@@ -3045,6 +3045,22 @@
         "connect": "Collega Google per questo assistente",
         "explanation": "Questo autorizza Google per questo assistente. Non attiva le prenotazioni. Il salvataggio controllerà di nuovo l’accesso al calendario.",
         "failed": "Impossibile avviare il collegamento. Aggiorna e riprova."
+      },
+      "bookingConnection": {
+        "title": "Completa la configurazione delle prenotazioni",
+        "connect": "Collega Google Calendar e attiva le prenotazioni",
+        "explanation": "Collega Google, poi scegli il calendario per i tuoi appuntamenti.",
+        "choose": "Scegli il calendario per gli appuntamenti",
+        "activate": "Usa questo calendario e attiva le prenotazioni",
+        "active": "Le prenotazioni sono attive.",
+        "failed": "Non è stato possibile completare l’attivazione. Aggiorna la configurazione e riprova.",
+        "partial": "L’attivazione è incompleta. Controlla le modifiche rimanenti.",
+        "stale": "La configurazione è cambiata. Controlla le modifiche aggiornate prima di collegarti di nuovo.",
+        "refresh": "Aggiorna il collegamento al calendario",
+        "review": "Controlla le modifiche proposte ({count})",
+        "select": "Seleziona un calendario",
+        "unnamed": "Calendario",
+        "primary": "principale"
       }
     },
     "aladminConfigurator": {

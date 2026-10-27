@@ -3074,6 +3074,22 @@
         "connect": "Conectar Google para este asistente",
         "explanation": "Esto autoriza Google para este asistente. No activa las reservas. Al guardar se comprobará de nuevo el acceso al calendario.",
         "failed": "No se ha podido iniciar la conexión. Actualiza y vuelve a intentarlo."
+      },
+      "bookingConnection": {
+        "title": "Completar la configuración de reservas",
+        "connect": "Conectar Google Calendar y activar las reservas",
+        "explanation": "Conecta Google y elige el calendario para tus citas.",
+        "choose": "Elige el calendario para tus citas",
+        "activate": "Usar este calendario y activar las reservas",
+        "active": "Las reservas están activas.",
+        "failed": "No se pudo completar la activación. Actualiza la configuración e inténtalo de nuevo.",
+        "partial": "La activación está incompleta. Revisa los cambios restantes.",
+        "stale": "La configuración ha cambiado. Revisa los cambios antes de volver a conectar.",
+        "refresh": "Actualizar la conexión del calendario",
+        "review": "Revisar los cambios propuestos ({count})",
+        "select": "Selecciona un calendario",
+        "unnamed": "Calendario",
+        "primary": "principal"
       }
     },
     "activation": {

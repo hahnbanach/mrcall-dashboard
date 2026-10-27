@@ -3047,6 +3047,22 @@
         "connect": "Connect Google for this assistant",
         "explanation": "This authorizes Google for this assistant. It does not activate booking. Save will check calendar access again.",
         "failed": "The connection could not be started. Refresh and try again."
+      },
+      "bookingConnection": {
+        "title": "Complete booking setup",
+        "connect": "Connect Google Calendar and activate booking",
+        "explanation": "Connect Google, then choose the calendar for your appointments.",
+        "choose": "Choose the calendar for your appointments",
+        "activate": "Use this calendar and activate booking",
+        "active": "Booking is active.",
+        "failed": "Activation could not be completed. Refresh the setup and try again.",
+        "partial": "Activation is incomplete. Review the remaining changes.",
+        "stale": "The setup changed. Review the updated changes before connecting again.",
+        "refresh": "Refresh calendar connection",
+        "review": "Review proposed changes ({count})",
+        "select": "Select a calendar",
+        "unnamed": "Calendar",
+        "primary": "primary"
       }
     },
     "aladminConfigurator": {

@@ -47,9 +47,16 @@
         </details>
       </div>
     </div>
-    <BusinessSkillConnection v-if="hasPendingChanges" :business-id="businessId" :changes="pendingChanges"
+    <BookingCalendarConnection :business-id="businessId" :session-id="configSessionId" :changes="pendingChanges"
+                               :ready="agentReady && historyState === 'ready'"
+                               :disabled="externalActionsDisabled || recoveryRequired"
+                               @available="bookingConnectionAvailable = $event"
+                               @busy-change="connectionBusy = $event" @result="onBookingResult" />
+    <BusinessSkillConnection v-if="hasPendingChanges && !bookingConnectionAvailable && !hasBookingGroup" :business-id="businessId" :changes="pendingChanges"
                              :disabled="externalActionsDisabled || recoveryRequired" @busy-change="connectionBusy = $event" />
-    <div v-if="hasPendingChanges" class="pending-preview" data-testid="pending-preview">
+    <details v-if="hasPendingChanges" class="pending-review" :open="!hasBookingGroup">
+      <summary>{{ $t('views.configureAI.bookingConnection.review', { count: pendingChanges.length }) }}</summary>
+      <div class="pending-preview" data-testid="pending-preview">
       <article v-for="change in pendingChanges" :key="change.operation_id || change.variable_name"
                class="pending-item" :data-operation-id="change.operation_id">
         <template v-if="change.kind === 'skill_instance'">
@@ -82,7 +89,8 @@
           <div>{{ $t('views.configureAI.pending.after') }}: <pre>{{ displayValue(change.new_value) }}</pre></div>
         </template>
       </article>
-    </div>
+      </div>
+    </details>
     <div class="pending-changes-bar" v-if="hasPendingChanges || recoveryRequired">
       <Button v-if="hasPendingChanges" :label="$t('views.configureAI.pending.save', { count: saveableChanges.length })"
               icon="pi pi-check" class="p-button-success save-button" :loading="isSaving"
@@ -104,6 +112,7 @@ import Button from 'primevue/button';
 import ZylchChat from '@/components/ZylchChat.vue';
 import SkillPendingSummary from '@/components/SkillPendingSummary.vue';
 import BusinessSkillConnection from '@/components/BusinessSkillConnection.vue';
+import BookingCalendarConnection from '@/components/BookingCalendarConnection.vue';
 import zylchUtils from '@/utils/Zylch';
 
 const QUICK_ACTION_ICONS = [
@@ -117,7 +126,7 @@ const QUICK_ACTION_ICONS = [
 
 export default {
   name: 'ConfigureAIPanel',
-  components: { Button, ZylchChat, SkillPendingSummary, BusinessSkillConnection },
+  components: { Button, ZylchChat, SkillPendingSummary, BusinessSkillConnection, BookingCalendarConnection },
   emits: ['open-skill', 'skills-saved'],
   props: {
     businessId: {
@@ -184,6 +193,9 @@ export default {
 
     const chatProcessing = ref(false);
     const connectionBusy = ref(false);
+    const bookingConnectionAvailable = ref(false);
+    const hasBookingGroup = computed(() => ['availability', 'event_create', 'events_read', 'event_update', 'event_delete']
+      .every(name => pendingChanges.value.some(change => change.kind === 'skill_instance' && change.skill === `skill_calendar_${name}`)));
     const recoveryRequired = ref(true);
     const historyState = ref('loading');
     const actionMessage = ref('');
@@ -297,6 +309,21 @@ export default {
         handoffTargets.value = [{ phase: change.phase, instanceId: confirmedId }];
       }
     };
+    const onBookingResult = async ({ ownerUid, businessId, result, lost, refused }) => {
+      if (user.value?.uid !== ownerUid || props.businessId !== businessId) return;
+      if (lost) {
+        actionMessage.value = t(refused ? 'views.configureAI.pending.incomplete' : 'views.configureAI.pending.responseLost');
+        try { await reloadPending(); } catch { recoveryRequired.value = true; }
+        return;
+      }
+      if (Array.isArray(result?.remaining_pending)) onPendingChanges(result.remaining_pending);
+      else { recoveryRequired.value = true; return; }
+      outcomes.value = result.skill_outcomes || [];
+      actionMessage.value = t(result.booking_active && result.success ? 'views.configureAI.bookingConnection.active' : 'views.configureAI.bookingConnection.partial');
+      if (outcomes.value.some(outcome => outcome.status === 'saved')) {
+        emit('skills-saved', { businessId, ownerUid, phases: ['during'] });
+      }
+    };
 
     onMounted(async () => {
       if (!props.businessId || !chatComponent.value) return;
@@ -317,6 +344,7 @@ export default {
     });
 
     return {
+      bookingConnectionAvailable, hasBookingGroup, onBookingResult,
       connectionBusy, externalActionsDisabled, handoffTargets, emitSkillTarget, onHistoryState, historyState, chatProcessing, recoveryRequired, actionMessage, outcomes, readOperations, actionsDisabled, saveableChanges,
       localized, displayValue, outcomeLabel, outcomeMessage, statusLabel, refreshPending, reconcile,
       chatComponent,
@@ -347,6 +375,7 @@ export default {
   gap: 0.75rem;
   flex: 1 1 auto;
   min-height: 0;
+  overflow-y: auto;
   padding: 0.5rem;
 
   :deep(.session-info) {
@@ -357,7 +386,7 @@ export default {
     height: auto;
     max-height: none;
     flex: 1 1 auto;
-    min-height: 0;
+    min-height: 20rem;
     box-shadow: none;
     border-radius: 0;
     margin: 0;
@@ -368,6 +397,7 @@ export default {
     min-height: 0;
     overflow-y: auto;
   }
+  :deep(.message-input) { min-width: 0; min-height: 4.5rem; }
 
   // Move the attachment button to the left of the textarea
   :deep(.input-actions) {
@@ -386,7 +416,7 @@ export default {
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
-  min-height: 0;
+  min-height: 20rem;
 }
 
 .quick-actions-row,
@@ -411,9 +441,11 @@ export default {
 
 .pending-preview {
   flex: 0 0 auto;
-  max-height: 38vh;
+  max-height: 24vh;
   overflow: auto;
 }
+.pending-review { flex: 0 0 auto; }
+.pending-review > summary { cursor: pointer; padding: 0.5rem 0; font-weight: 600; }
 .pending-item { padding: 0.75rem; border: 1px solid var(--surface-border); border-radius: 6px; margin-bottom: 0.5rem; overflow-wrap: anywhere; }
 .pending-item p { margin: 0.3rem 0; }
 .pending-item pre { white-space: pre-wrap; overflow-wrap: anywhere; margin: 0.25rem 0; font: inherit; }
@@ -429,5 +461,10 @@ export default {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+@media (max-width: 768px) {
+  .configure-ai-panel :deep(.welcome-message) { padding: 0.5rem 0.25rem; }
+  .configure-ai-panel :deep(.welcome-message > i) { display: none; }
+  .configure-ai-panel :deep(.welcome-message h3) { margin: 0.5rem 0; font-size: 1rem; }
 }
 </style>

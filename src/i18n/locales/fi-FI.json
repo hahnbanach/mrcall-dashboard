@@ -3073,6 +3073,22 @@
         "connect": "Yhdistä Google tälle avustajalle",
         "explanation": "Tämä valtuuttaa Googlen tälle avustajalle aktivoimatta ajanvarausta. Kalenterin käyttöoikeus tarkistetaan uudelleen tallennettaessa.",
         "failed": "Yhteyttä ei voitu aloittaa. Päivitä ja yritä uudelleen."
+      },
+      "bookingConnection": {
+        "title": "Viimeistele ajanvarausten määritys",
+        "connect": "Yhdistä Google Kalenteri ja ota ajanvaraukset käyttöön",
+        "explanation": "Yhdistä Google ja valitse sitten tapaamisten kalenteri.",
+        "choose": "Valitse tapaamisten kalenteri",
+        "activate": "Käytä tätä kalenteria ja ota ajanvaraukset käyttöön",
+        "active": "Ajanvaraukset ovat käytössä.",
+        "failed": "Käyttöönottoa ei voitu viimeistellä. Päivitä määritys ja yritä uudelleen.",
+        "partial": "Käyttöönotto on kesken. Tarkista jäljellä olevat muutokset.",
+        "stale": "Määritys on muuttunut. Tarkista muutokset ennen uutta yhdistämistä.",
+        "refresh": "Päivitä kalenteriyhteys",
+        "review": "Tarkista ehdotetut muutokset ({count})",
+        "select": "Valitse kalenteri",
+        "unnamed": "Kalenteri",
+        "primary": "ensisijainen"
       }
     },
     "aladminConfigurator": {

@@ -364,6 +364,19 @@ export default {
     });
   },
 
+  getBookingSetup: function(user, businessId, sessionId) {
+    return axios.get(process.env.VUE_APP_ZYLCH_URL + "/api/mrcall/booking/setup", {
+      params: { business_id: businessId, session_id: sessionId },
+      headers: { Authorization: "Bearer " + user.accessToken },
+    }).then(response => response.data);
+  },
+
+  activateBooking: function(user, businessId, sessionId, setupToken, calendarId) {
+    return axios.post(process.env.VUE_APP_ZYLCH_URL + "/api/mrcall/booking/activate", {
+      business_id: businessId, session_id: sessionId, setup_token: setupToken, calendar_id: calendarId,
+    }, { headers: { Authorization: "Bearer " + user.accessToken } }).then(response => response.data);
+  },
+
   discardPending: function(user, businessId, sessionId, changes, skillOperationIds) {
     return axios.post(process.env.VUE_APP_ZYLCH_URL + "/api/mrcall/pending/discard", {
       business_id: businessId, session_id: sessionId, changes,

@@ -3072,6 +3072,22 @@
         "connect": "Connecter Google pour cet assistant",
         "explanation": "Cela autorise Google pour cet assistant sans activer les réservations. L’enregistrement vérifiera de nouveau l’accès au calendrier.",
         "failed": "La connexion n’a pas pu démarrer. Actualisez et réessayez."
+      },
+      "bookingConnection": {
+        "title": "Terminer la configuration des réservations",
+        "connect": "Connecter Google Agenda et activer les réservations",
+        "explanation": "Connectez Google, puis choisissez l’agenda de vos rendez-vous.",
+        "choose": "Choisissez l’agenda de vos rendez-vous",
+        "activate": "Utiliser cet agenda et activer les réservations",
+        "active": "Les réservations sont actives.",
+        "failed": "L’activation n’a pas pu être terminée. Actualisez la configuration et réessayez.",
+        "partial": "L’activation est incomplète. Vérifiez les modifications restantes.",
+        "stale": "La configuration a changé. Vérifiez les modifications avant de vous reconnecter.",
+        "refresh": "Actualiser la connexion à l’agenda",
+        "review": "Vérifier les modifications proposées ({count})",
+        "select": "Sélectionner un agenda",
+        "unnamed": "Agenda",
+        "primary": "principal"
       }
     },
     "aladminConfigurator": {

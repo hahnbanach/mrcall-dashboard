@@ -285,10 +285,13 @@ specified in [development.md](development.md#environment-routing).
 - **Google** — Google Sign-In, and Google Calendar authorization per skill (for a business, under the skill's grant name or the business's shared one), stored by StarChat.
   The client flow and scope constraints are implemented in `src/utils/OAuth.js`.
 
-The chat's business-wide calendar consent (`BusinessSkillConnection.vue` beside a
-pending proposal) is the only calendar authorization outside a skill card; there is
-none on Account or in `__SEND_DATA__`. See
-[Google OAuth](integration/google-oauth.md#business-wide-consent-from-the-chat).
+The chat reuses business-wide Google Calendar consent. Generic proposals use
+BusinessSkillConnection; the complete five-skill booking group uses BookingCalendarConnection
+with explicit activation intent, a calendar choice by name and backend-owned scoped Save.
+Its sessionStorage intent binds the exact verified OAuth state and is consumed once, so
+navigation alone never activates. There is no calendar connection on Account or in
+`__SEND_DATA__`. See [Google OAuth](integration/google-oauth.md#business-wide-consent-from-the-chat)
+and the [booking continuation](integration/zylch-integration.md#five-skill-booking-connection).
 
 The confirmed skill refresh connects ConfigureAIPanel's confirmed
 saved-phase notices to BusinessConfiguration's guarded saved-configuration read.

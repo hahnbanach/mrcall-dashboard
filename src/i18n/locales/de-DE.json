@@ -3072,6 +3072,22 @@
         "connect": "Google für diesen Assistenten verbinden",
         "explanation": "Dies autorisiert Google für diesen Assistenten und aktiviert keine Buchung. Beim Speichern wird der Kalenderzugriff erneut geprüft.",
         "failed": "Die Verbindung konnte nicht gestartet werden. Aktualisieren Sie die Seite und versuchen Sie es erneut."
+      },
+      "bookingConnection": {
+        "title": "Buchungseinrichtung abschließen",
+        "connect": "Google Kalender verbinden und Buchungen aktivieren",
+        "explanation": "Verbinden Sie Google und wählen Sie dann den Kalender für Ihre Termine.",
+        "choose": "Kalender für Ihre Termine auswählen",
+        "activate": "Diesen Kalender verwenden und Buchungen aktivieren",
+        "active": "Buchungen sind aktiv.",
+        "failed": "Die Aktivierung konnte nicht abgeschlossen werden. Aktualisieren Sie die Einrichtung und versuchen Sie es erneut.",
+        "partial": "Die Aktivierung ist unvollständig. Prüfen Sie die verbleibenden Änderungen.",
+        "stale": "Die Einrichtung wurde geändert. Prüfen Sie die Änderungen, bevor Sie die Verbindung erneut herstellen.",
+        "refresh": "Kalenderverbindung aktualisieren",
+        "review": "Vorgeschlagene Änderungen prüfen ({count})",
+        "select": "Kalender auswählen",
+        "unnamed": "Kalender",
+        "primary": "primär"
       }
     },
     "aladminConfigurator": {

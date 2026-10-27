@@ -47,6 +47,8 @@ Methods take the Firebase user as their first argument. Requests use
 | `stopJob` | `POST /api/jobs/{jobId}/stop` | Job cancellation helper |
 | `applyChanges` | `POST /api/mrcall/apply-changes` | Save ordinary changes and stored skill operation IDs |
 | `discardPending` | `POST /api/mrcall/pending/discard` | Persist discard of matching unsent proposals |
+| `getBookingSetup` | `GET /api/mrcall/booking/setup` | Owned five-skill setup token and safe calendar choices |
+| `activateBooking` | `POST /api/mrcall/booking/activate` | Explicit connection/selection completes only that five-skill group |
 | `reconcilePending` | `POST /api/mrcall/pending/reconcile` | Read or explicitly resolve an uncertain skill attempt |
 
 This table describes implemented client methods, not a guarantee that every
@@ -127,9 +129,9 @@ and stored pending parameters determine eligibility; named/default-named grants,
 saved edits, unsupported metadata and uncertain operations remain excluded.
 The business target binds owner, provider, business, scopes, state/digest and a
 safe return without a fabricated saved-instance identity. It uses the existing
-connect endpoint with exact businessId and empty grantName. Consent never
-changes the pending parameters, enables an instance or replaces explicit Save
-and its resource probe.
+connect endpoint with exact businessId and empty grantName. Generic consent never
+changes pending parameters or enables an instance. The booking-only continuation
+below is a separate explicit activation action through the backend Save/probe path.
 
 There is no calendar connection on Account or in `__SEND_DATA__`. See
 [Google OAuth](google-oauth.md#business-wide-consent-from-the-chat).
@@ -166,9 +168,40 @@ effective availability, including possible shared fallback; it does not prove
 exclusive ownership of a named grant. Empty/error/malformed responses remain
 unknown. Current-user provider-list absence does not prove business grants are
 missing. The existing calendar GET can persist provider account metadata;
-these editor checks are outside chat/proposal validation. Authorization does
-not enable an instance or perform a configuration write. A new grant reference
+these editor checks are outside chat/proposal validation. Generic authorization does
+not enable an instance or perform a configuration write; the explicitly authorized
+five-skill booking continuation below is separate. A new grant reference
 requires an explicit configuration proposal and Save before it is used.
+
+## Five-skill booking connection
+
+`BookingCalendarConnection.vue` recognizes the complete booking group through the backend's
+owned-session setup status, for unsaved drafts and saved disabled instances. Its Connect
+Calendar action explains activation. `BookingConnection.js` stores a 15-minute sessionStorage
+intent binding owner, business, session, setup token and exact OAuth state. GoogleCallback
+marks it connected only after the existing context/state/owner/scope checks and successful
+provider/connect. Failure clears it. A query marker alone never authorizes activation.
+
+Returning to the same chat consumes the successful intent once. A matching unchanged setup
+with one verified calendar can finish automatically; multiple calendars require a choice by
+name. Already-connected configurations require an explicit destination/activation action.
+Owner/business changes and unmount invalidate old responses and release busy state. Reload
+cannot replay an activation. Existing generic/manual connection behavior stays separate.
+
+The authenticated GET setup response supplies available/state/setup_token/connection_status,
+calendar rows `{id, summary, primary}` and served oauth_scopes. POST activation sends only
+business_id/session_id/setup_token/calendar_id. The backend owns exact-group validation,
+plan, fresh calendar access, staging and revisioned Save/probe/journal/readback. The panel
+adopts authoritative remaining_pending and per-operation outcomes, and refreshes confirmed
+saved phases through the existing guarded parent path. Partial/uncertain results never
+claim booking active or silently retry. Named/unsupported grants keep their existing route.
+
+Booking tool results with display_summary=false do not append a fixed English summary;
+pending metadata and the model's closing response remain intact. The five-skill review is
+collapsed by default; runtime instruction/template fields remain only in exact details.
+The chat/composer has a usable minimum size and the panel scrolls when constrained, keeping
+connection, review and Save controls separate. New UI copy is translated in all 12 locales.
+Advanced settings is a fallback only when the supported booking connection action is unavailable.
 
 ## Credits display
 
