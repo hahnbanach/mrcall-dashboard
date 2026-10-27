@@ -99,6 +99,30 @@ test.describe('the conversations list: a count\'s filters and corrections in bul
     expect(sent.find((s) => s.path === 'gesture-revert').gestureId).toBe(bulk.body.gestureId)
   })
 
+  test('the selection does not outlive the rows it was made on (P10 review, finding 1)', async ({ authenticatedPage: page }) => {
+    await mockConversations(page, calls)
+    await mockClassifications(page)
+    await page.goto(`/conversations?id=${BUSINESS_ID}`)
+    await expect(page.locator('.conversations-list .conversation-card').filter({ hasText: 'Anna' })).toBeVisible({ timeout: 15000 })
+    await select(page, 'Anna')
+    await expect(page.getByRole('toolbar', { name: 'Selected calls' })).toBeVisible()
+    await page.getByText('Archive', { exact: true }).first().click()
+    await expect(page.getByRole('toolbar', { name: 'Selected calls' })).toHaveCount(0)
+  })
+
+  test('an undo offered on one page is not offered on another (P10 review, finding 4)', async ({ authenticatedPage: page }) => {
+    await mockConversations(page, calls)
+    await mockClassifications(page)
+    await page.goto(`/conversations?id=${BUSINESS_ID}`)
+    await expect(page.locator('.conversations-list .conversation-card').filter({ hasText: 'Anna' })).toBeVisible({ timeout: 15000 })
+    await select(page, 'Anna')
+    await page.getByRole('toolbar', { name: 'Selected calls' }).getByRole('button', { name: 'Mark as spam' }).click()
+    await expect(page.getByRole('status').filter({ hasText: 'Changed' })).toBeVisible()
+    await page.evaluate(() => window.history.pushState({}, '', '/analytics?id=test-biz-001'))
+    await page.evaluate(() => window.dispatchEvent(new PopStateEvent('popstate')))
+    await expect(page.getByRole('status').filter({ hasText: 'Changed' })).toHaveCount(0)
+  })
+
   test('after a bulk gesture an opened call\'s chips show the new value (R2 review, finding 1)', async ({ authenticatedPage: page }) => {
     await mockConversations(page, calls)
     await mockClassifications(page, { calls: { 'CON-a': judged({ conversationId: 'CON-a', requests: [] }) } })

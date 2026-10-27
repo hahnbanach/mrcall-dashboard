@@ -2516,7 +2516,8 @@
         "readOnly": {
           "title": "Nur-Lese-Ansicht",
           "note": "Sie sind nicht Inhaber dieser Anrufe: Jeder Anruf, den Sie öffnen, wird protokolliert, und der Inhaber sieht, wer ihn geöffnet hat.",
-          "open": "Anruf öffnen"
+          "open": "Anruf öffnen",
+          "unknown": "Es konnte nicht gelesen werden, ob diese Anrufe Ihnen gehören."
         },
         "filters": {
           "title": "Filter aus dem Link",

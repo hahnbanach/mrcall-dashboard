@@ -2514,7 +2514,8 @@
         "readOnly": {
           "title": "Skrivskyddad vy",
           "note": "Du äger inte de här samtalen: varje samtal du öppnar registreras, och ägaren ser vem som öppnade det.",
-          "open": "Öppna samtalet"
+          "open": "Öppna samtalet",
+          "unknown": "Det gick inte att läsa om de här samtalen är dina."
         },
         "filters": {
           "title": "Filter från länken",

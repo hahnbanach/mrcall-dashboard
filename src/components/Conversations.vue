@@ -16,7 +16,7 @@
             <span v-if="opened.deleted" class="opened-state">{{ $t("components.conversations.details.inTrash") }}</span>
             <span v-else-if="opened.archived" class="opened-state">{{ $t("components.conversations.details.inArchive") }}</span>
           </div>
-          <p v-if="readOnly" class="read-only-note">{{ $t("components.callInsights.feedback.readOnly.title") }}</p>
+          <p v-if="notOwner" class="read-only-note">{{ $t("components.callInsights.feedback.readOnly.title") }}</p>
           <div class="card-header">
             <div class="contact-info">
               <span class="contact-name">{{ callerName(opened) }}</span>
@@ -53,10 +53,18 @@
       </div>
 
       <!-- A non-owner's page (an admin, a reseller): read-only, every call opened recorded (StarChat decision 14) -->
-      <div v-if="readerKnown && readOnly" class="conversation-table-container">
+      <div v-if="readerKnown && notOwner" class="conversation-table-container">
         <div class="read-only-banner" role="note">
           <i class="pi pi-eye" aria-hidden="true"></i>
           <span><strong>{{ $t("components.callInsights.feedback.readOnly.title") }}</strong> · {{ $t("components.callInsights.feedback.readOnly.note") }}</span>
+        </div>
+      </div>
+      <!-- The business could not be read: whether the reader owns these calls is not known. Its controls stay (StarChat
+           refuses an owner-only write to anyone else); no call or judgement is read on its own until it is known. -->
+      <div v-if="readerKnown && ownership === null && businessId" class="conversation-table-container">
+        <div class="read-only-banner" role="status">
+          <span>{{ $t("components.callInsights.feedback.readOnly.unknown") }}</span>
+          <Button type="button" size="small" text :label="$t('components.callInsights.state.retry')" @click="readBusiness" />
         </div>
       </div>
 
@@ -269,7 +277,7 @@
             </div>
 
             <!-- Export Row: the owner's only (StarChat answers 403 owner_only to anyone else) -->
-            <div v-if="!readOnly" class="filter-row">
+            <div v-if="!notOwner" class="filter-row">
               <label class="filter-label">
                 <i class="pi pi-download"></i>
                 {{ $t("components.conversations.exportLabel") }}
@@ -293,7 +301,7 @@
             </div>
 
             <!-- Bulk Actions Row: archive and delete are the owner's only -->
-            <div v-if="!readOnly" class="filter-row">
+            <div v-if="!notOwner" class="filter-row">
               <label class="filter-label">
                 <i class="pi pi-list-check"></i>
                 {{ $t("components.conversations.bulkActionsLabel") }}
@@ -371,7 +379,7 @@
               :key="key"
               class="conversation-card"
               :class="{
-                'unread': !readOnly && !isRead(conversation),
+                'unread': !notOwner && !isRead(conversation),
                 'animating-out': animatingOut.has(key),
                 'selected-card': selection.has(key)
               }"
@@ -392,7 +400,7 @@
                 />
                 <div class="contact-info">
                   <span class="contact-name">
-                    <span v-if="!readOnly && !isRead(conversation)" class="unread-dot"></span>
+                    <span v-if="!notOwner && !isRead(conversation)" class="unread-dot"></span>
                     {{ callerName(conversation) }}
                   </span>
                   <span
@@ -414,7 +422,7 @@
 
                 <!-- A non-owner's row is reduced: the call is opened, and recorded, only when asked -->
                 <Button
-                  v-if="readOnly"
+                  v-if="notOwner"
                   type="button" size="small" outlined
                   class="open-call-btn"
                   :label="$t('components.callInsights.feedback.readOnly.open')"
@@ -423,7 +431,7 @@
 
                 <!-- Read/Unread toggle (always visible) -->
                 <button
-                  v-if="!readOnly"
+                  v-if="!notOwner"
                   type="button"
                   class="action-btn action-btn-read"
                   :title="isRead(conversation)
@@ -436,7 +444,7 @@
                 </button>
 
                 <!-- Desktop Actions (hover reveal) -->
-                <div v-if="!readOnly" class="desktop-actions">
+                <div v-if="!notOwner" class="desktop-actions">
                   <template v-if="activeView === 'inbox'">
                     <button
                       type="button"
@@ -491,7 +499,7 @@
                 </div>
 
                 <!-- Mobile Actions (3-dot menu) -->
-                <div v-if="!readOnly" class="mobile-action-trigger">
+                <div v-if="!notOwner" class="mobile-action-trigger">
                   <button
                     type="button"
                     class="action-btn"
@@ -722,13 +730,17 @@ export default {
     };
   },
   computed: {
-    // the reader owns these calls: true only when known (`Classifications.isOwnerOf`), so that an unknown reader never
-    // reads a call's judgements on its own nor sees an owner-only control
-    isOwner() {
-      return Classifications.isOwnerOf(this.business, this.user) === true;
+    // Whether the reader owns these calls (`Classifications.isOwnerOf`): true, false, or null while the business could not
+    // be read. A known non-owner sees the read-only page; an unknown reader keeps the owner's controls (StarChat is the
+    // gate for writes) but no call or judgement is read on its own, since a non-owner's read is recorded.
+    ownership() {
+      return Classifications.isOwnerOf(this.business, this.user);
+    },
+    notOwner() {
+      return this.ownership === false;
     },
     readOnly() {
-      return !this.isOwner;
+      return this.ownership !== true;
     },
     addressChips() {
       const chips = this.addressFilters.map((f) => ({ key: f.key, text: this.addressFilterText(f) }));
@@ -870,12 +882,7 @@ export default {
       } catch (error) {
         console.debug("Role not read:", error && error.response ? error.response.status : "");
       }
-      try {
-        this.business = this.businessId ? await CallInsights.business(user, this.businessId) : null;
-      } catch (error) {
-        console.debug("Business not read:", error && error.response ? error.response.status : "");
-        this.business = null;
-      }
+      await this.readBusiness();
       this.readerKnown = true;
       if (this.addressFilters.some((f) => f.key === "category")) {
         Classifications.categories(user, this.$i18n.locale)
@@ -952,6 +959,16 @@ export default {
       this.router.replace({ path: this.$route.path, query: { ...this.$route.query, conversation: key } });
       this.openConversation(key);
       window.scrollTo(0, 0);
+    },
+    async readBusiness() {
+      const user = this.store.state.user;
+      if (!user || !this.businessId) return;
+      try {
+        this.business = await CallInsights.business(user, this.businessId);
+      } catch (error) {
+        console.debug("Business not read:", error && error.response ? error.response.status : "");
+        this.business = null;
+      }
     },
     callerName(conversation) {
       const details = conversation.details || {};
@@ -1031,6 +1048,7 @@ export default {
     // A changed view or filter invalidates the page shown: start over from the first one, as
     // (before this) only a changed view already did.
     resetAndReload() {
+      this.selection.clear();
       this.first = 0;
       this.items = new Map();
       this.totalHits = 0;
@@ -1158,6 +1176,8 @@ export default {
           }
           self.items = map;
           self.newestTimestamp = newest;
+          // a selected call no longer listed is no longer selected
+          for (const key of self.selection.selected) if (!map.has(key)) self.selection.toggle(key, false);
           if (self.activeView === "inbox") {
             self.unreadCount = unread;
           }
@@ -1237,6 +1257,7 @@ export default {
         });
     },
     onPage(event) {
+      this.selection.clear();
       this.first = event.first;
       this.size = event.rows;
       this.conversationList();
@@ -1248,6 +1269,7 @@ export default {
         setTimeout(() => {
           this.items.delete(key);
           this.items = new Map(this.items);
+          this.selection.toggle(key, false);
           this.totalHits = Math.max(0, this.totalHits - 1);
           this.animatingOut.delete(key);
           this.animatingOut = new Set(this.animatingOut);

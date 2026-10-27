@@ -495,6 +495,7 @@ import TimeSlotsEditor from "@/components/widgets/TimeSlotsEditor.vue";
 import AgentSkillsConfigurator from "@/components/widgets/AgentSkillsConfigurator.vue";
 import RetentionSettings from "@/components/widgets/RetentionSettings.vue";
 import CallsAccessSettings from "@/components/widgets/CallsAccessSettings.vue";
+import Classifications from "@/utils/Classifications";
 
 // a page of its own, the business's owner's: the numbers treated as spam and who opened the calls
 // (docs/briefs/2026-10-27-classification-feedback.md, scope 10)
@@ -562,7 +563,7 @@ export default {
     },
     /** The reader owns this business: its spam numbers and its calls' openings are the owner's to read. */
     ownsBusiness() {
-      return !!(this.business && this.user && this.business.owner && this.business.owner === this.user.uid)
+      return Classifications.isOwnerOf(this.business, this.user) === true
     },
     /** The business runs the restaurant_booking skill: only then has it a book to show. */
     hasRestaurant() {

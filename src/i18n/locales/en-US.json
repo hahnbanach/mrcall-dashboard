@@ -2519,7 +2519,8 @@
         "readOnly": {
           "title": "Read-only view",
           "note": "You are not the owner of these calls: each call you open is recorded, and its owner can see who opened it.",
-          "open": "Open the call"
+          "open": "Open the call",
+          "unknown": "Whether you own these calls could not be read."
         },
         "filters": {
           "title": "Filters from the link",

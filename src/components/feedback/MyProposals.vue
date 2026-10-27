@@ -61,8 +61,11 @@ export default {
     labels() {
       return judgementLabels(this.$t, this.categories, this.$i18n.locale);
     },
+    // the reader's proposals only: StarChat's `mine` also lists the corrections the reader applied at once (an owner's
+    // outcome, an admin's category), which are not proposals (`Classifications.statusFor`)
     signals() {
-      return this.page.items.flatMap((g) => (Array.isArray(g.signals) ? g.signals : []));
+      return this.page.items.flatMap((g) => (Array.isArray(g.signals) ? g.signals : []))
+        .filter((s) => Classifications.statusFor(s.field, s.signal, s.actorRole) === "proposed");
     },
   },
   watch: {

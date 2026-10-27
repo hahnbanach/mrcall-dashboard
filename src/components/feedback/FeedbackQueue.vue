@@ -105,6 +105,13 @@ export default {
       return judgementLabels(this.$t, this.categories, this.$i18n.locale);
     },
   },
+  watch: {
+    // a selected signal no longer on the page shown is no longer selected
+    "page.items"(groups) {
+      const shown = new Set((groups || []).flatMap((g) => (g.signals || []).map((s) => s.feedbackId)));
+      this.selected = new Set([...this.selected].filter((id) => shown.has(id)));
+    },
+  },
   mounted() {
     this.page.refresh();
     Classifications.categories(this.$store.state.user, this.$i18n.locale)

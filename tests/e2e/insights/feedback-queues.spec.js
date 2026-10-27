@@ -102,7 +102,12 @@ test.describe('the queues of corrections', () => {
     const mine = {
       total: 1, asOf: 1,
       groups: [{ category: 'opening_hours', businessId: BUSINESS_ID, businessName: 'Test Restaurant', calls: 2, items: 2,
-        signals: [signal({ feedbackId: 21, businessId: BUSINESS_ID, byMe: true }), signal({ feedbackId: 22, businessId: BUSINESS_ID, byMe: true, status: 'rejected', requestText: 'Do you have parking?' })] }],
+        signals: [
+          signal({ feedbackId: 21, businessId: BUSINESS_ID, byMe: true }),
+          signal({ feedbackId: 22, businessId: BUSINESS_ID, byMe: true, status: 'rejected', requestText: 'Do you have parking?' }),
+          // the owner's own correction of an outcome, applied at once: not a proposal (P10 review, finding 3)
+          signal({ feedbackId: 23, businessId: BUSINESS_ID, byMe: true, field: 'outcome', valueFrom: 'met', valueTo: 'taken', status: 'applied', requestText: 'Is the parking free?' }),
+        ] }],
       items: [],
     }
     const { sent } = await mockClassifications(page, { queue: () => mine })
@@ -110,6 +115,7 @@ test.describe('the queues of corrections', () => {
     const section = page.getByRole('region', { name: 'My proposals' })
     await expect(section.getByRole('listitem').filter({ hasText: 'How much is a whitening?' })).toContainText('Proposal sent', { timeout: 15000 })
     await expect(section.getByRole('listitem').filter({ hasText: 'Do you have parking?' })).toContainText('Rejected')
+    await expect(section.getByText('Is the parking free?')).toHaveCount(0)
     expect(sent.find((s) => s.path === 'feedback').query).toMatchObject({ mine: 'true', businessId: BUSINESS_ID, status: 'proposed,applied,rejected,closed' })
     // no decisions for an owner
     await expect(section.getByRole('button', { name: 'Apply' })).toHaveCount(0)

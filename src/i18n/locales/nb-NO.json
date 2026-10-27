@@ -2514,7 +2514,8 @@
         "readOnly": {
           "title": "Skrivebeskyttet visning",
           "note": "Du er ikke eier av disse samtalene: hver samtale du åpner registreres, og eieren ser hvem som åpnet den.",
-          "open": "Åpne samtalen"
+          "open": "Åpne samtalen",
+          "unknown": "Det kunne ikke leses om disse samtalene er dine."
         },
         "filters": {
           "title": "Filtre fra lenken",

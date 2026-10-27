@@ -2514,7 +2514,8 @@
         "readOnly": {
           "title": "Ainult lugemiseks",
           "note": "Sa ei ole nende kõnede omanik: iga avatud kõne registreeritakse ja omanik näeb, kes selle avas.",
-          "open": "Ava kõne"
+          "open": "Ava kõne",
+          "unknown": "Ei õnnestunud lugeda, kas need kõned on sinu omad."
         },
         "filters": {
           "title": "Lingi filtrid",

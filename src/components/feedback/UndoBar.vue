@@ -46,6 +46,10 @@ export default {
       if (value) this.message = null;
     },
   },
+  // The undo belongs to the page it was offered on: leaving it drops the gesture, whose list is gone with it.
+  beforeUnmount() {
+    UndoGesture.clear();
+  },
   methods: {
     async undo() {
       const user = this.$store.state.user;

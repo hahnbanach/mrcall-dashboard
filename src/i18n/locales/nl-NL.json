@@ -2514,7 +2514,8 @@
         "readOnly": {
           "title": "Alleen-lezen weergave",
           "note": "U bent niet de eigenaar van deze oproepen: elke oproep die u opent wordt vastgelegd, en de eigenaar ziet wie hem opende.",
-          "open": "Oproep openen"
+          "open": "Oproep openen",
+          "unknown": "Er kon niet worden gelezen of deze oproepen van u zijn."
         },
         "filters": {
           "title": "Filters uit de link",

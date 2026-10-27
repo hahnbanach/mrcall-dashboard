@@ -2514,7 +2514,8 @@
         "readOnly": {
           "title": "Skrivebeskyttet visning",
           "note": "Du er ikke ejer af disse opkald: hvert opkald, du åbner, registreres, og ejeren kan se, hvem der åbnede det.",
-          "open": "Åbn opkaldet"
+          "open": "Åbn opkaldet",
+          "unknown": "Det kunne ikke læses, om disse opkald er dine."
         },
         "filters": {
           "title": "Filtre fra linket",

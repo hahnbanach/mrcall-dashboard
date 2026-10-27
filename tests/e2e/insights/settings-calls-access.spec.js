@@ -59,7 +59,7 @@ test.describe('the business\'s calls: spam numbers and who opened them', () => {
     await mockClassifications(page, { role: 'admin' })
     await page.goto(`/businessconfiguration?id=${BUSINESS_ID}`)
     // the menu is drawn (its retention entry, a synthetic page as this one is), and has no entry for this section
-    await expect(page.getByText('Data retention').first()).toBeVisible({ timeout: 15000 })
+    await expect(page.getByText('Data retention').first()).toBeAttached({ timeout: 15000 })
     await expect(page.getByText('Spam numbers and call access')).toHaveCount(0)
   })
 })

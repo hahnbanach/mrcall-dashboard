@@ -2520,7 +2520,8 @@
         "readOnly": {
           "title": "Visualizzazione in sola lettura",
           "note": "Non sei il titolare di queste chiamate: ogni chiamata che apri viene registrata, e il titolare può vedere chi l'ha aperta.",
-          "open": "Apri la chiamata"
+          "open": "Apri la chiamata",
+          "unknown": "Non è stato possibile leggere se queste chiamate sono tue."
         },
         "filters": {
           "title": "Filtri dal link",

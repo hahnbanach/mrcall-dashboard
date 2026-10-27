@@ -161,6 +161,8 @@ export default {
       ruleDone: null,
       offered: false,
       undo: UndoGesture.state,
+      // reads overlap (a gesture's re-read, an undo's): only the latest one's answer is drawn
+      gate: CallInsights.latestOnly(),
     };
   },
   computed: {
@@ -243,10 +245,12 @@ export default {
     load() {
       this.status = this.data ? this.status : "loading";
       const language = this.$i18n.locale;
+      const isCurrent = this.gate.begin();
       return Promise.all([
         Classifications.classifications(this.user, this.businessId, this.conversation.id),
         categoryList(this.user, language),
       ]).then(([answer, categories]) => {
+        if (!isCurrent()) return;
         this.categories = categories;
         // an answer that is not a call's judgements (no judgement, no request list) is read as none: never chips drawn
         // off a shape this code does not know
@@ -256,7 +260,7 @@ export default {
         this.data = answer;
         this.status = "ok";
       }).catch((error) => {
-        if (isSessionEnded(error)) return;
+        if (!isCurrent() || isSessionEnded(error)) return;
         this.status = this.data ? "ok" : "error";
       });
     },
@@ -348,9 +352,12 @@ export default {
       }
       await this.load();
     },
+    // who put the correction in force: the newest applied one, dated by its decision as `chipState` dates it
     inForceSource(field) {
       const applied = Classifications.historyOf(this.data && this.data.history, { field }).filter((h) => h.status === "applied");
-      return applied.length ? applied[applied.length - 1].source : null;
+      const at = (h) => h.decidedAt || h.createdAt || 0;
+      const newest = applied.reduce((best, h) => (!best || at(h) > at(best) ? h : best), null);
+      return newest ? newest.source : null;
     },
     async restore(key, feedbackId) {
       this.busyKey = key;

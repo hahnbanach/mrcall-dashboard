@@ -140,6 +140,11 @@ export default {
     },
   },
   watch: {
+    // a selected request no longer on the page shown is no longer selected (another page, a reload)
+    "page.items"(items) {
+      const shown = new Set((items || []).map((r) => r.requestId));
+      for (const key of this.selection.selected) if (!shown.has(key)) this.selection.toggle(key, false);
+    },
     category() { this.reload(); },
     outcome() { this.reload(); },
     all() { this.reload(); },

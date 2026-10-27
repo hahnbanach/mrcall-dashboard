@@ -2528,7 +2528,8 @@
         "readOnly": {
           "title": "Vista de solo lectura",
           "note": "No eres el titular de estas llamadas: cada llamada que abres queda registrada y el titular puede ver quién la abrió.",
-          "open": "Abrir la llamada"
+          "open": "Abrir la llamada",
+          "unknown": "No se pudo comprobar si estas llamadas son tuyas."
         },
         "filters": {
           "title": "Filtros del enlace",

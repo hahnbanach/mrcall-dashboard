@@ -2514,7 +2514,8 @@
         "readOnly": {
           "title": "Vain luku -näkymä",
           "note": "Et omista näitä puheluita: jokainen avaamasi puhelu kirjataan, ja omistaja näkee, kuka sen avasi.",
-          "open": "Avaa puhelu"
+          "open": "Avaa puhelu",
+          "unknown": "Ei voitu lukea, ovatko nämä puhelut sinun."
         },
         "filters": {
           "title": "Linkin suodattimet",

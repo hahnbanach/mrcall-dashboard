@@ -63,6 +63,24 @@ for (const role of ['admin', 'reseller']) {
   })
 }
 
+test('an owner whose business cannot be read keeps its controls, is told so and can retry (P10 review, finding 5)', async ({ authenticatedPage: page }) => {
+  let failing = true
+  await page.route('**/crm/business?id=*', (route) => (failing
+    ? route.fulfill({ status: 500, contentType: 'application/json', body: '"Error"' })
+    : route.fallback()))
+  await mockConversations(page, [conversation({ id: 'CON-o1', contactName: 'Olga', details: { callerName: 'Olga', summary: 'Own call.' } })])
+  await mockClassifications(page)
+  await page.goto(`/conversations?id=${BUSINESS_ID}`)
+  await expect(page.locator('.conversation-card')).toHaveCount(1, { timeout: 15000 })
+  await expect(page.getByText('Read-only view')).toHaveCount(0)
+  await expect(page.getByRole('button', { name: 'TSV' })).toBeVisible()
+  const note = page.getByText('Whether you own these calls could not be read.')
+  await expect(note).toBeVisible()
+  failing = false
+  await page.getByRole('button', { name: 'Try again' }).click()
+  await expect(note).toHaveCount(0)
+})
+
 test('the owner\'s own list keeps every control and reads its recording as before', async ({ authenticatedPage: page }) => {
   await mockConversations(page, [conversation({ id: 'CON-o1', contactName: 'Olga', details: { callerName: 'Olga', summary: 'Own call.' } })])
   await mockClassifications(page)

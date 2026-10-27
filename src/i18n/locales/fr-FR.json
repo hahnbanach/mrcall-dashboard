@@ -2516,7 +2516,8 @@
         "readOnly": {
           "title": "Affichage en lecture seule",
           "note": "Vous n'êtes pas le titulaire de ces appels : chaque appel que vous ouvrez est enregistré, et son titulaire voit qui l'a ouvert.",
-          "open": "Ouvrir l'appel"
+          "open": "Ouvrir l'appel",
+          "unknown": "Impossible de vérifier si ces appels sont les vôtres."
         },
         "filters": {
           "title": "Filtres du lien",

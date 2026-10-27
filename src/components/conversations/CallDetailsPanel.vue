@@ -42,8 +42,8 @@
          checks that fired). Absent on a call from before the feature, exactly like today. -->
     <!-- drawn while the call has insights, or while its judgements are chips (a call whose details carry none, read
          on a page that asks for its judgements) -->
-    <section v-if="hasInsights || withJudgements" v-show="hasInsights || chips" class="call-box call-insights-box">
-      <h3 class="call-box-title">{{ $t("components.callInsights.panel.title") }}</h3>
+    <section v-if="hasInsights || withJudgements" :class="{ 'call-box call-insights-box': hasInsights || chips }">
+      <h3 v-if="hasInsights || chips" class="call-box-title">{{ $t("components.callInsights.panel.title") }}</h3>
 
       <!-- The judgements as chips a person corrects (CallJudgements); while they are not drawn, today's rows -->
       <CallJudgements
