@@ -284,10 +284,13 @@ above.
      It is named to StarChat's lead, whose decision it is.
    - A stale value (409) carries only the stale fields' current values, with no model value and no history: the
      chips take them at once and the call's judgements are then read once, so the chip says truly what is in force.
+   - An answer arriving while another gesture of the same panel is still out may be the older one: the panel takes it
+     and then reads the call's judgements once, so the last answer cannot leave a stale chip.
    - Supersedes, and they stay as written above: scope 1's re-read after every gesture and undo; the rejected
      alternative "Keeping a chip's state from the signal's answer alone", whose reason (the answer names only its own
      field) no longer holds; the acceptance line "and then one after each gesture or undo", which now reads "and then
-     one after a stale value, or after an answer without the call's state"; the gap row on recorded openings.
+     one after a stale value, after an answer without the call's state, or after an answer that arrived while another
+     gesture of the panel was out"; the gap row on recorded openings.
 11. **A category's requests carry their call's resolution** (`resolution`): "Segna come spam" is offered on the
    selected requests, one signal per call with that resolution as the value read. Closes the gap row "Segna come spam
    over a category's requests".
