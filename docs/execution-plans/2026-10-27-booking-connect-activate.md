@@ -1,5 +1,5 @@
 ---
-status: active
+status: completed
 ---
 
 # Booking connect and activate UI
@@ -67,5 +67,21 @@ M1 integration is APPROVED for both implementations. Evidence records 156 backen
 checks, 46 affected browser cases, 19 booking cases, two final identity component
 checks, five final browser reruns and three layout sizes, plus final frontend
 build/lint. No live OAuth/model/calendar actions occur. Current TEST inspection
-is read-only; saved skills remain unchanged. Source closure and publication gates
-are next; delivery and conversation cleanup stay mandatory after source approval.
+is read-only; saved skills remain unchanged. Source closure and separate final source review are approved. The verified delivery
+results below satisfy publication and cleanup; real customer effects remain operator-owned.
+
+## Verified delivery and handoff
+
+Backend main→dev publication succeeds at 9c482083 in pipeline2993947619; the ready
+image, fourteen source hashes and health are verified. Dashboard v2.2.36-test at
+3c19137 succeeds in workflow40492024562; all 104 served assets match CI names and
+contain the booking paths. The authenticated TEST setup GET recognizes five prepared
+skills and three accessible calendars without configuration changes. The requested
+history reset verifies zero messages and preserves the saved five. Production is
+unchanged. Exact receipts are bound in the paired evaluation and external task cache.
+
+The 9c482083 follow-up only aligns tool/prompt copy with the reviewed connection
+flow, with 26 focused checks, exact lint and a separate corrective fast-path review.
+Operational documentation closure and a fresh final delivery review precede checker
+finalization of this plan. The user owns actual consent/model/caller verification;
+no paid model, OAuth consent or calendar event action was run by the delivery agent.

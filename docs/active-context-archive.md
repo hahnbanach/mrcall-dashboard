@@ -1,3 +1,20 @@
+
+## 2026-10-27 — Booking source candidate before TEST publication
+
+The v2.2.36 booking-connect candidate implements the existing Google consent button,
+calendar selection by name and scoped activation of five prepared skills. Local acceptance
+passes 46 affected browser cases, 19 booking cases, two component identity checks, five
+final browser reruns and three layout sizes. Production-mode TEST build and lint pass.
+M1 integration is approved; source closure and final publication approval remain pending.
+See the [plan](execution-plans/2026-10-27-booking-connect-activate.md) and
+[evidence](evaluations/2026-10-27-booking-connect-activate.md).
+
+The source baseline is fd4c94d, matching successful TEST workflow40482572038 for
+v2.2.35-test. This candidate is not yet deployed. Production retains the separately
+published v2.2.34 release; this work authorizes only TEST. The baseline includes readable
+skill previews, confirmed Save refresh, business-wide consent, call-insights screens and
+removal of the account-level connection. The dirty v2.1 checkout is untouched.
+
 # Active context archive
 
 Historical snapshots preserved verbatim, newest first. This cold storage is not

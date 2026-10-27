@@ -1,5 +1,5 @@
 ---
-doc_baseline_commit: fd4c94d1e5b9dd2cd693b0ee24a282926c7fd4ce
+doc_baseline_commit: 3c19137f1584e6c846ad4fbee3cbf23d62b639ea
 doc_baseline_date: 2026-10-27
 ---
 
@@ -11,19 +11,19 @@ Scope: Current dashboard operating state, unresolved verification limits, and im
 
 ## State now
 
-The v2.2.36 booking-connect candidate implements the existing Google consent button,
-calendar selection by name and scoped activation of five prepared skills. Local acceptance
-passes 46 affected browser cases, 19 booking cases, two component identity checks, five
-final browser reruns and three layout sizes. Production-mode TEST build and lint pass.
-M1 integration is approved; source closure and final publication approval remain pending.
+TEST serves v2.2.36-test at 3c19137 through successful workflow40492024562.
+All 104 published JavaScript/CSS assets answer HTTP200 and match the CI asset names;
+served code contains the booking setup/activation and bound connection-intent paths.
+The companion backend runs dev-9c482083 with a successful authenticated setup check.
+The authorized conversation is empty and its five saved skills are preserved.
 See the [plan](execution-plans/2026-10-27-booking-connect-activate.md) and
 [evidence](evaluations/2026-10-27-booking-connect-activate.md).
 
-The source baseline is fd4c94d, matching successful TEST workflow40482572038 for
-v2.2.35-test. This candidate is not yet deployed. Production retains the separately
-published v2.2.34 release; this work authorizes only TEST. The baseline includes readable
-skill previews, confirmed Save refresh, business-wide consent, call-insights screens and
-removal of the account-level connection. The dirty v2.1 checkout is untouched.
+The five-skill review is compact, the existing connection flow continues to calendar
+selection by name and scoped activation, and fixed English booking summaries are suppressed.
+Local scripted browser/component/layout acceptance and build/lint pass. Actual consent,
+real-model chat and caller booking remain operator-owned. Production retains v2.2.34;
+the dirty v2.1 checkout is untouched. The prior TEST baseline is fd4c94d.
 
 Session ownership: every nonpublic route needs a session, the Axios interceptor alone ends it,
 and components suppress their failure UI for `isSessionEnded`. Browser tests mock StarChat and
@@ -51,9 +51,8 @@ mrcall-agent.
 
 ## Next
 
-- Complete source closure/review and publish this booking continuation to TEST, verify
-  the actual served artifact and coordinate the backend/chat cleanup. Real consent/model
-  verification belongs to the operator.
+- Operator: reload TEST and verify the actual conversation, Google consent when needed,
+  calendar selection and booking. Existing accessible calendars can be selected directly.
 - Remove `__BOOKING__` from `menuGroups` after StarChat's move is on test.
 - Classification feedback (StarChat plan step C8) is being built on a branch from `v2.2` and
   lands by fast-forward after review.
