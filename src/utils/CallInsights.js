@@ -397,6 +397,7 @@ export default {
     latestOnly,
     isAssessed,
     refusalOf,
+    unwrap,
     RESOLUTION_KEYS,
     MESSAGE_KEYS,
     GAP_KEYS,
