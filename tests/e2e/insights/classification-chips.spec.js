@@ -17,7 +17,7 @@ const { mockClassifications, mockConversations, conversation, judged, CALL_ID, B
  * Later cases, each seen failing on the commit before its code: the fact report (perturbation), focus back on the chip
  * and a confirmation in the history (dec211e), no read after a gesture or an undo and the six facts (2d39e13), the
  * single read after a stale value (0cc7469); an answer without the call's state, a refused read after it and no facts
- * served (259ff67).
+ * served (259ff67); a fact report without the call's state keeping the fact (b940b29).
  */
 const open = (page) => page.goto(`/conversations?id=${BUSINESS_ID}&conversation=${CALL_ID}`)
 const opened = (page) => page.locator('.opened-card')
@@ -162,6 +162,19 @@ test.describe('a call\'s judgements as chips', () => {
     await page.getByRole('listbox').getByRole('option', { name: 'Booking: Booked' }).click()
     await expect.poll(() => sent.filter((s) => s.path === 'feedback' && s.method === 'POST').length).toBe(2)
     expect(sent.filter((s) => s.path === 'feedback').pop().body).toMatchObject({ field: 'booked', signal: 'fact_wrong', valueFrom: 'true' })
+  })
+
+  test('a fact report answered without the call\'s state changes no fact, though the read after it is refused (C10, third round)', async ({ authenticatedPage: page }) => {
+    await mockConversations(page, [conversation()])
+    const { sent } = await mockClassifications(page, { partialState: true, unreadable: true })
+    await open(page)
+    await expect(chip(page, /^Resolution: Resolved/)).toBeVisible({ timeout: 15000 })
+    await chip(page, 'Report an error on a fact').click()
+    await page.getByRole('listbox').getByRole('option', { name: 'Booking: Booked' }).click()
+    await expect.poll(() => reads(sent)).toBe(2)
+    await expect(opened(page).getByText('Reported to MrCall: Booking')).toBeVisible()
+    await chip(page, 'Report an error on a fact').click()
+    await expect(page.getByRole('listbox').getByRole('option', { name: 'Booking: Booked' })).toBeVisible()
   })
 
   test('the author restores the analysis\'s value, and reads the history', async ({ authenticatedPage: page }) => {

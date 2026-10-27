@@ -359,6 +359,13 @@ describe('a call\'s judgements from a gesture\'s answer, with no re-read', () =>
     expect(Classifications.withGesture(read, gesture)).toBe(read)
   })
 
+  it('a fact report without the call\'s state changes no fact: StarChat answers a fact\'s value as null (C10, third round)', () => {
+    const ask = Classifications.ask({ conversationId: 'CON-1', field: 'booked', signal: 'fact_wrong', valueFrom: 'true' })
+    const next = Classifications.withGesture(read, { gestureId: 'g', role: 'owner', calls: [], entries: [{ ask, answer: { feedbackId: 6, status: 'proposed', value: null } }] }, 2000)
+    expect(next.facts).toEqual({ booked: 'true' })
+    expect(next.history.map((h) => h.feedbackId)).toContain(6)
+  })
+
   it('a gesture with no call state still brings this call the values and signals it wrote (the read that follows may be refused)', () => {
     const ask = Classifications.ask({ conversationId: 'CON-1', field: 'resolution', signal: 'wrong_value', valueFrom: 'resolved', valueTo: 'unresolved' })
     const next = Classifications.withGesture(read, { gestureId: 'g', role: 'owner', calls: [], entries: [{ ask, answer: { feedbackId: 5, status: 'applied', value: 'unresolved' } }] }, 2000)

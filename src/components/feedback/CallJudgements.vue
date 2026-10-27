@@ -174,6 +174,8 @@ export default {
       busyKey: null,
       // gestures of this panel waiting for their answer: an answer arriving while another is out may be the older one
       pending: 0,
+      // gestures this panel has sent: an answer is the newest only if none was sent after it
+      sentSeq: 0,
       historyOpen: null,
       alert: null,
       ruleOffer: null,
@@ -392,9 +394,10 @@ export default {
       const ruleJudged = field === "resolution" && state.value === "spam_wrong_number" && this.inForceSource("resolution") === "rule";
       this.busyKey = key;
       this.pending += 1;
+      const seq = ++this.sentSeq;
       try {
         const answer = await Classifications.signal(this.user, ask, gestureId);
-        this.takeAnswer(answer, ask, gestureId);
+        this.takeAnswer(answer, ask, gestureId, seq);
         UndoGesture.record(gestureId, [this.conversation.id], null, this.uid, answer && answer.call ? [answer.call] : [], [{ ask, answer }], this.role);
         if (field === "resolution" && answer && answer.status === "applied") {
           if (ask.valueTo === "spam_wrong_number") this.offerRule();
@@ -412,14 +415,14 @@ export default {
     // The signal's answer: its call's state (`call`), and the signal itself recorded in the history so the chip says it.
     // Without the call's state (a reader who may not open the call now, or a StarChat older than a012b6926) the judged
     // field takes the answered `value` and the call is read again; so it is when another gesture of this panel is still
-    // out, since this answer may then be the older one.
-    takeAnswer(answer, ask, gestureId) {
+    // out or was sent after this one, since this answer may then be the older one.
+    takeAnswer(answer, ask, gestureId, seq) {
       if (!answer) return;
       const full = Classifications.isCallState(answer.call);
       this.gate.begin();
       this.data = Classifications.withGesture(this.data, { gestureId, role: this.role, calls: full ? [answer.call] : [], entries: [{ ask, answer }] });
       this.status = "ok";
-      if (!full || this.pending > 1) this.load({ keep: true });
+      if (!full || this.pending > 1 || seq !== this.sentSeq) this.load({ keep: true });
     },
     // A refusal: a stale value (409) carries only the stale fields' current values, which the chips take at once; the
     // judgements are then read once, since whoever changed them also wrote history this panel has not seen. Anything
@@ -454,9 +457,10 @@ export default {
       this.alert = null;
       this.busyKey = "facts";
       this.pending += 1;
+      const seq = ++this.sentSeq;
       try {
         const answer = await Classifications.signal(this.user, ask, gestureId);
-        this.takeAnswer(answer, ask, gestureId);
+        this.takeAnswer(answer, ask, gestureId, seq);
         if (!this.reportedFacts.includes(field)) this.reportedFacts = this.reportedFacts.concat([field]);
       } catch (error) {
         if (isSessionEnded(error)) return;

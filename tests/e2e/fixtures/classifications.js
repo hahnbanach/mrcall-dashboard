@@ -139,8 +139,10 @@ async function mockClassifications (page, options = {}) {
     if (a.signal === 'fact_wrong') {
       if ((call.facts || {})[a.field] !== a.valueFrom) return { status: 409, current: { conversationId: call.conversationId, field: a.field, value: (call.facts || {})[a.field] } }
       const id = state.nextId++
+      // StarChat's answered `value` for a fact is null whatever the fact holds (`InsightsFeedback.value` reads only
+      // judgements), so the fixture answers the same
       call.history.push({ feedbackId: id, subject: 'call', field: a.field, signal: 'fact_wrong', valueFrom: a.valueFrom, valueTo: null, source: 'person', status: 'proposed', actorRole: role, actorName, byMe: true, createdAt: Date.now(), gestureId })
-      return { status: 200, call, body: { feedbackId: id, conversationId: call.conversationId, field: a.field, status: 'proposed', value: a.valueFrom, replayed: false } }
+      return { status: 200, call, body: { feedbackId: id, conversationId: call.conversationId, field: a.field, status: 'proposed', value: null, replayed: false } }
     }
     const j = judgementOf(call, a)
     if (!j) return { status: 404 }

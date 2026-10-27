@@ -197,8 +197,9 @@ function withSignal(history, answer, a, gestureId, role, now = Date.now()) {
 /**
  * A gesture as `UndoGesture` carries it (made in this panel, another panel of the call, or a list): the touched calls'
  * state (`calls`) and the signals it wrote (`entries`: `{ask, answer}`), applied to this call's judgements. Without this
- * call's state, each signal's answered `value` stands for its field; the same object when the gesture did not touch
- * this call.
+ * call's state, each signal's answered `value` stands for its judgement; never for a fact, which a report does not
+ * change and whose answered `value` StarChat gives as null (`InsightsFeedback.value` reads judgements only). The same
+ * object when the gesture did not touch this call.
  */
 function withGesture(data, gesture, now = Date.now()) {
     if (!data || !gesture) return data;
@@ -208,7 +209,7 @@ function withGesture(data, gesture, now = Date.now()) {
     if (!mine && entries.length === 0) return data;
     let history = Array.isArray(data.history) ? data.history : [];
     for (const e of entries) history = withSignal(history, e.answer, e.ask, gesture.gestureId, gesture.role, now);
-    const base = mine ? withCallState(data, mine) : withCurrent(data, entries.filter((e) => e.answer.value !== undefined)
+    const base = mine ? withCallState(data, mine) : withCurrent(data, entries.filter((e) => e.answer.value !== undefined && !FACT_FIELDS.includes(e.ask.field))
         .map((e) => ({ conversationId: e.ask.conversationId, requestId: e.ask.requestId, field: e.ask.field, value: e.answer.value })));
     return { ...base, history };
 }
