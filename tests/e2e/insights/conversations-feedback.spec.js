@@ -69,6 +69,8 @@ test.describe('the conversations list: a count\'s filters and corrections in bul
     await mockClassifications(page)
     await page.goto(`/conversations?id=${BUSINESS_ID}&gap=nope`)
     await expect(page.getByText('A filter in the link was not recognised and is not applied.')).toBeVisible({ timeout: 15000 })
+    // the note is drawn from the address at once; the list's search follows the reader's role and business
+    await expect.poll(() => searches.filter((s) => !s.id).length).toBeGreaterThan(0)
     expect(searches.filter((s) => !s.id).pop().gap).toBeUndefined()
   })
 
