@@ -1,5 +1,5 @@
 ---
-doc_baseline_commit: 2ac966bbf8ac786ec09a7e7752a7135a9d8e8df4
+doc_baseline_commit: ab4ca78fcabd47371e4cac3b4e9ea932d6381fa3
 doc_baseline_date: 2026-10-27
 ---
 
@@ -11,17 +11,14 @@ Scope: Current dashboard operating state, unresolved verification limits, and im
 
 ## State now
 
-The booking-card visibility candidate separates saved skill readiness from managed
-prompt alignment. It hides passive setup for five already-configured skills while
-retaining pending/disabled/failure controls. Focused checks and build pass; it is not
-yet deployed. See the [plan](execution-plans/2026-10-27-booking-card-visibility.md).
-
-TEST serves v2.2.37-test at e5ce20e3, successful workflow40546056223.
-All 104 published JS/CSS assets answer HTTP200 and match the CI build names;
-served code contains the Sheets intent, provider, write scope and get_call_log_setup
-continuation, retaining prior booking paths and the TEST backend reference.
-The companion backend dev-69223983 is ready with matching source hashes and health.
-See the [Sheets plan](execution-plans/2026-10-27-sheets-oauth-call-log.md).
+TEST serves v2.2.38-test at ab4ca78f, successful workflow40563308648.
+All 104 served JS/CSS assets answer HTTP200 and match CI build names; booking
+configured visibility and prior Sheets/booking paths are present. The backend
+dev-7b9cec51 is ready with nineteen matching hashes and HTTP200 health.
+The reported assistant's read-only status returns configured=true; passive setup
+is hidden despite managed alignment state=prepared. Disabled/pending groups
+and explicit local failure recovery retain their controls. No customer configuration
+or history is changed. See the [plan](execution-plans/2026-10-27-booking-card-visibility.md).
 
 The Sheets button authorizes the account and returns to actual column review before
 explicit Save. Customer consent, real model review/language and an actual append

@@ -1,5 +1,5 @@
 ---
-status: active
+status: completed
 ---
 
 # Booking setup card visibility
@@ -36,3 +36,24 @@ for the known markerless saved group, without opening/modifying a chat or invoki
 activation. Fresh operational closure/final review precedes readiness. No production,
 customer configuration/history or provider action. Roll back by normal reviewed
 revert/redeployment, never force-push or retag.
+
+## Verified source and TEST delivery
+
+Fresh brief, plan, M1, explicit source doc-critic and separate final source review
+approve the implementation. Actual focused service/API checks pass 41 cases;
+22 booking browser cases pass, including the reported markerless saved group,
+disabled/pending controls, successful hiding and failed-activation recovery through
+refresh. Exact lint/format and TEST build pass. Source effects are scripted.
+
+The explicitly authorized backend main→dev publication succeeds at 7b9cec51be46ed4257bec16d88f86e3d13f3564d
+in pipeline2995970926; ready digest sha256:9fe946759ea956acc13eb2bff0b728a3e50effc985c7e1c7879535e1b9b236d7, nineteen exact
+source hashes and HTTP200 health are verified. Dashboard v2.2.38-test at
+ab4ca78fcabd47371e4cac3b4e9ea932d6381fa3 succeeds in workflow40563308648; all 104 served
+JS/CSS assets return HTTP200 and match CI names, retaining Sheets and prior booking paths.
+
+The actual reported TEST assistant returns configured=true/state=prepared with
+an unchanged saved booking configuration across the read. No activation, customer
+prompt/calendar/skill write, history reset, model call or provider event occurs.
+Production/beta receive no promotion. Operational receipts are retained externally
+in the task cache's release directory; fresh release doc-critic and final review
+precede checker completion. Actual caller behavior is outside this visibility fix.

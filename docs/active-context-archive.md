@@ -1,4 +1,19 @@
 
+## 2026-10-27 — Booking-card candidate before authorized TEST publication
+
+The booking-card visibility candidate separates saved skill readiness from managed
+prompt alignment. It hides passive setup for five already-configured skills while
+retaining pending/disabled/failure controls. Focused checks and build pass; it is not
+yet deployed. See the [plan](execution-plans/2026-10-27-booking-card-visibility.md).
+
+TEST serves v2.2.37-test at e5ce20e3, successful workflow40546056223.
+All 104 published JS/CSS assets answer HTTP200 and match the CI build names;
+served code contains the Sheets intent, provider, write scope and get_call_log_setup
+continuation, retaining prior booking paths and the TEST backend reference.
+The companion backend dev-69223983 is ready with matching source hashes and health.
+See the [Sheets plan](execution-plans/2026-10-27-sheets-oauth-call-log.md).
+
+
 ## 2026-10-27 — Sheets source candidate before authorized TEST publication
 
 The v2.2.37 Sheets candidate adds a Google Sheets OAuth action and verified return
