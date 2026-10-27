@@ -16,7 +16,7 @@ const { mockClassifications, mockConversations, conversation, judged, CALL_ID, B
  * panel by construction and was then seen failing by perturbation (the panel drawing chips from `details` alone).
  * Later cases, each seen failing on the commit before its code: the fact report (perturbation), focus back on the chip
  * and a confirmation in the history (dec211e), no read after a gesture or an undo and the six facts (2d39e13), the
- * single read after a stale value (0cc7469).
+ * single read after a stale value (0cc7469), the read after an answer carrying the judged field alone (0fed030).
  */
 const open = (page) => page.goto(`/conversations?id=${BUSINESS_ID}&conversation=${CALL_ID}`)
 const opened = (page) => page.locator('.opened-card')
@@ -53,6 +53,22 @@ test.describe('a call\'s judgements as chips', () => {
     await expect(chip(page, /^Resolution: Resolved$/)).toBeVisible()
     // the undo's answer carries the call's state too
     expect(reads(sent)).toBe(before)
+  })
+
+  test('an answer carrying the judged field alone (a reader who may not open the call now) reads the call again', async ({ authenticatedPage: page }) => {
+    await mockConversations(page, [conversation()])
+    const { sent } = await mockClassifications(page, { partialState: true })
+    await open(page)
+    await expect(chip(page, /^Resolution: Resolved/)).toBeVisible({ timeout: 15000 })
+    const before = reads(sent)
+    await choose(page, /^Resolution: Resolved/, 'Unresolved')
+    await expect(chip(page, /^Resolution: Unresolved, Corrected \(from Resolved to Unresolved, /)).toBeVisible()
+    // the partial answer is never merged over the judgements: they are read once, and the other chips stay drawn
+    await expect.poll(() => reads(sent)).toBe(before + 1)
+    await expect(chip(page, /^Message: /)).toBeVisible()
+    await page.getByRole('status').filter({ hasText: 'Changed' }).getByRole('button', { name: 'Undo' }).click()
+    await expect(chip(page, /^Resolution: Resolved$/)).toBeVisible()
+    await expect.poll(() => reads(sent)).toBe(before + 2)
   })
 
   test('each request shows its outcome and its category; an owner\'s category is a proposal, its outcome applies', async ({ authenticatedPage: page }) => {

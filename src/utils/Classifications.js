@@ -149,8 +149,24 @@ function ask({ conversationId, requestId, field, signal, valueFrom, valueTo, not
 // ---- a call's judgements from a gesture's answer (StarChat a012b6926), never read again after a gesture ----
 
 /** The judgements a gesture's answer carries (`call`, or one of `calls`), with the history kept: the answer has none. */
+/**
+ * Whether a gesture's answer carries a call's full state (its judgements: `resolution`, `message`, `requests`), which
+ * StarChat answers only to a reader who may open the call now; anyone else gets the judged field's effective value
+ * alone, which is never merged over what was read: the panel reads the call again (one recorded opening per 10 minutes).
+ */
+function isCallState(c) {
+    return !!c && typeof c === "object" && typeof c.conversationId === "string"
+        && "resolution" in c && "message" in c && Array.isArray(c.requests);
+}
+
+/** The full state of call `conversationId` among a gesture's answered calls, or null (absent, or partial). */
+function stateIn(calls, conversationId) {
+    const c = (Array.isArray(calls) ? calls : []).find((x) => x && x.conversationId === conversationId);
+    return isCallState(c) ? c : null;
+}
+
 function withCallState(data, call) {
-    if (!call || typeof call !== "object") return data;
+    if (!isCallState(call)) return data;
     return { ...call, history: data && Array.isArray(data.history) ? data.history : [] };
 }
 
@@ -185,7 +201,7 @@ function withSignal(history, answer, a, gestureId, role, now = Date.now()) {
  */
 function withGesture(data, gesture, now = Date.now()) {
     if (!data || !gesture) return data;
-    const mine = (Array.isArray(gesture.calls) ? gesture.calls : []).find((c) => c && c.conversationId === data.conversationId);
+    const mine = stateIn(gesture.calls, data.conversationId);
     if (!mine) return data;
     let history = Array.isArray(data.history) ? data.history : [];
     for (const e of Array.isArray(gesture.entries) ? gesture.entries : []) {
@@ -417,6 +433,8 @@ export default {
     withSignal,
     withGesture,
     bulkEntries,
+    isCallState,
+    stateIn,
     withReverted,
     withDecision,
     withCurrent,

@@ -270,7 +270,9 @@ above.
    again after a gesture or an undo; the history (which the state does not carry) is kept and updated from what the
    gesture wrote, in every panel of the touched calls (the signals travel with the gesture, a bulk answer's items
    paired with their asks by call, field and request), an applied correction marking the one it replaces reverted as
-   StarChat does. A stale value (409) carries only the stale fields' current values, with no model value and no
+   StarChat does. StarChat answers the full state only to a reader who may open the call now; anyone else gets the
+   judged field's effective value alone, which is never merged over the judgements read: that panel reads the call
+   again (one recorded opening per actor and call within 10 minutes). A stale value (409) carries only the stale fields' current values, with no model value and no
    history: the chips take them at once and the call's judgements are then read once, so the chip says truly what is
    in force (StarChat now records one opening per actor and call within 10 minutes, `f87578328`, so that read adds no
    record to a non-owner's recent opening). Supersedes, and they stay as written above: scope 1's re-read after every

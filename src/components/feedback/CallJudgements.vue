@@ -252,8 +252,7 @@ export default {
     "undo.recorded"() {
       const last = this.undo.lastRecorded;
       if (!last || last.origin === this.uid || !last.affected.includes(this.conversation.id) || !this.loaded) return;
-      const mine = (last.calls || []).find((c) => c && c.conversationId === this.conversation.id);
-      if (!mine) { this.load(); return; }
+      if (!Classifications.stateIn(last.calls, this.conversation.id)) { this.load(); return; }
       this.gate.begin();
       this.data = Classifications.withGesture(this.data, last);
       this.status = "ok";
@@ -280,9 +279,10 @@ export default {
   },
   methods: {
     // A gesture's or an undo's answer carries the touched calls' state (StarChat a012b6926): this call's is taken as it
-    // is, the history kept and the reverted signals marked. Only an answer without it (an older StarChat) reads again.
+    // is, the history kept and the reverted signals marked. An answer without it (an older StarChat) or with the judged
+    // field alone (a reader who may not open the call now) reads the call again.
     takeCalls(calls, reverted) {
-      const mine = (Array.isArray(calls) ? calls : []).find((c) => c && c.conversationId === this.conversation.id);
+      const mine = Classifications.stateIn(calls, this.conversation.id);
       if (!mine) { this.load(); return; }
       this.gate.begin();
       const next = Classifications.withCallState(this.data, mine);
@@ -398,10 +398,11 @@ export default {
       }
     },
     // The signal's answer: its call's state (`call`), and the signal itself recorded in the history so the chip says it.
-    // An answer without the call's state (a StarChat older than a012b6926) reads the call again.
+    // An answer without the call's full state (a StarChat older than a012b6926, or a reader who may not open the call
+    // now, answered the judged field alone) reads the call again.
     takeAnswer(answer, ask, gestureId) {
       if (!answer) return;
-      if (!answer.call) { this.load(); return; }
+      if (!Classifications.isCallState(answer.call)) { this.load(); return; }
       this.gate.begin();
       const next = Classifications.withCallState(this.data, answer.call);
       next.history = Classifications.withSignal(this.data && this.data.history, answer, ask, gestureId, this.role);
@@ -463,7 +464,8 @@ export default {
       try {
         const row = await Classifications.revert(this.user, feedbackId);
         this.gate.begin();
-        const next = row && row.call ? Classifications.withCallState(this.data, row.call) : { ...this.data };
+        if (!row || !Classifications.isCallState(row.call)) { await this.load(); return; }
+        const next = Classifications.withCallState(this.data, row.call);
         next.history = Classifications.withDecision(this.data.history, row);
         this.data = next;
       } catch (error) {

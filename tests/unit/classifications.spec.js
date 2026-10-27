@@ -346,6 +346,19 @@ describe('a call\'s judgements from a gesture\'s answer, with no re-read', () =>
     expect(next.facts).toEqual({ booked: 'true' })
   })
 
+  it('takes only a full call state; a partial one (the judged field alone, for a reader who may not open the call now) is not a state', () => {
+    const partial = { conversationId: 'CON-1', field: 'resolution', value: 'unresolved' }
+    expect(Classifications.stateIn([partial], 'CON-1')).toBeNull()
+    expect(Classifications.stateIn([{ conversationId: 'CON-1', resolution: { model: 'resolved', value: 'unresolved', corrected: true } }], 'CON-1')).toBeNull()
+    expect(Classifications.stateIn([state], 'CON-1')).toBe(state)
+    expect(Classifications.stateIn([state], 'CON-9')).toBeNull()
+    expect(Classifications.stateIn(undefined, 'CON-1')).toBeNull()
+    // never merged over the judgements read: the panel reads the call again instead
+    expect(Classifications.withCallState(read, partial)).toBe(read)
+    const gesture = { gestureId: 'g', role: 'owner', calls: [partial], entries: [] }
+    expect(Classifications.withGesture(read, gesture)).toBe(read)
+  })
+
   it('records what the gesture wrote in the history, so the chip says it at once', () => {
     const a = Classifications.ask({ conversationId: 'CON-1', field: 'resolution', signal: 'wrong_value', valueFrom: 'resolved', valueTo: 'unresolved' })
     const h = Classifications.withSignal(read.history, { feedbackId: 9, status: 'applied' }, a, 'g-1', 'owner', 5000)

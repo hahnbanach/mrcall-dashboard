@@ -85,7 +85,8 @@ API clients and business logic:
   their undo, queues, caller rules, a category's requests, the category list, the access record and the one-time
   audio link; and how a gesture's answer becomes the call's judgements (`withCallState`, `withSignal`, which marks
   the correction an applied one replaces as reverted, `withGesture` for a gesture made in another panel, `bulkEntries`,
-  `withReverted`, `withDecision`, `withCurrent`; a stale value's refusal is taken and then the call read once).
+  `withReverted`, `withDecision`, `withCurrent`; `isCallState`/`stateIn`: only a full call state is taken, an answer
+  with the judged field alone reads the call again; a stale value's refusal is taken and then the call read once).
   Pinned by `tests/unit/classifications.spec.js`
 - `UndoGesture.js` — the last gesture on judgements, for the page's one undo bar, with the touched calls' state and
   the signals it wrote, which every other panel of those calls takes when the gesture is made or undone
