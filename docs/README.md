@@ -36,7 +36,11 @@ The call insights contract (what calls said: outcomes and the calls without a co
 assistants to review, call reports and their jobs, callers' requests by category, and the conversation list's own
 resolution, message, booked, transferred and unanswered filters) is StarChat's own, read by
 `src/utils/CallInsights.js`: its conversation-analytics API reference, §7-12, and its customer conversation API
-guide, both in the StarChat repository. No copy of either lives here.
+guide, both in the StarChat repository. No copy of either lives here. A call's judgements, their corrections, undo
+and queues, the caller rules, a category's requests, the access record and the conversation search's filters a
+count opens are read by `src/utils/Classifications.js`, against StarChat's brief
+`docs/briefs/2026-10-26-classification-feedback.md` and its routes (this repository's brief
+[2026-10-27-classification-feedback](briefs/2026-10-27-classification-feedback.md) states which).
 
 - [Readable review and assistant Google connection](briefs/2026-10-26-readable-skill-preview.md)
   — [clean TEST delivery plan](execution-plans/2026-10-26-readable-skill-preview.md).

@@ -29,6 +29,14 @@ Session ownership: every nonpublic route needs a session, the Axios interceptor 
 and components suppress their failure UI for `isSessionEnded`. Browser tests mock StarChat and
 mrcall-agent.
 
+Branch `classification-feedback` (built on `v2.2`, not merged, not deployed) carries the dashboard side of StarChat's
+classification feedback (its plan's step C8): a call's judgements as chips with one undo, bulk corrections, every
+count opening its calls, callers' requests on request records, the queues, caller rules and the access record, a
+non-owner's read-only call ([brief](briefs/2026-10-27-classification-feedback.md),
+[plan](execution-plans/2026-10-27-classification-feedback.md)). It needs StarChat with the routes of that plan's C5,
+C5b, C6 and C7 and the commits named in the brief's amendment; the category chip waits for the category list read
+the brief proposes to StarChat.
+
 ## Unresolved
 
 - The AI chat SSE client uses native fetch and bypasses the Axios interceptor; WebSockets

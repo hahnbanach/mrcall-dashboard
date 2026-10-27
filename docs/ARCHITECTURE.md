@@ -76,6 +76,17 @@ API clients and business logic:
   business's zone, its last day included; the periods a request offers, ending at the last midnight there; the
   label of every report and job state; a recompute's progress; who asked, by the role StarChat recorded (`requesterRole`), never by an id; the coverage banner's
   threshold. Pure, pinned by `tests/unit/insightsReports.spec.js`
+- `Classifications.js` — a call's judgements as a person checks and corrects them (brief
+  [2026-10-27-classification-feedback](briefs/2026-10-27-classification-feedback.md)): the closed value sets, who
+  applies and who proposes, a chip's state from a judgement and the call's history (a correction, a confirmation, the
+  reader's own proposal), a chip's menu, the asks of a gesture (`valueFrom` always sent, `fact_wrong` for a fact), THE
+  FILTER TABLE from every count kind to its conversation-search filter (`countLink`, `searchFromQuery`), whether the
+  reader owns a business (`isOwnerOf`: true, false or unknown), and the clients of StarChat's judgements, signals and
+  their undo, queues, caller rules, a category's requests, the category list (a read the brief proposes to
+  StarChat; absent today), the access record and the one-time audio link. Pinned by `tests/unit/classifications.spec.js`
+- `UndoGesture.js` — the last gesture on judgements, for the page's one undo bar, and the panels to read again when a
+  gesture is made or undone
+- `Selection.js` — the selection of a list's rows (a checkbox on a wide screen, a long-press mode under 600 px)
 - `KnowledgeBase.js` — "Add the answer": one question/answer pair added to the business's knowledge base
   (`?section=__KNOWLEDGE_BASE__&draftQuestion=`), unsaved until the person saves
 - `Admin.js` — Admin API endpoints
@@ -189,10 +200,26 @@ for the four dimensions lives in `src/utils/CallInsights.js`.
   opened call): after the summary, the topics as tags, the four dimensions under the value table, the
   unanswered questions with their reason and suggestion, the checks that fired. A call from before
   the feature draws with none of this.
+- **The judgements as chips** (`src/components/feedback/`; brief
+  [2026-10-27-classification-feedback](briefs/2026-10-27-classification-feedback.md)): `CallJudgements.vue` in the
+  call's panel, on the pages that ask for it (`with-judgements`: the conversations page, the restaurant call dialog),
+  draws the resolution, the message and each request's outcome and category as `JudgementChip.vue` (a button naming
+  value and state; a listbox, a bottom sheet under 600 px), with the history under a chip (`JudgementHistory.vue`);
+  an owner's call reads its judgements when opened or in view, a non-owner's only when the person opens a chip, and
+  every gesture, undo, restore and refusal reads them again. `UndoBar.vue` is the page's one undo (a live region, no
+  time limit); `BulkBar.vue` the bar of a list's selected rows. Booked and transferred carry "Report an error". The
+  words of a judgement are `labels.js`. A non-owner's page (`Classifications.isOwnerOf` on the business's owner) is
+  read-only: reduced rows opened on request, no owner-only control, the recording from the one-time link.
+  `FeedbackQueue.vue` ("Corrections to review", an admin's) and `MyProposals.vue` ("My proposals") draw StarChat's
+  grouped queue. `widgets/CallsAccessSettings.vue` is the owner's settings page `__CALLS_ACCESS__` (the numbers
+  treated as spam, who opened the calls).
 - **The list's filters** (`Conversations.vue`): resolution and message `Dropdown`s (marked
   "Assessed by the assistant"), a booked `Dropdown`, and "transferred" and "unanswered questions"
   `ToggleButton`s, all folded into the
-  one `searchBody(extra)` the list, its poll, both exports and the two bulk actions all build from.
+  one `searchBody(extra)` the list, its poll, both exports and the two bulk actions all build from. A count's link
+  carries its filter in the address (`Classifications.searchFromQuery`), each shown as a chip that undoes it; a
+  count's list keeps archived calls, and a report count's list says how many calls it leaves out for the reader
+  (`leftOut`). A selection column (long-press under 600 px) corrects the selected calls' outcome in one gesture.
 - **The analytics pages** (`src/components/analytics/`; StarChat's brief docs/briefs/2026-10-24-insights-reports-ux.md
   for the reports, jobs and requests). `Analytics.vue` and `AnalyticsAdmin.vue` fetch the outcomes, topics and
   quality and pass them to presentational sections (`CallOutcomes.vue`, `CallTopics.vue`, `CallQuality.vue`);
