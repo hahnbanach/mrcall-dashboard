@@ -2481,7 +2481,9 @@
             "applied": "Toegepast",
             "rejected": "Afgewezen",
             "reverted": "Ongedaan gemaakt",
-            "orphaned": "Verzoek niet meer gevonden"
+            "orphaned": "Verzoek niet meer gevonden",
+            "confirmed": "Bevestigd",
+            "closed": "Afgehandeld door MrCall"
           }
         },
         "undo": {
@@ -2530,7 +2532,8 @@
             "requestOutcome": "Uitkomst van het verzoek",
             "noConversation": "Geen gesprek",
             "corrected": "Gecorrigeerd"
-          }
+          },
+          "counted": "Oproepen: zoals de statistieken ze tellen, gearchiveerde inbegrepen"
         },
         "bulk": {
           "label": "Geselecteerde oproepen",

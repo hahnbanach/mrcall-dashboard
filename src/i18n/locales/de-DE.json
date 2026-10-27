@@ -2483,7 +2483,9 @@
             "applied": "Übernommen",
             "rejected": "Abgelehnt",
             "reverted": "Rückgängig gemacht",
-            "orphaned": "Anfrage nicht mehr gefunden"
+            "orphaned": "Anfrage nicht mehr gefunden",
+            "confirmed": "Bestätigt",
+            "closed": "Von MrCall bearbeitet"
           }
         },
         "undo": {
@@ -2532,7 +2534,8 @@
             "requestOutcome": "Ergebnis der Anfrage",
             "noConversation": "Kein Gespräch",
             "corrected": "Korrigiert"
-          }
+          },
+          "counted": "Anrufe: wie die Statistik sie zählt, archivierte eingeschlossen"
         },
         "bulk": {
           "label": "Ausgewählte Anrufe",

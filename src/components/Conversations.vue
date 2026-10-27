@@ -43,6 +43,7 @@
             :expanded="true"
             :eager="true"
             :read-only="readOnly"
+            :with-judgements="true"
             @error="recordingFailed"
           />
         </div>
@@ -507,6 +508,7 @@
                 :user="user"
                 :expanded="messagesExpanded"
                 :read-only="readOnly"
+                :with-judgements="true"
                 @error="recordingFailed"
               />
             </div>
@@ -585,6 +587,7 @@
         :value-label="$t('components.callInsights.feedback.bulk.changeOutcome')"
         :name="$t('components.callInsights.feedback.bulk.changeOutcome')"
         :entries="bulkOutcomeEntries"
+        :upward="true"
         :busy="bulkBusy"
         @choose="bulkResolution('wrong_value', $event.value)"
       />
@@ -593,8 +596,10 @@
       <Button type="button" size="small" text :label="$t('components.callInsights.feedback.bulk.clear')" @click="clearSelection" />
     </div>
     <p v-if="bulkNote" class="bulk-note conversation-table-container" role="status">{{ bulkNote }}</p>
+    <!-- room under the last card for the bar fixed at the bottom -->
+    <div v-if="selected.size > 0" class="bulk-bar-room" aria-hidden="true"></div>
     <!-- The one undo of a gesture on the calls' judgements -->
-    <UndoBar :raised="selected.size > 0 && narrow" />
+    <UndoBar :raised="selected.size > 0" />
   </div>
 </template>
 
@@ -726,7 +731,9 @@ export default {
       return !this.isOwner;
     },
     addressChips() {
-      return this.addressFilters.map((f) => ({ key: f.key, text: this.addressFilterText(f) }));
+      const chips = this.addressFilters.map((f) => ({ key: f.key, text: this.addressFilterText(f) }));
+      if (this.counted) chips.push({ key: "counted", text: this.$t("components.callInsights.feedback.filters.counted") });
+      return chips;
     },
     bulkOutcomeEntries() {
       return CallInsights.RESOLUTION_KEYS.map((key) => ({ key, value: key, kind: "value", label: this.$t("components.callInsights.resolution." + key) }));
@@ -897,6 +904,7 @@ export default {
       }
     },
     removeAddressFilter(key) {
+      if (key === "counted") this.counted = false;
       const f = Classifications.ADDRESS_FILTERS.find((x) => x.key === key);
       this.addressFilters = this.addressFilters.filter((x) => x.key !== key);
       const body = { ...this.addressBody };
@@ -1026,9 +1034,11 @@ export default {
     // specific to one caller (pagination, `lightweight`, the poll's own `timestampGte`), applied
     // after the shared fields so it can override them.
     searchBody(extra = {}) {
+      // A count's list is the calls the statistics count, archived ones included (StarChat's `counted`: finalised and
+      // not deleted); the inbox's narrowing to calls not archived would make it shorter than its count.
       const body = {
         businessId: this.businessId,
-        ...this.getViewFilters(),
+        ...(this.counted ? {} : this.getViewFilters()),
       };
       if (this.timestampGte != null) body.timestampGte = this.timestampGte;
       if (this.timestampLte != null) body.timestampLte = this.timestampLte;
@@ -2273,8 +2283,11 @@ export default {
 }
 
 .bulk-bar {
-  position: sticky;
-  top: 0;
+  position: fixed;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  width: calc(100% - 32px);
   z-index: 900;
   display: flex;
   flex-wrap: wrap;
@@ -2289,15 +2302,18 @@ export default {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 
   &.bulk-bar-bottom {
-    position: fixed;
-    top: auto;
     left: 0;
-    right: 0;
     bottom: 0;
+    transform: none;
+    width: 100%;
     max-width: none;
     margin: 0;
     border-radius: 12px 12px 0 0;
   }
+}
+
+.bulk-bar-room {
+  height: 96px;
 }
 
 .bulk-count {

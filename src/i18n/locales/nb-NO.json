@@ -2481,7 +2481,9 @@
             "applied": "Tatt i bruk",
             "rejected": "Avvist",
             "reverted": "Angret",
-            "orphaned": "Forespørselen finnes ikke lenger"
+            "orphaned": "Forespørselen finnes ikke lenger",
+            "confirmed": "Bekreftet",
+            "closed": "Håndtert av MrCall"
           }
         },
         "undo": {
@@ -2530,7 +2532,8 @@
             "requestOutcome": "Utfall av forespørselen",
             "noConversation": "Ingen samtale",
             "corrected": "Rettet"
-          }
+          },
+          "counted": "Samtaler: slik statistikken teller dem, arkiverte medregnet"
         },
         "bulk": {
           "label": "Valgte samtaler",

@@ -7,7 +7,8 @@ import { reactive } from "vue";
  * `gestureId` (`POST insights/feedback/gestures/{gestureId}/revert`).
  *
  * `affected` names the calls the gesture touched, so that each call shown re-reads its judgements once the gesture is
- * undone (`undone` counts the undos; a component watches it). `reload` is what a list runs after an undo of a gesture
+ * made and once it is undone (`recorded` and `undone` count them; a component watches both, skipping the gesture it made
+ * itself, which it reads again on its own). `reload` is what a list runs after an undo of a gesture
  * it made (a bulk gesture changes rows, not one panel).
  */
 const state = reactive({
@@ -16,14 +17,19 @@ const state = reactive({
     reload: null,
     undone: 0,
     lastUndone: { gestureId: null, affected: [] },
+    // every gesture made, with its calls and the panel that made it: the other panels of those calls read again
+    recorded: 0,
+    lastRecorded: { gestureId: null, affected: [], origin: null },
 });
 
 export default {
     state,
-    record(gestureId, affected, reload = null) {
+    record(gestureId, affected, reload = null, origin = null) {
         state.gestureId = gestureId;
         state.affected = Array.isArray(affected) ? [...affected] : [];
         state.reload = reload;
+        state.lastRecorded = { gestureId, affected: state.affected, origin };
+        state.recorded += 1;
     },
     clear() {
         state.gestureId = null;

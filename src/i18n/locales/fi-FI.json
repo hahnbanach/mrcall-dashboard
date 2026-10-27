@@ -2481,7 +2481,9 @@
             "applied": "Otettu käyttöön",
             "rejected": "Hylätty",
             "reverted": "Peruttu",
-            "orphaned": "Pyyntöä ei enää löydy"
+            "orphaned": "Pyyntöä ei enää löydy",
+            "confirmed": "Vahvistettu",
+            "closed": "MrCall käsitteli"
           }
         },
         "undo": {
@@ -2530,7 +2532,8 @@
             "requestOutcome": "Pyynnön lopputulos",
             "noConversation": "Ei keskustelua",
             "corrected": "Korjattu"
-          }
+          },
+          "counted": "Puhelut: kuten tilastot ne laskevat, arkistoidut mukaan lukien"
         },
         "bulk": {
           "label": "Valitut puhelut",

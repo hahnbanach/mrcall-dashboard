@@ -2487,7 +2487,9 @@
             "applied": "Applicata",
             "rejected": "Respinta",
             "reverted": "Annullata",
-            "orphaned": "Richiesta non più trovata"
+            "orphaned": "Richiesta non più trovata",
+            "confirmed": "Confermata",
+            "closed": "Gestita da MrCall"
           }
         },
         "undo": {
@@ -2536,7 +2538,8 @@
             "requestOutcome": "Esito della richiesta",
             "noConversation": "Nessuna conversazione",
             "corrected": "Corretta"
-          }
+          },
+          "counted": "Chiamate: come le contano le statistiche, archiviate comprese"
         },
         "bulk": {
           "label": "Chiamate selezionate",

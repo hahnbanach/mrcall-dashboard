@@ -1,7 +1,7 @@
 // @ts-check
 const { expect } = require('@playwright/test')
 const { test } = require('../fixtures/auth')
-const { mockClassifications, mockConversations, conversation, BUSINESS_ID } = require('../fixtures/classifications')
+const { mockClassifications, mockConversations, conversation, judged, BUSINESS_ID } = require('../fixtures/classifications')
 
 /**
  * Brief docs/briefs/2026-10-27-classification-feedback.md, scope 4 (StarChat's brief, decision 9, "In lists" and
@@ -10,6 +10,8 @@ const { mockClassifications, mockConversations, conversation, BUSINESS_ID } = re
  * the selected calls in one gesture with one undo, from a bottom bar under 600 px.
  *
  * Seen failing, 2026-10-27, before the address filters and the selection existed in Conversations.vue: every case.
+ * The R2 review's cases (a count's list keeping archived calls, the bar on screen, an opened call's chips after a bulk
+ * gesture) failed on dec211e.
  */
 const calls = [
   conversation({ id: 'CON-a', contactName: 'Anna', details: { callerName: 'Anna', summary: 'A', resolution: 'resolved', message: 'none', booked: false } }),
@@ -22,7 +24,7 @@ const narrow = (page) => page.viewportSize().width < 600
 async function select (page, name) {
   if (narrow(page)) {
     // a long press enters the selection mode; then a tap selects
-    const card = page.locator('.conversation-card').filter({ hasText: name }).first()
+    const card = page.locator('.conversations-list .conversation-card').filter({ hasText: name }).first()
     if (!(await page.getByRole('checkbox', { name: `Select the call of ${name}` }).isVisible())) {
       await card.scrollIntoViewIfNeeded()
       const box = await card.locator('.card-header').boundingBox()
@@ -43,6 +45,10 @@ test.describe('the conversations list: a count\'s filters and corrections in bul
     await expect(page.getByRole('button', { name: 'Remove the filter Unanswered question: Missing information' })).toBeVisible({ timeout: 15000 })
     const listed = searches.filter((s) => !s.id).pop()
     expect(listed).toMatchObject({ businessId: BUSINESS_ID, timestampGte: 1000, timestampLte: 2000, counted: true, gap: 'missing_info', requestCategory: 'prices', requestOutcomes: ['taken'] })
+    // the analytics count archived calls too: a count's list does not narrow them to the inbox (R2 review, finding 2)
+    expect(listed.archived).toBeUndefined()
+    expect(listed.deleted).toBeUndefined()
+    await expect(page.getByRole('button', { name: 'Remove the filter Calls: as the statistics count them, archived included' })).toBeVisible()
     await expect(page.getByRole('button', { name: /^Remove the filter Request outcome: Taken for the business/ })).toBeVisible()
     await page.getByRole('button', { name: 'Remove the filter Unanswered question: Missing information' }).click()
     await expect(page).not.toHaveURL(/gap=/)
@@ -67,6 +73,8 @@ test.describe('the conversations list: a count\'s filters and corrections in bul
     await select(page, 'Bruno')
     const bar = page.getByRole('toolbar', { name: 'Selected calls' })
     await expect(bar).toContainText('2 selected')
+    // on screen where the person is, not at the end of the page (R2 review, finding 3)
+    await expect(bar).toBeInViewport()
     const before = searches.length
     await bar.getByRole('button', { name: 'Mark as spam' }).click()
     await expect.poll(() => sent.filter((s) => s.path === 'bulk').length).toBe(1)
@@ -81,6 +89,17 @@ test.describe('the conversations list: a count\'s filters and corrections in bul
     await undoBar.getByRole('button', { name: 'Undo' }).click()
     await expect.poll(() => sent.filter((s) => s.path === 'gesture-revert').length).toBe(1)
     expect(sent.find((s) => s.path === 'gesture-revert').gestureId).toBe(bulk.body.gestureId)
+  })
+
+  test('after a bulk gesture an opened call\'s chips show the new value (R2 review, finding 1)', async ({ authenticatedPage: page }) => {
+    await mockConversations(page, calls)
+    await mockClassifications(page, { calls: { 'CON-a': judged({ conversationId: 'CON-a', requests: [] }) } })
+    await page.goto(`/conversations?id=${BUSINESS_ID}&conversation=CON-a`)
+    const opened = page.locator('.opened-card')
+    await expect(opened.getByRole('button', { name: /^Resolution: Resolved/ })).toBeVisible({ timeout: 15000 })
+    await select(page, 'Anna')
+    await page.getByRole('toolbar', { name: 'Selected calls' }).getByRole('button', { name: 'Mark as spam' }).click()
+    await expect(opened.getByRole('button', { name: /^Resolution: Spam or wrong number, Corrected/ })).toBeVisible()
   })
 
   test('"change outcome" offers the values; "confirm" confirms; a call without a judged outcome is left out and said', async ({ authenticatedPage: page }) => {

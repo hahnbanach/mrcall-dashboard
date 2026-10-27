@@ -191,7 +191,9 @@ async function mockClassifications (page, options = {}) {
     const reverted = []
     for (const call of Object.values(state.calls)) {
       for (const h of [...call.history].reverse()) {
+        // StarChat reverts a gesture's corrections and confirmations (6d13718c6); a confirmation undone changes no value
         if (h.gestureId === g && h.status === 'applied') { revertEntry(call, h); reverted.push(h.feedbackId) }
+        else if (h.gestureId === g && h.status === 'confirmed') { h.status = 'reverted'; reverted.push(h.feedbackId) }
       }
     }
     json(route, 200, { gestureId: g, reverted })

@@ -91,7 +91,7 @@ function chipState(judgement, history, where, role) {
     const mine = historyOf(history, where);
     const inForce = newest(mine.filter((h) => h.status === "applied"));
     // a confirmation is recorded beside the value and is never the correction in force (StarChat 6d13718c6)
-    const confirmation = newest(mine.filter((h) => h.status === "confirmed"));
+    const confirmation = newest(mine.filter((h) => h.status === "confirmed" && h.valueTo === (judgement || {}).value));
     const ownLatest = newest(mine.filter((h) => h.byMe && h.status !== "reverted"));
     // a proposal of the reader still waiting is said first, whatever was decided on its older ones
     const waiting = mine.some((h) => h.byMe && h.status === "proposed");

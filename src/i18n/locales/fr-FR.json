@@ -2483,7 +2483,9 @@
             "applied": "Appliquée",
             "rejected": "Refusée",
             "reverted": "Annulée",
-            "orphaned": "Demande introuvable"
+            "orphaned": "Demande introuvable",
+            "confirmed": "Confirmée",
+            "closed": "Traitée par MrCall"
           }
         },
         "undo": {
@@ -2532,7 +2534,8 @@
             "requestOutcome": "Issue de la demande",
             "noConversation": "Sans conversation",
             "corrected": "Corrigé"
-          }
+          },
+          "counted": "Appels : comme les comptent les statistiques, archivés compris"
         },
         "bulk": {
           "label": "Appels sélectionnés",

@@ -2481,7 +2481,9 @@
             "applied": "Anvendt",
             "rejected": "Afvist",
             "reverted": "Fortrudt",
-            "orphaned": "Anmodningen findes ikke længere"
+            "orphaned": "Anmodningen findes ikke længere",
+            "confirmed": "Bekræftet",
+            "closed": "Håndteret af MrCall"
           }
         },
         "undo": {
@@ -2530,7 +2532,8 @@
             "requestOutcome": "Udfald af anmodningen",
             "noConversation": "Ingen samtale",
             "corrected": "Rettet"
-          }
+          },
+          "counted": "Opkald: som statistikken tæller dem, arkiverede medregnet"
         },
         "bulk": {
           "label": "Valgte opkald",

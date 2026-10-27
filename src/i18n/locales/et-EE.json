@@ -2481,7 +2481,9 @@
             "applied": "Rakendatud",
             "rejected": "Tagasi lükatud",
             "reverted": "Tagasi võetud",
-            "orphaned": "Päringut enam ei leita"
+            "orphaned": "Päringut enam ei leita",
+            "confirmed": "Kinnitatud",
+            "closed": "MrCall käsitles"
           }
         },
         "undo": {
@@ -2530,7 +2532,8 @@
             "requestOutcome": "Päringu tulemus",
             "noConversation": "Vestlust pole",
             "corrected": "Parandatud"
-          }
+          },
+          "counted": "Kõned: nagu statistika neid loeb, arhiveeritud kaasa arvatud"
         },
         "bulk": {
           "label": "Valitud kõned",

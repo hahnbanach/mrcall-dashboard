@@ -2495,7 +2495,9 @@
             "applied": "Aplicada",
             "rejected": "Rechazada",
             "reverted": "Deshecha",
-            "orphaned": "Solicitud ya no encontrada"
+            "orphaned": "Solicitud ya no encontrada",
+            "confirmed": "Confirmada",
+            "closed": "Gestionada por MrCall"
           }
         },
         "undo": {
@@ -2544,7 +2546,8 @@
             "requestOutcome": "Resultado de la solicitud",
             "noConversation": "Sin conversación",
             "corrected": "Corregida"
-          }
+          },
+          "counted": "Llamadas: como las cuentan las estadísticas, archivadas incluidas"
         },
         "bulk": {
           "label": "Llamadas seleccionadas",

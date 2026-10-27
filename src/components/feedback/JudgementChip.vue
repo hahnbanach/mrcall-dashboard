@@ -9,7 +9,7 @@
       :aria-expanded="open ? 'true' : 'false'"
       :aria-label="accessibleName"
       :title="detail || null"
-      :disabled="busy"
+      :aria-busy="busy ? 'true' : 'false'"
       @click="toggle"
       @keydown.down.prevent="show"
     >
@@ -21,7 +21,7 @@
     <Teleport to="body" :disabled="!sheet">
       <template v-if="open">
         <div v-if="sheet" class="judgement-backdrop" @click="close(true)"></div>
-        <div :class="sheet ? 'judgement-sheet insights-ui' : 'judgement-popover'">
+        <div :class="sheet ? 'judgement-sheet insights-ui' : ['judgement-popover', { 'judgement-popover-up': upward }]">
           <p v-if="sheet" class="judgement-sheet-title">{{ fieldLabel }}</p>
           <ul
             :id="listId"
@@ -78,6 +78,8 @@ export default {
     deferred: { type: Boolean, default: false },
     // an accessible name of its own, for a chip that is an action rather than a value ("Cambia esito")
     name: { type: String, default: null },
+    // the popover opens above the chip (a chip in a bar at the bottom of the screen)
+    upward: { type: Boolean, default: false },
   },
   emits: ["choose", "opening"],
   data() {
@@ -103,7 +105,9 @@ export default {
     optionId(i) {
       return this.uid + "-option-" + i;
     },
+    // busy, the chip keeps its focus and ignores taps: a disabled button would drop the focus to the page
     toggle() {
+      if (this.busy) return;
       if (this.open) this.close(false);
       else this.show();
     },
@@ -183,7 +187,7 @@ export default {
     outline-offset: 2px;
   }
 
-  &:disabled {
+  &[aria-busy="true"] {
     cursor: progress;
   }
 
@@ -220,6 +224,11 @@ export default {
   border: 1px solid @mrcall_borders;
   border-radius: 10px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.judgement-popover-up {
+  top: auto;
+  bottom: calc(100% + 4px);
 }
 
 .judgement-backdrop {

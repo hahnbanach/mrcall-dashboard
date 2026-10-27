@@ -2481,7 +2481,9 @@
             "applied": "Tillämpad",
             "rejected": "Avvisad",
             "reverted": "Ångrad",
-            "orphaned": "Begäran hittas inte längre"
+            "orphaned": "Begäran hittas inte längre",
+            "confirmed": "Bekräftad",
+            "closed": "Hanterad av MrCall"
           }
         },
         "undo": {
@@ -2530,7 +2532,8 @@
             "requestOutcome": "Utfall för begäran",
             "noConversation": "Inget samtal",
             "corrected": "Korrigerad"
-          }
+          },
+          "counted": "Samtal: som statistiken räknar dem, arkiverade inräknade"
         },
         "bulk": {
           "label": "Valda samtal",

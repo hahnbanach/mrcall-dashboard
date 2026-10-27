@@ -119,14 +119,18 @@ test.describe('a call\'s judgements as chips', () => {
     await mockConversations(page, [conversation()])
     const call = judged({
       resolution: { model: 'resolved', value: 'unresolved', corrected: true, previous: ['resolved'] },
-      history: [{ feedbackId: 77, subject: 'call', field: 'resolution', signal: 'wrong_value', valueFrom: 'resolved', valueTo: 'unresolved', source: 'person', status: 'applied', actorRole: 'owner', actorName: 'Mario Rossi', byMe: true, createdAt: Date.UTC(2026, 9, 21, 8) }],
+      history: [
+        { feedbackId: 77, subject: 'call', field: 'resolution', signal: 'wrong_value', valueFrom: 'resolved', valueTo: 'unresolved', source: 'person', status: 'applied', actorRole: 'owner', actorName: 'Mario Rossi', byMe: true, createdAt: Date.UTC(2026, 9, 21, 8) },
+        { feedbackId: 78, subject: 'call', field: 'resolution', signal: 'right', valueFrom: 'unresolved', valueTo: 'unresolved', source: 'person', status: 'confirmed', actorRole: 'reseller', actorName: 'Partner Srl', byMe: false, createdAt: Date.UTC(2026, 9, 22, 8) },
+      ],
     })
     const { sent } = await mockClassifications(page, { calls: { [CALL_ID]: call } })
     await open(page)
     await chip(page, /^Resolution: Unresolved, Corrected/).click()
     await page.getByRole('listbox').getByRole('option', { name: 'History' }).click()
     const history = opened(page).getByRole('list', { name: 'History of Resolution' })
-    await expect(history.getByRole('listitem')).toHaveText([/Resolved → Unresolved, Mario Rossi, .*Applied/])
+    // a confirmation is listed with its own state, never as a raw key (R2 review, finding 6)
+    await expect(history.getByRole('listitem')).toHaveText([/Unresolved confirmed, Partner Srl, .*Confirmed/, /Resolved → Unresolved, Mario Rossi, .*Applied/])
     await choose(page, /^Resolution: Unresolved, Corrected/, 'Restore the analysis\'s value')
     await expect.poll(() => sent.filter((s) => s.path === 'decide').length).toBe(1)
     expect(sent.find((s) => s.path === 'decide')).toMatchObject({ id: 77, move: 'revert' })
@@ -178,6 +182,8 @@ test.describe('a call\'s judgements as chips', () => {
     await page.keyboard.press('Enter')
     await expect.poll(() => sent.filter((s) => s.path === 'feedback').length).toBe(1)
     expect(sent.filter((s) => s.path === 'feedback').pop().body).toMatchObject({ field: 'message', valueFrom: 'none' })
+    // the focus comes back to the chip once the choice is made (R2 review, finding 4)
+    await expect(chip(page, /^Message: No message/)).toBeFocused()
   })
 
   test('under 600 px the listbox opens as a bottom sheet', async ({ authenticatedPage: page }) => {

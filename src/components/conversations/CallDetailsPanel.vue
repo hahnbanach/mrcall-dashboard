@@ -45,6 +45,7 @@
 
       <!-- The judgements as chips a person corrects (CallJudgements); while they are not drawn, today's rows -->
       <CallJudgements
+        v-if="withJudgements"
         :conversation="conversation"
         :business-id="businessId"
         :user="user"
@@ -207,6 +208,8 @@ export default {
     readOnly: { type: Boolean, default: false },
     // the call was opened on purpose (its link): its judgements are read at once rather than when in view
     eager: { type: Boolean, default: false },
+    // the judgements as chips: a page that carries the undo bar and knows the reader's ownership asks for them
+    withJudgements: { type: Boolean, default: false },
   },
   data() {
     return {

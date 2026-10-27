@@ -2486,7 +2486,9 @@
             "applied": "Applied",
             "rejected": "Rejected",
             "reverted": "Undone",
-            "orphaned": "Request no longer found"
+            "orphaned": "Request no longer found",
+            "confirmed": "Confirmed",
+            "closed": "Handled by MrCall"
           }
         },
         "undo": {
@@ -2535,7 +2537,8 @@
             "requestOutcome": "Request outcome",
             "noConversation": "No conversation",
             "corrected": "Corrected"
-          }
+          },
+          "counted": "Calls: as the statistics count them, archived included"
         },
         "bulk": {
           "label": "Selected calls",

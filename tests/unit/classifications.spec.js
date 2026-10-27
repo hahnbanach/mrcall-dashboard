@@ -95,6 +95,8 @@ describe('a chip\'s state, from the judgement and the call\'s history', () => {
     expect(both.kind).toBe('corrected')
     expect(both.correction.feedbackId).toBe(4)
     expect(Classifications.chipState({ model: 'resolved', value: 'resolved', corrected: false }, [{ ...confirmation, status: 'reverted' }], { field: 'resolution' }, 'owner').kind).toBe('model')
+    // a confirmation of another value than the current one (the correction it confirmed was restored) says nothing
+    expect(Classifications.chipState({ model: 'resolved', value: 'resolved', corrected: false }, [{ ...confirmation, valueFrom: 'unresolved', valueTo: 'unresolved' }], { field: 'resolution' }, 'owner').kind).toBe('model')
   })
 
   it('the reader\'s own proposal: sent, then applied or rejected, on the same chip', () => {

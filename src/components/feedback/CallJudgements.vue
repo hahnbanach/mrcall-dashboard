@@ -210,6 +210,11 @@ export default {
       immediate: true,
       handler(value) { this.$emit("chips", value); },
     },
+    // another panel or a list changed this call's judgements: read them again (a bulk gesture, the same call drawn twice)
+    "undo.recorded"() {
+      const last = this.undo.lastRecorded;
+      if (last && last.origin !== this.uid && last.affected.includes(this.conversation.id) && this.loaded) this.load();
+    },
     "undo.undone"() {
       const last = this.undo.lastUndone;
       if (last && last.affected.includes(this.conversation.id) && this.status !== "idle") this.load();
@@ -328,7 +333,7 @@ export default {
       this.busyKey = key;
       try {
         const answer = await Classifications.signal(this.user, ask, gestureId);
-        UndoGesture.record(gestureId, [this.conversation.id]);
+        UndoGesture.record(gestureId, [this.conversation.id], null, this.uid);
         if (field === "resolution" && answer && answer.status === "applied") {
           if (ask.valueTo === "spam_wrong_number") this.offerRule();
           // a rule is the business's owner's: StarChat masks its number to anyone else (a700131a4)
