@@ -166,7 +166,9 @@
         "assistant_without_page": "Der Assistent kann keine Reservierungen annehmen, solange die Restaurantseite aus ist: schalten Sie den Assistenten aus oder die Seite ein.",
         "allergies_required_unavailable": "Allergien können hier noch nicht Pflicht sein: alle Anrufer danach zu fragen wartet auf die Klärung der rechtlichen Frage.",
         "admin_only_skill": "Nur ein Administrator kann diesen Skill hinzufügen. Die Seite war nicht aktuell: Laden Sie sie neu. Bereits konfigurierte Skills können weiterhin bearbeitet werden."
-      }
+      },
+      "savedRefreshFailed": "Die Skill wurde gespeichert, ihre Konfiguration konnte hier jedoch nicht aktualisiert werden. Sichern Sie Ihre Änderungen, bevor Sie die Seite neu laden.",
+      "savedRefreshConflict": "Die Skill wurde gespeichert. Ihre ungespeicherten Skill-Änderungen bleiben erhalten; sichern Sie sie, bevor Sie die gespeicherte Konfiguration neu laden."
     }
   },
   "components": {
@@ -3040,6 +3042,36 @@
         "reconciling": "Ergebnis wird geprüft",
         "pending": "Ausstehend",
         "loadingPending": "Ausstehende Änderungen werden geladen…"
+      },
+      "summary": {
+        "create": "Neue Konfiguration",
+        "replace": "Konfigurationsänderungen",
+        "remove": "Konfiguration entfernen",
+        "active": "Nach dem Speichern: aktiv",
+        "inactive": "Nach dem Speichern: inaktiv",
+        "unspecified": "Diese Änderung legt den Aktivierungsstatus nicht fest.",
+        "removal": "Diese Konfiguration wird nach dem Speichern entfernt.",
+        "additional": "Weitere Einstellungen finden Sie in den technischen Details.",
+        "details": "Technische Details",
+        "yes": "Ja",
+        "no": "Nein",
+        "closed": "Geschlossen",
+        "configuration": "Konfiguration",
+        "accessRefused": "Der Zugriff auf die externe Ressource wurde verweigert. Prüfen Sie die Verbindung und Berechtigungen und speichern Sie erneut. Ihre Änderungen bleiben ausstehend.",
+        "outcomeDetails": "Weitere Informationen finden Sie in den technischen Details.",
+        "monday": "Montag",
+        "tuesday": "Dienstag",
+        "wednesday": "Mittwoch",
+        "thursday": "Donnerstag",
+        "friday": "Freitag",
+        "saturday": "Samstag",
+        "sunday": "Sonntag",
+        "manage": "Verbindung verwalten"
+      },
+      "businessConnection": {
+        "connect": "Google für diesen Assistenten verbinden",
+        "explanation": "Dies autorisiert Google für diesen Assistenten und aktiviert keine Buchung. Beim Speichern wird der Kalenderzugriff erneut geprüft.",
+        "failed": "Die Verbindung konnte nicht gestartet werden. Aktualisieren Sie die Seite und versuchen Sie es erneut."
       }
     },
     "aladminConfigurator": {

@@ -166,7 +166,9 @@
         "assistant_without_page": "L'assistant ne peut pas prendre de réservations tant que la page du restaurant est désactivée : désactivez l'assistant, ou activez la page.",
         "allergies_required_unavailable": "Les allergies ne peuvent pas encore être obligatoires ici : les demander à chaque appelant attend que le point juridique soit réglé.",
         "admin_only_skill": "Seul un administrateur peut ajouter cette skill. La page n'était pas à jour : rechargez-la. Les skills déjà configurées restent modifiables."
-      }
+      },
+      "savedRefreshFailed": "La skill a été enregistrée, mais sa configuration ne peut pas être actualisée ici. Conservez vos modifications avant de recharger la page.",
+      "savedRefreshConflict": "La skill a été enregistrée. Vos modifications de skills non enregistrées ont été conservées ; préservez-les avant de recharger la configuration enregistrée."
     }
   },
   "components": {
@@ -3040,6 +3042,36 @@
         "reconciling": "Vérification en cours",
         "pending": "En attente",
         "loadingPending": "Chargement des modifications en attente…"
+      },
+      "summary": {
+        "create": "Nouvelle configuration",
+        "replace": "Modifications de configuration",
+        "remove": "Supprimer la configuration",
+        "active": "Après enregistrement : active",
+        "inactive": "Après enregistrement : inactive",
+        "unspecified": "Cette modification ne précise pas l’état d’activation.",
+        "removal": "Cette configuration sera supprimée après enregistrement.",
+        "additional": "Des paramètres supplémentaires figurent dans les détails techniques.",
+        "details": "Détails techniques",
+        "yes": "Oui",
+        "no": "Non",
+        "closed": "Fermé",
+        "configuration": "Configuration",
+        "accessRefused": "L’accès à la ressource externe a été refusé. Vérifiez la connexion et les autorisations, puis réessayez d’enregistrer. Les modifications restent en attente.",
+        "outcomeDetails": "Consultez les détails techniques pour plus d’informations.",
+        "monday": "Lundi",
+        "tuesday": "Mardi",
+        "wednesday": "Mercredi",
+        "thursday": "Jeudi",
+        "friday": "Vendredi",
+        "saturday": "Samedi",
+        "sunday": "Dimanche",
+        "manage": "Gérer la connexion"
+      },
+      "businessConnection": {
+        "connect": "Connecter Google pour cet assistant",
+        "explanation": "Cela autorise Google pour cet assistant sans activer les réservations. L’enregistrement vérifiera de nouveau l’accès au calendrier.",
+        "failed": "La connexion n’a pas pu démarrer. Actualisez et réessayez."
       }
     },
     "aladminConfigurator": {

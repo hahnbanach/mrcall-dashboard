@@ -9,7 +9,7 @@ const open = async page => {
   const support = page.locator('#support-small:not(.collapsed) .panel-toggle-btn-small')
   if (await support.isVisible()) await support.click()
 }
-const manage = page => page.getByRole('button', { name: `Manage connection: ${instanceId}`, exact: true })
+const manage = page => page.getByRole('button', { name: 'Manage connection', exact: true })
 const openSaved = async (page, model) => {
   await open(page)
   await expect(manage(page)).toHaveCount(0)

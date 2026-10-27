@@ -165,7 +165,9 @@
         "assistant_without_page": "Assistent ei saa broneeringuid võtta, kuni restorani leht on väljas: lülita assistent välja või leht sisse.",
         "allergies_required_unavailable": "Allergiad ei saa siin veel kohustuslikud olla: igalt helistajalt küsimine ootab õigusliku küsimuse lahendamist.",
         "admin_only_skill": "Seda skilli saab lisada ainult administraator. Leht ei olnud ajakohane: laadi see uuesti. Juba seadistatud skille saab endiselt muuta."
-      }
+      },
+      "savedRefreshFailed": "Skill on salvestatud, kuid selle seadistust ei saanud siin värskendada. Säilitage oma muudatused enne lehe uuesti laadimist.",
+      "savedRefreshConflict": "Skill on salvestatud. Teie salvestamata skill-muudatused säilitati; hoidke need alles enne salvestatud seadistuse uuesti laadimist."
     }
   },
   "components": {
@@ -3041,6 +3043,36 @@
         "reconciling": "Tulemuse kontrollimine",
         "pending": "Ootel",
         "loadingPending": "Ootel muudatuste laadimine…"
+      },
+      "summary": {
+        "create": "Uus seadistus",
+        "replace": "Seadistuse muudatused",
+        "remove": "Eemalda seadistus",
+        "active": "Pärast salvestamist: aktiivne",
+        "inactive": "Pärast salvestamist: mitteaktiivne",
+        "unspecified": "See muudatus ei määra aktiveerimise olekut.",
+        "removal": "See seadistus eemaldatakse pärast salvestamist.",
+        "additional": "Lisaseaded on tehnilistes üksikasjades.",
+        "details": "Tehnilised üksikasjad",
+        "yes": "Jah",
+        "no": "Ei",
+        "closed": "Suletud",
+        "configuration": "Seadistus",
+        "accessRefused": "Juurdepääs välisele ressursile keelati. Kontrollige ühendust ja õigusi ning proovige uuesti salvestada. Muudatused jäävad ootele.",
+        "outcomeDetails": "Lisateavet leiate tehnilistest üksikasjadest.",
+        "monday": "Esmaspäev",
+        "tuesday": "Teisipäev",
+        "wednesday": "Kolmapäev",
+        "thursday": "Neljapäev",
+        "friday": "Reede",
+        "saturday": "Laupäev",
+        "sunday": "Pühapäev",
+        "manage": "Halda ühendust"
+      },
+      "businessConnection": {
+        "connect": "Ühenda Google selle assistendiga",
+        "explanation": "See annab Google’ile loa selle assistendi jaoks ega aktiveeri broneerimist. Salvestamisel kontrollitakse kalendri juurdepääsu uuesti.",
+        "failed": "Ühendust ei saanud alustada. Värskendage ja proovige uuesti."
       }
     },
     "aladminConfigurator": {

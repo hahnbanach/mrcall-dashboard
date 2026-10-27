@@ -165,7 +165,9 @@
         "assistant_without_page": "De assistent kan geen reserveringen aannemen zolang de restaurantpagina uit staat: zet de assistent uit, of de pagina aan.",
         "allergies_required_unavailable": "Allergieën kunnen hier nog niet verplicht zijn: elke beller ernaar vragen wacht tot het juridische punt is opgelost.",
         "admin_only_skill": "Alleen een beheerder kan deze skill toevoegen. De pagina was niet bijgewerkt: laad haar opnieuw. Skills die al zijn ingesteld blijven bewerkbaar."
-      }
+      },
+      "savedRefreshFailed": "De skill is opgeslagen, maar de configuratie kon hier niet worden vernieuwd. Bewaar je wijzigingen voordat je de pagina opnieuw laadt.",
+      "savedRefreshConflict": "De skill is opgeslagen. Je niet-opgeslagen skillwijzigingen zijn behouden; bewaar ze voordat je de opgeslagen configuratie opnieuw laadt."
     }
   },
   "components": {
@@ -3041,6 +3043,36 @@
         "reconciling": "Resultaat wordt gecontroleerd",
         "pending": "Openstaand",
         "loadingPending": "Openstaande wijzigingen laden…"
+      },
+      "summary": {
+        "create": "Nieuwe configuratie",
+        "replace": "Configuratiewijzigingen",
+        "remove": "Configuratie verwijderen",
+        "active": "Na opslaan: actief",
+        "inactive": "Na opslaan: inactief",
+        "unspecified": "Deze wijziging geeft de activeringsstatus niet aan.",
+        "removal": "Deze configuratie wordt na het opslaan verwijderd.",
+        "additional": "Extra instellingen staan in de technische details.",
+        "details": "Technische details",
+        "yes": "Ja",
+        "no": "Nee",
+        "closed": "Gesloten",
+        "configuration": "Configuratie",
+        "accessRefused": "Toegang tot de externe bron is geweigerd. Controleer de verbinding en machtigingen en probeer opnieuw op te slaan. Uw wijzigingen blijven in behandeling.",
+        "outcomeDetails": "Bekijk de technische details voor meer informatie.",
+        "monday": "Maandag",
+        "tuesday": "Dinsdag",
+        "wednesday": "Woensdag",
+        "thursday": "Donderdag",
+        "friday": "Vrijdag",
+        "saturday": "Zaterdag",
+        "sunday": "Zondag",
+        "manage": "Verbinding beheren"
+      },
+      "businessConnection": {
+        "connect": "Google verbinden voor deze assistent",
+        "explanation": "Dit geeft Google toestemming voor deze assistent en activeert geen boekingen. Bij het opslaan wordt de kalendertoegang opnieuw gecontroleerd.",
+        "failed": "De verbinding kon niet worden gestart. Vernieuw en probeer opnieuw."
       }
     },
     "aladminConfigurator": {

@@ -97,7 +97,7 @@ For `provider = 'google_calendar'` there are three kinds of row:
 | Row | Written by | Read by |
 |---|---|---|
 | Per instance: `business_id` and `grant_name` set | `POST /mrcall/v1/mrcall0/oauth/providers/google_calendar/connect` from either skill callback, with the instance's grant name | The calendar skills of that business that name this grant |
-| Shared in a business: `business_id` set, `grant_name = ''` | The same `/connect`, when the skill's saved reference is empty (the manual editor without an instance id, the chat handoff with an empty reference) | The calendar skills of that business, as the fallback when no row matches their grant name |
+| Shared in a business: `business_id` set, `grant_name = ''` | The same `/connect`, when the skill's saved reference is empty (the manual editor without an instance id, the chat handoff with an empty reference), and from the explicit business consent the chat offers beside a pending proposal that creates a calendar skill with no reference (`BusinessSkillConnection`) | The calendar skills of that business, as the fallback when no row matches their grant name |
 | Account level: `business_id = ''`, `grant_name = ''` | The customer registry PUT (`oauth.GOOGLE_CALENDAR`), and `/connect` sent without a business | The registry GET, and `/calendars` called without business and grant. No skill reads it: skill lookups never fall back on an empty business |
 
 The dashboard writes the first two kinds only. It has no account-level connect,
@@ -107,7 +107,7 @@ unread by any skill; their owner can revoke one with
 `DELETE /mrcall/v1/{realm}/oauth/providers/google_calendar` sent with neither
 business nor grant name, which leaves per-skill grants untouched.
 
-**No credential leaves the server.** `GET /mrcall/v1/{realm}/crm/customer/registry`
+**Registry reads expose connection metadata, not credentials.** `GET /mrcall/v1/{realm}/crm/customer/registry`
 returns `oauth.GOOGLE_CALENDAR` as `{connected: true, calendarId}` and nothing
 else. It used to include the Google refresh token, and that route authorizes
 through `ResellerOwnerResolver`, which resolves a reseller to every customer they
@@ -131,6 +131,25 @@ user had picked. Two changes closed that:
 
 The warning is the migration signal: once it stops appearing in the logs, no
 client is sending the old shape any more.
+
+## Business-wide consent from the chat
+
+There is no calendar connection on the Account page and none in the
+`__SEND_DATA__` section; the skills own their connections. Besides the per-skill
+card, the chat offers one business-wide consent: when a pending proposal creates a
+calendar skill whose authorization field has no reference and no default
+(`businessCalendarScopes` in `src/utils/BusinessSkillConnection.js`),
+`BusinessSkillConnection.vue` beside the proposal starts a PKCE authorization with
+a `target: 'business'` context (owner, state digest, allowed calendar scopes, a
+return to the same business's configuration page, checked by `skillOAuthContext`
+in `src/utils/OAuth.js`). The callback connects the shared row of that business
+(`grant_name = ''`) through the provider endpoint. Pending proposals survive the
+round trip and Save still performs its own resource probe; no token is copied from
+an account-level row.
+
+A saved skill whose reference is empty is re-authorized from its own card: the
+chat handoff's Manage connection keeps the saved empty reference, so it reconnects
+the shared row.
 
 ## Secrets
 

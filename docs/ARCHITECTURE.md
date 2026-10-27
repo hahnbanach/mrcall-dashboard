@@ -285,6 +285,18 @@ specified in [development.md](development.md#environment-routing).
 - **Google** — Google Sign-In, and Google Calendar authorization per skill (for a business, under the skill's grant name or the business's shared one), stored by StarChat.
   The client flow and scope constraints are implemented in `src/utils/OAuth.js`.
 
+The chat's business-wide calendar consent (`BusinessSkillConnection.vue` beside a
+pending proposal) is the only calendar authorization outside a skill card; there is
+none on Account or in `__SEND_DATA__`. See
+[Google OAuth](integration/google-oauth.md#business-wide-consent-from-the-chat).
+
+The confirmed skill refresh connects ConfigureAIPanel's confirmed
+saved-phase notices to BusinessConfiguration's guarded saved-configuration read.
+Only clean affected phase projections change; ordinary edits and dirty manual
+skill phases remain local. Outstanding saved phases coalesce across overlapping
+reads, including failures, with owner/business/generation protection. Warnings
+separate page refresh failure or retained edits from the confirmed Save outcome.
+
 ## Cross-Cutting Concerns
 
 ### Authentication
@@ -312,9 +324,11 @@ exchangeCode()   POST the code and verifier to the backend, which holds the
                  client secret and talks to Google
 ```
 
-Skill authorization additionally binds owner, business, exact saved grant,
-phase/instance, supported scopes and a safe local return location to that state.
-The callback consumes and verifies the context before connecting; see the
+Skill authorization binds owner, business, supported scopes and a safe local
+return location to that state. Saved-instance authorization also binds the exact
+saved grant and phase/instance. The business target uses an unnamed business
+grant and excludes phase, instance and operation IDs. The callback consumes and
+verifies either context before connecting; see the
 [skill authorization contract](integration/zylch-integration.md#skill-authorization-handoff).
 
 The dashboard sends the code and verifier to

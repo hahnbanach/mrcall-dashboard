@@ -165,7 +165,9 @@
         "assistant_without_page": "Assistenten kan inte ta emot bokningar medan restaurangsidan är avstängd: stäng av assistenten, eller slå på sidan.",
         "allergies_required_unavailable": "Allergier kan inte vara obligatoriska här ännu: att fråga alla som ringer väntar på att den juridiska frågan klaras ut.",
         "admin_only_skill": "Endast en administratör kan lägga till den här skillen. Sidan var inte uppdaterad: ladda om den. Skills som redan är konfigurerade kan fortfarande redigeras."
-      }
+      },
+      "savedRefreshFailed": "Skillen har sparats, men konfigurationen kunde inte uppdateras här. Spara dina ändringar innan du laddar om sidan.",
+      "savedRefreshConflict": "Skillen har sparats. Dina osparade skilländringar har behållits; spara dem innan du laddar om den sparade konfigurationen."
     }
   },
   "components": {
@@ -3041,6 +3043,36 @@
         "reconciling": "Kontrollerar resultat",
         "pending": "Väntande",
         "loadingPending": "Läser in väntande ändringar…"
+      },
+      "summary": {
+        "create": "Ny konfiguration",
+        "replace": "Konfigurationsändringar",
+        "remove": "Ta bort konfiguration",
+        "active": "Efter sparande: aktiv",
+        "inactive": "Efter sparande: inaktiv",
+        "unspecified": "Den här ändringen anger inte aktiveringsstatus.",
+        "removal": "Den här konfigurationen tas bort efter sparande.",
+        "additional": "Fler inställningar finns i de tekniska detaljerna.",
+        "details": "Tekniska detaljer",
+        "yes": "Ja",
+        "no": "Nej",
+        "closed": "Stängt",
+        "configuration": "Konfiguration",
+        "accessRefused": "Åtkomst till den externa resursen nekades. Kontrollera anslutningen och behörigheterna och försök spara igen. Dina ändringar är fortfarande väntande.",
+        "outcomeDetails": "Se tekniska detaljer för mer information.",
+        "monday": "Måndag",
+        "tuesday": "Tisdag",
+        "wednesday": "Onsdag",
+        "thursday": "Torsdag",
+        "friday": "Fredag",
+        "saturday": "Lördag",
+        "sunday": "Söndag",
+        "manage": "Hantera anslutning"
+      },
+      "businessConnection": {
+        "connect": "Anslut Google för den här assistenten",
+        "explanation": "Detta auktoriserar Google för den här assistenten utan att aktivera bokningar. Kalenderåtkomsten kontrolleras igen när du sparar.",
+        "failed": "Anslutningen kunde inte startas. Uppdatera och försök igen."
       }
     },
     "aladminConfigurator": {

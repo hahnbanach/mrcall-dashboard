@@ -37,6 +37,7 @@
           v-if="selectedMenupage?.collection.id === '__CONFIGURE_AI__' && businessId"
           :business-id="businessId"
           @open-skill="openSkillTarget"
+          @skills-saved="refreshSavedSkills"
       />
       <RestaurantBook
           v-if="selectedMenupage?.collection.id === '__RESTAURANT_BOOKING__' && businessId && user"
@@ -640,11 +641,63 @@ export default {
       isOnboarding,
       selectedMenupage,
       skillFocusTarget: null,
+      skillServerPhases: null,
+      skillRefreshGeneration: 0,
+      skillRefreshPhases: [],
       message,
       countryCodesMap,
     }
   },
   methods: {
+    invalidateSkillRefresh() {
+      this.skillRefreshGeneration++
+      this.skillRefreshPhases = []
+    },
+    rememberSkillBaseline(snapshot = null) {
+      this.invalidateSkillRefresh()
+      this.skillServerPhases = JSON.parse(JSON.stringify(snapshot || this.agentSkillsUtils.readPhaseConfig(this.business?.variables || {})))
+    },
+    async refreshSavedSkills(notice) {
+      const business = this.business
+      const ownerUid = this.user?.uid
+      const businessId = notice.businessId
+      const sameScope = () => this.business === business &&
+        this.businessId === businessId && this.$route.query.id === businessId &&
+        business?.businessId === businessId && this.user?.uid === ownerUid && ownerUid === notice.ownerUid
+      if (!sameScope() || !this.skillServerPhases) return
+      const phases = [...new Set([...this.skillRefreshPhases, ...notice.phases])].filter(phase => ['prefetch', 'during', 'final'].includes(phase))
+      if (!phases.length) return
+      const generation = ++this.skillRefreshGeneration
+      this.skillRefreshPhases = phases
+      const current = () => generation === this.skillRefreshGeneration && sameScope()
+      try {
+        const saved = await this.agentSkillsUtils.getSavedConfiguration(this.user, businessId)
+        if (!current()) return
+        const local = this.agentSkillsUtils.readPhaseConfig(business.variables)
+        let skipped = false
+        const skippedPhases = []
+        for (const phase of phases) {
+          if (JSON.stringify(local[phase]) !== JSON.stringify(this.skillServerPhases[phase]) &&
+              JSON.stringify(local[phase]) !== JSON.stringify(saved[phase])) {
+            skipped = true
+            skippedPhases.push(phase)
+            continue
+          }
+          local[phase] = saved[phase]
+          this.skillServerPhases[phase] = JSON.parse(JSON.stringify(saved[phase]))
+        }
+        this.agentSkillsUtils.writePhaseConfig(business.variables, local)
+        this.skillRefreshPhases = skippedPhases
+        console.debug('Saved skill view refreshed', { businessId, phases, skipped })
+        if (skipped) await this.setMessage('warn', this.t('widgets.agentSkills.savedRefreshConflict'), true, 0, 'skill-refresh')
+        else if (this.message?.source === 'skill-refresh') this.message = undefined
+      } catch (error) {
+        if (current() && !isSessionEnded(error)) {
+          console.debug('Saved skill view refresh unavailable', { businessId })
+          await this.setMessage('warn', this.t('widgets.agentSkills.savedRefreshFailed'), true, 0, 'skill-refresh')
+        }
+      }
+    },
     async openSkillTarget(target) {
       try {
         if (!['prefetch', 'during', 'final'].includes(target.phase) || !target.instanceId) throw new Error('invalid_target')
@@ -669,6 +722,7 @@ export default {
         if (!collection) throw new Error('skill_editor_unavailable')
         for (const [phase, variable] of Object.entries(this.agentSkillsUtils.phaseVariables)) business.variables[variable] = saved[phase]
         this.business = business
+        this.rememberSkillBaseline()
         this.skillFocusTarget = { phase: target.phase, instanceId: target.instanceId }
         await this.switchToMenupage(collection.collection.id)
         await nextTick()
@@ -827,6 +881,7 @@ export default {
         // variables whose type is `apidomain_agent_skills`, so this is what persists the cards. It
         // runs after the business is stored because a business that did not exist a moment ago has
         // no id to configure skills for.
+        const submittedSkillPhases = JSON.parse(JSON.stringify(this.agentSkillsUtils.readPhaseConfig(this.business.variables)))
         const skillsOutcome = await agentSkillsUtils.persistConfiguration(
             this.user,
             response.data && response.data.result ? response.data.result.businessId : this.business.businessId,
@@ -845,6 +900,7 @@ export default {
         }
         if(response.status === 201 || response.status === 200) {
           this.business.businessId = response.data.result.businessId
+          this.rememberSkillBaseline(submittedSkillPhases)
           this.setMessage("success", this.t('components.business.settingsSuccessfullySaved'), false, 5000)
           return true
         }
@@ -1078,6 +1134,7 @@ export default {
             this.user.email,
             this.variablesAnnotations
         )
+        this.rememberSkillBaseline()
         await this.updateMenu() //set menu values
         // The URL decides which section opens. Not a push: this is the first render of the page
         // the person is already on.
@@ -1110,7 +1167,7 @@ export default {
       delete query.draftQuestion
       this.$router.replace({ query }).catch((error) => console.debug("draftQuestion not removed from the address:", error))
     },
-    async setMessage(severity, content, sticky = true, life = 0) {
+    async setMessage(severity, content, sticky = true, life = 0, source = null) {
       //severity: success, info, warn, error
       const id = Date.now()
       this.message = {
@@ -1118,11 +1175,14 @@ export default {
         severity: severity,
         content: content,
         sticky: sticky,
-        life: life
+        life: life,
+        source
       }
     },
   },
   watch: {
+    '$route.query.id'() { this.invalidateSkillRefresh() },
+    'user.uid'() { this.invalidateSkillRefresh() },
     // The page switch of the restaurant skill decides whether the menu has its entry (R8).
     hasRestaurant() {
       if (this.itemsMenu) this.updateMenu()
@@ -1158,6 +1218,7 @@ export default {
     console.log("BusinessConfiguration Called");
   },
   beforeUnmount() {
+    this.invalidateSkillRefresh()
   }
 }
 </script>

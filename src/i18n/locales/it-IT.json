@@ -167,7 +167,9 @@
         "assistant_without_page": "L'assistente non può prendere prenotazioni mentre la pagina del ristorante è spenta: spegni l'assistente, o accendi la pagina.",
         "allergies_required_unavailable": "Qui le allergie non possono ancora essere obbligatorie: chiederle a ogni chiamante aspetta che il punto legale sia chiarito.",
         "admin_only_skill": "Solo un amministratore può aggiungere questa skill. La pagina non era aggiornata: ricaricala. Le skill già configurate restano modificabili."
-      }
+      },
+      "savedRefreshFailed": "La skill è stata salvata, ma la pagina non è riuscita ad aggiornare la configurazione. Conserva le modifiche prima di ricaricare.",
+      "savedRefreshConflict": "La skill è stata salvata. Le modifiche alle skill non ancora salvate sono state mantenute: conservale prima di ricaricare la configurazione salvata."
     },
     "templatedVariable": {
       "unavailable": "{option} non è disponibile con le impostazioni attuali: scegline un'altra."
@@ -3013,6 +3015,36 @@
         "reconciling": "Verifica esito in corso",
         "pending": "In sospeso",
         "loadingPending": "Caricamento delle modifiche in sospeso…"
+      },
+      "summary": {
+        "create": "Nuova configurazione",
+        "replace": "Modifiche alla configurazione",
+        "remove": "Rimuovi configurazione",
+        "active": "Dopo il salvataggio: attiva",
+        "inactive": "Dopo il salvataggio: non attiva",
+        "unspecified": "Questa modifica non specifica lo stato di attivazione.",
+        "removal": "Questa configurazione verrà rimossa dopo il salvataggio.",
+        "additional": "Altre impostazioni sono disponibili nei dettagli tecnici.",
+        "details": "Dettagli tecnici",
+        "yes": "Sì",
+        "no": "No",
+        "closed": "Chiuso",
+        "configuration": "Configurazione",
+        "accessRefused": "L’accesso alla risorsa esterna è stato rifiutato. Controlla il collegamento e i permessi, poi riprova a salvare. Le modifiche restano in attesa.",
+        "outcomeDetails": "Consulta i dettagli tecnici per ulteriori informazioni.",
+        "monday": "Lunedì",
+        "tuesday": "Martedì",
+        "wednesday": "Mercoledì",
+        "thursday": "Giovedì",
+        "friday": "Venerdì",
+        "saturday": "Sabato",
+        "sunday": "Domenica",
+        "manage": "Gestisci collegamento"
+      },
+      "businessConnection": {
+        "connect": "Collega Google per questo assistente",
+        "explanation": "Questo autorizza Google per questo assistente. Non attiva le prenotazioni. Il salvataggio controllerà di nuovo l’accesso al calendario.",
+        "failed": "Impossibile avviare il collegamento. Aggiorna e riprova."
       }
     },
     "aladminConfigurator": {

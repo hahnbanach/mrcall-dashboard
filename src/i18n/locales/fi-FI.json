@@ -165,7 +165,9 @@
         "assistant_without_page": "Avustaja ei voi ottaa varauksia, kun ravintolasivu on pois päältä: kytke avustaja pois tai sivu päälle.",
         "allergies_required_unavailable": "Allergiat eivät voi vielä olla pakollisia täällä: jokaiselta soittajalta kysyminen odottaa oikeudellisen kysymyksen ratkeamista.",
         "admin_only_skill": "Vain ylläpitäjä voi lisätä tämän skillin. Sivu ei ollut ajan tasalla: lataa se uudelleen. Jo määritettyjä skillejä voi edelleen muokata."
-      }
+      },
+      "savedRefreshFailed": "Skill on tallennettu, mutta sen asetuksia ei voitu päivittää tässä. Säilytä muutoksesi ennen sivun lataamista uudelleen.",
+      "savedRefreshConflict": "Skill on tallennettu. Tallentamattomat skill-muutoksesi on säilytetty; ota ne talteen ennen tallennettujen asetusten lataamista uudelleen."
     }
   },
   "components": {
@@ -3041,6 +3043,36 @@
         "reconciling": "Tarkistetaan tulosta",
         "pending": "Odottaa",
         "loadingPending": "Ladataan odottavia muutoksia…"
+      },
+      "summary": {
+        "create": "Uusi määritys",
+        "replace": "Määrityksen muutokset",
+        "remove": "Poista määritys",
+        "active": "Tallennuksen jälkeen: aktiivinen",
+        "inactive": "Tallennuksen jälkeen: ei aktiivinen",
+        "unspecified": "Tämä muutos ei määritä aktivoinnin tilaa.",
+        "removal": "Tämä määritys poistetaan tallennuksen jälkeen.",
+        "additional": "Lisäasetukset ovat teknisissä tiedoissa.",
+        "details": "Tekniset tiedot",
+        "yes": "Kyllä",
+        "no": "Ei",
+        "closed": "Suljettu",
+        "configuration": "Määritys",
+        "accessRefused": "Ulkoisen resurssin käyttö estettiin. Tarkista yhteys ja käyttöoikeudet ja yritä tallentaa uudelleen. Muutoksesi odottavat edelleen.",
+        "outcomeDetails": "Katso lisätietoja teknisistä tiedoista.",
+        "monday": "Maanantai",
+        "tuesday": "Tiistai",
+        "wednesday": "Keskiviikko",
+        "thursday": "Torstai",
+        "friday": "Perjantai",
+        "saturday": "Lauantai",
+        "sunday": "Sunnuntai",
+        "manage": "Hallitse yhteyttä"
+      },
+      "businessConnection": {
+        "connect": "Yhdistä Google tälle avustajalle",
+        "explanation": "Tämä valtuuttaa Googlen tälle avustajalle aktivoimatta ajanvarausta. Kalenterin käyttöoikeus tarkistetaan uudelleen tallennettaessa.",
+        "failed": "Yhteyttä ei voitu aloittaa. Päivitä ja yritä uudelleen."
       }
     },
     "aladminConfigurator": {

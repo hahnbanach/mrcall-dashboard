@@ -165,7 +165,9 @@
         "assistant_without_page": "Assistenten kan ikke tage imod bookinger, mens restaurantsiden er slået fra: slå assistenten fra, eller siden til.",
         "allergies_required_unavailable": "Allergier kan ikke være obligatoriske her endnu: at spørge alle, der ringer, venter på, at det juridiske spørgsmål er afklaret.",
         "admin_only_skill": "Kun en administrator kan tilføje denne skill. Siden var ikke opdateret: genindlæs den. Skills, der allerede er konfigureret, kan stadig redigeres."
-      }
+      },
+      "savedRefreshFailed": "Skillen er gemt, men konfigurationen kunne ikke opdateres her. Bevar dine ændringer, før du genindlæser siden.",
+      "savedRefreshConflict": "Skillen er gemt. Dine ikke-gemte skillændringer er bevaret; bevar dem, før du genindlæser den gemte konfiguration."
     }
   },
   "components": {
@@ -3041,6 +3043,36 @@
         "reconciling": "Kontrollerer resultat",
         "pending": "Afventer",
         "loadingPending": "Indlæser ventende ændringer…"
+      },
+      "summary": {
+        "create": "Ny konfiguration",
+        "replace": "Konfigurationsændringer",
+        "remove": "Fjern konfiguration",
+        "active": "Efter lagring: aktiv",
+        "inactive": "Efter lagring: inaktiv",
+        "unspecified": "Denne ændring angiver ikke aktiveringsstatus.",
+        "removal": "Denne konfiguration fjernes efter lagring.",
+        "additional": "Flere indstillinger findes i de tekniske detaljer.",
+        "details": "Tekniske detaljer",
+        "yes": "Ja",
+        "no": "Nej",
+        "closed": "Lukket",
+        "configuration": "Konfiguration",
+        "accessRefused": "Adgang til den eksterne ressource blev afvist. Kontrollér forbindelsen og tilladelserne, og prøv at gemme igen. Dine ændringer afventer stadig.",
+        "outcomeDetails": "Se tekniske detaljer for flere oplysninger.",
+        "monday": "Mandag",
+        "tuesday": "Tirsdag",
+        "wednesday": "Onsdag",
+        "thursday": "Torsdag",
+        "friday": "Fredag",
+        "saturday": "Lørdag",
+        "sunday": "Søndag",
+        "manage": "Administrer forbindelse"
+      },
+      "businessConnection": {
+        "connect": "Tilslut Google for denne assistent",
+        "explanation": "Dette godkender Google for denne assistent uden at aktivere booking. Kalenderadgangen kontrolleres igen, når du gemmer.",
+        "failed": "Forbindelsen kunne ikke startes. Opdater og prøv igen."
       }
     },
     "aladminConfigurator": {

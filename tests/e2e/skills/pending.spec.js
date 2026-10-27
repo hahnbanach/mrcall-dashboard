@@ -195,7 +195,7 @@ test('actual nested labels and label-only before/after stay readable alongside S
   await preview.scrollIntoViewIfNeeded()
   const bounds = await preview.boundingBox()
   for (const label of ['Original label', 'Changed label']) {
-    const field = await preview.getByText(label, { exact: true }).boundingBox()
+    const field = await preview.getByTestId('skill-summary').getByText(label, { exact: true }).boundingBox()
     expect(field.y).toBeGreaterThanOrEqual(bounds.y)
     expect(field.y + field.height).toBeLessThanOrEqual(bounds.y + bounds.height)
   }
