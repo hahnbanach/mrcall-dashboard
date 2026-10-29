@@ -1,6 +1,6 @@
 ---
-doc_baseline_commit: ab4ca78fcabd47371e4cac3b4e9ea932d6381fa3
-doc_baseline_date: 2026-10-27
+doc_baseline_commit: 4e6fb4faf3f8838da4da58d36b7049f2f73f9c54
+doc_baseline_date: 2026-10-29
 ---
 
 # Active Context
@@ -11,25 +11,19 @@ Scope: Current dashboard operating state, unresolved verification limits, and im
 
 ## State now
 
-TEST serves v2.2.38-test at ab4ca78f, successful workflow40563308648.
-All 104 served JS/CSS assets answer HTTP200 and match CI build names; booking
-configured visibility and prior Sheets/booking paths are present. The backend
-dev-7b9cec51 is ready with nineteen matching hashes and HTTP200 health.
-The reported assistant's read-only status returns configured=true; passive setup
-is hidden despite managed alignment state=prepared. Disabled/pending groups
-and explicit local failure recovery retain their controls. No customer configuration
-or history is changed. See the [plan](execution-plans/2026-10-27-booking-card-visibility.md).
+Production and TEST serve the tested v2.2.38 source ab4ca78f.
+Production tag v2.2.38-production succeeds in workflow40879746700; all
+104 served JS/CSS assets match the CI build names and answer HTTP200.
+The production bundle contains Sheets/booking/configured-state paths and points to
+zylch.mrcall.ai and api.mrcall.ai. Backend prod-c40fef81 is healthy,
+with 21 matching source hashes. See the [release plan](execution-plans/2026-10-29-chat-skills-production.md).
 
-The Sheets button authorizes the account and returns to actual column review before
-explicit Save. Customer consent, real model review/language and an actual append
-remain operator-owned. No customer configuration or conversation is changed by this
-release. Production and beta receive no promotion; the dirty v2.1 checkout is untouched.
-
-The five-skill review is compact, the existing connection flow continues to calendar
-selection by name and scoped activation, and fixed English booking summaries are suppressed.
-Local scripted browser/component/layout acceptance and build/lint pass. Actual consent,
-real-model chat and caller booking remain operator-owned. Production retains v2.2.34;
-the dirty v2.1 checkout is untouched. The prior TEST baseline is fd4c94d.
+Sheets authorization returns to actual editable column review before explicit Save.
+Booking uses five separate skills, calendar selection and scoped activation; passive
+setup is hidden for configured groups. The operator confirms TEST setup. Actual
+production consent, model behavior, caller booking and append remain operator-owned.
+The release changes no customer configuration, history or grant and performs no
+model/provider action. Beta and the dirty v2.1 checkout receive no changes.
 
 Session ownership: every nonpublic route needs a session, the Axios interceptor alone ends it,
 and components suppress their failure UI for `isSessionEnded`. Browser tests mock StarChat and
@@ -40,8 +34,8 @@ mrcall-agent.
 - The AI chat SSE client uses native fetch and bypasses the Axios interceptor; WebSockets
   (Whatsappweb, the Aladdin configurator, TestChat, the webcall text chat and voice button) do
   not pass through it either. See [harness-backlog](harness-backlog.md).
-- Actual Sheets consent, model column-review quality and post-call append remain
-  operator-owned acceptance; the operator confirms the existing booking flow works.
+- Actual production consent, model behavior, caller booking and post-call append
+  remain operator-owned acceptance; the operator confirms TEST setup works.
 - On `v2.2.34`, the first callback response of the reported calendar Save is unexplained; the
   call-history reads available returned no record for it.
 - `tests/unit/skillsOwnerSave.spec.js` takes 3.5 to 5.3 s against a 5 s timeout in a fresh
@@ -57,9 +51,7 @@ mrcall-agent.
 
 ## Next
 
-- Operator: reload TEST and verify Sheets consent, actual column review/editing and post-call append.
+- Operator: verify the production flow and actual call results with the chosen account.
 - Remove `__BOOKING__` from `menuGroups` after StarChat's move is on test.
 - Classification feedback (StarChat plan step C8) is being built on a branch from `v2.2` and
   lands by fast-forward after review.
-- Promoting the chat skill work beyond test requires promoting mrcall-agent first, plus
-  authorization.

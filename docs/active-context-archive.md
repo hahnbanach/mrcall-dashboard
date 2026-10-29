@@ -1,3 +1,38 @@
+## 2026-10-29 — Before authorized chat skills production promotion
+
+TEST serves v2.2.38-test at ab4ca78f, successful workflow40563308648.
+All 104 served JS/CSS assets answer HTTP200 and match CI build names; booking
+configured visibility and prior Sheets/booking paths are present. The backend
+dev-7b9cec51 is ready with nineteen matching hashes and HTTP200 health.
+The reported assistant's read-only status returns configured=true; passive setup
+is hidden despite managed alignment state=prepared. Disabled/pending groups
+and explicit local failure recovery retain their controls. No customer configuration
+or history is changed. See the [plan](execution-plans/2026-10-27-booking-card-visibility.md).
+
+The Sheets button authorizes the account and returns to actual column review before
+explicit Save. Customer consent, real model review/language and an actual append
+remain operator-owned. No customer configuration or conversation is changed by this
+release. Production and beta receive no promotion; the dirty v2.1 checkout is untouched.
+
+The five-skill review is compact, the existing connection flow continues to calendar
+selection by name and scoped activation, and fixed English booking summaries are suppressed.
+Local scripted browser/component/layout acceptance and build/lint pass. Actual consent,
+real-model chat and caller booking remain operator-owned. Production retains v2.2.34;
+the dirty v2.1 checkout is untouched. The prior TEST baseline is fd4c94d.
+
+
+
+- Actual Sheets consent, model column-review quality and post-call append remain
+  operator-owned acceptance; the operator confirms the existing booking flow works.
+
+
+- Operator: reload TEST and verify Sheets consent, actual column review/editing and post-call append.
+
+
+- Promoting the chat skill work beyond test requires promoting mrcall-agent first, plus
+  authorization.
+
+
 
 ## 2026-10-27 — Booking-card candidate before authorized TEST publication
 

@@ -55,3 +55,5 @@ guide, both in the StarChat repository. No copy of either lives here.
 
 Cross-repo facts (architecture spanning repos, incident log, operator access)
 live in `~/hb/docs/`, not here.
+
+- [Chat skills production release](execution-plans/2026-10-29-chat-skills-production.md) — verified backend and dashboard promotion of the tested booking/Sheets flow.
