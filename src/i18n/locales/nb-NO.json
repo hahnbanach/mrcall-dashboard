@@ -2007,7 +2007,8 @@
         "history": {
           "emptyDay": "Ingen samtaler {day}",
           "emptyPeriod": "Ingen samtaler fra {from} til {to}",
-          "noReport": "Ingen rapport"
+          "noReport": "Ingen rapport",
+          "coveredFrom": "Den dekker også dagene uten samtaler fra {date}."
         }
       },
       "assistants": {
@@ -2270,7 +2271,9 @@
         "callBackTitle": "Samtaler å ringe tilbake",
         "callBackNote": "Samtaler som ikke ble løst, eller som ble gitt videre til bedriften med en ufullstendig melding.",
         "reviewTitle": "Samtaler som bør gjennomgås",
-        "reviewNote": "Ikke løst, med ubesvarte spørsmål eller kontroller som slo ut."
+        "reviewNote": "Ikke løst, med ubesvarte spørsmål eller kontroller som slo ut.",
+        "quietDays": "Den dekker også dagene uten samtaler fra {from} til {to}.",
+        "quietDay": "Den dekker også en dag uten samtaler, {day}."
       },
       "deleteReport": {
         "title": "Slett rapporten",
@@ -2345,7 +2348,7 @@
         "cycleEmpty": "Den pågående automatiske rapporten har ennå ingen avsluttet dag: det er ingenting å lage nå.",
         "busyYou": "Det pågår allerede en behandling for denne virksomheten, startet av deg {when}.",
         "reads": "{n} analysert samtale | {n} analyserte samtaler",
-        "leftOut": "{n} samtale som ennå ikke er analysert, er ikke med | {n} samtaler som ennå ikke er analysert, er ikke med"
+        "leftOut": "{n} samtale i perioden er ikke med: uten samtale eller ikke analysert. | {n} samtaler i perioden er ikke med: uten samtale eller ikke analysert."
       },
       "recompute": {
         "banner": "{n} samtaler behandlet i denne perioden har ikke den automatiske analysen ennå, så utfall, emner og kvalitet tar dem ikke med.",

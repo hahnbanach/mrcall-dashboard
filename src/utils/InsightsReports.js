@@ -481,8 +481,9 @@ function nextAction(row) {
 }
 
 /*
- * THE CYCLES WITH NO CALL (the amendment of 2026-10-30, rule 9, as StarChat b6c43ca49 serves it): the history's
- * top-level `emptyCycles` ({from, to}, the automatic cycles since the last report that held no call) are no rows of
+ * THE CYCLES WITH NO CALL (the amendment of 2026-10-30, rule 9, as StarChat 2affa35f2 serves it): the history's
+ * top-level `emptyCycles` ({from, to}: the automatic cycles since the last report that held no call, and those the
+ * page's written reports recorded inside their longer periods) are no rows of
  * StarChat's page, so they never count in its total nor shift its paging. The page shows them as rows ("Nessuna
  * chiamata dal … al …"), placed by date among its reports, on the page whose range of period ends covers them: the
  * first and the last page reach open-ended toward the newest and the oldest. Only when the history is in date order
@@ -492,18 +493,23 @@ function nextAction(row) {
 function historyWithEmptyCycles(items, emptyCycles, page) {
     const list = Array.isArray(items) ? items : [];
     const p = page || {};
+    // each cycle once: StarChat merges the cycles the page's written reports recorded with the stretch since the last
+    // one (2affa35f2), and dedupes them; a repeat is drawn once here too
+    const seen = new Set();
     const cycles = (Array.isArray(emptyCycles) ? emptyCycles : [])
-        .filter((c) => c && typeof c.from === "number" && typeof c.to === "number");
+        .filter((c) => c && typeof c.from === "number" && typeof c.to === "number")
+        .filter((c) => { const k = c.from + ":" + c.to; if (seen.has(k)) return false; seen.add(k); return true; });
     if (cycles.length === 0 || (p.sort || "periodEnd") !== "periodEnd" || p.status || (p.type && p.type !== "automatic")) return list;
     const desc = p.direction !== "asc";
     const first = (p.offset || 0) === 0;
     const last = (p.offset || 0) + (p.size || list.length) >= (p.total || 0);
-    const ends = list.map((r) => r.periodEnd);
-    const newest = ends.length ? Math.max(...ends) : null;
-    const oldest = ends.length ? Math.min(...ends) : null;
+    // the page's span, from its oldest report's start to its newest's end: a cycle a written report recorded lies
+    // inside that report's period
+    const newest = list.length ? Math.max(...list.map((r) => r.periodEnd)) : null;
+    const oldest = list.length ? Math.min(...list.map((r) => r.periodStart)) : null;
     const reachesNew = desc ? first : last;
     const reachesOld = desc ? last : first;
-    const shown = cycles.filter((c) => (reachesNew || (newest !== null && c.to <= newest)) && (reachesOld || (oldest !== null && c.to >= oldest)))
+    const shown = cycles.filter((c) => (reachesNew || (newest !== null && c.to <= newest)) && (reachesOld || (oldest !== null && c.from >= oldest)))
         .map((c) => ({ emptyCycle: true, periodStart: c.from, periodEnd: c.to }));
     if (shown.length === 0) return list;
     return [...list, ...shown].sort((a, b) => (desc ? b.periodEnd - a.periodEnd : a.periodEnd - b.periodEnd));

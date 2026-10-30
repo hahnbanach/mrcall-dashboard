@@ -189,3 +189,16 @@ describe('b6c43ca49: the cycles with no call among a page of the history', () =>
     expect(rows.map((r) => r.periodEnd / DAY)).toEqual([86, 93, 100, 101, 102])
   })
 })
+
+/** StarChat 2affa35f2 (seen failing on f4adba8): a page's `emptyCycles` also carry the cycles its written reports
+ * recorded, which lie inside a report's period; and no cycle is drawn twice. */
+describe('2affa35f2: the cycles a written report recorded', () => {
+  const DAY = 86400000
+  const row = (start, end) => ({ periodStart: start * DAY, periodEnd: end * DAY, status: 'done' })
+  it('one inside the oldest report of a middle page is drawn there, once', () => {
+    const items = [row(93, 100), row(80, 93)]
+    const inside = { from: 80 * DAY, to: 81 * DAY }
+    const rows = R.historyWithEmptyCycles(items, [inside, { ...inside }], { offset: 10, total: 30, size: 2, sort: 'periodEnd', direction: 'desc' })
+    expect(rows.filter((r) => r.emptyCycle).map((r) => r.periodStart / DAY)).toEqual([80])
+  })
+})

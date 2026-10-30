@@ -105,6 +105,8 @@
           <router-link v-else-if="row.status === 'done'" :to="detailLink(row)" class="history-period">{{ period(row) }}</router-link>
           <span v-else class="history-period">{{ period(row) }}</span>
           <span v-if="!row.emptyCycle" class="history-days">{{ daysText(row) }}</span>
+          <!-- a written report longer than its cadence: the quiet stretch it begins with (StarChat's `extendedFrom`) -->
+          <span v-if="!row.emptyCycle && typeof row.extendedFrom === 'number'" class="history-days">{{ $t("components.callInsights.reports.history.coveredFrom", { date: day(row.extendedFrom) }) }}</span>
         </template>
         <template #cell-type="{ row }">
           <span v-if="row.emptyCycle">{{ $t("components.callInsights.reports.type.automatic") }}</span>

@@ -2007,7 +2007,8 @@
         "history": {
           "emptyDay": "Ingen opkald den {day}",
           "emptyPeriod": "Ingen opkald fra {from} til {to}",
-          "noReport": "Ingen rapport"
+          "noReport": "Ingen rapport",
+          "coveredFrom": "Den dækker også dagene uden opkald fra {date}."
         }
       },
       "assistants": {
@@ -2270,7 +2271,9 @@
         "callBackTitle": "Opkald der skal ringes tilbage",
         "callBackNote": "Opkald, der ikke blev løst, eller som blev givet videre til virksomheden med en ufuldstændig besked.",
         "reviewTitle": "Opkald, der skal gennemgås",
-        "reviewNote": "Ikke løst, med ubesvarede spørgsmål eller kontroller, der slog ud."
+        "reviewNote": "Ikke løst, med ubesvarede spørgsmål eller kontroller, der slog ud.",
+        "quietDays": "Den dækker også dagene uden opkald fra {from} til {to}.",
+        "quietDay": "Den dækker også en dag uden opkald, {day}."
       },
       "deleteReport": {
         "title": "Slet rapporten",
@@ -2345,7 +2348,7 @@
         "cycleEmpty": "Den igangværende automatiske rapport har endnu ingen afsluttet dag: der er intet at udarbejde lige nu.",
         "busyYou": "Der er allerede en behandling i gang for denne virksomhed, startet af dig den {when}.",
         "reads": "{n} analyseret opkald | {n} analyserede opkald",
-        "leftOut": "{n} opkald, der endnu ikke er analyseret, er ikke med | {n} opkald, der endnu ikke er analyseret, er ikke med"
+        "leftOut": "{n} opkald i perioden er ikke med: uden samtale eller ikke analyseret. | {n} opkald i perioden er ikke med: uden samtale eller ikke analyseret."
       },
       "recompute": {
         "banner": "{n} opkald håndteret i denne periode har endnu ikke den automatiske analyse, så udfald, emner og kvalitet tæller dem ikke med.",

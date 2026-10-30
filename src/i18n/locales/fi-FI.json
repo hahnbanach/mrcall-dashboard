@@ -2007,7 +2007,8 @@
         "history": {
           "emptyDay": "Ei puheluita {day}",
           "emptyPeriod": "Ei puheluita {from}–{to}",
-          "noReport": "Ei raporttia"
+          "noReport": "Ei raporttia",
+          "coveredFrom": "Se kattaa myös puheluttomat päivät {date} alkaen."
         }
       },
       "assistants": {
@@ -2270,7 +2271,9 @@
         "callBackTitle": "Takaisin soitettavat puhelut",
         "callBackNote": "Ratkaisemattomat puhelut tai yritykselle puutteellisen viestin kanssa välitetyt puhelut.",
         "reviewTitle": "Tarkistettavat puhelut",
-        "reviewNote": "Ratkaisemattomat, joissa jäi vastaamattomia kysymyksiä tai tarkistuksia laukesi."
+        "reviewNote": "Ratkaisemattomat, joissa jäi vastaamattomia kysymyksiä tai tarkistuksia laukesi.",
+        "quietDays": "Se kattaa myös puheluttomat päivät {from}–{to}.",
+        "quietDay": "Se kattaa myös puhelutoman päivän {day}."
       },
       "deleteReport": {
         "title": "Poista raportti",
@@ -2345,7 +2348,7 @@
         "cycleEmpty": "Käynnissä olevalla automaattisella raportilla ei ole vielä yhtään päättynyttä päivää: nyt ei ole mitään laadittavaa.",
         "busyYou": "Tälle yritykselle on jo käsittely käynnissä, jonka aloitit {when}.",
         "reads": "{n} analysoitu puhelu | {n} analysoitua puhelua",
-        "leftOut": "{n} vielä analysoimaton puhelu jää ulkopuolelle | {n} vielä analysoimatonta puhelua jää ulkopuolelle"
+        "leftOut": "{n} jakson puhelu ei ole mukana: ilman keskustelua tai analysoimatta. | {n} jakson puhelua ei ole mukana: ilman keskustelua tai analysoimatta."
       },
       "recompute": {
         "banner": "{n} tällä jaksolla hoidetulla puhelulla ei ole vielä automaattista analyysia, joten lopputulokset, aiheet ja laatu eivät laske niitä mukaan.",

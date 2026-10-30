@@ -1,7 +1,7 @@
 // @ts-check
 const { expect } = require('@playwright/test')
 const { test } = require('../fixtures/auth')
-const { mockInsights, BUSINESS_ID, rome, historyRows, reportsPage, REPORT, REPORT_QUALITY } = require('../fixtures/insights')
+const { mockInsights, BUSINESS_ID, rome, historyRows, reportsPage, REPORT, REPORT_QUALITY, SCHEDULE } = require('../fixtures/insights')
 
 /**
  * U19r6, aligned with what StarChat 9.34 at b6c43ca49 answers (the amendment of 2026-10-30): the cycles with no call
@@ -35,6 +35,27 @@ test.describe('rule 9: the cycles with no call', () => {
     await mockInsights(page, { reports: (url) => reportsPage(url, { emptyCycles: EMPTY, schedule: SCHEDULE_EXTENDED }) })
     await page.goto(`/analytics?id=${BUSINESS_ID}&tab=reports`)
     await expect(page.getByText('It covers from Oct 21, 2026: the days since then had no calls.')).toBeVisible({ timeout: 15000 })
+  })
+})
+
+test.describe('rule 9 at 2affa35f2: a written report longer than its cadence', () => {
+  test('its row says from when it covers the days with no call, and the page\'s cycles are drawn once each', async ({ authenticatedPage: page }) => {
+    const rows = historyRows()
+    // the newest row covers 21-27 October after a quiet stretch from the 21st (StarChat's `extendedFrom`)
+    Object.assign(rows[0], { status: 'done', calls: 12, callsManaged: 12, periodStart: rome(2026, 10, 21), periodEnd: rome(2026, 10, 28), extendedFrom: rome(2026, 10, 21) })
+    const recorded = { from: rome(2026, 10, 21), to: rome(2026, 10, 22) }
+    await mockInsights(page, { reports: (url) => reportsPage(url, { rows, schedule: SCHEDULE, emptyCycles: [recorded, { ...recorded }] }) })
+    await page.goto(`/analytics?id=${BUSINESS_ID}&tab=reports`)
+    const written = table(page).getByRole('row').filter({ hasText: 'Oct 21, 2026 – Oct 27, 2026' })
+    await expect(written).toContainText('It also covers the days with no calls from Oct 21, 2026.', { timeout: 15000 })
+    await expect(table(page).getByText('No calls on Oct 21, 2026', { exact: true })).toHaveCount(1)
+  })
+
+  test('the report\'s own page says it too, from its content\'s emptyCycles', async ({ authenticatedPage: page }) => {
+    const report = { ...REPORT, content: { ...REPORT.content, emptyCycles: [{ from: rome(2026, 10, 1), to: rome(2026, 10, 2) }, { from: rome(2026, 10, 2), to: rome(2026, 10, 3) }] } }
+    await mockInsights(page, { report })
+    await page.goto(`/analytics/report?id=${BUSINESS_ID}&start=${report.periodStart}&requestId=${report.requestId}`)
+    await expect(page.getByText('It also covers the days with no calls from Oct 1, 2026 to Oct 2, 2026.')).toBeVisible({ timeout: 15000 })
   })
 })
 

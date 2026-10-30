@@ -2007,7 +2007,8 @@
         "history": {
           "emptyDay": "Kõnesid ei olnud {day}",
           "emptyPeriod": "Kõnesid ei olnud {from}–{to}",
-          "noReport": "Aruannet pole"
+          "noReport": "Aruannet pole",
+          "coveredFrom": "See hõlmab ka kõnedeta päevi alates {date}."
         }
       },
       "assistants": {
@@ -2270,7 +2271,9 @@
         "callBackTitle": "Kõned, millele tagasi helistada",
         "callBackNote": "Lahendamata kõned või ettevõttele puuduliku sõnumiga edastatud kõned.",
         "reviewTitle": "Ülevaatamist vajavad kõned",
-        "reviewNote": "Lahendamata, vastuseta küsimuste või käivitunud kontrollidega."
+        "reviewNote": "Lahendamata, vastuseta küsimuste või käivitunud kontrollidega.",
+        "quietDays": "See hõlmab ka kõnedeta päevi {from}–{to}.",
+        "quietDay": "See hõlmab ka kõnedeta päeva {day}."
       },
       "deleteReport": {
         "title": "Kustuta aruanne",
@@ -2345,7 +2348,7 @@
         "cycleEmpty": "Käimasoleval automaatsel aruandel pole veel ühtegi lõppenud päeva: praegu pole midagi koostada.",
         "busyYou": "Selle ettevõtte jaoks on juba töötlus pooleli, mille algatasid {when}.",
         "reads": "{n} analüüsitud kõne | {n} analüüsitud kõnet",
-        "leftOut": "{n} veel analüüsimata kõne jääb välja | {n} veel analüüsimata kõnet jääb välja"
+        "leftOut": "{n} perioodi kõne pole nende hulgas: vestluseta või analüüsimata. | {n} perioodi kõnet pole nende hulgas: vestluseta või analüüsimata."
       },
       "recompute": {
         "banner": "{n} sellel perioodil käsitletud kõnel ei ole veel automaatset analüüsi, mistõttu tulemused, teemad ja kvaliteet neid ei arvesta.",

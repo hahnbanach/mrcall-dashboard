@@ -2009,7 +2009,8 @@
         "history": {
           "emptyDay": "Keine Anrufe am {day}",
           "emptyPeriod": "Keine Anrufe vom {from} bis {to}",
-          "noReport": "Kein Bericht"
+          "noReport": "Kein Bericht",
+          "coveredFrom": "Er umfasst auch die Tage ohne Anrufe ab {date}."
         }
       },
       "assistants": {
@@ -2272,7 +2273,9 @@
         "callBackTitle": "Anrufe zum Zurückrufen",
         "callBackNote": "Nicht gelöste Anrufe oder solche, die mit unvollständiger Nachricht an das Unternehmen weitergegeben wurden.",
         "reviewTitle": "Zu prüfende Anrufe",
-        "reviewNote": "Nicht gelöst, mit unbeantworteten Fragen oder ausgelösten Prüfungen."
+        "reviewNote": "Nicht gelöst, mit unbeantworteten Fragen oder ausgelösten Prüfungen.",
+        "quietDays": "Er umfasst auch die Tage ohne Anrufe vom {from} bis {to}.",
+        "quietDay": "Er umfasst auch einen Tag ohne Anrufe, den {day}."
       },
       "deleteReport": {
         "title": "Bericht löschen",
@@ -2347,7 +2350,7 @@
         "cycleEmpty": "Der laufende automatische Bericht hat noch keinen abgeschlossenen Tag: Im Moment gibt es nichts vorzubereiten.",
         "busyYou": "Für dieses Unternehmen läuft bereits eine Verarbeitung, von Ihnen gestartet am {when}.",
         "reads": "{n} analysierter Anruf | {n} analysierte Anrufe",
-        "leftOut": "{n} noch nicht analysierter Anruf bleibt außen vor | {n} noch nicht analysierte Anrufe bleiben außen vor"
+        "leftOut": "{n} Anruf des Zeitraums ist nicht dabei: ohne Gespräch oder nicht analysiert. | {n} Anrufe des Zeitraums sind nicht dabei: ohne Gespräch oder nicht analysiert."
       },
       "recompute": {
         "banner": "{n} in diesem Zeitraum bearbeitete Anrufe haben noch keine automatische Analyse, daher zählen Ergebnisse, Themen und Qualität sie nicht mit.",

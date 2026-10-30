@@ -2013,7 +2013,8 @@
         "history": {
           "emptyDay": "Nessuna chiamata il {day}",
           "emptyPeriod": "Nessuna chiamata dal {from} al {to}",
-          "noReport": "Nessun report"
+          "noReport": "Nessun report",
+          "coveredFrom": "Copre anche i giorni senza chiamate dal {date}."
         }
       },
       "assistants": {
@@ -2276,7 +2277,9 @@
         "callBackTitle": "Chiamate da richiamare",
         "callBackNote": "Chiamate non risolte, o passate all'attività con un messaggio incompleto.",
         "reviewTitle": "Chiamate da rivedere",
-        "reviewNote": "Non risolte, con domande senza risposta o controlli scattati."
+        "reviewNote": "Non risolte, con domande senza risposta o controlli scattati.",
+        "quietDays": "Copre anche i giorni senza chiamate dal {from} al {to}.",
+        "quietDay": "Copre anche un giorno senza chiamate, il {day}."
       },
       "deleteReport": {
         "title": "Elimina il report",
@@ -2351,7 +2354,7 @@
         "cycleEmpty": "Il report automatico in corso non ha ancora un giorno concluso: per ora non c'è niente da preparare.",
         "busyYou": "C'è già un'elaborazione in corso per questa attività, avviata da te il {when}.",
         "reads": "{n} chiamata analizzata | {n} chiamate analizzate",
-        "leftOut": "{n} chiamata non ancora analizzata resta fuori | {n} chiamate non ancora analizzate restano fuori"
+        "leftOut": "{n} chiamata del periodo non è tra queste: senza conversazione, o non analizzata. | {n} chiamate del periodo non sono tra queste: senza conversazione, o non analizzate."
       },
       "recompute": {
         "banner": "{n} chiamate gestite in questo periodo non hanno ancora l'analisi automatica, quindi esiti, argomenti e qualità non le contano.",

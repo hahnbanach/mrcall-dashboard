@@ -2012,7 +2012,8 @@
         "history": {
           "emptyDay": "No calls on {day}",
           "emptyPeriod": "No calls from {from} to {to}",
-          "noReport": "No report"
+          "noReport": "No report",
+          "coveredFrom": "It also covers the days with no calls from {date}."
         }
       },
       "assistants": {
@@ -2275,7 +2276,9 @@
         "callBackTitle": "Calls to call back",
         "callBackNote": "Calls not resolved, or passed to the business with an incomplete message.",
         "reviewTitle": "Calls to review",
-        "reviewNote": "Unresolved, with questions left unanswered or checks that fired."
+        "reviewNote": "Unresolved, with questions left unanswered or checks that fired.",
+        "quietDays": "It also covers the days with no calls from {from} to {to}.",
+        "quietDay": "It also covers a day with no calls, {day}."
       },
       "deleteReport": {
         "title": "Delete the report",
@@ -2350,7 +2353,7 @@
         "cycleEmpty": "The automatic report in progress has no finished day yet: there is nothing to prepare now.",
         "busyYou": "There is already a processing in progress for this business, started by you on {when}.",
         "reads": "{n} analysed call | {n} analysed calls",
-        "leftOut": "{n} call not analysed yet is left out | {n} calls not analysed yet are left out"
+        "leftOut": "{n} call of the period is not among them: a call without a conversation, or not analysed. | {n} calls of the period are not among them: calls without a conversation, or not analysed."
       },
       "recompute": {
         "banner": "{n} calls managed in this period do not have the automatic analysis yet, so outcomes, topics and quality do not count them.",

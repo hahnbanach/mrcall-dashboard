@@ -2007,7 +2007,8 @@
         "history": {
           "emptyDay": "Geen gesprekken op {day}",
           "emptyPeriod": "Geen gesprekken van {from} tot {to}",
-          "noReport": "Geen rapport"
+          "noReport": "Geen rapport",
+          "coveredFrom": "Het beslaat ook de dagen zonder gesprekken vanaf {date}."
         }
       },
       "assistants": {
@@ -2270,7 +2271,9 @@
         "callBackTitle": "Gesprekken om terug te bellen",
         "callBackNote": "Gesprekken die niet zijn opgelost, of met een onvolledig bericht aan het bedrijf zijn doorgegeven.",
         "reviewTitle": "Gesprekken om na te kijken",
-        "reviewNote": "Niet opgelost, met onbeantwoorde vragen of controles die afgingen."
+        "reviewNote": "Niet opgelost, met onbeantwoorde vragen of controles die afgingen.",
+        "quietDays": "Het beslaat ook de dagen zonder gesprekken van {from} tot {to}.",
+        "quietDay": "Het beslaat ook een dag zonder gesprekken, {day}."
       },
       "deleteReport": {
         "title": "Het rapport verwijderen",
@@ -2345,7 +2348,7 @@
         "cycleEmpty": "Het lopende automatische rapport heeft nog geen afgeronde dag: er is nu nog niets voor te bereiden.",
         "busyYou": "Er loopt al een verwerking voor dit bedrijf, door u gestart op {when}.",
         "reads": "{n} geanalyseerd gesprek | {n} geanalyseerde gesprekken",
-        "leftOut": "{n} nog niet geanalyseerd gesprek blijft buiten beschouwing | {n} nog niet geanalyseerde gesprekken blijven buiten beschouwing"
+        "leftOut": "{n} gesprek van de periode hoort er niet bij: zonder conversatie, of niet geanalyseerd. | {n} gesprekken van de periode horen er niet bij: zonder conversatie, of niet geanalyseerd."
       },
       "recompute": {
         "banner": "{n} in deze periode afgehandelde gesprekken hebben nog geen automatische analyse, dus afloop, onderwerpen en kwaliteit tellen ze niet mee.",

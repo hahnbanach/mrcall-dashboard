@@ -2021,7 +2021,8 @@
         "history": {
           "emptyDay": "Ninguna llamada el {day}",
           "emptyPeriod": "Ninguna llamada del {from} al {to}",
-          "noReport": "Ningún informe"
+          "noReport": "Ningún informe",
+          "coveredFrom": "Cubre también los días sin llamadas desde el {date}."
         }
       },
       "assistants": {
@@ -2284,7 +2285,9 @@
         "callBackTitle": "Llamadas que devolver",
         "callBackNote": "Llamadas no resueltas, o pasadas al negocio con un mensaje incompleto.",
         "reviewTitle": "Llamadas para revisar",
-        "reviewNote": "No resueltas, con preguntas sin respuesta o controles activados."
+        "reviewNote": "No resueltas, con preguntas sin respuesta o controles activados.",
+        "quietDays": "Cubre también los días sin llamadas del {from} al {to}.",
+        "quietDay": "Cubre también un día sin llamadas, el {day}."
       },
       "deleteReport": {
         "title": "Eliminar el informe",
@@ -2359,7 +2362,7 @@
         "cycleEmpty": "El informe automático en curso aún no tiene ningún día terminado: por ahora no hay nada que preparar.",
         "busyYou": "Ya hay un proceso en curso para este negocio, iniciado por ti el {when}.",
         "reads": "{n} llamada analizada | {n} llamadas analizadas",
-        "leftOut": "{n} llamada aún no analizada queda fuera | {n} llamadas aún no analizadas quedan fuera"
+        "leftOut": "{n} llamada del período no está entre ellas: sin conversación, o no analizada. | {n} llamadas del período no están entre ellas: sin conversación, o no analizadas."
       },
       "recompute": {
         "banner": "{n} llamadas gestionadas en este período aún no tienen el análisis automático, así que resultados, temas y calidad no las cuentan.",

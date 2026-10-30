@@ -45,7 +45,9 @@ test.describe('B1: a report over analysed calls is confirmed, saying what it rea
     const dialog = await openRequest(page)
     await dialog.getByRole('button', { name: 'Continue' }).click()
     await expect(dialog.getByText('253 analysed calls', { exact: true })).toBeVisible({ timeout: 15000 })
-    await expect(dialog.getByText('7 calls not analysed yet are left out', { exact: true })).toBeVisible()
+    // `finalised` also counts calls the assistant did not manage (no conversation), which are never analysed: the
+    // words do not promise they will be (StarChat review of U19r6, m5)
+    await expect(dialog.getByText('7 calls of the period are not among them: calls without a conversation, or not analysed.', { exact: true })).toBeVisible()
   })
 })
 

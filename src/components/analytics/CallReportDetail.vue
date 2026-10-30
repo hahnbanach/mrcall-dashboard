@@ -37,6 +37,8 @@
             <p>{{ $t("components.callInsights.reports.baseOld", { analysed: base.analysed }) }}</p>
             <p v-if="base.kind === 'old'" class="report-note">{{ $t("components.callInsights.reports.baseOldNote") }}</p>
           </template>
+          <!-- an automatic report longer than its cadence: the days with no call it begins with (`content.emptyCycles`) -->
+          <p v-if="quietText">{{ quietText }}</p>
           <p v-if="excluded">{{ $t("components.callInsights.reports.excluded", excluded) }}</p>
           <!-- Requests corrected after the report was written: its counts stay as written; a regeneration reads the corrections -->
           <p v-if="correctedCount > 0" class="report-newer" role="status">
@@ -283,6 +285,17 @@ export default {
     },
     base() {
       return InsightsReports.reportBase(this.content);
+    },
+    // "It also covers the days with no calls from … to …", from the cycles the report recorded (StarChat 2affa35f2)
+    quietText() {
+      const cycles = (Array.isArray(this.content.emptyCycles) ? this.content.emptyCycles : [])
+        .filter((c) => c && typeof c.from === "number" && typeof c.to === "number");
+      if (cycles.length === 0) return null;
+      const from = Math.min(...cycles.map((c) => c.from));
+      const to = Math.max(...cycles.map((c) => c.to));
+      const d = InsightsReports.inclusiveDays(from, to, this.zone, this.$i18n.locale);
+      return d.days <= 1 ? this.$t("components.callInsights.reportDetail.quietDay", { day: d.first })
+        : this.$t("components.callInsights.reportDetail.quietDays", { from: d.first, to: d.last });
     },
     flaggedCaption() {
       return InsightsReports.flaggedCaption(this.content);
