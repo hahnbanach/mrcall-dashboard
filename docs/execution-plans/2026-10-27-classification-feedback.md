@@ -11,7 +11,8 @@ Excerpt: the ordered steps that build the brief's scope (one API module and its 
 and bottom sheet, and the undo bar; the call's judgements and caller rules; the conversations list's filters,
 selection and non-owner view; the count links, the categories view on requests and a category's requests; the
 queues; the settings section; locales and documents), each with its tests seen failing first, then the full gates,
-the code review (StarChat plan C10) and the hand-over.
+the code review (StarChat plan C10) and the hand-over; and P16, the dashboard's repairs of the U19c attack (StarChat
+plan insights-reports-ux, U19r6) with the StarChat fields they assume.
 
 ## Classification
 
@@ -69,7 +70,28 @@ change. The contract is StarChat 9.34.118 (test) plus `3abdd92d1`; the category 
 | P12 | Documentation closure (`doc-end`, as AGENTS.md requires): the lead's reconciliation of the affected docs, the archive of any replaced narrative in `docs/active-context-archive.md` verbatim, `doc-check.py --completion check`, `doc-critic` over the affected docs and the active-context shape; STALE repaired. The baseline is not finalized here: that is the line holder's, at merge | `doc-critic` verdict recorded; mechanical gate clean | in progress: task `c8-classification-feedback`; prior reviews recorded; impact, reconciliation, mechanical and the focused check (the nine specs of this work, 49 passed) recorded; doc-critic STALE on this plan (base, port, P4's files, P9's head), repaired here |
 | P13 | Final review of the whole branch through the final user's path (the Playwright screens, desktop and mobile) by a fresh reviewer, after P12 | APPROVED | planned |
 | P15 | StarChat's additions for the hand-over (brief, second amendment, items 8-11; StarChat `a012b6926`, `f87578328`): the category chip and move on the category list; the six facts reported from one chip; every gesture's answer taken instead of a re-read (signal, revert, apply, reject, bulk, gesture undo), the history kept from what the gesture wrote, a 409 taking its current values; spam over a category's requests on their calls' resolution | Specs first: `classifications.spec` (the state, history, revert, decision and 409 helpers; a correction made elsewhere), `classification-chips.spec` (no read after a gesture or an undo; the six facts), `conversations-feedback.spec` (an opened call's chips from a bulk answer, no read), `categories-requests.spec` (spam with the resolution), each seen failing on `2d39e13`; then lint, vitest, full Playwright; C10 and P13 brought up to date for the changed parts | in progress |
+| P16 | StarChat plan `docs/execution-plans/2026-10-24-insights-reports-ux.md` step U19r6, and U19r5's dashboard part (6): the dashboard's repairs of the U19c attack (StarChat brief `docs/briefs/2026-10-24-insights-reports-ux.md`, "Amendment 2026-10-30", rules 1-6, 8-10 and "Dashboard (minors)"), on this branch, against the fields StarChat is building beside it (section "U19r6: the StarChat fields assumed") | New specs `tests/e2e/insights/u19c-{reports,scope,feedback,calls,contrast}.spec.js` and `tests/unit/u19cRules.spec.js`, written first and seen failing on `c0a4e35` with the fixtures already amended (Playwright desktop 30 of 31, the 31st the version-5 caption kept; vitest 22 of 23, the 23rd a whole-days period kept); then lint, vitest, the full Playwright run; the fixture-against-recorded-answer shape check after StarChat's U19r7a on test; code review U19r6b | code `4e25bb2`, `9ef5e61` (the first full run's repair: the phone tables' header row kept for assistive technology, a share read as one phrase, two pins moved to m13's words). Gates on `9ef5e61`: lint clean; vitest 561 of 561; full Playwright (desktop, tablet, mobile, `E2E_PORT=8097`) 1 948 passed, 4 failed, 9 skipped, the four (mobile, `page.goto` timing out under load: `u19c-reports.spec.js:79`, `:137`, `u19c-scope.spec.js:94`, `:142`) passing alone, 3 times each. On `4e25bb2` the same run had 14 failures, repaired in `9ef5e61`. Not run: the shape check against answers recorded on test, U19r6b |
 | P14 | Hand-over to the StarChat lead and the line holder: the branch and its head; the brief and plan with their verdicts; each acceptance item's code and tests; how each test failed first; the full Playwright line; the not-built items of the brief's gap table; the category-list read proposed to StarChat; the server changes asked (effective values in the signal, bulk and revert answers; the opening recorded once; masked numbers in caller rules; the budget's amount against the no-amount rule); the live re-run after C11 stated as outside this hand-over. No push, tag or deploy | — | planned |
+
+## U19r6: the StarChat fields assumed
+
+The amendment of 2026-10-30 names what StarChat serves, not its field names; StarChat builds them beside this work.
+Each is read in one place, named here so the lead aligns them before the shape check:
+
+| Rule | Field the dashboard reads | Read in |
+|---|---|---|
+| 1 | the report estimate's `finalised` (finalised calls of the period) and `analysed` (those the report reads); "no calls" only from `fits: false, reason: "no_calls"` | `InsightsReports.reportReach`, `InsightsRequestDialog.followEstimate` |
+| 2 | a report's `content.version` (5 for the new `flagged_calls`) | `InsightsReports.flaggedCaption` |
+| 3 | `analytics/assistants` rows' `requestCategories[]` `{category, label, questions}` (as served by 9.34.123) and `latestReport.periodStart`; the requests list `POST insights/categories/{c}/requests?businessId=&all=true` | `AssistantsToReview.asksOf`, `CategoryRequests` |
+| 4 | category rows' `nextActionKind`: `business_info`, `integration` (with `nextAction`), `delegate`, `handled`, `withdrawn`, `unrated`; the unclassified row by `category: null` / `unclassified` | `InsightsReports.nextAction` |
+| 5 | `POST insights/feedback/{id}/withdraw` answering the signal with `status: "withdrawn"` (and `call` when readable); the status `withdrawn` in histories and `GET insights/feedback?mine=true&status=…,withdrawn`; the gesture undo's `items[]` each with `status` (`reverted` or `withdrawn`), `reverted[]` kept for an older answer | `Classifications.withdraw`, `.undoOutcome`, `.withReverted`, `.ownFactReports` |
+| 8 (m7) | report rows' `requesterRole`, as on jobs: no dashboard change | `InsightsReports.requesterLabel` |
+| 9 | history rows' `status: "no_calls"` for a cycle with no calls | `InsightsReports.REPORT_STATUS` |
+| 10 | `previousPartial: true` on `analytics/outcomes` answers and on each `analytics/assistants` row | `InsightsReports.previousPartial` |
+
+Not covered by an assumed field: the KPI cards' changes (`analytics/dashboard`) against a partial window (StarChat
+computes those changes; no `previousPartial` is read there). Rule 7 (the owner's language) and rule 6's server part
+are StarChat's.
 
 ## Locales and intermediate heads
 
