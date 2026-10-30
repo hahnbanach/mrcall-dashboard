@@ -97,12 +97,12 @@
           <div v-for="kpi in kpis" :key="kpi.key" class="kpi-card">
             <div class="kpi-label">{{ $t('components.analytics.kpi.' + kpi.key) }}</div>
             <div class="kpi-value">{{ kpi.text }}</div>
-            <!-- a change over a period before of fewer than 20 calls says nothing: "n.d." (U19 M13) -->
+            <!-- a change over a period before of fewer than 20 calls (U19 M13), or over a partial one (rule 10): "n.d." -->
             <div
               v-if="kpi.change && !kpi.change.available"
               class="kpi-delta delta-neutral"
-              :title="$t('components.callInsights.change.notAvailableHelp')"
-            ><abbr :title="$t('components.callInsights.change.notAvailableHelp')">{{ $t('components.callInsights.change.notAvailable') }}</abbr></div>
+              :title="naHelp(kpi.change)"
+            ><abbr :title="naHelp(kpi.change)">{{ $t('components.callInsights.change.notAvailable') }}</abbr></div>
             <div v-else-if="kpi.change" class="kpi-delta delta-neutral">
               <i :class="deltaIcon(kpi.change.value)"></i>
               {{ formatDeltaPercentage(kpi.change.value) }}
@@ -937,6 +937,9 @@ export default {
       const intensity = value / max;
       return `rgba(0, 104, 255, ${0.15 + intensity * 0.75})`;
     },
+    naHelp(change) {
+      return this.$t(change.reason === "partial" ? "components.callInsights.change.partialHelp" : "components.callInsights.change.notAvailableHelp");
+    },
     deltaIcon(delta) {
       if (delta > 0) return 'pi pi-arrow-up';
       if (delta < 0) return 'pi pi-arrow-down';
@@ -973,15 +976,14 @@ export default {
     // --- Backend → Frontend transformations ---
     transformDashboard(data) {
       if (!data) return data;
-      const prev = data.previousPeriod;
-      // every KPI's change is over the previous period's calls: under 20 of them it is "n.d." (U19 M13)
-      const change = (current, previous) => (prev ? InsightsReports.change(current, previous, prev.totalCalls) : null);
+      // every KPI's change is "n.d." over fewer than 20 previous calls or a partial previous window
+      const ch = InsightsReports.kpiChanges(data);
       return {
         ...data,
-        totalCallsChange: prev ? change(data.totalCalls, prev.totalCalls) : null,
-        avgDurationChange: prev ? change(data.avgCallDurationMs, prev.avgCallDurationMs) : null,
-        totalDurationChange: prev ? change(data.totalCallDurationMs, prev.totalCallDurationMs) : null,
-        uniqueCallersChange: prev ? change(data.uniqueCallers, prev.uniqueCallers) : null,
+        totalCallsChange: ch.totalCalls,
+        avgDurationChange: ch.avgDuration,
+        totalDurationChange: ch.totalDuration,
+        uniqueCallersChange: ch.uniqueCallers,
       };
     },
     transformTimeseries(data) {

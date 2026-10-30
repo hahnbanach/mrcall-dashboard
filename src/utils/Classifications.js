@@ -235,7 +235,7 @@ function bulkEntries(asks, items) {
 /**
  * What an undo did, by StarChat's answer only (the amendment of 2026-10-30, rule 5): its `items`, each signal with its
  * new `status` (`reverted`: an applied correction or a confirmation; `withdrawn`: a proposal, a fact report included),
- * and before that rule the ids it lists as `reverted`. The undo bar says these and nothing else (U19c M4: "Modifica
+ * and the ids it lists as `reverted` and `withdrawn`. The undo bar says these and nothing else (U19c M4: "Modifica
  * annullata." was said over a proposal the undo had left waiting).
  */
 function undoOutcome(answer) {
@@ -243,7 +243,8 @@ function undoOutcome(answer) {
     const listed = new Set(Array.isArray(a.reverted) ? a.reverted : []);
     const items = Array.isArray(a.items) ? a.items : [];
     const reverted = new Set();
-    const withdrawn = new Set();
+    // StarChat (b6c43ca49) lists both: `reverted` and `withdrawn` ids beside the items with their `status`
+    const withdrawn = new Set(Array.isArray(a.withdrawn) ? a.withdrawn : []);
     for (const i of items) {
         if (!i || i.feedbackId == null) continue;
         if (i.status === "withdrawn") withdrawn.add(i.feedbackId);

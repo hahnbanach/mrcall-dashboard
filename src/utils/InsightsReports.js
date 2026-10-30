@@ -128,7 +128,8 @@ function isoDayLabel(iso, locale) {
 /*
  * THE STATES, each to its label key under `components.callInsights.status` (the brief's "status labels").
  * A history row (`ReportPageStatus`): done, claimed, failed (retried the next night), budget_exhausted (the night's
- * budget ran out, retried without limit), written_off (three real failures), no_calls (a cycle with no call).
+ * budget ran out, retried without limit), written_off (three real failures). A cycle with no call is no row of
+ * StarChat's: see `historyWithEmptyCycles`.
  */
 const REPORT_STATUS = {
     done: "ready",
@@ -136,8 +137,6 @@ const REPORT_STATUS = {
     failed: "retryTomorrow",
     budget_exhausted: "postponed",
     written_off: "failed",
-    // a cadence cycle with no calls, which writes no report but leaves its row (the amendment of 2026-10-30, rule 9)
-    no_calls: "noCallsCycle",
 };
 const REPORT_STATUSES = Object.keys(REPORT_STATUS);
 
@@ -238,12 +237,16 @@ function jobResult(job) {
  */
 const REQUESTER_ROLES = ["owner", "reseller", "admin", "system"];
 
-function requester(uid, role, { me, business } = {}) {
+function requester(uid, role, { me, business } = {}, requestedByName = null) {
     if (me && typeof uid === "string" && uid !== "" && uid === me) return { kind: "you" };
     // a request recorded before its role was (`requesterRole` null): the business's owner is still known by its uid
     // (U19 m4); any other account has no name the dashboard can read
     if (role == null && business && typeof uid === "string" && uid !== "" && uid === business.owner) {
         return { kind: "owner", name: business.ownerName || null };
+    }
+    // any other request without its role: the name StarChat gives it (`requestedByName`, on jobs and report rows)
+    if (role == null && typeof requestedByName === "string" && requestedByName.trim() !== "") {
+        return { kind: "named", name: requestedByName.trim() };
     }
     if (!REQUESTER_ROLES.includes(role)) return null;
     if (role === "owner") return { kind: "owner", name: (business && business.ownerName) || null };
@@ -252,8 +255,9 @@ function requester(uid, role, { me, business } = {}) {
 
 // The one label of a requester (`t` the i18n translate function): its words, or a dash.
 function requesterLabel(t, item, context) {
-    const r = requester(item && item.requestedBy, item && item.requesterRole, context);
+    const r = requester(item && item.requestedBy, item && item.requesterRole, context, item && item.requestedByName);
     if (!r) return "—";
+    if (r.kind === "named") return r.name;
     if (r.kind === "owner") {
         return r.name ? t("components.callInsights.requester.owner", { name: r.name }) : t("components.callInsights.requester.ownerNoName");
     }
@@ -380,6 +384,22 @@ function previousPartial(answer) {
     return !!answer && answer.previousPartial === true;
 }
 
+// The four KPIs' changes against the period before (`analytics/dashboard`, its `previousPeriod`), each over the previous
+// period's calls (U19 M13) and "n.d." over a partial previous window (rule 10): the business page's and the admin's.
+function kpiChanges(dashboard) {
+    const d = dashboard || {};
+    const prev = d.previousPeriod;
+    if (!prev) return { totalCalls: null, avgDuration: null, totalDuration: null, uniqueCallers: null };
+    const opts = { partial: previousPartial(d) };
+    const c = (current, previous) => change(current, previous, prev.totalCalls, opts);
+    return {
+        totalCalls: c(d.totalCalls, prev.totalCalls),
+        avgDuration: c(d.avgCallDurationMs, prev.avgCallDurationMs),
+        totalDuration: c(d.totalCallDurationMs, prev.totalCallDurationMs),
+        uniqueCallers: c(d.uniqueCallers, prev.uniqueCallers),
+    };
+}
+
 /*
  * "RICHIESTE DEI CHIAMANTI", what the dashboard does to the rows StarChat orders: an example said by two businesses in
  * near-identical words (case, ’ against ', a comma) is one example (U19 m9); and "other", which says least about what
@@ -461,14 +481,32 @@ function nextAction(row) {
 }
 
 /*
- * The next automatic report covering more days than the cadence (the amendment of 2026-10-30, rule 9): it starts where
- * the last report ended, so it also covers the days since, which had no report of their own. The days it covers, or
- * null when it covers no more than the cadence.
+ * THE CYCLES WITH NO CALL (the amendment of 2026-10-30, rule 9, as StarChat b6c43ca49 serves it): the history's
+ * top-level `emptyCycles` ({from, to}, the automatic cycles since the last report that held no call) are no rows of
+ * StarChat's page, so they never count in its total nor shift its paging. The page shows them as rows ("Nessuna
+ * chiamata dal … al …"), placed by date among its reports, on the page whose range of period ends covers them: the
+ * first and the last page reach open-ended toward the newest and the oldest. Only when the history is in date order
+ * (`sort` periodEnd) and not narrowed to a state or to requested reports, which a cycle with no call is not.
+ * `page`: `{offset, size, total, sort, direction, status, type}`. Each such row carries `emptyCycle: true`.
  */
-function longerThanCadence(next, cadenceDays, zone, locale) {
-    if (!next || !(cadenceDays > 0)) return null;
-    const days = inclusiveDays(next.from, next.to, zone, locale).days;
-    return days > cadenceDays ? days : null;
+function historyWithEmptyCycles(items, emptyCycles, page) {
+    const list = Array.isArray(items) ? items : [];
+    const p = page || {};
+    const cycles = (Array.isArray(emptyCycles) ? emptyCycles : [])
+        .filter((c) => c && typeof c.from === "number" && typeof c.to === "number");
+    if (cycles.length === 0 || (p.sort || "periodEnd") !== "periodEnd" || p.status || (p.type && p.type !== "automatic")) return list;
+    const desc = p.direction !== "asc";
+    const first = (p.offset || 0) === 0;
+    const last = (p.offset || 0) + (p.size || list.length) >= (p.total || 0);
+    const ends = list.map((r) => r.periodEnd);
+    const newest = ends.length ? Math.max(...ends) : null;
+    const oldest = ends.length ? Math.min(...ends) : null;
+    const reachesNew = desc ? first : last;
+    const reachesOld = desc ? last : first;
+    const shown = cycles.filter((c) => (reachesNew || (newest !== null && c.to <= newest)) && (reachesOld || (oldest !== null && c.to >= oldest)))
+        .map((c) => ({ emptyCycle: true, periodStart: c.from, periodEnd: c.to }));
+    if (shown.length === 0) return list;
+    return [...list, ...shown].sort((a, b) => (desc ? b.periodEnd - a.periodEnd : a.periodEnd - b.periodEnd));
 }
 
 export default {
@@ -477,8 +515,9 @@ export default {
     reportReach,
     flaggedCaption,
     nextAction,
-    longerThanCadence,
+    historyWithEmptyCycles,
     previousPartial,
+    kpiChanges,
     atMidnight,
     distinctExamples,
     otherLast,

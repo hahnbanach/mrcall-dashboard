@@ -2007,7 +2007,7 @@
           "covers": "El próximo cubrirá del {from} al {to}.",
           "coversOneDay": "El próximo cubrirá el {day}.",
           "retryOneDay": "El informe del {day} no salió bien: se volverá a intentar esta noche.",
-          "longer": "Cubre {days} día, más que la frecuencia: cubre también los días desde el último informe. | Cubre {days} días, más que la frecuencia: cubre también los días desde el último informe."
+          "extended": "Cubre desde el {date}: los días desde entonces no tuvieron llamadas."
         },
         "type": {
           "automatic": "Automático",
@@ -2017,7 +2017,12 @@
         "base": "Basado en {analysed} de las {managed} llamadas que gestionó el asistente en el período.",
         "baseOld": "Basado en {analysed} llamadas analizadas.",
         "baseOldNote": "De las llamadas anteriores al 10 de octubre no sabemos cuántas gestionó el asistente.",
-        "excluded": "Excluidas: {silent} llamadas en las que quien llamó no habló, {credit} rechazadas por falta de crédito."
+        "excluded": "Excluidas: {silent} llamadas en las que quien llamó no habló, {credit} rechazadas por falta de crédito.",
+        "history": {
+          "emptyDay": "Ninguna llamada el {day}",
+          "emptyPeriod": "Ninguna llamada del {from} al {to}",
+          "noReport": "Ningún informe"
+        }
       },
       "assistants": {
         "title": "Asistentes para revisar",
@@ -2174,8 +2179,7 @@
         "notRunCredit": "No ejecutado: crédito insuficiente",
         "stoppedCredit": "Detenido: crédito insuficiente",
         "cancelled": "Cancelado",
-        "recomputeStopped": "Detenido: crédito insuficiente. Se analizaron {done} de {total} llamadas con el crédito del negocio. Las demás no se analizaron.",
-        "noCallsCycle": "Ninguna llamada"
+        "recomputeStopped": "Detenido: crédito insuficiente. Se analizaron {done} de {total} llamadas con el crédito del negocio. Las demás no se analizaron."
       },
       "reportsTab": {
         "scheduleTitle": "Informes automáticos",

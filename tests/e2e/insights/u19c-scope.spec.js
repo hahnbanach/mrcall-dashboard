@@ -27,7 +27,7 @@ const VIEW = {
     category('messaging', { label: 'Leave a message', nextActionKind: 'handled', nextAction: undefined, outcomes: { met: 8 } }),
     category('complaints', { label: 'Complaints', nextActionKind: 'withdrawn', nextAction: undefined, outcomes: { withdrawn: 4 } }),
     category('insurance', { label: 'Insurance', nextActionKind: 'unrated', nextAction: undefined, outcomes: {} }),
-    category(null, { label: undefined, unclassified: true, nextActionKind: 'none', nextAction: undefined, outcomes: { neither: 3 } }),
+    category(null, { label: undefined, unclassified: true, nextActionKind: 'business_info', nextAction: undefined, outcomes: { neither: 3 } }),
   ],
 }
 

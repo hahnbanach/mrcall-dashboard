@@ -1999,7 +1999,7 @@
           "covers": "Il prossimo coprirà dal {from} al {to}.",
           "coversOneDay": "Il prossimo coprirà il {day}.",
           "retryOneDay": "Il report del {day} non è riuscito: verrà riprovato questa notte.",
-          "longer": "Copre {days} giorno, più della frequenza: copre anche i giorni dall'ultimo report. | Copre {days} giorni, più della frequenza: copre anche i giorni dall'ultimo report."
+          "extended": "Copre dal {date}: i giorni da allora non hanno avuto chiamate."
         },
         "type": {
           "automatic": "Automatico",
@@ -2009,7 +2009,12 @@
         "base": "Basato su {analysed} delle {managed} chiamate gestite dall'assistente nel periodo.",
         "baseOld": "Basato su {analysed} chiamate analizzate.",
         "baseOldNote": "Per le chiamate prima del 10 ottobre non sappiamo quante ne abbia gestite l'assistente.",
-        "excluded": "Escluse: {silent} chiamate in cui il chiamante non ha parlato, {credit} rifiutate per credito."
+        "excluded": "Escluse: {silent} chiamate in cui il chiamante non ha parlato, {credit} rifiutate per credito.",
+        "history": {
+          "emptyDay": "Nessuna chiamata il {day}",
+          "emptyPeriod": "Nessuna chiamata dal {from} al {to}",
+          "noReport": "Nessun report"
+        }
       },
       "assistants": {
         "title": "Assistenti da rivedere",
@@ -2166,8 +2171,7 @@
         "notRunCredit": "Non eseguito: credito insufficiente",
         "stoppedCredit": "Interrotto: credito insufficiente",
         "cancelled": "Annullato",
-        "recomputeStopped": "Interrotto: credito insufficiente. Analizzate {done} chiamate su {total}, che hanno usato il credito dell'attività. Le altre non sono state analizzate.",
-        "noCallsCycle": "Nessuna chiamata"
+        "recomputeStopped": "Interrotto: credito insufficiente. Analizzate {done} chiamate su {total}, che hanno usato il credito dell'attività. Le altre non sono state analizzate."
       },
       "reportsTab": {
         "scheduleTitle": "Report automatici",

@@ -1993,7 +1993,7 @@
           "covers": "Den neste dekker {from} til {to}.",
           "coversOneDay": "Den neste dekker {day}.",
           "retryOneDay": "Rapporten for {day} lyktes ikke: den prøves på nytt i natt.",
-          "longer": "Den dekker {days} dag, mer enn hyppigheten: den dekker også dagene siden den siste rapporten. | Den dekker {days} dager, mer enn hyppigheten: den dekker også dagene siden den siste rapporten."
+          "extended": "Den dekker fra {date}: dagene siden da hadde ingen samtaler."
         },
         "type": {
           "automatic": "Automatisk",
@@ -2003,7 +2003,12 @@
         "base": "Basert på {analysed} av de {managed} samtalene assistenten tok imot i perioden.",
         "baseOld": "Basert på {analysed} analyserte samtaler.",
         "baseOldNote": "For samtaler før 10. oktober vet vi ikke hvor mange assistenten tok imot.",
-        "excluded": "Utelatt: {silent} samtaler der den som ringte, ikke sa noe, {credit} avvist på grunn av manglende kreditt."
+        "excluded": "Utelatt: {silent} samtaler der den som ringte, ikke sa noe, {credit} avvist på grunn av manglende kreditt.",
+        "history": {
+          "emptyDay": "Ingen samtaler {day}",
+          "emptyPeriod": "Ingen samtaler fra {from} til {to}",
+          "noReport": "Ingen rapport"
+        }
       },
       "assistants": {
         "title": "Assistenter å gjennomgå",
@@ -2160,8 +2165,7 @@
         "notRunCredit": "Ikke kjørt: ikke nok kreditt",
         "stoppedCredit": "Stoppet: ikke nok kreditt",
         "cancelled": "Avbrutt",
-        "recomputeStopped": "Stoppet: ikke nok kreditt. {done} av {total} samtaler ble analysert med virksomhetens kreditt. De andre ble ikke analysert.",
-        "noCallsCycle": "Ingen samtaler"
+        "recomputeStopped": "Stoppet: ikke nok kreditt. {done} av {total} samtaler ble analysert med virksomhetens kreditt. De andre ble ikke analysert."
       },
       "reportsTab": {
         "scheduleTitle": "Automatiske rapporter",

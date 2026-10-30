@@ -1993,7 +1993,7 @@
           "covers": "Seuraava kattaa ajan {from}–{to}.",
           "coversOneDay": "Seuraava kattaa päivän {day}.",
           "retryOneDay": "Raportti päivältä {day} ei onnistunut: sitä yritetään uudelleen tänä yönä.",
-          "longer": "Se kattaa {days} päivän, enemmän kuin tiheys: se kattaa myös päivät edellisen raportin jälkeen. | Se kattaa {days} päivää, enemmän kuin tiheys: se kattaa myös päivät edellisen raportin jälkeen."
+          "extended": "Se kattaa ajan {date} alkaen: sen jälkeisinä päivinä ei ollut puheluita."
         },
         "type": {
           "automatic": "Automaattinen",
@@ -2003,7 +2003,12 @@
         "base": "Perustuu {analysed} puheluun niistä {managed} puhelusta, jotka avustaja hoiti jaksolla.",
         "baseOld": "Perustuu {analysed} analysoituun puheluun.",
         "baseOldNote": "10. lokakuuta edeltäneistä puheluista emme tiedä, kuinka monta avustaja hoiti.",
-        "excluded": "Jätetty pois: {silent} puhelua, joissa soittaja ei puhunut, {credit} hylätty saldon puutteen vuoksi."
+        "excluded": "Jätetty pois: {silent} puhelua, joissa soittaja ei puhunut, {credit} hylätty saldon puutteen vuoksi.",
+        "history": {
+          "emptyDay": "Ei puheluita {day}",
+          "emptyPeriod": "Ei puheluita {from}–{to}",
+          "noReport": "Ei raporttia"
+        }
       },
       "assistants": {
         "title": "Tarkistettavat avustajat",
@@ -2160,8 +2165,7 @@
         "notRunCredit": "Ei suoritettu: saldo ei riitä",
         "stoppedCredit": "Pysäytetty: saldo ei riitä",
         "cancelled": "Peruttu",
-        "recomputeStopped": "Pysäytetty: saldo ei riitä. {done} / {total} puhelusta analysoitiin yrityksen saldolla. Muita ei analysoitu.",
-        "noCallsCycle": "Ei puheluita"
+        "recomputeStopped": "Pysäytetty: saldo ei riitä. {done} / {total} puhelusta analysoitiin yrityksen saldolla. Muita ei analysoitu."
       },
       "reportsTab": {
         "scheduleTitle": "Automaattiset raportit",

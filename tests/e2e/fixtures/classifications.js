@@ -223,6 +223,7 @@ async function mockClassifications (page, options = {}) {
     const g = decodeURIComponent(new URL(route.request().url()).pathname.split('/gestures/')[1].split('/')[0])
     sent.push({ method: 'POST', path: 'gesture-revert', gestureId: g })
     const reverted = []
+    const withdrawn = []
     const items = []
     const touched = new Set()
     for (const call of Object.values(state.calls)) {
@@ -235,13 +236,14 @@ async function mockClassifications (page, options = {}) {
         else continue
         h.decidedAt = Date.now()
         if (h.status === 'reverted') reverted.push(h.feedbackId)
+        else withdrawn.push(h.feedbackId)
         touched.add(call)
         // each signal with its new status and its judgement's value now (StarChat 9.34.122's `items`, with `status`)
         const j = judgementOf(call, h)
         items.push({ feedbackId: h.feedbackId, status: h.status, conversationId: call.conversationId, requestId: h.requestId, field: h.field, value: j ? j.value : (call.facts || {})[h.field] })
       }
     }
-    json(route, 200, { gestureId: g, reverted, items, calls: [...touched].map(answered).filter(Boolean) })
+    json(route, 200, { gestureId: g, reverted, withdrawn, items, calls: [...touched].map(answered).filter(Boolean) })
   })
   await page.route(/\/customer\/insights\/feedback\/\d+\/(revert|apply|reject|withdraw)$/, (route) => {
     const [, id, move] = new URL(route.request().url()).pathname.match(/feedback\/(\d+)\/(\w+)$/)

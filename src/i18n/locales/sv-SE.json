@@ -1993,7 +1993,7 @@
           "covers": "Nästa täcker {from} till {to}.",
           "coversOneDay": "Nästa täcker {day}.",
           "retryOneDay": "Rapporten för {day} lyckades inte: den försöks igen i natt.",
-          "longer": "Den täcker {days} dag, mer än intervallet: den täcker också dagarna sedan den senaste rapporten. | Den täcker {days} dagar, mer än intervallet: den täcker också dagarna sedan den senaste rapporten."
+          "extended": "Den täcker från {date}: dagarna sedan dess hade inga samtal."
         },
         "type": {
           "automatic": "Automatisk",
@@ -2003,7 +2003,12 @@
         "base": "Baserad på {analysed} av de {managed} samtal som assistenten hanterade under perioden.",
         "baseOld": "Baserad på {analysed} analyserade samtal.",
         "baseOldNote": "För samtal före den 10 oktober vet vi inte hur många assistenten hanterade.",
-        "excluded": "Utelämnade: {silent} samtal där den som ringde inte sa något, {credit} nekade på grund av otillräcklig kredit."
+        "excluded": "Utelämnade: {silent} samtal där den som ringde inte sa något, {credit} nekade på grund av otillräcklig kredit.",
+        "history": {
+          "emptyDay": "Inga samtal den {day}",
+          "emptyPeriod": "Inga samtal från {from} till {to}",
+          "noReport": "Ingen rapport"
+        }
       },
       "assistants": {
         "title": "Assistenter att granska",
@@ -2160,8 +2165,7 @@
         "notRunCredit": "Inte utförd: otillräcklig kredit",
         "stoppedCredit": "Stoppad: otillräcklig kredit",
         "cancelled": "Avbruten",
-        "recomputeStopped": "Stoppad: otillräcklig kredit. {done} av {total} samtal analyserades med företagets kredit. De övriga analyserades inte.",
-        "noCallsCycle": "Inga samtal"
+        "recomputeStopped": "Stoppad: otillräcklig kredit. {done} av {total} samtal analyserades med företagets kredit. De övriga analyserades inte."
       },
       "reportsTab": {
         "scheduleTitle": "Automatiska rapporter",

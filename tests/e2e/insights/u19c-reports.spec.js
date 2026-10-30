@@ -110,17 +110,6 @@ test.describe('m4, m5: the questions left without an answer', () => {
 })
 
 test.describe('rule 9, m8: the history says every cycle, by its real days', () => {
-  test('a cycle with no calls has its row, and a next period longer than the cadence says why', async ({ authenticatedPage: page }) => {
-    const rows = historyRows()
-    rows.unshift({ periodStart: rome(2026, 10, 21), periodEnd: rome(2026, 10, 28), status: 'no_calls', type: 'automatic', revision: 0, days: 7, failures: 0, createdAt: rome(2026, 10, 28) + 5 * 3600 * 1000, requesterRole: 'system' })
-    const schedule = { cadenceDays: 1, nextAutomatic: { from: rome(2026, 10, 28), to: rome(2026, 10, 31), retry: false, anticipable: true, arrivesAt: Date.UTC(2026, 9, 31, 5) } }
-    await mockInsights(page, { reports: (url) => reportsPage(url, { rows, schedule }) })
-    await page.goto(`/analytics?id=${BUSINESS_ID}&tab=reports`)
-    const row = page.getByRole('table', { name: 'All reports' }).getByRole('row').filter({ hasText: 'Oct 21, 2026 – Oct 27, 2026' })
-    await expect(row).toContainText('No calls', { timeout: 15000 })
-    await expect(page.getByText('It covers 3 days, more than the cadence: it also covers the days since the last report.')).toBeVisible()
-  })
-
   test('a report stored with UTC bounds is labelled with its real start and end, never a day it does not cover', async ({ authenticatedPage: page }) => {
     const rows = [{ periodStart: Date.UTC(2026, 2, 19), periodEnd: Date.UTC(2026, 2, 21), status: 'done', type: 'requested', revision: 0, days: 2, calls: 4, failures: 0, requestId: 'legacy-1', requestedBy: 'admin-uid-12345', requesterRole: 'admin', createdAt: Date.UTC(2026, 2, 22) }]
     await mockInsights(page, { reports: (url) => reportsPage(url, { rows, schedule: SCHEDULE }) })

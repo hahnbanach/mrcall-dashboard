@@ -2,7 +2,7 @@
   <div class="paged-table">
     <InsightsState
       :status="state.status"
-      :empty="state.status === 'ok' && state.items.length === 0"
+      :empty="state.status === 'ok' && shownRows.length === 0"
       :empty-text="emptyText"
       :keep-content="state.status === 'loading' && state.items.length > 0"
       @retry="state.retry()"
@@ -46,7 +46,7 @@
             </tr>
           </thead>
           <tbody>
-            <template v-for="row in state.items" :key="rowKey(row)">
+            <template v-for="row in shownRows" :key="rowKey(row)">
               <tr :class="rowClass ? rowClass(row) : null" v-bind="rowAttrs ? rowAttrs(row) : {}">
                 <td v-for="column in columns" :key="column.key" :data-label="column.label" :class="column.class">
                   <div class="paged-table-cell"><slot :name="'cell-' + column.key" :row="row">{{ row[column.key] }}</slot></div>
@@ -109,8 +109,14 @@ export default {
     rowAttrs: { type: Function, default: null },
     caption: { type: String, required: true },
     emptyText: { type: String, default: "" },
+    // the rows drawn, when the page adds its own among the state's (the history's cycles with no call); never counted
+    // in the total or the paging, which stay the state's
+    rows: { type: Array, default: null },
   },
   computed: {
+    shownRows() {
+      return this.rows || this.state.items;
+    },
     sortable() {
       return this.columns.filter((c) => c.sortKey);
     },

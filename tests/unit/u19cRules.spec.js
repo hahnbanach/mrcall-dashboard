@@ -41,11 +41,11 @@ describe('rule 4: every category row has a next action', () => {
     expect(R.nextAction({ category: 'x', nextActionKind: 'integration', nextAction: 'Connect' })).toEqual({ text: 'Connect' })
     for (const kind of ['delegate', 'handled', 'withdrawn']) expect(R.nextAction({ category: 'x', nextActionKind: kind })).toEqual({ key: kind, opens: false })
     expect(R.nextAction({ category: 'x', nextActionKind: 'unrated' })).toEqual({ key: 'unrated', opens: true })
-    expect(R.nextAction({ category: null, unclassified: true, nextActionKind: 'none' })).toEqual({ key: 'classify', opens: true })
+    expect(R.nextAction({ category: null, unclassified: true, nextActionKind: 'business_info' })).toEqual({ key: 'classify', opens: true })
   })
   it('no row is blank: a kind without its words, or one not known, opens the requests', () => {
     expect(R.nextAction({ category: 'x', nextActionKind: 'integration' })).toEqual({ key: 'open', opens: true })
-    expect(R.nextAction({ category: 'x', nextActionKind: 'none' })).toEqual({ key: 'open', opens: true })
+    expect(R.nextAction({ category: 'x', nextActionKind: 'unknown_kind' })).toEqual({ key: 'open', opens: true })
   })
 })
 
@@ -122,17 +122,6 @@ describe('m8: a period not at the zone\'s midnights', () => {
   })
 })
 
-describe('rule 9: a next period longer than the cadence', () => {
-  it('says its days, or nothing when it is no longer', () => {
-    const from = Date.UTC(2026, 9, 27, 23)
-    expect(R.longerThanCadence({ from, to: from + 3 * 86400000 }, 1, ROME, 'en-US')).toBe(3)
-    expect(R.longerThanCadence({ from, to: from + 86400000 }, 1, ROME, 'en-US')).toBeNull()
-  })
-  it('a cycle with no calls has its own state', () => {
-    expect(R.reportStatusKey({ status: 'no_calls' })).toBe('noCallsCycle')
-  })
-})
-
 describe('m9: Processing counts calls as Panoramica does', () => {
   it('the sessions not finalised are outside the progress and said apart', () => {
     const job = { kind: 'recompute', status: 'done', estimate: { calls: 14 }, counts: { written: 4, not_finalised: 10 } }
@@ -159,5 +148,44 @@ describe('m16: the queue\'s fact sentence, one per fact', () => {
     expect(Object.keys(f).sort()).toEqual([...C.FACT_FIELDS].sort())
     expect(f.booked).toBe('Prenotazione segnalata come sbagliata')
     expect(f.unkept).toBe('Promesse non mantenute segnalate come sbagliate')
+  })
+})
+
+/**
+ * Aligned with StarChat 9.34 at b6c43ca49 (seen failing on a37a133): the undo answers `reverted` and `withdrawn` id
+ * lists beside `items`; a report row or a job without a recorded role carries `requestedByName`; the history's
+ * `emptyCycles` are placed among a page's rows by date.
+ */
+describe('b6c43ca49: the undo\'s id lists', () => {
+  it('a top-level `withdrawn` list is withdrawn, whatever the items say', () => {
+    expect(C.undoOutcome({ reverted: [1], withdrawn: [2], items: [{ feedbackId: 1 }, { feedbackId: 2 }] })).toEqual({ reverted: [1], withdrawn: [2] })
+  })
+})
+
+describe('b6c43ca49: a requester without a recorded role', () => {
+  it('is named by `requestedByName`', () => {
+    const t = (k, v) => (v && v.name ? k + ':' + v.name : k)
+    expect(R.requesterLabel(t, { requestedBy: 'x', requesterRole: null, requestedByName: 'Partner Srl' }, { me: 'me', business: { owner: 'o' } })).toBe('Partner Srl')
+  })
+})
+
+describe('b6c43ca49: the cycles with no call among a page of the history', () => {
+  const DAY = 86400000
+  const row = (end) => ({ periodStart: end - 7 * DAY, periodEnd: end, status: 'done' })
+  const items = [row(100 * DAY), row(93 * DAY), row(86 * DAY)]
+  const cycles = [{ from: 100 * DAY, to: 101 * DAY }, { from: 101 * DAY, to: 102 * DAY }]
+  it('newest first: on the first page, before the reports they follow', () => {
+    const rows = R.historyWithEmptyCycles(items, cycles, { offset: 0, total: 3, size: 10, sort: 'periodEnd', direction: 'desc' })
+    expect(rows.map((r) => (r.emptyCycle ? 'e' : 'r') + r.periodEnd / DAY)).toEqual(['e102', 'e101', 'r100', 'r93', 'r86'])
+  })
+  it('not on a later page, nor under a sort that is not by date, nor under a state filter', () => {
+    expect(R.historyWithEmptyCycles(items, cycles, { offset: 10, total: 13, size: 10, sort: 'periodEnd', direction: 'desc' }).length).toBe(3)
+    expect(R.historyWithEmptyCycles(items, cycles, { offset: 0, total: 3, size: 10, sort: 'calls', direction: 'desc' }).length).toBe(3)
+    expect(R.historyWithEmptyCycles(items, cycles, { offset: 0, total: 3, size: 10, sort: 'periodEnd', direction: 'desc', status: 'done' }).length).toBe(3)
+  })
+  it('oldest first: on the last page, after the reports', () => {
+    const asc = [...items].reverse()
+    const rows = R.historyWithEmptyCycles(asc, cycles, { offset: 0, total: 3, size: 10, sort: 'periodEnd', direction: 'asc' })
+    expect(rows.map((r) => r.periodEnd / DAY)).toEqual([86, 93, 100, 101, 102])
   })
 })

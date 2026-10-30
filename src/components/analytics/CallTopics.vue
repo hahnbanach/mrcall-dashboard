@@ -27,6 +27,8 @@
             <template #body="slotProps">{{ formatNumber(slotProps.data.previousCalls) }}</template>
           </Column>
         </DataTable>
+        <!-- the period before holds calls for part of its days only (StarChat's `previousPartial`, rule 10) -->
+        <p v-if="data.previousPartial === true" class="insights-note">{{ $t("components.callInsights.change.partialHelp") }}</p>
       </div>
     </template>
   </div>

@@ -28,7 +28,7 @@ const VIEW = {
     }),
     category(null, {
       label: undefined, unclassified: true, calls: 5, businesses: 1, share: 0.25, outcomes: { neither: 5 }, dominantOutcome: 'neither',
-      nextActionKind: 'none', nextAction: undefined, examples: [],
+      nextActionKind: 'business_info', nextAction: undefined, examples: [],
     }),
   ],
 }

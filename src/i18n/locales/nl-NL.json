@@ -1993,7 +1993,7 @@
           "covers": "Het volgende beslaat {from} tot {to}.",
           "coversOneDay": "Het volgende beslaat {day}.",
           "retryOneDay": "Het rapport voor {day} is niet gelukt: het wordt vannacht opnieuw geprobeerd.",
-          "longer": "Het beslaat {days} dag, meer dan de frequentie: het beslaat ook de dagen sinds het laatste rapport. | Het beslaat {days} dagen, meer dan de frequentie: het beslaat ook de dagen sinds het laatste rapport."
+          "extended": "Het beslaat de periode vanaf {date}: de dagen sindsdien hadden geen gesprekken."
         },
         "type": {
           "automatic": "Automatisch",
@@ -2003,7 +2003,12 @@
         "base": "Gebaseerd op {analysed} van de {managed} gesprekken die de assistent in de periode heeft afgehandeld.",
         "baseOld": "Gebaseerd op {analysed} geanalyseerde gesprekken.",
         "baseOldNote": "Voor gesprekken van vóór 10 oktober weten we niet hoeveel de assistent er heeft afgehandeld.",
-        "excluded": "Niet meegeteld: {silent} gesprekken waarin de beller niets zei, {credit} geweigerd wegens onvoldoende tegoed."
+        "excluded": "Niet meegeteld: {silent} gesprekken waarin de beller niets zei, {credit} geweigerd wegens onvoldoende tegoed.",
+        "history": {
+          "emptyDay": "Geen gesprekken op {day}",
+          "emptyPeriod": "Geen gesprekken van {from} tot {to}",
+          "noReport": "Geen rapport"
+        }
       },
       "assistants": {
         "title": "Te controleren assistenten",
@@ -2160,8 +2165,7 @@
         "notRunCredit": "Niet uitgevoerd: onvoldoende tegoed",
         "stoppedCredit": "Gestopt: onvoldoende tegoed",
         "cancelled": "Geannuleerd",
-        "recomputeStopped": "Gestopt: onvoldoende tegoed. {done} van de {total} gesprekken zijn geanalyseerd met het tegoed van het bedrijf. De overige zijn niet geanalyseerd.",
-        "noCallsCycle": "Geen gesprekken"
+        "recomputeStopped": "Gestopt: onvoldoende tegoed. {done} van de {total} gesprekken zijn geanalyseerd met het tegoed van het bedrijf. De overige zijn niet geanalyseerd."
       },
       "reportsTab": {
         "scheduleTitle": "Automatische rapporten",

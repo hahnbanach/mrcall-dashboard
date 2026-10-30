@@ -1993,7 +1993,7 @@
           "covers": "Järgmine katab ajavahemiku {from}–{to}.",
           "coversOneDay": "Järgmine katab päeva {day}.",
           "retryOneDay": "Aruanne päeva {day} kohta ei õnnestunud: seda proovitakse uuesti täna öösel.",
-          "longer": "See hõlmab {days} päeva, rohkem kui sagedus: see hõlmab ka päevi pärast viimast aruannet. | See hõlmab {days} päeva, rohkem kui sagedus: see hõlmab ka päevi pärast viimast aruannet."
+          "extended": "See hõlmab aega alates {date}: sellest ajast pole kõnesid olnud."
         },
         "type": {
           "automatic": "Automaatne",
@@ -2003,7 +2003,12 @@
         "base": "Põhineb {analysed} kõnel nendest {managed} kõnest, mida assistent perioodi jooksul käsitles.",
         "baseOld": "Põhineb {analysed} analüüsitud kõnel.",
         "baseOldNote": "10. oktoobrile eelnenud kõnede kohta me ei tea, mitut assistent käsitles.",
-        "excluded": "Välja jäetud: {silent} kõnet, kus helistaja ei rääkinud, {credit} tagasi lükatud krediidi puudumise tõttu."
+        "excluded": "Välja jäetud: {silent} kõnet, kus helistaja ei rääkinud, {credit} tagasi lükatud krediidi puudumise tõttu.",
+        "history": {
+          "emptyDay": "Kõnesid ei olnud {day}",
+          "emptyPeriod": "Kõnesid ei olnud {from}–{to}",
+          "noReport": "Aruannet pole"
+        }
       },
       "assistants": {
         "title": "Ülevaatamist vajavad assistendid",
@@ -2160,8 +2165,7 @@
         "notRunCredit": "Ei käivitatud: krediiti ei piisa",
         "stoppedCredit": "Peatatud: krediiti ei piisa",
         "cancelled": "Tühistatud",
-        "recomputeStopped": "Peatatud: krediiti ei piisa. {done} kõnet {total}-st analüüsiti ettevõtte krediidiga. Teisi ei analüüsitud.",
-        "noCallsCycle": "Kõnesid ei olnud"
+        "recomputeStopped": "Peatatud: krediiti ei piisa. {done} kõnet {total}-st analüüsiti ettevõtte krediidiga. Teisi ei analüüsitud."
       },
       "reportsTab": {
         "scheduleTitle": "Automaatsed aruanded",

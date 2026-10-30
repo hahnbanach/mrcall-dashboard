@@ -1995,7 +1995,7 @@
           "covers": "Der nächste deckt den Zeitraum vom {from} bis {to} ab.",
           "coversOneDay": "Der nächste deckt den {day} ab.",
           "retryOneDay": "Der Bericht für den {day} war nicht erfolgreich: Er wird heute Nacht erneut versucht.",
-          "longer": "Er umfasst {days} Tag, mehr als die Häufigkeit: Er umfasst auch die Tage seit dem letzten Bericht. | Er umfasst {days} Tage, mehr als die Häufigkeit: Er umfasst auch die Tage seit dem letzten Bericht."
+          "extended": "Er umfasst die Zeit ab {date}: Die Tage seitdem hatten keine Anrufe."
         },
         "type": {
           "automatic": "Automatisch",
@@ -2005,7 +2005,12 @@
         "base": "Basiert auf {analysed} der {managed} Anrufe, die der Assistent im Zeitraum bearbeitet hat.",
         "baseOld": "Basiert auf {analysed} analysierten Anrufen.",
         "baseOldNote": "Bei Anrufen vor dem 10. Oktober wissen wir nicht, wie viele der Assistent bearbeitet hat.",
-        "excluded": "Nicht berücksichtigt: {silent} Anrufe, in denen der Anrufer nicht sprach, {credit} wegen fehlenden Guthabens abgelehnt."
+        "excluded": "Nicht berücksichtigt: {silent} Anrufe, in denen der Anrufer nicht sprach, {credit} wegen fehlenden Guthabens abgelehnt.",
+        "history": {
+          "emptyDay": "Keine Anrufe am {day}",
+          "emptyPeriod": "Keine Anrufe vom {from} bis {to}",
+          "noReport": "Kein Bericht"
+        }
       },
       "assistants": {
         "title": "Zu überprüfende Assistenten",
@@ -2162,8 +2167,7 @@
         "notRunCredit": "Nicht ausgeführt: nicht genug Guthaben",
         "stoppedCredit": "Gestoppt: nicht genug Guthaben",
         "cancelled": "Abgebrochen",
-        "recomputeStopped": "Gestoppt: nicht genug Guthaben. {done} von {total} Anrufen wurden mit dem Guthaben des Unternehmens analysiert. Die übrigen wurden nicht analysiert.",
-        "noCallsCycle": "Keine Anrufe"
+        "recomputeStopped": "Gestoppt: nicht genug Guthaben. {done} von {total} Anrufen wurden mit dem Guthaben des Unternehmens analysiert. Die übrigen wurden nicht analysiert."
       },
       "reportsTab": {
         "scheduleTitle": "Automatische Berichte",

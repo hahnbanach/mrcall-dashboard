@@ -179,6 +179,8 @@
             </tbody>
           </table>
           <p class="report-note">{{ $t("components.callInsights.reportDetail.qualityBase", { calls: qualityBase }) }}</p>
+          <!-- the period before holds calls for part of its days only (StarChat's `previousPartial`, rule 10) -->
+          <p v-if="quality && quality.previousPartial === true" class="report-note">{{ $t("components.callInsights.change.partialHelp") }}</p>
         </section>
       </template>
     </InsightsState>

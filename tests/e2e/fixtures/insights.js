@@ -59,7 +59,9 @@ function historyRows () {
 // finished day) and `arrivesAt`, the nightly run (05:00 UTC) that will write the period.
 const SCHEDULE = { cadenceDays: 7, nextAutomatic: { from: rome(2026, 10, 21), to: rome(2026, 10, 28), retry: false, anticipable: true, arrivesAt: Date.UTC(2026, 9, 28, 5) } }
 
-function reportsPage (url, { rows = historyRows(), schedule = SCHEDULE } = {}) {
+// `emptyCycles`: StarChat's top-level list of the automatic cycles since the last report that held no call (the
+// amendment of 2026-10-30, rule 9, as StarChat b6c43ca49 serves it): never rows of `items`, never in `total`.
+function reportsPage (url, { rows = historyRows(), schedule = SCHEDULE, emptyCycles } = {}) {
   const q = new URL(url).searchParams
   const offset = Number(q.get('offset') || 0)
   const size = Number(q.get('size') || 10)
@@ -70,7 +72,7 @@ function reportsPage (url, { rows = historyRows(), schedule = SCHEDULE } = {}) {
     list = [...list].sort((a, b) => (a.calls || 0) - (b.calls || 0))
     if (q.get('direction') !== 'asc') list.reverse()
   }
-  return { items: list.slice(offset, offset + size), total: list.length, asOf: 1761300000000, schedule }
+  return { items: list.slice(offset, offset + size), total: list.length, asOf: 1761300000000, schedule, ...(emptyCycles ? { emptyCycles } : {}) }
 }
 
 // A version-5 report: themes, questions without an answer by reason with example calls, suggestions.

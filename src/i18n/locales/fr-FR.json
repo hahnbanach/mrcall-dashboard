@@ -1995,7 +1995,7 @@
           "covers": "Le prochain couvrira du {from} au {to}.",
           "coversOneDay": "Le prochain couvrira le {day}.",
           "retryOneDay": "Le rapport du {day} n'a pas abouti : il sera retenté cette nuit.",
-          "longer": "Il couvre {days} jour, plus que la fréquence : il couvre aussi les jours depuis le dernier rapport. | Il couvre {days} jours, plus que la fréquence : il couvre aussi les jours depuis le dernier rapport."
+          "extended": "Il couvre à partir du {date} : les jours depuis n'ont eu aucun appel."
         },
         "type": {
           "automatic": "Automatique",
@@ -2005,7 +2005,12 @@
         "base": "Basé sur {analysed} des {managed} appels gérés par l'assistant sur la période.",
         "baseOld": "Basé sur {analysed} appels analysés.",
         "baseOldNote": "Pour les appels antérieurs au 10 octobre, nous ne savons pas combien l'assistant en a gérés.",
-        "excluded": "Exclus : {silent} appels où l'appelant n'a pas parlé, {credit} refusés faute de crédit."
+        "excluded": "Exclus : {silent} appels où l'appelant n'a pas parlé, {credit} refusés faute de crédit.",
+        "history": {
+          "emptyDay": "Aucun appel le {day}",
+          "emptyPeriod": "Aucun appel du {from} au {to}",
+          "noReport": "Aucun rapport"
+        }
       },
       "assistants": {
         "title": "Assistants à revoir",
@@ -2162,8 +2167,7 @@
         "notRunCredit": "Non exécuté : crédit insuffisant",
         "stoppedCredit": "Arrêté : crédit insuffisant",
         "cancelled": "Annulé",
-        "recomputeStopped": "Arrêté : crédit insuffisant. {done} appels sur {total} ont été analysés, avec le crédit de l'entreprise. Les autres n'ont pas été analysés.",
-        "noCallsCycle": "Aucun appel"
+        "recomputeStopped": "Arrêté : crédit insuffisant. {done} appels sur {total} ont été analysés, avec le crédit de l'entreprise. Les autres n'ont pas été analysés."
       },
       "reportsTab": {
         "scheduleTitle": "Rapports automatiques",

@@ -1998,7 +1998,7 @@
           "covers": "The next one will cover {from} to {to}.",
           "coversOneDay": "The next one will cover {day}.",
           "retryOneDay": "The report covering {day} did not succeed: it will be tried again tonight.",
-          "longer": "It covers {days} day, more than the cadence: it also covers the days since the last report. | It covers {days} days, more than the cadence: it also covers the days since the last report."
+          "extended": "It covers from {date}: the days since then had no calls."
         },
         "type": {
           "automatic": "Automatic",
@@ -2008,7 +2008,12 @@
         "base": "Based on {analysed} of the {managed} calls the assistant managed in the period.",
         "baseOld": "Based on {analysed} analysed calls.",
         "baseOldNote": "For calls before 10 October we do not know how many the assistant managed.",
-        "excluded": "Left out: {silent} calls in which the caller did not speak, {credit} refused for lack of credit."
+        "excluded": "Left out: {silent} calls in which the caller did not speak, {credit} refused for lack of credit.",
+        "history": {
+          "emptyDay": "No calls on {day}",
+          "emptyPeriod": "No calls from {from} to {to}",
+          "noReport": "No report"
+        }
       },
       "assistants": {
         "title": "Assistants to review",
@@ -2165,8 +2170,7 @@
         "notRunCredit": "Not run: not enough credit",
         "stoppedCredit": "Stopped: not enough credit",
         "cancelled": "Cancelled",
-        "recomputeStopped": "Stopped: not enough credit. {done} of {total} calls were analysed, using the business's credit. The others were not analysed.",
-        "noCallsCycle": "No calls"
+        "recomputeStopped": "Stopped: not enough credit. {done} of {total} calls were analysed, using the business's credit. The others were not analysed."
       },
       "reportsTab": {
         "scheduleTitle": "Automatic reports",
