@@ -271,7 +271,7 @@ export default {
       const last = this.undo.lastUndone;
       if (!last || !last.affected.includes(this.conversation.id)) return;
       if (!this.loaded) { this.readIfOpened(); return; }
-      this.takeCalls(last.calls, last.reverted);
+      this.takeCalls(last.calls, last.reverted, last.items);
     },
   },
   mounted() {
@@ -299,9 +299,22 @@ export default {
     readIfOpened() {
       if (this.eager) this.load();
     },
-    takeCalls(calls, reverted) {
+    // An undo's answer without this call's state (a reader who does not own it, from StarChat 9.34.122, or an older
+    // StarChat) gives each reverted judgement its value now (`items`, never a fact's) and marks the reverted signals, so
+    // that a refused read after it leaves the chips undone, not as the gesture had made them (C10, fourth round).
+    takeCalls(calls, reverted, items = []) {
       const mine = Classifications.stateIn(calls, this.conversation.id);
-      if (!mine) { this.load({ keep: true }); return; }
+      if (!mine) {
+        if (this.data) {
+          const values = (Array.isArray(items) ? items : [])
+            .filter((i) => i && i.conversationId === this.conversation.id && i.value !== undefined && !Classifications.FACT_FIELDS.includes(i.field));
+          const next = Classifications.withCurrent(this.data, values);
+          next.history = Classifications.withReverted(next.history, reverted);
+          this.data = next;
+        }
+        this.load({ keep: true });
+        return;
+      }
       this.gate.begin();
       const next = Classifications.withCallState(this.data, mine);
       next.history = Classifications.withReverted(next.history, reverted);

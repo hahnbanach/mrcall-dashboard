@@ -278,9 +278,12 @@ above.
      field (never for a fact: a report changes none), records the signal in its history, and reads the call's
      judgements again; if that read is refused (404, the reader may not open the call now) the chips stay as the
      answer left them instead of disappearing.
-   - *Bulk, decided by StarChat's lead and announced, not yet built there:* a bulk gesture answers the calls' full
-     state only to their owner and records no opening for a non-owner's bulk gesture; a non-owner gets the judged
-     values only. After it the dashboard reads only the calls on screen: the opened call, whose read may be its first
+   - *Bulk and undo, built in StarChat 9.34.122 (`385ed995b`):* a bulk gesture and a gesture's undo answer the calls'
+     full state only to their owner and record no opening for a non-owner; each answers `items`, every signal with
+     its judgement's or fact's effective `value` now, so a non-owner gets the judged values only. A panel whose call's
+     state the undo did not carry takes each reverted judgement's value from `items` (never a fact's) and marks the
+     reverted signals before it reads the call again, so a refused read leaves the chip undone. A fact signal's
+     `value` is the fact as the summary holds it (before 9.34.122 it was null); a report changes no fact either way. After it the dashboard reads only the calls on screen: the opened call, whose read may be its first
      judgements read for a non-owner who has opened no chip of it (the read records its opening once per actor and
      call within 10 minutes, `f87578328`), never a call only listed, so the Constraint on calls opened "without a
      person asking" holds: the person opened that call and made the gesture.
@@ -296,11 +299,11 @@ above.
 11. **A category's requests carry their call's resolution** (`resolution`): "Segna come spam" is offered on the
    selected requests, one signal per call with that resolution as the value read. Closes the gap row "Segna come spam
    over a category's requests".
-12. **The release depends on StarChat's.** `a012b6926`, `f87578328` and `db92e82d8` are on test with StarChat
-   9.34.121, and item 10's bulk change is not built yet: the
-   dashboard's test tag goes after the StarChat tag that carries them, and production with it. Before the bulk change
-   StarChat answers a bulk's state to every reader who may open each call, recording a non-owner's opening of each,
-   which the dashboard takes as it is. Against an older StarChat:
+12. **The release depends on StarChat's.** `a012b6926`, `f87578328` and `db92e82d8` (StarChat 9.34.121) and item 10's
+   bulk and undo change with the undo's `items` (StarChat 9.34.122): the dashboard's test tag goes after StarChat
+   9.34.122 is on test, and production with it. Before 9.34.122 StarChat answers a bulk's state to every reader who
+   may open each call, recording a non-owner's opening of each, which the dashboard takes as it is, and an undo
+   carries no `items`. Against an older StarChat:
    - the category list answers 404 and no category chip or move is drawn (as before);
    - a gesture's answer without `call` or `calls` makes the panel read the call's judgements again (the earlier
      behaviour);

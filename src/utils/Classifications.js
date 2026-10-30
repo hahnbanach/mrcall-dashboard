@@ -198,7 +198,7 @@ function withSignal(history, answer, a, gestureId, role, now = Date.now()) {
  * A gesture as `UndoGesture` carries it (made in this panel, another panel of the call, or a list): the touched calls'
  * state (`calls`) and the signals it wrote (`entries`: `{ask, answer}`), applied to this call's judgements. Without this
  * call's state, each signal's answered `value` stands for its judgement; never for a fact, which a report does not
- * change and whose answered `value` StarChat gives as null (`InsightsFeedback.value` reads judgements only). The same
+ * change (StarChat before 9.34.122 answered a fact's `value` as null; from it, the fact as the summary holds it). The same
  * object when the gesture did not touch this call.
  */
 function withGesture(data, gesture, now = Date.now()) {

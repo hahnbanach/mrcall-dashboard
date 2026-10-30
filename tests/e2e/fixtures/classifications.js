@@ -139,10 +139,10 @@ async function mockClassifications (page, options = {}) {
     if (a.signal === 'fact_wrong') {
       if ((call.facts || {})[a.field] !== a.valueFrom) return { status: 409, current: { conversationId: call.conversationId, field: a.field, value: (call.facts || {})[a.field] } }
       const id = state.nextId++
-      // StarChat's answered `value` for a fact is null whatever the fact holds (`InsightsFeedback.value` reads only
-      // judgements), so the fixture answers the same
+      // StarChat 9.34.122 answers a fact's `value` as the summary holds it (`InsightsFeedback.valueOf`); a report
+      // changes no fact
       call.history.push({ feedbackId: id, subject: 'call', field: a.field, signal: 'fact_wrong', valueFrom: a.valueFrom, valueTo: null, source: 'person', status: 'proposed', actorRole: role, actorName, byMe: true, createdAt: Date.now(), gestureId })
-      return { status: 200, call, body: { feedbackId: id, conversationId: call.conversationId, field: a.field, status: 'proposed', value: null, replayed: false } }
+      return { status: 200, call, body: { feedbackId: id, conversationId: call.conversationId, field: a.field, status: 'proposed', value: (call.facts || {})[a.field], replayed: false } }
     }
     const j = judgementOf(call, a)
     if (!j) return { status: 404 }
@@ -222,15 +222,22 @@ async function mockClassifications (page, options = {}) {
     const g = decodeURIComponent(new URL(route.request().url()).pathname.split('/gestures/')[1].split('/')[0])
     sent.push({ method: 'POST', path: 'gesture-revert', gestureId: g })
     const reverted = []
+    const items = []
     const touched = new Set()
     for (const call of Object.values(state.calls)) {
       for (const h of [...call.history].reverse()) {
         // StarChat reverts a gesture's corrections and confirmations (6d13718c6); a confirmation undone changes no value
-        if (h.gestureId === g && h.status === 'applied') { revertEntry(call, h); reverted.push(h.feedbackId); touched.add(call) }
-        else if (h.gestureId === g && h.status === 'confirmed') { h.status = 'reverted'; reverted.push(h.feedbackId); touched.add(call) }
+        if (h.gestureId === g && h.status === 'applied') revertEntry(call, h)
+        else if (h.gestureId === g && h.status === 'confirmed') h.status = 'reverted'
+        else continue
+        reverted.push(h.feedbackId)
+        touched.add(call)
+        // each reverted signal with its judgement's value now (StarChat 9.34.122, `revertGesture`'s `items`)
+        const j = judgementOf(call, h)
+        items.push({ feedbackId: h.feedbackId, conversationId: call.conversationId, requestId: h.requestId, field: h.field, value: j ? j.value : (call.facts || {})[h.field] })
       }
     }
-    json(route, 200, { gestureId: g, reverted, calls: [...touched].map(answered).filter(Boolean) })
+    json(route, 200, { gestureId: g, reverted, items, calls: [...touched].map(answered).filter(Boolean) })
   })
   await page.route(/\/customer\/insights\/feedback\/\d+\/(revert|apply|reject)$/, (route) => {
     const [, id, move] = new URL(route.request().url()).pathname.match(/feedback\/(\d+)\/(\w+)$/)

@@ -83,6 +83,20 @@ test.describe('a call\'s judgements as chips', () => {
     await expect(chip(page, /^Message: /)).toBeVisible()
   })
 
+  test('an undo answered without the call\'s state, its read refused (404), leaves the chip undone (C10, fourth round)', async ({ authenticatedPage: page }) => {
+    await mockConversations(page, [conversation()])
+    const { sent } = await mockClassifications(page, { partialState: true, unreadable: true })
+    await open(page)
+    await expect(chip(page, /^Resolution: Resolved/)).toBeVisible({ timeout: 15000 })
+    await choose(page, /^Resolution: Resolved/, 'Unresolved')
+    await expect(chip(page, /^Resolution: Unresolved, Corrected/)).toBeVisible()
+    await page.getByRole('status').filter({ hasText: 'Changed' }).getByRole('button', { name: 'Undo' }).click()
+    await expect.poll(() => sent.filter((s) => s.path === 'gesture-revert').length).toBe(1)
+    // the undo's `items` give the resolution its value now; the read after it is refused, and the chip stays undone
+    await expect(chip(page, /^Resolution: Resolved$/)).toBeVisible()
+    await expect(chip(page, /^Resolution: Unresolved/)).toHaveCount(0)
+  })
+
   test('against a StarChat that serves no facts, no fact is offered for a report', async ({ authenticatedPage: page }) => {
     await mockConversations(page, [conversation()])
     await mockClassifications(page, { calls: { [CALL_ID]: judged({ facts: undefined }) } })

@@ -35,8 +35,8 @@ reported from one chip, bulk corrections, every count opening its calls, callers
 their category chip, "Move to category" and "Mark as spam", the queues, caller rules and the access record, a
 non-owner's read-only call ([brief](briefs/2026-10-27-classification-feedback.md),
 [plan](execution-plans/2026-10-27-classification-feedback.md)). Verified on the repository's mocks only (vitest and
-the full Playwright run); the StarChat pieces it reads are on test with StarChat 9.34.121, and the bulk gating the
-brief's second amendment (item 10) names is not built there yet; its live check comes with StarChat's C11.
+the full Playwright run); the StarChat pieces it reads are in StarChat 9.34.121 and, for the bulk and undo answers
+of the brief's second amendment (item 10), 9.34.122; the live check comes with StarChat's C11 on 9.34.122.
 
 ## Unresolved
 
