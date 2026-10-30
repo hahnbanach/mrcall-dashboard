@@ -52,8 +52,7 @@
       <template v-for="column in shareColumns" :key="column.sort" #[cellSlot(column)]="{ row }">
         <span v-if="shareOf(row, column.sort).percent === null" class="assistant-share">—</span>
         <span v-else class="assistant-share">
-          <span class="assistant-share-percent">{{ shareOf(row, column.sort).percent }}</span>
-          <span class="assistant-share-base">{{ shareOf(row, column.sort).of }}</span>
+          <span class="assistant-share-percent">{{ shareOf(row, column.sort).percent }}</span>{{ " " }}<span class="assistant-share-base">{{ shareOf(row, column.sort).of }}</span>
         </span>
       </template>
       <template #cell-change="{ row }">

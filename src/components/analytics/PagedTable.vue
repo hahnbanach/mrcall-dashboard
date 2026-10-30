@@ -275,10 +275,14 @@ export default {
   }
 
   .paged-table-table {
-    // not drawn: each cell carries its column's name, and the order is chosen above. A header row clipped to one
-    // pixel kept its full width in the layout (1366 px in a 390 px screen, U19c m12)
+    // visually hidden but kept for assistive technology (the column headers and their sort state); each cell
+    // carries its column's name, and the order is chosen above
     thead {
-      display: none;
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
     }
 
     // A card holds its values two by two, each under its column's name; the first (what the row is) and the last

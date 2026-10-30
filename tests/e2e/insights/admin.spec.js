@@ -117,9 +117,9 @@ test.describe('Callers\' requests', () => {
     expect(asked.categories[0].body.timestampLte).toBeGreaterThan(asked.categories[0].body.timestampGte)
 
     const booking = table.getByRole('row').filter({ hasText: 'Online booking' })
-    await expect(booking.getByText('Rising', { exact: true })).toBeVisible()
+    await expect(booking.getByText('Rising in the second half of the period', { exact: true })).toBeVisible()
     await expect(booking.getByText('3 businesses')).toBeVisible()
-    await expect(booking.getByText('+2 compared with the previous period')).toBeVisible()
+    await expect(booking.getByText('+2 businesses compared with the previous period')).toBeVisible()
     // the share is over the businesses with analysed calls, since the view counts request records, not reports
     // (StarChat's brief docs/briefs/2026-10-26-classification-feedback.md, decision 13)
     await expect(booking.getByText('25% of the businesses with analysed calls')).toBeVisible()

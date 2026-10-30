@@ -121,8 +121,11 @@ test.describe('m11, m12, m13, m14: the admin page', () => {
       expect(over).toBeLessThanOrEqual(1)
     }
     if (width < 600) {
-      const widest = await assistants(page).evaluate((t) => Math.max(...[...t.querySelectorAll('tr')].map((r) => r.getBoundingClientRect().width)))
+      // the rows are cards inside the screen, and nothing scrolls the page sideways (the header row, hidden to the
+      // eye and kept for assistive technology, is clipped to one pixel)
+      const widest = await assistants(page).evaluate((t) => Math.max(...[...t.querySelectorAll('tbody tr')].map((r) => r.getBoundingClientRect().width)))
       expect(widest).toBeLessThanOrEqual(width)
+      expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width)
     }
   })
 
