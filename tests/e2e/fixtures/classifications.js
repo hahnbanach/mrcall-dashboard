@@ -3,7 +3,8 @@
  * StarChat's answers for a call's judgements, their signals and undo, the queues, the caller rules, a category's
  * requests, the access record and the audio link (StarChat's brief docs/briefs/2026-10-26-classification-feedback.md,
  * decisions 6, 12, 13, 14), shaped as its code answers them: `InsightsFeedback.classifications`, `.signal`, `.bulk`,
- * `.revertGesture`, `.decide`, `.queue`, `.rules`, `.createRule`, `.deleteRule`; `CallInsightsReportService
+ * `.revertGesture`, `.decide`, `.withdraw` (the amendment of 2026-10-30, rule 5: an author's withdrawal of its own proposal, and
+ * an undo that withdraws a gesture's proposals and lists each signal with its new status), `.queue`, `.rules`, `.createRule`, `.deleteRule`; `CallInsightsReportService
  * .categoryRequests`; `ConversationAccess.accessLog`, `.audioLink`. The category list (`GET insights/categories`) is the
  * read the dashboard's brief PROPOSES to StarChat; `categories: null` answers it 404, as StarChat does today.
  *
@@ -226,32 +227,42 @@ async function mockClassifications (page, options = {}) {
     const touched = new Set()
     for (const call of Object.values(state.calls)) {
       for (const h of [...call.history].reverse()) {
-        // StarChat reverts a gesture's corrections and confirmations (6d13718c6); a confirmation undone changes no value
+        // StarChat reverts a gesture's corrections and confirmations (6d13718c6), a confirmation undone changing no value,
+        // and withdraws its proposals, a fact report included (the brief's amendment of 2026-10-30, rule 5)
         if (h.gestureId === g && h.status === 'applied') revertEntry(call, h)
         else if (h.gestureId === g && h.status === 'confirmed') h.status = 'reverted'
+        else if (h.gestureId === g && h.status === 'proposed') h.status = 'withdrawn'
         else continue
-        reverted.push(h.feedbackId)
+        h.decidedAt = Date.now()
+        if (h.status === 'reverted') reverted.push(h.feedbackId)
         touched.add(call)
-        // each reverted signal with its judgement's value now (StarChat 9.34.122, `revertGesture`'s `items`)
+        // each signal with its new status and its judgement's value now (StarChat 9.34.122's `items`, with `status`)
         const j = judgementOf(call, h)
-        items.push({ feedbackId: h.feedbackId, conversationId: call.conversationId, requestId: h.requestId, field: h.field, value: j ? j.value : (call.facts || {})[h.field] })
+        items.push({ feedbackId: h.feedbackId, status: h.status, conversationId: call.conversationId, requestId: h.requestId, field: h.field, value: j ? j.value : (call.facts || {})[h.field] })
       }
     }
     json(route, 200, { gestureId: g, reverted, items, calls: [...touched].map(answered).filter(Boolean) })
   })
-  await page.route(/\/customer\/insights\/feedback\/\d+\/(revert|apply|reject)$/, (route) => {
+  await page.route(/\/customer\/insights\/feedback\/\d+\/(revert|apply|reject|withdraw)$/, (route) => {
     const [, id, move] = new URL(route.request().url()).pathname.match(/feedback\/(\d+)\/(\w+)$/)
     const body = route.request().postDataJSON() || {}
-    sent.push({ method: 'POST', path: 'decide', id: Number(id), move, body })
+    sent.push({ method: 'POST', path: move === 'withdraw' ? 'withdraw' : 'decide', id: Number(id), move, body })
     for (const call of Object.values(state.calls)) {
       const h = call.history.find((x) => x.feedbackId === Number(id))
       if (!h) continue
+      // an author's withdrawal of a proposal still waiting (the amendment of 2026-10-30, rule 5): no value changes
+      if (move === 'withdraw') {
+        if (!h.byMe || h.status !== 'proposed') return json(route, 409, { code: 'not_withdrawable', message: 'only its author withdraws a proposal still waiting' })
+        h.status = 'withdrawn'
+        h.decidedAt = Date.now()
+        return json(route, 200, { ...h, call: answered(call) })
+      }
       if (move === 'revert') revertEntry(call, h)
       else h.status = move === 'apply' ? 'applied' : 'rejected'
       h.decidedAt = Date.now()
       return json(route, 200, { ...h, call: answered(call) })
     }
-    json(route, 200, { feedbackId: Number(id), status: move === 'apply' ? 'applied' : move === 'reject' ? 'rejected' : 'reverted' })
+    json(route, 200, { feedbackId: Number(id), status: move === 'apply' ? 'applied' : move === 'reject' ? 'rejected' : move === 'withdraw' ? 'withdrawn' : 'reverted' })
   })
   await page.route('**/customer/insights/caller-rules*', (route) => {
     const req = route.request()

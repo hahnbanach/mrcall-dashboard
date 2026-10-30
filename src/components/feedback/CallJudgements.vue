@@ -44,8 +44,16 @@
           @opening="loadThenOpen('chip-facts')"
           @choose="reportFact($event.value)"
         />
-        <span v-for="f in reportedFacts" :key="f" class="judgement-note" role="status">
-          {{ $t("components.callInsights.feedback.fact.reportedOf", { fact: fieldLabel(f) }) }}
+        <!-- the reader's own fact reports still waiting, each withdrawn by its author (the amendment's rule 5) -->
+        <span v-for="r in factReports" :key="r.feedbackId" class="judgement-note judgement-fact-report" role="status">
+          {{ $t("components.callInsights.feedback.fact.reportedOf", { fact: fieldLabel(r.field) }) }}
+          <Button
+            type="button" text size="small"
+            :label="$t('components.callInsights.feedback.fact.withdraw')"
+            :aria-label="$t('components.callInsights.feedback.fact.withdrawOf', { fact: fieldLabel(r.field) })"
+            :loading="busyKey === 'withdraw:' + r.feedbackId"
+            @click="withdraw('withdraw:' + r.feedbackId, r.feedbackId)"
+          />
         </span>
       </div>
 
@@ -185,8 +193,6 @@ export default {
       ruleDone: null,
       offered: false,
       undo: UndoGesture.state,
-      // the facts reported wrong from this panel
-      reportedFacts: [],
       // reads overlap (a gesture's re-read, an undo's): only the latest one's answer is drawn
       gate: CallInsights.latestOnly(),
     };
@@ -232,6 +238,10 @@ export default {
     factsServed() {
       return !this.loaded || (!!this.data.facts && typeof this.data.facts === "object");
     },
+    // The reader's own fact reports still waiting, from the call's history (the gesture's answer adds them to it).
+    factReports() {
+      return this.loaded ? Classifications.ownFactReports(this.data.history) : [];
+    },
     // The six facts with the value read, each an entry of the report's menu.
     factEntries() {
       if (!this.loaded) return [];
@@ -271,7 +281,7 @@ export default {
       const last = this.undo.lastUndone;
       if (!last || !last.affected.includes(this.conversation.id)) return;
       if (!this.loaded) { this.readIfOpened(); return; }
-      this.takeCalls(last.calls, last.reverted, last.items);
+      this.takeCalls(last.calls, last.outcome, last.items);
     },
   },
   mounted() {
@@ -302,14 +312,14 @@ export default {
     // An undo's answer without this call's state (a reader who does not own it, from StarChat 9.34.122, or an older
     // StarChat) gives each reverted judgement its value now (`items`, never a fact's) and marks the reverted signals, so
     // that a refused read after it leaves the chips undone, not as the gesture had made them (C10, fourth round).
-    takeCalls(calls, reverted, items = []) {
+    takeCalls(calls, outcome, items = []) {
       const mine = Classifications.stateIn(calls, this.conversation.id);
       if (!mine) {
         if (this.data) {
           const values = (Array.isArray(items) ? items : [])
             .filter((i) => i && i.conversationId === this.conversation.id && i.value !== undefined && !Classifications.FACT_FIELDS.includes(i.field));
           const next = Classifications.withCurrent(this.data, values);
-          next.history = Classifications.withReverted(next.history, reverted);
+          next.history = Classifications.withReverted(next.history, outcome);
           this.data = next;
         }
         this.load({ keep: true });
@@ -317,7 +327,7 @@ export default {
       }
       this.gate.begin();
       const next = Classifications.withCallState(this.data, mine);
-      next.history = Classifications.withReverted(next.history, reverted);
+      next.history = Classifications.withReverted(next.history, outcome);
       this.data = next;
       this.status = "ok";
     },
@@ -406,6 +416,7 @@ export default {
       }
       this.alert = null;
       if (entry.kind === "restore") return this.restore(key, entry.feedbackId);
+      if (entry.kind === "withdraw") return this.withdraw(key, entry.feedbackId);
       if (entry.kind === "value" && entry.value === state.value) return;
       const signal = entry.kind === "value" ? "wrong_value" : entry.kind;
       const ask = Classifications.ask({
@@ -485,7 +496,8 @@ export default {
       try {
         const answer = await Classifications.signal(this.user, ask, gestureId);
         this.takeAnswer(answer, ask, gestureId, seq, overlapped);
-        if (!this.reportedFacts.includes(field)) this.reportedFacts = this.reportedFacts.concat([field]);
+        // a fact report has the same undo as any gesture, which withdraws it (the amendment of 2026-10-30, rule 5)
+        UndoGesture.record(gestureId, [this.conversation.id], null, this.uid, answer && answer.call ? [answer.call] : [], [{ ask, answer }], this.role);
       } catch (error) {
         if (isSessionEnded(error)) return;
         this.refused(error);
@@ -513,6 +525,26 @@ export default {
       } catch (error) {
         if (isSessionEnded(error)) return;
         this.alert = this.$t("components.callInsights.feedback.failed");
+      } finally {
+        this.busyKey = null;
+      }
+    },
+    // The author withdraws its own proposal or fact report while it waits: it changes no value and leaves the admin's
+    // queue (the amendment of 2026-10-30, rule 5). The answer is the signal as it now stands, with the call's state.
+    async withdraw(key, feedbackId) {
+      this.busyKey = key;
+      this.alert = null;
+      try {
+        const row = await Classifications.withdraw(this.user, feedbackId);
+        this.gate.begin();
+        const base = row && Classifications.isCallState(row.call) ? Classifications.withCallState(this.data, row.call) : { ...this.data };
+        base.history = Classifications.withDecision(this.data.history, { ...(row || {}), feedbackId, status: "withdrawn" });
+        this.data = base;
+        this.status = "ok";
+      } catch (error) {
+        if (isSessionEnded(error)) return;
+        this.alert = this.$t("components.callInsights.feedback.failed");
+        this.load({ keep: true });
       } finally {
         this.busyKey = null;
       }

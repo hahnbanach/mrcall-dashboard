@@ -1994,7 +1994,8 @@
           "nextOneDay": "Le prochain arrivera le {date} et couvrira le {day}.",
           "covers": "Le prochain couvrira du {from} au {to}.",
           "coversOneDay": "Le prochain couvrira le {day}.",
-          "retryOneDay": "Le rapport du {day} n'a pas abouti : il sera retenté cette nuit."
+          "retryOneDay": "Le rapport du {day} n'a pas abouti : il sera retenté cette nuit.",
+          "longer": "Il couvre {days} jour, plus que la fréquence : il couvre aussi les jours depuis le dernier rapport. | Il couvre {days} jours, plus que la fréquence : il couvre aussi les jours depuis le dernier rapport."
         },
         "type": {
           "automatic": "Automatique",
@@ -2019,7 +2020,6 @@
         "checks": "Vérifications",
         "skillErrors": "Erreurs de fonctions",
         "extractionIssues": "Problèmes d'extraction",
-        "shareOfTotal": "{percent} % ({count} sur {total})",
         "sortOptions": {
           "calls": "Appels",
           "notSolved": "Non résolu (évalué par l'assistant)",
@@ -2044,7 +2044,8 @@
           "skillErrors": "Erreurs de skill",
           "extractionIssues": "Extraction",
           "change": "Évolution",
-          "configSuggestions": "Suggestions MrCall"
+          "configSuggestions": "Suggestions MrCall",
+          "asks": "Ce que demandent les appelants"
         },
         "legend": {
           "notSolved": "non résolu, plus les demandes transmises à l'entreprise avec un message incomplet, sur les appels où l'appelant a demandé quelque chose",
@@ -2073,7 +2074,10 @@
           "unknown": "Inconnu",
           "planOther": "Forfait inactif"
         },
-        "changePoints": "{sign}{n} points"
+        "changePoints": "{sign}{n} points",
+        "askedOf": "{category} : {n} demande | {category} : {n} demandes",
+        "latestReport": "Dernier rapport",
+        "countOf": "({count} sur {total})"
       },
       "scope": {
         "allBusinesses": "Sur tous les établissements que vous pouvez voir, au cours des 30 derniers jours.",
@@ -2158,7 +2162,8 @@
         "notRunCredit": "Non exécuté : crédit insuffisant",
         "stoppedCredit": "Arrêté : crédit insuffisant",
         "cancelled": "Annulé",
-        "recomputeStopped": "Arrêté : crédit insuffisant. {done} appels sur {total} ont été analysés, avec le crédit de l'entreprise. Les autres n'ont pas été analysés."
+        "recomputeStopped": "Arrêté : crédit insuffisant. {done} appels sur {total} ont été analysés, avec le crédit de l'entreprise. Les autres n'ont pas été analysés.",
+        "noCallsCycle": "Aucun appel"
       },
       "reportsTab": {
         "scheduleTitle": "Rapports automatiques",
@@ -2224,11 +2229,11 @@
         "examined": "{n} appel examiné | {n} appels examinés",
         "outcome": {
           "recompute": {
-            "written": "{n} analysé | {n} analysés",
+            "written": "{n} appel analysé | {n} appels analysés",
             "reasoned": "{n} sans conversation | {n} sans conversation",
             "skipped": "{n} déjà à jour | {n} déjà à jour",
             "left": "{n} sans rien à analyser | {n} sans rien à analyser",
-            "not_finalised": "{n} non terminé | {n} non terminés",
+            "not_finalised": "{n} session non terminée exclue | {n} sessions non terminées exclues",
             "conflict": "{n} modifié entre-temps | {n} modifiés entre-temps",
             "failed": "{n} échoué | {n} échoués",
             "ceiling": "{n} non analysé : limite atteinte | {n} non analysés : limite atteinte"
@@ -2236,7 +2241,7 @@
           "facts": {
             "written": "{n} mis à jour | {n} mis à jour",
             "unchanged": "{n} déjà à jour | {n} déjà à jour",
-            "not_finalised": "{n} non terminé | {n} non terminés",
+            "not_finalised": "{n} session non terminée exclue | {n} sessions non terminées exclues",
             "conflict": "{n} modifié entre-temps | {n} modifiés entre-temps"
           }
         }
@@ -2261,7 +2266,9 @@
         "transferred": "{n} appel transféré à une personne | {n} appels transférés à une personne",
         "themeOutcome": "Issue des appels de {topic}",
         "callBackTitle": "Appels à rappeler",
-        "callBackNote": "Appels non résolus, ou transmis à l'entreprise avec un message incomplet."
+        "callBackNote": "Appels non résolus, ou transmis à l'entreprise avec un message incomplet.",
+        "reviewTitle": "Appels à revoir",
+        "reviewNote": "Non résolus, avec des questions sans réponse ou des contrôles déclenchés."
       },
       "deleteReport": {
         "title": "Supprimer le rapport",
@@ -2334,7 +2341,9 @@
         "noAnalysis": "Il y a 1 appel sur cette période, mais il n'est pas encore analysé. | Il y a {n} appels sur cette période, mais aucun n'est encore analysé.",
         "noAnalysisNone": "Aucun appel de cette période n'est analysé, et aucun ne peut l'être.",
         "cycleEmpty": "Le rapport automatique en cours n'a encore aucun jour terminé : il n'y a rien à préparer pour l'instant.",
-        "busyYou": "Un traitement est déjà en cours pour cette entreprise, lancé par vous le {when}."
+        "busyYou": "Un traitement est déjà en cours pour cette entreprise, lancé par vous le {when}.",
+        "reads": "{n} appel analysé | {n} appels analysés",
+        "leftOut": "{n} appel pas encore analysé reste en dehors | {n} appels pas encore analysés restent en dehors"
       },
       "recompute": {
         "banner": "{n} appels gérés sur cette période n'ont pas encore l'analyse automatique ; les issues, les sujets et la qualité ne les comptent donc pas.",
@@ -2363,7 +2372,7 @@
           "freshness": "Fraîcheur"
         },
         "businesses": "{n} entreprises",
-        "trend": "{sign}{n} par rapport à la période précédente",
+        "trend": "{sign}{n} entreprise par rapport à la période précédente | {sign}{n} entreprises par rapport à la période précédente",
         "share": "{pct} % des entreprises avec des appels analysés",
         "histogramLabel": "Entreprises par {bucket}, de la plus ancienne : {values}",
         "bucket": {
@@ -2399,9 +2408,9 @@
         "confirmDismiss": "Archiver",
         "reopened": "Rouverte : {n} nouvelles entreprises l'ont demandée après son archivage le {date}.",
         "status": {
-          "rising": "En hausse",
-          "steady": "Stable",
-          "falling": "En baisse",
+          "rising": "En hausse dans la seconde moitié de la période",
+          "steady": "Stable sur la période",
+          "falling": "En baisse dans la seconde moitié de la période",
           "stale": "Plus demandée récemment"
         },
         "hiddenExamples": "Exemples masqués",
@@ -2414,7 +2423,15 @@
           "admin": "MrCall"
         },
         "archived": "{category} archivée.",
-        "undo": "Annuler"
+        "undo": "Annuler",
+        "next": {
+          "delegate": "Envisagez de confier ces demandes à l'assistant",
+          "handled": "Traitées par l'assistant",
+          "withdrawn": "Retirées par les appelants",
+          "unrated": "Résultat pas encore évalué : ouvrir les demandes",
+          "classify": "Classer ces demandes",
+          "open": "Ouvrir les demandes"
+        }
       },
       "admin": {
         "reason": {
@@ -2424,7 +2441,8 @@
       },
       "change": {
         "notAvailable": "n.d.",
-        "notAvailableHelp": "La période précédente comptait moins de 20 appels : la variation n'est pas significative."
+        "notAvailableHelp": "La période précédente comptait moins de 20 appels : la variation n'est pas significative.",
+        "partialHelp": "La période précédente n'a des appels que sur une partie de ses jours : la variation n'est pas significative."
       },
       "overview": {
         "noCallsDays": "Aucun appel le dernier jour. | Aucun appel ces {days} derniers jours."
@@ -2452,7 +2470,8 @@
           "confirmed": "Confirmée",
           "proposed": "Proposition envoyée",
           "applied": "Appliquée",
-          "rejected": "Refusée"
+          "rejected": "Refusée",
+          "withdrawn": "Retirée"
         },
         "chip": {
           "name": "{field} : {value}",
@@ -2463,7 +2482,8 @@
           "right": "C'est correct",
           "wrong": "C'est faux, je ne sais pas quelle valeur",
           "restore": "Rétablir la valeur de l'analyse",
-          "history": "Historique"
+          "history": "Historique",
+          "withdraw": "Retirer ma proposition"
         },
         "who": {
           "owner": "le titulaire",
@@ -2486,7 +2506,8 @@
             "reverted": "Annulée",
             "orphaned": "Demande introuvable",
             "confirmed": "Confirmée",
-            "closed": "Traitée par MrCall"
+            "closed": "Traitée par MrCall",
+            "withdrawn": "Retirée"
           }
         },
         "undo": {
@@ -2494,7 +2515,10 @@
           "undo": "Annuler",
           "close": "Fermer",
           "undone": "Modification annulée.",
-          "failed": "La modification n'a pas pu être annulée."
+          "failed": "La modification n'a pas pu être annulée.",
+          "withdrawn": "Proposition retirée. | {n} propositions retirées.",
+          "both": "Modifications annulées : {reverted}. Propositions retirées : {withdrawn}.",
+          "nothing": "Rien n'a été annulé : c'était déjà décidé."
         },
         "stale": "Cette valeur a changé entre-temps : la valeur actuelle est affichée.",
         "failed": "La modification n'a pas été enregistrée.",
@@ -2558,7 +2582,9 @@
         "fact": {
           "chip": "Signaler une erreur sur un fait",
           "reportedOf": "Signalé à MrCall : {fact}",
-          "option": "{fact} : {value}"
+          "option": "{fact} : {value}",
+          "withdraw": "Retirer",
+          "withdrawOf": "Retirer le signalement : {fact}"
         },
         "links": {
           "open": "Ouvrir l'appel : {label} | Ouvrir les {n} appels : {label}",
@@ -2611,11 +2637,20 @@
           "change": "{field} : {from} → {to}",
           "wrong": "{field} : {from} est faux, à revoir",
           "right": "{field} : {from} confirmé",
-          "fact": "{field} signalé faux"
+          "fact": "{field} signalé faux",
+          "factOf": {
+            "booked": "Réservation signalée fausse",
+            "transferred": "Transfert signalé faux",
+            "no_conversation": "« Sans conversation » signalé faux",
+            "managed_call": "« Géré par l'assistant » signalé faux",
+            "skill_errors": "Erreurs des skills signalées fausses",
+            "unkept": "Promesses non tenues signalées fausses"
+          }
         },
         "mine": {
           "title": "Mes propositions",
-          "empty": "Aucune proposition pour l'instant."
+          "empty": "Aucune proposition pour l'instant.",
+          "withdraw": "Retirer"
         },
         "facts": {
           "no_conversation": "Sans conversation",

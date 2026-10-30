@@ -1992,7 +1992,8 @@
           "nextOneDay": "Het volgende komt op {date} en beslaat {day}.",
           "covers": "Het volgende beslaat {from} tot {to}.",
           "coversOneDay": "Het volgende beslaat {day}.",
-          "retryOneDay": "Het rapport voor {day} is niet gelukt: het wordt vannacht opnieuw geprobeerd."
+          "retryOneDay": "Het rapport voor {day} is niet gelukt: het wordt vannacht opnieuw geprobeerd.",
+          "longer": "Het beslaat {days} dag, meer dan de frequentie: het beslaat ook de dagen sinds het laatste rapport. | Het beslaat {days} dagen, meer dan de frequentie: het beslaat ook de dagen sinds het laatste rapport."
         },
         "type": {
           "automatic": "Automatisch",
@@ -2017,7 +2018,6 @@
         "checks": "Controles",
         "skillErrors": "Functiefouten",
         "extractionIssues": "Extractieproblemen",
-        "shareOfTotal": "{percent}% ({count} van de {total})",
         "sortOptions": {
           "calls": "Gesprekken",
           "notSolved": "Niet opgelost (door de assistent beoordeeld)",
@@ -2042,7 +2042,8 @@
           "skillErrors": "Skillfouten",
           "extractionIssues": "Extractie",
           "change": "Verandering",
-          "configSuggestions": "MrCall-suggesties"
+          "configSuggestions": "MrCall-suggesties",
+          "asks": "Wat bellers vragen"
         },
         "legend": {
           "notSolved": "niet opgelost, plus aan het bedrijf doorgegeven verzoeken met een onvolledig bericht, over de gesprekken waarin de beller iets vroeg",
@@ -2071,7 +2072,10 @@
           "unknown": "Niet bekend",
           "planOther": "Abonnement niet actief"
         },
-        "changePoints": "{sign}{n} punten"
+        "changePoints": "{sign}{n} punten",
+        "askedOf": "{category}: {n} verzoek | {category}: {n} verzoeken",
+        "latestReport": "Laatste rapport",
+        "countOf": "({count} van de {total})"
       },
       "scope": {
         "allBusinesses": "Over alle bedrijven die u kunt zien, van de afgelopen 30 dagen.",
@@ -2156,7 +2160,8 @@
         "notRunCredit": "Niet uitgevoerd: onvoldoende tegoed",
         "stoppedCredit": "Gestopt: onvoldoende tegoed",
         "cancelled": "Geannuleerd",
-        "recomputeStopped": "Gestopt: onvoldoende tegoed. {done} van de {total} gesprekken zijn geanalyseerd met het tegoed van het bedrijf. De overige zijn niet geanalyseerd."
+        "recomputeStopped": "Gestopt: onvoldoende tegoed. {done} van de {total} gesprekken zijn geanalyseerd met het tegoed van het bedrijf. De overige zijn niet geanalyseerd.",
+        "noCallsCycle": "Geen gesprekken"
       },
       "reportsTab": {
         "scheduleTitle": "Automatische rapporten",
@@ -2222,11 +2227,11 @@
         "examined": "{n} gesprek bekeken | {n} gesprekken bekeken",
         "outcome": {
           "recompute": {
-            "written": "{n} geanalyseerd | {n} geanalyseerd",
+            "written": "{n} gesprek geanalyseerd | {n} gesprekken geanalyseerd",
             "reasoned": "{n} zonder gesprek | {n} zonder gesprek",
             "skipped": "{n} al bijgewerkt | {n} al bijgewerkt",
             "left": "{n} zonder iets te analyseren | {n} zonder iets te analyseren",
-            "not_finalised": "{n} niet afgerond | {n} niet afgerond",
+            "not_finalised": "{n} niet afgeronde sessie uitgesloten | {n} niet afgeronde sessies uitgesloten",
             "conflict": "{n} intussen gewijzigd | {n} intussen gewijzigd",
             "failed": "{n} niet gelukt | {n} niet gelukt",
             "ceiling": "{n} niet geanalyseerd: limiet bereikt | {n} niet geanalyseerd: limiet bereikt"
@@ -2234,7 +2239,7 @@
           "facts": {
             "written": "{n} bijgewerkt | {n} bijgewerkt",
             "unchanged": "{n} al bijgewerkt | {n} al bijgewerkt",
-            "not_finalised": "{n} niet afgerond | {n} niet afgerond",
+            "not_finalised": "{n} niet afgeronde sessie uitgesloten | {n} niet afgeronde sessies uitgesloten",
             "conflict": "{n} intussen gewijzigd | {n} intussen gewijzigd"
           }
         }
@@ -2259,7 +2264,9 @@
         "transferred": "{n} gesprek doorverbonden met een persoon | {n} gesprekken doorverbonden met een persoon",
         "themeOutcome": "Uitkomst van de gesprekken over {topic}",
         "callBackTitle": "Gesprekken om terug te bellen",
-        "callBackNote": "Gesprekken die niet zijn opgelost, of met een onvolledig bericht aan het bedrijf zijn doorgegeven."
+        "callBackNote": "Gesprekken die niet zijn opgelost, of met een onvolledig bericht aan het bedrijf zijn doorgegeven.",
+        "reviewTitle": "Gesprekken om na te kijken",
+        "reviewNote": "Niet opgelost, met onbeantwoorde vragen of controles die afgingen."
       },
       "deleteReport": {
         "title": "Het rapport verwijderen",
@@ -2332,7 +2339,9 @@
         "noAnalysis": "Er is 1 gesprek in deze periode, maar het is nog niet geanalyseerd. | Er zijn {n} gesprekken in deze periode, maar geen enkel is al geanalyseerd.",
         "noAnalysisNone": "Geen gesprek van deze periode is geanalyseerd, en geen enkel kan worden geanalyseerd.",
         "cycleEmpty": "Het lopende automatische rapport heeft nog geen afgeronde dag: er is nu nog niets voor te bereiden.",
-        "busyYou": "Er loopt al een verwerking voor dit bedrijf, door u gestart op {when}."
+        "busyYou": "Er loopt al een verwerking voor dit bedrijf, door u gestart op {when}.",
+        "reads": "{n} geanalyseerd gesprek | {n} geanalyseerde gesprekken",
+        "leftOut": "{n} nog niet geanalyseerd gesprek blijft buiten beschouwing | {n} nog niet geanalyseerde gesprekken blijven buiten beschouwing"
       },
       "recompute": {
         "banner": "{n} in deze periode afgehandelde gesprekken hebben nog geen automatische analyse, dus afloop, onderwerpen en kwaliteit tellen ze niet mee.",
@@ -2361,7 +2370,7 @@
           "freshness": "Actualiteit"
         },
         "businesses": "{n} bedrijven",
-        "trend": "{sign}{n} ten opzichte van de vorige periode",
+        "trend": "{sign}{n} bedrijf ten opzichte van de vorige periode | {sign}{n} bedrijven ten opzichte van de vorige periode",
         "share": "{pct}% van de bedrijven met geanalyseerde oproepen",
         "histogramLabel": "Bedrijven per {bucket}, vanaf de oudste: {values}",
         "bucket": {
@@ -2397,9 +2406,9 @@
         "confirmDismiss": "Archiveren",
         "reopened": "Heropend: {n} nieuwe bedrijven vroegen erom nadat het op {date} was gearchiveerd.",
         "status": {
-          "rising": "Stijgend",
-          "steady": "Stabiel",
-          "falling": "Dalend",
+          "rising": "Stijgend in de tweede helft van de periode",
+          "steady": "Stabiel over de periode",
+          "falling": "Dalend in de tweede helft van de periode",
           "stale": "Recent niet meer gevraagd"
         },
         "hiddenExamples": "Verborgen voorbeelden",
@@ -2412,7 +2421,15 @@
           "admin": "MrCall"
         },
         "archived": "{category} gearchiveerd.",
-        "undo": "Ongedaan maken"
+        "undo": "Ongedaan maken",
+        "next": {
+          "delegate": "Overweeg deze verzoeken door de assistent te laten afhandelen",
+          "handled": "Afgehandeld door de assistent",
+          "withdrawn": "Ingetrokken door de bellers",
+          "unrated": "Uitkomst nog niet beoordeeld: open de verzoeken",
+          "classify": "Deze verzoeken indelen",
+          "open": "Open de verzoeken"
+        }
       },
       "admin": {
         "reason": {
@@ -2422,7 +2439,8 @@
       },
       "change": {
         "notAvailable": "n.v.t.",
-        "notAvailableHelp": "De vorige periode had minder dan 20 gesprekken: de verandering is niet zinvol."
+        "notAvailableHelp": "De vorige periode had minder dan 20 gesprekken: de verandering is niet zinvol.",
+        "partialHelp": "De vorige periode heeft maar voor een deel van haar dagen gesprekken: de verandering zegt niets."
       },
       "overview": {
         "noCallsDays": "Geen gesprekken op de laatste dag. | Geen gesprekken in de laatste {days} dagen."
@@ -2450,7 +2468,8 @@
           "confirmed": "Bevestigd",
           "proposed": "Voorstel verzonden",
           "applied": "Toegepast",
-          "rejected": "Afgewezen"
+          "rejected": "Afgewezen",
+          "withdrawn": "Ingetrokken"
         },
         "chip": {
           "name": "{field}: {value}",
@@ -2461,7 +2480,8 @@
           "right": "Dit klopt",
           "wrong": "Dit klopt niet, ik weet niet wat wel",
           "restore": "Waarde van de analyse herstellen",
-          "history": "Geschiedenis"
+          "history": "Geschiedenis",
+          "withdraw": "Mijn voorstel intrekken"
         },
         "who": {
           "owner": "de eigenaar",
@@ -2484,7 +2504,8 @@
             "reverted": "Ongedaan gemaakt",
             "orphaned": "Verzoek niet meer gevonden",
             "confirmed": "Bevestigd",
-            "closed": "Afgehandeld door MrCall"
+            "closed": "Afgehandeld door MrCall",
+            "withdrawn": "Ingetrokken"
           }
         },
         "undo": {
@@ -2492,7 +2513,10 @@
           "undo": "Ongedaan maken",
           "close": "Sluiten",
           "undone": "Wijziging ongedaan gemaakt.",
-          "failed": "De wijziging kon niet ongedaan worden gemaakt."
+          "failed": "De wijziging kon niet ongedaan worden gemaakt.",
+          "withdrawn": "Voorstel ingetrokken. | {n} voorstellen ingetrokken.",
+          "both": "Wijzigingen ongedaan gemaakt: {reverted}. Voorstellen ingetrokken: {withdrawn}.",
+          "nothing": "Er is niets ongedaan gemaakt: er was al over beslist."
         },
         "stale": "Deze waarde is intussen gewijzigd: de huidige wordt getoond.",
         "failed": "De wijziging is niet opgeslagen.",
@@ -2556,7 +2580,9 @@
         "fact": {
           "chip": "Een fout in een feit melden",
           "reportedOf": "Gemeld aan MrCall: {fact}",
-          "option": "{fact}: {value}"
+          "option": "{fact}: {value}",
+          "withdraw": "Intrekken",
+          "withdrawOf": "Melding intrekken: {fact}"
         },
         "links": {
           "open": "De oproep openen: {label} | De {n} oproepen openen: {label}",
@@ -2609,11 +2635,20 @@
           "change": "{field}: {from} → {to}",
           "wrong": "{field}: {from} is fout, te beoordelen",
           "right": "{field}: {from} bevestigd",
-          "fact": "{field} als fout gemeld"
+          "fact": "{field} als fout gemeld",
+          "factOf": {
+            "booked": "Boeking als fout gemeld",
+            "transferred": "Doorverbinding als fout gemeld",
+            "no_conversation": "„Geen gesprek” als fout gemeld",
+            "managed_call": "„Afgehandeld door de assistent” als fout gemeld",
+            "skill_errors": "Skillfouten als fout gemeld",
+            "unkept": "Niet nagekomen toezeggingen als fout gemeld"
+          }
         },
         "mine": {
           "title": "Mijn voorstellen",
-          "empty": "Nog geen voorstellen."
+          "empty": "Nog geen voorstellen.",
+          "withdraw": "Intrekken"
         },
         "facts": {
           "no_conversation": "Geen gesprek",

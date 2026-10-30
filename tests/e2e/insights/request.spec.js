@@ -159,10 +159,11 @@ test.describe('requesting a report', () => {
   }
 
   test('a period without calls says so and creates nothing', async ({ authenticatedPage: page }) => {
-    const asked = await mockInsights(page, { job: () => estimateJob({ estimate: { fits: true, calls: 0, requests: 0 } }) })
+    // StarChat's refusal is the only source of "no calls" (the amendment of 2026-10-30, rule 1, superseding a test that
+    // read a report estimate's `calls: 0` as "no calls": a report's `calls` is always 0, U19c B1)
+    const asked = await mockInsights(page, { job: () => estimateJob({ estimate: { fits: false, reason: 'no_calls', kind: 'report', calls: 0, requests: 0 } }) })
     const dialog = await openRequest(page)
     await dialog.getByRole('button', { name: 'Continue' }).click()
-    // the brief's words for a period with no call (amendment of 2026-10-26, rule 5), from a server that answers it fits
     await expect(dialog.getByText('No calls in this period.')).toBeVisible({ timeout: 15000 })
     expect(asked.create).toHaveLength(0)
   })

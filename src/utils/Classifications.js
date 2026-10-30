@@ -92,9 +92,13 @@ function chipState(judgement, history, where, role) {
     const inForce = newest(mine.filter((h) => h.status === "applied"));
     // a confirmation is recorded beside the value and is never the correction in force (StarChat 6d13718c6)
     const confirmation = newest(mine.filter((h) => h.status === "confirmed" && h.valueTo === (judgement || {}).value));
-    const ownLatest = newest(mine.filter((h) => h.byMe && h.status !== "reverted"));
-    // a proposal of the reader still waiting is said first, whatever was decided on its older ones
-    const waiting = mine.some((h) => h.byMe && h.status === "proposed");
+    // a proposal withdrawn by its author, like a signal reverted, says nothing on the chip (the amendment of 2026-10-30,
+    // rule 5): it changed no value and is no longer waiting
+    const ownLatest = newest(mine.filter((h) => h.byMe && h.status !== "reverted" && h.status !== "withdrawn"));
+    // a proposal of the reader still waiting is said first, whatever was decided on its older ones; its author may
+    // withdraw it (`ownProposal`)
+    const ownProposal = newest(mine.filter((h) => h.byMe && h.status === "proposed"));
+    const waiting = !!ownProposal;
     let kind = "model";
     if (waiting) kind = "proposed";
     else if (ownLatest && ownLatest.status === "rejected" && (!inForce || movedAt(ownLatest) >= movedAt(inForce))) kind = "rejected";
@@ -113,11 +117,13 @@ function chipState(judgement, history, where, role) {
         kind,
         correction,
         canRestore: !!inForce && (inForce.byMe === true || role === "admin"),
+        ownProposal: ownProposal ? ownProposal.feedbackId : null,
     };
 }
 
-/** A chip's menu: every value with the current one marked, then "right", "wrong", "restore" when allowed, "history".
- * A category whose list is not known offers nothing (the chip is not drawn: brief, gap table). */
+/** A chip's menu: every value with the current one marked, then "right", "wrong", "restore" when allowed, "withdraw" the
+ * reader's own proposal still waiting, "history". A category whose list is not known offers nothing (the chip is not
+ * drawn: brief, gap table). */
 function menuEntries(field, state, categories) {
     const values = valuesOf(field, categories);
     if (values.length === 0) return [];
@@ -127,6 +133,7 @@ function menuEntries(field, state, categories) {
     if (s.value != null) entries.push({ kind: "right" });
     entries.push({ kind: "wrong" });
     if (s.canRestore && s.correction) entries.push({ kind: "restore", feedbackId: s.correction.feedbackId });
+    if (s.ownProposal != null) entries.push({ kind: "withdraw", feedbackId: s.ownProposal });
     entries.push({ kind: "history" });
     return entries;
 }
@@ -225,10 +232,48 @@ function bulkEntries(asks, items) {
     return (Array.isArray(asks) ? asks : []).map((ask) => ({ ask, answer: byKey.get(key(ask)) })).filter((e) => e.answer);
 }
 
-/** The signals an undo reverted (`reverted` ids), marked so in the history. */
-function withReverted(history, ids, now = Date.now()) {
-    const set = new Set(ids || []);
-    return (Array.isArray(history) ? history : []).map((h) => (set.has(h.feedbackId) ? { ...h, status: "reverted", decidedAt: now } : h));
+/**
+ * What an undo did, by StarChat's answer only (the amendment of 2026-10-30, rule 5): its `items`, each signal with its
+ * new `status` (`reverted`: an applied correction or a confirmation; `withdrawn`: a proposal, a fact report included),
+ * and before that rule the ids it lists as `reverted`. The undo bar says these and nothing else (U19c M4: "Modifica
+ * annullata." was said over a proposal the undo had left waiting).
+ */
+function undoOutcome(answer) {
+    const a = answer || {};
+    const listed = new Set(Array.isArray(a.reverted) ? a.reverted : []);
+    const items = Array.isArray(a.items) ? a.items : [];
+    const reverted = new Set();
+    const withdrawn = new Set();
+    for (const i of items) {
+        if (!i || i.feedbackId == null) continue;
+        if (i.status === "withdrawn") withdrawn.add(i.feedbackId);
+        else if (i.status === "reverted" || (i.status === undefined && listed.has(i.feedbackId))) reverted.add(i.feedbackId);
+    }
+    for (const id of listed) if (!withdrawn.has(id)) reverted.add(id);
+    return { reverted: [...reverted], withdrawn: [...withdrawn] };
+}
+
+/** The signals an undo reverted and withdrew (`undoOutcome`), marked so in the history. An array is the reverted ids. */
+function withReverted(history, outcome, now = Date.now()) {
+    const o = Array.isArray(outcome) ? { reverted: outcome, withdrawn: [] } : (outcome || {});
+    const reverted = new Set(o.reverted || []);
+    const withdrawn = new Set(o.withdrawn || []);
+    return (Array.isArray(history) ? history : []).map((h) => {
+        if (reverted.has(h.feedbackId)) return { ...h, status: "reverted", decidedAt: now };
+        if (withdrawn.has(h.feedbackId)) return { ...h, status: "withdrawn", decidedAt: now };
+        return h;
+    });
+}
+
+/** The reader's own fact reports still waiting, the newest per fact: what "Segnalato a MrCall" says and offers to withdraw. */
+function ownFactReports(history) {
+    const byField = new Map();
+    for (const h of Array.isArray(history) ? history : []) {
+        if (!h || !h.byMe || h.signal !== "fact_wrong" || !FACT_FIELDS.includes(h.field)) continue;
+        const prev = byField.get(h.field);
+        if (!prev || movedAt(h) >= movedAt(prev)) byField.set(h.field, h);
+    }
+    return FACT_FIELDS.filter((f) => byField.has(f) && byField.get(f).status === "proposed").map((f) => byField.get(f));
 }
 
 /** A decision's answer (the signal as it now stands, with its call's state beside it) put in place in the history. */
@@ -439,7 +484,9 @@ export default {
     bulkEntries,
     isCallState,
     stateIn,
+    undoOutcome,
     withReverted,
+    ownFactReports,
     withDecision,
     withCurrent,
     searchFromQuery,
@@ -467,6 +514,11 @@ export default {
     },
     revert(user, feedbackId) {
         return data(axios.post(INSIGHTS + "/feedback/" + encodeURIComponent(feedbackId) + "/revert", {}, headers(user)));
+    },
+    // An author's withdrawal of its own proposal or fact report while it waits (the amendment of 2026-10-30, rule 5):
+    // the signal as it now stands (`status: "withdrawn"`), with its call's state beside it when the reader may open it.
+    withdraw(user, feedbackId) {
+        return data(axios.post(INSIGHTS + "/feedback/" + encodeURIComponent(feedbackId) + "/withdraw", {}, headers(user)));
     },
     // An admin's decision; `requestId` re-attaches an orphan to a current request of its call.
     apply(user, feedbackId, requestId) {

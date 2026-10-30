@@ -17,7 +17,7 @@ const state = reactive({
     affected: [],
     reload: null,
     undone: 0,
-    lastUndone: { gestureId: null, affected: [], calls: [], reverted: [], items: [] },
+    lastUndone: { gestureId: null, affected: [], calls: [], outcome: { reverted: [], withdrawn: [] }, items: [] },
     // every gesture made, with its calls and the panel that made it: the other panels of those calls read again
     recorded: 0,
     lastRecorded: { gestureId: null, affected: [], origin: null, calls: [], entries: [], role: null },
@@ -42,13 +42,15 @@ export default {
         state.affected = [];
         state.reload = null;
     },
-    // After StarChat reverted the gesture: every panel of an affected call takes the state the undo answered (`calls`, the
+    // After StarChat undid the gesture: every panel of an affected call takes the state the undo answered (`calls`, the
     // calls the reader owns only, from StarChat 9.34.122) or else each reverted signal's value now (`items`), and marks
-    // the reverted signals (`reverted`); the list that made it reloads.
-    undone(calls = [], reverted = [], items = []) {
+    // the signals reverted and withdrawn (`outcome`, `Classifications.undoOutcome`); the list that made it reloads.
+    undone(calls = [], outcome = null, items = []) {
+        const o = outcome || {};
         state.lastUndone = {
             gestureId: state.gestureId, affected: state.affected, calls: Array.isArray(calls) ? calls : [],
-            reverted: Array.isArray(reverted) ? reverted : [], items: Array.isArray(items) ? items : [],
+            outcome: { reverted: Array.isArray(o.reverted) ? o.reverted : [], withdrawn: Array.isArray(o.withdrawn) ? o.withdrawn : [] },
+            items: Array.isArray(items) ? items : [],
         };
         const reload = state.reload;
         state.gestureId = null;

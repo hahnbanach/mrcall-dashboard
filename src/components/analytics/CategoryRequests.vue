@@ -115,6 +115,8 @@ export default {
     body: { type: Object, default: null },
     outcome: { type: String, default: null },
     all: { type: Boolean, default: false },
+    // one business's requests (a row of "Assistants to review"); null for every business of the window
+    businessId: { type: String, default: null },
     categories: { type: Array, default: null },
   },
   data() {
@@ -122,7 +124,7 @@ export default {
     return {
       page: CallInsights.serverPage(({ offset, size, asOf }) =>
         Classifications.categoryRequests(user(), this.category, this.body || {}, {
-          outcome: this.outcome || undefined, all: this.all && !this.outcome, from: offset, size, asOf,
+          businessId: this.businessId || undefined, outcome: this.outcome || undefined, all: this.all && !this.outcome, from: offset, size, asOf,
         })),
       selection: createSelection(),
       busyRow: null,

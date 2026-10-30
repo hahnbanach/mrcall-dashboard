@@ -185,10 +185,13 @@ export default {
       if (row.kind === "estimate") return this.$t("components.callInsights.jobs.estimate");
       return this.$t("components.callInsights.reportsTab.jobReport", { period: this.period(row.from, row.to) });
     },
-    // What a finished recompute or facts job did, in words from its counts ("4 analizzate, 10 non concluse").
+    // What a finished recompute or facts job did, in words from its counts, the sessions not finalised said apart from
+    // the calls ("4 chiamate analizzate; 10 sessioni non concluse escluse", U19c m9).
     resultText(row) {
       const parts = InsightsReports.jobResult(row);
-      return parts.map((p) => this.$t("components.callInsights.jobs.outcome." + row.kind + "." + p.key, { n: p.count }, p.count)).join(", ");
+      const said = (p) => this.$t("components.callInsights.jobs.outcome." + row.kind + "." + p.key, { n: p.count }, p.count);
+      const calls = parts.filter((p) => !p.apart).map(said).join(", ");
+      return [calls, ...parts.filter((p) => p.apart).map(said)].filter(Boolean).join("; ");
     },
     dateTime(ms) {
       return InsightsReports.dateTimeLabel(ms, this.zone, this.$i18n.locale);

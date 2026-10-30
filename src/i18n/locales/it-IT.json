@@ -1998,7 +1998,8 @@
           "nextOneDay": "Il prossimo arriverà il {date} e coprirà il {day}.",
           "covers": "Il prossimo coprirà dal {from} al {to}.",
           "coversOneDay": "Il prossimo coprirà il {day}.",
-          "retryOneDay": "Il report del {day} non è riuscito: verrà riprovato questa notte."
+          "retryOneDay": "Il report del {day} non è riuscito: verrà riprovato questa notte.",
+          "longer": "Copre {days} giorno, più della frequenza: copre anche i giorni dall'ultimo report. | Copre {days} giorni, più della frequenza: copre anche i giorni dall'ultimo report."
         },
         "type": {
           "automatic": "Automatico",
@@ -2023,7 +2024,6 @@
         "checks": "Controlli",
         "skillErrors": "Errori delle funzioni",
         "extractionIssues": "Problemi di estrazione",
-        "shareOfTotal": "{percent}% ({count} di {total})",
         "sortOptions": {
           "calls": "Chiamate",
           "notSolved": "Non risolte (valutato dall'assistente)",
@@ -2048,7 +2048,8 @@
           "skillErrors": "Errori skill",
           "extractionIssues": "Estrazione",
           "change": "Variazione",
-          "configSuggestions": "Suggerimenti MrCall"
+          "configSuggestions": "Suggerimenti MrCall",
+          "asks": "Cosa chiedono"
         },
         "legend": {
           "notSolved": "non risolte, più le richieste passate all'attività con un messaggio incompleto, sulle chiamate in cui il chiamante ha chiesto qualcosa",
@@ -2077,7 +2078,10 @@
           "unknown": "Non noto",
           "planOther": "Piano non attivo"
         },
-        "changePoints": "{sign}{n} punti"
+        "changePoints": "{sign}{n} punti",
+        "askedOf": "{category}: {n} richiesta | {category}: {n} richieste",
+        "latestReport": "Ultimo report",
+        "countOf": "({count} di {total})"
       },
       "scope": {
         "allBusinesses": "In tutte le attività che puoi vedere, negli ultimi 30 giorni.",
@@ -2162,7 +2166,8 @@
         "notRunCredit": "Non eseguito: credito insufficiente",
         "stoppedCredit": "Interrotto: credito insufficiente",
         "cancelled": "Annullato",
-        "recomputeStopped": "Interrotto: credito insufficiente. Analizzate {done} chiamate su {total}, che hanno usato il credito dell'attività. Le altre non sono state analizzate."
+        "recomputeStopped": "Interrotto: credito insufficiente. Analizzate {done} chiamate su {total}, che hanno usato il credito dell'attività. Le altre non sono state analizzate.",
+        "noCallsCycle": "Nessuna chiamata"
       },
       "reportsTab": {
         "scheduleTitle": "Report automatici",
@@ -2228,11 +2233,11 @@
         "examined": "{n} chiamata esaminata | {n} chiamate esaminate",
         "outcome": {
           "recompute": {
-            "written": "{n} analizzata | {n} analizzate",
+            "written": "{n} chiamata analizzata | {n} chiamate analizzate",
             "reasoned": "{n} senza conversazione | {n} senza conversazione",
             "skipped": "{n} già aggiornata | {n} già aggiornate",
             "left": "{n} senza niente da analizzare | {n} senza niente da analizzare",
-            "not_finalised": "{n} non conclusa | {n} non concluse",
+            "not_finalised": "{n} sessione non conclusa esclusa | {n} sessioni non concluse escluse",
             "conflict": "{n} cambiata nel frattempo | {n} cambiate nel frattempo",
             "failed": "{n} non riuscita | {n} non riuscite",
             "ceiling": "{n} non analizzata: limite raggiunto | {n} non analizzate: limite raggiunto"
@@ -2240,7 +2245,7 @@
           "facts": {
             "written": "{n} aggiornata | {n} aggiornate",
             "unchanged": "{n} già aggiornata | {n} già aggiornate",
-            "not_finalised": "{n} non conclusa | {n} non concluse",
+            "not_finalised": "{n} sessione non conclusa esclusa | {n} sessioni non concluse escluse",
             "conflict": "{n} cambiata nel frattempo | {n} cambiate nel frattempo"
           }
         }
@@ -2265,7 +2270,9 @@
         "transferred": "{n} chiamata trasferita a una persona | {n} chiamate trasferite a una persona",
         "themeOutcome": "Esito delle chiamate di {topic}",
         "callBackTitle": "Chiamate da richiamare",
-        "callBackNote": "Chiamate non risolte, o passate all'attività con un messaggio incompleto."
+        "callBackNote": "Chiamate non risolte, o passate all'attività con un messaggio incompleto.",
+        "reviewTitle": "Chiamate da rivedere",
+        "reviewNote": "Non risolte, con domande senza risposta o controlli scattati."
       },
       "deleteReport": {
         "title": "Elimina il report",
@@ -2338,7 +2345,9 @@
         "noAnalysis": "C'è 1 chiamata in questo periodo, ma non è ancora analizzata. | Ci sono {n} chiamate in questo periodo, ma nessuna è ancora analizzata.",
         "noAnalysisNone": "Nessuna chiamata di questo periodo è analizzata, e nessuna si può analizzare.",
         "cycleEmpty": "Il report automatico in corso non ha ancora un giorno concluso: per ora non c'è niente da preparare.",
-        "busyYou": "C'è già un'elaborazione in corso per questa attività, avviata da te il {when}."
+        "busyYou": "C'è già un'elaborazione in corso per questa attività, avviata da te il {when}.",
+        "reads": "{n} chiamata analizzata | {n} chiamate analizzate",
+        "leftOut": "{n} chiamata non ancora analizzata resta fuori | {n} chiamate non ancora analizzate restano fuori"
       },
       "recompute": {
         "banner": "{n} chiamate gestite in questo periodo non hanno ancora l'analisi automatica, quindi esiti, argomenti e qualità non le contano.",
@@ -2367,7 +2376,7 @@
           "freshness": "Freschezza"
         },
         "businesses": "{n} attività",
-        "trend": "{sign}{n} rispetto al periodo precedente",
+        "trend": "{sign}{n} attività rispetto al periodo precedente | {sign}{n} attività rispetto al periodo precedente",
         "share": "il {pct}% delle attività con chiamate analizzate",
         "histogramLabel": "Attività per {bucket}, dalla più vecchia: {values}",
         "bucket": {
@@ -2403,9 +2412,9 @@
         "confirmDismiss": "Archivia",
         "reopened": "Riaperta: {n} nuove attività lo hanno chiesto dopo l'archiviazione del {date}.",
         "status": {
-          "rising": "In crescita",
-          "steady": "Stabile",
-          "falling": "In calo",
+          "rising": "In crescita nella seconda metà del periodo",
+          "steady": "Stabile nel periodo",
+          "falling": "In calo nella seconda metà del periodo",
           "stale": "Non più richiesta di recente"
         },
         "hiddenExamples": "Esempi nascosti",
@@ -2418,7 +2427,15 @@
           "admin": "MrCall"
         },
         "archived": "{category} archiviata.",
-        "undo": "Annulla"
+        "undo": "Annulla",
+        "next": {
+          "delegate": "Valuta di far gestire queste richieste all'assistente",
+          "handled": "Gestite dall'assistente",
+          "withdrawn": "Ritirate dai chiamanti",
+          "unrated": "Esito non ancora valutato: apri le richieste",
+          "classify": "Classifica queste richieste",
+          "open": "Apri le richieste"
+        }
       },
       "admin": {
         "reason": {
@@ -2428,7 +2445,8 @@
       },
       "change": {
         "notAvailable": "n.d.",
-        "notAvailableHelp": "Il periodo precedente aveva meno di 20 chiamate: la variazione non è significativa."
+        "notAvailableHelp": "Il periodo precedente aveva meno di 20 chiamate: la variazione non è significativa.",
+        "partialHelp": "Il periodo precedente ha chiamate solo per una parte dei suoi giorni: la variazione non è significativa."
       },
       "overview": {
         "noCallsDays": "Nessuna chiamata nell'ultimo giorno. | Nessuna chiamata negli ultimi {days} giorni."
@@ -2456,7 +2474,8 @@
           "confirmed": "Confermata",
           "proposed": "Proposta inviata",
           "applied": "Applicata",
-          "rejected": "Respinta"
+          "rejected": "Respinta",
+          "withdrawn": "Ritirata"
         },
         "chip": {
           "name": "{field}: {value}",
@@ -2467,7 +2486,8 @@
           "right": "È corretta",
           "wrong": "È sbagliata, non so quale",
           "restore": "Ripristina il valore dell'analisi",
-          "history": "Cronologia"
+          "history": "Cronologia",
+          "withdraw": "Ritira la mia proposta"
         },
         "who": {
           "owner": "il titolare",
@@ -2490,7 +2510,8 @@
             "reverted": "Annullata",
             "orphaned": "Richiesta non più trovata",
             "confirmed": "Confermata",
-            "closed": "Gestita da MrCall"
+            "closed": "Gestita da MrCall",
+            "withdrawn": "Ritirata"
           }
         },
         "undo": {
@@ -2498,7 +2519,10 @@
           "undo": "Annulla",
           "close": "Chiudi",
           "undone": "Modifica annullata.",
-          "failed": "Non è stato possibile annullare la modifica."
+          "failed": "Non è stato possibile annullare la modifica.",
+          "withdrawn": "Proposta ritirata. | {n} proposte ritirate.",
+          "both": "Modifiche annullate: {reverted}. Proposte ritirate: {withdrawn}.",
+          "nothing": "Non è stato annullato niente: era già stato deciso."
         },
         "stale": "Questo valore è cambiato nel frattempo: è mostrato quello attuale.",
         "failed": "La modifica non è stata salvata.",
@@ -2562,7 +2586,9 @@
         "fact": {
           "chip": "Segnala un errore su un fatto",
           "reportedOf": "Segnalato a MrCall: {fact}",
-          "option": "{fact}: {value}"
+          "option": "{fact}: {value}",
+          "withdraw": "Ritira",
+          "withdrawOf": "Ritira la segnalazione: {fact}"
         },
         "links": {
           "open": "Apri la chiamata: {label} | Apri le {n} chiamate: {label}",
@@ -2615,11 +2641,20 @@
           "change": "{field}: {from} → {to}",
           "wrong": "{field}: {from} è sbagliato, da rivedere",
           "right": "{field}: {from} confermato",
-          "fact": "{field} segnalato come sbagliato"
+          "fact": "{field} segnalato come sbagliato",
+          "factOf": {
+            "booked": "Prenotazione segnalata come sbagliata",
+            "transferred": "Trasferimento segnalato come sbagliato",
+            "no_conversation": "«Nessuna conversazione» segnalata come sbagliata",
+            "managed_call": "«Gestita dall'assistente» segnalata come sbagliata",
+            "skill_errors": "Errori delle skill segnalati come sbagliati",
+            "unkept": "Promesse non mantenute segnalate come sbagliate"
+          }
         },
         "mine": {
           "title": "Le mie proposte",
-          "empty": "Ancora nessuna proposta."
+          "empty": "Ancora nessuna proposta.",
+          "withdraw": "Ritira"
         },
         "facts": {
           "no_conversation": "Nessuna conversazione",

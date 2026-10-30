@@ -1,7 +1,8 @@
 <template>
   <div class="call-details">
-    <!-- What the business can do about the call, as the call email offers it -->
-    <div v-if="dialable || calendarLink" class="call-actions">
+    <!-- What the business can do about the call, as the call email offers it: the owner's actions, never offered on a
+         call opened read-only (U19c m15) -->
+    <div v-if="ownerActions && (dialable || calendarLink)" class="call-actions">
       <a v-if="dialable" class="call-action call-action-primary" :href="'tel:' + dialable">
         <i class="pi pi-phone" aria-hidden="true"></i>
         <span>{{ $t("components.conversations.details.callBack") }}</span>
@@ -197,6 +198,8 @@ export default {
     expanded: { type: Boolean, default: false },
     // a call of a business the reader does not own (an admin, a reseller): read-only, recorded by StarChat
     readOnly: { type: Boolean, default: false },
+    // the owner's actions on the call (call back, WhatsApp, calendar): false for a reader known not to own it
+    ownerActions: { type: Boolean, default: true },
     // the call was opened on purpose (its link): its judgements are read at once rather than when in view
     eager: { type: Boolean, default: false },
     // the judgements as chips: a page that carries the undo bar and knows the reader's ownership asks for them

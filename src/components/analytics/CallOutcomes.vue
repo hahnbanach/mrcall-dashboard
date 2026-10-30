@@ -38,7 +38,7 @@
                 <span class="legend-count"><CountLink :to="line.key === 'forwarded' ? linkTo('resolution', 'forwarded') : linkTo('outcomeLine', line.key)" :count="line.count" :display="formatNumber(line.count)" :label="$t('components.callInsights.outcome.' + line.key)" /></span>
                 <span class="legend-share">{{ $t("components.callInsights.howCallsWent.shareOfBase", { percent: line.percent, base: formatNumber(outcome.base) }) }}</span>
                 <!-- neutral: a rise is good news on one line and bad on another, so colour would mislead -->
-                <span v-if="lineChange(line) && !lineChange(line).available" class="legend-delta delta-neutral"><abbr :title="$t('components.callInsights.change.notAvailableHelp')">{{ $t("components.callInsights.change.notAvailable") }}</abbr></span>
+                <span v-if="lineChange(line) && !lineChange(line).available" class="legend-delta delta-neutral"><abbr :title="naHelp(lineChange(line))">{{ $t("components.callInsights.change.notAvailable") }}</abbr></span>
                 <span v-else-if="lineChange(line)" class="legend-delta delta-neutral">
                   <i :class="deltaIcon(lineChange(line).value)" aria-hidden="true"></i>
                   {{ formatDeltaPercentage(lineChange(line).value) }}
@@ -83,8 +83,9 @@
             <span class="legend-swatch" :style="{ background: colorOf(key) }" aria-hidden="true"></span>
             <InsightLabel :dimension="dim.name" :value="key" />
             <span class="legend-count"><CountLink :to="linkTo(dim.name, key)" :count="dim.totals[key] || 0" :display="formatNumber(dim.totals[key] || 0)" :label="$t('components.callInsights.' + dim.name + '.' + key)" /></span>
-            <span v-if="delta(dim, key) && !delta(dim, key).available" class="legend-delta delta-neutral"><abbr :title="$t('components.callInsights.change.notAvailableHelp')">{{ $t("components.callInsights.change.notAvailable") }}</abbr></span>
-            <span v-else-if="delta(dim, key)" class="legend-delta" :class="deltaClass(delta(dim, key).value)">
+            <span v-if="delta(dim, key) && !delta(dim, key).available" class="legend-delta delta-neutral"><abbr :title="naHelp(delta(dim, key))">{{ $t("components.callInsights.change.notAvailable") }}</abbr></span>
+            <!-- neutral as the outcome lines: a rise of a complete message is good, of an incomplete one bad (U19c m1) -->
+            <span v-else-if="delta(dim, key)" class="legend-delta delta-neutral">
               <i :class="deltaIcon(delta(dim, key).value)"></i>
               {{ formatDeltaPercentage(delta(dim, key).value) }}
             </span>
@@ -236,19 +237,20 @@ export default {
     },
     // Each line's change over the period before, counted on the calls with a request then: under 20 of them it is
     // "n.d." (U19 M13).
+    // A change against a previous window with calls for part of its days is "n.d." too (StarChat's `previousPartial`,
+    // the amendment of 2026-10-30, rule 10).
     lineChange(line) {
       const base = this.outcome.lines.reduce((sum, l) => sum + (l.previous || 0), 0);
-      return InsightsReports.change(line.count, line.previous || 0, base);
+      return InsightsReports.change(line.count, line.previous || 0, base, { partial: InsightsReports.previousPartial(this.data) });
     },
     delta(dim, key) {
       const base = Object.values(dim.previousTotals).reduce((sum, v) => sum + (v || 0), 0);
       const prev = dim.previousTotals[key];
-      return InsightsReports.change(dim.totals[key] || 0, prev == null ? null : prev, base);
+      return InsightsReports.change(dim.totals[key] || 0, prev == null ? null : prev, base, { partial: InsightsReports.previousPartial(this.data) });
     },
-    deltaClass(delta) {
-      if (delta > 0) return "delta-positive";
-      if (delta < 0) return "delta-negative";
-      return "delta-neutral";
+    // why a change is "n.d.": a previous base under 20 calls, or a partial previous window
+    naHelp(change) {
+      return this.$t(change.reason === "partial" ? "components.callInsights.change.partialHelp" : "components.callInsights.change.notAvailableHelp");
     },
     deltaIcon(delta) {
       if (delta > 0) return "pi pi-arrow-up";
@@ -393,7 +395,7 @@ export default {
   margin: 0;
   font-size: 13px;
   font-weight: 600;
-  color: @mrcall_grey_text2;
+  color: @mrcall_grey_text;
 }
 
 .no-conversation {
@@ -448,15 +450,7 @@ export default {
   gap: 2px;
 }
 
-.delta-positive {
-  color: #22c55e;
-}
-
-.delta-negative {
-  color: #ef4444;
-}
-
 .delta-neutral {
-  color: #6b7280;
+  color: @mrcall_grey_text;
 }
 </style>

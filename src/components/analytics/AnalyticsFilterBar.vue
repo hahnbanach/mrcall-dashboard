@@ -68,7 +68,8 @@ export default {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: @mrcall_grey_text2;
+  // @mrcall_grey_text2 is 4.2:1 on the bar (U19c m2)
+  color: @mrcall_grey_text;
 }
 
 .filter-bar-list {
@@ -107,7 +108,7 @@ export default {
 }
 
 .filter-chip-name {
-  color: @mrcall_grey_text2;
+  color: @mrcall_grey_text;
 }
 
 .filter-chip-value {

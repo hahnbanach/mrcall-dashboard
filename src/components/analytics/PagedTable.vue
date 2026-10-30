@@ -232,8 +232,12 @@ export default {
   flex-wrap: wrap;
   gap: 8px;
   margin-top: 8px;
+  padding: 2px 8px;
   font-size: 13px;
   color: @mrcall_grey_text;
+  // the page numbers are blue text buttons: on white they read 4.7:1, on the page's grey 3.77:1 (U19c m2)
+  background: @mrcall_white;
+  border-radius: 8px;
 }
 
 .paged-table-pages {
@@ -271,12 +275,10 @@ export default {
   }
 
   .paged-table-table {
+    // not drawn: each cell carries its column's name, and the order is chosen above. A header row clipped to one
+    // pixel kept its full width in the layout (1366 px in a 390 px screen, U19c m12)
     thead {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      clip: rect(0 0 0 0);
+      display: none;
     }
 
     // A card holds its values two by two, each under its column's name; the first (what the row is) and the last

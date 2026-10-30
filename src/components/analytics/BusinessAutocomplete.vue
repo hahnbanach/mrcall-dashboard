@@ -8,7 +8,7 @@
     forceSelection
     :placeholder="$t('components.callInsights.filters.business')"
     :aria-label="$t('components.callInsights.filters.business')"
-    :emptySearchMessage="$t('components.callInsights.filters.noBusinessFound')"
+    :emptySearchMessage="searched ? $t('components.callInsights.filters.noBusinessFound') : ' '"
     class="business-autocomplete"
     @complete="search"
     @update:modelValue="onChange"
@@ -30,8 +30,11 @@ export default {
     name: { type: String, default: null },
   },
   emits: ["update:modelValue", "names"],
+  // `searched`: a name was looked for. PrimeVue keeps its empty-search message in a live status region from the first
+  // render, so an untouched filter announced "No business with this name" (U19c m14); before a search the message is a
+  // blank (an empty string would fall back to PrimeVue's own "No results found").
   data() {
-    return { suggestions: [] };
+    return { suggestions: [], searched: false };
   },
   computed: {
     selected() {
@@ -42,9 +45,10 @@ export default {
   methods: {
     search(event) {
       const term = (event.query || "").trim();
-      if (term.length < 2) { this.suggestions = []; return; }
+      if (term.length < 2) { this.suggestions = []; this.searched = false; return; }
       CallInsights.searchBusinesses(this.$store.state.user, term)
         .then((list) => {
+          this.searched = true;
           this.suggestions = list;
           const names = {};
           list.forEach((b) => { names[b.businessId] = b.name; });

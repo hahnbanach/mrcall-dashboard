@@ -284,7 +284,9 @@ describe('callInsights: the reports, requests and outcomes of 2026-10-24', () =>
     expect(ci.outcome.unresolved).toBe('Non risolte')
     expect(ci.resolution.forwarded).toBe("Richiesta passata all'attività")
     expect(ci.admin.reason.reserve).toBe('Riserva per le chiamate')
-    expect(ci.requests.status).toEqual({ rising: 'In crescita', steady: 'Stabile', falling: 'In calo', stale: 'Non più richiesta di recente' })
+    // the status compares the window's halves, said so beside the change against the period before (the amendment of
+    // 2026-10-30, m13)
+    expect(ci.requests.status).toEqual({ rising: 'In crescita nella seconda metà del periodo', steady: 'Stabile nel periodo', falling: 'In calo nella seconda metà del periodo', stale: 'Non più richiesta di recente' })
   })
 
   const WORDED = ['tabs.reports', 'tabs.jobs', 'reports.panel.skipped', 'request.confirm', 'request.reserve', 'outcome.resolved',

@@ -73,7 +73,7 @@ function reportsPage (url, { rows = historyRows(), schedule = SCHEDULE } = {}) {
   return { items: list.slice(offset, offset + size), total: list.length, asOf: 1761300000000, schedule }
 }
 
-// A version-3 report: themes, questions without an answer by reason with example calls, suggestions.
+// A version-5 report: themes, questions without an answer by reason with example calls, suggestions.
 const REPORT = {
   businessId: BUSINESS_ID,
   periodStart: rome(2026, 10, 1),
@@ -83,7 +83,9 @@ const REPORT = {
   requestedBy: mockUser.uid,
   requesterRole: 'owner',
   content: {
-    version: 3,
+    // content version 5: `flagged_calls` are the calls whose outcome line is not solved (the amendment of 2026-10-30,
+    // rule 2); a version 4 or lower is captioned as the calls to review
+    version: 5,
     period: { from: '2026-09-30T22:00:00Z', to: '2026-10-07T22:00:00Z' },
     calls: 120,
     callsManaged: 130,
@@ -156,9 +158,19 @@ function job (over = {}) {
   }
 }
 
+/**
+ * An estimate job as StarChat answers it, by what it estimates (`of`). A report analyses no call: it reads the calls
+ * already analysed, so its `calls` is always 0 and its `requests` 1 (StarChat's `InsightsJobEstimator`, seen on test
+ * 9.34.123, U19c B1); the brief's amendment of 2026-10-30, rule 1, adds the period's `finalised` calls and, of those, the
+ * `analysed` ones the report reads. A recompute's `calls` are the calls it will analyse.
+ */
+const REPORT_ESTIMATE = { fits: true, kind: 'report', left: 0, calls: 0, toSend: 0, skipped: 0, reasoned: 0, requests: 1, notFinalised: 0, finalised: 130, analysed: 120, topUpEffective: true }
+const RECOMPUTE_ESTIMATE = { fits: true, kind: 'recompute', left: 0, calls: 120, toSend: 120, skipped: 0, reasoned: 0, requests: 120, notFinalised: 0, topUpEffective: true }
+
 function estimateJob (over = {}) {
-  return job({ jobId: 'est-1', kind: 'estimate', of: 'report', status: 'done', phase: 'finished',
-    estimate: { fits: true, kind: 'report', calls: 120, toSend: 1, skipped: 0, reasoned: 0, left: 0, notFinalised: 0, requests: 1 }, ...over })
+  const of = over.of || 'report'
+  return job({ jobId: 'est-1', kind: 'estimate', of, status: 'done', phase: 'finished',
+    estimate: of === 'recompute' ? RECOMPUTE_ESTIMATE : REPORT_ESTIMATE, ...over })
 }
 
 // Who asked, in every role StarChat records (`requesterRole`), and one it does not know (null).
@@ -200,7 +212,9 @@ const JOBS_U19 = [
 
 function category (key, over = {}) {
   return {
-    category: key, label: key, nextAction: 'Next', dominantKind: 'integration', businesses: 3, previousBusinesses: 1, trend: 2,
+    // `nextActionKind` as StarChat answers it (`RequestCategoryView`): business_info and integration with their
+    // `nextAction`; delegate, handled, and from the amendment of 2026-10-30 (rule 4) withdrawn and unrated, without one
+    category: key, label: key, nextAction: 'Next', nextActionKind: 'integration', kind: 'integration', businesses: 3, previousBusinesses: 1, trend: 2,
     share: 0.25, histogram: [{ start: '2026-09-28', businesses: 0 }, { start: '2026-10-05', businesses: 1 }, { start: '2026-10-12', businesses: 3 }, { start: '2026-10-19', businesses: 2 }],
     bucket: 'week', lastSeen: '2026-10-21', recentShare: 0.67, status: 'rising', score: 2.6, reportDated: 0,
     examples: [{ text: 'Can I book on the website?', businessId: BUSINESS_ID, name: 'Test Restaurant', reportPeriodStart: rome(2026, 10, 14) }],
@@ -212,7 +226,7 @@ const CATEGORIES = {
   total: 3, asOf: 1761300000000, from: rome(2026, 9, 24), to: rome(2026, 10, 24),
   items: [
     category('online_booking', { label: 'Online booking', nextAction: 'Consider an integration with a booking system' }),
-    category('prices', { label: 'Prices and rates', nextAction: 'Ask the businesses to add their prices', dominantKind: 'business_info', businesses: 2, previousBusinesses: 2, trend: 0, status: 'steady', reportDated: 1,
+    category('prices', { label: 'Prices and rates', nextAction: 'Ask the businesses to add their prices', nextActionKind: 'business_info', kind: 'business_info', businesses: 2, previousBusinesses: 2, trend: 0, status: 'steady', reportDated: 1,
       histogram: [{ start: '2026-09-28', businesses: 1 }, { start: '2026-10-05', businesses: 1 }, { start: '2026-10-12', businesses: 0 }, { start: '2026-10-19', businesses: 1 }],
       examples: [{ text: 'How much is a visit?', businessId: 'biz-2', name: 'Studio Bianchi', reportPeriodStart: rome(2026, 10, 7) }] }),
     category('opening_hours', { label: 'Opening hours and closures', nextAction: 'Ask the businesses to update their hours', businesses: 1, previousBusinesses: 4, trend: -3, status: 'stale', share: 0.08, lastSeen: '2026-09-29',
@@ -229,6 +243,14 @@ function assistantRow (i) {
     callsWithRequest: 60, notSolved: 30 - i, callsWithAnyCheck: 2,
     // the period before (StarChat U13c): row 1 at 20 of 50, row 2 with no request then, row 5 on 8 calls (U19 M13)
     previousCallsWithRequest: i === 2 ? 0 : i === 5 ? 8 : 50, previousNotSolved: i === 2 ? 0 : i === 5 ? 3 : 20,
+    // the business's top three request categories with their requests (StarChat counts them as `questions`), and its
+    // latest report (the amendment of 2026-10-26, rule 8; shown from the amendment of 2026-10-30, rule 3)
+    requestCategories: [
+      { category: 'online_booking', label: 'Online booking', questions: 30 - i },
+      { category: 'prices', label: 'Prices and rates', questions: 12 },
+      { category: 'opening_hours', label: 'Opening hours', questions: 5 },
+    ],
+    ...(i === 4 ? {} : { latestReport: { periodStart: rome(2026, 10, 14) } }),
     accountHealth: i === 1 ? { subscriptionStatus: 'ACTIVE', creditLow: true, inDebt: false } : i === 2 ? { subscriptionStatus: 'UNPAID', creditLow: false, inDebt: true } : { subscriptionStatus: 'ACTIVE', creditLow: false, inDebt: false },
   }
 }
@@ -346,7 +368,10 @@ async function mockInsights (page, options = {}) {
     if (/\/jobs\/(report|recompute)$/.test(url)) { route.fallback(); return }
     record('job', route)
     const id = decodeURIComponent(url.split('/').pop())
-    const answer = options.job ? options.job(id, asked.job.filter((j) => j.url.endsWith('/' + encodeURIComponent(id))).length) : estimateJob({ jobId: id })
+    // by default the estimate of what was last asked: a report's or a recompute's
+    const last = asked.estimate.length ? asked.estimate[asked.estimate.length - 1].body : null
+    const of = last && last.kind === 'recompute' ? 'recompute' : 'report'
+    const answer = options.job ? options.job(id, asked.job.filter((j) => j.url.endsWith('/' + encodeURIComponent(id))).length) : estimateJob({ jobId: id, of })
     route.fulfill(json(answer))
   })
   await page.route(/\/customer\/insights\/jobs\/[^/]+\/cancel$/, (route) => {
@@ -392,6 +417,6 @@ async function reachFilterBar (page, bar) {
 
 module.exports = {
   BUSINESS_ID, DAY, rome, historyRows, reportsPage, SCHEDULE, REPORT, REPORT_OUTCOMES, REPORT_QUALITY, OUTCOMES,
-  job, estimateJob, JOBS, JOBS_U19, jobsPage, CATEGORIES, category, assistantRow, assistantsPage, mockInsights, sortBy,
+  job, estimateJob, REPORT_ESTIMATE, RECOMPUTE_ESTIMATE, JOBS, JOBS_U19, jobsPage, CATEGORIES, category, assistantRow, assistantsPage, mockInsights, sortBy,
   reachFilterBar,
 }

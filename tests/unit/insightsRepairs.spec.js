@@ -75,16 +75,18 @@ describe('M10: a recompute\'s progress and result, told honestly', () => {
     expect(R.jobProgress(job)).toEqual({ processed: 120, total: 200, written: 120, notFinalised: 0, ceiling: 80 })
   })
 
+  // the amendment of 2026-10-30, m9: the sessions not finalised are no calls, as Panoramica counts them; they leave the
+  // progress and are said apart ("14 di 14 chiamate" read beside Panoramica's 4)
   it('names the calls not finalised; OVERLAND\'s recompute: 4 written, 10 not finalised', () => {
     const job = { kind: 'recompute', status: 'done', estimate: { calls: 14 }, counts: { written: 4, not_finalised: 10 } }
-    expect(R.jobProgress(job)).toEqual({ processed: 14, total: 14, written: 4, notFinalised: 10, ceiling: 0 })
-    expect(R.jobResult(job)).toEqual([{ key: 'written', count: 4 }, { key: 'not_finalised', count: 10 }])
+    expect(R.jobProgress(job)).toEqual({ processed: 4, total: 4, written: 4, notFinalised: 10, ceiling: 0 })
+    expect(R.jobResult(job)).toEqual([{ key: 'written', count: 4 }, { key: 'not_finalised', count: 10, apart: true }])
   })
 
   it('a facts job (no estimate) has its calls examined and its result, by StarChat\'s own outcomes', () => {
     const job = { kind: 'facts', status: 'done', counts: { written: 30, unchanged: 70, not_finalised: 2 } }
-    expect(R.jobProgress(job)).toEqual({ processed: 102, total: null, written: 30, notFinalised: 2, ceiling: 0 })
-    expect(R.jobResult(job)).toEqual([{ key: 'written', count: 30 }, { key: 'unchanged', count: 70 }, { key: 'not_finalised', count: 2 }])
+    expect(R.jobProgress(job)).toEqual({ processed: 100, total: null, written: 30, notFinalised: 2, ceiling: 0 })
+    expect(R.jobResult(job)).toEqual([{ key: 'written', count: 30 }, { key: 'unchanged', count: 70 }, { key: 'not_finalised', count: 2, apart: true }])
   })
 
   it('no result for a report job, nor for a job without counts', () => {
@@ -104,8 +106,8 @@ describe('m4: who asked, when StarChat did not record the role', () => {
 
 describe('M13: a change is said only over a previous base of at least 20 calls', () => {
   it('a smaller base is "not available", never a percentage on 8 calls', () => {
-    expect(R.change(1986, 8, 8)).toEqual({ available: false })
-    expect(R.change(30, 10, 19)).toEqual({ available: false })
+    expect(R.change(1986, 8, 8)).toEqual({ available: false, reason: 'base' })
+    expect(R.change(30, 10, 19)).toEqual({ available: false, reason: 'base' })
   })
   it('a base of 20 or more gives the relative change; nothing to compare gives none', () => {
     expect(R.change(30, 20, 20)).toEqual({ available: true, value: 0.5 })

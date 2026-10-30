@@ -62,8 +62,8 @@ test.describe('the report\'s own page, as the U19 attack repaired it', () => {
     await page.goto(detail)
     const clinical = page.locator('.report-gap').filter({ hasText: 'Which pill should I take for my blood pressure?' })
     await expect(clinical).toBeVisible({ timeout: 15000 })
-    await expect(clinical.getByRole('link', { name: 'Add the answer' })).toHaveCount(0)
-    await expect(page.locator('.report-gap').filter({ hasText: 'Is there parking near the restaurant?' }).getByRole('link', { name: 'Add the answer' })).toBeVisible()
+    await expect(clinical.getByRole('button', { name: 'Add the answer' })).toHaveCount(0)
+    await expect(page.locator('.report-gap').filter({ hasText: 'Is there parking near the restaurant?' }).getByRole('button', { name: 'Add the answer' })).toBeVisible()
   })
 
   test('m7: no "Left out" line when no call was left out', async ({ authenticatedPage: page }) => {

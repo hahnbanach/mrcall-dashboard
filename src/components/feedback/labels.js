@@ -4,6 +4,8 @@
  * `$t`; `categories` StarChat's configured categories with their labels (`Classifications.categories`), null while it
  * answers none, and then a category is never shown by its key.
  */
+import Classifications from "@/utils/Classifications";
+
 const DIMENSIONS = ["resolution", "message", "booked", "transferred"];
 
 export function judgementLabels(t, categories, locale) {
@@ -41,7 +43,9 @@ export function judgementLabels(t, categories, locale) {
         signal(s) {
             const field = labels.field(s.field);
             const from = labels.value(s.field, s.valueFrom);
-            if (s.signal === "fact_wrong") return t(p + "feedback.queue.fact", { field });
+            // one sentence per fact, so each language agrees it with the fact's gender (U19c m16: "Prenotazione
+            // segnalato come sbagliato")
+            if (s.signal === "fact_wrong") return Classifications.FACT_FIELDS.includes(s.field) ? t(p + "feedback.queue.factOf." + s.field) : t(p + "feedback.queue.fact", { field });
             if (s.signal === "wrong") return t(p + "feedback.queue.wrong", { field, from });
             if (s.signal === "right") return t(p + "feedback.queue.right", { field, from });
             return t(p + "feedback.queue.change", { field, from, to: labels.value(s.field, s.valueTo) });

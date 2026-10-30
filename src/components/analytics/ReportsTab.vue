@@ -11,6 +11,8 @@
               {{ $t("components.callInsights.reports.panel.skipped", { period: skippedPeriod, days: schedule.cadenceDays }, schedule.cadenceDays) }}
             </p>
             <p v-else-if="next">{{ nextText }}</p>
+            <!-- a next period longer than the cadence says why (the amendment of 2026-10-30, rule 9) -->
+            <p v-if="!skipped && longerDays" class="schedule-hint">{{ $t("components.callInsights.reports.panel.longer", { days: longerDays }, longerDays) }}</p>
             <p class="schedule-hint">
               {{ $t("components.callInsights.reports.panel.settings") }}
               <router-link :to="settingsLink">{{ $t("components.callInsights.reports.panel.settingsLink") }}</router-link>
@@ -175,7 +177,6 @@ import PagedTable from "@/components/analytics/PagedTable.vue";
 import InsightsRequestDialog from "@/components/analytics/InsightsRequestDialog.vue";
 import ReportDeleteDialog from "@/components/analytics/ReportDeleteDialog.vue";
 
-const STATUSES = ["done", "claimed", "failed", "budget_exhausted", "written_off"];
 const RECENT_SIZE = 3;
 const RECENT_POLL_MS = 5000;
 
@@ -254,6 +255,9 @@ export default {
       const date = this.day(next.arrivesAt);
       return one ? this.$t(p + "nextOneDay", { date, day: days.first }) : this.$t(p + "next", { date, from: days.first, to: days.last });
     },
+    longerDays() {
+      return this.schedule && this.next && !this.next.retry ? InsightsReports.longerThanCadence(this.next, this.schedule.cadenceDays, this.zone, this.locale) : null;
+    },
     skipped() {
       return this.schedule ? this.schedule.skippedForCredit || null : null;
     },
@@ -282,7 +286,7 @@ export default {
       ];
     },
     statusOptions() {
-      return STATUSES.map((s) => ({ value: s, label: this.$t("components.callInsights.status." + InsightsReports.reportStatusKey({ status: s })) }));
+      return InsightsReports.REPORT_STATUSES.map((s) => ({ value: s, label: this.$t("components.callInsights.status." + InsightsReports.reportStatusKey({ status: s })) }));
     },
     typeOptions() {
       return ["automatic", "requested"].map((t) => ({ value: t, label: this.$t("components.callInsights.reports.type." + t) }));

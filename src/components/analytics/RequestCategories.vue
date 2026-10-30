@@ -145,7 +145,18 @@
                   <span v-if="row.lastSeen">{{ $t("components.callInsights.requests.freshness", { date: isoDay(row.lastSeen), pct: percent(row.recentShare), bucket: $t("components.callInsights.requests.bucket." + bucketUnit(row)) }) }}</span>
                   <span v-if="row.reportDated > 0" class="requests-sub">{{ $t("components.callInsights.requests.reportDated", { n: row.reportDated }) }}</span>
                 </td>
-                <td :data-label="$t('components.callInsights.requests.nextAction')">{{ row.nextAction }}</td>
+                <!-- every row says what to do next (the amendment of 2026-10-30, rule 4): StarChat's words, or ours by kind -->
+                <td :data-label="$t('components.callInsights.requests.nextAction')">
+                  <span v-if="nextActionOf(row).text">{{ nextActionOf(row).text }}</span>
+                  <Button
+                    v-else-if="nextActionOf(row).opens"
+                    type="button" text size="small" class="requests-next"
+                    :label="$t('components.callInsights.requests.next.' + nextActionOf(row).key)"
+                    :aria-expanded="isListOpen(row, null) ? 'true' : 'false'"
+                    @click="openList(row, null, nextActionOf(row).key === 'unrated')"
+                  />
+                  <span v-else>{{ $t("components.callInsights.requests.next." + nextActionOf(row).key) }}</span>
+                </td>
                 <td :data-label="$t('components.callInsights.requests.examples')">
                   <ul class="requests-examples">
                     <!-- not quoted: an example may be what a caller asked or what the report suggests (U19 m9) -->
@@ -194,7 +205,7 @@
                     :label="rowLabel(row)"
                     :body="body"
                     :outcome="list.outcome"
-                    :all="all"
+                    :all="all || list.all"
                     :categories="categories"
                   />
                 </td>
@@ -408,8 +419,12 @@ export default {
     isListOpen(row, outcome) {
       return !!this.list && this.list.key === this.rowKey(row) && this.list.outcome === outcome;
     },
-    openList(row, outcome) {
-      this.list = this.isListOpen(row, outcome) ? null : { key: this.rowKey(row), outcome };
+    // `all`: every request of the row, whatever its outcome (a row whose requests have no outcome yet)
+    openList(row, outcome, all = false) {
+      this.list = this.isListOpen(row, outcome) ? null : { key: this.rowKey(row), outcome, all };
+    },
+    nextActionOf(row) {
+      return InsightsReports.nextAction(row);
     },
     toggle(row) {
       this.expanded = this.expanded === row.category ? null : row.category;
@@ -418,10 +433,12 @@ export default {
     percent(fraction) {
       return Math.round((fraction || 0) * 100);
     },
+    // a count of businesses against the previous period, said as such beside a status that compares the window's halves
+    // (U19c m13: "In calo" beside "+3 rispetto al periodo precedente" read as a contradiction)
     trendText(row) {
       const n = row.trend || 0;
       const sign = n > 0 ? "+" : n < 0 ? "−" : "±";
-      return this.$t("components.callInsights.requests.trend", { sign, n: Math.abs(n) });
+      return this.$t("components.callInsights.requests.trend", { sign, n: Math.abs(n) }, Math.abs(n));
     },
     bucketUnit(row) {
       return row.bucket === "month" ? "month" : "week";

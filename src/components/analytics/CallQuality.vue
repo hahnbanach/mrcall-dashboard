@@ -125,7 +125,8 @@ export default {
   margin: 0 0 6px 0;
   font-size: 13px;
   font-weight: 700;
-  color: @mrcall_grey_text2;
+  // on the page's grey @mrcall_grey_text2 is 3.7:1 (U19c m2)
+  color: @mrcall_grey_text;
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }

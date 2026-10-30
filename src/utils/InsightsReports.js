@@ -74,21 +74,38 @@ function daysInterval(firstDay, lastDay, zone) {
     return { from: zonedMidnight(a.y, a.m, a.d, zone), to: zonedMidnight(b.y, b.m, b.d, zone) };
 }
 
+// Whether an instant is 00:00 in `zone`: a period between two such instants is whole days of the business.
+function atMidnight(ms, zone) {
+    const p = zonedParts(ms, validZone(zone));
+    return p.h === 0 && p.mi === 0 && p.s === 0;
+}
+
 // The days [periodStart, periodEnd) covers in `zone`, the last one included: the first and last day as dates of the
-// locale, and how many days.
+// locale, and how many days. A period whose bounds are not midnights of the zone (a report asked with UTC bounds,
+// before the dashboard asked local ones) is not whole days: its days are its length, and `exact` says so.
 function inclusiveDays(periodStart, periodEnd, zone, locale) {
     const z = validZone(zone);
     const format = new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeZone: z });
+    if (!atMidnight(periodStart, z) || !atMidnight(periodEnd, z)) {
+        const instant = new Intl.DateTimeFormat(locale, { dateStyle: "medium", timeStyle: "short", timeZone: z });
+        return {
+            first: instant.format(new Date(periodStart)), last: instant.format(new Date(periodEnd)),
+            days: Math.max(1, Math.round((periodEnd - periodStart) / DAY_MS)), exact: true,
+        };
+    }
     const last = Math.max(periodStart, periodEnd - 1);
     const a = zonedParts(periodStart, z);
     const b = zonedParts(last, z);
     const days = Math.round((Date.UTC(b.y, b.m - 1, b.d) - Date.UTC(a.y, a.m - 1, a.d)) / DAY_MS) + 1;
-    return { first: format.format(new Date(periodStart)), last: format.format(new Date(last)), days };
+    return { first: format.format(new Date(periodStart)), last: format.format(new Date(last)), days, exact: false };
 }
 
-// "1 ott 2026 – 7 ott 2026", or the one date of a one-day period.
+// "1 ott 2026 – 7 ott 2026", or the one date of a one-day period. A period that is not whole days of the business is
+// said by its start and end instants, so that no day it does not cover is named (U19c m8: a report stored as
+// 2026-03-19 00:00 UTC to 2026-03-21 00:00 UTC read "19 mar 2026 – 21 mar 2026" and ends at 01:00 of the 21st in Rome).
 function periodLabel(periodStart, periodEnd, zone, locale) {
     const d = inclusiveDays(periodStart, periodEnd, zone, locale);
+    if (d.exact) return d.first + " – " + d.last;
     return d.days <= 1 ? d.first : d.first + " – " + d.last;
 }
 
@@ -111,7 +128,7 @@ function isoDayLabel(iso, locale) {
 /*
  * THE STATES, each to its label key under `components.callInsights.status` (the brief's "status labels").
  * A history row (`ReportPageStatus`): done, claimed, failed (retried the next night), budget_exhausted (the night's
- * budget ran out, retried without limit), written_off (three real failures).
+ * budget ran out, retried without limit), written_off (three real failures), no_calls (a cycle with no call).
  */
 const REPORT_STATUS = {
     done: "ready",
@@ -119,7 +136,10 @@ const REPORT_STATUS = {
     failed: "retryTomorrow",
     budget_exhausted: "postponed",
     written_off: "failed",
+    // a cadence cycle with no calls, which writes no report but leaves its row (the amendment of 2026-10-30, rule 9)
+    no_calls: "noCallsCycle",
 };
+const REPORT_STATUSES = Object.keys(REPORT_STATUS);
 
 function reportStatusKey(row) {
     const key = row && REPORT_STATUS[row.status];
@@ -176,29 +196,38 @@ function outcomesOf(job) {
     return null;
 }
 
+// A session not finalised is not a call as Panoramica counts calls (StarChat's `AnalyticsScope`): progress and result
+// count calls without it, and say it apart ("4 chiamate analizzate; 10 sessioni non concluse escluse", U19c m9: the
+// row read "14 di 14 chiamate" beside Panoramica's 4 calls of the same days). The estimate's `notFinalised`, else the
+// job's own count of them, is taken off its `calls`.
+const NOT_FINALISED = "not_finalised";
+
 function jobProgress(job) {
     const outcomes = outcomesOf(job);
     if (!outcomes) return null;
-    const total = job.estimate && typeof job.estimate.calls === "number" ? job.estimate.calls : null;
-    if (job.kind === "recompute" && total === null) return null;
     const counts = job.counts || {};
-    const processed = outcomes.filter((key) => key !== "ceiling").reduce((sum, key) => sum + (counts[key] || 0), 0);
+    const estimated = job.estimate && typeof job.estimate.calls === "number" ? job.estimate.calls : null;
+    if (job.kind === "recompute" && estimated === null) return null;
+    const notFinalised = job.estimate && typeof job.estimate.notFinalised === "number" ? job.estimate.notFinalised : (counts[NOT_FINALISED] || 0);
+    const total = estimated === null ? null : Math.max(0, estimated - notFinalised);
+    const processed = outcomes.filter((key) => key !== "ceiling" && key !== NOT_FINALISED).reduce((sum, key) => sum + (counts[key] || 0), 0);
     return {
         processed: total === null ? processed : Math.min(processed, total),
         total,
         written: counts.written || 0,
-        notFinalised: counts.not_finalised || 0,
+        notFinalised: counts[NOT_FINALISED] || 0,
         ceiling: counts.ceiling || 0,
     };
 }
 
-// What a finished recompute or facts job did, in words: each of its outcomes that has calls, in StarChat's order
-// ("4 analizzate, 10 non concluse"), never an empty result beside "Pronto".
+// What a finished recompute or facts job did, in words: each of its outcomes that has calls, in StarChat's order, never
+// an empty result beside "Pronto"; the sessions not finalised come last, said apart from the calls.
 function jobResult(job) {
     const outcomes = outcomesOf(job);
     if (!outcomes || jobOpen(job)) return [];
     const counts = job.counts || {};
-    return outcomes.filter((key) => counts[key] > 0).map((key) => ({ key, count: counts[key] }));
+    return outcomes.filter((key) => key !== NOT_FINALISED && counts[key] > 0).map((key) => ({ key, count: counts[key] }))
+        .concat(counts[NOT_FINALISED] > 0 ? [{ key: NOT_FINALISED, count: counts[NOT_FINALISED], apart: true }] : []);
 }
 
 /*
@@ -314,11 +343,13 @@ function reportThemes(content) {
         .sort((a, b) => (b.calls === null ? -1 : b.calls) - (a.calls === null ? -1 : a.calls));
 }
 
-// "Aggiungi la risposta" pre-fills the knowledge base with the question: never for a question about the caller's own
-// medical case (StarChat's amendment of 2026-10-26, rule 3: the knowledge base is never pre-filled with a clinical
-// answer), and never for a gap without words.
+// "Aggiungi la risposta" pre-fills the knowledge base with a caller's question: never for a question about the
+// caller's own medical case (StarChat's amendment of 2026-10-26, rule 3: the knowledge base is never pre-filled with a
+// clinical answer), never on a gap that needs an integration, whose action is the integration's and which an answer in
+// the knowledge base cannot satisfy (the amendment of 2026-10-30, m5), and never for a gap without words.
 function answerable(gap) {
-    return !!gap && typeof gap.summary === "string" && gap.summary.trim() !== "" && gap.category !== "clinical_advice";
+    return !!gap && typeof gap.summary === "string" && gap.summary.trim() !== "" && gap.category !== "clinical_advice"
+        && gap.group !== "needs_integration";
 }
 
 /*
@@ -330,11 +361,23 @@ function answerable(gap) {
  */
 const MIN_PREVIOUS_BASE = 20;
 
-function change(current, previous, previousBase) {
+/*
+ * `partial`: the previous window holds data for less than its whole length (the business's or the scope's first
+ * finalised call falls inside it, StarChat's `previousPartial`, the amendment of 2026-10-30, rule 10): its counts
+ * compare a few days against a whole period ("+4550%" on the reseller scope, U19c m18), so the change is "n.d." too, with
+ * its own reason (`reason`: "base" or "partial").
+ */
+function change(current, previous, previousBase, { partial = false } = {}) {
     if (previous == null || current == null) return null;
-    if (typeof previousBase === "number" && previousBase < MIN_PREVIOUS_BASE) return { available: false };
+    if (partial) return { available: false, reason: "partial" };
+    if (typeof previousBase === "number" && previousBase < MIN_PREVIOUS_BASE) return { available: false, reason: "base" };
     if (previous === 0) return null;
     return { available: true, value: (current - previous) / previous };
+}
+
+// StarChat's word that an answer's (or a row's) previous window is partial: one place reads it.
+function previousPartial(answer) {
+    return !!answer && answer.previousPartial === true;
 }
 
 /*
@@ -370,8 +413,73 @@ function otherLast(rows, sort) {
     return list;
 }
 
+/*
+ * WHAT A REPORT READS (the amendment of 2026-10-30, rule 1, U19c B1). A report analyses no call: it reads the calls
+ * already analysed, so its estimate's `calls` is always 0 (StarChat's report tally sums only its own request) and
+ * cannot say "no calls": only StarChat's refusal (`fits: false`, `no_calls`) does. The report estimate carries the
+ * period's finalised calls (`finalised`) and, of those, the analysed ones the report reads (`analysed`). Null when the
+ * estimate does not carry them (an older StarChat): then nothing is said about them.
+ */
+function reportReach(estimate) {
+    const e = estimate || {};
+    if (typeof e.analysed !== "number") return null;
+    const notAnalysed = typeof e.finalised === "number" ? Math.max(0, e.finalised - e.analysed) : 0;
+    return { analysed: e.analysed, notAnalysed };
+}
+
+/*
+ * THE CALLS A REPORT LISTS (the amendment of 2026-10-30, rule 2, U19c M1). From content version 5 a report's
+ * `flagged_calls` are the calls whose outcome line is not solved, "the calls to call back"; a report of version 4 or
+ * lower froze a list that also took solved calls with an unanswered question or a check, and is captioned for what it
+ * holds, "the calls to review", so no stored report is mislabelled.
+ */
+const FLAGGED_CALL_BACK_FROM = 5;
+
+function flaggedCaption(content) {
+    const v = content && typeof content.version === "number" ? content.version : 0;
+    return v >= FLAGGED_CALL_BACK_FROM ? "callBack" : "review";
+}
+
+/*
+ * A CATEGORY ROW'S NEXT ACTION (the amendment of 2026-10-30, rule 4, U19c M3), from StarChat's `nextActionKind`:
+ * `business_info` and `integration` with the category's own words (`nextAction`); `delegate`, `handled`, `withdrawn`
+ * worded here; `unrated` (no request of the row has an outcome yet) and the unclassified row opening their requests.
+ * No row is blank: a kind or an action StarChat leaves unsaid opens the requests.
+ * `{ text }` for StarChat's words, `{ key, opens }` for a label key and whether it opens the row's requests.
+ */
+const WORDED_ACTIONS = ["delegate", "handled", "withdrawn"];
+
+function nextAction(row) {
+    const r = row || {};
+    if (r.category == null || r.unclassified) return { key: "classify", opens: true };
+    const kind = r.nextActionKind;
+    const own = typeof r.nextAction === "string" && r.nextAction.trim() !== "" ? r.nextAction.trim() : null;
+    if ((kind === "business_info" || kind === "integration") && own) return { text: own };
+    if (WORDED_ACTIONS.includes(kind)) return { key: kind, opens: false };
+    if (kind === "unrated") return { key: "unrated", opens: true };
+    return { key: "open", opens: true };
+}
+
+/*
+ * The next automatic report covering more days than the cadence (the amendment of 2026-10-30, rule 9): it starts where
+ * the last report ended, so it also covers the days since, which had no report of their own. The days it covers, or
+ * null when it covers no more than the cadence.
+ */
+function longerThanCadence(next, cadenceDays, zone, locale) {
+    if (!next || !(cadenceDays > 0)) return null;
+    const days = inclusiveDays(next.from, next.to, zone, locale).days;
+    return days > cadenceDays ? days : null;
+}
+
 export default {
     FALLBACK_ZONE,
+    REPORT_STATUSES,
+    reportReach,
+    flaggedCaption,
+    nextAction,
+    longerThanCadence,
+    previousPartial,
+    atMidnight,
     distinctExamples,
     otherLast,
     MIN_PREVIOUS_BASE,

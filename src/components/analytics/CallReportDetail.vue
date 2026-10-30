@@ -93,10 +93,11 @@
           </ul>
         </section>
 
-        <!-- The calls to call back: not resolved, or passed on with a message that is not complete -->
+        <!-- The calls to call back (content version 5: not resolved, or passed on with a message that is not complete);
+             a report of version 4 or lower froze a wider list, captioned for what it holds (the amendment's rule 2) -->
         <section v-if="flagged.length > 0" class="report-section" aria-labelledby="callback-title">
-          <h3 id="callback-title" class="report-section-title">{{ $t("components.callInsights.reportDetail.callBackTitle") }}</h3>
-          <p class="report-note">{{ $t("components.callInsights.reportDetail.callBackNote") }}</p>
+          <h3 id="callback-title" class="report-section-title">{{ $t("components.callInsights.reportDetail." + flaggedCaption + "Title") }}</h3>
+          <p class="report-note">{{ $t("components.callInsights.reportDetail." + flaggedCaption + "Note") }}</p>
           <ul class="report-calls">
             <li v-for="id in flagged" :key="id">
               <router-link :to="conversationLink(id)">{{ exampleName(id) }}</router-link>
@@ -109,12 +110,13 @@
           <div v-for="group in gapGroups" :key="group.key" class="report-gap-group">
             <h4 class="report-gap-reason">
               {{ $t("components.callInsights.gaps." + group.key) }}
+              <!-- the group's count, the analytics' over the report's days, which is what its list holds (m4) -->
               <router-link
                 v-if="link('gap', group.key)"
                 :to="link('gap', group.key)"
                 class="report-gap-calls"
                 :aria-label="$t('components.callInsights.feedback.links.openAll', { label: $t('components.callInsights.gaps.' + group.key) })"
-              >{{ $t("components.callInsights.feedback.links.calls") }}</router-link>
+              >{{ gapCount(group.key) === null ? $t("components.callInsights.feedback.links.calls") : $t("components.callInsights.reportDetail.calls", { n: gapCount(group.key) }, gapCount(group.key)) }}</router-link>
             </h4>
             <ul class="report-list">
               <li v-for="(gap, i) in group.gaps" :key="i" class="report-gap">
@@ -127,9 +129,14 @@
                     <router-link :to="conversationLink(id)">{{ exampleName(id) }}</router-link>
                   </template>
                 </p>
-                <router-link v-if="answerable(gap)" :to="answerLink(gap)" class="report-answer">
-                  <i class="pi pi-pencil" aria-hidden="true"></i> {{ $t("components.callInsights.reportDetail.addAnswer") }}
-                </router-link>
+                <Button
+                  v-if="answerable(gap)"
+                  type="button" text size="small" icon="pi pi-pencil"
+                  class="report-answer"
+                  :label="$t('components.callInsights.reportDetail.addAnswer')"
+                  :loading="answering === gap"
+                  @click="addAnswer(gap)"
+                />
               </li>
             </ul>
           </div>
@@ -199,6 +206,7 @@
 import CallInsights from "@/utils/CallInsights";
 import InsightsReports from "@/utils/InsightsReports";
 import { KNOWLEDGE_BASE_SECTION, cleanQuestion } from "@/utils/KnowledgeBase";
+import ConversationApi from "@/utils/Conversation";
 import { isSessionEnded } from "@/firebase/session";
 import InsightsState from "@/components/analytics/InsightsState.vue";
 import InsightsRequestDialog from "@/components/analytics/InsightsRequestDialog.vue";
@@ -237,6 +245,8 @@ export default {
       quality: null,
       dialogVisible: false,
       deleteVisible: false,
+      // the gap whose caller's question is being read for "Add the answer"
+      answering: null,
     };
   },
   computed: {
@@ -271,6 +281,9 @@ export default {
     },
     base() {
       return InsightsReports.reportBase(this.content);
+    },
+    flaggedCaption() {
+      return InsightsReports.flaggedCaption(this.content);
     },
     excluded() {
       const n = this.outcomes && this.outcomes.noConversation;
@@ -386,6 +399,41 @@ export default {
     answerable(gap) {
       return InsightsReports.answerable(gap);
     },
+    // A gap group's calls over the report's days, as its link lists them; null without the analytics' answer.
+    gapCount(key) {
+      const gaps = this.quality && this.quality.gaps;
+      return gaps && typeof gaps[key] === "number" ? gaps[key] : null;
+    },
+    /*
+     * "Add the answer" pre-fills the knowledge base with a question a caller asked (U19c m5: the gap's summary, a
+     * sentence about the business, was pre-filled instead). The question is the first example call's own unanswered
+     * question of the gap's reason, read when the person asks, from the owner's own call: an owner's read records no
+     * opening. A reader who does not own the calls (a reseller, an admin) does not read them for this, since StarChat
+     * records each such read as an opening (the classification brief: no call is opened without a person asking to
+     * open it); the knowledge base then opens without a question, as it does when no example names one.
+     */
+    async addAnswer(gap) {
+      if (this.answering) return;
+      this.answering = gap;
+      let question = null;
+      try {
+        const id = Array.isArray(gap.examples) ? gap.examples[0] : null;
+        if (id && Classifications.isOwnerOf(this.businessRecord, this.user()) === true) {
+          const call = await ConversationApi.get(this.user(), this.businessId, id);
+          const asked = call && call.details && Array.isArray(call.details.unanswered) ? call.details.unanswered : [];
+          const same = asked.find((q) => q && q.gap === gap.group && typeof q.question === "string" && q.question.trim() !== "")
+            || asked.find((q) => q && typeof q.question === "string" && q.question.trim() !== "");
+          question = same ? cleanQuestion(same.question) : null;
+        }
+      } catch (error) {
+        if (isSessionEnded(error)) { this.answering = null; return; }
+        console.debug("Example call not read for its question:", error && error.message);
+      }
+      this.answering = null;
+      const query = { id: this.businessId, section: KNOWLEDGE_BASE_SECTION };
+      if (question) query.draftQuestion = question;
+      this.$router.push({ path: "/businessconfiguration", query });
+    },
     // A call StarChat named, by its caller and start; one it did not, by its number among the report's unnamed calls,
     // the same number wherever it appears, so two different calls never share a name.
     exampleName(id) {
@@ -417,9 +465,6 @@ export default {
     },
     conversationLink(conversationId) {
       return { path: "/conversations", query: { id: this.businessId, conversation: conversationId } };
-    },
-    answerLink(gap) {
-      return { path: "/businessconfiguration", query: { id: this.businessId, section: KNOWLEDGE_BASE_SECTION, draftQuestion: cleanQuestion(gap.summary) } };
     },
     onDeleted() {
       this.$router.push(this.backLink);

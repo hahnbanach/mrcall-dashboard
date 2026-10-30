@@ -30,7 +30,8 @@ import { isSessionEnded } from "@/firebase/session";
 /**
  * The one undo of a page's judgements (brief docs/briefs/2026-10-27-classification-feedback.md, scope 2): after every
  * gesture, "Modificato · Annulla", announced to screen readers, with no time limit, until the next gesture replaces it
- * or the person closes it. "Annulla" reverts the whole gesture (one gesture, one undo), then says so or says it failed.
+ * or the person closes it. "Annulla" undoes the whole gesture (one gesture, one undo): StarChat reverts its corrections
+ * and withdraws its proposals, and the bar says what the answer lists, or that it failed.
  * Built new: the conversations page's toast group "undo" never rendered, and a toast has a time limit.
  * `raised`: a bottom bar of bulk actions is shown under it.
  */
@@ -58,8 +59,9 @@ export default {
       this.busy = true;
       try {
         const answer = await Classifications.revertGesture(user, gestureId);
-        UndoGesture.undone(answer && answer.calls, answer && answer.reverted, answer && answer.items);
-        this.message = this.$t("components.callInsights.feedback.undo.undone");
+        const outcome = Classifications.undoOutcome(answer);
+        UndoGesture.undone(answer && answer.calls, outcome, answer && answer.items);
+        this.message = this.said(outcome);
       } catch (error) {
         if (isSessionEnded(error)) return;
         this.message = this.$t("components.callInsights.feedback.undo.failed");
@@ -70,6 +72,15 @@ export default {
     close() {
       UndoGesture.clear();
       this.message = null;
+    },
+    // What the undo did, by StarChat's answer only: corrections undone, proposals withdrawn, or nothing (a gesture
+    // already decided by someone else).
+    said({ reverted, withdrawn }) {
+      const p = "components.callInsights.feedback.undo.";
+      if (reverted.length > 0 && withdrawn.length > 0) return this.$t(p + "both", { reverted: reverted.length, withdrawn: withdrawn.length });
+      if (withdrawn.length > 0) return this.$t(p + "withdrawn", { n: withdrawn.length }, withdrawn.length);
+      if (reverted.length > 0) return this.$t(p + "undone");
+      return this.$t(p + "nothing");
     },
   },
 };

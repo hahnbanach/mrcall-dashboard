@@ -5,7 +5,8 @@
       mode="indeterminate"
       :style="{ height: '0.3em', visibility: anyLoading ? 'visible' : 'hidden' }"
     />
-    <div v-if="user" class="analytics-container insights-ui">
+    <!-- the scope page holds the tables over several businesses: wider, so they fit their card at 1440 px (U19c m12) -->
+    <div v-if="user" class="analytics-container insights-ui" :class="{ 'analytics-container-wide': showScopePage }">
 
       <!-- Reseller Owner Selector -->
       <!-- not over one business: the business is the filter, and the selector had nothing to show (U19 m23) -->
@@ -102,7 +103,7 @@
               class="kpi-delta delta-neutral"
               :title="$t('components.callInsights.change.notAvailableHelp')"
             ><abbr :title="$t('components.callInsights.change.notAvailableHelp')">{{ $t('components.callInsights.change.notAvailable') }}</abbr></div>
-            <div v-else-if="kpi.change" class="kpi-delta" :class="deltaClass(kpi.change.value)">
+            <div v-else-if="kpi.change" class="kpi-delta delta-neutral">
               <i :class="deltaIcon(kpi.change.value)"></i>
               {{ formatDeltaPercentage(kpi.change.value) }}
             </div>
@@ -262,11 +263,12 @@
         @names="rememberNames"
         @error="handleApiError"
       />
+      </template>
       <!-- The reader's own proposals on the calls' judgements: of this business, or of the reseller's scope (brief
-           docs/briefs/2026-10-27-classification-feedback.md, scope 9) -->
+           docs/briefs/2026-10-27-classification-feedback.md, scope 9); shown whatever the range, the no-calls empty
+           state included (U19c m10: a proposal of March was found only with a custom March range) -->
       <MyProposals v-if="(businessId && !businessMissing) || (showScopePage && roleReady)" :business-id="businessId || null" />
 
-      </template>
 
       <!-- Empty state -->
       <div v-if="allDataReady && noData && !showScopePage" class="analytics-section">
@@ -366,6 +368,8 @@ export default {
       recomputeVisible: false,
       // The role is known (see `establishRole`): the scope-wide lists wait for it.
       roleReady: false,
+      // Panoramica's reads were skipped on another tab, and are made when it is shown
+      overviewStale: false,
       // businessId -> company name, from every answer that names a business (brief outcome 10)
       businessNames: {},
     };
@@ -476,8 +480,10 @@ export default {
       ];
     },
     anyLoading() {
+      // the outcomes are read on Panoramica (or the scope page) only: another tab waits for none of them
+      const outcomesRead = !this.businessId || this.currentTab === 'overview';
       return this.loadingDashboard || this.loadingTimeseries || this.loadingDuration ||
-        this.loadingHeatmap || this.loadingCallers || this.outcomesStatus === 'loading';
+        this.loadingHeatmap || this.loadingCallers || (outcomesRead && this.outcomesStatus === 'loading');
     },
     allDataReady() {
       return !this.anyLoading;
@@ -617,6 +623,10 @@ export default {
     },
     // Moving from the scope page to a business, or back, has no other reactive trigger
     // (`<router-view/>` has no key, `App.vue:14`), so a route change loads the one the link asks for.
+    // Panoramica's reads are made when its tab is shown, not before (rule 6 of the amendment of 2026-10-30)
+    currentTab(tab) {
+      if (tab === "overview" && this.businessId && this.overviewStale) this.fetchAllData();
+    },
     '$route.query'() {
       if (this.$route.name !== 'Analytics') return;
       if (this.redirectOldReportLink()) return;
@@ -792,6 +802,11 @@ export default {
         return;
       }
 
+      // The business record serves every tab; Panoramica's reads only its own (the amendment of 2026-10-30, rule 6:
+      // the Report tab fired the nine reads it does not show, 0.89-1.50 s beside its own 0.35-0.49 s on test).
+      this.fetchBusiness(user);
+      if (this.currentTab !== "overview") { this.overviewStale = true; return; }
+      this.overviewStale = false;
       const request = this.buildRequestBody();
       this.fetchDashboard(user, request);
       this.fetchTimeseries(user, request, granularity, timezone);
@@ -802,7 +817,6 @@ export default {
       this.fetchOutcomes(user, request, granularity, timezone);
       this.fetchTopics(user, request);
       this.fetchQuality(user, request);
-      this.fetchBusiness(user);
     },
     // Across the reseller's scope (its own calls and all its managed owners', or one of them
     // through the owner selector): no businessId key, which is StarChat's "every business" the
@@ -923,11 +937,6 @@ export default {
       const intensity = value / max;
       return `rgba(0, 104, 255, ${0.15 + intensity * 0.75})`;
     },
-    deltaClass(delta) {
-      if (delta > 0) return 'delta-positive';
-      if (delta < 0) return 'delta-negative';
-      return 'delta-neutral';
-    },
     deltaIcon(delta) {
       if (delta > 0) return 'pi pi-arrow-up';
       if (delta < 0) return 'pi pi-arrow-down';
@@ -1044,6 +1053,10 @@ export default {
   padding: 0 16px 32px;
 }
 
+.analytics-container-wide {
+  max-width: 1280px;
+}
+
 .analytics-section {
   margin-bottom: 32px;
 }
@@ -1079,7 +1092,8 @@ export default {
 }
 
 .analytics-tab-active {
-  color: @mrcall_blue;
+  // the blue mark under it; the text dark, since the blue on the page's grey is 3.77:1 (U19c m2)
+  color: @mrcall_dark_grey_text;
   border-bottom-color: @mrcall_blue;
 }
 
@@ -1159,9 +1173,8 @@ export default {
   gap: 4px;
 }
 
-.delta-positive { color: #22C55E; }
-.delta-negative { color: #EF4444; }
-.delta-neutral { color: #6b7280; }
+// every change is neutral: no figure here is good or bad by its direction alone (U19c m1)
+.delta-neutral { color: @mrcall_grey_text; }
 
 // Charts
 .chart-container {

@@ -1992,7 +1992,8 @@
           "nextOneDay": "Seuraava saapuu {date} ja kattaa päivän {day}.",
           "covers": "Seuraava kattaa ajan {from}–{to}.",
           "coversOneDay": "Seuraava kattaa päivän {day}.",
-          "retryOneDay": "Raportti päivältä {day} ei onnistunut: sitä yritetään uudelleen tänä yönä."
+          "retryOneDay": "Raportti päivältä {day} ei onnistunut: sitä yritetään uudelleen tänä yönä.",
+          "longer": "Se kattaa {days} päivän, enemmän kuin tiheys: se kattaa myös päivät edellisen raportin jälkeen. | Se kattaa {days} päivää, enemmän kuin tiheys: se kattaa myös päivät edellisen raportin jälkeen."
         },
         "type": {
           "automatic": "Automaattinen",
@@ -2017,7 +2018,6 @@
         "checks": "Tarkistukset",
         "skillErrors": "Toimintovirheet",
         "extractionIssues": "Poiminnan ongelmat",
-        "shareOfTotal": "{percent} % ({count} / {total})",
         "sortOptions": {
           "calls": "Puhelut",
           "notSolved": "Ratkaisematta (avustajan arvioima)",
@@ -2042,7 +2042,8 @@
           "skillErrors": "Skill-virheet",
           "extractionIssues": "Poiminta",
           "change": "Muutos",
-          "configSuggestions": "MrCallin ehdotukset"
+          "configSuggestions": "MrCallin ehdotukset",
+          "asks": "Mitä soittajat kysyvät"
         },
         "legend": {
           "notSolved": "ratkaisematta, sekä yritykselle puutteellisella viestillä välitetyt pyynnöt, niistä puheluista, joissa soittaja kysyi jotain",
@@ -2071,7 +2072,10 @@
           "unknown": "Ei tiedossa",
           "planOther": "Tilaus ei ole aktiivinen"
         },
-        "changePoints": "{sign}{n} prosenttiyksikköä"
+        "changePoints": "{sign}{n} prosenttiyksikköä",
+        "askedOf": "{category}: {n} pyyntö | {category}: {n} pyyntöä",
+        "latestReport": "Viimeisin raportti",
+        "countOf": "({count} / {total})"
       },
       "scope": {
         "allBusinesses": "Kaikissa yrityksissä, jotka voit nähdä, viimeisten 30 päivän ajalta.",
@@ -2156,7 +2160,8 @@
         "notRunCredit": "Ei suoritettu: saldo ei riitä",
         "stoppedCredit": "Pysäytetty: saldo ei riitä",
         "cancelled": "Peruttu",
-        "recomputeStopped": "Pysäytetty: saldo ei riitä. {done} / {total} puhelusta analysoitiin yrityksen saldolla. Muita ei analysoitu."
+        "recomputeStopped": "Pysäytetty: saldo ei riitä. {done} / {total} puhelusta analysoitiin yrityksen saldolla. Muita ei analysoitu.",
+        "noCallsCycle": "Ei puheluita"
       },
       "reportsTab": {
         "scheduleTitle": "Automaattiset raportit",
@@ -2222,11 +2227,11 @@
         "examined": "{n} puhelu tarkistettu | {n} puhelua tarkistettu",
         "outcome": {
           "recompute": {
-            "written": "{n} analysoitu | {n} analysoitu",
+            "written": "{n} puhelu analysoitu | {n} puhelua analysoitu",
             "reasoned": "{n} ilman keskustelua | {n} ilman keskustelua",
             "skipped": "{n} jo ajan tasalla | {n} jo ajan tasalla",
             "left": "{n} ilman analysoitavaa | {n} ilman analysoitavaa",
-            "not_finalised": "{n} keskeneräinen | {n} keskeneräistä",
+            "not_finalised": "{n} keskeneräinen istunto jätetty pois | {n} keskeneräistä istuntoa jätetty pois",
             "conflict": "{n} muuttui sillä välin | {n} muuttui sillä välin",
             "failed": "{n} epäonnistui | {n} epäonnistui",
             "ceiling": "{n} analysoimatta: raja saavutettu | {n} analysoimatta: raja saavutettu"
@@ -2234,7 +2239,7 @@
           "facts": {
             "written": "{n} päivitetty | {n} päivitetty",
             "unchanged": "{n} jo ajan tasalla | {n} jo ajan tasalla",
-            "not_finalised": "{n} keskeneräinen | {n} keskeneräistä",
+            "not_finalised": "{n} keskeneräinen istunto jätetty pois | {n} keskeneräistä istuntoa jätetty pois",
             "conflict": "{n} muuttui sillä välin | {n} muuttui sillä välin"
           }
         }
@@ -2259,7 +2264,9 @@
         "transferred": "{n} puhelu siirretty henkilölle | {n} puhelua siirretty henkilölle",
         "themeOutcome": "Aiheen {topic} puheluiden tulos",
         "callBackTitle": "Takaisin soitettavat puhelut",
-        "callBackNote": "Ratkaisemattomat puhelut tai yritykselle puutteellisen viestin kanssa välitetyt puhelut."
+        "callBackNote": "Ratkaisemattomat puhelut tai yritykselle puutteellisen viestin kanssa välitetyt puhelut.",
+        "reviewTitle": "Tarkistettavat puhelut",
+        "reviewNote": "Ratkaisemattomat, joissa jäi vastaamattomia kysymyksiä tai tarkistuksia laukesi."
       },
       "deleteReport": {
         "title": "Poista raportti",
@@ -2332,7 +2339,9 @@
         "noAnalysis": "Jaksolla on 1 puhelu, mutta sitä ei ole vielä analysoitu. | Jaksolla on {n} puhelua, mutta yhtäkään ei ole vielä analysoitu.",
         "noAnalysisNone": "Yhtäkään jakson puhelua ei ole analysoitu, eikä yhtäkään voi analysoida.",
         "cycleEmpty": "Käynnissä olevalla automaattisella raportilla ei ole vielä yhtään päättynyttä päivää: nyt ei ole mitään laadittavaa.",
-        "busyYou": "Tälle yritykselle on jo käsittely käynnissä, jonka aloitit {when}."
+        "busyYou": "Tälle yritykselle on jo käsittely käynnissä, jonka aloitit {when}.",
+        "reads": "{n} analysoitu puhelu | {n} analysoitua puhelua",
+        "leftOut": "{n} vielä analysoimaton puhelu jää ulkopuolelle | {n} vielä analysoimatonta puhelua jää ulkopuolelle"
       },
       "recompute": {
         "banner": "{n} tällä jaksolla hoidetulla puhelulla ei ole vielä automaattista analyysia, joten lopputulokset, aiheet ja laatu eivät laske niitä mukaan.",
@@ -2361,7 +2370,7 @@
           "freshness": "Tuoreus"
         },
         "businesses": "{n} yritystä",
-        "trend": "{sign}{n} edelliseen jaksoon verrattuna",
+        "trend": "{sign}{n} yritys edelliseen jaksoon verrattuna | {sign}{n} yritystä edelliseen jaksoon verrattuna",
         "share": "{pct} % yrityksistä, joilla on analysoituja puheluita",
         "histogramLabel": "Yritykset per {bucket}, vanhimmasta alkaen: {values}",
         "bucket": {
@@ -2397,9 +2406,9 @@
         "confirmDismiss": "Arkistoi",
         "reopened": "Avattu uudelleen: {n} uutta yritystä on pyytänyt sitä sen jälkeen, kun se arkistoitiin {date}.",
         "status": {
-          "rising": "Nousussa",
-          "steady": "Vakaa",
-          "falling": "Laskussa",
+          "rising": "Nousussa jakson jälkimmäisellä puoliskolla",
+          "steady": "Vakaa jakson aikana",
+          "falling": "Laskussa jakson jälkimmäisellä puoliskolla",
           "stale": "Ei enää pyydetty viime aikoina"
         },
         "hiddenExamples": "Piilotetut esimerkit",
@@ -2412,7 +2421,15 @@
           "admin": "MrCall"
         },
         "archived": "{category} arkistoitu.",
-        "undo": "Kumoa"
+        "undo": "Kumoa",
+        "next": {
+          "delegate": "Harkitse näiden pyyntöjen antamista avustajan hoidettaviksi",
+          "handled": "Avustaja hoiti nämä",
+          "withdrawn": "Soittajat peruivat nämä",
+          "unrated": "Lopputulosta ei ole vielä arvioitu: avaa pyynnöt",
+          "classify": "Luokittele nämä pyynnöt",
+          "open": "Avaa pyynnöt"
+        }
       },
       "admin": {
         "reason": {
@@ -2422,7 +2439,8 @@
       },
       "change": {
         "notAvailable": "ei tiedossa",
-        "notAvailableHelp": "Edellisellä jaksolla oli alle 20 puhelua: muutos ei ole merkitsevä."
+        "notAvailableHelp": "Edellisellä jaksolla oli alle 20 puhelua: muutos ei ole merkitsevä.",
+        "partialHelp": "Edellisellä jaksolla on puheluita vain osana sen päivistä: muutos ei ole merkityksellinen."
       },
       "overview": {
         "noCallsDays": "Ei puheluita viimeisen päivän aikana. | Ei puheluita viimeisten {days} päivän aikana."
@@ -2450,7 +2468,8 @@
           "confirmed": "Vahvistettu",
           "proposed": "Ehdotus lähetetty",
           "applied": "Otettu käyttöön",
-          "rejected": "Hylätty"
+          "rejected": "Hylätty",
+          "withdrawn": "Peruttu"
         },
         "chip": {
           "name": "{field}: {value}",
@@ -2461,7 +2480,8 @@
           "right": "Tämä on oikein",
           "wrong": "Tämä on väärin, en tiedä mikä on oikein",
           "restore": "Palauta analyysin arvo",
-          "history": "Historia"
+          "history": "Historia",
+          "withdraw": "Peru ehdotukseni"
         },
         "who": {
           "owner": "omistaja",
@@ -2484,7 +2504,8 @@
             "reverted": "Peruttu",
             "orphaned": "Pyyntöä ei enää löydy",
             "confirmed": "Vahvistettu",
-            "closed": "MrCall käsitteli"
+            "closed": "MrCall käsitteli",
+            "withdrawn": "Peruttu"
           }
         },
         "undo": {
@@ -2492,7 +2513,10 @@
           "undo": "Kumoa",
           "close": "Sulje",
           "undone": "Muutos kumottu.",
-          "failed": "Muutosta ei voitu kumota."
+          "failed": "Muutosta ei voitu kumota.",
+          "withdrawn": "Ehdotus peruttu. | {n} ehdotusta peruttu.",
+          "both": "Kumotut muutokset: {reverted}. Perutut ehdotukset: {withdrawn}.",
+          "nothing": "Mitään ei kumottu: asiasta oli jo päätetty."
         },
         "stale": "Arvo muuttui sillä välin: nykyinen näytetään.",
         "failed": "Muutosta ei tallennettu.",
@@ -2556,7 +2580,9 @@
         "fact": {
           "chip": "Ilmoita tosiasian virheestä",
           "reportedOf": "Ilmoitettu MrCallille: {fact}",
-          "option": "{fact}: {value}"
+          "option": "{fact}: {value}",
+          "withdraw": "Peru",
+          "withdrawOf": "Peru ilmoitus: {fact}"
         },
         "links": {
           "open": "Avaa puhelu: {label} | Avaa {n} puhelua: {label}",
@@ -2609,11 +2635,20 @@
           "change": "{field}: {from} → {to}",
           "wrong": "{field}: {from} on väärin, tarkistettavana",
           "right": "{field}: {from} vahvistettu",
-          "fact": "{field} ilmoitettu vääräksi"
+          "fact": "{field} ilmoitettu vääräksi",
+          "factOf": {
+            "booked": "Varaus ilmoitettu vääräksi",
+            "transferred": "Yhdistäminen ilmoitettu vääräksi",
+            "no_conversation": "”Ei keskustelua” ilmoitettu vääräksi",
+            "managed_call": "”Avustajan hoitama” ilmoitettu vääräksi",
+            "skill_errors": "Skill-virheet ilmoitettu vääriksi",
+            "unkept": "Pitämättömät lupaukset ilmoitettu vääriksi"
+          }
         },
         "mine": {
           "title": "Omat ehdotukset",
-          "empty": "Ei vielä ehdotuksia."
+          "empty": "Ei vielä ehdotuksia.",
+          "withdraw": "Peru"
         },
         "facts": {
           "no_conversation": "Ei keskustelua",

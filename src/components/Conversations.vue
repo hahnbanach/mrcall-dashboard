@@ -20,7 +20,7 @@
           <div class="card-header">
             <div class="contact-info">
               <span class="contact-name">{{ callerName(opened) }}</span>
-              <span v-if="opened.contactNumber" class="contact-number">{{ opened.contactNumber }}</span>
+              <span v-if="callerNumber(opened)" class="contact-number">{{ callerNumber(opened) }}</span>
             </div>
             <div class="timestamp-section">
               <span class="timestamp">{{ timestampToDate(opened.startTimestamp) }}</span>
@@ -43,6 +43,7 @@
             :expanded="true"
             :eager="true"
             :read-only="readOnly"
+            :owner-actions="!notOwner"
             :with-judgements="true"
             @error="recordingFailed"
           />
@@ -77,6 +78,8 @@
               <i class="pi pi-times" aria-hidden="true"></i>
             </button>
           </span>
+          <!-- the count the link opened, as StarChat counts the list (U19c m3) -->
+          <p v-if="counted && queryConvResultReady" class="address-count" role="status">{{ $t("components.callInsights.reportDetail.calls", { n: totalHits }, totalHits) }}</p>
           <p v-if="addressUnknown.length > 0" class="address-unknown" role="status">{{ $t("components.callInsights.feedback.filters.unknown") }}</p>
           <p v-if="leftOut > 0" class="address-unknown" role="status">{{ $t("components.callInsights.feedback.filters.leftOut", { n: leftOut }, leftOut) }}</p>
         </div>
@@ -160,14 +163,17 @@
                 <Tag severity="secondary" :value="$t('components.callInsights.assessedMarking')" class="insight-assessed-tag" />
               </label>
               <div class="filter-control">
+                <!-- an outcome line from a count's link fixes the resolution: shown, not editable (U19c m3) -->
                 <Dropdown
-                  v-model="resolutionFilter"
+                  :modelValue="impliedResolution || resolutionFilter"
                   :options="resolutionOptions"
                   optionLabel="label"
                   optionValue="value"
-                  :showClear="true"
+                  :showClear="!impliedResolution"
+                  :disabled="!!impliedResolution"
                   :ariaLabel="$t('components.callInsights.dimensions.resolution')"
                   :placeholder="$t('components.callInsights.filters.resolutionPlaceholder')"
+                  @update:modelValue="resolutionFilter = $event"
                 />
               </div>
             </div>
@@ -300,8 +306,9 @@
               </div>
             </div>
 
-            <!-- Bulk Actions Row: archive and delete are the owner's only -->
-            <div v-if="!notOwner" class="filter-row">
+            <!-- Bulk Actions Row: archive and delete are the owner's only, and not offered on the list a count opened, whose
+                 calls are a statistic's, not a selection (U19c m3) -->
+            <div v-if="!notOwner && !counted" class="filter-row">
               <label class="filter-label">
                 <i class="pi pi-list-check"></i>
                 {{ $t("components.conversations.bulkActionsLabel") }}
@@ -404,10 +411,10 @@
                     {{ callerName(conversation) }}
                   </span>
                   <span
-                    v-if="conversation.contactNumber"
+                    v-if="callerNumber(conversation)"
                     class="contact-number"
                   >
-                    {{ conversation.contactNumber }}
+                    {{ callerNumber(conversation) }}
                   </span>
                 </div>
                 <div class="timestamp-section">
@@ -517,6 +524,7 @@
                 :user="user"
                 :expanded="messagesExpanded"
                 :read-only="readOnly"
+                :owner-actions="!notOwner"
                 :with-judgements="true"
                 @error="recordingFailed"
               />
@@ -750,6 +758,12 @@ export default {
     bulkOutcomeEntries() {
       return CallInsights.RESOLUTION_KEYS.map((key) => ({ key, value: key, kind: "value", label: this.$t("components.callInsights.resolution." + key) }));
     },
+    // The resolution an outcome line of the address fixes (the line "forwarded_*" is resolution "forwarded"), shown in
+    // the resolution control so that it agrees with the chip; null when the address carries none.
+    impliedResolution() {
+      const line = this.addressFilters.find((f) => f.key === "outcomeLine");
+      return line ? CallInsights.resolutionOfLine(line.value) : null;
+    },
     resolutionOptions() {
       return CallInsights.RESOLUTION_KEYS.map((key) => ({
         label: this.$t("components.callInsights.resolution." + key),
@@ -971,10 +985,15 @@ export default {
         this.business = null;
       }
     },
+    // A web call is named as the analytics name it, never by its caller's identity string (U19c m15).
     callerName(conversation) {
       const details = conversation.details || {};
+      if (CallInsights.isWebCaller(conversation)) return this.$t("components.callInsights.callers.web");
       return details.callerName || conversation.contactName ||
         this.$t("components.conversations.unknownContact");
+    },
+    callerNumber(conversation) {
+      return CallInsights.isWebCaller(conversation) ? null : conversation.contactNumber || null;
     },
     async openConversation(id) {
       this.openedId = id;
@@ -2260,6 +2279,12 @@ export default {
   margin: 0;
   font-size: 13px;
   color: @mrcall_grey_text;
+}
+
+.address-count {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .select-check {

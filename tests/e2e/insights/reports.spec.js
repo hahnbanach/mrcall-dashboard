@@ -3,6 +3,7 @@ const { expect } = require('@playwright/test')
 const { test } = require('../fixtures/auth')
 const { mockBusiness } = require('../fixtures/mock-data')
 const { mockInsights, BUSINESS_ID, rome, REPORT, historyRows, reportsPage, sortBy } = require('../fixtures/insights')
+const { mockConversations, conversation } = require('../fixtures/classifications')
 
 /**
  * U14 of StarChat's plan docs/execution-plans/2026-10-24-insights-reports-ux.md: the Report tab (its own address, the
@@ -147,8 +148,9 @@ test.describe('the report\'s own page', () => {
     await page.route('**/crm/business?*', (route) => route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify([business]),
       headers: { 'x-mrcall-role': 'owner', 'access-control-expose-headers': 'x-mrcall-role' } }))
 
-    const add = page.getByRole('link', { name: 'Add the answer' }).first()
-    await expect(add).toHaveAttribute('href', /section=__KNOWLEDGE_BASE__&draftQuestion=Is\+there\+parking|section=__KNOWLEDGE_BASE__&draftQuestion=Is%20there%20parking/)
+    // the question a caller asked, read from the gap's example call when the owner asks (the amendment of 2026-10-30, m5)
+    await mockConversations(page, [conversation({ id: 'CON-1', details: { summary: 'Asked about parking.', unanswered: [{ question: 'Is there parking near the restaurant?', gap: 'missing_info' }], checks: {}, requests: [] } })])
+    const add = page.getByRole('button', { name: 'Add the answer' }).first()
     await add.click()
     await expect(page.locator('.tuple-item')).toHaveCount(2, { timeout: 20000 })
     await expect(page.locator('.tuple-item').first().locator('textarea').first()).toHaveValue('Is there parking near the restaurant?')

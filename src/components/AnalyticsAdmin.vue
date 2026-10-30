@@ -5,6 +5,7 @@
       mode="indeterminate"
       :style="{ height: '0.3em', visibility: anyLoading ? 'visible' : 'hidden' }"
     />
+    <!-- the admin page holds the tables over every business: wider, so they fit their card at 1440 px (U19c m12) -->
     <div v-if="user" class="analytics-container insights-ui">
 
       <!-- Admin Mode Banner -->
@@ -79,7 +80,7 @@
           <div class="kpi-card">
             <div class="kpi-label">{{ $t('components.analytics.kpi.totalCalls') }}</div>
             <div class="kpi-value">{{ formatNumber(dashboardData.totalCalls) }}</div>
-            <div v-if="dashboardData.totalCallsDelta != null" class="kpi-delta" :class="deltaClass(dashboardData.totalCallsDelta)">
+            <div v-if="dashboardData.totalCallsDelta != null" class="kpi-delta delta-neutral">
               <i :class="deltaIcon(dashboardData.totalCallsDelta)"></i>
               {{ formatDeltaPercentage(dashboardData.totalCallsDelta) }}
             </div>
@@ -87,7 +88,7 @@
           <div class="kpi-card">
             <div class="kpi-label">{{ $t('components.analytics.kpi.avgDuration') }}</div>
             <div class="kpi-value">{{ formatDuration(dashboardData.avgCallDurationMs) }}</div>
-            <div v-if="dashboardData.avgDurationDelta != null" class="kpi-delta" :class="deltaClass(dashboardData.avgDurationDelta)">
+            <div v-if="dashboardData.avgDurationDelta != null" class="kpi-delta delta-neutral">
               <i :class="deltaIcon(dashboardData.avgDurationDelta)"></i>
               {{ formatDeltaPercentage(dashboardData.avgDurationDelta) }}
             </div>
@@ -95,7 +96,7 @@
           <div class="kpi-card">
             <div class="kpi-label">{{ $t('components.analytics.kpi.totalDuration') }}</div>
             <div class="kpi-value">{{ formatDuration(dashboardData.totalCallDurationMs) }}</div>
-            <div v-if="dashboardData.totalDurationDelta != null" class="kpi-delta" :class="deltaClass(dashboardData.totalDurationDelta)">
+            <div v-if="dashboardData.totalDurationDelta != null" class="kpi-delta delta-neutral">
               <i :class="deltaIcon(dashboardData.totalDurationDelta)"></i>
               {{ formatDeltaPercentage(dashboardData.totalDurationDelta) }}
             </div>
@@ -103,7 +104,7 @@
           <div class="kpi-card">
             <div class="kpi-label">{{ $t('components.analytics.kpi.uniqueCallers') }}</div>
             <div class="kpi-value">{{ formatNumber(dashboardData.uniqueCallers) }}</div>
-            <div v-if="dashboardData.uniqueCallersDelta != null" class="kpi-delta" :class="deltaClass(dashboardData.uniqueCallersDelta)">
+            <div v-if="dashboardData.uniqueCallersDelta != null" class="kpi-delta delta-neutral">
               <i :class="deltaIcon(dashboardData.uniqueCallersDelta)"></i>
               {{ formatDeltaPercentage(dashboardData.uniqueCallersDelta) }}
             </div>
@@ -984,11 +985,6 @@ export default {
       if (previous == null || previous === 0 || current == null) return null;
       return (current - previous) / previous;
     },
-    deltaClass(delta) {
-      if (delta > 0) return 'delta-positive';
-      if (delta < 0) return 'delta-negative';
-      return 'delta-neutral';
-    },
     deltaIcon(delta) {
       if (delta > 0) return 'pi pi-arrow-up';
       if (delta < 0) return 'pi pi-arrow-down';
@@ -1107,7 +1103,7 @@ export default {
 
 .analytics-container {
   margin: auto;
-  max-width: 960px;
+  max-width: 1280px;
   padding: 0 16px 32px;
 }
 
@@ -1192,9 +1188,8 @@ export default {
   gap: 4px;
 }
 
-.delta-positive { color: #22C55E; }
-.delta-negative { color: #EF4444; }
-.delta-neutral { color: #6b7280; }
+// every change is neutral: no figure here is good or bad by its direction alone (U19c m1)
+.delta-neutral { color: @mrcall_grey_text; }
 
 // Charts
 .chart-container {

@@ -16,6 +16,16 @@
             <span class="my-proposal-state">{{ stateLabel(s) }}</span> · {{ labels.when(s.createdAt) }} ·
             <router-link :to="{ path: '/conversations', query: { id: s.businessId, conversation: s.conversationId } }">{{ $t("components.callInsights.feedback.categories.call") }}</router-link>
           </p>
+          <!-- the author withdraws a proposal still waiting (the amendment of 2026-10-30, rule 5) -->
+          <Button
+            v-if="s.status === 'proposed' && s.source !== 'agent'"
+            type="button" text size="small"
+            :label="$t('components.callInsights.feedback.mine.withdraw')"
+            :loading="withdrawing === s.feedbackId"
+            :disabled="withdrawing !== null"
+            @click="withdraw(s)"
+          />
+          <p v-if="failed === s.feedbackId" class="my-proposal-failed" role="alert">{{ $t("components.callInsights.feedback.failed") }}</p>
         </li>
       </ul>
       <nav v-if="page.total > page.size" class="my-proposals-pager" :aria-label="$t('components.callInsights.pager.label', { name: $t('components.callInsights.feedback.mine.title') })">
@@ -32,13 +42,15 @@ import CallInsights from "@/utils/CallInsights";
 import Classifications from "@/utils/Classifications";
 import InsightsState from "@/components/analytics/InsightsState.vue";
 import { judgementLabels } from "@/components/feedback/labels";
+import { isSessionEnded } from "@/firebase/session";
 
-// the states of the reader's own signals: waiting, applied, rejected, a fact report handled
-const STATUSES = "proposed,applied,rejected,closed";
+// the states of the reader's own signals: waiting, applied, rejected, a fact report handled, withdrawn by its author
+const STATUSES = "proposed,applied,rejected,closed,withdrawn";
 
 /**
  * "Le mie proposte" (brief docs/briefs/2026-10-27-classification-feedback.md, scope 9; StarChat's brief, decision 9):
- * the reader's own proposals and where they stand ("Proposta inviata", "Applicata", "Respinta", a fact report handled),
+ * the reader's own proposals and where they stand ("Proposta inviata", "Applicata", "Respinta", a fact report handled,
+ * "Ritirata"), a proposal still waiting withdrawn by its author,
  * of one business (`businessId`, an owner's page) or of every business the reader reaches (a reseller's scope page, the
  * admin page), as StarChat's queue answers them grouped, paged over groups (`GET insights/feedback?mine=true`).
  */
@@ -55,6 +67,8 @@ export default {
         read: (a) => ({ items: a && Array.isArray(a.groups) ? a.groups : [], total: a && typeof a.total === "number" ? a.total : 0, asOf: a && a.asOf }),
       }),
       categories: null,
+      withdrawing: null,
+      failed: null,
     };
   },
   computed: {
@@ -80,8 +94,16 @@ export default {
   },
   methods: {
     stateLabel(s) {
-      const key = s.status === "proposed" ? "proposed" : s.status === "applied" ? "applied" : s.status === "rejected" ? "rejected" : "closed";
-      return key === "closed" ? this.$t("components.callInsights.feedback.history.status.closed") : this.$t("components.callInsights.feedback.state." + key);
+      const known = ["proposed", "applied", "rejected", "withdrawn"];
+      return known.includes(s.status) ? this.$t("components.callInsights.feedback.state." + s.status) : this.$t("components.callInsights.feedback.history.status.closed");
+    },
+    withdraw(s) {
+      this.withdrawing = s.feedbackId;
+      this.failed = null;
+      Classifications.withdraw(this.$store.state.user, s.feedbackId)
+        .then(() => this.page.retry())
+        .catch((error) => { if (!isSessionEnded(error)) this.failed = s.feedbackId; })
+        .finally(() => { this.withdrawing = null; });
     },
   },
 };

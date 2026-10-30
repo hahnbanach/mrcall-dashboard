@@ -49,6 +49,11 @@
     margin-bottom: 32px;
   }
 
+  // PrimeVue's unselected toggle text (#64748B) is 4.3:1 on its own background (U19c m2)
+  .p-selectbutton .p-togglebutton:not(.p-togglebutton-checked) {
+    color: @mrcall_grey_text;
+  }
+
   .section-title {
     font-size: 1.2rem;
     font-weight: 600;

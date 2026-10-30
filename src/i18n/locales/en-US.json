@@ -1997,7 +1997,8 @@
           "nextOneDay": "The next one will arrive on {date} and will cover {day}.",
           "covers": "The next one will cover {from} to {to}.",
           "coversOneDay": "The next one will cover {day}.",
-          "retryOneDay": "The report covering {day} did not succeed: it will be tried again tonight."
+          "retryOneDay": "The report covering {day} did not succeed: it will be tried again tonight.",
+          "longer": "It covers {days} day, more than the cadence: it also covers the days since the last report. | It covers {days} days, more than the cadence: it also covers the days since the last report."
         },
         "type": {
           "automatic": "Automatic",
@@ -2022,7 +2023,6 @@
         "checks": "Checks",
         "skillErrors": "Skill errors",
         "extractionIssues": "Extraction issues",
-        "shareOfTotal": "{percent}% ({count} of {total})",
         "sortOptions": {
           "calls": "Calls",
           "notSolved": "Unresolved (assessed by the assistant)",
@@ -2047,7 +2047,8 @@
           "skillErrors": "Skill errors",
           "extractionIssues": "Extraction",
           "change": "Change",
-          "configSuggestions": "MrCall suggestions"
+          "configSuggestions": "MrCall suggestions",
+          "asks": "What callers ask"
         },
         "legend": {
           "notSolved": "not resolved, plus requests passed to the business with an incomplete message, over the calls where the caller asked something",
@@ -2076,7 +2077,10 @@
           "unknown": "Not known",
           "planOther": "Plan not active"
         },
-        "changePoints": "{sign}{n} points"
+        "changePoints": "{sign}{n} points",
+        "askedOf": "{category}: {n} request | {category}: {n} requests",
+        "latestReport": "Latest report",
+        "countOf": "({count} of {total})"
       },
       "scope": {
         "allBusinesses": "Across every business you can see, over the last 30 days.",
@@ -2161,7 +2165,8 @@
         "notRunCredit": "Not run: not enough credit",
         "stoppedCredit": "Stopped: not enough credit",
         "cancelled": "Cancelled",
-        "recomputeStopped": "Stopped: not enough credit. {done} of {total} calls were analysed, using the business's credit. The others were not analysed."
+        "recomputeStopped": "Stopped: not enough credit. {done} of {total} calls were analysed, using the business's credit. The others were not analysed.",
+        "noCallsCycle": "No calls"
       },
       "reportsTab": {
         "scheduleTitle": "Automatic reports",
@@ -2227,11 +2232,11 @@
         "examined": "{n} call examined | {n} calls examined",
         "outcome": {
           "recompute": {
-            "written": "{n} analysed | {n} analysed",
+            "written": "{n} call analysed | {n} calls analysed",
             "reasoned": "{n} without a conversation | {n} without a conversation",
             "skipped": "{n} already up to date | {n} already up to date",
             "left": "{n} with nothing to analyse | {n} with nothing to analyse",
-            "not_finalised": "{n} not finished | {n} not finished",
+            "not_finalised": "{n} unfinished session left out | {n} unfinished sessions left out",
             "conflict": "{n} changed meanwhile | {n} changed meanwhile",
             "failed": "{n} not successful | {n} not successful",
             "ceiling": "{n} not analysed: limit reached | {n} not analysed: limit reached"
@@ -2239,7 +2244,7 @@
           "facts": {
             "written": "{n} updated | {n} updated",
             "unchanged": "{n} already up to date | {n} already up to date",
-            "not_finalised": "{n} not finished | {n} not finished",
+            "not_finalised": "{n} unfinished session left out | {n} unfinished sessions left out",
             "conflict": "{n} changed meanwhile | {n} changed meanwhile"
           }
         }
@@ -2264,7 +2269,9 @@
         "transferred": "{n} call transferred to a person | {n} calls transferred to a person",
         "themeOutcome": "Outcome of the calls of {topic}",
         "callBackTitle": "Calls to call back",
-        "callBackNote": "Calls not resolved, or passed to the business with an incomplete message."
+        "callBackNote": "Calls not resolved, or passed to the business with an incomplete message.",
+        "reviewTitle": "Calls to review",
+        "reviewNote": "Unresolved, with questions left unanswered or checks that fired."
       },
       "deleteReport": {
         "title": "Delete the report",
@@ -2337,7 +2344,9 @@
         "noAnalysis": "There is 1 call in this period, but it is not analysed yet. | There are {n} calls in this period, but none is analysed yet.",
         "noAnalysisNone": "No call of this period is analysed, and none can be analysed.",
         "cycleEmpty": "The automatic report in progress has no finished day yet: there is nothing to prepare now.",
-        "busyYou": "There is already a processing in progress for this business, started by you on {when}."
+        "busyYou": "There is already a processing in progress for this business, started by you on {when}.",
+        "reads": "{n} analysed call | {n} analysed calls",
+        "leftOut": "{n} call not analysed yet is left out | {n} calls not analysed yet are left out"
       },
       "recompute": {
         "banner": "{n} calls managed in this period do not have the automatic analysis yet, so outcomes, topics and quality do not count them.",
@@ -2366,7 +2375,7 @@
           "freshness": "Freshness"
         },
         "businesses": "{n} businesses",
-        "trend": "{sign}{n} compared with the previous period",
+        "trend": "{sign}{n} business compared with the previous period | {sign}{n} businesses compared with the previous period",
         "share": "{pct}% of the businesses with analysed calls",
         "histogramLabel": "Businesses per {bucket}, from the oldest: {values}",
         "bucket": {
@@ -2402,9 +2411,9 @@
         "confirmDismiss": "Archive",
         "reopened": "Reopened: {n} new businesses asked for it after it was archived on {date}.",
         "status": {
-          "rising": "Rising",
-          "steady": "Steady",
-          "falling": "Falling",
+          "rising": "Rising in the second half of the period",
+          "steady": "Steady across the period",
+          "falling": "Falling in the second half of the period",
           "stale": "No longer asked recently"
         },
         "hiddenExamples": "Hidden examples",
@@ -2417,7 +2426,15 @@
           "admin": "MrCall"
         },
         "archived": "{category} archived.",
-        "undo": "Undo"
+        "undo": "Undo",
+        "next": {
+          "delegate": "Consider letting the assistant handle these requests",
+          "handled": "Handled by the assistant",
+          "withdrawn": "Withdrawn by the callers",
+          "unrated": "Outcome not rated yet: open the requests",
+          "classify": "Classify these requests",
+          "open": "Open the requests"
+        }
       },
       "admin": {
         "reason": {
@@ -2427,7 +2444,8 @@
       },
       "change": {
         "notAvailable": "n/a",
-        "notAvailableHelp": "The period before had fewer than 20 calls: the change is not meaningful."
+        "notAvailableHelp": "The period before had fewer than 20 calls: the change is not meaningful.",
+        "partialHelp": "The period before has calls for only part of its days: the change is not meaningful."
       },
       "overview": {
         "noCallsDays": "No calls in the last day. | No calls in the last {days} days."
@@ -2455,7 +2473,8 @@
           "confirmed": "Confirmed",
           "proposed": "Proposal sent",
           "applied": "Applied",
-          "rejected": "Rejected"
+          "rejected": "Rejected",
+          "withdrawn": "Withdrawn"
         },
         "chip": {
           "name": "{field}: {value}",
@@ -2466,7 +2485,8 @@
           "right": "It is correct",
           "wrong": "It is wrong, I don't know which",
           "restore": "Restore the analysis's value",
-          "history": "History"
+          "history": "History",
+          "withdraw": "Withdraw my proposal"
         },
         "who": {
           "owner": "the owner",
@@ -2489,7 +2509,8 @@
             "reverted": "Undone",
             "orphaned": "Request no longer found",
             "confirmed": "Confirmed",
-            "closed": "Handled by MrCall"
+            "closed": "Handled by MrCall",
+            "withdrawn": "Withdrawn"
           }
         },
         "undo": {
@@ -2497,7 +2518,10 @@
           "undo": "Undo",
           "close": "Close",
           "undone": "Change undone.",
-          "failed": "The change could not be undone."
+          "failed": "The change could not be undone.",
+          "withdrawn": "Proposal withdrawn. | {n} proposals withdrawn.",
+          "both": "Changes undone: {reverted}. Proposals withdrawn: {withdrawn}.",
+          "nothing": "Nothing was undone: it had already been decided."
         },
         "stale": "This value changed meanwhile: the current one is shown.",
         "failed": "The change was not saved.",
@@ -2561,7 +2585,9 @@
         "fact": {
           "chip": "Report an error on a fact",
           "reportedOf": "Reported to MrCall: {fact}",
-          "option": "{fact}: {value}"
+          "option": "{fact}: {value}",
+          "withdraw": "Withdraw",
+          "withdrawOf": "Withdraw the report: {fact}"
         },
         "links": {
           "open": "Open the call: {label} | Open the {n} calls: {label}",
@@ -2614,11 +2640,20 @@
           "change": "{field}: {from} → {to}",
           "wrong": "{field}: {from} is wrong, to review",
           "right": "{field}: {from} confirmed",
-          "fact": "{field} reported wrong"
+          "fact": "{field} reported wrong",
+          "factOf": {
+            "booked": "Booking reported wrong",
+            "transferred": "Transfer reported wrong",
+            "no_conversation": "No conversation reported wrong",
+            "managed_call": "Managed by the assistant reported wrong",
+            "skill_errors": "Skill errors reported wrong",
+            "unkept": "Promises not kept reported wrong"
+          }
         },
         "mine": {
           "title": "My proposals",
-          "empty": "No proposal yet."
+          "empty": "No proposal yet.",
+          "withdraw": "Withdraw"
         },
         "facts": {
           "no_conversation": "No conversation",

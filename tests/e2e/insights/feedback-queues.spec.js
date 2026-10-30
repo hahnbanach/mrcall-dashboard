@@ -116,7 +116,7 @@ test.describe('the queues of corrections', () => {
     await expect(section.getByRole('listitem').filter({ hasText: 'How much is a whitening?' })).toContainText('Proposal sent', { timeout: 15000 })
     await expect(section.getByRole('listitem').filter({ hasText: 'Do you have parking?' })).toContainText('Rejected')
     await expect(section.getByText('Is the parking free?')).toHaveCount(0)
-    expect(sent.find((s) => s.path === 'feedback').query).toMatchObject({ mine: 'true', businessId: BUSINESS_ID, status: 'proposed,applied,rejected,closed' })
+    expect(sent.find((s) => s.path === 'feedback').query).toMatchObject({ mine: 'true', businessId: BUSINESS_ID, status: 'proposed,applied,rejected,closed,withdrawn' })
     // no decisions for an owner
     await expect(section.getByRole('button', { name: 'Apply' })).toHaveCount(0)
   })
