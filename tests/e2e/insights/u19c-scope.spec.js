@@ -76,7 +76,7 @@ test.describe('rule 10, m1: changes', () => {
     await page.goto('/analytics')
     const outcome = page.getByRole('list', { name: 'Outcome of the calls where the caller asked something' })
     await expect(outcome.getByText('n/a').first()).toBeVisible({ timeout: 15000 })
-    await expect(outcome.locator('abbr').first()).toHaveAttribute('title', 'The period before has calls for only part of its days: the change is not meaningful.')
+    await expect(outcome.locator('abbr').first()).toHaveAccessibleDescription('The period before has calls for only part of its days: the change is not meaningful.')
     await expect(page.locator('.legend-delta:not(:has(abbr))')).toHaveCount(0)
   })
 

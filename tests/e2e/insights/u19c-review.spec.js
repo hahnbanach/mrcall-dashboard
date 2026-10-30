@@ -90,9 +90,19 @@ test.describe('the minors of U19r6b', () => {
       expect(ids, 'an n/a names the text that says why').toBeTruthy()
       return page.locator(ids.split(' ').map((id) => '#' + id).join(', '))
     }
-    const kpi = page.locator('.kpi-card').filter({ hasText: 'Total Calls' }).getByText('n/a', { exact: true })
+    const card = page.locator('.kpi-card').filter({ hasText: 'Total Calls' })
+    const kpi = card.getByText('n/a', { exact: true })
     await expect(kpi).toBeVisible({ timeout: 15000 })
     await expect(await describedBy(kpi)).toHaveText(help)
+    // the reason reaches assistive technology once (U19r6b n3): as the n/a's description, never read again in place
+    await expect(kpi).toHaveAccessibleDescription(help)
+    await expect(kpi).not.toHaveAccessibleName(/meaningful/)
+    await expect(card.locator('.not-available')).not.toHaveAccessibleName(/meaningful/)
+    await expect(card.locator('.not-available')).not.toHaveAccessibleDescription(/meaningful/)
+    expect(await card.ariaSnapshot()).not.toContain(help)
+    // for a pointer, the reason shows on hover
+    await kpi.hover()
+    await expect(card.locator('.not-available-reason')).toBeInViewport()
     const line = page.getByRole('list', { name: 'Outcome of the calls where the caller asked something' }).getByText('n/a', { exact: true }).first()
     await expect(await describedBy(line)).toHaveText(help)
   })

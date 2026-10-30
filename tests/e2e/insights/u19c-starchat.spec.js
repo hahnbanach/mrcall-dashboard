@@ -81,7 +81,7 @@ test.describe('rule 10: a partial previous window, beyond the outcomes', () => {
     await page.goto(`/analytics?id=${BUSINESS_ID}`)
     const total = page.locator('.kpi-card').filter({ hasText: 'Total Calls' })
     await expect(total.locator('.kpi-delta abbr')).toHaveText('n/a', { timeout: 15000 })
-    await expect(total.locator('.kpi-delta abbr')).toHaveAttribute('title', help)
+    await expect(total.locator('.kpi-delta abbr')).toHaveAccessibleDescription(help)
   })
 
   test('the admin page\'s KPIs too', async ({ adminPage: page }) => {
@@ -90,7 +90,7 @@ test.describe('rule 10: a partial previous window, beyond the outcomes', () => {
     await page.goto('/analytics-admin')
     const total = page.locator('.kpi-card').filter({ hasText: 'Total Calls' })
     await expect(total.locator('.kpi-delta abbr')).toHaveText('n/a', { timeout: 15000 })
-    await expect(total.locator('.kpi-delta abbr')).toHaveAttribute('title', help)
+    await expect(total.locator('.kpi-delta abbr')).toHaveAccessibleDescription(help)
   })
 
   test('the topics\' previous counts and the report\'s quality comparison say the window is partial', async ({ authenticatedPage: page }) => {

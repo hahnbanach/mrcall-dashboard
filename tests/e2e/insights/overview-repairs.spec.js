@@ -43,7 +43,7 @@ test.describe('Overview, as the U19 attack repaired it', () => {
     const total = page.locator('.kpi-card').filter({ hasText: 'Total Calls' })
     await expect(total).toContainText('1,986', { timeout: 15000 })
     await expect(total.locator('.kpi-delta abbr')).toHaveText('n/a')
-    await expect(total.locator('.kpi-delta abbr')).toHaveAttribute('title', 'The period before had fewer than 20 calls: the change is not meaningful.')
+    await expect(total.locator('.kpi-delta abbr')).toHaveAccessibleDescription('The period before had fewer than 20 calls: the change is not meaningful.')
     await expect(page.getByText(/24725/)).toHaveCount(0)
   })
 

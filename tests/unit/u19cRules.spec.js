@@ -179,10 +179,15 @@ describe('b6c43ca49: the cycles with no call among a page of the history', () =>
     const rows = R.historyWithEmptyCycles(items, cycles, { offset: 0, total: 3, size: 10, sort: 'periodEnd', direction: 'desc', nextFrom: 100 * DAY })
     expect(rows.map((r) => (r.emptyCycle ? 'e' : 'r') + r.periodEnd / DAY)).toEqual(['e102', 'e101', 'r100', 'r93', 'r86'])
   })
+  // the cycles are the stretch since the last report (`nextFrom`), so that only the page, sort and filter guard keeps
+  // them off: seen failing with that guard removed (U19r6b n2), passing with it
   it('not on a later page, nor under a sort that is not by date, nor under a state filter', () => {
-    expect(R.historyWithEmptyCycles(items, cycles, { offset: 10, total: 13, size: 10, sort: 'periodEnd', direction: 'desc' }).length).toBe(3)
-    expect(R.historyWithEmptyCycles(items, cycles, { offset: 0, total: 3, size: 10, sort: 'calls', direction: 'desc' }).length).toBe(3)
-    expect(R.historyWithEmptyCycles(items, cycles, { offset: 0, total: 3, size: 10, sort: 'periodEnd', direction: 'desc', status: 'done' }).length).toBe(3)
+    const stretch = { nextFrom: 100 * DAY }
+    expect(R.historyWithEmptyCycles(items, cycles, { ...stretch, offset: 0, total: 3, size: 10, sort: 'periodEnd', direction: 'desc' }).length).toBe(5)
+    expect(R.historyWithEmptyCycles(items, cycles, { ...stretch, offset: 10, total: 13, size: 10, sort: 'periodEnd', direction: 'desc' }).length).toBe(3)
+    expect(R.historyWithEmptyCycles(items, cycles, { ...stretch, offset: 0, total: 3, size: 10, sort: 'calls', direction: 'desc' }).length).toBe(3)
+    expect(R.historyWithEmptyCycles(items, cycles, { ...stretch, offset: 0, total: 3, size: 10, sort: 'periodEnd', direction: 'desc', status: 'done' }).length).toBe(3)
+    expect(R.historyWithEmptyCycles(items, cycles, { ...stretch, offset: 0, total: 3, size: 10, sort: 'periodEnd', direction: 'desc', type: 'requested' }).length).toBe(3)
   })
   it('oldest first: on the last page, after the reports', () => {
     const asc = [...items].reverse()
