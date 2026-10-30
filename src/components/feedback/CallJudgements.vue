@@ -260,7 +260,8 @@ export default {
     // and the signals the gesture's answer carries, as the panel that made it did
     "undo.recorded"() {
       const last = this.undo.lastRecorded;
-      if (!last || last.origin === this.uid || !last.affected.includes(this.conversation.id) || !this.loaded) return;
+      if (!last || last.origin === this.uid || !last.affected.includes(this.conversation.id)) return;
+      if (!this.loaded) { this.readIfOpened(); return; }
       this.gate.begin();
       this.data = Classifications.withGesture(this.data, last);
       this.status = "ok";
@@ -268,7 +269,9 @@ export default {
     },
     "undo.undone"() {
       const last = this.undo.lastUndone;
-      if (last && last.affected.includes(this.conversation.id) && this.loaded) this.takeCalls(last.calls, last.reverted);
+      if (!last || !last.affected.includes(this.conversation.id)) return;
+      if (!this.loaded) { this.readIfOpened(); return; }
+      this.takeCalls(last.calls, last.reverted);
     },
   },
   mounted() {
@@ -290,6 +293,12 @@ export default {
     // A gesture's or an undo's answer carries the touched calls' state (StarChat a012b6926): this call's is taken as it
     // is, the history kept and the reverted signals marked. An answer without it (an older StarChat) or with the judged
     // field alone (a reader who may not open the call now) reads the call again.
+    // A gesture made elsewhere touched this call before its judgements were read here. The opened call (`eager`) is on
+    // screen, so it reads them, a non-owner's read recording its opening once per 10 minutes; a call only listed is
+    // not read, and StarChat records no opening for a non-owner's bulk gesture itself.
+    readIfOpened() {
+      if (this.eager) this.load();
+    },
     takeCalls(calls, reverted) {
       const mine = Classifications.stateIn(calls, this.conversation.id);
       if (!mine) { this.load({ keep: true }); return; }

@@ -14,7 +14,9 @@ const { mockClassifications, mockConversations, conversation, BUSINESS_ID } = re
  *
  * Seen failing, 2026-10-27, before the non-owner view existed in Conversations.vue and CallDetailsPanel.vue: every case
  * (the owner-only controls drawn; no "Open the call"; the recording read by id). The masked number's dial and WhatsApp
- * actions, found by the final review, failed on e4f77d2.
+ * actions, found by the final review, failed on e4f77d2. The bulk case (StarChat's decision that a non-owner's bulk answers
+ * no call's state and records no opening) failed on d24e658: the opened call of a non-owner, whose chips come from its
+ * details, did not read its judgements after the gesture and kept the old value.
  */
 const reduced = (id, name) => ({
   id, businessId: BUSINESS_ID, startTimestamp: Date.UTC(2026, 9, 20, 9, 30), contactNumber: '+39****001', duration: 61000,
@@ -48,6 +50,40 @@ for (const role of ['admin', 'reseller']) {
       await expect(page.locator('.opened-card')).toContainText('Asked about prices.', { timeout: 15000 })
       expect(searches.filter((s) => s.id).map((s) => s.id)).toEqual(['CON-r1'])
       await expect(page.locator('.opened-card').getByText('Read-only view')).toBeVisible()
+    })
+
+    test('after a bulk gesture answered without the calls\' state, only the call on screen is read again', async ({ page }) => {
+      await signIn(page)
+      await mockConversations(page, [reduced('CON-r1'), reduced('CON-r2')], { byId: [full] })
+      const { sent } = await mockClassifications(page, { role, partialState: true })
+      await page.goto(`/conversations?id=${BUSINESS_ID}&conversation=CON-r1`)
+      const opened = page.locator('.opened-card')
+      await expect(opened.getByRole('button', { name: /^Resolution: Resolved/ })).toBeVisible({ timeout: 15000 })
+      const readsOf = (id) => sent.filter((s) => s.path === 'classifications' && s.id === id).length
+      // the opened call's chips come from its details: nothing read yet
+      expect(readsOf('CON-r1')).toBe(0)
+      const before = 0
+      for (const i of [0, 1]) {
+        const card = page.locator('.conversations-list .conversation-card').nth(i)
+        await card.scrollIntoViewIfNeeded()
+        if (page.viewportSize().width < 600 && !(await card.getByRole('checkbox').isVisible())) {
+          // a long press enters the selection mode under 600 px
+          const box = await card.locator('.card-header').boundingBox()
+          await page.mouse.move(box.x + 20, box.y + 10)
+          await page.mouse.down()
+          await page.waitForTimeout(700)
+          await page.mouse.up()
+        }
+        await card.getByRole('checkbox').check()
+      }
+      await page.getByRole('toolbar', { name: 'Selected calls' }).getByRole('button', { name: 'Mark as spam' }).click()
+      await expect.poll(() => sent.filter((s) => s.path === 'bulk').length).toBe(1)
+      // StarChat answers a non-owner's bulk with no call's state and records no opening for it: the opened call alone is
+      // read again (its one recorded opening), never a call only listed
+      await expect.poll(() => readsOf('CON-r1')).toBe(before + 1)
+      await expect(opened.getByRole('button', { name: /^Resolution: Spam or wrong number/ })).toBeVisible()
+      await page.waitForTimeout(1000)
+      expect(readsOf('CON-r2')).toBe(0)
     })
 
     test('an opened call\'s recording comes from the one-time link', async ({ page }) => {

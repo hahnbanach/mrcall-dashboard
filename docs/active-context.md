@@ -29,14 +29,14 @@ Session ownership: every nonpublic route needs a session, the Axios interceptor 
 and components suppress their failure UI for `isSessionEnded`. Browser tests mock StarChat and
 mrcall-agent.
 
-Branch `classification-feedback` (a fast-forward from `fd4c94d`, not merged, not deployed) carries the dashboard side
-of StarChat's classification feedback (its plan's step C8): a call's judgements as chips with one undo, bulk
-corrections, every count opening its calls, callers' requests on request records, the queues, caller rules and the
-access record, a non-owner's read-only call ([brief](briefs/2026-10-27-classification-feedback.md),
+Branch `classification-feedback` (a fast-forward from `de91ac6`, not merged, not deployed) carries the dashboard side
+of StarChat's classification feedback (its plan's step C8): a call's judgements as chips with one undo, the six facts
+reported from one chip, bulk corrections, every count opening its calls, callers' requests on request records with
+their category chip, "Move to category" and "Mark as spam", the queues, caller rules and the access record, a
+non-owner's read-only call ([brief](briefs/2026-10-27-classification-feedback.md),
 [plan](execution-plans/2026-10-27-classification-feedback.md)). Verified on the repository's mocks only (vitest and
-the full Playwright run); it needs StarChat with the routes of that plan's C5, C5b, C6 and C7 and the commits named in
-the brief's amendments (the second one: `a012b6926`, `f87578328`, on test with StarChat's next tag), and its live check
-comes with StarChat's C11.
+the full Playwright run); the StarChat pieces it reads are on test with StarChat 9.34.121, and the bulk gating the
+brief's second amendment (item 10) names is not built there yet; its live check comes with StarChat's C11.
 
 ## Unresolved
 

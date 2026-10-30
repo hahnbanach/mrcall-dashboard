@@ -272,16 +272,17 @@ above.
    gesture wrote, in every panel of the touched calls (the signals travel with the gesture, a bulk answer's items
    paired with their asks by call, field and request), an applied correction marking the one it replaces reverted as
    StarChat does.
-   - *Pending on StarChat (announced, not committed when this was written):* the state is answered only for a call
-     the reader may open now (`ConversationAccess.readable`) and omitted for any other; a signal's answer keeps the
-     judged field's effective `value`. A panel whose call's state is absent (or not a full state) takes that `value`
-     for the judged field, records the signal in its history, and reads the call's judgements again; if that read is
-     refused (404, the reader may not open the call now) the chips stay as the answer left them instead of
-     disappearing. Deciding "may open now" records an opening for a non-owner (once per actor and call within 10
-     minutes, `f87578328`), so a non-owner's bulk gesture records one for every touched call they may open, opened
-     on screen or not. That record is StarChat's, made on the person's own gesture on those calls; the Constraint on
-     calls opened "without a person asking" is about reads the dashboard makes on its own and none is added here.
-     It is named to StarChat's lead, whose decision it is.
+   - *StarChat's gating (`db92e82d8`, on test with 9.34.121):* the state is answered only for a call the reader may
+     open now (`ConversationAccess.readable`) and omitted for any other; a signal's answer keeps the judged field's
+     effective `value`. A panel whose call's state is absent (or not a full state) takes that `value` for the judged
+     field (never for a fact: a report changes none), records the signal in its history, and reads the call's
+     judgements again; if that read is refused (404, the reader may not open the call now) the chips stay as the
+     answer left them instead of disappearing.
+   - *Bulk, decided by StarChat's lead and announced, not yet built there:* a bulk gesture answers the calls' full
+     state only to their owner and records no opening for a non-owner's bulk gesture; a non-owner gets the judged
+     values only. After it the dashboard reads again only the calls on screen: the opened call (its read records its
+     opening once per actor and call within 10 minutes, `f87578328`), never a call only listed, so the Constraint on
+     calls opened "without a person asking" holds.
    - A stale value (409) carries only the stale fields' current values, with no model value and no history: the
      chips take them at once and the call's judgements are then read once, so the chip says truly what is in force.
    - An answer arriving while another gesture of the same panel is still out may be the older one: the panel takes it
@@ -294,10 +295,11 @@ above.
 11. **A category's requests carry their call's resolution** (`resolution`): "Segna come spam" is offered on the
    selected requests, one signal per call with that resolution as the value read. Closes the gap row "Segna come spam
    over a category's requests".
-12. **The release depends on StarChat's.** `a012b6926` and `f87578328` are on StarChat's line 9.34 and in no tag yet,
-   and item 10's pending change is not committed: the dashboard's test tag goes after the StarChat tag that carries
-   them, and production with it. Without the pending change StarChat answers the full state to every reader in the
-   feedback scope, which the dashboard takes as it is. Against an older StarChat:
+12. **The release depends on StarChat's.** `a012b6926`, `f87578328` and `db92e82d8` are on test with StarChat
+   9.34.121, and item 10's bulk change is not built yet: the
+   dashboard's test tag goes after the StarChat tag that carries them, and production with it. Before the bulk change
+   StarChat answers a bulk's state to every reader who may open each call, recording a non-owner's opening of each,
+   which the dashboard takes as it is. Against an older StarChat:
    - the category list answers 404 and no category chip or move is drawn (as before);
    - a gesture's answer without `call` or `calls` makes the panel read the call's judgements again (the earlier
      behaviour);
@@ -310,7 +312,7 @@ above.
    The Rollback section's "existing screens work as before" holds with these fallbacks. Supersedes the Assumption
    that StarChat "accepts, or shapes differently, the proposed category list read": it built it as proposed; and the
    Constraint "The contract is 9.34.118 plus `3abdd92d1` and `1c6629964`", which now also holds the two amendments'
-   commits and item 10's pending change.
+   commits, `db92e82d8` and item 10's bulk change.
 
 Still not built: the similar panel, the admin's platform jobs and budget, a bulk decision route, counts over several
 businesses opening their calls, and the "Assistenti da rivedere" columns opening their calls (unchanged from the gap
