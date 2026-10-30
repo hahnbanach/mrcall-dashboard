@@ -280,9 +280,10 @@ above.
      answer left them instead of disappearing.
    - *Bulk, decided by StarChat's lead and announced, not yet built there:* a bulk gesture answers the calls' full
      state only to their owner and records no opening for a non-owner's bulk gesture; a non-owner gets the judged
-     values only. After it the dashboard reads again only the calls on screen: the opened call (its read records its
-     opening once per actor and call within 10 minutes, `f87578328`), never a call only listed, so the Constraint on
-     calls opened "without a person asking" holds.
+     values only. After it the dashboard reads only the calls on screen: the opened call, whose read may be its first
+     judgements read for a non-owner who has opened no chip of it (the read records its opening once per actor and
+     call within 10 minutes, `f87578328`), never a call only listed, so the Constraint on calls opened "without a
+     person asking" holds: the person opened that call and made the gesture.
    - A stale value (409) carries only the stale fields' current values, with no model value and no history: the
      chips take them at once and the call's judgements are then read once, so the chip says truly what is in force.
    - An answer arriving while another gesture of the same panel is still out may be the older one: the panel takes it
@@ -290,8 +291,8 @@ above.
    - Supersedes, and they stay as written above: scope 1's re-read after every gesture and undo; the rejected
      alternative "Keeping a chip's state from the signal's answer alone", whose reason (the answer names only its own
      field) no longer holds; the acceptance line "and then one after each gesture or undo", which now reads "and then
-     one after a stale value, after an answer without the call's state, or after an answer that arrived while another
-     gesture of the panel was out"; the gap row on recorded openings.
+     one after a stale value, after an answer without the call's state, after an answer that arrived while another
+     gesture of the panel was out, or, for the opened call, after a gesture made elsewhere touched it"; the gap row on recorded openings.
 11. **A category's requests carry their call's resolution** (`resolution`): "Segna come spam" is offered on the
    selected requests, one signal per call with that resolution as the value read. Closes the gap row "Segna come spam
    over a category's requests".
