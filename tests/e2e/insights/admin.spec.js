@@ -130,7 +130,9 @@ test.describe('Callers\' requests', () => {
     const stale = table.getByRole('row').filter({ hasText: 'Opening hours and closures' })
     await expect(stale.getByText('No longer asked recently')).toBeVisible()
     await expect(stale.getByText(/^Reopened: 3 new businesses asked for it after it was archived on Oct 10, 2026\.$/)).toBeVisible()
-    await expect(table.getByRole('row').filter({ hasText: 'Prices and rates' }).getByText('1 businesses dated by the end of the report')).toBeVisible()
+    // `reportDated` is no field of StarChat's category rows (9.34.124, `RequestCategoryView`, the shape check of
+    // tests/unit/fixtureShapes.spec.js): no "dated by the end of the report" line is drawn
+    await expect(table.getByText(/dated by the end of the report/)).toHaveCount(0)
 
     // the page's period moves the window
     await page.getByRole('button', { name: '7 days' }).click()
