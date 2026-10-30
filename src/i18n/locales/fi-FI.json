@@ -2385,7 +2385,6 @@
           "month": "kuukausi"
         },
         "freshness": "Viimeisin pyyntö {date} · {pct} % viimeisen {bucket} aikana",
-        "reportDated": "{n} yritystä päivätty raportin lopun mukaan",
         "nextAction": "Seuraava toimi",
         "examples": "Esimerkit",
         "hideExample": "Piilota",

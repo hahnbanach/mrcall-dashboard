@@ -1,0 +1,32 @@
+{
+ "status": 200,
+ "body": {
+  "period": {
+   "from": 1790807375638,
+   "to": 1793399375638
+  },
+  "extractions": {
+   "not_managed": 14,
+   "ok": 1744
+  },
+  "callsWithChecks": 1744,
+  "checks": {
+   "caller_repeated": 237,
+   "caller_unsatisfied": 25,
+   "promise_not_kept_in_call": 74
+  },
+  "callsWithUnansweredRecorded": 1744,
+  "callsWithUnanswered": 326,
+  "gaps": {
+   "needs_integration": 76,
+   "missing_info": 235,
+   "out_of_scope": 21
+  },
+  "callsWithSkillErrors": 0,
+  "previousGaps": {
+   "needs_integration": 10,
+   "missing_info": 2
+  },
+  "previousPartial": true
+ }
+}

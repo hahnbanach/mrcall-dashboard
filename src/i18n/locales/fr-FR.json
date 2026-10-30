@@ -2387,7 +2387,6 @@
           "month": "mois"
         },
         "freshness": "Dernière demande le {date} · {pct} % dans la dernière période ({bucket})",
-        "reportDated": "{n} entreprises datées à la fin du rapport",
         "nextAction": "Prochaine action",
         "examples": "Exemples",
         "hideExample": "Masquer",

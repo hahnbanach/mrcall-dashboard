@@ -1,0 +1,36 @@
+{
+ "status": 200,
+ "body": {
+  "cycle": {
+   "from": 1793142000000,
+   "to": 1793314800000
+  },
+  "past": [
+   {
+    "periodStart": 1793055600000,
+    "periodEnd": 1793142000000,
+    "type": "automatic"
+   },
+   {
+    "periodStart": 1792969200000,
+    "periodEnd": 1793055600000,
+    "type": "automatic"
+   },
+   {
+    "periodStart": 1792879200000,
+    "periodEnd": 1792969200000,
+    "type": "automatic"
+   },
+   {
+    "periodStart": 1792792800000,
+    "periodEnd": 1792879200000,
+    "type": "automatic"
+   },
+   {
+    "periodStart": 1792706400000,
+    "periodEnd": 1792792800000,
+    "type": "automatic"
+   }
+  ]
+ }
+}

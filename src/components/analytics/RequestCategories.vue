@@ -143,7 +143,6 @@
                 </td>
                 <td :data-label="$t('components.callInsights.requests.columns.freshness')">
                   <span v-if="row.lastSeen">{{ $t("components.callInsights.requests.freshness", { date: isoDay(row.lastSeen), pct: percent(row.recentShare), bucket: $t("components.callInsights.requests.bucket." + bucketUnit(row)) }) }}</span>
-                  <span v-if="row.reportDated > 0" class="requests-sub">{{ $t("components.callInsights.requests.reportDated", { n: row.reportDated }) }}</span>
                 </td>
                 <!-- every row says what to do next (the amendment of 2026-10-30, rule 4): StarChat's words, or ours by kind -->
                 <td :data-label="$t('components.callInsights.requests.nextAction')">
@@ -162,8 +161,8 @@
                     <!-- not quoted: an example may be what a caller asked or what the report suggests (U19 m9) -->
                     <li v-for="e in examplesOf(row)" :key="e.text + e.businessId">
                       <span>{{ e.text }}</span>
-                      <router-link v-if="e.reportPeriodStart != null" :to="reportLink(e.businessId, e.reportPeriodStart)" class="requests-sub">{{ businessName(e) }}</router-link>
-                      <span v-else class="requests-sub">{{ businessName(e) }}</span>
+                      <!-- StarChat names an example's business and call (`RequestExampleView`), never a report of it -->
+                      <span class="requests-sub">{{ businessName(e) }}</span>
                       <router-link
                         v-if="e.conversationId"
                         :to="{ path: '/conversations', query: { id: e.businessId, conversation: e.conversationId } }"

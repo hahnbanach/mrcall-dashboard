@@ -1,0 +1,481 @@
+{
+ "status": 200,
+ "body": {
+  "requesterRole": null,
+  "businessId": "<text>",
+  "periodStart": 1791756000000,
+  "periodEnd": 1792360800000,
+  "content": {
+   "gaps": [
+    {
+     "group": "missing_info",
+     "summary": "<text>",
+     "category": "house_rules",
+     "examples": [
+      "CON-placeholder-61",
+      "CON-placeholder-62",
+      "CON-placeholder-63"
+     ],
+     "requests": [
+      2083,
+      2185,
+      2210,
+      2213,
+      2219
+     ]
+    },
+    {
+     "group": "needs_integration",
+     "summary": "<text>",
+     "category": "online_booking",
+     "examples": [
+      "CON-placeholder-64",
+      "CON-placeholder-65"
+     ],
+     "requests": [
+      2128,
+      2187
+     ]
+    }
+   ],
+   "calls": 127,
+   "booked": 69,
+   "period": {
+    "to": "<text>",
+    "from": "<text>",
+    "cadence": null
+   },
+   "topics": [
+    {
+     "new": true,
+     "calls": 122,
+     "topic": "<text>",
+     "labels": [
+      "<text>",
+      "<text>"
+     ],
+     "resolution": {
+      "resolved": 82,
+      "forwarded": 13,
+      "unresolved": 27
+     },
+     "with_unanswered": 6
+    },
+    {
+     "new": true,
+     "calls": 3,
+     "topic": "<text>",
+     "labels": [
+      "<text>",
+      "<text>",
+      "<text>"
+     ],
+     "resolution": {
+      "resolved": 2,
+      "unresolved": 1
+     },
+     "with_unanswered": 1
+    },
+    {
+     "new": true,
+     "calls": 2,
+     "topic": "<text>",
+     "labels": [
+      "<text>",
+      "<text>"
+     ],
+     "resolution": {
+      "forwarded": 2
+     },
+     "with_unanswered": 2
+    },
+    {
+     "new": true,
+     "calls": 1,
+     "topic": "<text>",
+     "labels": [
+      "<text>"
+     ],
+     "resolution": {
+      "forwarded": 1
+     },
+     "with_unanswered": 0
+    },
+    {
+     "new": true,
+     "calls": 1,
+     "topic": "<text>",
+     "labels": [
+      "<text>"
+     ],
+     "resolution": {
+      "unresolved": 1
+     },
+     "with_unanswered": 0
+    }
+   ],
+   "message": {
+    "none": 102,
+    "complete": 22,
+    "incomplete": 3
+   },
+   "outcome": {
+    "resolved": 84,
+    "unresolved": 28,
+    "forwarded_complete": 14
+   },
+   "version": 5,
+   "requests": [
+    {
+     "days": {
+      "2026-10-12": 1
+     },
+     "kind": "business_info",
+     "text": "<text>",
+     "calls": 1,
+     "dated": "<text>",
+     "category": "online_booking",
+     "requests": [
+      2083
+     ]
+    },
+    {
+     "days": {
+      "2026-10-15": 1
+     },
+     "kind": "needs_integration_gap",
+     "text": "<text>",
+     "calls": 1,
+     "dated": "<text>",
+     "category": "online_booking",
+     "requests": [
+      2128
+     ]
+    },
+    {
+     "days": {
+      "2026-10-16": 1
+     },
+     "kind": "business_info",
+     "text": "<text>",
+     "calls": 1,
+     "dated": "<text>",
+     "category": "booking_changes",
+     "requests": [
+      2185
+     ]
+    },
+    {
+     "days": {
+      "2026-10-16": 1
+     },
+     "kind": "needs_integration_gap",
+     "text": "<text>",
+     "calls": 1,
+     "dated": "<text>",
+     "category": "booking_changes",
+     "requests": [
+      2187
+     ]
+    },
+    {
+     "days": {
+      "2026-10-18": 1
+     },
+     "kind": "business_info",
+     "text": "<text>",
+     "calls": 1,
+     "dated": "<text>",
+     "category": "services_info",
+     "requests": [
+      2210
+     ]
+    },
+    {
+     "days": {
+      "2026-10-18": 1
+     },
+     "kind": "business_info",
+     "text": "<text>",
+     "calls": 1,
+     "dated": "<text>",
+     "category": "house_rules",
+     "requests": [
+      2213
+     ]
+    },
+    {
+     "days": {
+      "2026-10-18": 1
+     },
+     "kind": "business_info",
+     "text": "<text>",
+     "calls": 1,
+     "dated": "<text>",
+     "category": "house_rules",
+     "requests": [
+      2219
+     ]
+    },
+    {
+     "days": {
+      "2026-10-12": 1
+     },
+     "kind": "business_info",
+     "text": "<text>",
+     "calls": 1,
+     "dated": "<text>",
+     "category": "online_booking",
+     "requests": [
+      2083
+     ]
+    },
+    {
+     "days": {
+      "2026-10-18": 1
+     },
+     "kind": "business_info",
+     "text": "<text>",
+     "calls": 1,
+     "dated": "<text>",
+     "category": "services_info",
+     "requests": [
+      2210
+     ]
+    },
+    {
+     "days": {
+      "2026-10-18": 2
+     },
+     "kind": "business_info",
+     "text": "<text>",
+     "calls": 2,
+     "dated": "<text>",
+     "category": "house_rules",
+     "requests": [
+      2213,
+      2219
+     ]
+    },
+    {
+     "days": {
+      "2026-10-16": 1
+     },
+     "kind": "business_info",
+     "text": "<text>",
+     "calls": 1,
+     "dated": "<text>",
+     "category": "booking_changes",
+     "requests": [
+      2185
+     ]
+    },
+    {
+     "days": {
+      "2026-10-15": 1,
+      "2026-10-16": 1
+     },
+     "kind": "integration",
+     "text": "<text>",
+     "calls": 2,
+     "dated": "<text>",
+     "category": "online_booking",
+     "requests": [
+      2128,
+      2187
+     ]
+    },
+    {
+     "days": {
+      "2026-10-15": 1,
+      "2026-10-16": 1
+     },
+     "kind": "needs_integration_gap",
+     "text": "<text>",
+     "calls": 2,
+     "dated": "<text>",
+     "category": "online_booking",
+     "requests": [
+      2128,
+      2187
+     ]
+    }
+   ],
+   "gap_calls": {
+    "missing_info": 5,
+    "needs_integration": 2
+   },
+   "resolution": {
+    "resolved": 84,
+    "forwarded": 14,
+    "unresolved": 28,
+    "caller_left": 1
+   },
+   "suggestions": {
+    "integration": [
+     "<text>"
+    ],
+    "business_info": [
+     "<text>",
+     "<text>",
+     "<text>",
+     "<text>"
+    ]
+   },
+   "transferred": 0,
+   "callsManaged": 127,
+   "flagged_calls": [
+    "CON-placeholder-66",
+    "CON-placeholder-67",
+    "CON-placeholder-68",
+    "CON-placeholder-69",
+    "CON-placeholder-61",
+    "CON-placeholder-70",
+    "CON-placeholder-71",
+    "CON-placeholder-72",
+    "CON-placeholder-73",
+    "CON-placeholder-74",
+    "CON-placeholder-75",
+    "CON-placeholder-76",
+    "CON-placeholder-77",
+    "CON-placeholder-78",
+    "CON-placeholder-64",
+    "CON-placeholder-79",
+    "CON-placeholder-80",
+    "CON-placeholder-81",
+    "CON-placeholder-82",
+    "CON-placeholder-83",
+    "CON-placeholder-84",
+    "CON-placeholder-85",
+    "CON-placeholder-62",
+    "CON-placeholder-65",
+    "CON-placeholder-86",
+    "CON-placeholder-87",
+    "CON-placeholder-63",
+    "CON-placeholder-88"
+   ],
+   "regeneratedBy": "<text>",
+   "extractor_audit": {
+    "disagreements": 0,
+    "sampled_resolved": 0
+   }
+  },
+  "requestId": "<text>",
+  "exampleCalls": {
+   "CON-placeholder-65": {
+    "startTimestamp": 1792161743453,
+    "caller": "<text>"
+   },
+   "CON-placeholder-69": {
+    "startTimestamp": 1791816330183,
+    "caller": "<text>"
+   },
+   "CON-placeholder-61": {
+    "startTimestamp": 1791816451436,
+    "caller": "<text>"
+   },
+   "CON-placeholder-77": {
+    "startTimestamp": 1792058073019,
+    "caller": "<text>"
+   },
+   "CON-placeholder-73": {
+    "startTimestamp": 1791817480974,
+    "caller": "<text>"
+   },
+   "CON-placeholder-82": {
+    "startTimestamp": 1792135323211,
+    "caller": "<text>"
+   },
+   "CON-placeholder-87": {
+    "startTimestamp": 1792312746248,
+    "caller": "<text>"
+   },
+   "CON-placeholder-86": {
+    "startTimestamp": 1792246290832,
+    "caller": "<text>"
+   },
+   "CON-placeholder-70": {
+    "startTimestamp": 1791816759668,
+    "caller": "<text>"
+   },
+   "CON-placeholder-71": {
+    "startTimestamp": 1791817157730,
+    "caller": "<text>"
+   },
+   "CON-placeholder-72": {
+    "startTimestamp": 1791817335654,
+    "caller": "<text>"
+   },
+   "CON-placeholder-83": {
+    "startTimestamp": 1792140328896,
+    "caller": "<text>"
+   },
+   "CON-placeholder-88": {
+    "startTimestamp": 1792314039811,
+    "caller": "<text>"
+   },
+   "CON-placeholder-79": {
+    "startTimestamp": 1792134247282,
+    "caller": "<text>"
+   },
+   "CON-placeholder-84": {
+    "startTimestamp": 1792149915343,
+    "caller": "<text>"
+   },
+   "CON-placeholder-75": {
+    "startTimestamp": 1792056770000,
+    "caller": "<text>"
+   },
+   "CON-placeholder-62": {
+    "startTimestamp": 1792161612733,
+    "caller": "<text>"
+   },
+   "CON-placeholder-67": {
+    "startTimestamp": 1791815751263,
+    "caller": "<text>"
+   },
+   "CON-placeholder-85": {
+    "startTimestamp": 1792151371846,
+    "caller": "<text>"
+   },
+   "CON-placeholder-81": {
+    "startTimestamp": 1792135178014,
+    "caller": "<text>"
+   },
+   "CON-placeholder-78": {
+    "startTimestamp": 1792058244924,
+    "caller": "<text>"
+   },
+   "CON-placeholder-76": {
+    "startTimestamp": 1792057642861,
+    "caller": "<text>"
+   },
+   "CON-placeholder-74": {
+    "startTimestamp": 1792055757920,
+    "caller": "<text>"
+   },
+   "CON-placeholder-66": {
+    "startTimestamp": 1791787815534,
+    "caller": "<text>"
+   },
+   "CON-placeholder-63": {
+    "startTimestamp": 1792313372221,
+    "caller": "<text>"
+   },
+   "CON-placeholder-80": {
+    "startTimestamp": 1792134494464,
+    "caller": "<text>"
+   },
+   "CON-placeholder-68": {
+    "startTimestamp": 1791816044072,
+    "caller": "<text>"
+   },
+   "CON-placeholder-64": {
+    "startTimestamp": 1792058673521,
+    "caller": "<text>"
+   }
+  },
+  "revision": 3,
+  "requestedBy": "<text>"
+ }
+}

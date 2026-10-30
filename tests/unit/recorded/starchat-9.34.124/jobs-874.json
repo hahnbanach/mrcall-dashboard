@@ -1,0 +1,430 @@
+{
+ "status": 200,
+ "body": {
+  "total": 867,
+  "items": [
+   {
+    "requesterRole": "admin",
+    "jobId": "<text>",
+    "businessId": "<text>",
+    "kind": "report",
+    "status": "done",
+    "from": 1791151200000,
+    "to": 1793142000000,
+    "estimate": {
+     "fits": true,
+     "kind": "report",
+     "left": 0,
+     "calls": 0,
+     "toSend": 0,
+     "skipped": 0,
+     "analysed": 931,
+     "reasoned": 0,
+     "requests": 10,
+     "finalised": 956,
+     "notFinalised": 0
+    },
+    "counts": {
+     "regenerated": 10
+    },
+    "createdAt": 1793399164816,
+    "finishedAt": 1793399239555,
+    "mode": "regenerate",
+    "requestedBy": "<text>",
+    "phase": "finished",
+    "result": {
+     "reports": [
+      {
+       "periodStart": 1791151200000,
+       "periodEnd": 1791756000000,
+       "requestId": "<text>"
+      },
+      {
+       "periodStart": 1791756000000,
+       "periodEnd": 1792360800000,
+       "requestId": "<text>"
+      },
+      {
+       "periodStart": 1792447200000,
+       "periodEnd": 1792533600000
+      },
+      {
+       "periodStart": 1792533600000,
+       "periodEnd": 1792620000000
+      },
+      {
+       "periodStart": 1792620000000,
+       "periodEnd": 1792706400000
+      },
+      {
+       "periodStart": 1792706400000,
+       "periodEnd": 1792792800000
+      },
+      {
+       "periodStart": 1792792800000,
+       "periodEnd": 1792879200000
+      },
+      {
+       "periodStart": 1792879200000,
+       "periodEnd": 1792969200000
+      },
+      {
+       "periodStart": 1792969200000,
+       "periodEnd": 1793055600000
+      },
+      {
+       "periodStart": 1793055600000,
+       "periodEnd": 1793142000000
+      }
+     ]
+    }
+   },
+   {
+    "requesterRole": "admin",
+    "jobId": "<text>",
+    "businessId": "<text>",
+    "kind": "recompute",
+    "status": "done",
+    "recompute": true,
+    "from": 1790959076296,
+    "to": 1790959076297,
+    "conversationId": "CON-placeholder-57",
+    "estimate": {
+     "fits": true,
+     "kind": "recompute",
+     "left": 0,
+     "calls": 1,
+     "toSend": 1,
+     "skipped": 0,
+     "reasoned": 0,
+     "requests": 1,
+     "notFinalised": 0
+    },
+    "counts": {
+     "written": 1
+    },
+    "createdAt": 1793399103043,
+    "finishedAt": 1793399111866,
+    "requestedBy": "<text>",
+    "phase": "finished"
+   },
+   {
+    "requesterRole": "admin",
+    "jobId": "<text>",
+    "businessId": "<text>",
+    "kind": "recompute",
+    "status": "done",
+    "recompute": true,
+    "from": 1789862400000,
+    "to": 1791151200000,
+    "estimate": {
+     "fits": true,
+     "kind": "recompute",
+     "left": 72,
+     "calls": 1098,
+     "toSend": 1011,
+     "skipped": 0,
+     "reasoned": 0,
+     "requests": 1011,
+     "notFinalised": 15
+    },
+    "counts": {
+     "left": 72,
+     "failed": 1,
+     "written": 1010,
+     "not_finalised": 15
+    },
+    "createdAt": 1793392384654,
+    "finishedAt": 1793398984336,
+    "requestedBy": "<text>",
+    "phase": "finished"
+   },
+   {
+    "requesterRole": "admin",
+    "jobId": "<text>",
+    "businessId": "<text>",
+    "kind": "report",
+    "status": "done",
+    "from": 1791151200000,
+    "to": 1793142000000,
+    "estimate": {
+     "fits": true,
+     "kind": "report",
+     "left": 0,
+     "calls": 0,
+     "toSend": 0,
+     "skipped": 0,
+     "reasoned": 0,
+     "requests": 10,
+     "notFinalised": 0
+    },
+    "counts": {
+     "regenerated": 10
+    },
+    "createdAt": 1793342910334,
+    "finishedAt": 1793342965021,
+    "mode": "regenerate",
+    "requestedBy": "<text>",
+    "phase": "finished",
+    "result": {
+     "reports": [
+      {
+       "periodStart": 1791151200000,
+       "periodEnd": 1791756000000,
+       "requestId": "<text>"
+      },
+      {
+       "periodStart": 1791756000000,
+       "periodEnd": 1792360800000,
+       "requestId": "<text>"
+      },
+      {
+       "periodStart": 1792447200000,
+       "periodEnd": 1792533600000
+      },
+      {
+       "periodStart": 1792533600000,
+       "periodEnd": 1792620000000
+      },
+      {
+       "periodStart": 1792620000000,
+       "periodEnd": 1792706400000
+      },
+      {
+       "periodStart": 1792706400000,
+       "periodEnd": 1792792800000
+      },
+      {
+       "periodStart": 1792792800000,
+       "periodEnd": 1792879200000
+      },
+      {
+       "periodStart": 1792879200000,
+       "periodEnd": 1792969200000
+      },
+      {
+       "periodStart": 1792969200000,
+       "periodEnd": 1793055600000
+      },
+      {
+       "periodStart": 1793055600000,
+       "periodEnd": 1793142000000
+      }
+     ]
+    }
+   },
+   {
+    "requesterRole": "admin",
+    "jobId": "<text>",
+    "businessId": "<text>",
+    "kind": "recompute",
+    "status": "done",
+    "recompute": true,
+    "from": 1792589923446,
+    "to": 1792589923447,
+    "conversationId": "CON-placeholder-58",
+    "estimate": {
+     "fits": true,
+     "kind": "recompute",
+     "left": 0,
+     "calls": 1,
+     "toSend": 1,
+     "skipped": 0,
+     "reasoned": 0,
+     "requests": 1,
+     "notFinalised": 0
+    },
+    "counts": {
+     "written": 1
+    },
+    "createdAt": 1793342808321,
+    "finishedAt": 1793342822468,
+    "requestedBy": "<text>",
+    "phase": "finished"
+   },
+   {
+    "requesterRole": "admin",
+    "jobId": "<text>",
+    "businessId": "<text>",
+    "kind": "recompute",
+    "status": "done",
+    "recompute": true,
+    "from": 1767225600000,
+    "to": 1793110600000,
+    "estimate": {
+     "fits": true,
+     "kind": "recompute",
+     "left": 78,
+     "calls": 2052,
+     "toSend": 1937,
+     "skipped": 0,
+     "reasoned": 20,
+     "requests": 1937,
+     "notFinalised": 17
+    },
+    "counts": {
+     "not_finalised": 17,
+     "left": 78,
+     "failed": 1,
+     "reasoned": 20,
+     "written": 1936
+    },
+    "createdAt": 1793117936967,
+    "finishedAt": 1793127787899,
+    "requestedBy": "<text>",
+    "phase": "finished"
+   },
+   {
+    "requesterRole": "admin",
+    "jobId": "<text>",
+    "businessId": "<text>",
+    "kind": "report",
+    "status": "done",
+    "from": 1791151200000,
+    "to": 1792879200000,
+    "estimate": {
+     "fits": true,
+     "kind": "report",
+     "left": 0,
+     "calls": 0,
+     "toSend": 0,
+     "skipped": 0,
+     "reasoned": 0,
+     "requests": 7,
+     "notFinalised": 0
+    },
+    "counts": {
+     "regenerated": 7
+    },
+    "createdAt": 1792973241164,
+    "finishedAt": 1792973283747,
+    "mode": "regenerate",
+    "requestedBy": "<text>",
+    "phase": "finished",
+    "result": {
+     "reports": [
+      {
+       "periodStart": 1791151200000,
+       "periodEnd": 1791756000000,
+       "requestId": "<text>"
+      },
+      {
+       "periodStart": 1791756000000,
+       "periodEnd": 1792360800000,
+       "requestId": "<text>"
+      },
+      {
+       "periodStart": 1792447200000,
+       "periodEnd": 1792533600000
+      },
+      {
+       "periodStart": 1792533600000,
+       "periodEnd": 1792620000000
+      },
+      {
+       "periodStart": 1792620000000,
+       "periodEnd": 1792706400000
+      },
+      {
+       "periodStart": 1792706400000,
+       "periodEnd": 1792792800000
+      },
+      {
+       "periodStart": 1792792800000,
+       "periodEnd": 1792879200000
+      }
+     ]
+    }
+   },
+   {
+    "requesterRole": "admin",
+    "jobId": "<text>",
+    "businessId": "<text>",
+    "kind": "recompute",
+    "status": "done",
+    "recompute": true,
+    "from": 1790517767162,
+    "to": 1790517767163,
+    "conversationId": "CON-placeholder-59",
+    "estimate": {
+     "fits": true,
+     "kind": "recompute",
+     "left": 0,
+     "calls": 1,
+     "toSend": 1,
+     "skipped": 0,
+     "reasoned": 0,
+     "requests": 1,
+     "notFinalised": 0
+    },
+    "counts": {
+     "written": 1
+    },
+    "createdAt": 1792973139605,
+    "finishedAt": 1792973151101,
+    "requestedBy": "<text>",
+    "phase": "finished"
+   },
+   {
+    "requesterRole": "admin",
+    "jobId": "<text>",
+    "businessId": "<text>",
+    "kind": "recompute",
+    "status": "done",
+    "recompute": true,
+    "from": 1790517834478,
+    "to": 1792959608000,
+    "estimate": {
+     "fits": true,
+     "kind": "recompute",
+     "left": 74,
+     "calls": 1973,
+     "toSend": 1873,
+     "skipped": 0,
+     "reasoned": 13,
+     "requests": 1873,
+     "notFinalised": 13
+    },
+    "counts": {
+     "left": 74,
+     "written": 1873,
+     "reasoned": 13,
+     "not_finalised": 13
+    },
+    "createdAt": 1792963422764,
+    "finishedAt": 1792973000079,
+    "requestedBy": "<text>",
+    "phase": "finished"
+   },
+   {
+    "requesterRole": "admin",
+    "jobId": "<text>",
+    "businessId": "<text>",
+    "kind": "recompute",
+    "status": "done",
+    "recompute": true,
+    "from": 1792567790738,
+    "to": 1792567790739,
+    "conversationId": "CON-placeholder-60",
+    "estimate": {
+     "fits": true,
+     "kind": "recompute",
+     "left": 0,
+     "calls": 1,
+     "toSend": 1,
+     "skipped": 0,
+     "reasoned": 0,
+     "requests": 1,
+     "notFinalised": 0
+    },
+    "counts": {
+     "written": 1
+    },
+    "createdAt": 1792949913648,
+    "finishedAt": 1792949925671,
+    "requestedBy": "<text>",
+    "phase": "finished"
+   }
+  ]
+ }
+}

@@ -1,0 +1,49 @@
+{
+ "created": {
+  "status": 202,
+  "body": {
+   "requesterRole": "reseller",
+   "jobId": "<text>",
+   "businessId": "<text>",
+   "kind": "estimate",
+   "status": "queued",
+   "of": "recompute",
+   "from": 1792710000678,
+   "to": 1793314800678,
+   "counts": {},
+   "createdAt": 1793399386117,
+   "requestedBy": "<text>",
+   "phase": "queued"
+  }
+ },
+ "finished": {
+  "status": 200,
+  "body": {
+   "requesterRole": "reseller",
+   "jobId": "<text>",
+   "businessId": "<text>",
+   "kind": "estimate",
+   "status": "done",
+   "of": "recompute",
+   "from": 1792710000678,
+   "to": 1793314800678,
+   "estimate": {
+    "fits": true,
+    "kind": "recompute",
+    "left": 0,
+    "calls": 235,
+    "toSend": 0,
+    "skipped": 235,
+    "reasoned": 0,
+    "requests": 0,
+    "notFinalised": 0,
+    "topUpEffective": true
+   },
+   "counts": {},
+   "createdAt": 1793399386117,
+   "finishedAt": 1793399398550,
+   "requestedBy": "<text>",
+   "phase": "finished"
+  }
+ }
+}

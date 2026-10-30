@@ -2390,7 +2390,6 @@
           "month": "month"
         },
         "freshness": "Last request on {date} · {pct}% in the last {bucket}",
-        "reportDated": "{n} businesses dated by the end of the report",
         "nextAction": "Next action",
         "examples": "Examples",
         "hideExample": "Hide",

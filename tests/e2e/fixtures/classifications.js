@@ -170,6 +170,13 @@ async function mockClassifications (page, options = {}) {
     return { status: 200, call, body: { feedbackId: id, conversationId: call.conversationId, requestId: a.requestId, field: a.field, status, value: j.value, replayed: false } }
   }
 
+  // a decision's answer names no actor (StarChat 9.34.124, `InsightsFeedback.decide` reads no names): the history has it
+  function decided (h) {
+    const { actorName, ...row } = h
+    void actorName
+    return row
+  }
+
   function revertEntry (call, h) {
     const j = h.subject === 'call' ? call[h.field] : call.requests.find((r) => r.requestId === h.requestId)[h.field]
     h.status = 'reverted'
@@ -257,16 +264,16 @@ async function mockClassifications (page, options = {}) {
         // StarChat 9.34.124 (`InsightsFeedback.mayDecide`, `InsightsFeedbackPsql.moved`): a non-author 403 `not_author`; a
         // signal already withdrawn answered as it stands; any other state 409 `feedback_state`
         if (!h.byMe) return json(route, 403, { code: 'not_author', message: 'a proposal is withdrawn by its author' })
-        if (h.status === 'withdrawn') return json(route, 200, { ...h, call: answered(call) })
+        if (h.status === 'withdrawn') return json(route, 200, { ...decided(h), call: answered(call) })
         if (h.status !== 'proposed') return json(route, 409, { code: 'feedback_state', message: `feedback ${h.feedbackId} is ${h.status}` })
         h.status = 'withdrawn'
         h.decidedAt = Date.now()
-        return json(route, 200, { ...h, call: answered(call) })
+        return json(route, 200, { ...decided(h), call: answered(call) })
       }
       if (move === 'revert') revertEntry(call, h)
       else h.status = move === 'apply' ? 'applied' : 'rejected'
       h.decidedAt = Date.now()
-      return json(route, 200, { ...h, call: answered(call) })
+      return json(route, 200, { ...decided(h), call: answered(call) })
     }
     json(route, 200, { feedbackId: Number(id), status: move === 'apply' ? 'applied' : move === 'reject' ? 'rejected' : move === 'withdraw' ? 'withdrawn' : 'reverted' })
   })

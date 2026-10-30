@@ -20,8 +20,8 @@ test.describe('Callers\' requests: the U19 minors', () => {
       categories: { ...CATEGORIES, items: [
         category('other', { label: 'Other', nextAction: 'Review the examples' }),
         category('online_booking', { label: 'Online booking', examples: [
-          { text: 'Can I book on the website?', businessId: 'biz-1', name: 'Studio 1', reportPeriodStart: rome(2026, 10, 14) },
-          { text: 'can I book on the website', businessId: 'biz-2', name: 'Studio 2', reportPeriodStart: rome(2026, 10, 14) },
+          { text: 'Can I book on the website?', businessId: 'biz-1', name: 'Studio 1', conversationId: 'CON-m1' },
+          { text: 'can I book on the website', businessId: 'biz-2', name: 'Studio 2', conversationId: 'CON-m2' },
         ] }),
       ] },
     })

@@ -1,0 +1,165 @@
+{
+ "status": 200,
+ "body": {
+  "items": [
+   {
+    "requesterRole": "system",
+    "periodStart": 1793055600000,
+    "periodEnd": 1793142000000,
+    "status": "done",
+    "type": "automatic",
+    "revision": 2,
+    "days": 1,
+    "calls": 35,
+    "callsManaged": 35,
+    "failures": 0,
+    "createdAt": 1793399239486
+   },
+   {
+    "requesterRole": "system",
+    "periodStart": 1792969200000,
+    "periodEnd": 1793055600000,
+    "status": "done",
+    "type": "automatic",
+    "revision": 2,
+    "days": 1,
+    "calls": 21,
+    "callsManaged": 21,
+    "failures": 0,
+    "createdAt": 1793399235906
+   },
+   {
+    "requesterRole": "system",
+    "periodStart": 1792879200000,
+    "periodEnd": 1792969200000,
+    "status": "done",
+    "type": "automatic",
+    "revision": 2,
+    "days": 1,
+    "calls": 47,
+    "callsManaged": 47,
+    "failures": 0,
+    "createdAt": 1793399232466
+   },
+   {
+    "requesterRole": "system",
+    "periodStart": 1792792800000,
+    "periodEnd": 1792879200000,
+    "status": "done",
+    "type": "automatic",
+    "revision": 3,
+    "days": 1,
+    "calls": 16,
+    "callsManaged": 16,
+    "failures": 0,
+    "createdAt": 1793399225583
+   },
+   {
+    "requesterRole": "system",
+    "periodStart": 1792706400000,
+    "periodEnd": 1792792800000,
+    "status": "done",
+    "type": "automatic",
+    "revision": 3,
+    "days": 1,
+    "calls": 134,
+    "callsManaged": 134,
+    "failures": 0,
+    "createdAt": 1793399221927
+   },
+   {
+    "requesterRole": "system",
+    "periodStart": 1792620000000,
+    "periodEnd": 1792706400000,
+    "status": "done",
+    "type": "automatic",
+    "revision": 3,
+    "days": 1,
+    "calls": 168,
+    "callsManaged": 168,
+    "failures": 0,
+    "createdAt": 1793399215804
+   },
+   {
+    "requesterRole": "system",
+    "periodStart": 1792533600000,
+    "periodEnd": 1792620000000,
+    "status": "done",
+    "type": "automatic",
+    "revision": 3,
+    "days": 1,
+    "calls": 96,
+    "callsManaged": 96,
+    "failures": 0,
+    "createdAt": 1793399205913
+   },
+   {
+    "requesterRole": "system",
+    "periodStart": 1792447200000,
+    "periodEnd": 1792533600000,
+    "status": "done",
+    "type": "automatic",
+    "revision": 3,
+    "days": 1,
+    "calls": 172,
+    "callsManaged": 172,
+    "failures": 0,
+    "createdAt": 1793399197276
+   },
+   {
+    "requesterRole": null,
+    "periodStart": 1791756000000,
+    "periodEnd": 1792360800000,
+    "status": "done",
+    "type": "requested",
+    "revision": 3,
+    "days": 7,
+    "calls": 127,
+    "callsManaged": 127,
+    "requestId": "<text>",
+    "requestedBy": "<text>",
+    "failures": 0,
+    "createdAt": 1793399184772,
+    "requestedByName": "<text>"
+   },
+   {
+    "requesterRole": null,
+    "periodStart": 1791151200000,
+    "periodEnd": 1791756000000,
+    "status": "done",
+    "type": "requested",
+    "revision": 3,
+    "days": 7,
+    "calls": 115,
+    "requestId": "<text>",
+    "requestedBy": "<text>",
+    "failures": 0,
+    "createdAt": 1793399178418,
+    "requestedByName": "<text>"
+   }
+  ],
+  "total": 10,
+  "asOf": 1793399379178,
+  "schedule": {
+   "cadenceDays": 1,
+   "nextAutomatic": {
+    "from": 1793142000000,
+    "to": 1793401200000,
+    "retry": false,
+    "anticipable": true,
+    "arrivesAt": 1793422800000,
+    "extendedFrom": 1793142000000
+   }
+  },
+  "emptyCycles": [
+   {
+    "from": 1793142000000,
+    "to": 1793228400000
+   },
+   {
+    "from": 1793228400000,
+    "to": 1793314800000
+   }
+  ]
+ }
+}

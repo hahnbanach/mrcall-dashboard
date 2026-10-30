@@ -218,8 +218,9 @@ function category (key, over = {}) {
     // `nextAction`; delegate, handled, and from the amendment of 2026-10-30 (rule 4) withdrawn and unrated, without one
     category: key, label: key, nextAction: 'Next', nextActionKind: 'integration', kind: 'integration', businesses: 3, previousBusinesses: 1, trend: 2,
     share: 0.25, histogram: [{ start: '2026-09-28', businesses: 0 }, { start: '2026-10-05', businesses: 1 }, { start: '2026-10-12', businesses: 3 }, { start: '2026-10-19', businesses: 2 }],
-    bucket: 'week', lastSeen: '2026-10-21', recentShare: 0.67, status: 'rising', score: 2.6, reportDated: 0,
-    examples: [{ text: 'Can I book on the website?', businessId: BUSINESS_ID, name: 'Test Restaurant', reportPeriodStart: rome(2026, 10, 14) }],
+    bucket: 'week', lastSeen: '2026-10-21', recentShare: 0.67, status: 'rising', score: 2.6,
+    // `RequestExampleView` (9.34.124): the example's call, never a report's start
+    examples: [{ text: 'Can I book on the website?', businessId: BUSINESS_ID, name: 'Test Restaurant', conversationId: 'CON-ex-1' }],
     ...over,
   }
 }
@@ -228,9 +229,9 @@ const CATEGORIES = {
   total: 3, asOf: 1761300000000, from: rome(2026, 9, 24), to: rome(2026, 10, 24),
   items: [
     category('online_booking', { label: 'Online booking', nextAction: 'Consider an integration with a booking system' }),
-    category('prices', { label: 'Prices and rates', nextAction: 'Ask the businesses to add their prices', nextActionKind: 'business_info', kind: 'business_info', businesses: 2, previousBusinesses: 2, trend: 0, status: 'steady', reportDated: 1,
+    category('prices', { label: 'Prices and rates', nextAction: 'Ask the businesses to add their prices', nextActionKind: 'business_info', kind: 'business_info', businesses: 2, previousBusinesses: 2, trend: 0, status: 'steady',
       histogram: [{ start: '2026-09-28', businesses: 1 }, { start: '2026-10-05', businesses: 1 }, { start: '2026-10-12', businesses: 0 }, { start: '2026-10-19', businesses: 1 }],
-      examples: [{ text: 'How much is a visit?', businessId: 'biz-2', name: 'Studio Bianchi', reportPeriodStart: rome(2026, 10, 7) }] }),
+      examples: [{ text: 'How much is a visit?', businessId: 'biz-2', name: 'Studio Bianchi', conversationId: 'CON-ex-2' }] }),
     category('opening_hours', { label: 'Opening hours and closures', nextAction: 'Ask the businesses to update their hours', businesses: 1, previousBusinesses: 4, trend: -3, status: 'stale', share: 0.08, lastSeen: '2026-09-29',
       histogram: [{ start: '2026-09-28', businesses: 1 }, { start: '2026-10-05', businesses: 0 }, { start: '2026-10-12', businesses: 0 }, { start: '2026-10-19', businesses: 0 }],
       dismissal: { reason: 'done', at: rome(2026, 10, 10), by: 'admin-uid-12345', reopened: { newBusinesses: 3, since: rome(2026, 10, 10) } } }),
@@ -347,7 +348,8 @@ async function mockInsights (page, options = {}) {
     if (body.kind === 'report' && !body.regenerates && !body.rerunAutomatic && needsAck && !body.acknowledgeOverlap) {
       route.fulfill(json({ code: 'overlap_unacknowledged', message: 'acknowledgeOverlap' }, 400)); return
     }
-    const answer = options.estimate ? options.estimate(asked.estimate.length) : estimateJob({ status: 'queued', phase: 'queued' })
+    // queued: no estimate yet, as StarChat answers a job it has not run (`InsightsJobs.jobJson`)
+    const answer = options.estimate ? options.estimate(asked.estimate.length) : estimateJob({ status: 'queued', phase: 'queued', estimate: undefined })
     route.fulfill(json(answer, 202))
   })
   await page.route('**/customer/insights/jobs*', (route) => {

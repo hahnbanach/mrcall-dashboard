@@ -2385,7 +2385,6 @@
           "month": "kuu"
         },
         "freshness": "Viimane soov {date} · {pct} % viimase {bucket} jooksul",
-        "reportDated": "{n} ettevõtet dateeritud aruande lõpu järgi",
         "nextAction": "Järgmine samm",
         "examples": "Näited",
         "hideExample": "Peida",

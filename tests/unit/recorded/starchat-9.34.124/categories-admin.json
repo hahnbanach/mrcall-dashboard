@@ -1,0 +1,1210 @@
+{
+ "status": 200,
+ "body": {
+  "total": 20,
+  "asOf": 1793399378475,
+  "from": 1790807375638,
+  "to": 1793399375638,
+  "items": [
+   {
+    "category": "online_booking",
+    "label": "<text>",
+    "unclassified": false,
+    "calls": 777,
+    "businesses": 6,
+    "previousBusinesses": 4,
+    "trend": 2,
+    "share": 0.75,
+    "outcomes": {
+     "handed_over": 63,
+     "neither": 227,
+     "taken": 488
+    },
+    "dominantOutcome": "taken",
+    "kind": "integration",
+    "nextActionKind": "delegate",
+    "histogram": [
+     {
+      "start": "<text>",
+      "businesses": 5
+     },
+     {
+      "start": "<text>",
+      "businesses": 3
+     },
+     {
+      "start": "<text>",
+      "businesses": 2
+     },
+     {
+      "start": "<text>",
+      "businesses": 3
+     },
+     {
+      "start": "<text>",
+      "businesses": 4
+     }
+    ],
+    "bucket": "week",
+    "lastSeen": "<text>",
+    "recentShare": 0.6666666666666666,
+    "status": "falling",
+    "score": 3.806719743357162,
+    "examples": [
+     {
+      "text": "<text>",
+      "businessId": "<text>",
+      "name": "<text>",
+      "conversationId": "CON-placeholder-1"
+     },
+     {
+      "text": "<text>",
+      "businessId": "<text>",
+      "name": "<text>",
+      "conversationId": "CON-placeholder-2"
+     }
+    ],
+    "dismissedExamples": []
+   },
+   {
+    "category": "staff_availability",
+    "label": "<text>",
+    "unclassified": false,
+    "calls": 383,
+    "businesses": 6,
+    "previousBusinesses": 3,
+    "trend": 3,
+    "share": 0.75,
+    "outcomes": {
+     "handed_over": 95,
+     "neither": 121,
+     "taken": 169
+    },
+    "dominantOutcome": "taken",
+    "kind": "business_info",
+    "nextActionKind": "delegate",
+    "histogram": [
+     {
+      "start": "<text>",
+      "businesses": 5
+     },
+     {
+      "start": "<text>",
+      "businesses": 4
+     },
+     {
+      "start": "<text>",
+      "businesses": 0
+     },
+     {
+      "start": "<text>",
+      "businesses": 3
+     },
+     {
+      "start": "<text>",
+      "businesses": 3
+     }
+    ],
+    "bucket": "week",
+    "lastSeen": "<text>",
+    "recentShare": 0.5,
+    "status": "falling",
+    "score": 3.222780591916049,
+    "examples": [
+     {
+      "text": "<text>",
+      "businessId": "<text>",
+      "name": "<text>",
+      "conversationId": "CON-placeholder-3"
+     },
+     {
+      "text": "<text>",
+      "businessId": "<text>",
+      "name": "<text>",
+      "conversationId": "CON-placeholder-4"
+     }
+    ],
+    "dismissedExamples": []
+   },
+   {
+    "category": "prices",
+    "label": "<text>",
+    "unclassified": false,
+    "calls": 192,
+    "businesses": 6,
+    "previousBusinesses": 0,
+    "trend": 6,
+    "share": 0.75,
+    "outcomes": {
+     "handed_over": 3,
+     "neither": 60,
+     "taken": 129
+    },
+    "dominantOutcome": "taken",
+    "kind": "business_info",
+    "nextActionKind": "delegate",
+    "histogram": [
+     {
+      "start": "<text>",
+      "businesses": 5
+     },
+     {
+      "start": "<text>",
+      "businesses": 3
+     },
+     {
+      "start": "<text>",
+      "businesses": 0
+     },
+     {
+      "start": "<text>",
+      "businesses": 2
+     },
+     {
+      "start": "<text>",
+      "businesses": 0
+     }
+    ],
+    "bucket": "week",
+    "lastSeen": "<text>",
+    "recentShare": 0,
+    "status": "falling",
+    "score": 2.6238700350401003,
+    "examples": [
+     {
+      "text": "<text>",
+      "businessId": "<text>",
+      "name": "<text>",
+      "conversationId": "CON-placeholder-5"
+     },
+     {
+      "text": "<text>",
+      "businessId": "<text>",
+      "name": "<text>",
+      "conversationId": "CON-placeholder-6"
+     }
+    ],
+    "dismissedExamples": []
+   },
+   {
+    "category": "support_request",
+    "label": "<text>",
+    "unclassified": false,
+    "calls": 151,
+    "businesses": 5,
+    "previousBusinesses": 0,
+    "trend": 5,
+    "share": 0.625,
+    "outcomes": {
+     "handed_over": 8,
+     "neither": 19,
+     "taken": 126
+    },
+    "dominantOutcome": "taken",
+    "kind": "business_info",
+    "nextActionKind": "delegate",
+    "histogram": [
+     {
+      "start": "<text>",
+      "businesses": 3
+     },
+     {
+      "start": "<text>",
+      "businesses": 3
+     },
+     {
+      "start": "<text>",
+      "businesses": 0
+     },
+     {
+      "start": "<text>",
+      "businesses": 3
+     },
+     {
+      "start": "<text>",
+      "businesses": 1
+     }
+    ],
+    "bucket": "week",
+    "lastSeen": "<text>",
+    "recentShare": 0.2,
+    "status": "falling",
+    "score": 2.6120616834856554,
+    "examples": [
+     {
+      "text": "<text>",
+      "businessId": "<text>",
+      "name": "<text>",
+      "conversationId": "CON-placeholder-7"
+     },
+     {
+      "text": "<text>",
+      "businessId": "<text>",
+      "name": "<text>",
+      "conversationId": "CON-placeholder-8"
+     }
+    ],
+    "dismissedExamples": []
+   },
+   {
+    "category": "services_info",
+    "label": "<text>",
+    "unclassified": false,
+    "calls": 52,
+    "businesses": 4,
+    "previousBusinesses": 3,
+    "trend": 1,
+    "share": 0.5,
+    "outcomes": {
+     "handed_over": 1,
+     "neither": 11,
+     "taken": 41
+    },
+    "dominantOutcome": "taken",
+    "kind": "business_info",
+    "nextActionKind": "delegate",
+    "histogram": [
+     {
+      "start": "<text>",
+      "businesses": 3
+     },
+     {
+      "start": "<text>",
+      "businesses": 2
+     },
+     {
+      "start": "<text>",
+      "businesses": 1
+     },
+     {
+      "start": "<text>",
+      "businesses": 3
+     },
+     {
+      "start": "<text>",
+      "businesses": 2
+     }
+    ],
+    "bucket": "week",
+    "lastSeen": "<text>",
+    "recentShare": 0.5,
+    "status": "falling",
+    "score": 2.4834245647586624,
+    "examples": [
+     {
+      "text": "<text>",
+      "businessId": "<text>",
+      "name": "<text>",
+      "conversationId": "CON-placeholder-9"
+     },
+     {
+      "text": "<text>",
+      "businessId": "<text>",
+      "name": "<text>",
+      "conversationId": "CON-placeholder-10"
+     }
+    ],
+    "dismissedExamples": []
+   },
+   {
+    "category": "booking_changes",
+    "label": "<text>",
+    "unclassified": false,
+    "calls": 293,
+    "businesses": 3,
+    "previousBusinesses": 2,
+    "trend": 1,
+    "share": 0.375,
+    "outcomes": {
+     "neither": 181,
+     "taken": 115
+    },
+    "dominantOutcome": "neither",
+    "kind": "integration",
+    "nextActionKind": "integration",
+    "nextAction": "<text>",
+    "histogram": [
+     {
+      "start": "<text>",
+      "businesses": 3
+     },
+     {
+      "start": "<text>",
+      "businesses": 3
+     },
+     {
+      "start": "<text>",
+      "businesses": 2
+     },
+     {
+      "start": "<text>",
+      "businesses": 3
+     },
+     {
+      "start": "<text>",
+      "businesses": 3
+     }
+    ],
+    "bucket": "week",
+    "lastSeen": "<text>",
+    "recentShare": 1,
+    "status": "steady",
+    "score": 2.421379894170986,
+    "examples": [
+     {
+      "text": "<text>",
+      "businessId": "<text>",
+      "name": "<text>",
+      "conversationId": "CON-placeholder-11"
+     },
+     {
+      "text": "<text>",
+      "businessId": "<text>",
+      "name": "<text>",
+      "conversationId": "CON-placeholder-12"
+     }
+    ],
+    "dismissedExamples": []
+   },
+   {
+    "category": "other",
+    "label": "<text>",
+    "unclassified": false,
+    "calls": 67,
+    "businesses": 5,
+    "previousBusinesses": 2,
+    "trend": 3,
+    "share": 0.625,
+    "outcomes": {
+     "handed_over": 3,
+     "neither": 19,
+     "taken": 46
+    },
+    "dominantOutcome": "taken",
+    "kind": "business_info",
+    "nextActionKind": "delegate",
+    "histogram": [
+     {
+      "start": "<text>",
+      "businesses": 3
+     },
+     {
+      "start": "<text>",
+      "businesses": 3
+     },
+     {
+      "start": "<text>",
+      "businesses": 0
+     },
+     {
+      "start": "<text>",
+      "businesses": 1
+     },
+     {
+      "start": "<text>",
+      "businesses": 1
+     }
+    ],
+    "bucket": "week",
+    "lastSeen": "<text>",
+    "recentShare": 0.2,
+    "status": "falling",
+    "score": 2.3220293369456146,
+    "examples": [
+     {
+      "text": "<text>",
+      "businessId": "<text>",
+      "name": "<text>",
+      "conversationId": "CON-placeholder-13"
+     },
+     {
+      "text": "<text>",
+      "businessId": "<text>",
+      "name": "<text>",
+      "conversationId": "CON-placeholder-14"
+     }
+    ],
+    "dismissedExamples": []
+   },
+   {
+    "category": "documents",
+    "label": "<text>",
+    "unclassified": false,
+    "calls": 111,
+    "businesses": 3,
+    "previousBusinesses": 3,
+    "trend": 0,
+    "share": 0.375,
+    "outcomes": {
+     "handed_over": 12,
+     "neither": 63,
+     "taken": 37
+    },
+    "dominantOutcome": "neither",
+    "kind": "business_info",
+    "nextActionKind": "business_info",
+    "nextAction": "<text>",
+    "histogram": [
+     {
+      "start": "<text>",
+      "businesses": 3
+     },
+     {
+      "start": "<text>",
+      "businesses": 3
+     },
+     {
+      "start": "<text>",
+      "businesses": 0
+     },
+     {
+      "start": "<text>",
+      "businesses": 3
+     },
+     {
+      "start": "<text>",
+      "businesses": 2
+     }
+    ],
+    "bucket": "week",
+    "lastSeen": "<text>",
+    "recentShare": 0.6666666666666666,
+    "status": "steady",
+    "score": 2.281114056897412,
+    "examples": [
+     {
+      "text": "<text>",
+      "businessId": "<text>",
+      "name": "<text>",
+      "conversationId": "CON-placeholder-15"
+     },
+     {
+      "text": "<text>",
+      "businessId": "<text>",
+      "name": "<text>",
+      "conversationId": "CON-placeholder-16"
+     }
+    ],
+    "dismissedExamples": []
+   },
+   {
+    "category": "messaging",
+    "label": "<text>",
+    "unclassified": false,
+    "calls": 87,
+    "businesses": 3,
+    "previousBusinesses": 1,
+    "trend": 2,
+    "share": 0.375,
+    "outcomes": {
+     "neither": 29,
+     "taken": 59
+    },
+    "dominantOutcome": "taken",
+    "kind": "business_info",
+    "nextActionKind": "delegate",
+    "histogram": [
+     {
+      "start": "<text>",
+      "businesses": 3
+     },
+     {
+      "start": "<text>",
+      "businesses": 3
+     },
+     {
+      "start": "<text>",
+      "businesses": 0
+     },
+     {
+      "start": "<text>",
+      "businesses": 3
+     },
+     {
+      "start": "<text>",
+      "businesses": 2
+     }
+    ],
+    "bucket": "week",
+    "lastSeen": "<text>",
+    "recentShare": 0.6666666666666666,
+    "status": "steady",
+    "score": 2.2501775391175136,
+    "examples": [
+     {
+      "text": "<text>",
+      "businessId": "<text>",
+      "name": "<text>",
+      "conversationId": "CON-placeholder-17"
+     },
+     {
+      "text": "<text>",
+      "businessId": "<text>",
+      "name": "<text>",
+      "conversationId": "CON-placeholder-18"
+     }
+    ],
+    "dismissedExamples": []
+   },
+   {
+    "category": "order_status",
+    "label": "<text>",
+    "unclassified": false,
+    "calls": 129,
+    "businesses": 3,
+    "previousBusinesses": 2,
+    "trend": 1,
+    "share": 0.375,
+    "outcomes": {
+     "handed_over": 27,
+     "neither": 21,
+     "taken": 82
+    },
+    "dominantOutcome": "taken",
+    "kind": "integration",
+    "nextActionKind": "delegate",
+    "histogram": [
+     {
+      "start": "<text>",
+      "businesses": 3
+     },
+     {
+      "start": "<text>",
+      "businesses": 2
+     },
+     {
+      "start": "<text>",
+      "businesses": 0
+     },
+     {
+      "start": "<text>",
+      "businesses": 3
+     },
+     {
+      "start": "<text>",
+      "businesses": 2
+     }
+    ],
+    "bucket": "week",
+    "lastSeen": "<text>",
+    "recentShare": 0.6666666666666666,
+    "status": "steady",
+    "score": 2.2018617091935564,
+    "examples": [
+     {
+      "text": "<text>",
+      "businessId": "<text>",
+      "name": "<text>",
+      "conversationId": "CON-placeholder-19"
+     },
+     {
+      "text": "<text>",
+      "businessId": "<text>",
+      "name": "<text>",
+      "conversationId": "CON-placeholder-20"
+     }
+    ],
+    "dismissedExamples": []
+   },
+   {
+    "category": "opening_hours",
+    "label": "<text>",
+    "unclassified": false,
+    "calls": 204,
+    "businesses": 3,
+    "previousBusinesses": 0,
+    "trend": 3,
+    "share": 0.375,
+    "outcomes": {
+     "handed_over": 5,
+     "neither": 187,
+     "taken": 12
+    },
+    "dominantOutcome": "neither",
+    "kind": "business_info",
+    "nextActionKind": "business_info",
+    "nextAction": "<text>",
+    "histogram": [
+     {
+      "start": "<text>",
+      "businesses": 2
+     },
+     {
+      "start": "<text>",
+      "businesses": 2
+     },
+     {
+      "start": "<text>",
+      "businesses": 0
+     },
+     {
+      "start": "<text>",
+      "businesses": 3
+     },
+     {
+      "start": "<text>",
+      "businesses": 1
+     }
+    ],
+    "bucket": "week",
+    "lastSeen": "<text>",
+    "recentShare": 0.3333333333333333,
+    "status": "rising",
+    "score": 2.167885482076322,
+    "examples": [
+     {
+      "text": "<text>",
+      "businessId": "<text>",
+      "name": "<text>",
+      "conversationId": "CON-placeholder-21"
+     },
+     {
+      "text": "<text>",
+      "businessId": "<text>",
+      "name": "<text>",
+      "conversationId": "CON-placeholder-22"
+     }
+    ],
+    "dismissedExamples": []
+   },
+   {
+    "category": "clinical_advice",
+    "label": "<text>",
+    "unclassified": false,
+    "calls": 120,
+    "businesses": 3,
+    "previousBusinesses": 2,
+    "trend": 1,
+    "share": 0.375,
+    "outcomes": {
+     "neither": 15,
+     "taken": 106
+    },
+    "dominantOutcome": "taken",
+    "kind": "business_info",
+    "nextActionKind": "delegate",
+    "histogram": [
+     {
+      "start": "<text>",
+      "businesses": 3
+     },
+     {
+      "start": "<text>",
+      "businesses": 3
+     },
+     {
+      "start": "<text>",
+      "businesses": 0
+     },
+     {
+      "start": "<text>",
+      "businesses": 3
+     },
+     {
+      "start": "<text>",
+      "businesses": 0
+     }
+    ],
+    "bucket": "week",
+    "lastSeen": "<text>",
+    "recentShare": 0,
+    "status": "steady",
+    "score": 2.06605898221703,
+    "examples": [
+     {
+      "text": "<text>",
+      "businessId": "<text>",
+      "name": "<text>",
+      "conversationId": "CON-placeholder-23"
+     },
+     {
+      "text": "<text>",
+      "businessId": "<text>",
+      "name": "<text>",
+      "conversationId": "CON-placeholder-24"
+     }
+    ],
+    "dismissedExamples": []
+   },
+   {
+    "category": "product_availability",
+    "label": "<text>",
+    "unclassified": false,
+    "calls": 140,
+    "businesses": 3,
+    "previousBusinesses": 4,
+    "trend": -1,
+    "share": 0.375,
+    "outcomes": {
+     "neither": 17,
+     "taken": 123
+    },
+    "dominantOutcome": "taken",
+    "kind": "integration",
+    "nextActionKind": "delegate",
+    "histogram": [
+     {
+      "start": "<text>",
+      "businesses": 3
+     },
+     {
+      "start": "<text>",
+      "businesses": 2
+     },
+     {
+      "start": "<text>",
+      "businesses": 0
+     },
+     {
+      "start": "<text>",
+      "businesses": 2
+     },
+     {
+      "start": "<text>",
+      "businesses": 2
+     }
+    ],
+    "bucket": "week",
+    "lastSeen": "<text>",
+    "recentShare": 0.6666666666666666,
+    "status": "falling",
+    "score": 1.9771457601733649,
+    "examples": [
+     {
+      "text": "<text>",
+      "businessId": "<text>",
+      "name": "<text>",
+      "conversationId": "CON-placeholder-25"
+     },
+     {
+      "text": "<text>",
+      "businessId": "<text>",
+      "name": "<text>",
+      "conversationId": "CON-placeholder-18"
+     }
+    ],
+    "dismissedExamples": []
+   },
+   {
+    "category": "commercial",
+    "label": "<text>",
+    "unclassified": false,
+    "calls": 58,
+    "businesses": 3,
+    "previousBusinesses": 1,
+    "trend": 2,
+    "share": 0.375,
+    "outcomes": {
+     "neither": 6,
+     "taken": 52
+    },
+    "dominantOutcome": "taken",
+    "kind": "business_info",
+    "nextActionKind": "delegate",
+    "histogram": [
+     {
+      "start": "<text>",
+      "businesses": 2
+     },
+     {
+      "start": "<text>",
+      "businesses": 2
+     },
+     {
+      "start": "<text>",
+      "businesses": 0
+     },
+     {
+      "start": "<text>",
+      "businesses": 3
+     },
+     {
+      "start": "<text>",
+      "businesses": 0
+     }
+    ],
+    "bucket": "week",
+    "lastSeen": "<text>",
+    "recentShare": 0,
+    "status": "steady",
+    "score": 1.9554070197345939,
+    "examples": [
+     {
+      "text": "<text>",
+      "businessId": "<text>",
+      "name": "<text>",
+      "conversationId": "CON-placeholder-26"
+     },
+     {
+      "text": "<text>",
+      "businessId": "<text>",
+      "name": "<text>",
+      "conversationId": "CON-placeholder-27"
+     }
+    ],
+    "dismissedExamples": []
+   },
+   {
+    "category": "payments",
+    "label": "<text>",
+    "unclassified": false,
+    "calls": 52,
+    "businesses": 3,
+    "previousBusinesses": 0,
+    "trend": 3,
+    "share": 0.375,
+    "outcomes": {
+     "handed_over": 5,
+     "neither": 10,
+     "taken": 37
+    },
+    "dominantOutcome": "taken",
+    "kind": "business_info",
+    "nextActionKind": "delegate",
+    "histogram": [
+     {
+      "start": "<text>",
+      "businesses": 3
+     },
+     {
+      "start": "<text>",
+      "businesses": 2
+     },
+     {
+      "start": "<text>",
+      "businesses": 0
+     },
+     {
+      "start": "<text>",
+      "businesses": 2
+     },
+     {
+      "start": "<text>",
+      "businesses": 0
+     }
+    ],
+    "bucket": "week",
+    "lastSeen": "<text>",
+    "recentShare": 0,
+    "status": "falling",
+    "score": 1.635932539172397,
+    "examples": [
+     {
+      "text": "<text>",
+      "businessId": "<text>",
+      "name": "<text>",
+      "conversationId": "CON-placeholder-28"
+     },
+     {
+      "text": "<text>",
+      "businessId": "<text>",
+      "name": "<text>",
+      "conversationId": "CON-placeholder-29"
+     }
+    ],
+    "dismissedExamples": []
+   },
+   {
+    "category": "location_access",
+    "label": "<text>",
+    "unclassified": false,
+    "calls": 13,
+    "businesses": 3,
+    "previousBusinesses": 1,
+    "trend": 2,
+    "share": 0.375,
+    "outcomes": {
+     "neither": 10,
+     "taken": 3
+    },
+    "dominantOutcome": "neither",
+    "kind": "business_info",
+    "nextActionKind": "business_info",
+    "nextAction": "<text>",
+    "histogram": [
+     {
+      "start": "<text>",
+      "businesses": 3
+     },
+     {
+      "start": "<text>",
+      "businesses": 2
+     },
+     {
+      "start": "<text>",
+      "businesses": 0
+     },
+     {
+      "start": "<text>",
+      "businesses": 2
+     },
+     {
+      "start": "<text>",
+      "businesses": 0
+     }
+    ],
+    "bucket": "week",
+    "lastSeen": "<text>",
+    "recentShare": 0,
+    "status": "falling",
+    "score": 1.5709190363043133,
+    "examples": [
+     {
+      "text": "<text>",
+      "businessId": "<text>",
+      "name": "<text>",
+      "conversationId": "CON-placeholder-30"
+     },
+     {
+      "text": "<text>",
+      "businessId": "<text>",
+      "name": "<text>",
+      "conversationId": "CON-placeholder-31"
+     }
+    ],
+    "dismissedExamples": []
+   },
+   {
+    "category": "insurance",
+    "label": "<text>",
+    "unclassified": false,
+    "calls": 14,
+    "businesses": 3,
+    "previousBusinesses": 0,
+    "trend": 3,
+    "share": 0.375,
+    "outcomes": {
+     "taken": 14
+    },
+    "dominantOutcome": "taken",
+    "kind": "business_info",
+    "nextActionKind": "delegate",
+    "histogram": [
+     {
+      "start": "<text>",
+      "businesses": 2
+     },
+     {
+      "start": "<text>",
+      "businesses": 0
+     },
+     {
+      "start": "<text>",
+      "businesses": 0
+     },
+     {
+      "start": "<text>",
+      "businesses": 2
+     },
+     {
+      "start": "<text>",
+      "businesses": 0
+     }
+    ],
+    "bucket": "week",
+    "lastSeen": "<text>",
+    "recentShare": 0,
+    "status": "steady",
+    "score": 1.410129386160163,
+    "examples": [
+     {
+      "text": "<text>",
+      "businessId": "<text>",
+      "name": "<text>",
+      "conversationId": "CON-placeholder-32"
+     },
+     {
+      "text": "<text>",
+      "businessId": "<text>",
+      "name": "<text>",
+      "conversationId": "CON-placeholder-33"
+     }
+    ],
+    "dismissedExamples": []
+   },
+   {
+    "category": "house_rules",
+    "label": "<text>",
+    "unclassified": false,
+    "calls": 10,
+    "businesses": 3,
+    "previousBusinesses": 0,
+    "trend": 3,
+    "share": 0.375,
+    "outcomes": {
+     "neither": 1,
+     "taken": 9
+    },
+    "dominantOutcome": "taken",
+    "kind": "business_info",
+    "nextActionKind": "delegate",
+    "histogram": [
+     {
+      "start": "<text>",
+      "businesses": 2
+     },
+     {
+      "start": "<text>",
+      "businesses": 1
+     },
+     {
+      "start": "<text>",
+      "businesses": 2
+     },
+     {
+      "start": "<text>",
+      "businesses": 1
+     },
+     {
+      "start": "<text>",
+      "businesses": 0
+     }
+    ],
+    "bucket": "week",
+    "lastSeen": "<text>",
+    "recentShare": 0,
+    "status": "falling",
+    "score": 1.3674554227035567,
+    "examples": [
+     {
+      "text": "<text>",
+      "businessId": "<text>",
+      "name": "<text>",
+      "conversationId": "CON-placeholder-34"
+     },
+     {
+      "text": "<text>",
+      "businessId": "<text>",
+      "name": "<text>",
+      "conversationId": "CON-placeholder-35"
+     }
+    ],
+    "dismissedExamples": []
+   },
+   {
+    "category": "complaints",
+    "label": "<text>",
+    "unclassified": false,
+    "calls": 12,
+    "businesses": 3,
+    "previousBusinesses": 0,
+    "trend": 3,
+    "share": 0.375,
+    "outcomes": {
+     "neither": 1,
+     "taken": 11
+    },
+    "dominantOutcome": "taken",
+    "nextActionKind": "delegate",
+    "histogram": [
+     {
+      "start": "<text>",
+      "businesses": 3
+     },
+     {
+      "start": "<text>",
+      "businesses": 0
+     },
+     {
+      "start": "<text>",
+      "businesses": 0
+     },
+     {
+      "start": "<text>",
+      "businesses": 0
+     },
+     {
+      "start": "<text>",
+      "businesses": 0
+     }
+    ],
+    "bucket": "week",
+    "lastSeen": "<text>",
+    "recentShare": 0,
+    "status": "stale",
+    "score": 0.7379237882526548,
+    "examples": [
+     {
+      "text": "<text>",
+      "businessId": "<text>",
+      "name": "<text>",
+      "conversationId": "CON-placeholder-36"
+     },
+     {
+      "text": "<text>",
+      "businessId": "<text>",
+      "name": "<text>",
+      "conversationId": "CON-placeholder-37"
+     }
+    ],
+    "dismissedExamples": []
+   },
+   {
+    "category": "management_software",
+    "label": "<text>",
+    "unclassified": false,
+    "calls": 4,
+    "businesses": 2,
+    "previousBusinesses": 2,
+    "trend": 0,
+    "share": 0.25,
+    "outcomes": {
+     "neither": 3,
+     "taken": 1
+    },
+    "dominantOutcome": "neither",
+    "kind": "integration",
+    "nextActionKind": "integration",
+    "nextAction": "<text>",
+    "histogram": [
+     {
+      "start": "<text>",
+      "businesses": 1
+     },
+     {
+      "start": "<text>",
+      "businesses": 1
+     },
+     {
+      "start": "<text>",
+      "businesses": 0
+     },
+     {
+      "start": "<text>",
+      "businesses": 0
+     },
+     {
+      "start": "<text>",
+      "businesses": 0
+     }
+    ],
+    "bucket": "week",
+    "lastSeen": "<text>",
+    "recentShare": 0,
+    "status": "stale",
+    "score": 0.538711538081758,
+    "examples": [
+     {
+      "text": "<text>",
+      "businessId": "<text>",
+      "name": "<text>",
+      "conversationId": "CON-placeholder-38"
+     },
+     {
+      "text": "<text>",
+      "businessId": "<text>",
+      "name": "<text>",
+      "conversationId": "CON-placeholder-39"
+     }
+    ],
+    "dismissedExamples": []
+   }
+  ],
+  "calls": 2519,
+  "businesses": 8,
+  "businessesWithCalls": 8,
+  "backlog": {
+   "calls": 1
+  }
+ }
+}

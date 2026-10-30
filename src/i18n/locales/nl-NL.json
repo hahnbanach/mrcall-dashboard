@@ -2385,7 +2385,6 @@
           "month": "maand"
         },
         "freshness": "Laatste verzoek op {date} · {pct}% in de laatste periode ({bucket})",
-        "reportDated": "{n} bedrijven gedateerd op het einde van het rapport",
         "nextAction": "Volgende stap",
         "examples": "Voorbeelden",
         "hideExample": "Verbergen",

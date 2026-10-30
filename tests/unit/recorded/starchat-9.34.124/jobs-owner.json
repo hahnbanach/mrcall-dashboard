@@ -1,0 +1,139 @@
+{
+ "status": 200,
+ "body": {
+  "total": 4,
+  "items": [
+   {
+    "requesterRole": "admin",
+    "jobId": "<text>",
+    "businessId": "<text>",
+    "kind": "report",
+    "status": "done",
+    "from": 1773878400000,
+    "to": 1774051200000,
+    "estimate": {
+     "fits": true,
+     "kind": "report",
+     "left": 0,
+     "calls": 0,
+     "toSend": 0,
+     "skipped": 0,
+     "reasoned": 0,
+     "requests": 1,
+     "notFinalised": 0
+    },
+    "counts": {
+     "regenerated": 1
+    },
+    "createdAt": 1793342886239,
+    "finishedAt": 1793342895946,
+    "mode": "regenerate",
+    "requestedBy": "<text>",
+    "phase": "finished",
+    "result": {
+     "reports": [
+      {
+       "periodStart": 1773878400000,
+       "periodEnd": 1774051200000,
+       "requestId": "<text>"
+      }
+     ]
+    }
+   },
+   {
+    "requesterRole": "admin",
+    "jobId": "<text>",
+    "businessId": "<text>",
+    "kind": "recompute",
+    "status": "done",
+    "recompute": true,
+    "from": 1767225600000,
+    "to": 1793110600000,
+    "estimate": {
+     "fits": true,
+     "kind": "recompute",
+     "left": 0,
+     "calls": 14,
+     "toSend": 4,
+     "skipped": 0,
+     "reasoned": 0,
+     "requests": 4,
+     "notFinalised": 10
+    },
+    "counts": {
+     "written": 4,
+     "not_finalised": 10
+    },
+    "createdAt": 1793113908696,
+    "finishedAt": 1793113938036,
+    "requestedBy": "<text>",
+    "phase": "finished"
+   },
+   {
+    "requesterRole": "admin",
+    "jobId": "<text>",
+    "businessId": "<text>",
+    "kind": "report",
+    "status": "done",
+    "from": 1773878400000,
+    "to": 1774051200000,
+    "estimate": {
+     "fits": true,
+     "kind": "report",
+     "left": 0,
+     "calls": 0,
+     "toSend": 0,
+     "skipped": 0,
+     "reasoned": 0,
+     "requests": 1,
+     "notFinalised": 0
+    },
+    "counts": {
+     "requests": 1
+    },
+    "createdAt": 1792994912656,
+    "finishedAt": 1792994920742,
+    "requestedBy": "<text>",
+    "phase": "finished",
+    "result": {
+     "reports": [
+      {
+       "periodStart": 1773878400000,
+       "periodEnd": 1774051200000,
+       "requestId": "<text>"
+      }
+     ]
+    }
+   },
+   {
+    "requesterRole": "admin",
+    "jobId": "<text>",
+    "businessId": "<text>",
+    "kind": "recompute",
+    "status": "done",
+    "recompute": true,
+    "from": 1773878400000,
+    "to": 1774051200000,
+    "estimate": {
+     "fits": true,
+     "kind": "recompute",
+     "left": 0,
+     "calls": 14,
+     "toSend": 4,
+     "skipped": 0,
+     "reasoned": 0,
+     "requests": 4,
+     "notFinalised": 10
+    },
+    "counts": {
+     "written": 4,
+     "not_finalised": 10
+    },
+    "createdAt": 1792994860586,
+    "finishedAt": 1792994888111,
+    "requestedBy": "<text>",
+    "phase": "finished"
+   }
+  ]
+ }
+}

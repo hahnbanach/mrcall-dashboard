@@ -2387,7 +2387,6 @@
           "month": "Monat"
         },
         "freshness": "Letzte Anfrage am {date} · {pct} % im letzten Zeitraum ({bucket})",
-        "reportDated": "{n} Unternehmen mit Datum zum Ende des Berichts",
         "nextAction": "Nächster Schritt",
         "examples": "Beispiele",
         "hideExample": "Ausblenden",

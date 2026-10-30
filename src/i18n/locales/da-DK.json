@@ -2385,7 +2385,6 @@
           "month": "måned"
         },
         "freshness": "Seneste ønske den {date} · {pct} % i den seneste {bucket}",
-        "reportDated": "{n} virksomheder dateret ved rapportens slutning",
         "nextAction": "Næste skridt",
         "examples": "Eksempler",
         "hideExample": "Skjul",

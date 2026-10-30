@@ -2391,7 +2391,6 @@
           "month": "mese"
         },
         "freshness": "Ultima richiesta il {date} · {pct}% nell'ultima {bucket}",
-        "reportDated": "{n} attività datate dalla fine del report",
         "nextAction": "Prossima azione",
         "examples": "Esempi",
         "hideExample": "Nascondi",

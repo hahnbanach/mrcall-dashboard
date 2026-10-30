@@ -1,0 +1,64 @@
+{
+ "status": 200,
+ "body": {
+  "gestureId": "<text>",
+  "reverted": [],
+  "withdrawn": [
+   14
+  ],
+  "items": [
+   {
+    "feedbackId": 14,
+    "conversationId": "<text>",
+    "requestId": 200,
+    "field": "category",
+    "status": "withdrawn",
+    "value": "opening_hours"
+   }
+  ],
+  "calls": [
+   {
+    "conversationId": "<text>",
+    "businessId": "<text>",
+    "callStart": 1774005824343,
+    "version": 7,
+    "resolution": {
+     "model": "<text>",
+     "value": "resolved",
+     "corrected": false
+    },
+    "message": {
+     "model": "<text>",
+     "value": "none",
+     "corrected": false
+    },
+    "requests": [
+     {
+      "requestId": 200,
+      "ordinal": 1,
+      "text": "<text>",
+      "outcome": {
+       "model": "<text>",
+       "value": "met",
+       "corrected": false
+      },
+      "category": {
+       "model": "<text>",
+       "value": "opening_hours",
+       "corrected": false
+      },
+      "excluded": false
+     }
+    ],
+    "facts": {
+     "booked": "<text>",
+     "transferred": null,
+     "no_conversation": null,
+     "managed_call": "<text>",
+     "skill_errors": null,
+     "unkept": null
+    }
+   }
+  ]
+ }
+}

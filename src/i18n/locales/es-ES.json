@@ -2399,7 +2399,6 @@
           "month": "mes"
         },
         "freshness": "Última petición el {date} · {pct}% en el último período ({bucket})",
-        "reportDated": "{n} negocios fechados al final del informe",
         "nextAction": "Siguiente acción",
         "examples": "Ejemplos",
         "hideExample": "Ocultar",
