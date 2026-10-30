@@ -2655,7 +2655,8 @@
         "mine": {
           "title": "Minu ettepanekud",
           "empty": "Ettepanekuid veel pole.",
-          "withdraw": "Võta tagasi"
+          "withdraw": "Võta tagasi",
+          "withdrawOf": "Võta ettepanek tagasi: {what}"
         },
         "facts": {
           "no_conversation": "Vestlust pole",
@@ -2695,6 +2696,10 @@
             "opened": "Kõne avatud",
             "audio": "Salvestist kuulati"
           }
+        },
+        "withdrawRefused": {
+          "not_author": "Ettepaneku saab tagasi võtta ainult selle tegija.",
+          "feedback_state": "Selle ettepaneku üle on juba otsustatud."
         }
       }
     },

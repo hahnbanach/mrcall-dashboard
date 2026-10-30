@@ -252,7 +252,8 @@ function assistantRow (i) {
       { category: 'prices', label: 'Prices and rates', questions: 12 },
       { category: 'opening_hours', label: 'Opening hours', questions: 5 },
     ],
-    ...(i === 4 ? {} : { latestReport: { periodStart: rome(2026, 10, 14) } }),
+    // StarChat's latest report of any kind (`AssistantLatestReport`): a requested one carries its `requestId`
+    ...(i === 4 ? {} : { latestReport: i === 2 ? { periodStart: rome(2026, 10, 1), requestId: 'job-req-1' } : { periodStart: rome(2026, 10, 14) } }),
     accountHealth: i === 1 ? { subscriptionStatus: 'ACTIVE', creditLow: true, inDebt: false } : i === 2 ? { subscriptionStatus: 'UNPAID', creditLow: false, inDebt: true } : { subscriptionStatus: 'ACTIVE', creditLow: false, inDebt: false },
   }
 }

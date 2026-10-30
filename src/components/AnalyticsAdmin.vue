@@ -5,7 +5,6 @@
       mode="indeterminate"
       :style="{ height: '0.3em', visibility: anyLoading ? 'visible' : 'hidden' }"
     />
-    <!-- the admin page holds the tables over every business: wider, so they fit their card at 1440 px (U19c m12) -->
     <div v-if="user" class="analytics-container insights-ui">
 
       <!-- Admin Mode Banner -->
@@ -81,9 +80,7 @@
             <div class="kpi-label">{{ $t('components.analytics.kpi.' + kpi.key) }}</div>
             <div class="kpi-value">{{ kpi.text }}</div>
             <!-- "n.d." over fewer than 20 previous calls or a partial previous window, as on a business's page -->
-            <div v-if="kpi.change && !kpi.change.available" class="kpi-delta delta-neutral" :title="naHelp(kpi.change)">
-              <abbr :title="naHelp(kpi.change)">{{ $t('components.callInsights.change.notAvailable') }}</abbr>
-            </div>
+            <div v-if="kpi.change && !kpi.change.available" class="kpi-delta delta-neutral"><NotAvailable :change="kpi.change" /></div>
             <div v-else-if="kpi.change" class="kpi-delta delta-neutral">
               <i :class="deltaIcon(kpi.change.value)"></i>
               {{ formatDeltaPercentage(kpi.change.value) }}
@@ -321,9 +318,10 @@ import ConfigSuggestions from "@/components/analytics/ConfigSuggestions.vue";
 import BusinessAutocomplete from "@/components/analytics/BusinessAutocomplete.vue";
 import AnalyticsFilterBar from "@/components/analytics/AnalyticsFilterBar.vue";
 import InsightsReports from "@/utils/InsightsReports";
+import NotAvailable from "@/components/analytics/NotAvailable.vue";
 
 export default {
-  components: { CallOutcomes, CallTopics, CallQuality, AssistantsToReview, RequestCategories, ConfigSuggestions, BusinessAutocomplete, AnalyticsFilterBar, UndoBar, FeedbackQueue, MyProposals },
+  components: { CallOutcomes, CallTopics, CallQuality, AssistantsToReview, RequestCategories, ConfigSuggestions, BusinessAutocomplete, AnalyticsFilterBar, UndoBar, FeedbackQueue, MyProposals, NotAvailable },
   setup() {
     const store = useStore();
     const toast = useToast();
@@ -973,9 +971,6 @@ export default {
       const intensity = value / max;
       return `rgba(0, 104, 255, ${0.15 + intensity * 0.75})`;
     },
-    naHelp(change) {
-      return this.$t(change.reason === "partial" ? "components.callInsights.change.partialHelp" : "components.callInsights.change.notAvailableHelp");
-    },
     deltaIcon(delta) {
       if (delta > 0) return 'pi pi-arrow-up';
       if (delta < 0) return 'pi pi-arrow-down';
@@ -1088,6 +1083,8 @@ export default {
   color: @mrcall_grey_text2;
 }
 
+// the admin page holds the tables over every business: wider than a business's page (960 px), so that they fit
+// their card at 1440 px (U19c m12)
 .analytics-container {
   margin: auto;
   max-width: 1280px;

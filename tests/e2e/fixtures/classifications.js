@@ -254,7 +254,11 @@ async function mockClassifications (page, options = {}) {
       if (!h) continue
       // an author's withdrawal of a proposal still waiting (the amendment of 2026-10-30, rule 5): no value changes
       if (move === 'withdraw') {
-        if (!h.byMe || h.status !== 'proposed') return json(route, 409, { code: 'not_withdrawable', message: 'only its author withdraws a proposal still waiting' })
+        // StarChat 9.34.124 (`InsightsFeedback.mayDecide`, `InsightsFeedbackPsql.moved`): a non-author 403 `not_author`; a
+        // signal already withdrawn answered as it stands; any other state 409 `feedback_state`
+        if (!h.byMe) return json(route, 403, { code: 'not_author', message: 'a proposal is withdrawn by its author' })
+        if (h.status === 'withdrawn') return json(route, 200, { ...h, call: answered(call) })
+        if (h.status !== 'proposed') return json(route, 409, { code: 'feedback_state', message: `feedback ${h.feedbackId} is ${h.status}` })
         h.status = 'withdrawn'
         h.decidedAt = Date.now()
         return json(route, 200, { ...h, call: answered(call) })

@@ -2660,7 +2660,8 @@
         "mine": {
           "title": "My proposals",
           "empty": "No proposal yet.",
-          "withdraw": "Withdraw"
+          "withdraw": "Withdraw",
+          "withdrawOf": "Withdraw the proposal: {what}"
         },
         "facts": {
           "no_conversation": "No conversation",
@@ -2700,6 +2701,10 @@
             "opened": "Call opened",
             "audio": "Recording heard"
           }
+        },
+        "withdrawRefused": {
+          "not_author": "Only its author can withdraw a proposal.",
+          "feedback_state": "This proposal has already been decided."
         }
       }
     },

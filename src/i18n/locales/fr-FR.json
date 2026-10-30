@@ -2657,7 +2657,8 @@
         "mine": {
           "title": "Mes propositions",
           "empty": "Aucune proposition pour l'instant.",
-          "withdraw": "Retirer"
+          "withdraw": "Retirer",
+          "withdrawOf": "Retirer la proposition : {what}"
         },
         "facts": {
           "no_conversation": "Sans conversation",
@@ -2697,6 +2698,10 @@
             "opened": "Appel ouvert",
             "audio": "Enregistrement écouté"
           }
+        },
+        "withdrawRefused": {
+          "not_author": "Seul son auteur peut retirer une proposition.",
+          "feedback_state": "Cette proposition a déjà été tranchée."
         }
       }
     },

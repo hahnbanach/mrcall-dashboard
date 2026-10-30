@@ -2655,7 +2655,8 @@
         "mine": {
           "title": "Mijn voorstellen",
           "empty": "Nog geen voorstellen.",
-          "withdraw": "Intrekken"
+          "withdraw": "Intrekken",
+          "withdrawOf": "Voorstel intrekken: {what}"
         },
         "facts": {
           "no_conversation": "Geen gesprek",
@@ -2695,6 +2696,10 @@
             "opened": "Oproep geopend",
             "audio": "Opname beluisterd"
           }
+        },
+        "withdrawRefused": {
+          "not_author": "Alleen wie een voorstel deed, kan het intrekken.",
+          "feedback_state": "Over dit voorstel is al beslist."
         }
       }
     },

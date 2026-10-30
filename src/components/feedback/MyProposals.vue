@@ -21,11 +21,12 @@
             v-if="s.status === 'proposed' && s.source !== 'agent'"
             type="button" text size="small"
             :label="$t('components.callInsights.feedback.mine.withdraw')"
+            :aria-label="$t('components.callInsights.feedback.mine.withdrawOf', { what: s.requestText || labels.signal(s) })"
             :loading="withdrawing === s.feedbackId"
             :disabled="withdrawing !== null"
             @click="withdraw(s)"
           />
-          <p v-if="failed === s.feedbackId" class="my-proposal-failed" role="alert">{{ $t("components.callInsights.feedback.failed") }}</p>
+          <p v-if="failed && failed.id === s.feedbackId" class="my-proposal-failed" role="alert">{{ $t(failed.key) }}</p>
         </li>
       </ul>
       <nav v-if="page.total > page.size" class="my-proposals-pager" :aria-label="$t('components.callInsights.pager.label', { name: $t('components.callInsights.feedback.mine.title') })">
@@ -102,7 +103,7 @@ export default {
       this.failed = null;
       Classifications.withdraw(this.$store.state.user, s.feedbackId)
         .then(() => this.page.retry())
-        .catch((error) => { if (!isSessionEnded(error)) this.failed = s.feedbackId; })
+        .catch((error) => { if (!isSessionEnded(error)) this.failed = { id: s.feedbackId, key: Classifications.withdrawRefusalKey(CallInsights.refusalOf(error)) }; })
         .finally(() => { this.withdrawing = null; });
     },
   },

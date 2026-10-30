@@ -2655,7 +2655,8 @@
         "mine": {
           "title": "Omat ehdotukset",
           "empty": "Ei vielä ehdotuksia.",
-          "withdraw": "Peru"
+          "withdraw": "Peru",
+          "withdrawOf": "Peru ehdotus: {what}"
         },
         "facts": {
           "no_conversation": "Ei keskustelua",
@@ -2695,6 +2696,10 @@
             "opened": "Puhelu avattu",
             "audio": "Tallenne kuunneltu"
           }
+        },
+        "withdrawRefused": {
+          "not_author": "Vain ehdotuksen tekijä voi perua sen.",
+          "feedback_state": "Tästä ehdotuksesta on jo päätetty."
         }
       }
     },

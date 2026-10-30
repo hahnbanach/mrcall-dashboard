@@ -175,7 +175,8 @@ describe('b6c43ca49: the cycles with no call among a page of the history', () =>
   const items = [row(100 * DAY), row(93 * DAY), row(86 * DAY)]
   const cycles = [{ from: 100 * DAY, to: 101 * DAY }, { from: 101 * DAY, to: 102 * DAY }]
   it('newest first: on the first page, before the reports they follow', () => {
-    const rows = R.historyWithEmptyCycles(items, cycles, { offset: 0, total: 3, size: 10, sort: 'periodEnd', direction: 'desc' })
+    // the stretch since the last report: from the next automatic report's start (`nextFrom`)
+    const rows = R.historyWithEmptyCycles(items, cycles, { offset: 0, total: 3, size: 10, sort: 'periodEnd', direction: 'desc', nextFrom: 100 * DAY })
     expect(rows.map((r) => (r.emptyCycle ? 'e' : 'r') + r.periodEnd / DAY)).toEqual(['e102', 'e101', 'r100', 'r93', 'r86'])
   })
   it('not on a later page, nor under a sort that is not by date, nor under a state filter', () => {
@@ -185,7 +186,7 @@ describe('b6c43ca49: the cycles with no call among a page of the history', () =>
   })
   it('oldest first: on the last page, after the reports', () => {
     const asc = [...items].reverse()
-    const rows = R.historyWithEmptyCycles(asc, cycles, { offset: 0, total: 3, size: 10, sort: 'periodEnd', direction: 'asc' })
+    const rows = R.historyWithEmptyCycles(asc, cycles, { offset: 0, total: 3, size: 10, sort: 'periodEnd', direction: 'asc', nextFrom: 100 * DAY })
     expect(rows.map((r) => r.periodEnd / DAY)).toEqual([86, 93, 100, 101, 102])
   })
 })
@@ -200,5 +201,38 @@ describe('2affa35f2: the cycles a written report recorded', () => {
     const inside = { from: 80 * DAY, to: 81 * DAY }
     const rows = R.historyWithEmptyCycles(items, [inside, { ...inside }], { offset: 10, total: 30, size: 2, sort: 'periodEnd', direction: 'desc' })
     expect(rows.filter((r) => r.emptyCycle).map((r) => r.periodStart / DAY)).toEqual([80])
+  })
+})
+
+/**
+ * U19r6b M2 with StarChat b1b863694 (seen failing on c1389ee): a page answers every recorded cycle whose report meets
+ * its range, so a cycle is drawn only beside the automatic report that recorded it, and the stretch since the last
+ * report only on the page that reaches the newest end.
+ */
+describe('b1b863694: each cycle on exactly one page', () => {
+  const DAY = 86400000
+  const auto = (start, end) => ({ periodStart: start * DAY, periodEnd: end * DAY, status: 'done', type: 'automatic' })
+  const asked = (start, end) => ({ ...auto(start, end), type: 'requested', requestId: 'r' + start })
+  const cycle = { from: 1 * DAY, to: 8 * DAY }
+  it('the reviewer\'s boundary: a recorded cycle is drawn beside its automatic report, not inside a requested one on the next page', () => {
+    const page1 = R.historyWithEmptyCycles([auto(1, 15)], [cycle], { offset: 0, size: 1, total: 2, sort: 'periodEnd', direction: 'desc' })
+    const page2 = R.historyWithEmptyCycles([asked(-30, 10)], [cycle], { offset: 1, size: 1, total: 2, sort: 'periodEnd', direction: 'desc' })
+    expect(page1.filter((r) => r.emptyCycle)).toHaveLength(1)
+    expect(page2.filter((r) => r.emptyCycle)).toHaveLength(0)
+  })
+  it('a recorded cycle whose report is on another page is not drawn here', () => {
+    // the page's span covers the cycle (a requested report from day 0), but the automatic report that recorded it is not here
+    const rows = R.historyWithEmptyCycles([auto(20, 27), asked(0, 19)], [cycle], { offset: 0, size: 2, total: 3, sort: 'periodEnd', direction: 'desc' })
+    expect(rows.filter((r) => r.emptyCycle)).toHaveLength(0)
+  })
+  it('the stretch since the last report is drawn only on the page that reaches the newest end', () => {
+    const stretch = { from: 27 * DAY, to: 28 * DAY }
+    const page = { size: 2, total: 4, sort: 'periodEnd', direction: 'desc', nextFrom: 27 * DAY }
+    expect(R.historyWithEmptyCycles([auto(20, 27), auto(15, 20)], [stretch], { ...page, offset: 0 }).filter((r) => r.emptyCycle)).toHaveLength(1)
+    expect(R.historyWithEmptyCycles([auto(10, 15), auto(1, 10)], [stretch], { ...page, offset: 2 }).filter((r) => r.emptyCycle)).toHaveLength(0)
+  })
+  it('a recorded cycle sits beside its report under any order', () => {
+    const rows = R.historyWithEmptyCycles([auto(20, 27), auto(1, 15)], [cycle], { offset: 0, size: 2, total: 2, sort: 'calls', direction: 'desc' })
+    expect(rows.map((r) => (r.emptyCycle ? 'e' : 'r') + r.periodStart / DAY)).toEqual(['r20', 'r1', 'e1'])
   })
 })

@@ -86,7 +86,9 @@ test.describe('rule 10, m1: changes', () => {
     await mockClassifications(page, { role: 'reseller' })
     await page.goto('/analytics')
     await expect(page.locator('.legend-delta').first()).toBeVisible({ timeout: 15000 })
-    await expect(page.locator('.legend-delta.delta-positive, .legend-delta.delta-negative')).toHaveCount(0)
+    // every delta is drawn in one colour, the outcome lines' and the messages' alike, whatever its direction
+    const colours = await page.locator('.legend-delta').evaluateAll((els) => [...new Set(els.map((e) => getComputedStyle(e).color))])
+    expect(colours).toHaveLength(1)
   })
 })
 

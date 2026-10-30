@@ -2669,7 +2669,8 @@
         "mine": {
           "title": "Mis propuestas",
           "empty": "Todavía no hay propuestas.",
-          "withdraw": "Retirar"
+          "withdraw": "Retirar",
+          "withdrawOf": "Retirar la propuesta: {what}"
         },
         "facts": {
           "no_conversation": "Sin conversación",
@@ -2709,6 +2710,10 @@
             "opened": "Llamada abierta",
             "audio": "Grabación escuchada"
           }
+        },
+        "withdrawRefused": {
+          "not_author": "Solo su autor puede retirar una propuesta.",
+          "feedback_state": "Esta propuesta ya se ha decidido."
         }
       }
     },

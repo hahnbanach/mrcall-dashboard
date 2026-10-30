@@ -543,7 +543,8 @@ export default {
         this.status = "ok";
       } catch (error) {
         if (isSessionEnded(error)) return;
-        this.alert = this.$t("components.callInsights.feedback.failed");
+        // StarChat's refusals (9.34.124): 403 `not_author`, 409 `feedback_state` (decided meanwhile), each in its words
+        this.alert = this.$t(Classifications.withdrawRefusalKey(CallInsights.refusalOf(error)));
         this.load({ keep: true });
       } finally {
         this.busyKey = null;

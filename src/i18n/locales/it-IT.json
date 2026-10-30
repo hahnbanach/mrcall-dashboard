@@ -2661,7 +2661,8 @@
         "mine": {
           "title": "Le mie proposte",
           "empty": "Ancora nessuna proposta.",
-          "withdraw": "Ritira"
+          "withdraw": "Ritira",
+          "withdrawOf": "Ritira la proposta: {what}"
         },
         "facts": {
           "no_conversation": "Nessuna conversazione",
@@ -2701,6 +2702,10 @@
             "opened": "Chiamata aperta",
             "audio": "Registrazione ascoltata"
           }
+        },
+        "withdrawRefused": {
+          "not_author": "Solo chi l'ha fatta può ritirare una proposta.",
+          "feedback_state": "Questa proposta è già stata decisa."
         }
       }
     },

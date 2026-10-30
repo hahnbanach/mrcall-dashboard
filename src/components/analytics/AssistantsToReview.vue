@@ -56,7 +56,7 @@
         </span>
       </template>
       <template #cell-change="{ row }">
-        <abbr v-if="changeOf(row).reason" :title="$t('components.callInsights.change.' + changeOf(row).reason + 'Help')">{{ changeOf(row).text }}</abbr>
+        <NotAvailable v-if="changeOf(row).reason" :change="{ available: false, reason: changeOf(row).reason }" />
         <span v-else>{{ changeOf(row).text }}</span>
       </template>
       <!-- what the business's callers ask most, each opening its requests for that business with all outcomes, and
@@ -69,6 +69,7 @@
               class="assistant-ask"
               :aria-label="$t('components.callInsights.assistants.askedOf', { category: c.label, n: c.count }, c.count)"
               :aria-expanded="isAskOpen(row, c) ? 'true' : 'false'"
+              :aria-controls="asksRegion(row)"
               @click="toggleAsk(row, c)"
             >{{ c.label }} <strong>{{ c.count }}</strong></button>
           </li>
@@ -80,7 +81,7 @@
       </template>
       <template #after-row="{ row, colspan }">
         <tr v-if="openAsk && openAsk.businessId === row.businessId" class="assistant-asks-expansion">
-          <td :colspan="colspan">
+          <td :id="asksRegion(row)" :colspan="colspan">
             <CategoryRequests
               :category="openAsk.category"
               :label="openAsk.label"
@@ -121,6 +122,7 @@ import CallInsights from "@/utils/CallInsights";
 import InsightsReports from "@/utils/InsightsReports";
 import PagedTable from "@/components/analytics/PagedTable.vue";
 import CategoryRequests from "@/components/analytics/CategoryRequests.vue";
+import NotAvailable from "@/components/analytics/NotAvailable.vue";
 
 /**
  * "Assistenti da rivedere" (docs/briefs/2026-10-24-insights-reports-ux.md in StarChat): the per-business signals,
@@ -146,7 +148,7 @@ const SHARE_COLUMNS = CallInsights.ASSISTANT_SORT_KEYS
   .map((sort) => ({ sort, ...SHARE_LABELS[sort] }));
 
 export default {
-  components: { PagedTable, CategoryRequests },
+  components: { PagedTable, CategoryRequests, NotAvailable },
   props: {
     // the page's filters, as every other section sends them
     body: { type: Object, default: null },
@@ -231,7 +233,7 @@ export default {
       const na = (reason) => ({ text: this.$t("components.callInsights.change.notAvailable"), reason });
       if (InsightsReports.previousPartial(row)) return na("partial");
       const before = row.previousCallsWithRequest;
-      if (typeof before === "number" && before > 0 && before < InsightsReports.MIN_PREVIOUS_BASE) return na("notAvailable");
+      if (typeof before === "number" && before > 0 && before < InsightsReports.MIN_PREVIOUS_BASE) return na("base");
       const points = CallInsights.notSolvedChange(row);
       if (points === null) return { text: "–" };
       const sign = points > 0 ? "+" : points < 0 ? "−" : "±";
@@ -247,14 +249,23 @@ export default {
       return list.filter((c) => c && typeof c.category === "string" && typeof c.questions === "number")
         .slice(0, 3).map((c) => ({ category: c.category, label: c.label || c.category, count: c.questions }));
     },
+    // the cell a row's category requests open in, named by the buttons that open it
+    asksRegion(row) {
+      return "assistant-asks-" + String(row.businessId).replace(/[^A-Za-z0-9_-]/g, "-");
+    },
     isAskOpen(row, c) {
       return !!this.openAsk && this.openAsk.businessId === row.businessId && this.openAsk.category === c.category;
     },
     toggleAsk(row, c) {
       this.openAsk = this.isAskOpen(row, c) ? null : { businessId: row.businessId, category: c.category, label: c.label };
     },
+    // StarChat's latest report of any kind (`AssistantLatestReport`): a requested one is read by its `requestId`, else the
+    // automatic report at that start would be opened, or none (U19r6b M1)
     latestReportLink(row) {
-      return { path: "/analytics/report", query: { id: row.businessId, start: String(row.latestReport.periodStart) } };
+      const r = row.latestReport;
+      const query = { id: row.businessId, start: String(r.periodStart) };
+      if (typeof r.requestId === "string" && r.requestId !== "") query.requestId = r.requestId;
+      return { path: "/analytics/report", query };
     },
     // The account in words, no amount: a debt or low credit, and the plan's state when it is not plainly active
     // (named as the plan page names it); "In regola" when none applies.

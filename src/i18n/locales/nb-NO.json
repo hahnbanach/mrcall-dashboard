@@ -2655,7 +2655,8 @@
         "mine": {
           "title": "Mine forslag",
           "empty": "Ingen forslag ennå.",
-          "withdraw": "Trekk tilbake"
+          "withdraw": "Trekk tilbake",
+          "withdrawOf": "Trekk tilbake forslaget: {what}"
         },
         "facts": {
           "no_conversation": "Ingen samtale",
@@ -2695,6 +2696,10 @@
             "opened": "Samtale åpnet",
             "audio": "Opptak avspilt"
           }
+        },
+        "withdrawRefused": {
+          "not_author": "Bare den som laget et forslag, kan trekke det tilbake.",
+          "feedback_state": "Dette forslaget er allerede avgjort."
         }
       }
     },

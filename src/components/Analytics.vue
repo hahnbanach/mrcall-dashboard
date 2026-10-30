@@ -98,11 +98,7 @@
             <div class="kpi-label">{{ $t('components.analytics.kpi.' + kpi.key) }}</div>
             <div class="kpi-value">{{ kpi.text }}</div>
             <!-- a change over a period before of fewer than 20 calls (U19 M13), or over a partial one (rule 10): "n.d." -->
-            <div
-              v-if="kpi.change && !kpi.change.available"
-              class="kpi-delta delta-neutral"
-              :title="naHelp(kpi.change)"
-            ><abbr :title="naHelp(kpi.change)">{{ $t('components.callInsights.change.notAvailable') }}</abbr></div>
+            <div v-if="kpi.change && !kpi.change.available" class="kpi-delta delta-neutral"><NotAvailable :change="kpi.change" /></div>
             <div v-else-if="kpi.change" class="kpi-delta delta-neutral">
               <i :class="deltaIcon(kpi.change.value)"></i>
               {{ formatDeltaPercentage(kpi.change.value) }}
@@ -311,12 +307,13 @@ import ReportsTab from "@/components/analytics/ReportsTab.vue";
 import JobsTab from "@/components/analytics/JobsTab.vue";
 import InsightsRequestDialog from "@/components/analytics/InsightsRequestDialog.vue";
 import AnalyticsFilterBar from "@/components/analytics/AnalyticsFilterBar.vue";
+import NotAvailable from "@/components/analytics/NotAvailable.vue";
 import InsightsReports from "@/utils/InsightsReports";
 
 const TABS = ["overview", "reports", "jobs"];
 
 export default {
-  components: { OwnerSelector, CallOutcomes, CallTopics, CallQuality, AssistantsToReview, RequestCategories, ReportsTab, JobsTab, InsightsRequestDialog, AnalyticsFilterBar, UndoBar, MyProposals },
+  components: { OwnerSelector, CallOutcomes, CallTopics, CallQuality, AssistantsToReview, RequestCategories, ReportsTab, JobsTab, InsightsRequestDialog, AnalyticsFilterBar, UndoBar, MyProposals, NotAvailable },
   setup() {
     const store = useStore();
     const toast = useToast();
@@ -936,9 +933,6 @@ export default {
       if (!value || value === 0) return 'transparent';
       const intensity = value / max;
       return `rgba(0, 104, 255, ${0.15 + intensity * 0.75})`;
-    },
-    naHelp(change) {
-      return this.$t(change.reason === "partial" ? "components.callInsights.change.partialHelp" : "components.callInsights.change.notAvailableHelp");
     },
     deltaIcon(delta) {
       if (delta > 0) return 'pi pi-arrow-up';

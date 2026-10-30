@@ -379,6 +379,11 @@ function change(current, previous, previousBase, { partial = false } = {}) {
     return { available: true, value: (current - previous) / previous };
 }
 
+// The label key of why a change is "n.d.": a previous base under 20 calls (`base`) or a partial window (`partial`).
+function changeHelpKey(change) {
+    return change && change.reason === "partial" ? "components.callInsights.change.partialHelp" : "components.callInsights.change.notAvailableHelp";
+}
+
 // StarChat's word that an answer's (or a row's) previous window is partial: one place reads it.
 function previousPartial(answer) {
     return !!answer && answer.previousPartial === true;
@@ -481,38 +486,47 @@ function nextAction(row) {
 }
 
 /*
- * THE CYCLES WITH NO CALL (the amendment of 2026-10-30, rule 9, as StarChat 2affa35f2 serves it): the history's
- * top-level `emptyCycles` ({from, to}: the automatic cycles since the last report that held no call, and those the
- * page's written reports recorded inside their longer periods) are no rows of
- * StarChat's page, so they never count in its total nor shift its paging. The page shows them as rows ("Nessuna
- * chiamata dal … al …"), placed by date among its reports, on the page whose range of period ends covers them: the
- * first and the last page reach open-ended toward the newest and the oldest. Only when the history is in date order
- * (`sort` periodEnd) and not narrowed to a state or to requested reports, which a cycle with no call is not.
- * `page`: `{offset, size, total, sort, direction, status, type}`. Each such row carries `emptyCycle: true`.
+ * THE CYCLES WITH NO CALL (the amendment of 2026-10-30, rule 9, as StarChat 9.34.124, b1b863694, serves it). The
+ * history's top-level `emptyCycles` ({from, to}) are no rows of StarChat's page, so they never count in its total nor
+ * shift its paging, and they come in two kinds:
+ * - the cycles a written automatic report recorded inside its longer period: StarChat answers every one whose report
+ *   meets the page's range, whatever page that report is on (U19c's review, M2, reproduced one drawn on two pages);
+ *   such a cycle is drawn only beside the automatic report (no `requestId`) that contains it, so on the one page that
+ *   report is on, under any order and filter that shows it;
+ * - the stretch since the last report (`from` at or after the next automatic report's start, `page.nextFrom`): drawn
+ *   only on the page that reaches the newest end, in date order and with no state or "requested" filter, which the
+ *   stretch is not.
+ * A recorded cycle lies inside its report, which is on exactly one page of the unfiltered history; the stretch is on its
+ * first (newest first) or last (oldest first) page: no cycle lands on two pages, none on no page of that history.
+ * `page`: `{offset, size, total, sort, direction, status, type, nextFrom}`. Each such row carries `emptyCycle: true`.
  */
 function historyWithEmptyCycles(items, emptyCycles, page) {
     const list = Array.isArray(items) ? items : [];
     const p = page || {};
-    // each cycle once: StarChat merges the cycles the page's written reports recorded with the stretch since the last
-    // one (2affa35f2), and dedupes them; a repeat is drawn once here too
     const seen = new Set();
     const cycles = (Array.isArray(emptyCycles) ? emptyCycles : [])
         .filter((c) => c && typeof c.from === "number" && typeof c.to === "number")
-        .filter((c) => { const k = c.from + ":" + c.to; if (seen.has(k)) return false; seen.add(k); return true; });
-    if (cycles.length === 0 || (p.sort || "periodEnd") !== "periodEnd" || p.status || (p.type && p.type !== "automatic")) return list;
+        .filter((c) => { const k = c.from + ":" + c.to; if (seen.has(k)) return false; seen.add(k); return true; })
+        .sort((a, b) => a.from - b.from);
+    if (cycles.length === 0) return list;
     const desc = p.direction !== "asc";
-    const first = (p.offset || 0) === 0;
-    const last = (p.offset || 0) + (p.size || list.length) >= (p.total || 0);
-    // the page's span, from its oldest report's start to its newest's end: a cycle a written report recorded lies
-    // inside that report's period
-    const newest = list.length ? Math.max(...list.map((r) => r.periodEnd)) : null;
-    const oldest = list.length ? Math.min(...list.map((r) => r.periodStart)) : null;
-    const reachesNew = desc ? first : last;
-    const reachesOld = desc ? last : first;
-    const shown = cycles.filter((c) => (reachesNew || (newest !== null && c.to <= newest)) && (reachesOld || (oldest !== null && c.from >= oldest)))
-        .map((c) => ({ emptyCycle: true, periodStart: c.from, periodEnd: c.to }));
-    if (shown.length === 0) return list;
-    return [...list, ...shown].sort((a, b) => (desc ? b.periodEnd - a.periodEnd : a.periodEnd - b.periodEnd));
+    const asRow = (c) => ({ emptyCycle: true, periodStart: c.from, periodEnd: c.to });
+    const automatic = (r) => !r.emptyCycle && !(typeof r.requestId === "string" && r.requestId !== "") && r.type !== "requested";
+    const placed = new Set();
+    const out = [];
+    for (const r of list) {
+        const inside = automatic(r) ? cycles.filter((c) => c.from >= r.periodStart && c.to <= r.periodEnd) : [];
+        inside.forEach((c) => placed.add(c));
+        // the quiet days begin the report's period: below it newest first, above it oldest first
+        const quiet = inside.map(asRow).sort((a, b) => (desc ? b.periodEnd - a.periodEnd : a.periodEnd - b.periodEnd));
+        if (desc) out.push(r, ...quiet); else out.push(...quiet, r);
+    }
+    const stretch = typeof p.nextFrom === "number" ? cycles.filter((c) => !placed.has(c) && c.from >= p.nextFrom) : [];
+    const dated = (p.sort || "periodEnd") === "periodEnd" && !p.status && !(p.type && p.type !== "automatic");
+    const reachesNewest = desc ? (p.offset || 0) === 0 : (p.offset || 0) + (p.size || list.length) >= (p.total || 0);
+    if (stretch.length === 0 || !dated || !reachesNewest) return out;
+    const rows = stretch.map(asRow).sort((a, b) => (desc ? b.periodEnd - a.periodEnd : a.periodEnd - b.periodEnd));
+    return desc ? [...rows, ...out] : [...out, ...rows];
 }
 
 export default {
@@ -524,7 +538,7 @@ export default {
     historyWithEmptyCycles,
     previousPartial,
     kpiChanges,
-    atMidnight,
+    changeHelpKey,
     distinctExamples,
     otherLast,
     MIN_PREVIOUS_BASE,

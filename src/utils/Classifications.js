@@ -266,6 +266,14 @@ function withReverted(history, outcome, now = Date.now()) {
     });
 }
 
+/** The words of a refused withdrawal by StarChat's code (`InsightsRefusal`: `not_author` 403, `feedback_state` 409), the
+ * generic failure for any other. */
+const WITHDRAW_REFUSALS = ["not_author", "feedback_state"];
+function withdrawRefusalKey(refusal) {
+    const code = refusal && refusal.code;
+    return WITHDRAW_REFUSALS.includes(code) ? "components.callInsights.feedback.withdrawRefused." + code : "components.callInsights.feedback.failed";
+}
+
 /** The reader's own fact reports still waiting, the newest per fact: what "Segnalato a MrCall" says and offers to withdraw. */
 function ownFactReports(history) {
     const byField = new Map();
@@ -486,6 +494,7 @@ export default {
     isCallState,
     stateIn,
     undoOutcome,
+    withdrawRefusalKey,
     withReverted,
     ownFactReports,
     withDecision,

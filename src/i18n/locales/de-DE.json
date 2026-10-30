@@ -2657,7 +2657,8 @@
         "mine": {
           "title": "Meine Vorschläge",
           "empty": "Noch keine Vorschläge.",
-          "withdraw": "Zurückziehen"
+          "withdraw": "Zurückziehen",
+          "withdrawOf": "Vorschlag zurückziehen: {what}"
         },
         "facts": {
           "no_conversation": "Kein Gespräch",
@@ -2697,6 +2698,10 @@
             "opened": "Anruf geöffnet",
             "audio": "Aufnahme angehört"
           }
+        },
+        "withdrawRefused": {
+          "not_author": "Nur wer einen Vorschlag gemacht hat, kann ihn zurückziehen.",
+          "feedback_state": "Über diesen Vorschlag wurde bereits entschieden."
         }
       }
     },

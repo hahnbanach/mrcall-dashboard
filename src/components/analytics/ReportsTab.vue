@@ -271,6 +271,7 @@ export default {
       return InsightsReports.historyWithEmptyCycles(this.history.items, a && a.emptyCycles, {
         offset: this.history.offset, size: this.history.size, total: this.history.total,
         sort: this.history.sort, direction: this.history.direction, status: this.statusFilter, type: this.typeFilter,
+        nextFrom: this.next && typeof this.next.from === "number" ? this.next.from : undefined,
       });
     },
     skipped() {

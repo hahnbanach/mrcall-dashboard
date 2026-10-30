@@ -38,7 +38,7 @@
                 <span class="legend-count"><CountLink :to="line.key === 'forwarded' ? linkTo('resolution', 'forwarded') : linkTo('outcomeLine', line.key)" :count="line.count" :display="formatNumber(line.count)" :label="$t('components.callInsights.outcome.' + line.key)" /></span>
                 <span class="legend-share">{{ $t("components.callInsights.howCallsWent.shareOfBase", { percent: line.percent, base: formatNumber(outcome.base) }) }}</span>
                 <!-- neutral: a rise is good news on one line and bad on another, so colour would mislead -->
-                <span v-if="lineChange(line) && !lineChange(line).available" class="legend-delta delta-neutral"><abbr :title="naHelp(lineChange(line))">{{ $t("components.callInsights.change.notAvailable") }}</abbr></span>
+                <span v-if="lineChange(line) && !lineChange(line).available" class="legend-delta delta-neutral"><NotAvailable :change="lineChange(line)" /></span>
                 <span v-else-if="lineChange(line)" class="legend-delta delta-neutral">
                   <i :class="deltaIcon(lineChange(line).value)" aria-hidden="true"></i>
                   {{ formatDeltaPercentage(lineChange(line).value) }}
@@ -83,7 +83,7 @@
             <span class="legend-swatch" :style="{ background: colorOf(key) }" aria-hidden="true"></span>
             <InsightLabel :dimension="dim.name" :value="key" />
             <span class="legend-count"><CountLink :to="linkTo(dim.name, key)" :count="dim.totals[key] || 0" :display="formatNumber(dim.totals[key] || 0)" :label="$t('components.callInsights.' + dim.name + '.' + key)" /></span>
-            <span v-if="delta(dim, key) && !delta(dim, key).available" class="legend-delta delta-neutral"><abbr :title="naHelp(delta(dim, key))">{{ $t("components.callInsights.change.notAvailable") }}</abbr></span>
+            <span v-if="delta(dim, key) && !delta(dim, key).available" class="legend-delta delta-neutral"><NotAvailable :change="delta(dim, key)" /></span>
             <!-- neutral as the outcome lines: a rise of a complete message is good, of an incomplete one bad (U19c m1) -->
             <span v-else-if="delta(dim, key)" class="legend-delta delta-neutral">
               <i :class="deltaIcon(delta(dim, key).value)"></i>
@@ -124,6 +124,7 @@ import CallInsights from "@/utils/CallInsights";
 import InsightsReports from "@/utils/InsightsReports";
 import InsightLabel from "@/components/analytics/InsightLabel.vue";
 import CountLink from "@/components/analytics/CountLink.vue";
+import NotAvailable from "@/components/analytics/NotAvailable.vue";
 
 /**
  * "How the calls went" (insights version 3, StarChat's brief docs/briefs/2026-10-24-call-resolution-forwarded.md): the
@@ -153,7 +154,7 @@ const COLORS = {
 };
 
 export default {
-  components: { InsightLabel, CountLink },
+  components: { InsightLabel, CountLink, NotAvailable },
   props: {
     status: { type: String, required: true }, // loading | ok | absent | unavailable
     data: { type: Object, default: null },
@@ -247,10 +248,6 @@ export default {
       const base = Object.values(dim.previousTotals).reduce((sum, v) => sum + (v || 0), 0);
       const prev = dim.previousTotals[key];
       return InsightsReports.change(dim.totals[key] || 0, prev == null ? null : prev, base, { partial: InsightsReports.previousPartial(this.data) });
-    },
-    // why a change is "n.d.": a previous base under 20 calls, or a partial previous window
-    naHelp(change) {
-      return this.$t(change.reason === "partial" ? "components.callInsights.change.partialHelp" : "components.callInsights.change.notAvailableHelp");
     },
     deltaIcon(delta) {
       if (delta > 0) return "pi pi-arrow-up";
