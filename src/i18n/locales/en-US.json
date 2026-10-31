@@ -1997,7 +1997,8 @@
           "nextOneDay": "The next one will arrive on {date} and will cover {day}.",
           "covers": "The next one will cover {from} to {to}.",
           "coversOneDay": "The next one will cover {day}.",
-          "retryOneDay": "The report covering {day} did not succeed: it will be tried again tonight."
+          "retryOneDay": "The report covering {day} did not succeed: it will be tried again tonight.",
+          "extended": "It covers from {date}: the days since then had no calls."
         },
         "type": {
           "automatic": "Automatic",
@@ -2007,7 +2008,13 @@
         "base": "Based on {analysed} of the {managed} calls the assistant managed in the period.",
         "baseOld": "Based on {analysed} analysed calls.",
         "baseOldNote": "For calls before 10 October we do not know how many the assistant managed.",
-        "excluded": "Left out: {silent} calls in which the caller did not speak, {credit} refused for lack of credit."
+        "excluded": "Left out: {silent} calls in which the caller did not speak, {credit} refused for lack of credit.",
+        "history": {
+          "emptyDay": "No calls on {day}",
+          "emptyPeriod": "No calls from {from} to {to}",
+          "noReport": "No report",
+          "coveredFrom": "It also covers the days with no calls from {date}."
+        }
       },
       "assistants": {
         "title": "Assistants to review",
@@ -2022,7 +2029,6 @@
         "checks": "Checks",
         "skillErrors": "Skill errors",
         "extractionIssues": "Extraction issues",
-        "shareOfTotal": "{percent}% ({count} of {total})",
         "sortOptions": {
           "calls": "Calls",
           "notSolved": "Unresolved (assessed by the assistant)",
@@ -2047,7 +2053,8 @@
           "skillErrors": "Skill errors",
           "extractionIssues": "Extraction",
           "change": "Change",
-          "configSuggestions": "MrCall suggestions"
+          "configSuggestions": "MrCall suggestions",
+          "asks": "What callers ask"
         },
         "legend": {
           "notSolved": "not resolved, plus requests passed to the business with an incomplete message, over the calls where the caller asked something",
@@ -2076,7 +2083,10 @@
           "unknown": "Not known",
           "planOther": "Plan not active"
         },
-        "changePoints": "{sign}{n} points"
+        "changePoints": "{sign}{n} points",
+        "askedOf": "{category}: {n} request | {category}: {n} requests",
+        "latestReport": "Latest report",
+        "countOf": "({count} of {total})"
       },
       "scope": {
         "allBusinesses": "Across every business you can see, over the last 30 days.",
@@ -2227,11 +2237,11 @@
         "examined": "{n} call examined | {n} calls examined",
         "outcome": {
           "recompute": {
-            "written": "{n} analysed | {n} analysed",
+            "written": "{n} call analysed | {n} calls analysed",
             "reasoned": "{n} without a conversation | {n} without a conversation",
             "skipped": "{n} already up to date | {n} already up to date",
             "left": "{n} with nothing to analyse | {n} with nothing to analyse",
-            "not_finalised": "{n} not finished | {n} not finished",
+            "not_finalised": "{n} unfinished session left out | {n} unfinished sessions left out",
             "conflict": "{n} changed meanwhile | {n} changed meanwhile",
             "failed": "{n} not successful | {n} not successful",
             "ceiling": "{n} not analysed: limit reached | {n} not analysed: limit reached"
@@ -2239,7 +2249,7 @@
           "facts": {
             "written": "{n} updated | {n} updated",
             "unchanged": "{n} already up to date | {n} already up to date",
-            "not_finalised": "{n} not finished | {n} not finished",
+            "not_finalised": "{n} unfinished session left out | {n} unfinished sessions left out",
             "conflict": "{n} changed meanwhile | {n} changed meanwhile"
           }
         }
@@ -2264,7 +2274,11 @@
         "transferred": "{n} call transferred to a person | {n} calls transferred to a person",
         "themeOutcome": "Outcome of the calls of {topic}",
         "callBackTitle": "Calls to call back",
-        "callBackNote": "Calls not resolved, or passed to the business with an incomplete message."
+        "callBackNote": "Calls not resolved, or passed to the business with an incomplete message.",
+        "reviewTitle": "Calls to review",
+        "reviewNote": "Unresolved, with questions left unanswered or checks that fired.",
+        "quietDays": "It also covers the days with no calls from {from} to {to}.",
+        "quietDay": "It also covers a day with no calls, {day}."
       },
       "deleteReport": {
         "title": "Delete the report",
@@ -2337,7 +2351,9 @@
         "noAnalysis": "There is 1 call in this period, but it is not analysed yet. | There are {n} calls in this period, but none is analysed yet.",
         "noAnalysisNone": "No call of this period is analysed, and none can be analysed.",
         "cycleEmpty": "The automatic report in progress has no finished day yet: there is nothing to prepare now.",
-        "busyYou": "There is already a processing in progress for this business, started by you on {when}."
+        "busyYou": "There is already a processing in progress for this business, started by you on {when}.",
+        "reads": "{n} analysed call | {n} analysed calls",
+        "leftOut": "{n} call of the period is not among them: a call without a conversation, or not analysed. | {n} calls of the period are not among them: calls without a conversation, or not analysed."
       },
       "recompute": {
         "banner": "{n} calls managed in this period do not have the automatic analysis yet, so outcomes, topics and quality do not count them.",
@@ -2351,13 +2367,13 @@
       },
       "requests": {
         "title": "Callers' requests",
-        "purpose": "What callers ask that the assistants cannot do, grouped by category across all businesses: to decide what to build and what to add to the plans.",
+        "purpose": "What callers ask and how much of it the assistant handles, by category across all businesses.",
         "window": "Period: {period}",
         "sortLabel": "Order by",
         "sortScore": "Most recent and widespread",
         "sortBusinesses": "Number of businesses",
         "showDismissed": "Show archived",
-        "scoreHelp": "Each business counts 1 if it asked in the last days covered by its reports, half if two weeks earlier, a quarter if four weeks earlier.",
+        "scoreHelp": "Each business counts 1 if it asked at the end of the period, half if two weeks earlier, a quarter if four weeks earlier.",
         "none": "No requests in this period.",
         "columns": {
           "category": "Category",
@@ -2366,15 +2382,14 @@
           "freshness": "Freshness"
         },
         "businesses": "{n} businesses",
-        "trend": "{sign}{n} compared with the previous period",
-        "share": "{pct}% of the businesses with reports",
+        "trend": "{sign}{n} business compared with the previous period | {sign}{n} businesses compared with the previous period",
+        "share": "{pct}% of the businesses with analysed calls",
         "histogramLabel": "Businesses per {bucket}, from the oldest: {values}",
         "bucket": {
           "week": "week",
           "month": "month"
         },
         "freshness": "Last request on {date} · {pct}% in the last {bucket}",
-        "reportDated": "{n} businesses dated by the end of the report",
         "nextAction": "Next action",
         "examples": "Examples",
         "hideExample": "Hide",
@@ -2402,9 +2417,9 @@
         "confirmDismiss": "Archive",
         "reopened": "Reopened: {n} new businesses asked for it after it was archived on {date}.",
         "status": {
-          "rising": "Rising",
-          "steady": "Steady",
-          "falling": "Falling",
+          "rising": "Rising in the second half of the period",
+          "steady": "Steady across the period",
+          "falling": "Falling in the second half of the period",
           "stale": "No longer asked recently"
         },
         "hiddenExamples": "Hidden examples",
@@ -2417,7 +2432,15 @@
           "admin": "MrCall"
         },
         "archived": "{category} archived.",
-        "undo": "Undo"
+        "undo": "Undo",
+        "next": {
+          "delegate": "Consider letting the assistant handle these requests",
+          "handled": "Handled by the assistant",
+          "withdrawn": "Withdrawn by the callers",
+          "unrated": "Outcome not rated yet: open the requests",
+          "classify": "Classify these requests",
+          "open": "Open the requests"
+        }
       },
       "admin": {
         "reason": {
@@ -2427,7 +2450,8 @@
       },
       "change": {
         "notAvailable": "n/a",
-        "notAvailableHelp": "The period before had fewer than 20 calls: the change is not meaningful."
+        "notAvailableHelp": "The period before had fewer than 20 calls: the change is not meaningful.",
+        "partialHelp": "The period before has calls for only part of its days: the change is not meaningful."
       },
       "overview": {
         "noCallsDays": "No calls in the last day. | No calls in the last {days} days."
@@ -2435,7 +2459,253 @@
       "callers": {
         "web": "Web call"
       },
-      "businessNotFound": "This business does not exist or is not among those you can see."
+      "businessNotFound": "This business does not exist or is not among those you can see.",
+      "feedback": {
+        "fields": {
+          "outcome": "Request outcome",
+          "category": "Category"
+        },
+        "outcome": {
+          "met": "Met by the assistant",
+          "taken": "Taken for the business",
+          "handed_over": "Passed to a person",
+          "neither": "Not met",
+          "withdrawn": "Withdrawn by the caller"
+        },
+        "unset": "Not classified yet",
+        "otherCategory": "A category no longer listed",
+        "state": {
+          "corrected": "Corrected",
+          "confirmed": "Confirmed",
+          "proposed": "Proposal sent",
+          "applied": "Applied",
+          "rejected": "Rejected",
+          "withdrawn": "Withdrawn"
+        },
+        "chip": {
+          "name": "{field}: {value}",
+          "detail": "from {from} to {to}, {who}, {when}"
+        },
+        "menu": {
+          "label": "Change {field}",
+          "right": "It is correct",
+          "wrong": "It is wrong, I don't know which",
+          "restore": "Restore the analysis's value",
+          "history": "History",
+          "withdraw": "Withdraw my proposal"
+        },
+        "who": {
+          "owner": "the owner",
+          "reseller": "a partner",
+          "admin": "MrCall",
+          "service": "MrCall",
+          "unknown": "someone",
+          "me": "you"
+        },
+        "history": {
+          "title": "History of {field}",
+          "entry": "{from} → {to}, {who}, {when}",
+          "right": "{from} confirmed, {who}, {when}",
+          "wrong": "{from} marked wrong, {who}, {when}",
+          "empty": "No change yet.",
+          "status": {
+            "proposed": "Proposed",
+            "applied": "Applied",
+            "rejected": "Rejected",
+            "reverted": "Undone",
+            "orphaned": "Request no longer found",
+            "confirmed": "Confirmed",
+            "closed": "Handled by MrCall",
+            "withdrawn": "Withdrawn"
+          }
+        },
+        "undo": {
+          "changed": "Changed",
+          "undo": "Undo",
+          "close": "Close",
+          "undone": "Change undone.",
+          "failed": "The change could not be undone.",
+          "withdrawn": "Proposal withdrawn. | {n} proposals withdrawn.",
+          "both": "Changes undone: {reverted}. Proposals withdrawn: {withdrawn}.",
+          "nothing": "Nothing was undone: it had already been decided."
+        },
+        "stale": "This value changed meanwhile: the current one is shown.",
+        "failed": "The change was not saved.",
+        "requests": {
+          "title": "Requests",
+          "excluded": "Left out of the counts: a spam call."
+        },
+        "rules": {
+          "offer": "Always treat this number as spam?",
+          "earlier": "Also the {n} earlier call | Also the {n} earlier calls",
+          "earlierMore": "Also the {n} most recent earlier calls",
+          "always": "Treat as spam",
+          "noThanks": "No thanks",
+          "created": "From now on this number is treated as spam. | From now on this number is treated as spam, and {n} earlier call was corrected. | From now on this number is treated as spam, and {n} earlier calls were corrected.",
+          "byRule": "This call was judged spam by a rule on its number. Delete the rule?",
+          "delete": "Delete the rule",
+          "keep": "Keep it",
+          "deleted": "The rule is deleted; the calls it marked are counted again."
+        },
+        "readOnly": {
+          "title": "Read-only view",
+          "note": "You are not the owner of these calls: each call you open is recorded, and its owner can see who opened it.",
+          "open": "Open the call",
+          "unknown": "Whether you own these calls could not be read."
+        },
+        "filters": {
+          "title": "Filters from the link",
+          "remove": "Remove the filter {filter}",
+          "unknown": "A filter in the link was not recognised and is not applied.",
+          "chip": "{name}: {value}",
+          "yes": "yes",
+          "no": "no",
+          "names": {
+            "outcomeLine": "Outcome",
+            "topic": "Topic",
+            "gap": "Unanswered question",
+            "check": "Check",
+            "category": "Request category",
+            "requestOutcome": "Request outcome",
+            "noConversation": "No conversation",
+            "corrected": "Corrected"
+          },
+          "counted": "Calls: as the statistics count them, archived included",
+          "leftOut": "{n} call not visible with your access | {n} calls not visible with your access"
+        },
+        "bulk": {
+          "label": "Selected calls",
+          "count": "{n} selected | {n} selected",
+          "select": "Select the call of {name}",
+          "changeOutcome": "Change outcome",
+          "spam": "Mark as spam",
+          "confirm": "Confirm",
+          "clear": "Clear selection",
+          "leftOut": "{n} call without a judged outcome was left out. | {n} calls without a judged outcome were left out.",
+          "selectRequest": "Select the request: {text}",
+          "labelRequests": "Selected requests",
+          "move": "Move to category",
+          "proposed": "{n} proposal sent: an admin decides. | {n} proposals sent: an admin decides.",
+          "alreadySpam": "{n} call already marked as spam was left out. | {n} calls already marked as spam were left out."
+        },
+        "fact": {
+          "chip": "Report an error on a fact",
+          "reportedOf": "Reported to MrCall: {fact}",
+          "option": "{fact}: {value}",
+          "withdraw": "Withdraw",
+          "withdrawOf": "Withdraw the report: {fact}"
+        },
+        "links": {
+          "open": "Open the call: {label} | Open the {n} calls: {label}",
+          "openAll": "Open the calls: {label}",
+          "calls": "Calls"
+        },
+        "report": {
+          "corrected": "{n} request of this report was corrected after it was written. | {n} requests of this report were corrected after it was written.",
+          "correctedTag": "Corrected after the report"
+        },
+        "categories": {
+          "all": "All requests, the ones the assistant handled too",
+          "manyRequests": "A call with several requests appears in every category of its requests.",
+          "backlog": "{n} call is still waiting for its analysis and is not counted yet. | {n} calls are still waiting for their analysis and are not counted yet.",
+          "columns": {
+            "calls": "Calls",
+            "select": "Select",
+            "text": "Request",
+            "business": "Business",
+            "outcome": "Outcome",
+            "category": "Category",
+            "call": "Call"
+          },
+          "calls": "{n} call | {n} calls",
+          "showRequests": "Show the requests of {category} ({n} call) | Show the requests of {category} ({n} calls)",
+          "showOutcome": "Show the requests of {category} with outcome {outcome} ({n})",
+          "openCall": "Open the call: {text}",
+          "call": "Open the call",
+          "requestsOf": "Requests of {category}",
+          "noRequests": "No request in this period."
+        },
+        "queue": {
+          "title": "Corrections to review",
+          "purpose": "Proposals, corrections whose request is gone, values marked wrong and facts reported, grouped by category and business, the groups that move the most calls first.",
+          "empty": "Nothing to review.",
+          "selectedLabel": "Selected corrections",
+          "applySelected": "Apply the selected ({n})",
+          "rejectSelected": "Reject the selected ({n})",
+          "select": "Select: {text}",
+          "apply": "Apply",
+          "reject": "Reject",
+          "handled": "Mark as handled",
+          "reattach": "Re-attach",
+          "requestOfCall": "Request of the call",
+          "reattachHere": "Re-attach here",
+          "close": "Close",
+          "applied": "{n} applied. | {n} applied.",
+          "rejected": "{n} rejected. | {n} rejected.",
+          "failedN": "{n} failed. | {n} failed.",
+          "change": "{field}: {from} → {to}",
+          "wrong": "{field}: {from} is wrong, to review",
+          "right": "{field}: {from} confirmed",
+          "fact": "{field} reported wrong",
+          "factOf": {
+            "booked": "Booking reported wrong",
+            "transferred": "Transfer reported wrong",
+            "no_conversation": "No conversation reported wrong",
+            "managed_call": "Managed by the assistant reported wrong",
+            "skill_errors": "Skill errors reported wrong",
+            "unkept": "Promises not kept reported wrong"
+          }
+        },
+        "mine": {
+          "title": "My proposals",
+          "empty": "No proposal yet.",
+          "withdraw": "Withdraw",
+          "withdrawOf": "Withdraw the proposal: {what}"
+        },
+        "facts": {
+          "no_conversation": "No conversation",
+          "managed_call": "Managed by the assistant",
+          "skill_errors": "Skill errors",
+          "unkept": "Promises not kept",
+          "none": "not recorded",
+          "yes": "yes",
+          "no": "no",
+          "recorded": "recorded"
+        },
+        "access": {
+          "menu": "Spam numbers and call access",
+          "rulesTitle": "Numbers treated as spam",
+          "rulesNote": "Calls from these numbers are counted as spam. Deleting a rule counts its calls again.",
+          "rulesEmpty": "No number is treated as spam.",
+          "since": "since {date}",
+          "delete": "Delete",
+          "deleteOf": "Delete the rule for {number}",
+          "deleted": "Rule deleted: {n} call counted again. | Rule deleted: {n} calls counted again.",
+          "logTitle": "Who opened your calls",
+          "logNote": "Your partner and MrCall can open your calls to help you; every opening is recorded here and kept for 12 months.",
+          "logEmpty": "Nobody else has opened your calls.",
+          "columns": {
+            "at": "When",
+            "who": "Who",
+            "event": "What",
+            "call": "Call"
+          },
+          "roles": {
+            "admin": "Admin",
+            "reseller": "Partner",
+            "service": "MrCall",
+            "unknown": "Someone"
+          },
+          "events": {
+            "opened": "Call opened",
+            "audio": "Recording heard"
+          }
+        },
+        "withdrawRefused": {
+          "not_author": "Only its author can withdraw a proposal.",
+          "feedback_state": "This proposal has already been decided."
+        }
+      }
     },
     "datePicker": {
       "chooseDate": "Choose Date",

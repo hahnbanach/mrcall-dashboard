@@ -1,0 +1,20 @@
+{
+ "status": 200,
+ "body": {
+  "period": {
+   "from": 1790807375638,
+   "to": 1793399375638
+  },
+  "totalCalls": 1796,
+  "avgCallDurationMs": 80386,
+  "totalCallDurationMs": 144374885,
+  "uniqueCallers": 6,
+  "previousPeriod": {
+   "totalCalls": 261,
+   "avgCallDurationMs": 146652,
+   "totalCallDurationMs": 38276217,
+   "uniqueCallers": 10
+  },
+  "previousPartial": true
+ }
+}

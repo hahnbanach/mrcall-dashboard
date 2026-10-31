@@ -29,6 +29,24 @@ Session ownership: every nonpublic route needs a session, the Axios interceptor 
 and components suppress their failure UI for `isSessionEnded`. Browser tests mock StarChat and
 mrcall-agent.
 
+Branch `classification-feedback` (a fast-forward from `de91ac6`, not merged, not deployed) carries the dashboard side
+of StarChat's classification feedback (its plan's step C8): a call's judgements as chips with one undo, the six facts
+reported from one chip, bulk corrections, every count opening its calls, callers' requests on request records with
+their category chip, "Move to category" and "Mark as spam", the queues, caller rules and the access record, a
+non-owner's read-only call ([brief](briefs/2026-10-27-classification-feedback.md),
+[plan](execution-plans/2026-10-27-classification-feedback.md)). Verified on the repository's mocks only (vitest and
+the full Playwright run); the StarChat pieces it reads are in StarChat 9.34.121 and, for the bulk and undo answers
+of the brief's second amendment (item 10), 9.34.122; the live check comes with StarChat's C11 on 9.34.122.
+
+The same branch carries the dashboard's repairs of the U19c attack (StarChat plan insights-reports-ux, step U19r6,
+and the dashboard part of U19r5: plan step P16): a report requested over analysed calls reaches its confirmation, the
+older reports' caption, "What callers ask", every category's next action, an author's withdrawal and an undo that
+says what StarChat's answer lists, the Report and Processing tabs without Panoramica's reads, the empty cycle's row,
+"n/a" over a partial window, and the amendment's minors. It is written against StarChat fields that StarChat is
+building beside it and whose names are assumed (the plan's "U19r6: the StarChat fields assumed"): until that StarChat
+is on test the screens that read them show what they showed before (no reach line, no withdrawal answered, no
+partial "n/a").
+
 ## Unresolved
 
 - The AI chat SSE client uses native fetch and bypasses the Axios interceptor; WebSockets
@@ -53,5 +71,7 @@ mrcall-agent.
 
 - Operator: verify the production flow and actual call results with the chosen account.
 - Remove `__BOOKING__` from `menuGroups` after StarChat's move is on test.
-- Classification feedback (StarChat plan step C8) is being built on a branch from `v2.2` and
-  lands by fast-forward after review.
+- Classification feedback (StarChat plan step C8) is built and reviewed on branch
+  `classification-feedback`, a fast-forward from `de91ac6`; the line holder lands it.
+- U19r6 (plan step P16): once StarChat's U19r7a is on test, align the assumed field names, check the fixtures'
+  shapes against answers recorded there, then the code review U19r6b.

@@ -1994,7 +1994,8 @@
           "nextOneDay": "Der nächste kommt am {date} und deckt den {day} ab.",
           "covers": "Der nächste deckt den Zeitraum vom {from} bis {to} ab.",
           "coversOneDay": "Der nächste deckt den {day} ab.",
-          "retryOneDay": "Der Bericht für den {day} war nicht erfolgreich: Er wird heute Nacht erneut versucht."
+          "retryOneDay": "Der Bericht für den {day} war nicht erfolgreich: Er wird heute Nacht erneut versucht.",
+          "extended": "Er umfasst die Zeit ab {date}: Die Tage seitdem hatten keine Anrufe."
         },
         "type": {
           "automatic": "Automatisch",
@@ -2004,7 +2005,13 @@
         "base": "Basiert auf {analysed} der {managed} Anrufe, die der Assistent im Zeitraum bearbeitet hat.",
         "baseOld": "Basiert auf {analysed} analysierten Anrufen.",
         "baseOldNote": "Bei Anrufen vor dem 10. Oktober wissen wir nicht, wie viele der Assistent bearbeitet hat.",
-        "excluded": "Nicht berücksichtigt: {silent} Anrufe, in denen der Anrufer nicht sprach, {credit} wegen fehlenden Guthabens abgelehnt."
+        "excluded": "Nicht berücksichtigt: {silent} Anrufe, in denen der Anrufer nicht sprach, {credit} wegen fehlenden Guthabens abgelehnt.",
+        "history": {
+          "emptyDay": "Keine Anrufe am {day}",
+          "emptyPeriod": "Keine Anrufe vom {from} bis {to}",
+          "noReport": "Kein Bericht",
+          "coveredFrom": "Er umfasst auch die Tage ohne Anrufe ab {date}."
+        }
       },
       "assistants": {
         "title": "Zu überprüfende Assistenten",
@@ -2019,7 +2026,6 @@
         "checks": "Prüfungen",
         "skillErrors": "Funktionsfehler",
         "extractionIssues": "Extraktionsprobleme",
-        "shareOfTotal": "{percent} % ({count} von {total})",
         "sortOptions": {
           "calls": "Anrufe",
           "notSolved": "Nicht gelöst (vom Assistenten eingeschätzt)",
@@ -2044,7 +2050,8 @@
           "skillErrors": "Skill-Fehler",
           "extractionIssues": "Extraktion",
           "change": "Veränderung",
-          "configSuggestions": "MrCall-Vorschläge"
+          "configSuggestions": "MrCall-Vorschläge",
+          "asks": "Was Anrufer fragen"
         },
         "legend": {
           "notSolved": "nicht gelöst, plus an das Unternehmen weitergegebene Anliegen mit unvollständiger Nachricht, bezogen auf die Anrufe, in denen der Anrufer etwas wollte",
@@ -2073,7 +2080,10 @@
           "unknown": "Nicht bekannt",
           "planOther": "Tarif nicht aktiv"
         },
-        "changePoints": "{sign}{n} Punkte"
+        "changePoints": "{sign}{n} Punkte",
+        "askedOf": "{category}: {n} Anfrage | {category}: {n} Anfragen",
+        "latestReport": "Letzter Bericht",
+        "countOf": "({count} von {total})"
       },
       "scope": {
         "allBusinesses": "Über alle Unternehmen, die Sie sehen können, in den letzten 30 Tagen.",
@@ -2224,11 +2234,11 @@
         "examined": "{n} Anruf geprüft | {n} Anrufe geprüft",
         "outcome": {
           "recompute": {
-            "written": "{n} analysiert | {n} analysiert",
+            "written": "{n} Anruf analysiert | {n} Anrufe analysiert",
             "reasoned": "{n} ohne Gespräch | {n} ohne Gespräch",
             "skipped": "{n} bereits aktuell | {n} bereits aktuell",
             "left": "{n} ohne etwas zu analysieren | {n} ohne etwas zu analysieren",
-            "not_finalised": "{n} nicht abgeschlossen | {n} nicht abgeschlossen",
+            "not_finalised": "{n} nicht abgeschlossene Sitzung ausgeschlossen | {n} nicht abgeschlossene Sitzungen ausgeschlossen",
             "conflict": "{n} zwischenzeitlich geändert | {n} zwischenzeitlich geändert",
             "failed": "{n} nicht erfolgreich | {n} nicht erfolgreich",
             "ceiling": "{n} nicht analysiert: Grenze erreicht | {n} nicht analysiert: Grenze erreicht"
@@ -2236,7 +2246,7 @@
           "facts": {
             "written": "{n} aktualisiert | {n} aktualisiert",
             "unchanged": "{n} bereits aktuell | {n} bereits aktuell",
-            "not_finalised": "{n} nicht abgeschlossen | {n} nicht abgeschlossen",
+            "not_finalised": "{n} nicht abgeschlossene Sitzung ausgeschlossen | {n} nicht abgeschlossene Sitzungen ausgeschlossen",
             "conflict": "{n} zwischenzeitlich geändert | {n} zwischenzeitlich geändert"
           }
         }
@@ -2261,7 +2271,11 @@
         "transferred": "{n} Anruf an eine Person weitergeleitet | {n} Anrufe an eine Person weitergeleitet",
         "themeOutcome": "Ergebnis der Anrufe zu {topic}",
         "callBackTitle": "Anrufe zum Zurückrufen",
-        "callBackNote": "Nicht gelöste Anrufe oder solche, die mit unvollständiger Nachricht an das Unternehmen weitergegeben wurden."
+        "callBackNote": "Nicht gelöste Anrufe oder solche, die mit unvollständiger Nachricht an das Unternehmen weitergegeben wurden.",
+        "reviewTitle": "Zu prüfende Anrufe",
+        "reviewNote": "Nicht gelöst, mit unbeantworteten Fragen oder ausgelösten Prüfungen.",
+        "quietDays": "Er umfasst auch die Tage ohne Anrufe vom {from} bis {to}.",
+        "quietDay": "Er umfasst auch einen Tag ohne Anrufe, den {day}."
       },
       "deleteReport": {
         "title": "Bericht löschen",
@@ -2334,7 +2348,9 @@
         "noAnalysis": "In diesem Zeitraum gibt es 1 Anruf, aber er ist noch nicht analysiert. | In diesem Zeitraum gibt es {n} Anrufe, aber noch keiner ist analysiert.",
         "noAnalysisNone": "Kein Anruf dieses Zeitraums ist analysiert, und keiner kann analysiert werden.",
         "cycleEmpty": "Der laufende automatische Bericht hat noch keinen abgeschlossenen Tag: Im Moment gibt es nichts vorzubereiten.",
-        "busyYou": "Für dieses Unternehmen läuft bereits eine Verarbeitung, von Ihnen gestartet am {when}."
+        "busyYou": "Für dieses Unternehmen läuft bereits eine Verarbeitung, von Ihnen gestartet am {when}.",
+        "reads": "{n} analysierter Anruf | {n} analysierte Anrufe",
+        "leftOut": "{n} Anruf des Zeitraums ist nicht dabei: ohne Gespräch oder nicht analysiert. | {n} Anrufe des Zeitraums sind nicht dabei: ohne Gespräch oder nicht analysiert."
       },
       "recompute": {
         "banner": "{n} in diesem Zeitraum bearbeitete Anrufe haben noch keine automatische Analyse, daher zählen Ergebnisse, Themen und Qualität sie nicht mit.",
@@ -2348,13 +2364,13 @@
       },
       "requests": {
         "title": "Anliegen der Anrufer",
-        "purpose": "Was Anrufer wollen und die Assistenten nicht können, nach Kategorie über alle Unternehmen gruppiert: um zu entscheiden, was entwickelt und in die Tarife aufgenommen werden soll.",
+        "purpose": "Was Anrufer wollen und wie viel davon der Assistent erledigt, nach Kategorie über alle Unternehmen.",
         "window": "Zeitraum: {period}",
         "sortLabel": "Sortieren nach",
         "sortScore": "Neueste und am weitesten verbreitete",
         "sortBusinesses": "Anzahl der Unternehmen",
         "showDismissed": "Archivierte anzeigen",
-        "scoreHelp": "Jedes Unternehmen zählt 1, wenn es in den letzten von seinen Berichten abgedeckten Tagen danach gefragt hat, die Hälfte bei zwei Wochen davor, ein Viertel bei vier Wochen davor.",
+        "scoreHelp": "Jedes Unternehmen zählt 1, wenn es am Ende des Zeitraums danach gefragt hat, die Hälfte zwei Wochen davor, ein Viertel vier Wochen davor.",
         "none": "Keine Anliegen in diesem Zeitraum.",
         "columns": {
           "category": "Kategorie",
@@ -2363,15 +2379,14 @@
           "freshness": "Aktualität"
         },
         "businesses": "{n} Unternehmen",
-        "trend": "{sign}{n} gegenüber dem vorherigen Zeitraum",
-        "share": "{pct} % der Unternehmen mit Berichten",
+        "trend": "{sign}{n} Unternehmen gegenüber dem vorherigen Zeitraum | {sign}{n} Unternehmen gegenüber dem vorherigen Zeitraum",
+        "share": "{pct} % der Unternehmen mit analysierten Anrufen",
         "histogramLabel": "Unternehmen pro {bucket}, beginnend mit dem ältesten: {values}",
         "bucket": {
           "week": "Woche",
           "month": "Monat"
         },
         "freshness": "Letzte Anfrage am {date} · {pct} % im letzten Zeitraum ({bucket})",
-        "reportDated": "{n} Unternehmen mit Datum zum Ende des Berichts",
         "nextAction": "Nächster Schritt",
         "examples": "Beispiele",
         "hideExample": "Ausblenden",
@@ -2399,9 +2414,9 @@
         "confirmDismiss": "Archivieren",
         "reopened": "Wieder geöffnet: {n} neue Unternehmen haben danach gefragt, nachdem es am {date} archiviert wurde.",
         "status": {
-          "rising": "Steigend",
-          "steady": "Gleichbleibend",
-          "falling": "Sinkend",
+          "rising": "Steigend in der zweiten Hälfte des Zeitraums",
+          "steady": "Gleichbleibend im Zeitraum",
+          "falling": "Sinkend in der zweiten Hälfte des Zeitraums",
           "stale": "In letzter Zeit nicht mehr gefragt"
         },
         "hiddenExamples": "Ausgeblendete Beispiele",
@@ -2414,7 +2429,15 @@
           "admin": "MrCall"
         },
         "archived": "{category} archiviert.",
-        "undo": "Rückgängig"
+        "undo": "Rückgängig",
+        "next": {
+          "delegate": "Erwägen Sie, diese Anfragen vom Assistenten bearbeiten zu lassen",
+          "handled": "Vom Assistenten erledigt",
+          "withdrawn": "Von den Anrufern zurückgezogen",
+          "unrated": "Ergebnis noch nicht bewertet: Anfragen öffnen",
+          "classify": "Diese Anfragen einordnen",
+          "open": "Anfragen öffnen"
+        }
       },
       "admin": {
         "reason": {
@@ -2424,7 +2447,8 @@
       },
       "change": {
         "notAvailable": "k. A.",
-        "notAvailableHelp": "Der vorherige Zeitraum hatte weniger als 20 Anrufe: Die Veränderung ist nicht aussagekräftig."
+        "notAvailableHelp": "Der vorherige Zeitraum hatte weniger als 20 Anrufe: Die Veränderung ist nicht aussagekräftig.",
+        "partialHelp": "Der vorherige Zeitraum hat nur für einen Teil seiner Tage Anrufe: Die Veränderung ist nicht aussagekräftig."
       },
       "overview": {
         "noCallsDays": "Keine Anrufe am letzten Tag. | Keine Anrufe in den letzten {days} Tagen."
@@ -2432,7 +2456,253 @@
       "callers": {
         "web": "Webanruf"
       },
-      "businessNotFound": "Dieses Unternehmen existiert nicht oder gehört nicht zu denen, die Sie sehen können."
+      "businessNotFound": "Dieses Unternehmen existiert nicht oder gehört nicht zu denen, die Sie sehen können.",
+      "feedback": {
+        "fields": {
+          "outcome": "Ergebnis der Anfrage",
+          "category": "Kategorie"
+        },
+        "outcome": {
+          "met": "Vom Assistenten erfüllt",
+          "taken": "Für das Unternehmen aufgenommen",
+          "handed_over": "An eine Person übergeben",
+          "neither": "Nicht erfüllt",
+          "withdrawn": "Vom Anrufer zurückgezogen"
+        },
+        "unset": "Noch nicht eingeordnet",
+        "otherCategory": "Eine Kategorie, die nicht mehr aufgeführt ist",
+        "state": {
+          "corrected": "Korrigiert",
+          "confirmed": "Bestätigt",
+          "proposed": "Vorschlag gesendet",
+          "applied": "Übernommen",
+          "rejected": "Abgelehnt",
+          "withdrawn": "Zurückgezogen"
+        },
+        "chip": {
+          "name": "{field}: {value}",
+          "detail": "von {from} zu {to}, {who}, {when}"
+        },
+        "menu": {
+          "label": "{field} ändern",
+          "right": "Das ist richtig",
+          "wrong": "Das ist falsch, ich weiß nicht, was stimmt",
+          "restore": "Wert der Analyse wiederherstellen",
+          "history": "Verlauf",
+          "withdraw": "Meinen Vorschlag zurückziehen"
+        },
+        "who": {
+          "owner": "der Inhaber",
+          "reseller": "ein Partner",
+          "admin": "MrCall",
+          "service": "MrCall",
+          "unknown": "jemand",
+          "me": "Sie"
+        },
+        "history": {
+          "title": "Verlauf von {field}",
+          "entry": "{from} → {to}, {who}, {when}",
+          "right": "{from} bestätigt, {who}, {when}",
+          "wrong": "{from} als falsch gemeldet, {who}, {when}",
+          "empty": "Noch keine Änderung.",
+          "status": {
+            "proposed": "Vorgeschlagen",
+            "applied": "Übernommen",
+            "rejected": "Abgelehnt",
+            "reverted": "Rückgängig gemacht",
+            "orphaned": "Anfrage nicht mehr gefunden",
+            "confirmed": "Bestätigt",
+            "closed": "Von MrCall bearbeitet",
+            "withdrawn": "Zurückgezogen"
+          }
+        },
+        "undo": {
+          "changed": "Geändert",
+          "undo": "Rückgängig",
+          "close": "Schließen",
+          "undone": "Änderung rückgängig gemacht.",
+          "failed": "Die Änderung konnte nicht rückgängig gemacht werden.",
+          "withdrawn": "Vorschlag zurückgezogen. | {n} Vorschläge zurückgezogen.",
+          "both": "Rückgängig gemachte Änderungen: {reverted}. Zurückgezogene Vorschläge: {withdrawn}.",
+          "nothing": "Nichts wurde rückgängig gemacht: Es war bereits entschieden."
+        },
+        "stale": "Dieser Wert hat sich inzwischen geändert: Der aktuelle wird angezeigt.",
+        "failed": "Die Änderung wurde nicht gespeichert.",
+        "requests": {
+          "title": "Anfragen",
+          "excluded": "Nicht mitgezählt: ein Spam-Anruf."
+        },
+        "rules": {
+          "offer": "Diese Nummer immer als Spam behandeln?",
+          "earlier": "Auch den {n} früheren Anruf | Auch die {n} früheren Anrufe",
+          "earlierMore": "Auch die {n} jüngsten früheren Anrufe",
+          "always": "Als Spam behandeln",
+          "noThanks": "Nein danke",
+          "created": "Ab jetzt wird diese Nummer als Spam behandelt. | Ab jetzt wird diese Nummer als Spam behandelt, und {n} früherer Anruf wurde korrigiert. | Ab jetzt wird diese Nummer als Spam behandelt, und {n} frühere Anrufe wurden korrigiert.",
+          "byRule": "Dieser Anruf wurde durch eine Regel für seine Nummer als Spam eingestuft. Regel löschen?",
+          "delete": "Regel löschen",
+          "keep": "Behalten",
+          "deleted": "Die Regel ist gelöscht; die markierten Anrufe werden wieder gezählt."
+        },
+        "readOnly": {
+          "title": "Nur-Lese-Ansicht",
+          "note": "Sie sind nicht Inhaber dieser Anrufe: Jeder Anruf, den Sie öffnen, wird protokolliert, und der Inhaber sieht, wer ihn geöffnet hat.",
+          "open": "Anruf öffnen",
+          "unknown": "Es konnte nicht gelesen werden, ob diese Anrufe Ihnen gehören."
+        },
+        "filters": {
+          "title": "Filter aus dem Link",
+          "remove": "Filter {filter} entfernen",
+          "unknown": "Ein Filter im Link wurde nicht erkannt und wird nicht angewendet.",
+          "chip": "{name}: {value}",
+          "yes": "ja",
+          "no": "nein",
+          "names": {
+            "outcomeLine": "Ergebnis",
+            "topic": "Thema",
+            "gap": "Unbeantwortete Frage",
+            "check": "Prüfung",
+            "category": "Kategorie der Anfrage",
+            "requestOutcome": "Ergebnis der Anfrage",
+            "noConversation": "Kein Gespräch",
+            "corrected": "Korrigiert"
+          },
+          "counted": "Anrufe: wie die Statistik sie zählt, archivierte eingeschlossen",
+          "leftOut": "{n} Anruf mit Ihrem Zugang nicht sichtbar | {n} Anrufe mit Ihrem Zugang nicht sichtbar"
+        },
+        "bulk": {
+          "label": "Ausgewählte Anrufe",
+          "count": "{n} ausgewählt | {n} ausgewählt",
+          "select": "Anruf von {name} auswählen",
+          "changeOutcome": "Ergebnis ändern",
+          "spam": "Als Spam markieren",
+          "confirm": "Bestätigen",
+          "clear": "Auswahl aufheben",
+          "leftOut": "{n} Anruf ohne bewertetes Ergebnis wurde ausgelassen. | {n} Anrufe ohne bewertetes Ergebnis wurden ausgelassen.",
+          "selectRequest": "Anfrage auswählen: {text}",
+          "labelRequests": "Ausgewählte Anfragen",
+          "move": "In Kategorie verschieben",
+          "proposed": "{n} Vorschlag gesendet: ein Administrator entscheidet. | {n} Vorschläge gesendet: ein Administrator entscheidet.",
+          "alreadySpam": "{n} bereits als Spam markierter Anruf wurde ausgelassen. | {n} bereits als Spam markierte Anrufe wurden ausgelassen."
+        },
+        "fact": {
+          "chip": "Einen Fehler bei einer Tatsache melden",
+          "reportedOf": "An MrCall gemeldet: {fact}",
+          "option": "{fact}: {value}",
+          "withdraw": "Zurückziehen",
+          "withdrawOf": "Meldung zurückziehen: {fact}"
+        },
+        "links": {
+          "open": "Anruf öffnen: {label} | Die {n} Anrufe öffnen: {label}",
+          "openAll": "Die Anrufe öffnen: {label}",
+          "calls": "Anrufe"
+        },
+        "report": {
+          "corrected": "{n} Anfrage dieses Berichts wurde nach seiner Erstellung korrigiert. | {n} Anfragen dieses Berichts wurden nach seiner Erstellung korrigiert.",
+          "correctedTag": "Nach dem Bericht korrigiert"
+        },
+        "categories": {
+          "all": "Alle Anfragen, auch die vom Assistenten erledigten",
+          "manyRequests": "Ein Anruf mit mehreren Anfragen erscheint in jeder Kategorie seiner Anfragen.",
+          "backlog": "{n} Anruf wartet noch auf seine Analyse und ist noch nicht gezählt. | {n} Anrufe warten noch auf ihre Analyse und sind noch nicht gezählt.",
+          "columns": {
+            "calls": "Anrufe",
+            "select": "Auswählen",
+            "text": "Anfrage",
+            "business": "Unternehmen",
+            "outcome": "Ergebnis",
+            "category": "Kategorie",
+            "call": "Anruf"
+          },
+          "calls": "{n} Anruf | {n} Anrufe",
+          "showRequests": "Anfragen von {category} anzeigen ({n} Anruf) | Anfragen von {category} anzeigen ({n} Anrufe)",
+          "showOutcome": "Anfragen von {category} mit Ergebnis {outcome} anzeigen ({n})",
+          "openCall": "Anruf öffnen: {text}",
+          "call": "Anruf öffnen",
+          "requestsOf": "Anfragen von {category}",
+          "noRequests": "Keine Anfrage in diesem Zeitraum."
+        },
+        "queue": {
+          "title": "Zu prüfende Korrekturen",
+          "purpose": "Vorschläge, Korrekturen, deren Anfrage nicht mehr existiert, als falsch markierte Werte und gemeldete Fakten, nach Kategorie und Unternehmen gruppiert, zuerst die Gruppen, die die meisten Anrufe betreffen.",
+          "empty": "Nichts zu prüfen.",
+          "selectedLabel": "Ausgewählte Korrekturen",
+          "applySelected": "Auswahl übernehmen ({n})",
+          "rejectSelected": "Auswahl ablehnen ({n})",
+          "select": "Auswählen: {text}",
+          "apply": "Übernehmen",
+          "reject": "Ablehnen",
+          "handled": "Als erledigt markieren",
+          "reattach": "Neu zuordnen",
+          "requestOfCall": "Anfrage des Anrufs",
+          "reattachHere": "Hier zuordnen",
+          "close": "Schließen",
+          "applied": "{n} übernommen. | {n} übernommen.",
+          "rejected": "{n} abgelehnt. | {n} abgelehnt.",
+          "failedN": "{n} fehlgeschlagen. | {n} fehlgeschlagen.",
+          "change": "{field}: {from} → {to}",
+          "wrong": "{field}: {from} ist falsch, zu prüfen",
+          "right": "{field}: {from} bestätigt",
+          "fact": "{field} als falsch gemeldet",
+          "factOf": {
+            "booked": "Buchung als falsch gemeldet",
+            "transferred": "Weiterleitung als falsch gemeldet",
+            "no_conversation": "„Kein Gespräch“ als falsch gemeldet",
+            "managed_call": "„Vom Assistenten bearbeitet“ als falsch gemeldet",
+            "skill_errors": "Skill-Fehler als falsch gemeldet",
+            "unkept": "Nicht gehaltene Zusagen als falsch gemeldet"
+          }
+        },
+        "mine": {
+          "title": "Meine Vorschläge",
+          "empty": "Noch keine Vorschläge.",
+          "withdraw": "Zurückziehen",
+          "withdrawOf": "Vorschlag zurückziehen: {what}"
+        },
+        "facts": {
+          "no_conversation": "Kein Gespräch",
+          "managed_call": "Vom Assistenten bearbeitet",
+          "skill_errors": "Skill-Fehler",
+          "unkept": "Nicht gehaltene Zusagen",
+          "none": "nicht erfasst",
+          "yes": "ja",
+          "no": "nein",
+          "recorded": "erfasst"
+        },
+        "access": {
+          "menu": "Spam-Nummern und Zugriff auf Anrufe",
+          "rulesTitle": "Als Spam behandelte Nummern",
+          "rulesNote": "Anrufe von diesen Nummern zählen als Spam. Wird eine Regel gelöscht, zählen ihre Anrufe wieder.",
+          "rulesEmpty": "Keine Nummer wird als Spam behandelt.",
+          "since": "seit {date}",
+          "delete": "Löschen",
+          "deleteOf": "Regel für {number} löschen",
+          "deleted": "Regel gelöscht: {n} Anruf zählt wieder. | Regel gelöscht: {n} Anrufe zählen wieder.",
+          "logTitle": "Wer Ihre Anrufe geöffnet hat",
+          "logNote": "Ihr Partner und MrCall können Ihre Anrufe öffnen, um Ihnen zu helfen; jedes Öffnen wird hier protokolliert und 12 Monate aufbewahrt.",
+          "logEmpty": "Niemand sonst hat Ihre Anrufe geöffnet.",
+          "columns": {
+            "at": "Wann",
+            "who": "Wer",
+            "event": "Was",
+            "call": "Anruf"
+          },
+          "roles": {
+            "admin": "Administrator",
+            "reseller": "Partner",
+            "service": "MrCall",
+            "unknown": "Jemand"
+          },
+          "events": {
+            "opened": "Anruf geöffnet",
+            "audio": "Aufnahme angehört"
+          }
+        },
+        "withdrawRefused": {
+          "not_author": "Nur wer einen Vorschlag gemacht hat, kann ihn zurückziehen.",
+          "feedback_state": "Über diesen Vorschlag wurde bereits entschieden."
+        }
+      }
     },
     "datePicker": {
       "chooseDate": "Datum wählen",

@@ -117,10 +117,12 @@ test.describe('Callers\' requests', () => {
     expect(asked.categories[0].body.timestampLte).toBeGreaterThan(asked.categories[0].body.timestampGte)
 
     const booking = table.getByRole('row').filter({ hasText: 'Online booking' })
-    await expect(booking.getByText('Rising', { exact: true })).toBeVisible()
+    await expect(booking.getByText('Rising in the second half of the period', { exact: true })).toBeVisible()
     await expect(booking.getByText('3 businesses')).toBeVisible()
-    await expect(booking.getByText('+2 compared with the previous period')).toBeVisible()
-    await expect(booking.getByText('25% of the businesses with reports')).toBeVisible()
+    await expect(booking.getByText('+2 businesses compared with the previous period')).toBeVisible()
+    // the share is over the businesses with analysed calls, since the view counts request records, not reports
+    // (StarChat's brief docs/briefs/2026-10-26-classification-feedback.md, decision 13)
+    await expect(booking.getByText('25% of the businesses with analysed calls')).toBeVisible()
     // each bucket by the day it starts (U19 m16)
     await expect(booking.getByRole('img', { name: 'Businesses per week, from the oldest: Sep 28: 0, Oct 5: 1, Oct 12: 3, Oct 19: 2' })).toBeVisible()
     await expect(booking.getByText('Last request on Oct 21, 2026 · 67% in the last week')).toBeVisible()
@@ -128,7 +130,9 @@ test.describe('Callers\' requests', () => {
     const stale = table.getByRole('row').filter({ hasText: 'Opening hours and closures' })
     await expect(stale.getByText('No longer asked recently')).toBeVisible()
     await expect(stale.getByText(/^Reopened: 3 new businesses asked for it after it was archived on Oct 10, 2026\.$/)).toBeVisible()
-    await expect(table.getByRole('row').filter({ hasText: 'Prices and rates' }).getByText('1 businesses dated by the end of the report')).toBeVisible()
+    // `reportDated` is no field of StarChat's category rows (9.34.124, `RequestCategoryView`, the shape check of
+    // tests/unit/fixtureShapes.spec.js): no "dated by the end of the report" line is drawn
+    await expect(table.getByText(/dated by the end of the report/)).toHaveCount(0)
 
     // the page's period moves the window
     await page.getByRole('button', { name: '7 days' }).click()

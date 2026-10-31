@@ -1,0 +1,27 @@
+{
+ "status": 200,
+ "body": {
+  "items": [
+   {
+    "requesterRole": "admin",
+    "periodStart": 1773878400000,
+    "periodEnd": 1774051200000,
+    "status": "done",
+    "type": "requested",
+    "revision": 1,
+    "days": 2,
+    "calls": 4,
+    "requestId": "<text>",
+    "requestedBy": "<text>",
+    "failures": 0,
+    "createdAt": 1793342895832
+   }
+  ],
+  "total": 1,
+  "asOf": 1793399379387,
+  "schedule": {
+   "cadenceDays": 0
+  },
+  "emptyCycles": []
+ }
+}

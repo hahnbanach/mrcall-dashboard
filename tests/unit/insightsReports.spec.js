@@ -26,8 +26,10 @@ describe('the days of a period, in the business\'s zone, the last day included',
     expect(R.periodLabel(start, end, ROME, 'en-GB')).toBe('1 Oct 2026 – 7 Oct 2026')
   })
 
+  // In New York the same instants are not midnights: the period is said by its instants there (the amendment of
+  // 2026-10-30, m8), which shows the zone read is the one given, never the viewer's.
   it('reads the days in the business\'s zone, not in the viewer\'s: the same instants are other days in New York', () => {
-    expect(R.inclusiveDays(start, end, NY, 'en-GB').first).toBe('30 Sept 2026')
+    expect(R.inclusiveDays(start, end, NY, 'en-GB').first).toBe('30 Sept 2026, 18:00')
   })
 
   it('counts a period across the end of summer time by calendar days (25 October 2026 has 25 hours in Rome)', () => {

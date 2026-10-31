@@ -86,6 +86,26 @@ const OUTCOME_LINES = [
 ];
 const OUTCOME_KEYS = OUTCOME_LINES.flatMap((line) => line.parts);
 
+// The resolution an outcome line's part stands for (`forwarded_complete` and `forwarded_incomplete` are `forwarded`), or
+// null for a key that is no part.
+function resolutionOfLine(part) {
+    const line = OUTCOME_LINES.find((l) => l.parts.includes(part));
+    return line ? line.key : null;
+}
+
+/*
+ * A web call (the dashboard's or the site's voice button) has no number: StarChat's analytics name its caller "Chiamata
+ * web" (`TopCaller.web`), while the call itself carries the caller's identity string, `uid:<uid>:<email>:<name>`, where
+ * a number would be. Said as the analytics say it, never as that string (U19c m15).
+ */
+const WEB_IDENTITY = /^uid:/;
+
+function isWebCaller(conversation) {
+    const c = conversation || {};
+    const d = c.details || {};
+    return [c.contactNumber, d.callerNumber, c.contactName, d.callerName].some((v) => typeof v === "string" && WEB_IDENTITY.test(v.trim()));
+}
+
 function outcomeShare(outcomes) {
     const o = outcomes && outcomes.outcome;
     if (!o || typeof o !== "object" || !o.totals || typeof outcomes.callsWithRequest !== "number") return null;
@@ -397,6 +417,7 @@ export default {
     latestOnly,
     isAssessed,
     refusalOf,
+    unwrap,
     RESOLUTION_KEYS,
     MESSAGE_KEYS,
     GAP_KEYS,
@@ -409,6 +430,8 @@ export default {
     OUTCOME_LINES,
     OUTCOME_KEYS,
     outcomeShare,
+    resolutionOfLine,
+    isWebCaller,
     outsideRows,
     noConversationRows,
     extractionProblems,
@@ -553,8 +576,10 @@ export default {
 
     // The categories of the window `body` names (`timestampGte`, `timestampLte`, `plan`): `{total, asOf, from, to,
     // items}`, one row per category, at most the active categories, so the answer is never paged.
-    requestCategories: function (user, body, { includeDismissed = false, sort = "score", asOf, language } = {}) {
-        return unwrap(axios.post(INSIGHTS_BASE + "/integrations" + query({ view: "categories", includeDismissed, sort, asOf, language }),
+    // `all`: every request, the ones the assistant fulfilled too; without it StarChat counts the others only (its brief
+    // docs/briefs/2026-10-26-classification-feedback.md, decision 13).
+    requestCategories: function (user, body, { includeDismissed = false, sort = "score", asOf, language, all = false } = {}) {
+        return unwrap(axios.post(INSIGHTS_BASE + "/integrations" + query({ view: "categories", includeDismissed, sort, asOf, language, all: all ? "true" : undefined }),
             body, { headers: getHeaders(user) }));
     },
     // The businesses that asked in a category: `{total, asOf, items}`, a page of them.

@@ -1,7 +1,8 @@
 <template>
   <div class="call-details">
-    <!-- What the business can do about the call, as the call email offers it -->
-    <div v-if="dialable || calendarLink" class="call-actions">
+    <!-- What the business can do about the call, as the call email offers it: the owner's actions, never offered on a
+         call opened read-only (U19c m15) -->
+    <div v-if="ownerActions && (dialable || calendarLink)" class="call-actions">
       <a v-if="dialable" class="call-action call-action-primary" :href="'tel:' + dialable">
         <i class="pi pi-phone" aria-hidden="true"></i>
         <span>{{ $t("components.conversations.details.callBack") }}</span>
@@ -40,10 +41,23 @@
     <!-- What the call said: StarChat's call insights, version 2 (the four dimensions under the
          dashboard's one value table, the topics, the questions the assistant could not answer, the
          checks that fired). Absent on a call from before the feature, exactly like today. -->
-    <section v-if="hasInsights" class="call-box call-insights-box">
-      <h3 class="call-box-title">{{ $t("components.callInsights.panel.title") }}</h3>
+    <!-- drawn while the call has insights, or while its judgements are chips (a call whose details carry none, read
+         on a page that asks for its judgements) -->
+    <section v-if="hasInsights || withJudgements" :class="{ 'call-box call-insights-box': hasInsights || chips }">
+      <h3 v-if="hasInsights || chips" class="call-box-title">{{ $t("components.callInsights.panel.title") }}</h3>
 
-      <dl v-for="row in insightRows" :key="row.dimension" class="call-facts insight-fact">
+      <!-- The judgements as chips a person corrects (CallJudgements); while they are not drawn, today's rows -->
+      <CallJudgements
+        v-if="withJudgements"
+        :conversation="conversation"
+        :business-id="businessId"
+        :user="user"
+        :read-only="readOnly"
+        :eager="eager"
+        @chips="chips = $event"
+      />
+
+      <dl v-for="row in plainRows" :key="row.dimension" class="call-facts insight-fact">
         <dt>{{ $t("components.callInsights.dimensions." + row.dimension) }}</dt>
         <dd>
           {{ $t("components.callInsights." + row.dimension + "." + row.value) }}
@@ -55,6 +69,7 @@
           />
         </dd>
       </dl>
+
 
       <div v-if="topics.length > 0" class="insight-topics">
         <Tag v-for="topic in topics" :key="topic" :value="topic" class="insight-topic-tag" />
@@ -135,8 +150,12 @@
       </div>
     </section>
 
-    <section class="call-section">
-      <audio v-if="audio" controls autoplay class="call-audio">
+    <!-- A non-owner's recording comes from a one-time link, and only on a call opened on purpose (StarChat decision 14) -->
+    <section v-if="!readOnly || eager" class="call-section">
+      <audio v-if="audioUrl" controls autoplay class="call-audio" :src="audioUrl">
+        {{ $t("components.conversations.table.audioNotSupported") }}
+      </audio>
+      <audio v-else-if="audio" controls autoplay class="call-audio">
         <source :src="'data:audio/mpeg;base64,' + audio" />
         {{ $t("components.conversations.table.audioNotSupported") }}
       </audio>
@@ -158,6 +177,8 @@
 <script>
 import ConversationApi from "@/utils/Conversation";
 import CallInsights from "@/utils/CallInsights";
+import CallJudgements from "@/components/feedback/CallJudgements.vue";
+import Classifications from "@/utils/Classifications";
 
 /**
  * The body of a call on the conversations page: what the business has to do about it, what the
@@ -169,18 +190,30 @@ import CallInsights from "@/utils/CallInsights";
  * fetched when the owner asks to listen.
  */
 export default {
+  components: { CallJudgements },
   props: {
     conversation: { type: Object, required: true },
     businessId: { type: String, required: true },
     user: { type: Object, required: true },
     expanded: { type: Boolean, default: false },
+    // a call of a business the reader does not own (an admin, a reseller): read-only, recorded by StarChat
+    readOnly: { type: Boolean, default: false },
+    // the owner's actions on the call (call back, WhatsApp, calendar): false for a reader known not to own it
+    ownerActions: { type: Boolean, default: true },
+    // the call was opened on purpose (its link): its judgements are read at once rather than when in view
+    eager: { type: Boolean, default: false },
+    // the judgements as chips: a page that carries the undo bar and knows the reader's ownership asks for them
+    withJudgements: { type: Boolean, default: false },
   },
   data() {
     return {
       showTranscript: this.expanded,
       showPrevious: this.expanded,
       audio: this.conversation.audio || null,
+      audioUrl: null,
       recordingState: "idle",
+      // the judgements are drawn as chips: the plain resolution and message rows step aside
+      chips: false,
     };
   },
   computed: {
@@ -189,6 +222,9 @@ export default {
     },
     dialable() {
       const number = this.details.callerNumber || this.conversation.contactNumber || "";
+      // A non-owner's list row carries the number masked by StarChat (`ConversationAccess.maskedNumber`: three
+      // characters, "****", three): stripped to its digits it would dial somebody else. No action for it.
+      if (number.includes("*")) return null;
       const digits = number.replace(/[^+0-9]/g, "");
       return digits.length < 5 ? null : digits;
     },
@@ -240,6 +276,9 @@ export default {
     insightRows() {
       return CallInsights.insightRows(this.details);
     },
+    plainRows() {
+      return this.chips ? this.insightRows.filter((r) => r.dimension !== "resolution" && r.dimension !== "message") : this.insightRows;
+    },
     hasInsights() {
       return this.topics.length > 0 || this.unanswered.length > 0 || this.unkept.length > 0 ||
         this.checksFired.length > 0 || this.insightRows.length > 0;
@@ -267,6 +306,7 @@ export default {
     },
     async loadRecording() {
       this.recordingState = "loading";
+      if (this.readOnly) return this.loadRecordingLink();
       try {
         const call = await ConversationApi.get(this.user, this.businessId, this.conversation.id);
         if (call && call.audio) {
@@ -277,6 +317,24 @@ export default {
         }
       } catch (error) {
         console.error("Recording not loaded:", this.conversation.id, error.response ? error.response.status : "");
+        this.recordingState = "idle";
+        this.$emit("error");
+      }
+    },
+    // A non-owner's recording: StarChat issues a one-time link (and records it as `conversation.audio`); a 404 is no
+    // recording, or a call out of reach.
+    async loadRecordingLink() {
+      try {
+        const link = await Classifications.audioLink(this.user, this.conversation.id);
+        if (link && link.url) {
+          this.audioUrl = link.url;
+          this.recordingState = "loaded";
+        } else {
+          this.recordingState = "missing";
+        }
+      } catch (error) {
+        if (error && error.response && error.response.status === 404) { this.recordingState = "missing"; return; }
+        console.error("Recording link not issued:", this.conversation.id, error && error.response ? error.response.status : "");
         this.recordingState = "idle";
         this.$emit("error");
       }
@@ -490,6 +548,9 @@ export default {
     flex-wrap: wrap;
   }
 }
+
+
+
 
 .insight-assessed-tag {
   font-size: 11px;

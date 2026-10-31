@@ -1992,7 +1992,8 @@
           "nextOneDay": "Seuraava saapuu {date} ja kattaa päivän {day}.",
           "covers": "Seuraava kattaa ajan {from}–{to}.",
           "coversOneDay": "Seuraava kattaa päivän {day}.",
-          "retryOneDay": "Raportti päivältä {day} ei onnistunut: sitä yritetään uudelleen tänä yönä."
+          "retryOneDay": "Raportti päivältä {day} ei onnistunut: sitä yritetään uudelleen tänä yönä.",
+          "extended": "Se kattaa ajan {date} alkaen: sen jälkeisinä päivinä ei ollut puheluita."
         },
         "type": {
           "automatic": "Automaattinen",
@@ -2002,7 +2003,13 @@
         "base": "Perustuu {analysed} puheluun niistä {managed} puhelusta, jotka avustaja hoiti jaksolla.",
         "baseOld": "Perustuu {analysed} analysoituun puheluun.",
         "baseOldNote": "10. lokakuuta edeltäneistä puheluista emme tiedä, kuinka monta avustaja hoiti.",
-        "excluded": "Jätetty pois: {silent} puhelua, joissa soittaja ei puhunut, {credit} hylätty saldon puutteen vuoksi."
+        "excluded": "Jätetty pois: {silent} puhelua, joissa soittaja ei puhunut, {credit} hylätty saldon puutteen vuoksi.",
+        "history": {
+          "emptyDay": "Ei puheluita {day}",
+          "emptyPeriod": "Ei puheluita {from}–{to}",
+          "noReport": "Ei raporttia",
+          "coveredFrom": "Se kattaa myös puheluttomat päivät {date} alkaen."
+        }
       },
       "assistants": {
         "title": "Tarkistettavat avustajat",
@@ -2017,7 +2024,6 @@
         "checks": "Tarkistukset",
         "skillErrors": "Toimintovirheet",
         "extractionIssues": "Poiminnan ongelmat",
-        "shareOfTotal": "{percent} % ({count} / {total})",
         "sortOptions": {
           "calls": "Puhelut",
           "notSolved": "Ratkaisematta (avustajan arvioima)",
@@ -2042,7 +2048,8 @@
           "skillErrors": "Skill-virheet",
           "extractionIssues": "Poiminta",
           "change": "Muutos",
-          "configSuggestions": "MrCallin ehdotukset"
+          "configSuggestions": "MrCallin ehdotukset",
+          "asks": "Mitä soittajat kysyvät"
         },
         "legend": {
           "notSolved": "ratkaisematta, sekä yritykselle puutteellisella viestillä välitetyt pyynnöt, niistä puheluista, joissa soittaja kysyi jotain",
@@ -2071,7 +2078,10 @@
           "unknown": "Ei tiedossa",
           "planOther": "Tilaus ei ole aktiivinen"
         },
-        "changePoints": "{sign}{n} prosenttiyksikköä"
+        "changePoints": "{sign}{n} prosenttiyksikköä",
+        "askedOf": "{category}: {n} pyyntö | {category}: {n} pyyntöä",
+        "latestReport": "Viimeisin raportti",
+        "countOf": "({count} / {total})"
       },
       "scope": {
         "allBusinesses": "Kaikissa yrityksissä, jotka voit nähdä, viimeisten 30 päivän ajalta.",
@@ -2222,11 +2232,11 @@
         "examined": "{n} puhelu tarkistettu | {n} puhelua tarkistettu",
         "outcome": {
           "recompute": {
-            "written": "{n} analysoitu | {n} analysoitu",
+            "written": "{n} puhelu analysoitu | {n} puhelua analysoitu",
             "reasoned": "{n} ilman keskustelua | {n} ilman keskustelua",
             "skipped": "{n} jo ajan tasalla | {n} jo ajan tasalla",
             "left": "{n} ilman analysoitavaa | {n} ilman analysoitavaa",
-            "not_finalised": "{n} keskeneräinen | {n} keskeneräistä",
+            "not_finalised": "{n} keskeneräinen istunto jätetty pois | {n} keskeneräistä istuntoa jätetty pois",
             "conflict": "{n} muuttui sillä välin | {n} muuttui sillä välin",
             "failed": "{n} epäonnistui | {n} epäonnistui",
             "ceiling": "{n} analysoimatta: raja saavutettu | {n} analysoimatta: raja saavutettu"
@@ -2234,7 +2244,7 @@
           "facts": {
             "written": "{n} päivitetty | {n} päivitetty",
             "unchanged": "{n} jo ajan tasalla | {n} jo ajan tasalla",
-            "not_finalised": "{n} keskeneräinen | {n} keskeneräistä",
+            "not_finalised": "{n} keskeneräinen istunto jätetty pois | {n} keskeneräistä istuntoa jätetty pois",
             "conflict": "{n} muuttui sillä välin | {n} muuttui sillä välin"
           }
         }
@@ -2259,7 +2269,11 @@
         "transferred": "{n} puhelu siirretty henkilölle | {n} puhelua siirretty henkilölle",
         "themeOutcome": "Aiheen {topic} puheluiden tulos",
         "callBackTitle": "Takaisin soitettavat puhelut",
-        "callBackNote": "Ratkaisemattomat puhelut tai yritykselle puutteellisen viestin kanssa välitetyt puhelut."
+        "callBackNote": "Ratkaisemattomat puhelut tai yritykselle puutteellisen viestin kanssa välitetyt puhelut.",
+        "reviewTitle": "Tarkistettavat puhelut",
+        "reviewNote": "Ratkaisemattomat, joissa jäi vastaamattomia kysymyksiä tai tarkistuksia laukesi.",
+        "quietDays": "Se kattaa myös puheluttomat päivät {from}–{to}.",
+        "quietDay": "Se kattaa myös puhelutoman päivän {day}."
       },
       "deleteReport": {
         "title": "Poista raportti",
@@ -2332,7 +2346,9 @@
         "noAnalysis": "Jaksolla on 1 puhelu, mutta sitä ei ole vielä analysoitu. | Jaksolla on {n} puhelua, mutta yhtäkään ei ole vielä analysoitu.",
         "noAnalysisNone": "Yhtäkään jakson puhelua ei ole analysoitu, eikä yhtäkään voi analysoida.",
         "cycleEmpty": "Käynnissä olevalla automaattisella raportilla ei ole vielä yhtään päättynyttä päivää: nyt ei ole mitään laadittavaa.",
-        "busyYou": "Tälle yritykselle on jo käsittely käynnissä, jonka aloitit {when}."
+        "busyYou": "Tälle yritykselle on jo käsittely käynnissä, jonka aloitit {when}.",
+        "reads": "{n} analysoitu puhelu | {n} analysoitua puhelua",
+        "leftOut": "{n} jakson puhelu ei ole mukana: ilman keskustelua tai analysoimatta. | {n} jakson puhelua ei ole mukana: ilman keskustelua tai analysoimatta."
       },
       "recompute": {
         "banner": "{n} tällä jaksolla hoidetulla puhelulla ei ole vielä automaattista analyysia, joten lopputulokset, aiheet ja laatu eivät laske niitä mukaan.",
@@ -2346,13 +2362,13 @@
       },
       "requests": {
         "title": "Soittajien pyynnöt",
-        "purpose": "Mitä soittajat pyytävät, mihin avustajat eivät pysty, ryhmiteltynä luokittain kaikissa yrityksissä: päättääksesi, mitä rakennetaan ja mitä lisätään tilauksiin.",
+        "purpose": "Mitä soittajat kysyvät ja kuinka paljon siitä avustaja hoitaa, luokittain kaikissa yrityksissä.",
         "window": "Jakso: {period}",
         "sortLabel": "Järjestys",
         "sortScore": "Tuoreimmat ja yleisimmät",
         "sortBusinesses": "Yritysten määrä",
         "showDismissed": "Näytä arkistoidut",
-        "scoreHelp": "Jokainen yritys lasketaan yhtenä, jos se kysyi raporttien kattamina viimeisinä päivinä, puolena, jos kaksi viikkoa aiemmin, neljänneksenä, jos neljä viikkoa aiemmin.",
+        "scoreHelp": "Jokainen yritys lasketaan 1:ksi, jos se kysyi jakson lopussa, puoleksi kaksi viikkoa aiemmin, neljännekseksi neljä viikkoa aiemmin.",
         "none": "Ei pyyntöjä tällä jaksolla.",
         "columns": {
           "category": "Luokka",
@@ -2361,15 +2377,14 @@
           "freshness": "Tuoreus"
         },
         "businesses": "{n} yritystä",
-        "trend": "{sign}{n} edelliseen jaksoon verrattuna",
-        "share": "{pct} % raportillisista yrityksistä",
+        "trend": "{sign}{n} yritys edelliseen jaksoon verrattuna | {sign}{n} yritystä edelliseen jaksoon verrattuna",
+        "share": "{pct} % yrityksistä, joilla on analysoituja puheluita",
         "histogramLabel": "Yritykset per {bucket}, vanhimmasta alkaen: {values}",
         "bucket": {
           "week": "viikko",
           "month": "kuukausi"
         },
         "freshness": "Viimeisin pyyntö {date} · {pct} % viimeisen {bucket} aikana",
-        "reportDated": "{n} yritystä päivätty raportin lopun mukaan",
         "nextAction": "Seuraava toimi",
         "examples": "Esimerkit",
         "hideExample": "Piilota",
@@ -2397,9 +2412,9 @@
         "confirmDismiss": "Arkistoi",
         "reopened": "Avattu uudelleen: {n} uutta yritystä on pyytänyt sitä sen jälkeen, kun se arkistoitiin {date}.",
         "status": {
-          "rising": "Nousussa",
-          "steady": "Vakaa",
-          "falling": "Laskussa",
+          "rising": "Nousussa jakson jälkimmäisellä puoliskolla",
+          "steady": "Vakaa jakson aikana",
+          "falling": "Laskussa jakson jälkimmäisellä puoliskolla",
           "stale": "Ei enää pyydetty viime aikoina"
         },
         "hiddenExamples": "Piilotetut esimerkit",
@@ -2412,7 +2427,15 @@
           "admin": "MrCall"
         },
         "archived": "{category} arkistoitu.",
-        "undo": "Kumoa"
+        "undo": "Kumoa",
+        "next": {
+          "delegate": "Harkitse näiden pyyntöjen antamista avustajan hoidettaviksi",
+          "handled": "Avustaja hoiti nämä",
+          "withdrawn": "Soittajat peruivat nämä",
+          "unrated": "Lopputulosta ei ole vielä arvioitu: avaa pyynnöt",
+          "classify": "Luokittele nämä pyynnöt",
+          "open": "Avaa pyynnöt"
+        }
       },
       "admin": {
         "reason": {
@@ -2422,7 +2445,8 @@
       },
       "change": {
         "notAvailable": "ei tiedossa",
-        "notAvailableHelp": "Edellisellä jaksolla oli alle 20 puhelua: muutos ei ole merkitsevä."
+        "notAvailableHelp": "Edellisellä jaksolla oli alle 20 puhelua: muutos ei ole merkitsevä.",
+        "partialHelp": "Edellisellä jaksolla on puheluita vain osana sen päivistä: muutos ei ole merkityksellinen."
       },
       "overview": {
         "noCallsDays": "Ei puheluita viimeisen päivän aikana. | Ei puheluita viimeisten {days} päivän aikana."
@@ -2430,7 +2454,253 @@
       "callers": {
         "web": "Verkkopuhelu"
       },
-      "businessNotFound": "Tätä yritystä ei ole tai se ei kuulu niihin, jotka voit nähdä."
+      "businessNotFound": "Tätä yritystä ei ole tai se ei kuulu niihin, jotka voit nähdä.",
+      "feedback": {
+        "fields": {
+          "outcome": "Pyynnön lopputulos",
+          "category": "Luokka"
+        },
+        "outcome": {
+          "met": "Avustaja hoiti",
+          "taken": "Otettu vastaan yritykselle",
+          "handed_over": "Siirretty henkilölle",
+          "neither": "Ei hoidettu",
+          "withdrawn": "Soittaja perui"
+        },
+        "unset": "Ei vielä luokiteltu",
+        "otherCategory": "Luokka, jota ei enää ole luettelossa",
+        "state": {
+          "corrected": "Korjattu",
+          "confirmed": "Vahvistettu",
+          "proposed": "Ehdotus lähetetty",
+          "applied": "Otettu käyttöön",
+          "rejected": "Hylätty",
+          "withdrawn": "Peruttu"
+        },
+        "chip": {
+          "name": "{field}: {value}",
+          "detail": "{from} → {to}, {who}, {when}"
+        },
+        "menu": {
+          "label": "Muuta: {field}",
+          "right": "Tämä on oikein",
+          "wrong": "Tämä on väärin, en tiedä mikä on oikein",
+          "restore": "Palauta analyysin arvo",
+          "history": "Historia",
+          "withdraw": "Peru ehdotukseni"
+        },
+        "who": {
+          "owner": "omistaja",
+          "reseller": "kumppani",
+          "admin": "MrCall",
+          "service": "MrCall",
+          "unknown": "joku",
+          "me": "sinä"
+        },
+        "history": {
+          "title": "Historia: {field}",
+          "entry": "{from} → {to}, {who}, {when}",
+          "right": "{from} vahvistettu, {who}, {when}",
+          "wrong": "{from} merkitty vääräksi, {who}, {when}",
+          "empty": "Ei muutoksia vielä.",
+          "status": {
+            "proposed": "Ehdotettu",
+            "applied": "Otettu käyttöön",
+            "rejected": "Hylätty",
+            "reverted": "Peruttu",
+            "orphaned": "Pyyntöä ei enää löydy",
+            "confirmed": "Vahvistettu",
+            "closed": "MrCall käsitteli",
+            "withdrawn": "Peruttu"
+          }
+        },
+        "undo": {
+          "changed": "Muutettu",
+          "undo": "Kumoa",
+          "close": "Sulje",
+          "undone": "Muutos kumottu.",
+          "failed": "Muutosta ei voitu kumota.",
+          "withdrawn": "Ehdotus peruttu. | {n} ehdotusta peruttu.",
+          "both": "Kumotut muutokset: {reverted}. Perutut ehdotukset: {withdrawn}.",
+          "nothing": "Mitään ei kumottu: asiasta oli jo päätetty."
+        },
+        "stale": "Arvo muuttui sillä välin: nykyinen näytetään.",
+        "failed": "Muutosta ei tallennettu.",
+        "requests": {
+          "title": "Pyynnöt",
+          "excluded": "Ei mukana laskuissa: roskapuhelu."
+        },
+        "rules": {
+          "offer": "Käsitelläänkö tämä numero aina roskapuheluna?",
+          "earlier": "Myös {n} aiempi puhelu | Myös {n} aiempaa puhelua",
+          "earlierMore": "Myös {n} viimeisintä aiempaa puhelua",
+          "always": "Käsittele roskapuheluna",
+          "noThanks": "Ei kiitos",
+          "created": "Tästä lähtien numero käsitellään roskapuheluna. | Tästä lähtien numero käsitellään roskapuheluna, ja {n} aiempi puhelu korjattiin. | Tästä lähtien numero käsitellään roskapuheluna, ja {n} aiempaa puhelua korjattiin.",
+          "byRule": "Numeroa koskeva sääntö arvioi tämän puhelun roskapuheluksi. Poistetaanko sääntö?",
+          "delete": "Poista sääntö",
+          "keep": "Säilytä",
+          "deleted": "Sääntö on poistettu; sen merkitsemät puhelut lasketaan taas mukaan."
+        },
+        "readOnly": {
+          "title": "Vain luku -näkymä",
+          "note": "Et omista näitä puheluita: jokainen avaamasi puhelu kirjataan, ja omistaja näkee, kuka sen avasi.",
+          "open": "Avaa puhelu",
+          "unknown": "Ei voitu lukea, ovatko nämä puhelut sinun."
+        },
+        "filters": {
+          "title": "Linkin suodattimet",
+          "remove": "Poista suodatin {filter}",
+          "unknown": "Linkin suodatinta ei tunnistettu, eikä sitä käytetä.",
+          "chip": "{name}: {value}",
+          "yes": "kyllä",
+          "no": "ei",
+          "names": {
+            "outcomeLine": "Lopputulos",
+            "topic": "Aihe",
+            "gap": "Vastaamaton kysymys",
+            "check": "Tarkistus",
+            "category": "Pyynnön luokka",
+            "requestOutcome": "Pyynnön lopputulos",
+            "noConversation": "Ei keskustelua",
+            "corrected": "Korjattu"
+          },
+          "counted": "Puhelut: kuten tilastot ne laskevat, arkistoidut mukaan lukien",
+          "leftOut": "{n} puhelu ei näy käyttöoikeuksillasi | {n} puhelua ei näy käyttöoikeuksillasi"
+        },
+        "bulk": {
+          "label": "Valitut puhelut",
+          "count": "{n} valittu | {n} valittu",
+          "select": "Valitse puhelu: {name}",
+          "changeOutcome": "Muuta lopputulosta",
+          "spam": "Merkitse roskapuheluksi",
+          "confirm": "Vahvista",
+          "clear": "Tyhjennä valinta",
+          "leftOut": "{n} puhelu ilman arvioitua lopputulosta jätettiin pois. | {n} puhelua ilman arvioitua lopputulosta jätettiin pois.",
+          "selectRequest": "Valitse pyyntö: {text}",
+          "labelRequests": "Valitut pyynnöt",
+          "move": "Siirrä luokkaan",
+          "proposed": "{n} ehdotus lähetetty: ylläpitäjä päättää. | {n} ehdotusta lähetetty: ylläpitäjä päättää.",
+          "alreadySpam": "{n} jo roskapuheluksi merkitty puhelu jätettiin pois. | {n} jo roskapuheluksi merkittyä puhelua jätettiin pois."
+        },
+        "fact": {
+          "chip": "Ilmoita tosiasian virheestä",
+          "reportedOf": "Ilmoitettu MrCallille: {fact}",
+          "option": "{fact}: {value}",
+          "withdraw": "Peru",
+          "withdrawOf": "Peru ilmoitus: {fact}"
+        },
+        "links": {
+          "open": "Avaa puhelu: {label} | Avaa {n} puhelua: {label}",
+          "openAll": "Avaa puhelut: {label}",
+          "calls": "Puhelut"
+        },
+        "report": {
+          "corrected": "Raportin {n} pyyntöä korjattiin raportin laatimisen jälkeen. | Raportin {n} pyyntöä korjattiin raportin laatimisen jälkeen.",
+          "correctedTag": "Korjattu raportin jälkeen"
+        },
+        "categories": {
+          "all": "Kaikki pyynnöt, myös avustajan hoitamat",
+          "manyRequests": "Puhelu, jossa on useita pyyntöjä, näkyy jokaisessa pyyntöjensä luokassa.",
+          "backlog": "{n} puhelu odottaa vielä analyysia eikä ole vielä mukana. | {n} puhelua odottaa vielä analyysia eikä niitä ole vielä laskettu.",
+          "columns": {
+            "calls": "Puhelut",
+            "select": "Valitse",
+            "text": "Pyyntö",
+            "business": "Yritys",
+            "outcome": "Lopputulos",
+            "category": "Luokka",
+            "call": "Puhelu"
+          },
+          "calls": "{n} puhelu | {n} puhelua",
+          "showRequests": "Näytä luokan {category} pyynnöt ({n} puhelu) | Näytä luokan {category} pyynnöt ({n} puhelua)",
+          "showOutcome": "Näytä luokan {category} pyynnöt, lopputulos {outcome} ({n})",
+          "openCall": "Avaa puhelu: {text}",
+          "call": "Avaa puhelu",
+          "requestsOf": "Luokan {category} pyynnöt",
+          "noRequests": "Ei pyyntöjä tällä jaksolla."
+        },
+        "queue": {
+          "title": "Tarkistettavat korjaukset",
+          "purpose": "Ehdotukset, korjaukset joiden pyyntöä ei enää ole, vääriksi merkityt arvot ja ilmoitetut tosiasiat, ryhmiteltyinä luokan ja yrityksen mukaan, ensin ryhmät jotka koskevat eniten puheluita.",
+          "empty": "Ei tarkistettavaa.",
+          "selectedLabel": "Valitut korjaukset",
+          "applySelected": "Ota valitut käyttöön ({n})",
+          "rejectSelected": "Hylkää valitut ({n})",
+          "select": "Valitse: {text}",
+          "apply": "Ota käyttöön",
+          "reject": "Hylkää",
+          "handled": "Merkitse käsitellyksi",
+          "reattach": "Liitä uudelleen",
+          "requestOfCall": "Puhelun pyyntö",
+          "reattachHere": "Liitä tähän",
+          "close": "Sulje",
+          "applied": "{n} otettu käyttöön. | {n} otettu käyttöön.",
+          "rejected": "{n} hylätty. | {n} hylätty.",
+          "failedN": "{n} epäonnistui. | {n} epäonnistui.",
+          "change": "{field}: {from} → {to}",
+          "wrong": "{field}: {from} on väärin, tarkistettavana",
+          "right": "{field}: {from} vahvistettu",
+          "fact": "{field} ilmoitettu vääräksi",
+          "factOf": {
+            "booked": "Varaus ilmoitettu vääräksi",
+            "transferred": "Yhdistäminen ilmoitettu vääräksi",
+            "no_conversation": "”Ei keskustelua” ilmoitettu vääräksi",
+            "managed_call": "”Avustajan hoitama” ilmoitettu vääräksi",
+            "skill_errors": "Skill-virheet ilmoitettu vääriksi",
+            "unkept": "Pitämättömät lupaukset ilmoitettu vääriksi"
+          }
+        },
+        "mine": {
+          "title": "Omat ehdotukset",
+          "empty": "Ei vielä ehdotuksia.",
+          "withdraw": "Peru",
+          "withdrawOf": "Peru ehdotus: {what}"
+        },
+        "facts": {
+          "no_conversation": "Ei keskustelua",
+          "managed_call": "Avustajan hoitama",
+          "skill_errors": "Skill-virheet",
+          "unkept": "Pitämättömät lupaukset",
+          "none": "ei kirjattu",
+          "yes": "kyllä",
+          "no": "ei",
+          "recorded": "kirjattu"
+        },
+        "access": {
+          "menu": "Roskanumerot ja pääsy puheluihin",
+          "rulesTitle": "Roskaksi käsitellyt numerot",
+          "rulesNote": "Näiden numeroiden puhelut lasketaan roskapuheluiksi. Säännön poistaminen laskee sen puhelut taas mukaan.",
+          "rulesEmpty": "Mitään numeroa ei käsitellä roskana.",
+          "since": "{date} alkaen",
+          "delete": "Poista",
+          "deleteOf": "Poista numeron {number} sääntö",
+          "deleted": "Sääntö poistettu: {n} puhelu lasketaan taas. | Sääntö poistettu: {n} puhelua lasketaan taas.",
+          "logTitle": "Kuka avasi puhelusi",
+          "logNote": "Kumppanisi ja MrCall voivat avata puhelusi auttaakseen sinua; jokainen avaus kirjataan tähän ja säilytetään 12 kuukautta.",
+          "logEmpty": "Kukaan muu ei ole avannut puheluitasi.",
+          "columns": {
+            "at": "Milloin",
+            "who": "Kuka",
+            "event": "Mitä",
+            "call": "Puhelu"
+          },
+          "roles": {
+            "admin": "Ylläpitäjä",
+            "reseller": "Kumppani",
+            "service": "MrCall",
+            "unknown": "Joku"
+          },
+          "events": {
+            "opened": "Puhelu avattu",
+            "audio": "Tallenne kuunneltu"
+          }
+        },
+        "withdrawRefused": {
+          "not_author": "Vain ehdotuksen tekijä voi perua sen.",
+          "feedback_state": "Tästä ehdotuksesta on jo päätetty."
+        }
+      }
     },
     "datePicker": {
       "chooseDate": "Valitse päivämäärä",

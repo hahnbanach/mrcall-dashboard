@@ -2,7 +2,7 @@
   <div class="paged-table">
     <InsightsState
       :status="state.status"
-      :empty="state.status === 'ok' && state.items.length === 0"
+      :empty="state.status === 'ok' && shownRows.length === 0"
       :empty-text="emptyText"
       :keep-content="state.status === 'loading' && state.items.length > 0"
       @retry="state.retry()"
@@ -46,8 +46,8 @@
             </tr>
           </thead>
           <tbody>
-            <template v-for="row in state.items" :key="rowKey(row)">
-              <tr :class="rowClass ? rowClass(row) : null">
+            <template v-for="row in shownRows" :key="rowKey(row)">
+              <tr :class="rowClass ? rowClass(row) : null" v-bind="rowAttrs ? rowAttrs(row) : {}">
                 <td v-for="column in columns" :key="column.key" :data-label="column.label" :class="column.class">
                   <div class="paged-table-cell"><slot :name="'cell-' + column.key" :row="row">{{ row[column.key] }}</slot></div>
                 </td>
@@ -105,10 +105,18 @@ export default {
     columns: { type: Array, required: true },
     rowKey: { type: Function, required: true },
     rowClass: { type: Function, default: null },
+    // attributes and listeners of a row (a list that selects rows by a long press)
+    rowAttrs: { type: Function, default: null },
     caption: { type: String, required: true },
     emptyText: { type: String, default: "" },
+    // the rows drawn, when the page adds its own among the state's (the history's cycles with no call); never counted
+    // in the total or the paging, which stay the state's
+    rows: { type: Array, default: null },
   },
   computed: {
+    shownRows() {
+      return this.rows || this.state.items;
+    },
     sortable() {
       return this.columns.filter((c) => c.sortKey);
     },
@@ -230,8 +238,12 @@ export default {
   flex-wrap: wrap;
   gap: 8px;
   margin-top: 8px;
+  padding: 2px 8px;
   font-size: 13px;
   color: @mrcall_grey_text;
+  // the page numbers are blue text buttons: on white they read 4.7:1, on the page's grey 3.77:1 (U19c m2)
+  background: @mrcall_white;
+  border-radius: 8px;
 }
 
 .paged-table-pages {
@@ -269,6 +281,8 @@ export default {
   }
 
   .paged-table-table {
+    // visually hidden but kept for assistive technology (the column headers and their sort state); each cell
+    // carries its column's name, and the order is chosen above
     thead {
       position: absolute;
       width: 1px;

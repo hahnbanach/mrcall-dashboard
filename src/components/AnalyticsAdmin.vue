@@ -76,36 +76,14 @@
       <div v-if="dashboardData" class="analytics-section">
         <h3 class="section-title">{{ $t('components.analytics.overview') }}</h3>
         <div class="kpi-grid">
-          <div class="kpi-card">
-            <div class="kpi-label">{{ $t('components.analytics.kpi.totalCalls') }}</div>
-            <div class="kpi-value">{{ formatNumber(dashboardData.totalCalls) }}</div>
-            <div v-if="dashboardData.totalCallsDelta != null" class="kpi-delta" :class="deltaClass(dashboardData.totalCallsDelta)">
-              <i :class="deltaIcon(dashboardData.totalCallsDelta)"></i>
-              {{ formatDeltaPercentage(dashboardData.totalCallsDelta) }}
-            </div>
-          </div>
-          <div class="kpi-card">
-            <div class="kpi-label">{{ $t('components.analytics.kpi.avgDuration') }}</div>
-            <div class="kpi-value">{{ formatDuration(dashboardData.avgCallDurationMs) }}</div>
-            <div v-if="dashboardData.avgDurationDelta != null" class="kpi-delta" :class="deltaClass(dashboardData.avgDurationDelta)">
-              <i :class="deltaIcon(dashboardData.avgDurationDelta)"></i>
-              {{ formatDeltaPercentage(dashboardData.avgDurationDelta) }}
-            </div>
-          </div>
-          <div class="kpi-card">
-            <div class="kpi-label">{{ $t('components.analytics.kpi.totalDuration') }}</div>
-            <div class="kpi-value">{{ formatDuration(dashboardData.totalCallDurationMs) }}</div>
-            <div v-if="dashboardData.totalDurationDelta != null" class="kpi-delta" :class="deltaClass(dashboardData.totalDurationDelta)">
-              <i :class="deltaIcon(dashboardData.totalDurationDelta)"></i>
-              {{ formatDeltaPercentage(dashboardData.totalDurationDelta) }}
-            </div>
-          </div>
-          <div class="kpi-card">
-            <div class="kpi-label">{{ $t('components.analytics.kpi.uniqueCallers') }}</div>
-            <div class="kpi-value">{{ formatNumber(dashboardData.uniqueCallers) }}</div>
-            <div v-if="dashboardData.uniqueCallersDelta != null" class="kpi-delta" :class="deltaClass(dashboardData.uniqueCallersDelta)">
-              <i :class="deltaIcon(dashboardData.uniqueCallersDelta)"></i>
-              {{ formatDeltaPercentage(dashboardData.uniqueCallersDelta) }}
+          <div v-for="kpi in kpis" :key="kpi.key" class="kpi-card">
+            <div class="kpi-label">{{ $t('components.analytics.kpi.' + kpi.key) }}</div>
+            <div class="kpi-value">{{ kpi.text }}</div>
+            <!-- "n.d." over fewer than 20 previous calls or a partial previous window, as on a business's page -->
+            <div v-if="kpi.change && !kpi.change.available" class="kpi-delta delta-neutral"><NotAvailable :change="kpi.change" /></div>
+            <div v-else-if="kpi.change" class="kpi-delta delta-neutral">
+              <i :class="deltaIcon(kpi.change.value)"></i>
+              {{ formatDeltaPercentage(kpi.change.value) }}
             </div>
           </div>
         </div>
@@ -263,11 +241,11 @@
 
       <!-- How the calls went, across the platform or narrowed by the filters above (brief outcomes 3
            and 9) -->
-      <CallOutcomes :status="outcomesStatus" :data="outcomesData" />
+      <CallOutcomes :status="outcomesStatus" :data="outcomesData" :link-for="countLinkFor" />
       <!-- What the calls were about (brief outcome 9): only with the business filter set; across
            several businesses it says to choose one and never asks -->
-      <CallTopics :status="businessId ? topicsStatus : 'needsBusiness'" :data="topicsData" />
-      <CallQuality :status="qualityStatus" :data="qualityData" :total-calls="outcomesData && outcomesData.totalCalls" />
+      <CallTopics :status="businessId ? topicsStatus : 'needsBusiness'" :data="topicsData" :link-for="countLinkFor" />
+      <CallQuality :status="qualityStatus" :data="qualityData" :total-calls="outcomesData && outcomesData.totalCalls" :link-for="countLinkFor" />
 
       <!-- Assistants to review and the callers' requests, following the filters above; MrCall's own configuration
            suggestions across the platform -->
@@ -287,6 +265,10 @@
         @names="rememberNames"
         @error="handleApiError"
       />
+      <!-- The corrections waiting for an admin, and the admin's own proposals (brief
+           docs/briefs/2026-10-27-classification-feedback.md, scope 9) -->
+      <FeedbackQueue v-if="isAdminRole && roleReady" />
+      <MyProposals v-if="roleReady" />
       <ConfigSuggestions
         v-if="isAdminRole"
         :ready="roleReady"
@@ -305,6 +287,8 @@
       </div>
 
     </div>
+    <!-- The one undo of a gesture on callers' requests (brief docs/briefs/2026-10-27-classification-feedback.md, scope 2) -->
+    <UndoBar />
   </div>
 </template>
 
@@ -319,6 +303,10 @@ import { isSessionEnded } from "@/firebase/axiosConfig";
 import AnalyticsApi from "@/utils/Analytics";
 import TemplatesApi from "@/utils/Templates";
 import CallInsights from "@/utils/CallInsights";
+import Classifications from "@/utils/Classifications";
+import UndoBar from "@/components/feedback/UndoBar.vue";
+import FeedbackQueue from "@/components/feedback/FeedbackQueue.vue";
+import MyProposals from "@/components/feedback/MyProposals.vue";
 import { scrollBelowBar } from "@/utils/scrollBelowBar";
 import businessUtils from "@/utils/Business";
 import CallOutcomes from "@/components/analytics/CallOutcomes.vue";
@@ -329,9 +317,11 @@ import RequestCategories from "@/components/analytics/RequestCategories.vue";
 import ConfigSuggestions from "@/components/analytics/ConfigSuggestions.vue";
 import BusinessAutocomplete from "@/components/analytics/BusinessAutocomplete.vue";
 import AnalyticsFilterBar from "@/components/analytics/AnalyticsFilterBar.vue";
+import InsightsReports from "@/utils/InsightsReports";
+import NotAvailable from "@/components/analytics/NotAvailable.vue";
 
 export default {
-  components: { CallOutcomes, CallTopics, CallQuality, AssistantsToReview, RequestCategories, ConfigSuggestions, BusinessAutocomplete, AnalyticsFilterBar },
+  components: { CallOutcomes, CallTopics, CallQuality, AssistantsToReview, RequestCategories, ConfigSuggestions, BusinessAutocomplete, AnalyticsFilterBar, UndoBar, FeedbackQueue, MyProposals, NotAvailable },
   setup() {
     const store = useStore();
     const toast = useToast();
@@ -394,6 +384,33 @@ export default {
     };
   },
   computed: {
+    kpis() {
+      const d = this.dashboardData;
+      if (!d) return [];
+      const c = d.changes || {};
+      return [
+        { key: "totalCalls", text: this.formatNumber(d.totalCalls), change: c.totalCalls },
+        { key: "avgDuration", text: this.formatDuration(d.avgCallDurationMs), change: c.avgDuration },
+        { key: "totalDuration", text: this.formatDuration(d.totalCallDurationMs), change: c.totalDuration },
+        { key: "uniqueCallers", text: this.formatNumber(d.uniqueCallers), change: c.uniqueCallers },
+      ];
+    },
+    // Each count of one business's calls opens them (brief docs/briefs/2026-10-27-classification-feedback.md, scope 6):
+    // the conversations list of the business, in the page's window, filtered as the count was counted. Over several
+    // businesses there is no such list, and the counts stay numbers.
+    countLinkFor() {
+      if (!(this.businessId)) return null;
+      const businessId = this.businessId;
+      const window = { from: this.timestampGte, to: this.timestampLte };
+      return (kind, key) => {
+        try {
+          return Classifications.countLink(businessId, window, kind, key);
+        } catch (error) {
+          console.debug("No list for this count:", kind, key, error.message);
+          return null;
+        }
+      };
+    },
     businessId() {
       return this.queryValue('businessId');
     },
@@ -954,15 +971,6 @@ export default {
       const intensity = value / max;
       return `rgba(0, 104, 255, ${0.15 + intensity * 0.75})`;
     },
-    computeDelta(current, previous) {
-      if (previous == null || previous === 0 || current == null) return null;
-      return (current - previous) / previous;
-    },
-    deltaClass(delta) {
-      if (delta > 0) return 'delta-positive';
-      if (delta < 0) return 'delta-negative';
-      return 'delta-neutral';
-    },
     deltaIcon(delta) {
       if (delta > 0) return 'pi pi-arrow-up';
       if (delta < 0) return 'pi pi-arrow-down';
@@ -999,13 +1007,9 @@ export default {
     // --- Backend to Frontend transformations ---
     transformDashboard(data) {
       if (!data) return data;
-      const prev = data.previousPeriod;
       return {
         ...data,
-        totalCallsDelta: prev ? this.computeDelta(data.totalCalls, prev.totalCalls) : null,
-        avgDurationDelta: prev ? this.computeDelta(data.avgCallDurationMs, prev.avgCallDurationMs) : null,
-        totalDurationDelta: prev ? this.computeDelta(data.totalCallDurationMs, prev.totalCallDurationMs) : null,
-        uniqueCallersDelta: prev ? this.computeDelta(data.uniqueCallers, prev.uniqueCallers) : null,
+        changes: InsightsReports.kpiChanges(data),
       };
     },
     transformTimeseries(data) {
@@ -1079,9 +1083,11 @@ export default {
   color: @mrcall_grey_text2;
 }
 
+// the admin page holds the tables over every business: wider than a business's page (960 px), so that they fit
+// their card at 1440 px (U19c m12)
 .analytics-container {
   margin: auto;
-  max-width: 960px;
+  max-width: 1280px;
   padding: 0 16px 32px;
 }
 
@@ -1166,9 +1172,8 @@ export default {
   gap: 4px;
 }
 
-.delta-positive { color: #22C55E; }
-.delta-negative { color: #EF4444; }
-.delta-neutral { color: #6b7280; }
+// every change is neutral: no figure here is good or bad by its direction alone (U19c m1)
+.delta-neutral { color: @mrcall_grey_text; }
 
 // Charts
 .chart-container {

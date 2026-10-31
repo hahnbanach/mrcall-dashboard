@@ -87,6 +87,11 @@
       </p>
       <p v-if="interval && mode !== 'anticipate'" class="request-selected">{{ selectedText }}</p>
       <p v-if="mode === 'regenerate'" class="request-selected">{{ regenerateText }}</p>
+      <!-- what a report reads: the calls already analysed, and those of the period left out (the amendment's rule 1) -->
+      <template v-if="reach">
+        <p class="request-reach">{{ $t("components.callInsights.request.reads", { n: reach.analysed }, reach.analysed) }}</p>
+        <p v-if="reach.notAnalysed > 0" class="request-note">{{ $t("components.callInsights.request.leftOut", { n: reach.notAnalysed }, reach.notAnalysed) }}</p>
+      </template>
       <p class="request-confirm">
         {{ platformPaid
           ? $t("components.callInsights.request.confirmPlatform")
@@ -190,7 +195,8 @@ const PRESETS = [7, 30, 90];
  *      in common with the reports there (`reports/overlap`): the same days refused (regeneration is the way), days of
  *      the cycle in progress or of a past report acknowledged before they are read again.
  *   2. A hidden estimate: StarChat estimates as a job, and says whether the work fits and, if not, why; no amount.
- *   3. A confirmation naming the business's credit, no amount; an admin may put the work at MrCall's cost.
+ *   3. A confirmation naming the business's credit, no amount, and for a report the analysed calls it reads and the
+ *      finalised calls not analysed yet it leaves out; an admin may put the work at MrCall's cost.
  *   4. The job, created under one request key so that a double click or a lost answer is one job, followed to its end,
  *      and cancellable.
  * Each refusal has its own copy (`InsightsRefusal`, the job's error): no credit offers a shorter period and a top-up;
@@ -309,6 +315,11 @@ export default {
     },
     jobKind() {
       return this.mode === "recompute" ? "recompute" : "report";
+    },
+    // A report's estimate says what the report reads (`InsightsReports.reportReach`); a recompute's says nothing here.
+    reach() {
+      if (this.jobKind !== "report" || !this.estimateJob) return null;
+      return InsightsReports.reportReach(this.estimateJob.estimate);
     },
     progress() {
       return InsightsReports.jobProgress(this.job);
@@ -542,7 +553,10 @@ export default {
       if (job.status !== "done" || !job.estimate) { this.showRefusal("failed"); return; }
       const e = job.estimate;
       if (e.fits === false) { this.showRefusal(e.reason || "no_credit", e); return; }
-      if (this.mode !== "anticipate" && this.mode !== "regenerate" && (e.calls === 0 || (this.jobKind === "report" && e.requests === 0))) {
+      // A report analyses no call, so its estimate's `calls` is always 0: only StarChat's refusal says a report has
+      // nothing to read (the amendment of 2026-10-30, rule 1; `calls === 0` refused every report, U19c B1). A
+      // recompute's `calls` are the calls it would analyse: none is nothing to do.
+      if (this.jobKind === "recompute" && e.calls === 0) {
         this.showRefusal("no_calls");
         return;
       }
@@ -679,7 +693,7 @@ export default {
   margin-top: 10px;
 }
 
-.request-selected {
+.request-selected, .request-reach {
   font-weight: 600;
 }
 

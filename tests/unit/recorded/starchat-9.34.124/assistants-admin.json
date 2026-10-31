@@ -1,0 +1,527 @@
+{
+ "status": 200,
+ "body": {
+  "period": {
+   "from": 1790807375638,
+   "to": 1793399375638
+  },
+  "sort": "not_solved",
+  "businesses": [
+   {
+    "businessId": "<text>",
+    "totalCalls": 5,
+    "callsWithResolution": 4,
+    "resolution": {
+     "unresolved": 1,
+     "forwarded": 3
+    },
+    "callsWithChecks": 4,
+    "checks": {
+     "caller_repeated": 3,
+     "caller_unsatisfied": 4,
+     "promise_not_kept_in_call": 0
+    },
+    "callsWithUnansweredRecorded": 4,
+    "callsWithUnanswered": 1,
+    "gaps": {
+     "missing_info": 1
+    },
+    "callsWithSkillErrors": 0,
+    "extractionsNotOk": 0,
+    "extractionsRun": 4,
+    "callsManaged": 5,
+    "noConversation": {},
+    "callsAnswered": 5,
+    "callsOffered": 5,
+    "callsWithRequest": 4,
+    "businessName": "<text>",
+    "callsWithAnyCheck": 4,
+    "accountHealth": {
+     "subscriptionStatus": "<text>",
+     "creditLow": false,
+     "inDebt": false
+    },
+    "notSolved": 3,
+    "previousCallsWithRequest": 0,
+    "previousNotSolved": 0,
+    "requestCategories": [
+     {
+      "category": "online_booking",
+      "label": "<text>",
+      "questions": 3
+     },
+     {
+      "category": "opening_hours",
+      "label": "<text>",
+      "questions": 1
+     }
+    ],
+    "previousPartial": true
+   },
+   {
+    "businessId": "<text>",
+    "totalCalls": 1796,
+    "callsWithResolution": 1744,
+    "resolution": {
+     "unresolved": 388,
+     "resolved": 583,
+     "spam_wrong_number": 89,
+     "caller_left": 119,
+     "forwarded": 435,
+     "handed_over": 130
+    },
+    "callsWithChecks": 1744,
+    "checks": {
+     "caller_repeated": 237,
+     "caller_unsatisfied": 25,
+     "promise_not_kept_in_call": 74
+    },
+    "callsWithUnansweredRecorded": 1744,
+    "callsWithUnanswered": 326,
+    "gaps": {
+     "needs_integration": 76,
+     "missing_info": 235,
+     "out_of_scope": 21
+    },
+    "callsWithSkillErrors": 0,
+    "extractionsNotOk": 0,
+    "extractionsRun": 1744,
+    "callsManaged": 1744,
+    "noConversation": {
+     "talk_and_hangup": 8,
+     "caller_silent": 9,
+     "no_credit": 2,
+     "not_answered": 1
+    },
+    "callsAnswered": 1753,
+    "callsOffered": 1754,
+    "callsWithRequest": 1536,
+    "businessName": "<text>",
+    "callsWithAnyCheck": 290,
+    "accountHealth": {
+     "subscriptionStatus": "<text>",
+     "creditLow": false,
+     "inDebt": false
+    },
+    "notSolved": 437,
+    "previousCallsWithRequest": 196,
+    "previousNotSolved": 87,
+    "configSuggestions": 0,
+    "requestCategories": [
+     {
+      "category": "online_booking",
+      "label": "<text>",
+      "questions": 570
+     },
+     {
+      "category": "booking_changes",
+      "label": "<text>",
+      "questions": 260
+     },
+     {
+      "category": "opening_hours",
+      "label": "<text>",
+      "questions": 249
+     }
+    ],
+    "latestReport": {
+     "periodStart": 1793055600000
+    },
+    "previousPartial": true
+   },
+   {
+    "businessId": "<text>",
+    "totalCalls": 2282,
+    "callsWithResolution": 2234,
+    "resolution": {
+     "unresolved": 465,
+     "resolved": 705,
+     "spam_wrong_number": 114,
+     "caller_left": 176,
+     "forwarded": 721,
+     "handed_over": 53
+    },
+    "callsWithChecks": 2234,
+    "checks": {
+     "caller_repeated": 255,
+     "caller_unsatisfied": 32,
+     "promise_not_kept_in_call": 197
+    },
+    "callsWithUnansweredRecorded": 2234,
+    "callsWithUnanswered": 436,
+    "gaps": {
+     "needs_integration": 106,
+     "missing_info": 289,
+     "assistant_error": 9,
+     "out_of_scope": 39
+    },
+    "callsWithSkillErrors": 0,
+    "extractionsNotOk": 0,
+    "extractionsRun": 2234,
+    "callsManaged": 2234,
+    "noConversation": {
+     "caller_silent": 15,
+     "not_answered": 6
+    },
+    "callsAnswered": 2249,
+    "callsOffered": 2255,
+    "callsWithRequest": 1944,
+    "businessName": "<text>",
+    "callsWithAnyCheck": 428,
+    "accountHealth": {
+     "subscriptionStatus": "<text>",
+     "creditLow": false,
+     "inDebt": false
+    },
+    "notSolved": 540,
+    "previousCallsWithRequest": 217,
+    "previousNotSolved": 97,
+    "requestCategories": [
+     {
+      "category": "online_booking",
+      "label": "<text>",
+      "questions": 717
+     },
+     {
+      "category": "booking_changes",
+      "label": "<text>",
+      "questions": 328
+     },
+     {
+      "category": "opening_hours",
+      "label": "<text>",
+      "questions": 245
+     }
+    ],
+    "previousPartial": true
+   },
+   {
+    "businessId": "<text>",
+    "totalCalls": 545,
+    "callsWithResolution": 525,
+    "resolution": {
+     "unresolved": 107,
+     "resolved": 154,
+     "spam_wrong_number": 19,
+     "caller_left": 26,
+     "forwarded": 216,
+     "handed_over": 3
+    },
+    "callsWithChecks": 525,
+    "checks": {
+     "caller_repeated": 124,
+     "caller_unsatisfied": 20,
+     "promise_not_kept_in_call": 8
+    },
+    "callsWithUnansweredRecorded": 525,
+    "callsWithUnanswered": 98,
+    "gaps": {
+     "needs_integration": 58,
+     "missing_info": 33,
+     "assistant_error": 1,
+     "out_of_scope": 9
+    },
+    "callsWithSkillErrors": 0,
+    "extractionsNotOk": 0,
+    "extractionsRun": 525,
+    "callsManaged": 525,
+    "noConversation": {
+     "caller_silent": 3,
+     "no_credit": 1,
+     "not_answered": 1
+    },
+    "callsAnswered": 528,
+    "callsOffered": 529,
+    "callsWithRequest": 480,
+    "businessName": "<text>",
+    "callsWithAnyCheck": 131,
+    "accountHealth": {
+     "subscriptionStatus": "<text>",
+     "creditLow": false,
+     "inDebt": false
+    },
+    "notSolved": 134,
+    "previousCallsWithRequest": 16,
+    "previousNotSolved": 6,
+    "requestCategories": [
+     {
+      "category": "online_booking",
+      "label": "<text>",
+      "questions": 233
+     },
+     {
+      "category": "product_availability",
+      "label": "<text>",
+      "questions": 80
+     },
+     {
+      "category": "booking_changes",
+      "label": "<text>",
+      "questions": 65
+     }
+    ],
+    "previousPartial": true
+   },
+   {
+    "businessId": "<text>",
+    "totalCalls": 10,
+    "callsWithResolution": 9,
+    "resolution": {
+     "unresolved": 1,
+     "caller_left": 1,
+     "forwarded": 7
+    },
+    "callsWithChecks": 9,
+    "checks": {
+     "caller_repeated": 2,
+     "caller_unsatisfied": 0,
+     "promise_not_kept_in_call": 1
+    },
+    "callsWithUnansweredRecorded": 9,
+    "callsWithUnanswered": 3,
+    "gaps": {
+     "missing_info": 3
+    },
+    "callsWithSkillErrors": 0,
+    "extractionsNotOk": 0,
+    "extractionsRun": 9,
+    "callsManaged": 9,
+    "noConversation": {
+     "caller_silent": 1
+    },
+    "callsAnswered": 10,
+    "callsOffered": 10,
+    "callsWithRequest": 8,
+    "businessName": "<text>",
+    "callsWithAnyCheck": 3,
+    "accountHealth": {
+     "subscriptionStatus": "<text>",
+     "creditLow": false,
+     "inDebt": false
+    },
+    "notSolved": 4,
+    "previousCallsWithRequest": 0,
+    "previousNotSolved": 0,
+    "requestCategories": [
+     {
+      "category": "support_request",
+      "label": "<text>",
+      "questions": 4
+     },
+     {
+      "category": "other",
+      "label": "<text>",
+      "questions": 2
+     },
+     {
+      "category": "prices",
+      "label": "<text>",
+      "questions": 2
+     }
+    ],
+    "previousPartial": true
+   },
+   {
+    "businessId": "<text>",
+    "totalCalls": 4,
+    "callsWithResolution": 4,
+    "resolution": {
+     "unresolved": 1,
+     "caller_left": 1,
+     "forwarded": 2
+    },
+    "callsWithChecks": 4,
+    "checks": {
+     "caller_repeated": 1,
+     "caller_unsatisfied": 0,
+     "promise_not_kept_in_call": 0
+    },
+    "callsWithUnansweredRecorded": 4,
+    "callsWithUnanswered": 1,
+    "gaps": {
+     "missing_info": 1
+    },
+    "callsWithSkillErrors": 0,
+    "extractionsNotOk": 0,
+    "extractionsRun": 4,
+    "callsManaged": 4,
+    "noConversation": {},
+    "callsAnswered": 4,
+    "callsOffered": 4,
+    "callsWithRequest": 3,
+    "businessName": "<text>",
+    "callsWithAnyCheck": 1,
+    "accountHealth": {
+     "subscriptionStatus": "<text>",
+     "creditLow": false,
+     "inDebt": false
+    },
+    "notSolved": 2,
+    "previousCallsWithRequest": 0,
+    "previousNotSolved": 0,
+    "requestCategories": [
+     {
+      "category": "staff_availability",
+      "label": "<text>",
+      "questions": 2
+     },
+     {
+      "category": "online_booking",
+      "label": "<text>",
+      "questions": 1
+     },
+     {
+      "category": "opening_hours",
+      "label": "<text>",
+      "questions": 1
+     }
+    ],
+    "previousPartial": true
+   },
+   {
+    "businessId": "<text>",
+    "totalCalls": 1,
+    "callsWithResolution": 1,
+    "resolution": {
+     "unresolved": 1
+    },
+    "callsWithChecks": 1,
+    "checks": {
+     "caller_repeated": 0,
+     "caller_unsatisfied": 0,
+     "promise_not_kept_in_call": 0
+    },
+    "callsWithUnansweredRecorded": 1,
+    "callsWithUnanswered": 1,
+    "gaps": {
+     "missing_info": 1
+    },
+    "callsWithSkillErrors": 0,
+    "extractionsNotOk": 0,
+    "extractionsRun": 1,
+    "callsManaged": 1,
+    "noConversation": {},
+    "callsAnswered": 1,
+    "callsOffered": 1,
+    "callsWithRequest": 1,
+    "businessName": "<text>",
+    "callsWithAnyCheck": 0,
+    "accountHealth": {
+     "subscriptionStatus": "<text>",
+     "creditLow": true,
+     "inDebt": false
+    },
+    "notSolved": 1,
+    "previousCallsWithRequest": 0,
+    "previousNotSolved": 0,
+    "requestCategories": [
+     {
+      "category": "other",
+      "label": "<text>",
+      "questions": 1
+     }
+    ],
+    "previousPartial": false
+   },
+   {
+    "businessId": "<text>",
+    "totalCalls": 12,
+    "callsWithResolution": 12,
+    "resolution": {
+     "unresolved": 2,
+     "forwarded": 4,
+     "resolved": 4,
+     "spam_wrong_number": 2
+    },
+    "callsWithChecks": 12,
+    "checks": {
+     "caller_repeated": 0,
+     "caller_unsatisfied": 0,
+     "promise_not_kept_in_call": 0
+    },
+    "callsWithUnansweredRecorded": 12,
+    "callsWithUnanswered": 3,
+    "gaps": {
+     "missing_info": 3
+    },
+    "callsWithSkillErrors": 0,
+    "extractionsNotOk": 0,
+    "extractionsRun": 12,
+    "callsManaged": 12,
+    "noConversation": {},
+    "callsAnswered": 12,
+    "callsOffered": 12,
+    "callsWithRequest": 10,
+    "businessName": "<text>",
+    "callsWithAnyCheck": 0,
+    "accountHealth": {
+     "subscriptionStatus": "<text>",
+     "creditLow": false,
+     "inDebt": false
+    },
+    "notSolved": 3,
+    "previousCallsWithRequest": 0,
+    "previousNotSolved": 0,
+    "requestCategories": [
+     {
+      "category": "services_info",
+      "label": "<text>",
+      "questions": 5
+     },
+     {
+      "category": "staff_availability",
+      "label": "<text>",
+      "questions": 4
+     },
+     {
+      "category": "online_booking",
+      "label": "<text>",
+      "questions": 2
+     }
+    ],
+    "previousPartial": true
+   },
+   {
+    "businessId": "<text>",
+    "totalCalls": 1,
+    "callsWithResolution": 0,
+    "resolution": {},
+    "callsWithChecks": 0,
+    "checks": {
+     "caller_repeated": 0,
+     "caller_unsatisfied": 0,
+     "promise_not_kept_in_call": 0
+    },
+    "callsWithUnansweredRecorded": 0,
+    "callsWithUnanswered": 0,
+    "gaps": {},
+    "callsWithSkillErrors": 0,
+    "extractionsNotOk": 0,
+    "extractionsRun": 0,
+    "callsManaged": 0,
+    "noConversation": {
+     "no_credit": 1
+    },
+    "callsAnswered": 0,
+    "callsOffered": 0,
+    "callsWithRequest": 0,
+    "businessName": "<text>",
+    "callsWithAnyCheck": 0,
+    "accountHealth": {
+     "subscriptionStatus": "<text>",
+     "creditLow": true,
+     "inDebt": false
+    },
+    "notSolved": 0,
+    "previousCallsWithRequest": 0,
+    "previousNotSolved": 0,
+    "requestCategories": [],
+    "previousPartial": true
+   }
+  ],
+  "total": 9,
+  "from": 0,
+  "size": 10,
+  "direction": "desc"
+ }
+}

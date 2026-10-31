@@ -1,0 +1,333 @@
+{
+ "status": 200,
+ "body": {
+  "requesterRole": "system",
+  "businessId": "<text>",
+  "periodStart": 1793055600000,
+  "periodEnd": 1793142000000,
+  "cadence": 1,
+  "content": {
+   "gaps": [
+    {
+     "group": "missing_info",
+     "summary": "<text>",
+     "category": "opening_hours",
+     "examples": [
+      "CON-placeholder-21"
+     ],
+     "requests": [
+      73
+     ]
+    },
+    {
+     "group": "needs_integration",
+     "summary": "<text>",
+     "category": "product_availability",
+     "examples": [
+      "CON-placeholder-89",
+      "CON-placeholder-90",
+      "CON-placeholder-91"
+     ],
+     "requests": [
+      286,
+      337,
+      418,
+      464,
+      502
+     ]
+    }
+   ],
+   "calls": 35,
+   "booked": 22,
+   "period": {
+    "to": "<text>",
+    "from": "<text>",
+    "cadence": 1
+   },
+   "topics": [
+    {
+     "new": false,
+     "calls": 26,
+     "topic": "<text>",
+     "labels": [
+      "<text>"
+     ],
+     "resolution": {
+      "resolved": 21,
+      "forwarded": 3,
+      "unresolved": 2
+     },
+     "with_unanswered": 1
+    },
+    {
+     "new": true,
+     "calls": 5,
+     "topic": "<text>",
+     "labels": [
+      "<text>",
+      "<text>"
+     ],
+     "resolution": {
+      "forwarded": 5
+     },
+     "with_unanswered": 4
+    },
+    {
+     "new": false,
+     "calls": 3,
+     "topic": "<text>",
+     "labels": [
+      "<text>"
+     ],
+     "resolution": {
+      "forwarded": 1,
+      "unresolved": 2
+     },
+     "with_unanswered": 2
+    },
+    {
+     "new": true,
+     "calls": 2,
+     "topic": "<text>",
+     "labels": [
+      "<text>",
+      "<text>"
+     ],
+     "resolution": {
+      "unresolved": 2
+     },
+     "with_unanswered": 0
+    },
+    {
+     "new": true,
+     "calls": 1,
+     "topic": "<text>",
+     "labels": [
+      "<text>"
+     ],
+     "resolution": {
+      "resolved": 1
+     },
+     "with_unanswered": 0
+    },
+    {
+     "new": false,
+     "calls": 1,
+     "topic": "<text>",
+     "labels": [
+      "<text>"
+     ],
+     "resolution": {
+      "forwarded": 1
+     },
+     "with_unanswered": 1
+    }
+   ],
+   "message": {
+    "none": 25,
+    "complete": 9,
+    "incomplete": 1
+   },
+   "outcome": {
+    "resolved": 22,
+    "unresolved": 4,
+    "forwarded_complete": 8,
+    "forwarded_incomplete": 1
+   },
+   "version": 5,
+   "requests": [
+    {
+     "days": {
+      "2026-10-27": 1
+     },
+     "kind": "business_info",
+     "text": "<text>",
+     "calls": 1,
+     "dated": "<text>",
+     "category": "opening_hours",
+     "requests": [
+      73
+     ]
+    },
+    {
+     "days": {
+      "2026-10-27": 1
+     },
+     "kind": "needs_integration_gap",
+     "text": "<text>",
+     "calls": 1,
+     "dated": "<text>",
+     "category": "product_availability",
+     "requests": [
+      286
+     ]
+    },
+    {
+     "days": {
+      "2026-10-27": 1
+     },
+     "kind": "needs_integration_gap",
+     "text": "<text>",
+     "calls": 1,
+     "dated": "<text>",
+     "category": "product_availability",
+     "requests": [
+      337
+     ]
+    },
+    {
+     "days": {
+      "2026-10-27": 1
+     },
+     "kind": "needs_integration_gap",
+     "text": "<text>",
+     "calls": 1,
+     "dated": "<text>",
+     "category": "product_availability",
+     "requests": [
+      418
+     ]
+    },
+    {
+     "days": {
+      "2026-10-27": 1
+     },
+     "kind": "needs_integration_gap",
+     "text": "<text>",
+     "calls": 1,
+     "dated": "<text>",
+     "category": "product_availability",
+     "requests": [
+      464
+     ]
+    },
+    {
+     "days": {
+      "2026-10-27": 1
+     },
+     "kind": "needs_integration_gap",
+     "text": "<text>",
+     "calls": 1,
+     "dated": "<text>",
+     "category": "product_availability",
+     "requests": [
+      502
+     ]
+    },
+    {
+     "days": {
+      "2026-10-27": 1
+     },
+     "kind": "business_info",
+     "text": "<text>",
+     "calls": 1,
+     "dated": "<text>",
+     "category": "opening_hours",
+     "requests": [
+      73
+     ]
+    },
+    {
+     "days": {
+      "2026-10-27": 5
+     },
+     "kind": "integration",
+     "text": "<text>",
+     "calls": 5,
+     "dated": "<text>",
+     "category": "product_availability",
+     "requests": [
+      286,
+      337,
+      418,
+      464,
+      502
+     ]
+    },
+    {
+     "days": {
+      "2026-10-27": 5
+     },
+     "kind": "needs_integration_gap",
+     "text": "<text>",
+     "calls": 5,
+     "dated": "<text>",
+     "category": "product_availability",
+     "requests": [
+      286,
+      337,
+      418,
+      464,
+      502
+     ]
+    }
+   ],
+   "gap_calls": {
+    "missing_info": 1,
+    "needs_integration": 5
+   },
+   "resolution": {
+    "resolved": 22,
+    "forwarded": 9,
+    "unresolved": 4
+   },
+   "suggestions": {
+    "integration": [
+     "<text>"
+    ],
+    "business_info": [
+     "<text>"
+    ]
+   },
+   "transferred": 0,
+   "callsManaged": 35,
+   "flagged_calls": [
+    "CON-placeholder-21",
+    "CON-placeholder-45",
+    "CON-placeholder-9",
+    "CON-placeholder-92",
+    "CON-placeholder-93"
+   ],
+   "regeneratedBy": "<text>",
+   "extractor_audit": {
+    "disagreements": 0,
+    "sampled_resolved": 0
+   }
+  },
+  "exampleCalls": {
+   "CON-placeholder-90": {
+    "startTimestamp": 1793114887785,
+    "caller": "<text>"
+   },
+   "CON-placeholder-45": {
+    "startTimestamp": 1793112174858,
+    "caller": "<text>"
+   },
+   "CON-placeholder-93": {
+    "startTimestamp": 1793115859380,
+    "caller": "<text>"
+   },
+   "CON-placeholder-89": {
+    "startTimestamp": 1793114568512,
+    "caller": "<text>"
+   },
+   "CON-placeholder-21": {
+    "startTimestamp": 1793088448449,
+    "caller": "<text>"
+   },
+   "CON-placeholder-92": {
+    "startTimestamp": 1793115689140,
+    "caller": "<text>"
+   },
+   "CON-placeholder-9": {
+    "startTimestamp": 1793113032039,
+    "caller": "<text>"
+   },
+   "CON-placeholder-91": {
+    "startTimestamp": 1793115117139,
+    "caller": "<text>"
+   }
+  },
+  "revision": 2
+ }
+}

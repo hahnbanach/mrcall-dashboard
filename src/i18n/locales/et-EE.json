@@ -1992,7 +1992,8 @@
           "nextOneDay": "Järgmine saabub {date} ja katab päeva {day}.",
           "covers": "Järgmine katab ajavahemiku {from}–{to}.",
           "coversOneDay": "Järgmine katab päeva {day}.",
-          "retryOneDay": "Aruanne päeva {day} kohta ei õnnestunud: seda proovitakse uuesti täna öösel."
+          "retryOneDay": "Aruanne päeva {day} kohta ei õnnestunud: seda proovitakse uuesti täna öösel.",
+          "extended": "See hõlmab aega alates {date}: sellest ajast pole kõnesid olnud."
         },
         "type": {
           "automatic": "Automaatne",
@@ -2002,7 +2003,13 @@
         "base": "Põhineb {analysed} kõnel nendest {managed} kõnest, mida assistent perioodi jooksul käsitles.",
         "baseOld": "Põhineb {analysed} analüüsitud kõnel.",
         "baseOldNote": "10. oktoobrile eelnenud kõnede kohta me ei tea, mitut assistent käsitles.",
-        "excluded": "Välja jäetud: {silent} kõnet, kus helistaja ei rääkinud, {credit} tagasi lükatud krediidi puudumise tõttu."
+        "excluded": "Välja jäetud: {silent} kõnet, kus helistaja ei rääkinud, {credit} tagasi lükatud krediidi puudumise tõttu.",
+        "history": {
+          "emptyDay": "Kõnesid ei olnud {day}",
+          "emptyPeriod": "Kõnesid ei olnud {from}–{to}",
+          "noReport": "Aruannet pole",
+          "coveredFrom": "See hõlmab ka kõnedeta päevi alates {date}."
+        }
       },
       "assistants": {
         "title": "Ülevaatamist vajavad assistendid",
@@ -2017,7 +2024,6 @@
         "checks": "Kontrollid",
         "skillErrors": "Funktsioonivead",
         "extractionIssues": "Väljavõtteprobleemid",
-        "shareOfTotal": "{percent}% ({count} / {total})",
         "sortOptions": {
           "calls": "Kõned",
           "notSolved": "Lahendamata (assistendi hinnang)",
@@ -2042,7 +2048,8 @@
           "skillErrors": "Skilli vead",
           "extractionIssues": "Eraldamine",
           "change": "Muutus",
-          "configSuggestions": "MrCalli soovitused"
+          "configSuggestions": "MrCalli soovitused",
+          "asks": "Mida küsitakse"
         },
         "legend": {
           "notSolved": "lahendamata, lisaks ettevõttele puuduliku sõnumiga edastatud palved, nende kõnede seast, kus helistaja midagi küsis",
@@ -2071,7 +2078,10 @@
           "unknown": "Teadmata",
           "planOther": "Pakett ei ole aktiivne"
         },
-        "changePoints": "{sign}{n} punkti"
+        "changePoints": "{sign}{n} punkti",
+        "askedOf": "{category}: {n} päring | {category}: {n} päringut",
+        "latestReport": "Viimane aruanne",
+        "countOf": "({count} / {total})"
       },
       "scope": {
         "allBusinesses": "Kõigis ettevõtetes, mida näed, viimase 30 päeva jooksul.",
@@ -2222,11 +2232,11 @@
         "examined": "{n} kõne vaadatud | {n} kõnet vaadatud",
         "outcome": {
           "recompute": {
-            "written": "{n} analüüsitud | {n} analüüsitud",
+            "written": "{n} kõne analüüsitud | {n} kõnet analüüsitud",
             "reasoned": "{n} ilma vestluseta | {n} ilma vestluseta",
             "skipped": "{n} juba ajakohane | {n} juba ajakohased",
             "left": "{n} ilma analüüsitavata | {n} ilma analüüsitavata",
-            "not_finalised": "{n} lõpetamata | {n} lõpetamata",
+            "not_finalised": "{n} lõpetamata seanss välja jäetud | {n} lõpetamata seanssi välja jäetud",
             "conflict": "{n} vahepeal muutunud | {n} vahepeal muutunud",
             "failed": "{n} ebaõnnestus | {n} ebaõnnestus",
             "ceiling": "{n} analüüsimata: piir täis | {n} analüüsimata: piir täis"
@@ -2234,7 +2244,7 @@
           "facts": {
             "written": "{n} uuendatud | {n} uuendatud",
             "unchanged": "{n} juba ajakohane | {n} juba ajakohased",
-            "not_finalised": "{n} lõpetamata | {n} lõpetamata",
+            "not_finalised": "{n} lõpetamata seanss välja jäetud | {n} lõpetamata seanssi välja jäetud",
             "conflict": "{n} vahepeal muutunud | {n} vahepeal muutunud"
           }
         }
@@ -2259,7 +2269,11 @@
         "transferred": "{n} kõne suunati inimesele | {n} kõnet suunati inimesele",
         "themeOutcome": "Teema {topic} kõnede tulemus",
         "callBackTitle": "Kõned, millele tagasi helistada",
-        "callBackNote": "Lahendamata kõned või ettevõttele puuduliku sõnumiga edastatud kõned."
+        "callBackNote": "Lahendamata kõned või ettevõttele puuduliku sõnumiga edastatud kõned.",
+        "reviewTitle": "Ülevaatamist vajavad kõned",
+        "reviewNote": "Lahendamata, vastuseta küsimuste või käivitunud kontrollidega.",
+        "quietDays": "See hõlmab ka kõnedeta päevi {from}–{to}.",
+        "quietDay": "See hõlmab ka kõnedeta päeva {day}."
       },
       "deleteReport": {
         "title": "Kustuta aruanne",
@@ -2332,7 +2346,9 @@
         "noAnalysis": "Selles perioodis on 1 kõne, kuid seda pole veel analüüsitud. | Selles perioodis on {n} kõnet, kuid ühtegi pole veel analüüsitud.",
         "noAnalysisNone": "Ühtegi selle perioodi kõnet pole analüüsitud ja ühtegi ei saa analüüsida.",
         "cycleEmpty": "Käimasoleval automaatsel aruandel pole veel ühtegi lõppenud päeva: praegu pole midagi koostada.",
-        "busyYou": "Selle ettevõtte jaoks on juba töötlus pooleli, mille algatasid {when}."
+        "busyYou": "Selle ettevõtte jaoks on juba töötlus pooleli, mille algatasid {when}.",
+        "reads": "{n} analüüsitud kõne | {n} analüüsitud kõnet",
+        "leftOut": "{n} perioodi kõne pole nende hulgas: vestluseta või analüüsimata. | {n} perioodi kõnet pole nende hulgas: vestluseta või analüüsimata."
       },
       "recompute": {
         "banner": "{n} sellel perioodil käsitletud kõnel ei ole veel automaatset analüüsi, mistõttu tulemused, teemad ja kvaliteet neid ei arvesta.",
@@ -2346,13 +2362,13 @@
       },
       "requests": {
         "title": "Helistajate soovid",
-        "purpose": "Mida helistajad paluvad, millega assistendid hakkama ei saa, rühmitatud kategooria järgi kõigi ettevõtete lõikes: et otsustada, mida ehitada ja mida pakettidesse lisada.",
+        "purpose": "Mida helistajad küsivad ja kui palju sellest assistent ise lahendab, kategooriate kaupa kõigi ettevõtete lõikes.",
         "window": "Periood: {period}",
         "sortLabel": "Järjesta",
         "sortScore": "Viimased ja levinuimad",
         "sortBusinesses": "Ettevõtete arv",
         "showDismissed": "Näita arhiveeritud",
-        "scoreHelp": "Iga ettevõte loeb 1, kui küsis aruannetega kaetud viimastel päevadel, poole, kui kaks nädalat varem, veerandi, kui neli nädalat varem.",
+        "scoreHelp": "Iga ettevõte loeb 1, kui ta küsis perioodi lõpus, pool kaks nädalat varem, veerand neli nädalat varem.",
         "none": "Selles perioodis soove pole.",
         "columns": {
           "category": "Kategooria",
@@ -2361,15 +2377,14 @@
           "freshness": "Värskus"
         },
         "businesses": "{n} ettevõtet",
-        "trend": "{sign}{n} võrreldes eelmise perioodiga",
-        "share": "{pct} % aruannetega ettevõtetest",
+        "trend": "{sign}{n} ettevõte võrreldes eelmise perioodiga | {sign}{n} ettevõtet võrreldes eelmise perioodiga",
+        "share": "{pct}% analüüsitud kõnedega ettevõtetest",
         "histogramLabel": "Ettevõtted {bucket} kohta, vanimast alates: {values}",
         "bucket": {
           "week": "nädal",
           "month": "kuu"
         },
         "freshness": "Viimane soov {date} · {pct} % viimase {bucket} jooksul",
-        "reportDated": "{n} ettevõtet dateeritud aruande lõpu järgi",
         "nextAction": "Järgmine samm",
         "examples": "Näited",
         "hideExample": "Peida",
@@ -2397,9 +2412,9 @@
         "confirmDismiss": "Arhiveeri",
         "reopened": "Taasavatud: {n} uut ettevõtet on seda palunud pärast arhiveerimist {date}.",
         "status": {
-          "rising": "Kasvab",
-          "steady": "Stabiilne",
-          "falling": "Langeb",
+          "rising": "Kasvab perioodi teisel poolel",
+          "steady": "Perioodi jooksul stabiilne",
+          "falling": "Langeb perioodi teisel poolel",
           "stale": "Viimasel ajal ei ole küsitud"
         },
         "hiddenExamples": "Peidetud näited",
@@ -2412,7 +2427,15 @@
           "admin": "MrCall"
         },
         "archived": "{category} arhiveeritud.",
-        "undo": "Võta tagasi"
+        "undo": "Võta tagasi",
+        "next": {
+          "delegate": "Kaalu nende päringute andmist assistendi hallata",
+          "handled": "Assistent lahendas need",
+          "withdrawn": "Helistajad võtsid need tagasi",
+          "unrated": "Tulemust pole veel hinnatud: ava päringud",
+          "classify": "Liigita need päringud",
+          "open": "Ava päringud"
+        }
       },
       "admin": {
         "reason": {
@@ -2422,7 +2445,8 @@
       },
       "change": {
         "notAvailable": "puudub",
-        "notAvailableHelp": "Eelmises perioodis oli alla 20 kõne: muutus pole tähenduslik."
+        "notAvailableHelp": "Eelmises perioodis oli alla 20 kõne: muutus pole tähenduslik.",
+        "partialHelp": "Eelmisel perioodil on kõnesid ainult osal päevadest: muutus ei ole tähenduslik."
       },
       "overview": {
         "noCallsDays": "Viimasel päeval kõnesid pole. | Viimase {days} päeva jooksul kõnesid pole."
@@ -2430,7 +2454,253 @@
       "callers": {
         "web": "Veebikõne"
       },
-      "businessNotFound": "Seda ettevõtet pole olemas või see pole nende hulgas, mida saad näha."
+      "businessNotFound": "Seda ettevõtet pole olemas või see pole nende hulgas, mida saad näha.",
+      "feedback": {
+        "fields": {
+          "outcome": "Päringu tulemus",
+          "category": "Kategooria"
+        },
+        "outcome": {
+          "met": "Assistent täitis",
+          "taken": "Võetud ettevõttele vastu",
+          "handed_over": "Antud inimesele üle",
+          "neither": "Täitmata",
+          "withdrawn": "Helistaja võttis tagasi"
+        },
+        "unset": "Veel liigitamata",
+        "otherCategory": "Kategooria, mida enam loendis pole",
+        "state": {
+          "corrected": "Parandatud",
+          "confirmed": "Kinnitatud",
+          "proposed": "Ettepanek saadetud",
+          "applied": "Rakendatud",
+          "rejected": "Tagasi lükatud",
+          "withdrawn": "Tagasi võetud"
+        },
+        "chip": {
+          "name": "{field}: {value}",
+          "detail": "{from} → {to}, {who}, {when}"
+        },
+        "menu": {
+          "label": "Muuda: {field}",
+          "right": "See on õige",
+          "wrong": "See on vale, ma ei tea, mis on õige",
+          "restore": "Taasta analüüsi väärtus",
+          "history": "Ajalugu",
+          "withdraw": "Võta oma ettepanek tagasi"
+        },
+        "who": {
+          "owner": "omanik",
+          "reseller": "partner",
+          "admin": "MrCall",
+          "service": "MrCall",
+          "unknown": "keegi",
+          "me": "sina"
+        },
+        "history": {
+          "title": "Ajalugu: {field}",
+          "entry": "{from} → {to}, {who}, {when}",
+          "right": "{from} kinnitatud, {who}, {when}",
+          "wrong": "{from} märgitud valeks, {who}, {when}",
+          "empty": "Muudatusi veel pole.",
+          "status": {
+            "proposed": "Ettepanek",
+            "applied": "Rakendatud",
+            "rejected": "Tagasi lükatud",
+            "reverted": "Tagasi võetud",
+            "orphaned": "Päringut enam ei leita",
+            "confirmed": "Kinnitatud",
+            "closed": "MrCall käsitles",
+            "withdrawn": "Tagasi võetud"
+          }
+        },
+        "undo": {
+          "changed": "Muudetud",
+          "undo": "Võta tagasi",
+          "close": "Sulge",
+          "undone": "Muudatus võeti tagasi.",
+          "failed": "Muudatust ei õnnestunud tagasi võtta.",
+          "withdrawn": "Ettepanek võeti tagasi. | {n} ettepanekut võeti tagasi.",
+          "both": "Tagasi võetud muudatused: {reverted}. Tagasi võetud ettepanekud: {withdrawn}.",
+          "nothing": "Midagi ei võetud tagasi: see oli juba otsustatud."
+        },
+        "stale": "See väärtus muutus vahepeal: näidatakse praegust.",
+        "failed": "Muudatust ei salvestatud.",
+        "requests": {
+          "title": "Päringud",
+          "excluded": "Loendustest välja jäetud: rämpskõne."
+        },
+        "rules": {
+          "offer": "Kas käsitleda seda numbrit alati rämpskõnena?",
+          "earlier": "Ka {n} varasem kõne | Ka {n} varasemat kõnet",
+          "earlierMore": "Ka {n} viimast varasemat kõnet",
+          "always": "Käsitle rämpskõnena",
+          "noThanks": "Ei, aitäh",
+          "created": "Edaspidi käsitletakse seda numbrit rämpskõnena. | Edaspidi käsitletakse seda numbrit rämpskõnena ja {n} varasem kõne parandati. | Edaspidi käsitletakse seda numbrit rämpskõnena ja {n} varasemat kõnet parandati.",
+          "byRule": "Numbri reegel hindas selle kõne rämpskõneks. Kas kustutada reegel?",
+          "delete": "Kustuta reegel",
+          "keep": "Jäta alles",
+          "deleted": "Reegel on kustutatud; selle märgitud kõnesid loetakse taas."
+        },
+        "readOnly": {
+          "title": "Ainult lugemiseks",
+          "note": "Sa ei ole nende kõnede omanik: iga avatud kõne registreeritakse ja omanik näeb, kes selle avas.",
+          "open": "Ava kõne",
+          "unknown": "Ei õnnestunud lugeda, kas need kõned on sinu omad."
+        },
+        "filters": {
+          "title": "Lingi filtrid",
+          "remove": "Eemalda filter {filter}",
+          "unknown": "Lingi filtrit ei tuntud ära ja seda ei rakendata.",
+          "chip": "{name}: {value}",
+          "yes": "jah",
+          "no": "ei",
+          "names": {
+            "outcomeLine": "Tulemus",
+            "topic": "Teema",
+            "gap": "Vastamata küsimus",
+            "check": "Kontroll",
+            "category": "Päringu kategooria",
+            "requestOutcome": "Päringu tulemus",
+            "noConversation": "Vestlust pole",
+            "corrected": "Parandatud"
+          },
+          "counted": "Kõned: nagu statistika neid loeb, arhiveeritud kaasa arvatud",
+          "leftOut": "{n} kõne pole sinu juurdepääsuga nähtav | {n} kõnet pole sinu juurdepääsuga nähtavad"
+        },
+        "bulk": {
+          "label": "Valitud kõned",
+          "count": "{n} valitud | {n} valitud",
+          "select": "Vali kõne: {name}",
+          "changeOutcome": "Muuda tulemust",
+          "spam": "Märgi rämpskõneks",
+          "confirm": "Kinnita",
+          "clear": "Tühista valik",
+          "leftOut": "{n} hinnatud tulemuseta kõne jäeti välja. | {n} hinnatud tulemuseta kõnet jäeti välja.",
+          "selectRequest": "Vali päring: {text}",
+          "labelRequests": "Valitud päringud",
+          "move": "Teisalda kategooriasse",
+          "proposed": "{n} ettepanek saadetud: otsustab administraator. | {n} ettepanekut saadetud: otsustab administraator.",
+          "alreadySpam": "{n} juba rämpskõneks märgitud kõne jäeti välja. | {n} juba rämpskõneks märgitud kõnet jäeti välja."
+        },
+        "fact": {
+          "chip": "Teata fakti veast",
+          "reportedOf": "MrCallile teatatud: {fact}",
+          "option": "{fact}: {value}",
+          "withdraw": "Võta tagasi",
+          "withdrawOf": "Võta teade tagasi: {fact}"
+        },
+        "links": {
+          "open": "Ava kõne: {label} | Ava {n} kõnet: {label}",
+          "openAll": "Ava kõned: {label}",
+          "calls": "Kõned"
+        },
+        "report": {
+          "corrected": "Aruande {n} päringut parandati pärast selle koostamist. | Aruande {n} päringut parandati pärast selle koostamist.",
+          "correctedTag": "Parandatud pärast aruannet"
+        },
+        "categories": {
+          "all": "Kõik päringud, ka need, mille assistent lahendas",
+          "manyRequests": "Mitme päringuga kõne on iga oma päringu kategoorias.",
+          "backlog": "{n} kõne ootab veel analüüsi ja seda ei ole veel loetud. | {n} kõnet ootab veel analüüsi ja neid ei ole veel loetud.",
+          "columns": {
+            "calls": "Kõned",
+            "select": "Vali",
+            "text": "Päring",
+            "business": "Ettevõte",
+            "outcome": "Tulemus",
+            "category": "Kategooria",
+            "call": "Kõne"
+          },
+          "calls": "{n} kõne | {n} kõnet",
+          "showRequests": "Näita kategooria {category} päringuid ({n} kõne) | Näita kategooria {category} päringuid ({n} kõnet)",
+          "showOutcome": "Näita kategooria {category} päringuid tulemusega {outcome} ({n})",
+          "openCall": "Ava kõne: {text}",
+          "call": "Ava kõne",
+          "requestsOf": "Kategooria {category} päringud",
+          "noRequests": "Sel perioodil päringuid pole."
+        },
+        "queue": {
+          "title": "Ülevaatamist vajavad parandused",
+          "purpose": "Ettepanekud, parandused, mille päringut enam pole, valeks märgitud väärtused ja teatatud faktid, rühmitatud kategooria ja ettevõtte kaupa, esmalt rühmad, mis puudutavad kõige rohkem kõnesid.",
+          "empty": "Pole midagi üle vaadata.",
+          "selectedLabel": "Valitud parandused",
+          "applySelected": "Rakenda valitud ({n})",
+          "rejectSelected": "Lükka valitud tagasi ({n})",
+          "select": "Vali: {text}",
+          "apply": "Rakenda",
+          "reject": "Lükka tagasi",
+          "handled": "Märgi käsitletuks",
+          "reattach": "Seo uuesti",
+          "requestOfCall": "Kõne päring",
+          "reattachHere": "Seo siia",
+          "close": "Sulge",
+          "applied": "{n} rakendatud. | {n} rakendatud.",
+          "rejected": "{n} tagasi lükatud. | {n} tagasi lükatud.",
+          "failedN": "{n} ebaõnnestus. | {n} ebaõnnestus.",
+          "change": "{field}: {from} → {to}",
+          "wrong": "{field}: {from} on vale, ülevaatamiseks",
+          "right": "{field}: {from} kinnitatud",
+          "fact": "{field} teatatud valeks",
+          "factOf": {
+            "booked": "Broneering teatatud valeks",
+            "transferred": "Suunamine teatatud valeks",
+            "no_conversation": "„Vestlust pole“ teatatud valeks",
+            "managed_call": "„Assistent käsitles“ teatatud valeks",
+            "skill_errors": "Skillide vead teatatud valeks",
+            "unkept": "Pidamata lubadused teatatud valeks"
+          }
+        },
+        "mine": {
+          "title": "Minu ettepanekud",
+          "empty": "Ettepanekuid veel pole.",
+          "withdraw": "Võta tagasi",
+          "withdrawOf": "Võta ettepanek tagasi: {what}"
+        },
+        "facts": {
+          "no_conversation": "Vestlust pole",
+          "managed_call": "Assistent käsitles",
+          "skill_errors": "Skillide vead",
+          "unkept": "Pidamata lubadused",
+          "none": "registreerimata",
+          "yes": "jah",
+          "no": "ei",
+          "recorded": "registreeritud"
+        },
+        "access": {
+          "menu": "Rämpsnumbrid ja juurdepääs kõnedele",
+          "rulesTitle": "Rämpsuna käsitletavad numbrid",
+          "rulesNote": "Nende numbrite kõnesid loetakse rämpskõnedeks. Reegli kustutamisel loetakse selle kõned uuesti.",
+          "rulesEmpty": "Ühtegi numbrit ei käsitleta rämpsuna.",
+          "since": "alates {date}",
+          "delete": "Kustuta",
+          "deleteOf": "Kustuta numbri {number} reegel",
+          "deleted": "Reegel kustutatud: {n} kõne loetakse uuesti. | Reegel kustutatud: {n} kõnet loetakse uuesti.",
+          "logTitle": "Kes avas sinu kõnesid",
+          "logNote": "Sinu partner ja MrCall võivad sinu kõnesid avada, et sind aidata; iga avamine registreeritakse siin ja seda hoitakse 12 kuud.",
+          "logEmpty": "Keegi teine pole sinu kõnesid avanud.",
+          "columns": {
+            "at": "Millal",
+            "who": "Kes",
+            "event": "Mida",
+            "call": "Kõne"
+          },
+          "roles": {
+            "admin": "Administraator",
+            "reseller": "Partner",
+            "service": "MrCall",
+            "unknown": "Keegi"
+          },
+          "events": {
+            "opened": "Kõne avatud",
+            "audio": "Salvestist kuulati"
+          }
+        },
+        "withdrawRefused": {
+          "not_author": "Ettepaneku saab tagasi võtta ainult selle tegija.",
+          "feedback_state": "Selle ettepaneku üle on juba otsustatud."
+        }
+      }
     },
     "datePicker": {
       "chooseDate": "Vali kuupäev",

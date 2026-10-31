@@ -76,6 +76,21 @@ API clients and business logic:
   business's zone, its last day included; the periods a request offers, ending at the last midnight there; the
   label of every report and job state; a recompute's progress; who asked, by the role StarChat recorded (`requesterRole`), never by an id; the coverage banner's
   threshold. Pure, pinned by `tests/unit/insightsReports.spec.js`
+- `Classifications.js` — a call's judgements as a person checks and corrects them (brief
+  [2026-10-27-classification-feedback](briefs/2026-10-27-classification-feedback.md)): the closed value sets, who
+  applies and who proposes, a chip's state from a judgement and the call's history (a correction, a confirmation, the
+  reader's own proposal), a chip's menu, the asks of a gesture (`valueFrom` always sent, `fact_wrong` for a fact), THE
+  FILTER TABLE from every count kind to its conversation-search filter (`countLink`, `searchFromQuery`), whether the
+  reader owns a business (`isOwnerOf`: true, false or unknown), and the clients of StarChat's judgements, signals and
+  their undo, queues, caller rules, a category's requests, the category list, the access record and the one-time
+  audio link; and how a gesture's answer becomes the call's judgements (`withCallState`, `withSignal`, which marks
+  the correction an applied one replaces as reverted, `withGesture` for a gesture made in another panel, `bulkEntries`,
+  `withReverted`, `withDecision`, `withCurrent`; `isCallState`/`stateIn`: only a full call state is taken; without it
+  the judged field takes the answered `value` and the call is read again, the chips kept if that read is refused; a stale value's refusal is taken and then the call read once).
+  Pinned by `tests/unit/classifications.spec.js`
+- `UndoGesture.js` — the last gesture on judgements, for the page's one undo bar, with the touched calls' state and
+  the signals it wrote, which every other panel of those calls takes when the gesture is made or undone
+- `Selection.js` — the selection of a list's rows (a checkbox on a wide screen, a long-press mode under 600 px)
 - `KnowledgeBase.js` — "Add the answer": one question/answer pair added to the business's knowledge base
   (`?section=__KNOWLEDGE_BASE__&draftQuestion=`), unsaved until the person saves
 - `Admin.js` — Admin API endpoints
@@ -189,47 +204,85 @@ for the four dimensions lives in `src/utils/CallInsights.js`.
   opened call): after the summary, the topics as tags, the four dimensions under the value table, the
   unanswered questions with their reason and suggestion, the checks that fired. A call from before
   the feature draws with none of this.
+- **The judgements as chips** (`src/components/feedback/`; brief
+  [2026-10-27-classification-feedback](briefs/2026-10-27-classification-feedback.md)): `CallJudgements.vue` in the
+  call's panel, on the pages that ask for it (`with-judgements`: the conversations page, the restaurant call dialog),
+  draws the resolution, the message and each request's outcome and category as `JudgementChip.vue` (a button naming
+  value and state; a listbox, a bottom sheet under 600 px), with the history under a chip (`JudgementHistory.vue`);
+  an owner's call reads its judgements when opened or in view, a non-owner's only when the person opens a chip; after
+  a gesture, an undo or a restore every panel of the call takes the state the answer carries, with no read of the
+  call. `UndoBar.vue` is the page's one undo (a live region, no time limit), which says only what StarChat's undo
+  answer lists (corrections reverted, proposals withdrawn, or nothing); `BulkBar.vue` the bar of a list's
+  selected rows. One chip reports any of the call's six facts wrong, with the same undo; the reader's own proposal or
+  fact report still waiting is withdrawn by its author from the chip, from beside the fact's note or from "My
+  proposals" (`POST insights/feedback/{id}/withdraw`, status `withdrawn`). The
+  words of a judgement are `labels.js`. A non-owner's page (`Classifications.isOwnerOf` on the business's owner) is
+  read-only: reduced rows opened on request, no owner-only control, the recording from the one-time link.
+  `FeedbackQueue.vue` ("Corrections to review", an admin's) and `MyProposals.vue` ("My proposals") draw StarChat's
+  grouped queue. `widgets/CallsAccessSettings.vue` is the owner's settings page `__CALLS_ACCESS__` (the numbers
+  treated as spam, who opened the calls).
 - **The list's filters** (`Conversations.vue`): resolution and message `Dropdown`s (marked
   "Assessed by the assistant"), a booked `Dropdown`, and "transferred" and "unanswered questions"
   `ToggleButton`s, all folded into the
-  one `searchBody(extra)` the list, its poll, both exports and the two bulk actions all build from.
+  one `searchBody(extra)` the list, its poll, both exports and the two bulk actions all build from. A count's link
+  carries its filter in the address (`Classifications.searchFromQuery`), each shown as a chip that undoes it; a
+  count's list keeps archived calls, says its count, shows the resolution its outcome line fixes, offers no "Archive
+  all" or "Delete all", and a report count's list says how many calls it leaves out for the reader (`leftOut`). A web
+  caller (an identity string `uid:…` where a number would be) is named "Web call"; a call opened read-only offers none
+  of the owner's actions. A selection column (long-press under 600 px) corrects the selected calls' outcome in one gesture.
 - **The analytics pages** (`src/components/analytics/`; StarChat's brief docs/briefs/2026-10-24-insights-reports-ux.md
   for the reports, jobs and requests). `Analytics.vue` and `AnalyticsAdmin.vue` fetch the outcomes, topics and
   quality and pass them to presentational sections (`CallOutcomes.vue`, `CallTopics.vue`, `CallQuality.vue`);
   every server-paged list owns its `CallInsights.serverPage` and draws through `PagedTable.vue` (a real table,
-  sortable headers with `aria-sort`, page numbers and "1–10 of N", each row a card under 640 pixels), and every
+  sortable headers with `aria-sort`, page numbers and "1–10 of N", each row a card under 640 pixels with no header
+  row drawn), and every
   loading, empty, unavailable and error state is `InsightsState.vue`. Both pages carry `AnalyticsFilterBar.vue`,
   the filters in force each undone where it shows; a business is shown by name wherever an answer names it.
   "How the calls went" shows the outcome of the calls where the caller asked something in four lines adding up to
   their base (resolved in the call; passed to the business, split by the message taken; passed to a person; not
   resolved), from StarChat's `outcome` and `callsWithRequest`, with `caller_left` and `spam_wrong_number` beside
   it in neutral colours, the message, booked and transferred, and the calls without a conversation by reason.
+  Every change against the period before is neutral in colour, and "n/a" with its reason under a base of 20 calls or
+  over a previous window with calls for part of its days (StarChat's `previousPartial`).
   No section shows a cost, a credit amount or a token count: StarChat answers none.
   - `Analytics.vue` with a business (`?id=`, any role) has three tabs, each with its address (`?tab=`):
-    Overview (the period's sections, a coverage banner when at least 10 managed calls and a tenth of them lack
-    the analysis, with "Analyse them now", and a card on the callers who never spoke linking to the greeting);
+    Overview (the period's sections, read only while this tab is shown, a coverage banner when at least 10 managed
+    calls and a tenth of them lack the analysis, with "Analyse them now", a card on the callers who never spoke
+    linking to the greeting, and "My proposals" whatever the range);
     Reports (`ReportsTab.vue`: the schedule panel with the cadence, the next report and a report held back for
     credit, "Request a report" and "Prepare now", the report jobs asked recently, and the history paged on the
-    server with its inclusive days in the business's zone, type, version, state, calls over the calls managed,
+    server with its inclusive days in the business's zone (a period not at the zone's midnights by its start and
+    end instants), a cycle with no calls as its own row, a next period longer than the cadence said so, type,
+    version, state, calls over the calls managed,
     who asked and when, filtered by state and type, with Regenerate, an admin's re-run of a written-off period and
-    delete); Processing (`JobsTab.vue`: the jobs, their state and progress, who asked, the report written and a
-    cancel while open). A FREE business's owner is offered the plan instead of paid work.
+    delete); Processing (`JobsTab.vue`: the jobs, their state and progress over calls as Overview counts them,
+    the unfinished sessions said apart, who asked, the report written and a cancel while open). A FREE business's owner is offered the plan instead of paid work.
   - `/analytics/report?id=&start=&requestId=` (`views/AnalyticsReport.vue`, `CallReportDetail.vue`): one report, its version,
     its base and the calls left out (the analytics of its days), a note when more calls of its days were analysed
-    since, its themes, the questions left unanswered by reason with example calls (linked for the owner only) and
-    "Add the answer", its suggestions (`mrcall_config` for an admin only), and the quality gaps beside the period
+    since, its themes, the calls to call back ("Calls to review" for a report of content version 4 or lower, whose
+    list was wider), the questions left unanswered by reason with their count and example calls and "Add the
+    answer" (a caller's question of the example call, read on the click from the owner's own call; never on a
+    clinical question nor on one that needs an integration), its suggestions (`mrcall_config` for an admin only), and the quality gaps beside the period
     before. A link of before (`/analytics?id=&report=`) opens it.
   - `InsightsRequestDialog.vue`: a report for a period, a regeneration, a recompute, "Prepare now" and a re-run,
-    one dialog: the period with the overlap choices, a hidden estimate, a confirmation without amount (an admin
-    may put the work at MrCall's cost), the job under one request key, its progress and end, and each refusal
+    one dialog: the period with the overlap choices, a hidden estimate, a confirmation without amount saying, for a
+    report, the analysed calls it reads and the finalised ones left out (a report's estimate counts no call to
+    analyse: "no calls" is StarChat's refusal only; an admin may put the work at MrCall's cost), the job under one request key, its progress and end, and each refusal
     with its own copy and offers (automatic top-up offered only when StarChat's estimate says it is not effective, `topUpEffective`; an admin refused for credit can run the work at MrCall's cost).
+  - The scope and admin pages are 1280 px wide, so that their tables over several businesses fit their card at
+    1440 px; a business's page stays 960 px.
   - `Analytics.vue` with no business, role `reseller` (its scope page): outcomes and quality over its scope (the
     `OwnerSelector` narrows it to one owner), the topics section saying to choose a business,
     `AssistantsToReview.vue` and `RequestCategories.vue`, both following the period and owner.
   - `AnalyticsAdmin.vue`: the same sections reacting to its own filters (the business chosen by company name,
     `BusinessAutocomplete.vue`), topics only with a business chosen, "Assistants to review" (paged, sorted on
-    the server, searched by name, "Unresolved" against the period before in points, MrCall's configuration suggestions for an admin, each account's health in words), "Callers' requests" (`RequestCategories.vue`:
-    one row per category with its status, numbers, histogram and freshness, its businesses on demand, archive and
+    the server, searched by name, a share over a zero base a dash, two businesses of one name told apart by a
+    short id, "Unresolved" against the period before in points, "What callers ask" (the business's top request
+    categories, each opening that business's requests with all outcomes, and its latest report), MrCall's
+    configuration suggestions for an admin, each account's health in words), "Callers' requests"
+    (`RequestCategories.vue`: one row per category with its status, numbers, histogram, freshness and next action
+    (StarChat's words, or the dashboard's by `nextActionKind`, the unrated and unclassified rows opening their
+    requests), its businesses on demand, archive and
     restore for an admin, the examples hidden from a row shown and restored with "Show archived"), and MrCall's own configuration suggestions (`ConfigSuggestions.vue`, admin only, the
     one section that follows no filter, which the bar says while it is on screen).
   - Both pages establish the role on mount (the same business search that already sets it,

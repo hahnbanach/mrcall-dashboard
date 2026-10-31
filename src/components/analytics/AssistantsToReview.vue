@@ -44,13 +44,54 @@
             @click="$emit('select-business', row.businessId)"
           >{{ businessLabel(row) }}</button>
           <span v-if="!row.businessName" class="assistant-business-id">{{ $t("components.callInsights.assistants.noName") }}</span>
+          <!-- two businesses of one name are told apart by a short id (U19c m11) -->
+          <span v-else-if="sharedNames.has(row.businessName)" class="assistant-business-id">{{ shortId(row.businessId) }}</span>
         </span>
       </template>
       <template #cell-calls="{ row }">{{ row.totalCalls }}</template>
       <template v-for="column in shareColumns" :key="column.sort" #[cellSlot(column)]="{ row }">
-        <span class="assistant-share">{{ shareOf(row, column.sort) }}</span>
+        <span v-if="shareOf(row, column.sort).percent === null" class="assistant-share">—</span>
+        <span v-else class="assistant-share">
+          <span class="assistant-share-percent">{{ shareOf(row, column.sort).percent }}</span>{{ " " }}<span class="assistant-share-base">{{ shareOf(row, column.sort).of }}</span>
+        </span>
       </template>
-      <template #cell-change="{ row }">{{ changeOf(row) }}</template>
+      <template #cell-change="{ row }">
+        <NotAvailable v-if="changeOf(row).reason" :change="{ available: false, reason: changeOf(row).reason }" />
+        <span v-else>{{ changeOf(row).text }}</span>
+      </template>
+      <!-- what the business's callers ask most, each opening its requests for that business with all outcomes, and
+           its latest report beside (the amendment of 2026-10-30, rule 3) -->
+      <template #cell-asks="{ row }">
+        <ul v-if="asksOf(row).length" class="assistant-asks">
+          <li v-for="c in asksOf(row)" :key="c.category">
+            <button
+              type="button"
+              class="assistant-ask"
+              :aria-label="$t('components.callInsights.assistants.askedOf', { category: c.label, n: c.count }, c.count)"
+              :aria-expanded="isAskOpen(row, c) ? 'true' : 'false'"
+              :aria-controls="asksRegion(row)"
+              @click="toggleAsk(row, c)"
+            >{{ c.label }} <strong>{{ c.count }}</strong></button>
+          </li>
+        </ul>
+        <span v-else>–</span>
+        <router-link v-if="row.latestReport && row.latestReport.periodStart != null" :to="latestReportLink(row)" class="assistant-report">
+          {{ $t("components.callInsights.assistants.latestReport") }}
+        </router-link>
+      </template>
+      <template #after-row="{ row, colspan }">
+        <tr v-if="openAsk && openAsk.businessId === row.businessId" class="assistant-asks-expansion">
+          <td :id="asksRegion(row)" :colspan="colspan">
+            <CategoryRequests
+              :category="openAsk.category"
+              :label="openAsk.label"
+              :body="body"
+              :business-id="row.businessId"
+              :all="true"
+            />
+          </td>
+        </tr>
+      </template>
       <template #cell-suggestions="{ row }">{{ typeof row.configSuggestions === "number" ? row.configSuggestions : "–" }}</template>
       <template #cell-health="{ row }">
         <span class="assistant-health">
@@ -80,6 +121,8 @@
 import CallInsights from "@/utils/CallInsights";
 import InsightsReports from "@/utils/InsightsReports";
 import PagedTable from "@/components/analytics/PagedTable.vue";
+import CategoryRequests from "@/components/analytics/CategoryRequests.vue";
+import NotAvailable from "@/components/analytics/NotAvailable.vue";
 
 /**
  * "Assistenti da rivedere" (docs/briefs/2026-10-24-insights-reports-ux.md in StarChat): the per-business signals,
@@ -105,7 +148,7 @@ const SHARE_COLUMNS = CallInsights.ASSISTANT_SORT_KEYS
   .map((sort) => ({ sort, ...SHARE_LABELS[sort] }));
 
 export default {
-  components: { PagedTable },
+  components: { PagedTable, CategoryRequests, NotAvailable },
   props: {
     // the page's filters, as every other section sends them
     body: { type: Object, default: null },
@@ -122,11 +165,19 @@ export default {
       ),
       searchInput: "",
       search: "",
+      // the category of a row whose requests are open under it: {businessId, category, label}
+      openAsk: null,
     };
   },
   computed: {
     showSuggestions() {
       return this.table.items.some((row) => typeof row.configSuggestions === "number");
+    },
+    // the company names that more than one row of the page carries
+    sharedNames() {
+      const seen = new Map();
+      this.table.items.forEach((row) => { if (row.businessName) seen.set(row.businessName, (seen.get(row.businessName) || 0) + 1); });
+      return new Set([...seen].filter(([, n]) => n > 1).map(([name]) => name));
     },
     shareColumns() {
       return SHARE_COLUMNS;
@@ -139,6 +190,7 @@ export default {
         ...SHARE_COLUMNS.map((c) => ({ key: c.sort, label: short(c.label) + (c.assessed ? " (" + this.$t("components.callInsights.assistants.assessedShort") + ")" : ""), sortKey: c.sort })),
         // "Non risolte" against the period before, beside the shares (not a server sort)
         { key: "change", label: short("change") },
+        { key: "asks", label: short("asks"), class: "assistant-asks-column" },
         // MrCall's configuration suggestions: an admin's only (StarChat sends them to no one else)
         ...(this.showSuggestions ? [{ key: "suggestions", label: short("configSuggestions") }] : []),
         { key: "health", label: this.$t("components.callInsights.assistants.healthTitle") },
@@ -167,20 +219,53 @@ export default {
     businessLabel(row) {
       return CallInsights.businessLabel(row.businessName, row.businessId);
     },
+    // A share in two lines, its percent over its count of its base; a base of 0 is no share at all, a dash (U19c m11:
+    // "0% (0 di 0)"), as is a server without `notSolved` (before StarChat's F3), never 0%.
     shareOf(row, sort) {
-      // a server without `notSolved` (before StarChat's F3) has no such share: said as unknown, never as 0%
-      if (sort === "not_solved" && typeof row.notSolved !== "number") return "–";
+      if (sort === "not_solved" && typeof row.notSolved !== "number") return { percent: null };
       const { count, base, percent } = CallInsights.assistantShare(row, sort);
-      return this.$t("components.callInsights.assistants.shareOfTotal", { percent, count, total: base });
+      if (!(base > 0)) return { percent: null };
+      return { percent: percent + "%", of: this.$t("components.callInsights.assistants.countOf", { count, total: base }) };
     },
+    // "Non risolte" against the period before: "n.d." with its reason over fewer than 20 calls with a request then
+    // (U19 M13) or over a previous window with calls for part of its days (the amendment of 2026-10-30, rule 10).
     changeOf(row) {
-      // over fewer than 20 calls with a request before, the change says nothing: "n.d." (U19 M13)
+      const na = (reason) => ({ text: this.$t("components.callInsights.change.notAvailable"), reason });
+      if (InsightsReports.previousPartial(row)) return na("partial");
       const before = row.previousCallsWithRequest;
-      if (typeof before === "number" && before > 0 && before < InsightsReports.MIN_PREVIOUS_BASE) return this.$t("components.callInsights.change.notAvailable");
+      if (typeof before === "number" && before > 0 && before < InsightsReports.MIN_PREVIOUS_BASE) return na("base");
       const points = CallInsights.notSolvedChange(row);
-      if (points === null) return "–";
+      if (points === null) return { text: "–" };
       const sign = points > 0 ? "+" : points < 0 ? "−" : "±";
-      return this.$t("components.callInsights.assistants.changePoints", { sign, n: Math.abs(points) });
+      return { text: this.$t("components.callInsights.assistants.changePoints", { sign, n: Math.abs(points) }) };
+    },
+    shortId(id) {
+      return String(id || "").slice(0, 8);
+    },
+    // The business's top request categories as StarChat answers them (`requestCategories`, each counting its requests
+    // as `questions`): the one place this field is read.
+    asksOf(row) {
+      const list = Array.isArray(row.requestCategories) ? row.requestCategories : [];
+      return list.filter((c) => c && typeof c.category === "string" && typeof c.questions === "number")
+        .slice(0, 3).map((c) => ({ category: c.category, label: c.label || c.category, count: c.questions }));
+    },
+    // the cell a row's category requests open in, named by the buttons that open it
+    asksRegion(row) {
+      return "assistant-asks-" + String(row.businessId).replace(/[^A-Za-z0-9_-]/g, "-");
+    },
+    isAskOpen(row, c) {
+      return !!this.openAsk && this.openAsk.businessId === row.businessId && this.openAsk.category === c.category;
+    },
+    toggleAsk(row, c) {
+      this.openAsk = this.isAskOpen(row, c) ? null : { businessId: row.businessId, category: c.category, label: c.label };
+    },
+    // StarChat's latest report of any kind (`AssistantLatestReport`): a requested one is read by its `requestId`, else the
+    // automatic report at that start would be opened, or none (U19r6b M1)
+    latestReportLink(row) {
+      const r = row.latestReport;
+      const query = { id: row.businessId, start: String(r.periodStart) };
+      if (typeof r.requestId === "string" && r.requestId !== "") query.requestId = r.requestId;
+      return { path: "/analytics/report", query };
     },
     // The account in words, no amount: a debt or low credit, and the plan's state when it is not plainly active
     // (named as the plan page names it); "In regola" when none applies.
@@ -231,7 +316,61 @@ export default {
 }
 
 .assistant-share {
+  display: flex;
+  flex-direction: column;
   white-space: nowrap;
+}
+
+.assistant-share-base {
+  font-size: 12px;
+  color: @mrcall_grey_text;
+}
+
+.assistant-asks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.assistant-ask {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: @mrcall_blue;
+  text-align: left;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.assistant-report {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 13px;
+}
+
+// The table fits its card at 1440 px (U19c m12: 1358 px of table in 926 px): headers wrap, a share is two lines, the
+// cells' side padding halved; the page around it is the wide one
+:deep(.paged-table-table th) {
+  white-space: normal;
+}
+
+@media screen and (min-width: 641px) {
+  :deep(.paged-table-table th), :deep(.paged-table-table td) {
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+}
+
+.assistant-health {
+  white-space: normal;
+}
+
+:deep(.assistant-asks-column) {
+  min-width: 130px;
 }
 
 .assistant-business {
@@ -322,7 +461,7 @@ export default {
 }
 
 :deep(.assistant-business-column) {
-  min-width: 160px;
+  min-width: 130px;
 }
 
 </style>

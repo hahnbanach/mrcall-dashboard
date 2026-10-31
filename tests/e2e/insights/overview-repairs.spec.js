@@ -42,8 +42,8 @@ test.describe('Overview, as the U19 attack repaired it', () => {
     await page.goto(`/analytics?id=${BUSINESS_ID}`)
     const total = page.locator('.kpi-card').filter({ hasText: 'Total Calls' })
     await expect(total).toContainText('1,986', { timeout: 15000 })
-    await expect(total.locator('.kpi-delta')).toHaveText('n/a')
-    await expect(total.locator('.kpi-delta')).toHaveAttribute('title', 'The period before had fewer than 20 calls: the change is not meaningful.')
+    await expect(total.locator('.kpi-delta abbr')).toHaveText('n/a')
+    await expect(total.locator('.kpi-delta abbr')).toHaveAccessibleDescription('The period before had fewer than 20 calls: the change is not meaningful.')
     await expect(page.getByText(/24725/)).toHaveCount(0)
   })
 
@@ -53,7 +53,7 @@ test.describe('Overview, as the U19 attack repaired it', () => {
     await page.goto(`/analytics?id=${BUSINESS_ID}`)
     const resolved = page.locator('.outcome-line').filter({ hasText: 'Resolved in the call' })
     await expect(resolved).toContainText('50', { timeout: 15000 })
-    await expect(resolved.locator('.legend-delta')).toHaveText('n/a')
+    await expect(resolved.locator('.legend-delta abbr')).toHaveText('n/a')
   })
 
   test('M14: the period filter shows on Overview only, the tab that applies it', async ({ authenticatedPage: page }) => {

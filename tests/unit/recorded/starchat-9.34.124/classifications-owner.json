@@ -1,0 +1,123 @@
+{
+ "status": 200,
+ "body": {
+  "history": [
+   {
+    "feedbackId": 3,
+    "businessId": "<text>",
+    "conversationId": "<text>",
+    "callStart": 1774005824343,
+    "subject": "call",
+    "field": "resolution",
+    "signal": "wrong_value",
+    "valueFrom": "resolved",
+    "valueTo": "unresolved",
+    "source": "person",
+    "status": "reverted",
+    "actorRole": "owner",
+    "actorName": "<text>",
+    "byMe": true,
+    "createdAt": 1793366623180,
+    "decidedAt": 1793366624710,
+    "gestureId": "<text>"
+   },
+   {
+    "feedbackId": 4,
+    "businessId": "<text>",
+    "conversationId": "<text>",
+    "callStart": 1774005824343,
+    "subject": "request",
+    "requestId": 200,
+    "field": "category",
+    "signal": "wrong_value",
+    "valueFrom": "opening_hours",
+    "valueTo": "services_info",
+    "source": "person",
+    "status": "rejected",
+    "actorRole": "owner",
+    "actorName": "<text>",
+    "byMe": true,
+    "createdAt": 1793366660972,
+    "decidedAt": 1793366969776,
+    "gestureId": "<text>"
+   },
+   {
+    "feedbackId": 5,
+    "businessId": "<text>",
+    "conversationId": "<text>",
+    "callStart": 1774005824343,
+    "subject": "call",
+    "field": "booked",
+    "signal": "fact_wrong",
+    "valueFrom": "false",
+    "source": "person",
+    "status": "rejected",
+    "actorRole": "owner",
+    "actorName": "<text>",
+    "byMe": true,
+    "createdAt": 1793366664782,
+    "decidedAt": 1793366968238,
+    "gestureId": "<text>"
+   },
+   {
+    "feedbackId": 6,
+    "businessId": "<text>",
+    "conversationId": "<text>",
+    "callStart": 1774005824343,
+    "subject": "call",
+    "field": "resolution",
+    "signal": "wrong_value",
+    "valueFrom": "resolved",
+    "valueTo": "unresolved",
+    "source": "person",
+    "status": "reverted",
+    "actorRole": "owner",
+    "actorName": "<text>",
+    "byMe": true,
+    "createdAt": 1793366739292,
+    "decidedAt": 1793366740877,
+    "gestureId": "<text>"
+   }
+  ],
+  "conversationId": "<text>",
+  "businessId": "<text>",
+  "callStart": 1774005824343,
+  "version": 7,
+  "resolution": {
+   "model": "<text>",
+   "value": "resolved",
+   "corrected": false
+  },
+  "message": {
+   "model": "<text>",
+   "value": "none",
+   "corrected": false
+  },
+  "requests": [
+   {
+    "requestId": 200,
+    "ordinal": 1,
+    "text": "<text>",
+    "outcome": {
+     "model": "<text>",
+     "value": "met",
+     "corrected": false
+    },
+    "category": {
+     "model": "<text>",
+     "value": "opening_hours",
+     "corrected": false
+    },
+    "excluded": false
+   }
+  ],
+  "facts": {
+   "booked": "<text>",
+   "transferred": null,
+   "no_conversation": null,
+   "managed_call": "<text>",
+   "skill_errors": null,
+   "unkept": null
+  }
+ }
+}

@@ -1,0 +1,708 @@
+{
+ "status": 200,
+ "body": {
+  "granularity": "daily",
+  "period": {
+   "from": 1790807375638,
+   "to": 1793399375638
+  },
+  "totalCalls": 4624,
+  "resolution": {
+   "callsWithValue": 4503,
+   "totals": {
+    "unresolved": 960,
+    "resolved": 1442,
+    "spam_wrong_number": 222,
+    "caller_left": 321,
+    "forwarded": 1372,
+    "handed_over": 186
+   },
+   "previousTotals": {
+    "unresolved": 192,
+    "resolved": 204,
+    "spam_wrong_number": 4,
+    "caller_left": 47,
+    "forwarded": 53,
+    "handed_over": 5
+   },
+   "buckets": [
+    {
+     "timestamp": 1790805600000,
+     "counts": {
+      "forwarded": 6,
+      "unresolved": 94,
+      "resolved": 179,
+      "spam_wrong_number": 40,
+      "caller_left": 78
+     }
+    },
+    {
+     "timestamp": 1790892000000,
+     "counts": {
+      "forwarded": 124,
+      "unresolved": 39,
+      "resolved": 59,
+      "spam_wrong_number": 104,
+      "caller_left": 55
+     }
+    },
+    {
+     "timestamp": 1790978400000,
+     "counts": {
+      "forwarded": 387,
+      "unresolved": 93,
+      "resolved": 99,
+      "spam_wrong_number": 29,
+      "caller_left": 49
+     }
+    },
+    {
+     "timestamp": 1791064800000,
+     "counts": {
+      "unresolved": 70,
+      "resolved": 46,
+      "spam_wrong_number": 12,
+      "caller_left": 36,
+      "forwarded": 315,
+      "handed_over": 9
+     }
+    },
+    {
+     "timestamp": 1791151200000,
+     "counts": {
+      "forwarded": 63,
+      "unresolved": 64,
+      "resolved": 167,
+      "spam_wrong_number": 10,
+      "caller_left": 12
+     }
+    },
+    {
+     "timestamp": 1791237600000,
+     "counts": {
+      "forwarded": 52,
+      "unresolved": 62,
+      "resolved": 91,
+      "spam_wrong_number": 4,
+      "caller_left": 12
+     }
+    },
+    {
+     "timestamp": 1791324000000,
+     "counts": {
+      "unresolved": 1,
+      "resolved": 4
+     }
+    },
+    {
+     "timestamp": 1791496800000,
+     "counts": {
+      "unresolved": 8,
+      "forwarded": 93,
+      "resolved": 3
+     }
+    },
+    {
+     "timestamp": 1791583200000,
+     "counts": {
+      "unresolved": 7,
+      "caller_left": 4,
+      "handed_over": 5,
+      "forwarded": 19
+     }
+    },
+    {
+     "timestamp": 1791669600000,
+     "counts": {
+      "resolved": 14
+     }
+    },
+    {
+     "timestamp": 1791756000000,
+     "counts": {
+      "unresolved": 17,
+      "forwarded": 3,
+      "resolved": 28
+     }
+    },
+    {
+     "timestamp": 1792015200000,
+     "counts": {
+      "unresolved": 13,
+      "forwarded": 14,
+      "resolved": 29
+     }
+    },
+    {
+     "timestamp": 1792101600000,
+     "counts": {
+      "unresolved": 15,
+      "forwarded": 13,
+      "resolved": 74
+     }
+    },
+    {
+     "timestamp": 1792188000000,
+     "counts": {
+      "unresolved": 3,
+      "caller_left": 2,
+      "resolved": 24,
+      "spam_wrong_number": 1
+     }
+    },
+    {
+     "timestamp": 1792274400000,
+     "counts": {
+      "unresolved": 4,
+      "forwarded": 6,
+      "resolved": 14
+     }
+    },
+    {
+     "timestamp": 1792360800000,
+     "counts": {
+      "unresolved": 5,
+      "resolved": 18,
+      "caller_left": 8,
+      "forwarded": 2,
+      "handed_over": 1
+     }
+    },
+    {
+     "timestamp": 1792447200000,
+     "counts": {
+      "unresolved": 136,
+      "resolved": 187,
+      "spam_wrong_number": 6,
+      "caller_left": 11,
+      "forwarded": 44,
+      "handed_over": 2
+     }
+    },
+    {
+     "timestamp": 1792533600000,
+     "counts": {
+      "unresolved": 89,
+      "resolved": 69,
+      "spam_wrong_number": 10,
+      "caller_left": 16,
+      "forwarded": 44,
+      "handed_over": 19
+     }
+    },
+    {
+     "timestamp": 1792620000000,
+     "counts": {
+      "unresolved": 104,
+      "resolved": 166,
+      "spam_wrong_number": 5,
+      "caller_left": 17,
+      "forwarded": 56,
+      "handed_over": 45
+     }
+    },
+    {
+     "timestamp": 1792706400000,
+     "counts": {
+      "unresolved": 71,
+      "resolved": 81,
+      "spam_wrong_number": 1,
+      "caller_left": 11,
+      "forwarded": 66,
+      "handed_over": 72
+     }
+    },
+    {
+     "timestamp": 1792792800000,
+     "counts": {
+      "unresolved": 15,
+      "resolved": 10,
+      "caller_left": 3,
+      "forwarded": 3,
+      "handed_over": 6
+     }
+    },
+    {
+     "timestamp": 1792879200000,
+     "counts": {
+      "unresolved": 27,
+      "resolved": 18,
+      "caller_left": 4,
+      "forwarded": 42,
+      "handed_over": 11
+     }
+    },
+    {
+     "timestamp": 1792969200000,
+     "counts": {
+      "unresolved": 15,
+      "resolved": 16,
+      "caller_left": 3,
+      "forwarded": 2,
+      "handed_over": 16
+     }
+    },
+    {
+     "timestamp": 1793055600000,
+     "counts": {
+      "unresolved": 8,
+      "forwarded": 18,
+      "resolved": 46
+     }
+    }
+   ]
+  },
+  "message": {
+   "callsWithValue": 4503,
+   "totals": {
+    "incomplete": 312,
+    "unintelligible": 23,
+    "none": 2788,
+    "complete": 1380
+   },
+   "previousTotals": {
+    "incomplete": 36,
+    "unintelligible": 2,
+    "none": 402,
+    "complete": 65
+   },
+   "buckets": [
+    {
+     "timestamp": 1790805600000,
+     "counts": {
+      "incomplete": 4,
+      "unintelligible": 2,
+      "none": 375,
+      "complete": 16
+     }
+    },
+    {
+     "timestamp": 1790892000000,
+     "counts": {
+      "incomplete": 5,
+      "unintelligible": 2,
+      "none": 244,
+      "complete": 130
+     }
+    },
+    {
+     "timestamp": 1790978400000,
+     "counts": {
+      "incomplete": 39,
+      "unintelligible": 2,
+      "none": 235,
+      "complete": 381
+     }
+    },
+    {
+     "timestamp": 1791064800000,
+     "counts": {
+      "incomplete": 87,
+      "unintelligible": 2,
+      "none": 132,
+      "complete": 267
+     }
+    },
+    {
+     "timestamp": 1791151200000,
+     "counts": {
+      "incomplete": 27,
+      "none": 221,
+      "complete": 68
+     }
+    },
+    {
+     "timestamp": 1791237600000,
+     "counts": {
+      "incomplete": 19,
+      "none": 140,
+      "complete": 62
+     }
+    },
+    {
+     "timestamp": 1791324000000,
+     "counts": {
+      "none": 5
+     }
+    },
+    {
+     "timestamp": 1791496800000,
+     "counts": {
+      "incomplete": 8,
+      "none": 10,
+      "complete": 86
+     }
+    },
+    {
+     "timestamp": 1791583200000,
+     "counts": {
+      "incomplete": 3,
+      "none": 13,
+      "complete": 19
+     }
+    },
+    {
+     "timestamp": 1791669600000,
+     "counts": {
+      "none": 14
+     }
+    },
+    {
+     "timestamp": 1791756000000,
+     "counts": {
+      "incomplete": 1,
+      "none": 43,
+      "complete": 4
+     }
+    },
+    {
+     "timestamp": 1792015200000,
+     "counts": {
+      "none": 36,
+      "complete": 20
+     }
+    },
+    {
+     "timestamp": 1792101600000,
+     "counts": {
+      "incomplete": 4,
+      "none": 80,
+      "complete": 18
+     }
+    },
+    {
+     "timestamp": 1792188000000,
+     "counts": {
+      "none": 30
+     }
+    },
+    {
+     "timestamp": 1792274400000,
+     "counts": {
+      "none": 15,
+      "complete": 9
+     }
+    },
+    {
+     "timestamp": 1792360800000,
+     "counts": {
+      "none": 29,
+      "complete": 5
+     }
+    },
+    {
+     "timestamp": 1792447200000,
+     "counts": {
+      "incomplete": 5,
+      "none": 335,
+      "complete": 46
+     }
+    },
+    {
+     "timestamp": 1792533600000,
+     "counts": {
+      "incomplete": 17,
+      "unintelligible": 13,
+      "none": 170,
+      "complete": 47
+     }
+    },
+    {
+     "timestamp": 1792620000000,
+     "counts": {
+      "incomplete": 39,
+      "unintelligible": 1,
+      "none": 288,
+      "complete": 65
+     }
+    },
+    {
+     "timestamp": 1792706400000,
+     "counts": {
+      "incomplete": 30,
+      "unintelligible": 1,
+      "none": 205,
+      "complete": 66
+     }
+    },
+    {
+     "timestamp": 1792792800000,
+     "counts": {
+      "incomplete": 2,
+      "none": 31,
+      "complete": 4
+     }
+    },
+    {
+     "timestamp": 1792879200000,
+     "counts": {
+      "incomplete": 17,
+      "none": 42,
+      "complete": 43
+     }
+    },
+    {
+     "timestamp": 1792969200000,
+     "counts": {
+      "incomplete": 4,
+      "none": 44,
+      "complete": 4
+     }
+    },
+    {
+     "timestamp": 1793055600000,
+     "counts": {
+      "incomplete": 1,
+      "none": 51,
+      "complete": 20
+     }
+    }
+   ]
+  },
+  "callsWithBooked": 4503,
+  "booked": 400,
+  "transferred": 123,
+  "noConversation": {
+   "talk_and_hangup": 8,
+   "caller_silent": 27,
+   "no_credit": 4,
+   "not_answered": 8
+  },
+  "callsAnswered": 4530,
+  "callsManaged": 4503,
+  "recomputable": 0,
+  "callsWithRequest": 3960,
+  "outcome": {
+   "callsWithValue": 3960,
+   "totals": {
+    "forwarded_incomplete": 151,
+    "handed_over": 186,
+    "unresolved": 960,
+    "forwarded_complete": 1221,
+    "resolved": 1442
+   },
+   "previousTotals": {
+    "forwarded_incomplete": 7,
+    "handed_over": 5,
+    "unresolved": 192,
+    "forwarded_complete": 46,
+    "resolved": 204
+   },
+   "buckets": [
+    {
+     "timestamp": 1790805600000,
+     "counts": {
+      "unresolved": 94,
+      "forwarded_complete": 5,
+      "resolved": 179,
+      "forwarded_incomplete": 1
+     }
+    },
+    {
+     "timestamp": 1790892000000,
+     "counts": {
+      "unresolved": 39,
+      "forwarded_complete": 120,
+      "resolved": 59,
+      "forwarded_incomplete": 4
+     }
+    },
+    {
+     "timestamp": 1790978400000,
+     "counts": {
+      "unresolved": 93,
+      "forwarded_complete": 366,
+      "resolved": 99,
+      "forwarded_incomplete": 21
+     }
+    },
+    {
+     "timestamp": 1791064800000,
+     "counts": {
+      "forwarded_incomplete": 67,
+      "handed_over": 9,
+      "unresolved": 70,
+      "forwarded_complete": 248,
+      "resolved": 46
+     }
+    },
+    {
+     "timestamp": 1791151200000,
+     "counts": {
+      "unresolved": 64,
+      "forwarded_complete": 52,
+      "resolved": 167,
+      "forwarded_incomplete": 11
+     }
+    },
+    {
+     "timestamp": 1791237600000,
+     "counts": {
+      "unresolved": 62,
+      "forwarded_complete": 45,
+      "resolved": 91,
+      "forwarded_incomplete": 7
+     }
+    },
+    {
+     "timestamp": 1791324000000,
+     "counts": {
+      "unresolved": 1,
+      "resolved": 4
+     }
+    },
+    {
+     "timestamp": 1791496800000,
+     "counts": {
+      "unresolved": 8,
+      "forwarded_complete": 85,
+      "resolved": 3,
+      "forwarded_incomplete": 8
+     }
+    },
+    {
+     "timestamp": 1791583200000,
+     "counts": {
+      "unresolved": 7,
+      "forwarded_complete": 18,
+      "handed_over": 5,
+      "forwarded_incomplete": 1
+     }
+    },
+    {
+     "timestamp": 1791669600000,
+     "counts": {
+      "resolved": 14
+     }
+    },
+    {
+     "timestamp": 1791756000000,
+     "counts": {
+      "unresolved": 17,
+      "forwarded_complete": 3,
+      "resolved": 28
+     }
+    },
+    {
+     "timestamp": 1792015200000,
+     "counts": {
+      "unresolved": 13,
+      "forwarded_complete": 14,
+      "resolved": 29
+     }
+    },
+    {
+     "timestamp": 1792101600000,
+     "counts": {
+      "unresolved": 15,
+      "forwarded_complete": 13,
+      "resolved": 74
+     }
+    },
+    {
+     "timestamp": 1792188000000,
+     "counts": {
+      "unresolved": 3,
+      "resolved": 24
+     }
+    },
+    {
+     "timestamp": 1792274400000,
+     "counts": {
+      "unresolved": 4,
+      "forwarded_complete": 6,
+      "resolved": 14
+     }
+    },
+    {
+     "timestamp": 1792360800000,
+     "counts": {
+      "unresolved": 5,
+      "forwarded_complete": 2,
+      "handed_over": 1,
+      "resolved": 18
+     }
+    },
+    {
+     "timestamp": 1792447200000,
+     "counts": {
+      "unresolved": 136,
+      "forwarded_complete": 44,
+      "handed_over": 2,
+      "resolved": 187
+     }
+    },
+    {
+     "timestamp": 1792533600000,
+     "counts": {
+      "forwarded_incomplete": 4,
+      "handed_over": 19,
+      "unresolved": 89,
+      "forwarded_complete": 40,
+      "resolved": 69
+     }
+    },
+    {
+     "timestamp": 1792620000000,
+     "counts": {
+      "forwarded_incomplete": 8,
+      "handed_over": 45,
+      "unresolved": 104,
+      "forwarded_complete": 48,
+      "resolved": 166
+     }
+    },
+    {
+     "timestamp": 1792706400000,
+     "counts": {
+      "forwarded_incomplete": 8,
+      "handed_over": 72,
+      "unresolved": 71,
+      "forwarded_complete": 58,
+      "resolved": 81
+     }
+    },
+    {
+     "timestamp": 1792792800000,
+     "counts": {
+      "forwarded_incomplete": 1,
+      "handed_over": 6,
+      "unresolved": 15,
+      "forwarded_complete": 2,
+      "resolved": 10
+     }
+    },
+    {
+     "timestamp": 1792879200000,
+     "counts": {
+      "forwarded_incomplete": 9,
+      "handed_over": 11,
+      "unresolved": 27,
+      "forwarded_complete": 33,
+      "resolved": 18
+     }
+    },
+    {
+     "timestamp": 1792969200000,
+     "counts": {
+      "unresolved": 15,
+      "forwarded_complete": 2,
+      "handed_over": 16,
+      "resolved": 16
+     }
+    },
+    {
+     "timestamp": 1793055600000,
+     "counts": {
+      "unresolved": 8,
+      "forwarded_complete": 17,
+      "resolved": 46,
+      "forwarded_incomplete": 1
+     }
+    }
+   ]
+  },
+  "lastCallAt": null,
+  "previousPartial": false
+ }
+}

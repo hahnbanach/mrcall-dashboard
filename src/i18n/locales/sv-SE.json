@@ -1992,7 +1992,8 @@
           "nextOneDay": "Nästa kommer den {date} och täcker {day}.",
           "covers": "Nästa täcker {from} till {to}.",
           "coversOneDay": "Nästa täcker {day}.",
-          "retryOneDay": "Rapporten för {day} lyckades inte: den försöks igen i natt."
+          "retryOneDay": "Rapporten för {day} lyckades inte: den försöks igen i natt.",
+          "extended": "Den täcker från {date}: dagarna sedan dess hade inga samtal."
         },
         "type": {
           "automatic": "Automatisk",
@@ -2002,7 +2003,13 @@
         "base": "Baserad på {analysed} av de {managed} samtal som assistenten hanterade under perioden.",
         "baseOld": "Baserad på {analysed} analyserade samtal.",
         "baseOldNote": "För samtal före den 10 oktober vet vi inte hur många assistenten hanterade.",
-        "excluded": "Utelämnade: {silent} samtal där den som ringde inte sa något, {credit} nekade på grund av otillräcklig kredit."
+        "excluded": "Utelämnade: {silent} samtal där den som ringde inte sa något, {credit} nekade på grund av otillräcklig kredit.",
+        "history": {
+          "emptyDay": "Inga samtal den {day}",
+          "emptyPeriod": "Inga samtal från {from} till {to}",
+          "noReport": "Ingen rapport",
+          "coveredFrom": "Den täcker också dagarna utan samtal från {date}."
+        }
       },
       "assistants": {
         "title": "Assistenter att granska",
@@ -2017,7 +2024,6 @@
         "checks": "Kontroller",
         "skillErrors": "Funktionsfel",
         "extractionIssues": "Extraktionsproblem",
-        "shareOfTotal": "{percent} % ({count} av {total})",
         "sortOptions": {
           "calls": "Samtal",
           "notSolved": "Olöst (bedömt av assistenten)",
@@ -2042,7 +2048,8 @@
           "skillErrors": "Skillfel",
           "extractionIssues": "Extrahering",
           "change": "Förändring",
-          "configSuggestions": "MrCall-förslag"
+          "configSuggestions": "MrCall-förslag",
+          "asks": "Vad de frågar om"
         },
         "legend": {
           "notSolved": "olöst, plus ärenden som vidarebefordrats till företaget med ett ofullständigt meddelande, av samtalen där den som ringde bad om något",
@@ -2071,7 +2078,10 @@
           "unknown": "Okänt",
           "planOther": "Abonnemanget är inte aktivt"
         },
-        "changePoints": "{sign}{n} enheter"
+        "changePoints": "{sign}{n} enheter",
+        "askedOf": "{category}: {n} förfrågan | {category}: {n} förfrågningar",
+        "latestReport": "Senaste rapport",
+        "countOf": "({count} av {total})"
       },
       "scope": {
         "allBusinesses": "Över alla verksamheter du kan se, de senaste 30 dagarna.",
@@ -2222,11 +2232,11 @@
         "examined": "{n} samtal granskat | {n} samtal granskade",
         "outcome": {
           "recompute": {
-            "written": "{n} analyserat | {n} analyserade",
+            "written": "{n} samtal analyserat | {n} samtal analyserade",
             "reasoned": "{n} utan samtal | {n} utan samtal",
             "skipped": "{n} redan uppdaterat | {n} redan uppdaterade",
             "left": "{n} utan något att analysera | {n} utan något att analysera",
-            "not_finalised": "{n} inte avslutat | {n} inte avslutade",
+            "not_finalised": "{n} oavslutad session utesluten | {n} oavslutade sessioner uteslutna",
             "conflict": "{n} ändrat under tiden | {n} ändrade under tiden",
             "failed": "{n} misslyckades | {n} misslyckades",
             "ceiling": "{n} inte analyserat: gränsen nådd | {n} inte analyserade: gränsen nådd"
@@ -2234,7 +2244,7 @@
           "facts": {
             "written": "{n} uppdaterat | {n} uppdaterade",
             "unchanged": "{n} redan uppdaterat | {n} redan uppdaterade",
-            "not_finalised": "{n} inte avslutat | {n} inte avslutade",
+            "not_finalised": "{n} oavslutad session utesluten | {n} oavslutade sessioner uteslutna",
             "conflict": "{n} ändrat under tiden | {n} ändrade under tiden"
           }
         }
@@ -2259,7 +2269,11 @@
         "transferred": "{n} samtal kopplat till en person | {n} samtal kopplade till en person",
         "themeOutcome": "Utfall av samtalen om {topic}",
         "callBackTitle": "Samtal att ringa tillbaka",
-        "callBackNote": "Samtal som inte lösts, eller som lämnats till företaget med ett ofullständigt meddelande."
+        "callBackNote": "Samtal som inte lösts, eller som lämnats till företaget med ett ofullständigt meddelande.",
+        "reviewTitle": "Samtal att granska",
+        "reviewNote": "Inte lösta, med obesvarade frågor eller kontroller som slog till.",
+        "quietDays": "Den täcker också dagarna utan samtal från {from} till {to}.",
+        "quietDay": "Den täcker också en dag utan samtal, {day}."
       },
       "deleteReport": {
         "title": "Ta bort rapporten",
@@ -2332,7 +2346,9 @@
         "noAnalysis": "Det finns 1 samtal under perioden, men det är inte analyserat ännu. | Det finns {n} samtal under perioden, men inget är analyserat ännu.",
         "noAnalysisNone": "Inget samtal under perioden är analyserat, och inget kan analyseras.",
         "cycleEmpty": "Den pågående automatiska rapporten har ännu ingen avslutad dag: det finns inget att ta fram just nu.",
-        "busyYou": "En bearbetning pågår redan för det här företaget, startad av dig den {when}."
+        "busyYou": "En bearbetning pågår redan för det här företaget, startad av dig den {when}.",
+        "reads": "{n} analyserat samtal | {n} analyserade samtal",
+        "leftOut": "{n} samtal i perioden är inte med: utan konversation eller inte analyserat. | {n} samtal i perioden är inte med: utan konversation eller inte analyserade."
       },
       "recompute": {
         "banner": "{n} samtal som hanterats under den här perioden har ännu ingen automatisk analys, så utfall, ämnen och kvalitet räknar inte med dem.",
@@ -2346,13 +2362,13 @@
       },
       "requests": {
         "title": "Uppringarnas önskemål",
-        "purpose": "Vad uppringare ber om som assistenterna inte kan göra, grupperat per kategori över alla företag: för att avgöra vad som ska byggas och vad som ska in i abonnemangen.",
+        "purpose": "Vad uppringare frågar efter och hur mycket assistenten hanterar, per kategori över alla företag.",
         "window": "Period: {period}",
         "sortLabel": "Sortera efter",
         "sortScore": "Senaste och mest utbredda",
         "sortBusinesses": "Antal företag",
         "showDismissed": "Visa arkiverade",
-        "scoreHelp": "Varje företag räknas som 1 om det bad om det under de senaste dagarna som dess rapporter täcker, som en halv om det var två veckor tidigare, som en fjärdedel om det var fyra veckor tidigare.",
+        "scoreHelp": "Varje företag räknas som 1 om det frågade i slutet av perioden, hälften två veckor tidigare, en fjärdedel fyra veckor tidigare.",
         "none": "Inga önskemål under den här perioden.",
         "columns": {
           "category": "Kategori",
@@ -2361,15 +2377,14 @@
           "freshness": "Aktualitet"
         },
         "businesses": "{n} företag",
-        "trend": "{sign}{n} jämfört med föregående period",
-        "share": "{pct}% av företagen med rapporter",
+        "trend": "{sign}{n} företag jämfört med föregående period | {sign}{n} företag jämfört med föregående period",
+        "share": "{pct} % av företagen med analyserade samtal",
         "histogramLabel": "Företag per {bucket}, från den äldsta: {values}",
         "bucket": {
           "week": "vecka",
           "month": "månad"
         },
         "freshness": "Senaste önskemål den {date} · {pct}% under senaste perioden ({bucket})",
-        "reportDated": "{n} företag daterade vid rapportens slut",
         "nextAction": "Nästa steg",
         "examples": "Exempel",
         "hideExample": "Dölj",
@@ -2397,9 +2412,9 @@
         "confirmDismiss": "Arkivera",
         "reopened": "Återöppnad: {n} nya företag bad om det efter att det arkiverades den {date}.",
         "status": {
-          "rising": "Ökar",
-          "steady": "Stabil",
-          "falling": "Minskar",
+          "rising": "Ökar under periodens andra hälft",
+          "steady": "Stabil under perioden",
+          "falling": "Minskar under periodens andra hälft",
           "stale": "Inte efterfrågad på sistone"
         },
         "hiddenExamples": "Dolda exempel",
@@ -2412,7 +2427,15 @@
           "admin": "MrCall"
         },
         "archived": "{category} arkiverad.",
-        "undo": "Ångra"
+        "undo": "Ångra",
+        "next": {
+          "delegate": "Överväg att låta assistenten hantera dessa förfrågningar",
+          "handled": "Hanterade av assistenten",
+          "withdrawn": "Återkallade av de som ringde",
+          "unrated": "Utfallet är inte bedömt än: öppna förfrågningarna",
+          "classify": "Klassificera dessa förfrågningar",
+          "open": "Öppna förfrågningarna"
+        }
       },
       "admin": {
         "reason": {
@@ -2422,7 +2445,8 @@
       },
       "change": {
         "notAvailable": "e.t.",
-        "notAvailableHelp": "Föregående period hade färre än 20 samtal: förändringen säger inget."
+        "notAvailableHelp": "Föregående period hade färre än 20 samtal: förändringen säger inget.",
+        "partialHelp": "Föregående period har samtal bara för en del av sina dagar: förändringen är inte meningsfull."
       },
       "overview": {
         "noCallsDays": "Inga samtal den senaste dagen. | Inga samtal de senaste {days} dagarna."
@@ -2430,7 +2454,253 @@
       "callers": {
         "web": "Webbsamtal"
       },
-      "businessNotFound": "Det här företaget finns inte eller hör inte till dem du kan se."
+      "businessNotFound": "Det här företaget finns inte eller hör inte till dem du kan se.",
+      "feedback": {
+        "fields": {
+          "outcome": "Utfall för begäran",
+          "category": "Kategori"
+        },
+        "outcome": {
+          "met": "Uppfylld av assistenten",
+          "taken": "Mottagen för företaget",
+          "handed_over": "Överlämnad till en person",
+          "neither": "Inte uppfylld",
+          "withdrawn": "Återkallad av den som ringer"
+        },
+        "unset": "Inte klassificerad än",
+        "otherCategory": "En kategori som inte längre finns i listan",
+        "state": {
+          "corrected": "Korrigerad",
+          "confirmed": "Bekräftad",
+          "proposed": "Förslag skickat",
+          "applied": "Tillämpad",
+          "rejected": "Avvisad",
+          "withdrawn": "Tillbakadragen"
+        },
+        "chip": {
+          "name": "{field}: {value}",
+          "detail": "från {from} till {to}, {who}, {when}"
+        },
+        "menu": {
+          "label": "Ändra {field}",
+          "right": "Det stämmer",
+          "wrong": "Det är fel, jag vet inte vad som stämmer",
+          "restore": "Återställ analysens värde",
+          "history": "Historik",
+          "withdraw": "Dra tillbaka mitt förslag"
+        },
+        "who": {
+          "owner": "ägaren",
+          "reseller": "en partner",
+          "admin": "MrCall",
+          "service": "MrCall",
+          "unknown": "någon",
+          "me": "du"
+        },
+        "history": {
+          "title": "Historik för {field}",
+          "entry": "{from} → {to}, {who}, {when}",
+          "right": "{from} bekräftad, {who}, {when}",
+          "wrong": "{from} markerad som fel, {who}, {when}",
+          "empty": "Inga ändringar än.",
+          "status": {
+            "proposed": "Föreslagen",
+            "applied": "Tillämpad",
+            "rejected": "Avvisad",
+            "reverted": "Ångrad",
+            "orphaned": "Begäran hittas inte längre",
+            "confirmed": "Bekräftad",
+            "closed": "Hanterad av MrCall",
+            "withdrawn": "Tillbakadragen"
+          }
+        },
+        "undo": {
+          "changed": "Ändrat",
+          "undo": "Ångra",
+          "close": "Stäng",
+          "undone": "Ändringen är ångrad.",
+          "failed": "Ändringen kunde inte ångras.",
+          "withdrawn": "Förslaget är tillbakadraget. | {n} förslag är tillbakadragna.",
+          "both": "Ångrade ändringar: {reverted}. Tillbakadragna förslag: {withdrawn}.",
+          "nothing": "Inget ångrades: det var redan avgjort."
+        },
+        "stale": "Det här värdet har ändrats under tiden: det aktuella visas.",
+        "failed": "Ändringen sparades inte.",
+        "requests": {
+          "title": "Begäranden",
+          "excluded": "Räknas inte: ett spamsamtal."
+        },
+        "rules": {
+          "offer": "Behandla alltid det här numret som spam?",
+          "earlier": "Även det {n} tidigare samtalet | Även de {n} tidigare samtalen",
+          "earlierMore": "Även de {n} senaste tidigare samtalen",
+          "always": "Behandla som spam",
+          "noThanks": "Nej tack",
+          "created": "Från och med nu behandlas numret som spam. | Från och med nu behandlas numret som spam, och {n} tidigare samtal korrigerades. | Från och med nu behandlas numret som spam, och {n} tidigare samtal korrigerades.",
+          "byRule": "Samtalet bedömdes som spam av en regel för numret. Ta bort regeln?",
+          "delete": "Ta bort regeln",
+          "keep": "Behåll den",
+          "deleted": "Regeln är borttagen; samtalen den markerade räknas igen."
+        },
+        "readOnly": {
+          "title": "Skrivskyddad vy",
+          "note": "Du äger inte de här samtalen: varje samtal du öppnar registreras, och ägaren ser vem som öppnade det.",
+          "open": "Öppna samtalet",
+          "unknown": "Det gick inte att läsa om de här samtalen är dina."
+        },
+        "filters": {
+          "title": "Filter från länken",
+          "remove": "Ta bort filtret {filter}",
+          "unknown": "Ett filter i länken kändes inte igen och tillämpas inte.",
+          "chip": "{name}: {value}",
+          "yes": "ja",
+          "no": "nej",
+          "names": {
+            "outcomeLine": "Utfall",
+            "topic": "Ämne",
+            "gap": "Obesvarad fråga",
+            "check": "Kontroll",
+            "category": "Kategori för begäran",
+            "requestOutcome": "Utfall för begäran",
+            "noConversation": "Inget samtal",
+            "corrected": "Korrigerad"
+          },
+          "counted": "Samtal: som statistiken räknar dem, arkiverade inräknade",
+          "leftOut": "{n} samtal syns inte med din behörighet | {n} samtal syns inte med din behörighet"
+        },
+        "bulk": {
+          "label": "Valda samtal",
+          "count": "{n} vald | {n} valda",
+          "select": "Välj samtalet från {name}",
+          "changeOutcome": "Ändra utfall",
+          "spam": "Markera som spam",
+          "confirm": "Bekräfta",
+          "clear": "Rensa urvalet",
+          "leftOut": "{n} samtal utan bedömt utfall utelämnades. | {n} samtal utan bedömt utfall utelämnades.",
+          "selectRequest": "Välj begäran: {text}",
+          "labelRequests": "Valda begäranden",
+          "move": "Flytta till kategori",
+          "proposed": "{n} förslag skickat: en administratör beslutar. | {n} förslag skickade: en administratör beslutar.",
+          "alreadySpam": "{n} samtal som redan var markerat som spam hoppades över. | {n} samtal som redan var markerade som spam hoppades över."
+        },
+        "fact": {
+          "chip": "Rapportera ett fel i ett faktum",
+          "reportedOf": "Rapporterat till MrCall: {fact}",
+          "option": "{fact}: {value}",
+          "withdraw": "Dra tillbaka",
+          "withdrawOf": "Dra tillbaka rapporten: {fact}"
+        },
+        "links": {
+          "open": "Öppna samtalet: {label} | Öppna de {n} samtalen: {label}",
+          "openAll": "Öppna samtalen: {label}",
+          "calls": "Samtal"
+        },
+        "report": {
+          "corrected": "{n} begäran i rapporten korrigerades efter att den skrevs. | {n} begäranden i rapporten korrigerades efter att den skrevs.",
+          "correctedTag": "Korrigerad efter rapporten"
+        },
+        "categories": {
+          "all": "Alla begäranden, även de som assistenten hanterade",
+          "manyRequests": "Ett samtal med flera begäranden visas i varje kategori för sina begäranden.",
+          "backlog": "{n} samtal väntar fortfarande på analys och räknas inte än. | {n} samtal väntar fortfarande på analys och räknas inte än.",
+          "columns": {
+            "calls": "Samtal",
+            "select": "Välj",
+            "text": "Begäran",
+            "business": "Företag",
+            "outcome": "Utfall",
+            "category": "Kategori",
+            "call": "Samtal"
+          },
+          "calls": "{n} samtal | {n} samtal",
+          "showRequests": "Visa begärandena för {category} ({n} samtal) | Visa begärandena för {category} ({n} samtal)",
+          "showOutcome": "Visa begärandena för {category} med utfallet {outcome} ({n})",
+          "openCall": "Öppna samtalet: {text}",
+          "call": "Öppna samtalet",
+          "requestsOf": "Begäranden för {category}",
+          "noRequests": "Ingen begäran under perioden."
+        },
+        "queue": {
+          "title": "Korrigeringar att granska",
+          "purpose": "Förslag, korrigeringar vars begäran inte längre finns, värden markerade som fel och rapporterade fakta, grupperade per kategori och företag, först de grupper som påverkar flest samtal.",
+          "empty": "Inget att granska.",
+          "selectedLabel": "Valda korrigeringar",
+          "applySelected": "Tillämpa de valda ({n})",
+          "rejectSelected": "Avvisa de valda ({n})",
+          "select": "Välj: {text}",
+          "apply": "Tillämpa",
+          "reject": "Avvisa",
+          "handled": "Markera som hanterad",
+          "reattach": "Koppla igen",
+          "requestOfCall": "Samtalets begäran",
+          "reattachHere": "Koppla här",
+          "close": "Stäng",
+          "applied": "{n} tillämpad. | {n} tillämpade.",
+          "rejected": "{n} avvisad. | {n} avvisade.",
+          "failedN": "{n} misslyckades. | {n} misslyckades.",
+          "change": "{field}: {from} → {to}",
+          "wrong": "{field}: {from} är fel, att granska",
+          "right": "{field}: {from} bekräftad",
+          "fact": "{field} rapporterad som fel",
+          "factOf": {
+            "booked": "Bokning rapporterad som fel",
+            "transferred": "Vidarekoppling rapporterad som fel",
+            "no_conversation": "”Inget samtal” rapporterat som fel",
+            "managed_call": "”Hanterat av assistenten” rapporterat som fel",
+            "skill_errors": "Skillfel rapporterade som fel",
+            "unkept": "Löften som inte hölls rapporterade som fel"
+          }
+        },
+        "mine": {
+          "title": "Mina förslag",
+          "empty": "Inga förslag än.",
+          "withdraw": "Dra tillbaka",
+          "withdrawOf": "Dra tillbaka förslaget: {what}"
+        },
+        "facts": {
+          "no_conversation": "Inget samtal",
+          "managed_call": "Hanterat av assistenten",
+          "skill_errors": "Skillfel",
+          "unkept": "Löften som inte hölls",
+          "none": "inte registrerat",
+          "yes": "ja",
+          "no": "nej",
+          "recorded": "registrerat"
+        },
+        "access": {
+          "menu": "Spamnummer och åtkomst till samtal",
+          "rulesTitle": "Nummer som behandlas som spam",
+          "rulesNote": "Samtal från dessa nummer räknas som spam. Tar du bort en regel räknas samtalen igen.",
+          "rulesEmpty": "Inget nummer behandlas som spam.",
+          "since": "sedan {date}",
+          "delete": "Ta bort",
+          "deleteOf": "Ta bort regeln för {number}",
+          "deleted": "Regeln borttagen: {n} samtal räknas igen. | Regeln borttagen: {n} samtal räknas igen.",
+          "logTitle": "Vem som öppnade dina samtal",
+          "logNote": "Din partner och MrCall kan öppna dina samtal för att hjälpa dig; varje öppning registreras här och sparas i 12 månader.",
+          "logEmpty": "Ingen annan har öppnat dina samtal.",
+          "columns": {
+            "at": "När",
+            "who": "Vem",
+            "event": "Vad",
+            "call": "Samtal"
+          },
+          "roles": {
+            "admin": "Administratör",
+            "reseller": "Partner",
+            "service": "MrCall",
+            "unknown": "Någon"
+          },
+          "events": {
+            "opened": "Samtal öppnat",
+            "audio": "Inspelning lyssnad"
+          }
+        },
+        "withdrawRefused": {
+          "not_author": "Bara den som gjorde ett förslag kan dra tillbaka det.",
+          "feedback_state": "Det här förslaget är redan avgjort."
+        }
+      }
     },
     "datePicker": {
       "chooseDate": "Välj datum",

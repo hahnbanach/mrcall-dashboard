@@ -99,6 +99,13 @@ removal of the account-level connection. The dirty v2.1 checkout is untouched.
 Historical snapshots preserved verbatim, newest first. This cold storage is not
 startup context; it records prior state without making current capability claims.
 
+## 2026-10-27 — Next steps replaced when v2.2 was pushed and the classification-feedback branch was reviewed
+
+- Push `v2.2`; deploying it to test needs its own authorization, and it is the release that
+  removes the calendar connect from `/account` on the live domains.
+- Classification feedback (StarChat plan step C8) is being built on a branch from `v2.2` and
+  lands by fast-forward after review.
+
 ## 2026-10-27 — Baseline before booking continuation
 
 - Push `v2.2`; deploying it to test needs its own authorization, and it is the release that

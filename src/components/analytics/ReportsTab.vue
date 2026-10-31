@@ -11,6 +11,8 @@
               {{ $t("components.callInsights.reports.panel.skipped", { period: skippedPeriod, days: schedule.cadenceDays }, schedule.cadenceDays) }}
             </p>
             <p v-else-if="next">{{ nextText }}</p>
+            <!-- a next period longer than the cadence says why: the cycles since `extendedFrom` held no call (rule 9) -->
+            <p v-if="!skipped && extendedFrom" class="schedule-hint">{{ $t("components.callInsights.reports.panel.extended", { date: extendedFrom }) }}</p>
             <p class="schedule-hint">
               {{ $t("components.callInsights.reports.panel.settings") }}
               <router-link :to="settingsLink">{{ $t("components.callInsights.reports.panel.settingsLink") }}</router-link>
@@ -92,28 +94,34 @@
       </div>
       <PagedTable
         :state="history"
+        :rows="historyRows"
         :columns="columns"
         :row-key="rowKey"
         :caption="$t('components.callInsights.reportsTab.historyTitle')"
         :empty-text="statusFilter || typeFilter ? $t('components.callInsights.reportsTab.noneFiltered') : $t('components.callInsights.reportsTab.none')"
       >
         <template #cell-period="{ row }">
-          <router-link v-if="row.status === 'done'" :to="detailLink(row)" class="history-period">{{ period(row) }}</router-link>
+          <span v-if="row.emptyCycle" class="history-period history-empty">{{ emptyText(row) }}</span>
+          <router-link v-else-if="row.status === 'done'" :to="detailLink(row)" class="history-period">{{ period(row) }}</router-link>
           <span v-else class="history-period">{{ period(row) }}</span>
-          <span class="history-days">{{ daysText(row) }}</span>
+          <span v-if="!row.emptyCycle" class="history-days">{{ daysText(row) }}</span>
+          <!-- a written report longer than its cadence: the quiet stretch it begins with (StarChat's `extendedFrom`) -->
+          <span v-if="!row.emptyCycle && typeof row.extendedFrom === 'number'" class="history-days">{{ $t("components.callInsights.reports.history.coveredFrom", { date: day(row.extendedFrom) }) }}</span>
         </template>
         <template #cell-type="{ row }">
-          <span :title="row.type === 'requested' ? $t('components.callInsights.reports.type.onRequestHelp') : null">
+          <span v-if="row.emptyCycle">{{ $t("components.callInsights.reports.type.automatic") }}</span>
+          <span v-else :title="row.type === 'requested' ? $t('components.callInsights.reports.type.onRequestHelp') : null">
             {{ $t("components.callInsights.reports.type." + row.type) }}
           </span>
         </template>
-        <template #cell-revision="{ row }">{{ row.revision + 1 }}</template>
+        <template #cell-revision="{ row }">{{ row.emptyCycle ? "–" : row.revision + 1 }}</template>
         <template #cell-status="{ row }">
-          <span class="history-status" :class="'status-' + row.status">{{ $t("components.callInsights.status." + statusOf(row)) }}</span>
+          <span v-if="row.emptyCycle" class="history-status">{{ $t("components.callInsights.reports.history.noReport") }}</span>
+          <span v-else class="history-status" :class="'status-' + row.status">{{ $t("components.callInsights.status." + statusOf(row)) }}</span>
         </template>
-        <template #cell-calls="{ row }">{{ callsText(row) }}</template>
-        <template #cell-requestedBy="{ row }">{{ requesterName(row) }}</template>
-        <template #cell-createdAt="{ row }">{{ dateTime(row.createdAt) }}</template>
+        <template #cell-calls="{ row }">{{ row.emptyCycle ? "0" : callsText(row) }}</template>
+        <template #cell-requestedBy="{ row }">{{ row.emptyCycle ? "–" : requesterName(row) }}</template>
+        <template #cell-createdAt="{ row }">{{ row.emptyCycle ? "–" : dateTime(row.createdAt) }}</template>
         <template #cell-actions="{ row }">
           <span class="history-actions">
             <router-link v-if="row.status === 'done'" :to="detailLink(row)" class="history-action">{{ $t("components.callInsights.reportsTab.open") }}</router-link>
@@ -175,7 +183,6 @@ import PagedTable from "@/components/analytics/PagedTable.vue";
 import InsightsRequestDialog from "@/components/analytics/InsightsRequestDialog.vue";
 import ReportDeleteDialog from "@/components/analytics/ReportDeleteDialog.vue";
 
-const STATUSES = ["done", "claimed", "failed", "budget_exhausted", "written_off"];
 const RECENT_SIZE = 3;
 const RECENT_POLL_MS = 5000;
 
@@ -254,6 +261,19 @@ export default {
       const date = this.day(next.arrivesAt);
       return one ? this.$t(p + "nextOneDay", { date, day: days.first }) : this.$t(p + "next", { date, from: days.first, to: days.last });
     },
+    extendedFrom() {
+      const n = this.next;
+      return n && !n.retry && typeof n.extendedFrom === "number" ? this.day(n.extendedFrom) : null;
+    },
+    // the page's reports with the cycles that held no call among them (StarChat's `emptyCycles`, outside its total)
+    historyRows() {
+      const a = this.history.answer;
+      return InsightsReports.historyWithEmptyCycles(this.history.items, a && a.emptyCycles, {
+        offset: this.history.offset, size: this.history.size, total: this.history.total,
+        sort: this.history.sort, direction: this.history.direction, status: this.statusFilter, type: this.typeFilter,
+        nextFrom: this.next && typeof this.next.from === "number" ? this.next.from : undefined,
+      });
+    },
     skipped() {
       return this.schedule ? this.schedule.skippedForCredit || null : null;
     },
@@ -282,7 +302,7 @@ export default {
       ];
     },
     statusOptions() {
-      return STATUSES.map((s) => ({ value: s, label: this.$t("components.callInsights.status." + InsightsReports.reportStatusKey({ status: s })) }));
+      return InsightsReports.REPORT_STATUSES.map((s) => ({ value: s, label: this.$t("components.callInsights.status." + InsightsReports.reportStatusKey({ status: s })) }));
     },
     typeOptions() {
       return ["automatic", "requested"].map((t) => ({ value: t, label: this.$t("components.callInsights.reports.type." + t) }));
@@ -315,7 +335,14 @@ export default {
     period(row) {
       return InsightsReports.periodLabel(row.periodStart, row.periodEnd, this.zone, this.locale);
     },
+    // "Nessuna chiamata dal … al …", or of its one day
+    emptyText(row) {
+      const d = InsightsReports.inclusiveDays(row.periodStart, row.periodEnd, this.zone, this.locale);
+      return d.days <= 1 ? this.$t("components.callInsights.reports.history.emptyDay", { day: d.first })
+        : this.$t("components.callInsights.reports.history.emptyPeriod", { from: d.first, to: d.last });
+    },
     rowKey(row) {
+      if (row.emptyCycle) return "empty:" + row.periodStart;
       return row.periodStart + ":" + (row.requestId || "") + ":" + row.revision + ":" + row.status;
     },
     statusOf(row) {

@@ -43,7 +43,7 @@ test.describe('M7: a period with nothing to read is refused for that, never for 
 
   test('calls but none analysed: says how many, and offers their analysis, which asks for the same days', async ({ authenticatedPage: page }) => {
     const asked = await mockInsights(page, {
-      job: (id, n) => (asked.estimate.length > 1 ? estimateJob({ jobId: id }) : refusedEstimate({ reason: 'no_analysis', recomputable: 14 })(id, n)),
+      job: (id, n) => (asked.estimate.length > 1 ? estimateJob({ jobId: id, of: 'recompute' }) : refusedEstimate({ reason: 'no_analysis', recomputable: 14 })(id, n)),
     })
     const dialog = await openRequest(page)
     await dialog.getByRole('button', { name: 'Last 7 days' }).click()
@@ -104,16 +104,18 @@ test.describe('M9: the schedule says when the next report arrives and what it co
 })
 
 test.describe('the history and the dialog: counts and words', () => {
-  test('m1: a one-day report says "1 day"; m5: a period not at midnight counts the days its dates show', async ({ authenticatedPage: page }) => {
+  test('m1: a one-day report says "1 day"; a period not at midnight is said by its real start and end', async ({ authenticatedPage: page }) => {
     const rows = historyRows()
     Object.assign(rows[7], { periodStart: rome(2026, 9, 2), periodEnd: rome(2026, 9, 3), days: 1 })
-    // an interval asked over the API at 01:00 local, as OVERLAND's (U19 m5): StarChat says 2 days, the dates show 3
+    // an interval asked over the API at 01:00 local, as OVERLAND's: the U19 m5 repair counted the 3 days its dates
+    // showed; the amendment of 2026-10-30 (m8) says such a period by its start and end instants, 2 days long, so that
+    // no day it does not cover is named
     Object.assign(rows[8], { periodStart: rome(2026, 3, 19) + 3600 * 1000, periodEnd: rome(2026, 3, 21) + 3600 * 1000, days: 2 })
     await mockInsights(page, { reports: (url) => reportsPage(url, { rows }) })
     await page.goto(`/analytics?id=${BUSINESS_ID}&tab=reports`)
     const table = page.getByRole('table', { name: 'All reports' })
     await expect(table.getByRole('row').filter({ hasText: 'Sep 2, 2026' }).getByText('1 day', { exact: true })).toBeVisible({ timeout: 15000 })
-    await expect(table.getByRole('row').filter({ hasText: 'Mar 19, 2026 – Mar 21, 2026' }).getByText('3 days', { exact: true })).toBeVisible()
+    await expect(table.getByRole('row').filter({ hasText: /Mar 19, 2026(,| at) 1:00 AM – Mar 21, 2026(,| at) 1:00 AM/ }).getByText('2 days', { exact: true })).toBeVisible()
   })
 
   test('M11: the reports a period overlaps are one sentence, with the days they cover', async ({ authenticatedPage: page }) => {

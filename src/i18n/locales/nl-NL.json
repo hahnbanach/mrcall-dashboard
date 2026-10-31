@@ -1992,7 +1992,8 @@
           "nextOneDay": "Het volgende komt op {date} en beslaat {day}.",
           "covers": "Het volgende beslaat {from} tot {to}.",
           "coversOneDay": "Het volgende beslaat {day}.",
-          "retryOneDay": "Het rapport voor {day} is niet gelukt: het wordt vannacht opnieuw geprobeerd."
+          "retryOneDay": "Het rapport voor {day} is niet gelukt: het wordt vannacht opnieuw geprobeerd.",
+          "extended": "Het beslaat de periode vanaf {date}: de dagen sindsdien hadden geen gesprekken."
         },
         "type": {
           "automatic": "Automatisch",
@@ -2002,7 +2003,13 @@
         "base": "Gebaseerd op {analysed} van de {managed} gesprekken die de assistent in de periode heeft afgehandeld.",
         "baseOld": "Gebaseerd op {analysed} geanalyseerde gesprekken.",
         "baseOldNote": "Voor gesprekken van vóór 10 oktober weten we niet hoeveel de assistent er heeft afgehandeld.",
-        "excluded": "Niet meegeteld: {silent} gesprekken waarin de beller niets zei, {credit} geweigerd wegens onvoldoende tegoed."
+        "excluded": "Niet meegeteld: {silent} gesprekken waarin de beller niets zei, {credit} geweigerd wegens onvoldoende tegoed.",
+        "history": {
+          "emptyDay": "Geen gesprekken op {day}",
+          "emptyPeriod": "Geen gesprekken van {from} tot {to}",
+          "noReport": "Geen rapport",
+          "coveredFrom": "Het beslaat ook de dagen zonder gesprekken vanaf {date}."
+        }
       },
       "assistants": {
         "title": "Te controleren assistenten",
@@ -2017,7 +2024,6 @@
         "checks": "Controles",
         "skillErrors": "Functiefouten",
         "extractionIssues": "Extractieproblemen",
-        "shareOfTotal": "{percent}% ({count} van de {total})",
         "sortOptions": {
           "calls": "Gesprekken",
           "notSolved": "Niet opgelost (door de assistent beoordeeld)",
@@ -2042,7 +2048,8 @@
           "skillErrors": "Skillfouten",
           "extractionIssues": "Extractie",
           "change": "Verandering",
-          "configSuggestions": "MrCall-suggesties"
+          "configSuggestions": "MrCall-suggesties",
+          "asks": "Wat bellers vragen"
         },
         "legend": {
           "notSolved": "niet opgelost, plus aan het bedrijf doorgegeven verzoeken met een onvolledig bericht, over de gesprekken waarin de beller iets vroeg",
@@ -2071,7 +2078,10 @@
           "unknown": "Niet bekend",
           "planOther": "Abonnement niet actief"
         },
-        "changePoints": "{sign}{n} punten"
+        "changePoints": "{sign}{n} punten",
+        "askedOf": "{category}: {n} verzoek | {category}: {n} verzoeken",
+        "latestReport": "Laatste rapport",
+        "countOf": "({count} van de {total})"
       },
       "scope": {
         "allBusinesses": "Over alle bedrijven die u kunt zien, van de afgelopen 30 dagen.",
@@ -2222,11 +2232,11 @@
         "examined": "{n} gesprek bekeken | {n} gesprekken bekeken",
         "outcome": {
           "recompute": {
-            "written": "{n} geanalyseerd | {n} geanalyseerd",
+            "written": "{n} gesprek geanalyseerd | {n} gesprekken geanalyseerd",
             "reasoned": "{n} zonder gesprek | {n} zonder gesprek",
             "skipped": "{n} al bijgewerkt | {n} al bijgewerkt",
             "left": "{n} zonder iets te analyseren | {n} zonder iets te analyseren",
-            "not_finalised": "{n} niet afgerond | {n} niet afgerond",
+            "not_finalised": "{n} niet afgeronde sessie uitgesloten | {n} niet afgeronde sessies uitgesloten",
             "conflict": "{n} intussen gewijzigd | {n} intussen gewijzigd",
             "failed": "{n} niet gelukt | {n} niet gelukt",
             "ceiling": "{n} niet geanalyseerd: limiet bereikt | {n} niet geanalyseerd: limiet bereikt"
@@ -2234,7 +2244,7 @@
           "facts": {
             "written": "{n} bijgewerkt | {n} bijgewerkt",
             "unchanged": "{n} al bijgewerkt | {n} al bijgewerkt",
-            "not_finalised": "{n} niet afgerond | {n} niet afgerond",
+            "not_finalised": "{n} niet afgeronde sessie uitgesloten | {n} niet afgeronde sessies uitgesloten",
             "conflict": "{n} intussen gewijzigd | {n} intussen gewijzigd"
           }
         }
@@ -2259,7 +2269,11 @@
         "transferred": "{n} gesprek doorverbonden met een persoon | {n} gesprekken doorverbonden met een persoon",
         "themeOutcome": "Uitkomst van de gesprekken over {topic}",
         "callBackTitle": "Gesprekken om terug te bellen",
-        "callBackNote": "Gesprekken die niet zijn opgelost, of met een onvolledig bericht aan het bedrijf zijn doorgegeven."
+        "callBackNote": "Gesprekken die niet zijn opgelost, of met een onvolledig bericht aan het bedrijf zijn doorgegeven.",
+        "reviewTitle": "Gesprekken om na te kijken",
+        "reviewNote": "Niet opgelost, met onbeantwoorde vragen of controles die afgingen.",
+        "quietDays": "Het beslaat ook de dagen zonder gesprekken van {from} tot {to}.",
+        "quietDay": "Het beslaat ook een dag zonder gesprekken, {day}."
       },
       "deleteReport": {
         "title": "Het rapport verwijderen",
@@ -2332,7 +2346,9 @@
         "noAnalysis": "Er is 1 gesprek in deze periode, maar het is nog niet geanalyseerd. | Er zijn {n} gesprekken in deze periode, maar geen enkel is al geanalyseerd.",
         "noAnalysisNone": "Geen gesprek van deze periode is geanalyseerd, en geen enkel kan worden geanalyseerd.",
         "cycleEmpty": "Het lopende automatische rapport heeft nog geen afgeronde dag: er is nu nog niets voor te bereiden.",
-        "busyYou": "Er loopt al een verwerking voor dit bedrijf, door u gestart op {when}."
+        "busyYou": "Er loopt al een verwerking voor dit bedrijf, door u gestart op {when}.",
+        "reads": "{n} geanalyseerd gesprek | {n} geanalyseerde gesprekken",
+        "leftOut": "{n} gesprek van de periode hoort er niet bij: zonder conversatie, of niet geanalyseerd. | {n} gesprekken van de periode horen er niet bij: zonder conversatie, of niet geanalyseerd."
       },
       "recompute": {
         "banner": "{n} in deze periode afgehandelde gesprekken hebben nog geen automatische analyse, dus afloop, onderwerpen en kwaliteit tellen ze niet mee.",
@@ -2346,13 +2362,13 @@
       },
       "requests": {
         "title": "Verzoeken van bellers",
-        "purpose": "Wat bellers vragen en de assistenten niet kunnen, gegroepeerd per categorie over alle bedrijven: om te beslissen wat er gebouwd moet worden en wat in de abonnementen moet komen.",
+        "purpose": "Wat bellers vragen en hoeveel daarvan de assistent afhandelt, per categorie over alle bedrijven.",
         "window": "Periode: {period}",
         "sortLabel": "Sorteren op",
         "sortScore": "Meest recent en wijdverbreid",
         "sortBusinesses": "Aantal bedrijven",
         "showDismissed": "Gearchiveerde tonen",
-        "scoreHelp": "Elk bedrijf telt voor 1 als het erom vroeg in de laatste dagen die zijn rapporten beslaan, voor de helft als dat twee weken eerder was, voor een kwart als dat vier weken eerder was.",
+        "scoreHelp": "Elk bedrijf telt 1 als het aan het eind van de periode vroeg, de helft twee weken eerder, een kwart vier weken eerder.",
         "none": "Geen verzoeken in deze periode.",
         "columns": {
           "category": "Categorie",
@@ -2361,15 +2377,14 @@
           "freshness": "Actualiteit"
         },
         "businesses": "{n} bedrijven",
-        "trend": "{sign}{n} ten opzichte van de vorige periode",
-        "share": "{pct}% van de bedrijven met rapporten",
+        "trend": "{sign}{n} bedrijf ten opzichte van de vorige periode | {sign}{n} bedrijven ten opzichte van de vorige periode",
+        "share": "{pct}% van de bedrijven met geanalyseerde oproepen",
         "histogramLabel": "Bedrijven per {bucket}, vanaf de oudste: {values}",
         "bucket": {
           "week": "week",
           "month": "maand"
         },
         "freshness": "Laatste verzoek op {date} · {pct}% in de laatste periode ({bucket})",
-        "reportDated": "{n} bedrijven gedateerd op het einde van het rapport",
         "nextAction": "Volgende stap",
         "examples": "Voorbeelden",
         "hideExample": "Verbergen",
@@ -2397,9 +2412,9 @@
         "confirmDismiss": "Archiveren",
         "reopened": "Heropend: {n} nieuwe bedrijven vroegen erom nadat het op {date} was gearchiveerd.",
         "status": {
-          "rising": "Stijgend",
-          "steady": "Stabiel",
-          "falling": "Dalend",
+          "rising": "Stijgend in de tweede helft van de periode",
+          "steady": "Stabiel over de periode",
+          "falling": "Dalend in de tweede helft van de periode",
           "stale": "Recent niet meer gevraagd"
         },
         "hiddenExamples": "Verborgen voorbeelden",
@@ -2412,7 +2427,15 @@
           "admin": "MrCall"
         },
         "archived": "{category} gearchiveerd.",
-        "undo": "Ongedaan maken"
+        "undo": "Ongedaan maken",
+        "next": {
+          "delegate": "Overweeg deze verzoeken door de assistent te laten afhandelen",
+          "handled": "Afgehandeld door de assistent",
+          "withdrawn": "Ingetrokken door de bellers",
+          "unrated": "Uitkomst nog niet beoordeeld: open de verzoeken",
+          "classify": "Deze verzoeken indelen",
+          "open": "Open de verzoeken"
+        }
       },
       "admin": {
         "reason": {
@@ -2422,7 +2445,8 @@
       },
       "change": {
         "notAvailable": "n.v.t.",
-        "notAvailableHelp": "De vorige periode had minder dan 20 gesprekken: de verandering is niet zinvol."
+        "notAvailableHelp": "De vorige periode had minder dan 20 gesprekken: de verandering is niet zinvol.",
+        "partialHelp": "De vorige periode heeft maar voor een deel van haar dagen gesprekken: de verandering zegt niets."
       },
       "overview": {
         "noCallsDays": "Geen gesprekken op de laatste dag. | Geen gesprekken in de laatste {days} dagen."
@@ -2430,7 +2454,253 @@
       "callers": {
         "web": "Webgesprek"
       },
-      "businessNotFound": "Dit bedrijf bestaat niet of hoort niet bij de bedrijven die u kunt zien."
+      "businessNotFound": "Dit bedrijf bestaat niet of hoort niet bij de bedrijven die u kunt zien.",
+      "feedback": {
+        "fields": {
+          "outcome": "Uitkomst van het verzoek",
+          "category": "Categorie"
+        },
+        "outcome": {
+          "met": "Door de assistent afgehandeld",
+          "taken": "Genoteerd voor het bedrijf",
+          "handed_over": "Doorgegeven aan een persoon",
+          "neither": "Niet afgehandeld",
+          "withdrawn": "Ingetrokken door de beller"
+        },
+        "unset": "Nog niet ingedeeld",
+        "otherCategory": "Een categorie die niet meer in de lijst staat",
+        "state": {
+          "corrected": "Gecorrigeerd",
+          "confirmed": "Bevestigd",
+          "proposed": "Voorstel verzonden",
+          "applied": "Toegepast",
+          "rejected": "Afgewezen",
+          "withdrawn": "Ingetrokken"
+        },
+        "chip": {
+          "name": "{field}: {value}",
+          "detail": "van {from} naar {to}, {who}, {when}"
+        },
+        "menu": {
+          "label": "{field} wijzigen",
+          "right": "Dit klopt",
+          "wrong": "Dit klopt niet, ik weet niet wat wel",
+          "restore": "Waarde van de analyse herstellen",
+          "history": "Geschiedenis",
+          "withdraw": "Mijn voorstel intrekken"
+        },
+        "who": {
+          "owner": "de eigenaar",
+          "reseller": "een partner",
+          "admin": "MrCall",
+          "service": "MrCall",
+          "unknown": "iemand",
+          "me": "u"
+        },
+        "history": {
+          "title": "Geschiedenis van {field}",
+          "entry": "{from} → {to}, {who}, {when}",
+          "right": "{from} bevestigd, {who}, {when}",
+          "wrong": "{from} als fout gemeld, {who}, {when}",
+          "empty": "Nog geen wijziging.",
+          "status": {
+            "proposed": "Voorgesteld",
+            "applied": "Toegepast",
+            "rejected": "Afgewezen",
+            "reverted": "Ongedaan gemaakt",
+            "orphaned": "Verzoek niet meer gevonden",
+            "confirmed": "Bevestigd",
+            "closed": "Afgehandeld door MrCall",
+            "withdrawn": "Ingetrokken"
+          }
+        },
+        "undo": {
+          "changed": "Gewijzigd",
+          "undo": "Ongedaan maken",
+          "close": "Sluiten",
+          "undone": "Wijziging ongedaan gemaakt.",
+          "failed": "De wijziging kon niet ongedaan worden gemaakt.",
+          "withdrawn": "Voorstel ingetrokken. | {n} voorstellen ingetrokken.",
+          "both": "Wijzigingen ongedaan gemaakt: {reverted}. Voorstellen ingetrokken: {withdrawn}.",
+          "nothing": "Er is niets ongedaan gemaakt: er was al over beslist."
+        },
+        "stale": "Deze waarde is intussen gewijzigd: de huidige wordt getoond.",
+        "failed": "De wijziging is niet opgeslagen.",
+        "requests": {
+          "title": "Verzoeken",
+          "excluded": "Niet meegeteld: een spamoproep."
+        },
+        "rules": {
+          "offer": "Dit nummer altijd als spam behandelen?",
+          "earlier": "Ook de {n} eerdere oproep | Ook de {n} eerdere oproepen",
+          "earlierMore": "Ook de {n} meest recente eerdere oproepen",
+          "always": "Als spam behandelen",
+          "noThanks": "Nee, bedankt",
+          "created": "Vanaf nu wordt dit nummer als spam behandeld. | Vanaf nu wordt dit nummer als spam behandeld, en {n} eerdere oproep is gecorrigeerd. | Vanaf nu wordt dit nummer als spam behandeld, en {n} eerdere oproepen zijn gecorrigeerd.",
+          "byRule": "Deze oproep is als spam beoordeeld door een regel op het nummer. De regel verwijderen?",
+          "delete": "Regel verwijderen",
+          "keep": "Behouden",
+          "deleted": "De regel is verwijderd; de gemarkeerde oproepen tellen weer mee."
+        },
+        "readOnly": {
+          "title": "Alleen-lezen weergave",
+          "note": "U bent niet de eigenaar van deze oproepen: elke oproep die u opent wordt vastgelegd, en de eigenaar ziet wie hem opende.",
+          "open": "Oproep openen",
+          "unknown": "Er kon niet worden gelezen of deze oproepen van u zijn."
+        },
+        "filters": {
+          "title": "Filters uit de link",
+          "remove": "Filter {filter} verwijderen",
+          "unknown": "Een filter in de link werd niet herkend en wordt niet toegepast.",
+          "chip": "{name}: {value}",
+          "yes": "ja",
+          "no": "nee",
+          "names": {
+            "outcomeLine": "Uitkomst",
+            "topic": "Onderwerp",
+            "gap": "Onbeantwoorde vraag",
+            "check": "Controle",
+            "category": "Categorie van het verzoek",
+            "requestOutcome": "Uitkomst van het verzoek",
+            "noConversation": "Geen gesprek",
+            "corrected": "Gecorrigeerd"
+          },
+          "counted": "Oproepen: zoals de statistieken ze tellen, gearchiveerde inbegrepen",
+          "leftOut": "{n} oproep niet zichtbaar met uw toegang | {n} oproepen niet zichtbaar met uw toegang"
+        },
+        "bulk": {
+          "label": "Geselecteerde oproepen",
+          "count": "{n} geselecteerd | {n} geselecteerd",
+          "select": "Oproep van {name} selecteren",
+          "changeOutcome": "Uitkomst wijzigen",
+          "spam": "Als spam markeren",
+          "confirm": "Bevestigen",
+          "clear": "Selectie wissen",
+          "leftOut": "{n} oproep zonder beoordeelde uitkomst is weggelaten. | {n} oproepen zonder beoordeelde uitkomst zijn weggelaten.",
+          "selectRequest": "Verzoek selecteren: {text}",
+          "labelRequests": "Geselecteerde verzoeken",
+          "move": "Naar categorie verplaatsen",
+          "proposed": "{n} voorstel verzonden: een beheerder beslist. | {n} voorstellen verzonden: een beheerder beslist.",
+          "alreadySpam": "{n} gesprek dat al als spam was gemarkeerd, is overgeslagen. | {n} gesprekken die al als spam waren gemarkeerd, zijn overgeslagen."
+        },
+        "fact": {
+          "chip": "Een fout in een feit melden",
+          "reportedOf": "Gemeld aan MrCall: {fact}",
+          "option": "{fact}: {value}",
+          "withdraw": "Intrekken",
+          "withdrawOf": "Melding intrekken: {fact}"
+        },
+        "links": {
+          "open": "De oproep openen: {label} | De {n} oproepen openen: {label}",
+          "openAll": "De oproepen openen: {label}",
+          "calls": "Oproepen"
+        },
+        "report": {
+          "corrected": "{n} verzoek uit dit rapport is gecorrigeerd nadat het was geschreven. | {n} verzoeken uit dit rapport zijn gecorrigeerd nadat het was geschreven.",
+          "correctedTag": "Gecorrigeerd na het rapport"
+        },
+        "categories": {
+          "all": "Alle verzoeken, ook die de assistent afhandelde",
+          "manyRequests": "Een oproep met meerdere verzoeken staat in elke categorie van zijn verzoeken.",
+          "backlog": "{n} oproep wacht nog op de analyse en telt nog niet mee. | {n} oproepen wachten nog op de analyse en tellen nog niet mee.",
+          "columns": {
+            "calls": "Oproepen",
+            "select": "Selecteren",
+            "text": "Verzoek",
+            "business": "Bedrijf",
+            "outcome": "Uitkomst",
+            "category": "Categorie",
+            "call": "Oproep"
+          },
+          "calls": "{n} oproep | {n} oproepen",
+          "showRequests": "Verzoeken van {category} tonen ({n} oproep) | Verzoeken van {category} tonen ({n} oproepen)",
+          "showOutcome": "Verzoeken van {category} met uitkomst {outcome} tonen ({n})",
+          "openCall": "Oproep openen: {text}",
+          "call": "Oproep openen",
+          "requestsOf": "Verzoeken van {category}",
+          "noRequests": "Geen verzoek in deze periode."
+        },
+        "queue": {
+          "title": "Te beoordelen correcties",
+          "purpose": "Voorstellen, correcties waarvan het verzoek niet meer bestaat, als fout gemarkeerde waarden en gemelde feiten, gegroepeerd per categorie en bedrijf, eerst de groepen die de meeste oproepen raken.",
+          "empty": "Niets te beoordelen.",
+          "selectedLabel": "Geselecteerde correcties",
+          "applySelected": "Selectie toepassen ({n})",
+          "rejectSelected": "Selectie afwijzen ({n})",
+          "select": "Selecteren: {text}",
+          "apply": "Toepassen",
+          "reject": "Afwijzen",
+          "handled": "Als afgehandeld markeren",
+          "reattach": "Opnieuw koppelen",
+          "requestOfCall": "Verzoek van de oproep",
+          "reattachHere": "Hier koppelen",
+          "close": "Sluiten",
+          "applied": "{n} toegepast. | {n} toegepast.",
+          "rejected": "{n} afgewezen. | {n} afgewezen.",
+          "failedN": "{n} mislukt. | {n} mislukt.",
+          "change": "{field}: {from} → {to}",
+          "wrong": "{field}: {from} is fout, te beoordelen",
+          "right": "{field}: {from} bevestigd",
+          "fact": "{field} als fout gemeld",
+          "factOf": {
+            "booked": "Boeking als fout gemeld",
+            "transferred": "Doorverbinding als fout gemeld",
+            "no_conversation": "„Geen gesprek” als fout gemeld",
+            "managed_call": "„Afgehandeld door de assistent” als fout gemeld",
+            "skill_errors": "Skillfouten als fout gemeld",
+            "unkept": "Niet nagekomen toezeggingen als fout gemeld"
+          }
+        },
+        "mine": {
+          "title": "Mijn voorstellen",
+          "empty": "Nog geen voorstellen.",
+          "withdraw": "Intrekken",
+          "withdrawOf": "Voorstel intrekken: {what}"
+        },
+        "facts": {
+          "no_conversation": "Geen gesprek",
+          "managed_call": "Afgehandeld door de assistent",
+          "skill_errors": "Skillfouten",
+          "unkept": "Niet nagekomen toezeggingen",
+          "none": "niet vastgelegd",
+          "yes": "ja",
+          "no": "nee",
+          "recorded": "vastgelegd"
+        },
+        "access": {
+          "menu": "Spamnummers en toegang tot oproepen",
+          "rulesTitle": "Als spam behandelde nummers",
+          "rulesNote": "Oproepen van deze nummers tellen als spam. Een regel verwijderen telt de oproepen weer mee.",
+          "rulesEmpty": "Geen nummer wordt als spam behandeld.",
+          "since": "sinds {date}",
+          "delete": "Verwijderen",
+          "deleteOf": "De regel voor {number} verwijderen",
+          "deleted": "Regel verwijderd: {n} oproep telt weer mee. | Regel verwijderd: {n} oproepen tellen weer mee.",
+          "logTitle": "Wie uw oproepen opende",
+          "logNote": "Uw partner en MrCall kunnen uw oproepen openen om u te helpen; elke keer wordt hier vastgelegd en 12 maanden bewaard.",
+          "logEmpty": "Niemand anders heeft uw oproepen geopend.",
+          "columns": {
+            "at": "Wanneer",
+            "who": "Wie",
+            "event": "Wat",
+            "call": "Oproep"
+          },
+          "roles": {
+            "admin": "Beheerder",
+            "reseller": "Partner",
+            "service": "MrCall",
+            "unknown": "Iemand"
+          },
+          "events": {
+            "opened": "Oproep geopend",
+            "audio": "Opname beluisterd"
+          }
+        },
+        "withdrawRefused": {
+          "not_author": "Alleen wie een voorstel deed, kan het intrekken.",
+          "feedback_state": "Over dit voorstel is al beslist."
+        }
+      }
     },
     "datePicker": {
       "chooseDate": "Datum kiezen",

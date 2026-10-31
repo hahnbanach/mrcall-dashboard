@@ -329,3 +329,18 @@ describe('CallDetailsPanel: told to the caller and not recorded as done', () => 
     expect(panel.find('.insight-unkept-said b').exists()).toBe(false)
   })
 })
+
+/**
+ * The judgements as chips are a page's choice (brief docs/briefs/2026-10-27-classification-feedback.md, scope 1 and 11):
+ * the conversations page asks for them, and carries the undo bar and the reader's ownership they need. A panel drawn
+ * elsewhere (the restaurant call dialog, which admins and resellers reach) reads no judgements: for a non-owner such a
+ * read is a recorded opening nobody asked for (R2 review, finding 5). Seen failing on dec211e, which drew the chips in
+ * every panel.
+ */
+describe('CallDetailsPanel: the judgements only where a page asks for them', () => {
+  it('draws no judgement chip, and so reads nothing, unless asked', () => {
+    const judged = { ...call, details: { ...call.details, resolution: 'resolved', message: 'none', booked: true } }
+    expect(draw(judged).findComponent({ name: 'CallJudgements' }).exists()).toBe(false)
+    expect(draw(judged, { withJudgements: true, readOnly: true }).findComponent({ name: 'CallJudgements' }).exists()).toBe(true)
+  })
+})

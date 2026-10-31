@@ -1,0 +1,52 @@
+{
+ "created": {
+  "status": 202,
+  "body": {
+   "requesterRole": "owner",
+   "jobId": "<text>",
+   "businessId": "<text>",
+   "kind": "estimate",
+   "status": "queued",
+   "of": "report",
+   "from": 1792710000678,
+   "to": 1793314800678,
+   "counts": {},
+   "createdAt": 1793399399552,
+   "requestedBy": "<text>",
+   "phase": "queued"
+  }
+ },
+ "finished": {
+  "status": 200,
+  "body": {
+   "requesterRole": "owner",
+   "jobId": "<text>",
+   "businessId": "<text>",
+   "kind": "estimate",
+   "status": "done",
+   "of": "report",
+   "from": 1792710000678,
+   "to": 1793314800678,
+   "estimate": {
+    "fits": false,
+    "kind": "report",
+    "left": 0,
+    "calls": 0,
+    "reason": "no_calls",
+    "toSend": 0,
+    "skipped": 0,
+    "analysed": 0,
+    "reasoned": 0,
+    "requests": 0,
+    "finalised": 0,
+    "lastCallAt": 1774005824343,
+    "notFinalised": 0
+   },
+   "counts": {},
+   "createdAt": 1793399399552,
+   "finishedAt": 1793399404840,
+   "requestedBy": "<text>",
+   "phase": "finished"
+  }
+ }
+}

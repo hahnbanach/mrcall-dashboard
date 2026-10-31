@@ -1998,7 +1998,8 @@
           "nextOneDay": "Il prossimo arriverà il {date} e coprirà il {day}.",
           "covers": "Il prossimo coprirà dal {from} al {to}.",
           "coversOneDay": "Il prossimo coprirà il {day}.",
-          "retryOneDay": "Il report del {day} non è riuscito: verrà riprovato questa notte."
+          "retryOneDay": "Il report del {day} non è riuscito: verrà riprovato questa notte.",
+          "extended": "Copre dal {date}: i giorni da allora non hanno avuto chiamate."
         },
         "type": {
           "automatic": "Automatico",
@@ -2008,7 +2009,13 @@
         "base": "Basato su {analysed} delle {managed} chiamate gestite dall'assistente nel periodo.",
         "baseOld": "Basato su {analysed} chiamate analizzate.",
         "baseOldNote": "Per le chiamate prima del 10 ottobre non sappiamo quante ne abbia gestite l'assistente.",
-        "excluded": "Escluse: {silent} chiamate in cui il chiamante non ha parlato, {credit} rifiutate per credito."
+        "excluded": "Escluse: {silent} chiamate in cui il chiamante non ha parlato, {credit} rifiutate per credito.",
+        "history": {
+          "emptyDay": "Nessuna chiamata il {day}",
+          "emptyPeriod": "Nessuna chiamata dal {from} al {to}",
+          "noReport": "Nessun report",
+          "coveredFrom": "Copre anche i giorni senza chiamate dal {date}."
+        }
       },
       "assistants": {
         "title": "Assistenti da rivedere",
@@ -2023,7 +2030,6 @@
         "checks": "Controlli",
         "skillErrors": "Errori delle funzioni",
         "extractionIssues": "Problemi di estrazione",
-        "shareOfTotal": "{percent}% ({count} di {total})",
         "sortOptions": {
           "calls": "Chiamate",
           "notSolved": "Non risolte (valutato dall'assistente)",
@@ -2048,7 +2054,8 @@
           "skillErrors": "Errori skill",
           "extractionIssues": "Estrazione",
           "change": "Variazione",
-          "configSuggestions": "Suggerimenti MrCall"
+          "configSuggestions": "Suggerimenti MrCall",
+          "asks": "Cosa chiedono"
         },
         "legend": {
           "notSolved": "non risolte, più le richieste passate all'attività con un messaggio incompleto, sulle chiamate in cui il chiamante ha chiesto qualcosa",
@@ -2077,7 +2084,10 @@
           "unknown": "Non noto",
           "planOther": "Piano non attivo"
         },
-        "changePoints": "{sign}{n} punti"
+        "changePoints": "{sign}{n} punti",
+        "askedOf": "{category}: {n} richiesta | {category}: {n} richieste",
+        "latestReport": "Ultimo report",
+        "countOf": "({count} di {total})"
       },
       "scope": {
         "allBusinesses": "In tutte le attività che puoi vedere, negli ultimi 30 giorni.",
@@ -2228,11 +2238,11 @@
         "examined": "{n} chiamata esaminata | {n} chiamate esaminate",
         "outcome": {
           "recompute": {
-            "written": "{n} analizzata | {n} analizzate",
+            "written": "{n} chiamata analizzata | {n} chiamate analizzate",
             "reasoned": "{n} senza conversazione | {n} senza conversazione",
             "skipped": "{n} già aggiornata | {n} già aggiornate",
             "left": "{n} senza niente da analizzare | {n} senza niente da analizzare",
-            "not_finalised": "{n} non conclusa | {n} non concluse",
+            "not_finalised": "{n} sessione non conclusa esclusa | {n} sessioni non concluse escluse",
             "conflict": "{n} cambiata nel frattempo | {n} cambiate nel frattempo",
             "failed": "{n} non riuscita | {n} non riuscite",
             "ceiling": "{n} non analizzata: limite raggiunto | {n} non analizzate: limite raggiunto"
@@ -2240,7 +2250,7 @@
           "facts": {
             "written": "{n} aggiornata | {n} aggiornate",
             "unchanged": "{n} già aggiornata | {n} già aggiornate",
-            "not_finalised": "{n} non conclusa | {n} non concluse",
+            "not_finalised": "{n} sessione non conclusa esclusa | {n} sessioni non concluse escluse",
             "conflict": "{n} cambiata nel frattempo | {n} cambiate nel frattempo"
           }
         }
@@ -2265,7 +2275,11 @@
         "transferred": "{n} chiamata trasferita a una persona | {n} chiamate trasferite a una persona",
         "themeOutcome": "Esito delle chiamate di {topic}",
         "callBackTitle": "Chiamate da richiamare",
-        "callBackNote": "Chiamate non risolte, o passate all'attività con un messaggio incompleto."
+        "callBackNote": "Chiamate non risolte, o passate all'attività con un messaggio incompleto.",
+        "reviewTitle": "Chiamate da rivedere",
+        "reviewNote": "Non risolte, con domande senza risposta o controlli scattati.",
+        "quietDays": "Copre anche i giorni senza chiamate dal {from} al {to}.",
+        "quietDay": "Copre anche un giorno senza chiamate, il {day}."
       },
       "deleteReport": {
         "title": "Elimina il report",
@@ -2338,7 +2352,9 @@
         "noAnalysis": "C'è 1 chiamata in questo periodo, ma non è ancora analizzata. | Ci sono {n} chiamate in questo periodo, ma nessuna è ancora analizzata.",
         "noAnalysisNone": "Nessuna chiamata di questo periodo è analizzata, e nessuna si può analizzare.",
         "cycleEmpty": "Il report automatico in corso non ha ancora un giorno concluso: per ora non c'è niente da preparare.",
-        "busyYou": "C'è già un'elaborazione in corso per questa attività, avviata da te il {when}."
+        "busyYou": "C'è già un'elaborazione in corso per questa attività, avviata da te il {when}.",
+        "reads": "{n} chiamata analizzata | {n} chiamate analizzate",
+        "leftOut": "{n} chiamata del periodo non è tra queste: senza conversazione, o non analizzata. | {n} chiamate del periodo non sono tra queste: senza conversazione, o non analizzate."
       },
       "recompute": {
         "banner": "{n} chiamate gestite in questo periodo non hanno ancora l'analisi automatica, quindi esiti, argomenti e qualità non le contano.",
@@ -2352,13 +2368,13 @@
       },
       "requests": {
         "title": "Richieste dei chiamanti",
-        "purpose": "Cosa chiedono i chiamanti che gli assistenti non sanno fare, raggruppato per categoria su tutte le attività: per decidere cosa costruire e cosa aggiungere ai piani.",
+        "purpose": "Cosa chiedono i chiamanti e quanto ne gestisce l'assistente, raggruppato per categoria su tutte le attività.",
         "window": "Periodo: {period}",
         "sortLabel": "Ordina per",
         "sortScore": "Più recenti e diffuse",
         "sortBusinesses": "Numero di attività",
         "showDismissed": "Mostra archiviate",
-        "scoreHelp": "Ogni attività conta 1 se l'ha chiesto negli ultimi giorni coperti dai suoi report, la metà se due settimane prima, un quarto se quattro settimane prima.",
+        "scoreHelp": "Ogni attività conta 1 se l'ha chiesto alla fine del periodo, la metà se due settimane prima, un quarto se quattro settimane prima.",
         "none": "Nessuna richiesta in questo periodo.",
         "columns": {
           "category": "Categoria",
@@ -2367,15 +2383,14 @@
           "freshness": "Freschezza"
         },
         "businesses": "{n} attività",
-        "trend": "{sign}{n} rispetto al periodo precedente",
-        "share": "il {pct}% delle attività con report",
+        "trend": "{sign}{n} attività rispetto al periodo precedente | {sign}{n} attività rispetto al periodo precedente",
+        "share": "il {pct}% delle attività con chiamate analizzate",
         "histogramLabel": "Attività per {bucket}, dalla più vecchia: {values}",
         "bucket": {
           "week": "settimana",
           "month": "mese"
         },
         "freshness": "Ultima richiesta il {date} · {pct}% nell'ultima {bucket}",
-        "reportDated": "{n} attività datate dalla fine del report",
         "nextAction": "Prossima azione",
         "examples": "Esempi",
         "hideExample": "Nascondi",
@@ -2403,9 +2418,9 @@
         "confirmDismiss": "Archivia",
         "reopened": "Riaperta: {n} nuove attività lo hanno chiesto dopo l'archiviazione del {date}.",
         "status": {
-          "rising": "In crescita",
-          "steady": "Stabile",
-          "falling": "In calo",
+          "rising": "In crescita nella seconda metà del periodo",
+          "steady": "Stabile nel periodo",
+          "falling": "In calo nella seconda metà del periodo",
           "stale": "Non più richiesta di recente"
         },
         "hiddenExamples": "Esempi nascosti",
@@ -2418,7 +2433,15 @@
           "admin": "MrCall"
         },
         "archived": "{category} archiviata.",
-        "undo": "Annulla"
+        "undo": "Annulla",
+        "next": {
+          "delegate": "Valuta di far gestire queste richieste all'assistente",
+          "handled": "Gestite dall'assistente",
+          "withdrawn": "Ritirate dai chiamanti",
+          "unrated": "Esito non ancora valutato: apri le richieste",
+          "classify": "Classifica queste richieste",
+          "open": "Apri le richieste"
+        }
       },
       "admin": {
         "reason": {
@@ -2428,7 +2451,8 @@
       },
       "change": {
         "notAvailable": "n.d.",
-        "notAvailableHelp": "Il periodo precedente aveva meno di 20 chiamate: la variazione non è significativa."
+        "notAvailableHelp": "Il periodo precedente aveva meno di 20 chiamate: la variazione non è significativa.",
+        "partialHelp": "Il periodo precedente ha chiamate solo per una parte dei suoi giorni: la variazione non è significativa."
       },
       "overview": {
         "noCallsDays": "Nessuna chiamata nell'ultimo giorno. | Nessuna chiamata negli ultimi {days} giorni."
@@ -2436,7 +2460,253 @@
       "callers": {
         "web": "Chiamata web"
       },
-      "businessNotFound": "Questa attività non esiste o non è tra quelle che puoi vedere."
+      "businessNotFound": "Questa attività non esiste o non è tra quelle che puoi vedere.",
+      "feedback": {
+        "fields": {
+          "outcome": "Esito della richiesta",
+          "category": "Categoria"
+        },
+        "outcome": {
+          "met": "Soddisfatta dall'assistente",
+          "taken": "Presa in carico per l'attività",
+          "handed_over": "Passata a una persona",
+          "neither": "Non soddisfatta",
+          "withdrawn": "Ritirata dal chiamante"
+        },
+        "unset": "Da classificare",
+        "otherCategory": "Una categoria non più in elenco",
+        "state": {
+          "corrected": "Corretta",
+          "confirmed": "Confermata",
+          "proposed": "Proposta inviata",
+          "applied": "Applicata",
+          "rejected": "Respinta",
+          "withdrawn": "Ritirata"
+        },
+        "chip": {
+          "name": "{field}: {value}",
+          "detail": "da {from} a {to}, {who}, {when}"
+        },
+        "menu": {
+          "label": "Cambia {field}",
+          "right": "È corretta",
+          "wrong": "È sbagliata, non so quale",
+          "restore": "Ripristina il valore dell'analisi",
+          "history": "Cronologia",
+          "withdraw": "Ritira la mia proposta"
+        },
+        "who": {
+          "owner": "il titolare",
+          "reseller": "un partner",
+          "admin": "MrCall",
+          "service": "MrCall",
+          "unknown": "qualcuno",
+          "me": "tu"
+        },
+        "history": {
+          "title": "Cronologia di {field}",
+          "entry": "{from} → {to}, {who}, {when}",
+          "right": "{from} confermata, {who}, {when}",
+          "wrong": "{from} segnalata come sbagliata, {who}, {when}",
+          "empty": "Nessuna modifica finora.",
+          "status": {
+            "proposed": "Proposta",
+            "applied": "Applicata",
+            "rejected": "Respinta",
+            "reverted": "Annullata",
+            "orphaned": "Richiesta non più trovata",
+            "confirmed": "Confermata",
+            "closed": "Gestita da MrCall",
+            "withdrawn": "Ritirata"
+          }
+        },
+        "undo": {
+          "changed": "Modificato",
+          "undo": "Annulla",
+          "close": "Chiudi",
+          "undone": "Modifica annullata.",
+          "failed": "Non è stato possibile annullare la modifica.",
+          "withdrawn": "Proposta ritirata. | {n} proposte ritirate.",
+          "both": "Modifiche annullate: {reverted}. Proposte ritirate: {withdrawn}.",
+          "nothing": "Non è stato annullato niente: era già stato deciso."
+        },
+        "stale": "Questo valore è cambiato nel frattempo: è mostrato quello attuale.",
+        "failed": "La modifica non è stata salvata.",
+        "requests": {
+          "title": "Richieste",
+          "excluded": "Esclusa dai conteggi: chiamata di spam."
+        },
+        "rules": {
+          "offer": "Trattare sempre questo numero come spam?",
+          "earlier": "Anche la {n} chiamata precedente | Anche le {n} chiamate precedenti",
+          "earlierMore": "Anche le {n} chiamate precedenti più recenti",
+          "always": "Tratta sempre questo numero come spam",
+          "noThanks": "No, grazie",
+          "created": "D'ora in poi questo numero è trattato come spam. | D'ora in poi questo numero è trattato come spam, e {n} chiamata precedente è stata corretta. | D'ora in poi questo numero è trattato come spam, e {n} chiamate precedenti sono state corrette.",
+          "byRule": "Questa chiamata è stata giudicata spam da una regola sul suo numero. Eliminare la regola?",
+          "delete": "Elimina la regola",
+          "keep": "Mantienila",
+          "deleted": "La regola è eliminata; le chiamate che aveva segnato tornano nei conteggi."
+        },
+        "readOnly": {
+          "title": "Visualizzazione in sola lettura",
+          "note": "Non sei il titolare di queste chiamate: ogni chiamata che apri viene registrata, e il titolare può vedere chi l'ha aperta.",
+          "open": "Apri la chiamata",
+          "unknown": "Non è stato possibile leggere se queste chiamate sono tue."
+        },
+        "filters": {
+          "title": "Filtri dal link",
+          "remove": "Togli il filtro {filter}",
+          "unknown": "Un filtro del link non è stato riconosciuto e non è applicato.",
+          "chip": "{name}: {value}",
+          "yes": "sì",
+          "no": "no",
+          "names": {
+            "outcomeLine": "Esito",
+            "topic": "Argomento",
+            "gap": "Domanda senza risposta",
+            "check": "Controllo",
+            "category": "Categoria della richiesta",
+            "requestOutcome": "Esito della richiesta",
+            "noConversation": "Nessuna conversazione",
+            "corrected": "Corretta"
+          },
+          "counted": "Chiamate: come le contano le statistiche, archiviate comprese",
+          "leftOut": "{n} chiamata non visibile con il tuo accesso | {n} chiamate non visibili con il tuo accesso"
+        },
+        "bulk": {
+          "label": "Chiamate selezionate",
+          "count": "{n} selezionata | {n} selezionate",
+          "select": "Seleziona la chiamata di {name}",
+          "changeOutcome": "Cambia esito",
+          "spam": "Segna come spam",
+          "confirm": "Conferma",
+          "clear": "Annulla la selezione",
+          "leftOut": "{n} chiamata senza esito valutato è stata esclusa. | {n} chiamate senza esito valutato sono state escluse.",
+          "selectRequest": "Seleziona la richiesta: {text}",
+          "labelRequests": "Richieste selezionate",
+          "move": "Sposta in categoria",
+          "proposed": "{n} proposta inviata: decide un amministratore. | {n} proposte inviate: decide un amministratore.",
+          "alreadySpam": "{n} chiamata già segnata come spam è stata esclusa. | {n} chiamate già segnate come spam sono state escluse."
+        },
+        "fact": {
+          "chip": "Segnala un errore su un fatto",
+          "reportedOf": "Segnalato a MrCall: {fact}",
+          "option": "{fact}: {value}",
+          "withdraw": "Ritira",
+          "withdrawOf": "Ritira la segnalazione: {fact}"
+        },
+        "links": {
+          "open": "Apri la chiamata: {label} | Apri le {n} chiamate: {label}",
+          "openAll": "Apri le chiamate: {label}",
+          "calls": "Chiamate"
+        },
+        "report": {
+          "corrected": "{n} richiesta di questo report è stata corretta dopo che è stato scritto. | {n} richieste di questo report sono state corrette dopo che è stato scritto.",
+          "correctedTag": "Corretta dopo il report"
+        },
+        "categories": {
+          "all": "Tutte le richieste, anche quelle gestite dall'assistente",
+          "manyRequests": "Una chiamata con più richieste compare in ogni categoria delle sue richieste.",
+          "backlog": "{n} chiamata aspetta ancora la sua analisi e non è ancora contata. | {n} chiamate aspettano ancora la loro analisi e non sono ancora contate.",
+          "columns": {
+            "calls": "Chiamate",
+            "select": "Seleziona",
+            "text": "Richiesta",
+            "business": "Attività",
+            "outcome": "Esito",
+            "category": "Categoria",
+            "call": "Chiamata"
+          },
+          "calls": "{n} chiamata | {n} chiamate",
+          "showRequests": "Mostra le richieste di {category} ({n} chiamata) | Mostra le richieste di {category} ({n} chiamate)",
+          "showOutcome": "Mostra le richieste di {category} con esito {outcome} ({n})",
+          "openCall": "Apri la chiamata: {text}",
+          "call": "Apri la chiamata",
+          "requestsOf": "Richieste di {category}",
+          "noRequests": "Nessuna richiesta in questo periodo."
+        },
+        "queue": {
+          "title": "Correzioni da rivedere",
+          "purpose": "Proposte, correzioni la cui richiesta non c'è più, valori segnalati come sbagliati e fatti segnalati, raggruppati per categoria e attività, prima i gruppi che spostano più chiamate.",
+          "empty": "Niente da rivedere.",
+          "selectedLabel": "Correzioni selezionate",
+          "applySelected": "Applica le selezionate ({n})",
+          "rejectSelected": "Respingi le selezionate ({n})",
+          "select": "Seleziona: {text}",
+          "apply": "Applica",
+          "reject": "Respingi",
+          "handled": "Segna come gestita",
+          "reattach": "Ricollega",
+          "requestOfCall": "Richiesta della chiamata",
+          "reattachHere": "Ricollega qui",
+          "close": "Chiudi",
+          "applied": "{n} applicata. | {n} applicate.",
+          "rejected": "{n} respinta. | {n} respinte.",
+          "failedN": "{n} non riuscita. | {n} non riuscite.",
+          "change": "{field}: {from} → {to}",
+          "wrong": "{field}: {from} è sbagliato, da rivedere",
+          "right": "{field}: {from} confermato",
+          "fact": "{field} segnalato come sbagliato",
+          "factOf": {
+            "booked": "Prenotazione segnalata come sbagliata",
+            "transferred": "Trasferimento segnalato come sbagliato",
+            "no_conversation": "«Nessuna conversazione» segnalata come sbagliata",
+            "managed_call": "«Gestita dall'assistente» segnalata come sbagliata",
+            "skill_errors": "Errori delle skill segnalati come sbagliati",
+            "unkept": "Promesse non mantenute segnalate come sbagliate"
+          }
+        },
+        "mine": {
+          "title": "Le mie proposte",
+          "empty": "Ancora nessuna proposta.",
+          "withdraw": "Ritira",
+          "withdrawOf": "Ritira la proposta: {what}"
+        },
+        "facts": {
+          "no_conversation": "Nessuna conversazione",
+          "managed_call": "Gestita dall'assistente",
+          "skill_errors": "Errori delle skill",
+          "unkept": "Promesse non mantenute",
+          "none": "non registrato",
+          "yes": "sì",
+          "no": "no",
+          "recorded": "registrato"
+        },
+        "access": {
+          "menu": "Numeri spam e accessi alle chiamate",
+          "rulesTitle": "Numeri trattati come spam",
+          "rulesNote": "Le chiamate da questi numeri sono contate come spam. Eliminando una regola le sue chiamate tornano nei conteggi.",
+          "rulesEmpty": "Nessun numero è trattato come spam.",
+          "since": "dal {date}",
+          "delete": "Elimina",
+          "deleteOf": "Elimina la regola per {number}",
+          "deleted": "Regola eliminata: {n} chiamata torna nei conteggi. | Regola eliminata: {n} chiamate tornano nei conteggi.",
+          "logTitle": "Chi ha aperto le tue chiamate",
+          "logNote": "Il tuo partner e MrCall possono aprire le tue chiamate per aiutarti; ogni apertura è registrata qui e conservata 12 mesi.",
+          "logEmpty": "Nessun altro ha aperto le tue chiamate.",
+          "columns": {
+            "at": "Quando",
+            "who": "Chi",
+            "event": "Cosa",
+            "call": "Chiamata"
+          },
+          "roles": {
+            "admin": "Amministratore",
+            "reseller": "Partner",
+            "service": "MrCall",
+            "unknown": "Qualcuno"
+          },
+          "events": {
+            "opened": "Chiamata aperta",
+            "audio": "Registrazione ascoltata"
+          }
+        },
+        "withdrawRefused": {
+          "not_author": "Solo chi l'ha fatta può ritirare una proposta.",
+          "feedback_state": "Questa proposta è già stata decisa."
+        }
+      }
     },
     "datePicker": {
       "chooseDate": "Scegli la data",

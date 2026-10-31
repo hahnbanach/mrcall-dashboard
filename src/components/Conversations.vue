@@ -16,10 +16,11 @@
             <span v-if="opened.deleted" class="opened-state">{{ $t("components.conversations.details.inTrash") }}</span>
             <span v-else-if="opened.archived" class="opened-state">{{ $t("components.conversations.details.inArchive") }}</span>
           </div>
+          <p v-if="notOwner" class="read-only-note">{{ $t("components.callInsights.feedback.readOnly.title") }}</p>
           <div class="card-header">
             <div class="contact-info">
               <span class="contact-name">{{ callerName(opened) }}</span>
-              <span v-if="opened.contactNumber" class="contact-number">{{ opened.contactNumber }}</span>
+              <span v-if="callerNumber(opened)" class="contact-number">{{ callerNumber(opened) }}</span>
             </div>
             <div class="timestamp-section">
               <span class="timestamp">{{ timestampToDate(opened.startTimestamp) }}</span>
@@ -40,11 +41,47 @@
             :business-id="businessId"
             :user="user"
             :expanded="true"
+            :eager="true"
+            :read-only="readOnly"
+            :owner-actions="!notOwner"
+            :with-judgements="true"
             @error="recordingFailed"
           />
         </div>
         <div v-else-if="openedState === 'missing'" class="conversation-card opened-card">
           <p class="opened-missing">{{ $t("components.conversations.details.openedMissing") }}</p>
+        </div>
+      </div>
+
+      <!-- A non-owner's page (an admin, a reseller): read-only, every call opened recorded (StarChat decision 14) -->
+      <div v-if="readerKnown && notOwner" class="conversation-table-container">
+        <div class="read-only-banner" role="note">
+          <i class="pi pi-eye" aria-hidden="true"></i>
+          <span><strong>{{ $t("components.callInsights.feedback.readOnly.title") }}</strong> · {{ $t("components.callInsights.feedback.readOnly.note") }}</span>
+        </div>
+      </div>
+      <!-- The business could not be read: whether the reader owns these calls is not known. Its controls stay (StarChat
+           refuses an owner-only write to anyone else); no call or judgement is read on its own until it is known. -->
+      <div v-if="readerKnown && ownership === null && businessId" class="conversation-table-container">
+        <div class="read-only-banner" role="status">
+          <span>{{ $t("components.callInsights.feedback.readOnly.unknown") }}</span>
+          <Button type="button" size="small" text :label="$t('components.callInsights.state.retry')" @click="readBusiness" />
+        </div>
+      </div>
+
+      <!-- The filters a count's link carried, each undone by its own chip; a value not recognised is said, not applied -->
+      <div v-if="addressChips.length > 0 || addressUnknown.length > 0" class="conversation-table-container">
+        <div class="address-filters" :aria-label="$t('components.callInsights.feedback.filters.title')" role="group">
+          <span v-for="c in addressChips" :key="c.key" class="address-chip">
+            <span>{{ c.text }}</span>
+            <button type="button" class="address-chip-clear" :aria-label="$t('components.callInsights.feedback.filters.remove', { filter: c.text })" @click="removeAddressFilter(c.key)">
+              <i class="pi pi-times" aria-hidden="true"></i>
+            </button>
+          </span>
+          <!-- the count the link opened, as StarChat counts the list (U19c m3) -->
+          <p v-if="counted && queryConvResultReady" class="address-count" role="status">{{ $t("components.callInsights.reportDetail.calls", { n: totalHits }, totalHits) }}</p>
+          <p v-if="addressUnknown.length > 0" class="address-unknown" role="status">{{ $t("components.callInsights.feedback.filters.unknown") }}</p>
+          <p v-if="leftOut > 0" class="address-unknown" role="status">{{ $t("components.callInsights.feedback.filters.leftOut", { n: leftOut }, leftOut) }}</p>
         </div>
       </div>
 
@@ -126,14 +163,17 @@
                 <Tag severity="secondary" :value="$t('components.callInsights.assessedMarking')" class="insight-assessed-tag" />
               </label>
               <div class="filter-control">
+                <!-- an outcome line from a count's link fixes the resolution: shown, not editable (U19c m3) -->
                 <Dropdown
-                  v-model="resolutionFilter"
+                  :modelValue="impliedResolution || resolutionFilter"
                   :options="resolutionOptions"
                   optionLabel="label"
                   optionValue="value"
-                  :showClear="true"
+                  :showClear="!impliedResolution"
+                  :disabled="!!impliedResolution"
                   :ariaLabel="$t('components.callInsights.dimensions.resolution')"
                   :placeholder="$t('components.callInsights.filters.resolutionPlaceholder')"
+                  @update:modelValue="resolutionFilter = $event"
                 />
               </div>
             </div>
@@ -242,8 +282,8 @@
               </div>
             </div>
 
-            <!-- Export Row -->
-            <div class="filter-row">
+            <!-- Export Row: the owner's only (StarChat answers 403 owner_only to anyone else) -->
+            <div v-if="!notOwner" class="filter-row">
               <label class="filter-label">
                 <i class="pi pi-download"></i>
                 {{ $t("components.conversations.exportLabel") }}
@@ -266,8 +306,9 @@
               </div>
             </div>
 
-            <!-- Bulk Actions Row -->
-            <div class="filter-row">
+            <!-- Bulk Actions Row: archive and delete are the owner's only, and not offered on the list a count opened, whose
+                 calls are a statistic's, not a selection (U19c m3) -->
+            <div v-if="!notOwner && !counted" class="filter-row">
               <label class="filter-label">
                 <i class="pi pi-list-check"></i>
                 {{ $t("components.conversations.bulkActionsLabel") }}
@@ -345,21 +386,35 @@
               :key="key"
               class="conversation-card"
               :class="{
-                'unread': !isRead(conversation),
-                'animating-out': animatingOut.has(key)
+                'unread': !notOwner && !isRead(conversation),
+                'animating-out': animatingOut.has(key),
+                'selected-card': selection.has(key)
               }"
+              @pointerdown="selection.pressStart(key, $event)"
+              @pointerup="selection.pressEnd()"
+              @pointerleave="selection.pressEnd()"
+              @pointercancel="selection.pressEnd()"
             >
               <div class="card-header">
+                <!-- the selection: always on a wide screen, after a long press on a narrow one -->
+                <input
+                  v-if="selection.showChecks"
+                  type="checkbox"
+                  class="select-check"
+                  :checked="selection.has(key)"
+                  :aria-label="$t('components.callInsights.feedback.bulk.select', { name: callerName(conversation) })"
+                  @change="selectRow(key, $event.target.checked)"
+                />
                 <div class="contact-info">
                   <span class="contact-name">
-                    <span v-if="!isRead(conversation)" class="unread-dot"></span>
+                    <span v-if="!notOwner && !isRead(conversation)" class="unread-dot"></span>
                     {{ callerName(conversation) }}
                   </span>
                   <span
-                    v-if="conversation.contactNumber"
+                    v-if="callerNumber(conversation)"
                     class="contact-number"
                   >
-                    {{ conversation.contactNumber }}
+                    {{ callerNumber(conversation) }}
                   </span>
                 </div>
                 <div class="timestamp-section">
@@ -372,8 +427,18 @@
                   </span>
                 </div>
 
+                <!-- A non-owner's row is reduced: the call is opened, and recorded, only when asked -->
+                <Button
+                  v-if="notOwner"
+                  type="button" size="small" outlined
+                  class="open-call-btn"
+                  :label="$t('components.callInsights.feedback.readOnly.open')"
+                  @click.stop="openFromList(key)"
+                />
+
                 <!-- Read/Unread toggle (always visible) -->
                 <button
+                  v-if="!notOwner"
                   type="button"
                   class="action-btn action-btn-read"
                   :title="isRead(conversation)
@@ -386,7 +451,7 @@
                 </button>
 
                 <!-- Desktop Actions (hover reveal) -->
-                <div class="desktop-actions">
+                <div v-if="!notOwner" class="desktop-actions">
                   <template v-if="activeView === 'inbox'">
                     <button
                       type="button"
@@ -441,7 +506,7 @@
                 </div>
 
                 <!-- Mobile Actions (3-dot menu) -->
-                <div class="mobile-action-trigger">
+                <div v-if="!notOwner" class="mobile-action-trigger">
                   <button
                     type="button"
                     class="action-btn"
@@ -458,6 +523,9 @@
                 :business-id="businessId"
                 :user="user"
                 :expanded="messagesExpanded"
+                :read-only="readOnly"
+                :owner-actions="!notOwner"
+                :with-judgements="true"
                 @error="recordingFailed"
               />
             </div>
@@ -521,6 +589,30 @@
 
     <!-- Mobile TieredMenu -->
     <TieredMenu ref="mobileMenu" :model="mobileMenuItems" popup />
+    <!-- The selected calls' judgements, corrected in one gesture (StarChat decision 9, "In lists"): a bar at the
+         bottom of the screen, across its whole width on a narrow one -->
+    <BulkBar
+      v-if="selection.size > 0"
+      :label="$t('components.callInsights.feedback.bulk.label')"
+      :count="selection.size"
+      :narrow="selection.narrow"
+    >
+      <JudgementChip
+        :field-label="$t('components.callInsights.feedback.bulk.changeOutcome')"
+        :value-label="$t('components.callInsights.feedback.bulk.changeOutcome')"
+        :name="$t('components.callInsights.feedback.bulk.changeOutcome')"
+        :entries="bulkOutcomeEntries"
+        :upward="true"
+        :busy="bulkBusy"
+        @choose="bulkResolution('wrong_value', $event.value)"
+      />
+      <Button type="button" size="small" outlined :label="$t('components.callInsights.feedback.bulk.spam')" :disabled="bulkBusy" @click="bulkResolution('wrong_value', 'spam_wrong_number')" />
+      <Button type="button" size="small" outlined :label="$t('components.callInsights.feedback.bulk.confirm')" :disabled="bulkBusy" @click="bulkResolution('right')" />
+      <Button type="button" size="small" text :label="$t('components.callInsights.feedback.bulk.clear')" @click="selection.clear()" />
+    </BulkBar>
+    <p v-if="bulkNote" class="bulk-note conversation-table-container" role="status">{{ bulkNote }}</p>
+    <!-- The one undo of a gesture on the calls' judgements -->
+    <UndoBar :raised="selection.size > 0" />
   </div>
 </template>
 
@@ -538,9 +630,41 @@ import Tr from "@/i18n/translation";
 import ConversationApi from "@/utils/Conversation";
 import CallDetailsPanel from "@/components/conversations/CallDetailsPanel";
 import CallInsights from "@/utils/CallInsights";
+import UndoBar from "@/components/feedback/UndoBar.vue";
+import Classifications from "@/utils/Classifications";
+import businessUtils from "@/utils/Business";
+import UndoGesture from "@/utils/UndoGesture";
+import { createSelection } from "@/utils/Selection";
+import JudgementChip from "@/components/feedback/JudgementChip.vue";
+import BulkBar from "@/components/feedback/BulkBar.vue";
+import { isSessionEnded } from "@/firebase/session";
+
+// The search filters a link carried (a count opening its calls, brief docs/briefs/2026-10-27-classification-feedback.md
+// scope 6): those with a control of their own on this page set the control; the window sets the range; the others are
+// sent as they are and shown as chips. Read once, when the page opens.
+const CONTROLLED = ["resolution", "message", "booked", "transferred", "hasUnanswered"];
+const WINDOW = ["timestampGte", "timestampLte"];
+function readAddress(query) {
+  const read = Classifications.searchFromQuery(query);
+  const controls = {};
+  const window = {};
+  const extra = {};
+  for (const [key, value] of Object.entries(read.body)) {
+    if (CONTROLLED.includes(key)) controls[key] = value;
+    else if (WINDOW.includes(key)) window[key] = value;
+    else if (key !== "counted") extra[key] = value;
+  }
+  const controlledKeys = ["resolution", "message", "booked", "transferred", "unanswered"];
+  return {
+    controls, window, extra,
+    counted: read.body.counted === true,
+    filters: read.filters.filter((f) => !controlledKeys.includes(f.key)),
+    unknown: read.unknown,
+  };
+}
 
 export default {
-  components: { CallDetailsPanel },
+  components: { CallDetailsPanel, UndoBar, JudgementChip, BulkBar },
   setup() {
     const store = useStore();
     const toast = useToast();
@@ -556,13 +680,16 @@ export default {
   },
   data() {
     const locale = Tr.getLocale();
+    const address = readAddress(router.currentRoute.value.query);
     return {
       locale,
       periodicEvent: null,
-      rangeValue: null,
+      rangeValue: address.window.timestampGte != null
+        ? [new Date(address.window.timestampGte), address.window.timestampLte != null ? new Date(address.window.timestampLte) : null]
+        : null,
       businessId: null,
-      timestampGte: null,
-      timestampLte: null,
+      timestampGte: address.window.timestampGte != null ? address.window.timestampGte : null,
+      timestampLte: address.window.timestampLte != null ? address.window.timestampLte : null,
       router,
       langCode: locale,
       items: new Map(),
@@ -587,14 +714,56 @@ export default {
       // What the call said (brief outcome 2): null/false means no filter. `bookedFilter` is
       // "booked" or "not_booked"; `transferredFilter` has no "not transferred" (StarChat refuses it:
       // the carrier writes only a true).
-      resolutionFilter: null,
-      messageFilter: null,
-      bookedFilter: null,
-      transferredFilter: false,
-      unansweredFilter: false,
+      resolutionFilter: address.controls.resolution || null,
+      messageFilter: address.controls.message || null,
+      bookedFilter: address.controls.booked === true ? "booked" : address.controls.booked === false ? "not_booked" : null,
+      transferredFilter: address.controls.transferred === true,
+      unansweredFilter: address.controls.hasUnanswered === true,
+      // the business as StarChat answers it (`CallInsights.business`): its owner says whose calls these are
+      business: null,
+      readerKnown: false,
+      // the filters a count's link carried that have no control of their own (`Classifications.searchFromQuery`)
+      addressBody: address.extra,
+      addressFilters: address.filters,
+      addressUnknown: address.unknown,
+      counted: address.counted,
+      // a report count's list (`leftOut=true`): how many of its calls the reader cannot open, as StarChat counts them
+      asksLeftOut: router.currentRoute.value.query.leftOut === "true",
+      leftOut: 0,
+      categoryLabels: null,
+      // the calls selected for a gesture, by id (`createSelection`: a long-press mode on a narrow screen)
+      selection: createSelection(),
+      bulkBusy: false,
+      bulkNote: null,
     };
   },
   computed: {
+    // Whether the reader owns these calls (`Classifications.isOwnerOf`): true, false, or null while the business could not
+    // be read. A known non-owner sees the read-only page; an unknown reader keeps the owner's controls (StarChat is the
+    // gate for writes) but no call or judgement is read on its own, since a non-owner's read is recorded.
+    ownership() {
+      return Classifications.isOwnerOf(this.business, this.user);
+    },
+    notOwner() {
+      return this.ownership === false;
+    },
+    readOnly() {
+      return this.ownership !== true;
+    },
+    addressChips() {
+      const chips = this.addressFilters.map((f) => ({ key: f.key, text: this.addressFilterText(f) }));
+      if (this.counted) chips.push({ key: "counted", text: this.$t("components.callInsights.feedback.filters.counted") });
+      return chips;
+    },
+    bulkOutcomeEntries() {
+      return CallInsights.RESOLUTION_KEYS.map((key) => ({ key, value: key, kind: "value", label: this.$t("components.callInsights.resolution." + key) }));
+    },
+    // The resolution an outcome line of the address fixes (the line "forwarded_*" is resolution "forwarded"), shown in
+    // the resolution control so that it agrees with the chip; null when the address carries none.
+    impliedResolution() {
+      const line = this.addressFilters.find((f) => f.key === "outcomeLine");
+      return line ? CallInsights.resolutionOfLine(line.value) : null;
+    },
     resolutionOptions() {
       return CallInsights.RESOLUTION_KEYS.map((key) => ({
         label: this.$t("components.callInsights.resolution." + key),
@@ -717,10 +886,114 @@ export default {
       const seconds = totalSeconds % 60;
       return this.$t("components.conversations.duration", { minutes, seconds });
     },
+    // The reader's role (the same business search that sets it on the analytics pages) and the business's owner, to
+    // tell an owner's page from a non-owner's. Unknown (a failed read) is read-only: the safe side of a recorded read.
+    async establishReader() {
+      const user = this.store.state.user;
+      if (!user || !user.accessToken) return;
+      try {
+        await businessUtils.checkUserHasBusinesses(user, this.store);
+      } catch (error) {
+        console.debug("Role not read:", error && error.response ? error.response.status : "");
+      }
+      await this.readBusiness();
+      this.readerKnown = true;
+      if (this.addressFilters.some((f) => f.key === "category")) {
+        Classifications.categories(user, this.$i18n.locale)
+          .then((answer) => { this.categoryLabels = answer && Array.isArray(answer.items) ? answer.items : null; })
+          .catch(() => { this.categoryLabels = null; });
+      }
+    },
+    addressFilterText(f) {
+      const t = (k, v) => this.$t("components.callInsights.feedback.filters.chip", { name: this.$t("components.callInsights.feedback.filters.names." + k), value: v });
+      const v = f.value;
+      switch (f.key) {
+        case "outcomeLine": return t(f.key, this.$t("components.callInsights.outcome." + (v.startsWith("forwarded_") ? "forwarded" : v)) +
+          (v.startsWith("forwarded_") ? " " + this.$t("components.callInsights.outcome." + v) : ""));
+        case "noConversation": return t(f.key, this.$t("components.callInsights.noConversation.reasons." + v));
+        case "gap": return t(f.key, this.$t("components.callInsights.gaps." + v));
+        case "check": return t(f.key, this.$t("components.callInsights.checks." + v));
+        case "requestOutcome": return t(f.key, v.map((o) => this.$t("components.callInsights.feedback.outcome." + o)).join(", "));
+        case "corrected": return t(f.key, this.$t("components.callInsights.feedback.filters." + (v ? "yes" : "no")));
+        case "topicLabel": return t("topic", v.join(", "));
+        case "category": {
+          if (v === Classifications.UNCLASSIFIED) return t(f.key, this.$t("components.callInsights.feedback.unset"));
+          const c = (this.categoryLabels || []).find((x) => x.key === v);
+          return c ? t(f.key, c.label) : this.$t("components.callInsights.feedback.filters.names.category");
+        }
+        default: return t(f.key, String(v));
+      }
+    },
+    removeAddressFilter(key) {
+      if (key === "counted") this.counted = false;
+      const f = Classifications.ADDRESS_FILTERS.find((x) => x.key === key);
+      this.addressFilters = this.addressFilters.filter((x) => x.key !== key);
+      const body = { ...this.addressBody };
+      if (f) delete body[f.body];
+      this.addressBody = body;
+      this.router.replace({ path: this.$route.path, query: Classifications.withoutFilter(this.$route.query, key) });
+      this.resetAndReload();
+    },
+    selectRow(key, on) {
+      this.selection.toggle(key, on);
+      this.bulkNote = null;
+    },
+    // One gesture over the selected calls' resolution (`POST insights/feedback/bulk`, all or nothing, one undo): a new
+    // value, or "right". A call without a judged resolution, or already at the value asked, is left out, and said.
+    async bulkResolution(signal, valueTo) {
+      const asks = [];
+      let leftOut = 0;
+      for (const key of this.selection.selected) {
+        const conversation = this.items.get(key);
+        const current = conversation && conversation.details ? conversation.details.resolution : null;
+        if (!current) { leftOut += 1; continue; }
+        if (signal === "wrong_value" && current === valueTo) continue;
+        asks.push(Classifications.ask({ conversationId: key, field: "resolution", signal, valueFrom: current, valueTo }));
+      }
+      this.bulkNote = leftOut > 0 ? this.$t("components.callInsights.feedback.bulk.leftOut", { n: leftOut }, leftOut) : null;
+      if (asks.length === 0) return;
+      const gestureId = Classifications.newGestureId();
+      this.bulkBusy = true;
+      try {
+        const answer = await Classifications.bulk(this.user, asks, gestureId);
+        UndoGesture.record(gestureId, asks.map((a) => a.conversationId), () => this.conversationList(), null, answer && answer.calls,
+          Classifications.bulkEntries(asks, answer && answer.items), this.$store.state.role || "owner");
+        this.selection.clear();
+      } catch (error) {
+        if (isSessionEnded(error)) return;
+        const refusal = CallInsights.refusalOf(error);
+        this.bulkNote = this.$t(refusal && refusal.code === "stale_value"
+          ? "components.callInsights.feedback.stale"
+          : "components.callInsights.feedback.failed");
+      } finally {
+        this.bulkBusy = false;
+      }
+      this.conversationList();
+    },
+    openFromList(key) {
+      this.router.replace({ path: this.$route.path, query: { ...this.$route.query, conversation: key } });
+      this.openConversation(key);
+      window.scrollTo(0, 0);
+    },
+    async readBusiness() {
+      const user = this.store.state.user;
+      if (!user || !this.businessId) return;
+      try {
+        this.business = await CallInsights.business(user, this.businessId);
+      } catch (error) {
+        console.debug("Business not read:", error && error.response ? error.response.status : "");
+        this.business = null;
+      }
+    },
+    // A web call is named as the analytics name it, never by its caller's identity string (U19c m15).
     callerName(conversation) {
       const details = conversation.details || {};
+      if (CallInsights.isWebCaller(conversation)) return this.$t("components.callInsights.callers.web");
       return details.callerName || conversation.contactName ||
         this.$t("components.conversations.unknownContact");
+    },
+    callerNumber(conversation) {
+      return CallInsights.isWebCaller(conversation) ? null : conversation.contactNumber || null;
     },
     async openConversation(id) {
       this.openedId = id;
@@ -775,9 +1048,11 @@ export default {
     // specific to one caller (pagination, `lightweight`, the poll's own `timestampGte`), applied
     // after the shared fields so it can override them.
     searchBody(extra = {}) {
+      // A count's list is the calls the statistics count, archived ones included (StarChat's `counted`: finalised and
+      // not deleted); the inbox's narrowing to calls not archived would make it shorter than its count.
       const body = {
         businessId: this.businessId,
-        ...this.getViewFilters(),
+        ...(this.counted ? {} : this.getViewFilters()),
       };
       if (this.timestampGte != null) body.timestampGte = this.timestampGte;
       if (this.timestampLte != null) body.timestampLte = this.timestampLte;
@@ -786,11 +1061,14 @@ export default {
       if (this.bookedFilter) body.booked = this.bookedFilter === "booked";
       if (this.transferredFilter) body.transferred = true;
       if (this.unansweredFilter) body.hasUnanswered = true;
+      if (this.counted) body.counted = true;
+      Object.assign(body, this.addressBody);
       return { ...body, ...extra };
     },
     // A changed view or filter invalidates the page shown: start over from the first one, as
     // (before this) only a changed view already did.
     resetAndReload() {
+      this.selection.clear();
       this.first = 0;
       this.items = new Map();
       this.totalHits = 0;
@@ -878,11 +1156,12 @@ export default {
       };
       // the recordings stay out of the list: CallDetailsPanel reads one when it is played
       const request = self.searchBody({ lightweight: true, from: self.first, size: self.size });
+      const leftOutQuery = self.asksLeftOut ? "&leftOut=true" : "";
       self.showProgressBar = true;
       axios
         .post(
           process.env.VUE_APP_STARCHAT_URL +
-            "/mrcall/v1/mrcall0/customer/conversation/search?enableDataMap=true",
+            "/mrcall/v1/mrcall0/customer/conversation/search?enableDataMap=true" + leftOutQuery,
           request,
           {
             headers: headers,
@@ -890,6 +1169,7 @@ export default {
         )
         .then((response) => {
           self.queryConvResultReady = true;
+          self.leftOut = response.data && typeof response.data.leftOut === "number" ? response.data.leftOut : 0;
           const map = new Map();
           let unread = 0;
           let newest = null;
@@ -916,6 +1196,8 @@ export default {
           }
           self.items = map;
           self.newestTimestamp = newest;
+          // a selected call no longer listed is no longer selected
+          for (const key of self.selection.selected) if (!map.has(key)) self.selection.toggle(key, false);
           if (self.activeView === "inbox") {
             self.unreadCount = unread;
           }
@@ -995,6 +1277,7 @@ export default {
         });
     },
     onPage(event) {
+      this.selection.clear();
       this.first = event.first;
       this.size = event.rows;
       this.conversationList();
@@ -1006,6 +1289,7 @@ export default {
         setTimeout(() => {
           this.items.delete(key);
           this.items = new Map(this.items);
+          this.selection.toggle(key, false);
           this.totalHits = Math.max(0, this.totalHits - 1);
           this.animatingOut.delete(key);
           this.animatingOut = new Set(this.animatingOut);
@@ -1396,6 +1680,7 @@ export default {
     },
   },
   beforeUnmount() {
+    this.selection.dispose();
     console.debug("Before Unmount");
     if (this.periodicEvent) {
       this.periodicEvent.unsubscribe();
@@ -1410,23 +1695,26 @@ export default {
       console.debug("Store not ready");
       return;
     }
-    if (!this.store.state.user) {
-      onAuthStateChanged(auth, (user) => {
-        if (user && user.emailVerified && !user.isAnonymous) {
-          console.debug("UserStateChanged:", user);
-          if (this.$route.query.conversation) this.openConversation(this.$route.query.conversation);
-          this.conversationList();
-          this.periodicEvent = interval(10000).subscribe(() => {
-            this.pollForNewConversations();
-          });
-        }
-      });
-    } else if (this.store.state.user.accessToken) {
+    // The reader's role and whether it owns the business's calls, known before anything is read: a non-owner's read of
+    // a call by id is recorded by StarChat, and its page shows no owner-only control (brief
+    // docs/briefs/2026-10-27-classification-feedback.md, scope 11).
+    const proceed = async () => {
+      await this.establishReader();
       if (this.$route.query.conversation) this.openConversation(this.$route.query.conversation);
       this.conversationList();
       this.periodicEvent = interval(10000).subscribe(() => {
         this.pollForNewConversations();
       });
+    };
+    if (!this.store.state.user) {
+      onAuthStateChanged(auth, (user) => {
+        if (user && user.emailVerified && !user.isAnonymous) {
+          console.debug("UserStateChanged:", user);
+          proceed();
+        }
+      });
+    } else if (this.store.state.user.accessToken) {
+      proceed();
     }
   },
 };
@@ -1931,5 +2219,95 @@ export default {
   50% {
     opacity: 0.5;
   }
+}
+
+.read-only-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 8px 0;
+  padding: 10px 12px;
+  border: 1px solid @mrcall_borders;
+  border-radius: 10px;
+  background: @mrcall_light_grey_2;
+  font-size: 14px;
+  color: @mrcall_dark_grey_text;
+}
+
+.read-only-note {
+  margin: 0 0 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: @mrcall_grey_text;
+}
+
+.address-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0;
+}
+
+.address-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 4px 4px 10px;
+  border: 1px solid @mrcall_blue;
+  border-radius: 16px;
+  font-size: 13px;
+  color: @mrcall_blue;
+  background: @mrcall_white;
+}
+
+.address-chip-clear {
+  border: none;
+  background: none;
+  color: @mrcall_blue;
+  cursor: pointer;
+  min-width: 28px;
+  min-height: 28px;
+  border-radius: 14px;
+
+  &:focus-visible {
+    outline: 2px solid @mrcall_blue;
+  }
+}
+
+.address-unknown {
+  margin: 0;
+  font-size: 13px;
+  color: @mrcall_grey_text;
+}
+
+.address-count {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.select-check {
+  width: 20px;
+  height: 20px;
+  margin: 0 8px 0 0;
+  flex: none;
+  accent-color: @mrcall_blue;
+}
+
+.selected-card {
+  outline: 2px solid @mrcall_blue;
+}
+
+.open-call-btn {
+  flex: none;
+}
+
+
+
+
+.bulk-note {
+  font-size: 13px;
+  color: @mrcall_grey_text;
 }
 </style>
