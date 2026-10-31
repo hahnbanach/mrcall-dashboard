@@ -40,7 +40,7 @@ present.
   second, stale truth of a contract StarChat owns.
 - `CALL_INSIGHTS_REPORT_CADENCE` is an enum business variable under `__NOTIFICATIONS__`; the configuration
   page renders catalogue enums generically (`BusinessConfiguration.vue:164-186`), so it needs no code if the
-  catalogue serves it with its values.
+  catalogue serves it with its values. *Superseded by the amendment of 2026-10-31, item 3.*
 
 ## Outcome
 
@@ -66,7 +66,7 @@ caller's language.
 
 | Section | Owner | Reseller | Admin | Where |
 |---|---|---|---|---|
-| A call's insights | own calls | — (no conversation access, see Evidence) | — | the call's panel in Conversations |
+| A call's insights | own calls | — (no conversation access, see Evidence) *superseded by the amendment of 2026-10-31, item 2* | — | the call's panel in Conversations |
 | Resolution, message, booked, transferred and "unanswered" filters | yes | — | — | Conversations |
 | The four dimensions and quality | the business | one business, or all its owners | any scope | `/analytics?id=<business>`; for resellers also `/analytics` without a business, over its scope (owner selector); admins `/analytics-admin` |
 | Call reports | the business | a business of its owners | any business | `/analytics?id=<business>`, a reports section |
@@ -94,7 +94,7 @@ caller's language.
    the business; an admin sees MrCall's configuration suggestions too (the server removes them for anyone
    else). A report's example calls open the call for the business's owner; for a reseller or an admin they
    are listed without a link, and the StarChat need (reading a managed owner's call) is recorded as a
-   Mycelium task.
+   Mycelium task. *Superseded by the amendment of 2026-10-31, items 1 and 2.*
 5. **Resellers and admins see which assistants to review**: the per-business table of signals sorted by
    StarChat's keys, each row opening that business's analytics, and the integrations and information
    businesses ask for; admins also MrCall's configuration suggestions. These last two cover the caller's
@@ -103,7 +103,7 @@ caller's language.
    the user can see, and do not react to the page's filters.
 6. **The report cadence is configurable** by the owner in the notifications section, with no new code
    (StarChat's catalogue serves it as an enum with its values; its labels in 6 languages, English in the
-   others); checked on test.
+   others); checked on test. *Superseded by the amendment of 2026-10-31, item 3.*
 7. **One truth for the API.** The stale root `analytics-api-guide.md` is removed; the documentation points
    to StarChat's guide.
 8. **What the caller was told and is not recorded as done** (amendment of 2026-10-21, StarChat brief intent
@@ -166,6 +166,33 @@ caller's language.
       selection; the page's time to show its first section no slower than on v2.2.29 against the same StarChat on
       test, both measured the same way, and each analytics request answered within one second there. Its findings
       are fixed or answered in the plan.
+11. **Amendment of 2026-10-31: what later work changed in this brief**, recorded for the release that ships
+    dashboard `v2.2.41-test` with StarChat 9.34.126. The text above stays as decided; each item names what
+    supersedes it and where the decision now lives.
+    1. **Reports and paid work on request** (outcome 4): the reports are no longer a read-only list. The Reports
+       tab, the request dialog (an estimate first, then the job, refused with the server's closed codes), the
+       jobs tab, "Anticipa", regeneration, an admin's re-run and delete, the schedule panel (the cadence, the next
+       period, a period held back for credit, a period longer than the cadence because its first cycles had no
+       call), and a FREE business's owner offered the plan instead of paid work, are specified by StarChat's
+       brief `docs/briefs/2026-10-24-insights-reports-ux.md` ("Dashboard" and its amendments of 2026-10-26 and
+       2026-10-30), whose contract is StarChat's `docs/analytics-api-guide.md` §10-12. No credit figure is shown
+       to any role: the server withholds them.
+    2. **A non-owner opens a call** (outcome 4's example calls, the table's first row, Out of scope): an admin or a
+       reseller opens a call of a business in its scope read-only, each opening recorded and shown to the owner,
+       and every count and example in the analytics and the reports opens its calls, for every role that reads
+       them. Specified by this repository's `docs/briefs/2026-10-27-classification-feedback.md` (StarChat
+       classification brief, decision 14), together with the judgements a person corrects, proposes, undoes and,
+       for an author's own undecided proposal, withdraws.
+    3. **The cadence is a number of days** (Evidence, outcome 6): StarChat's `CALL_INSIGHTS_REPORT_CADENCE` is a
+       `number` variable, a whole number from 0 to 366 with `constraints` `{integer, min 0, max 366}`, 0 (the
+       default) meaning no automatic report, not admin-only. The configuration page renders it with the generic
+       number field and its bounds (`BusinessVariables.numberFieldBounds`); the Reports tab's schedule panel
+       links to it.
+    4. **Not live in this release:** the aggregation redesign of StarChat's reports brief, amendment of
+       2026-10-31, and the call-satisfaction scorecard screens designed in the classification-feedback brief's
+       third amendment belong to the next release; nothing in this brief or its amendments describes them as
+       shipped.
+
 ## Constraints
 
 - Every request through the configured Axios instance; components show no failure UI for
@@ -218,7 +245,8 @@ caller's language.
 ## Out of scope
 
 - Calibration of the resolution and message judgements and any quality score (Mycelium 5e6dbb40).
-- Reading an owner's conversation as its reseller or an admin (StarChat; a Mycelium task).
+- Reading an owner's conversation as its reseller or an admin (StarChat; a Mycelium task). *Superseded by the
+  amendment of 2026-10-31, item 2.*
 - The pre-existing gaps the exploration found, fixed here where this work touches the same code
   (the reseller's `/analytics` without a business becomes its scope page), otherwise recorded in the
   backlog: the conversation list does not use `isSessionEnded`; the router's owner pass-through.
