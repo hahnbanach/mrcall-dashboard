@@ -3,9 +3,12 @@
     <Toast />
     <ProgressBar
       mode="indeterminate"
-      :style="{ height: '0.3em', visibility: anyLoading ? 'visible' : 'hidden' }"
+      :style="{ height: '0.3em', visibility: anyLoading || !adminConfirmed ? 'visible' : 'hidden' }"
     />
-    <div v-if="user" class="analytics-container insights-ui">
+    <!-- read at once, drawn once the role search has confirmed an admin: StarChat answers most of these reads to anyone,
+         scoped to the reader, so a non-admin is never shown their own data under the title for all businesses (U19 m12,
+         P17's review B1) -->
+    <div v-if="user" v-show="adminConfirmed" class="analytics-container insights-ui">
 
       <!-- Admin Mode Banner -->
       <div class="analytics-section">
@@ -372,9 +375,10 @@ export default {
       qualityData: null,
       // the filters as the assistants and the requests send them, set when the page fetches
       requestBody: null,
-      // The role is known (see `mounted`): the scope-wide lists wait for it, since MrCall's own
-      // configuration suggestions are asked for by an admin only.
+      // The role search has confirmed an admin (see `mounted`): the page is drawn, and the scope-wide lists that read
+      // on their own mount, MrCall's own configuration suggestions being asked for by an admin only.
       roleReady: false,
+      adminConfirmed: false,
       // businessId -> company name, from every answer that names a business (brief outcome 10)
       businessNames: {},
       // ownerId -> a name for it (`CallInsights.ownerName`), for the owner filter's chip
@@ -666,17 +670,21 @@ export default {
     this.ownerIdInput = this.ownerId;
     this.planInput = this.plan;
     this.setPresetRange('30d');
-    // The role on the server is the gate: admin-only routes answer 404 to anyone else. So the page's reads start at
-    // once, beside the role search, rather than behind it (U19r7b: on test 700-800 ms passed before the first read). A
-    // reader the search finds not to be an admin is taken to their own statistics, never left on a page titled for all
-    // businesses (U19 m12); the reads already asked are answered as StarChat answers a non-admin.
+    // The page's reads start at once, beside the role search, rather than behind it (U19r7b: on test 700-800 ms
+    // passed before the first read). They are not admin-only: StarChat answers the classic analytics, outcomes and
+    // quality to anyone, scoped to the reader (only the assistants route refuses a non-admin). So nothing is drawn
+    // (`adminConfirmed`) until the search confirms an admin, and the sections that read on their own and are not
+    // admin-only (the callers' requests, the reader's proposals, the queue) mount only then (`roleReady`). A reader the
+    // search finds not to be an admin is taken to their own statistics, never shown a page titled for all businesses
+    // (U19 m12); the reads already answered are dropped with the page.
     const proceed = () => {
-      this.roleReady = true;
       this.fetchAllData();
       this.fetchTemplates();
       this.establishRole().then(() => {
         const role = this.store.state.role;
-        if (role && role !== "admin") this.$router.replace({ path: "/analytics" });
+        if (role && role !== "admin") { this.$router.replace({ path: "/analytics" }); return; }
+        this.adminConfirmed = true;
+        this.roleReady = true;
       });
     };
     if (!this.store.state.user) {
