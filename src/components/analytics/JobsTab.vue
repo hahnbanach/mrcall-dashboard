@@ -2,6 +2,9 @@
   <section class="analytics-section call-insights-section" aria-labelledby="jobs-title">
     <h3 id="jobs-title" class="section-title">{{ $t("components.callInsights.jobs.title") }}</h3>
     <p class="jobs-purpose">{{ $t("components.callInsights.jobs.purpose") }}</p>
+    <!-- the jobs are read already; their days are said in the business's zone, so drawn once it is known -->
+    <InsightsState v-if="!businessKnown" status="loading" />
+    <template v-else>
     <div class="jobs-filters">
       <Dropdown
         v-model="kindFilter"
@@ -69,6 +72,7 @@
         </span>
       </template>
     </PagedTable>
+    </template>
   </section>
 </template>
 
@@ -76,6 +80,7 @@
 import CallInsights from "@/utils/CallInsights";
 import InsightsReports from "@/utils/InsightsReports";
 import PagedTable from "@/components/analytics/PagedTable.vue";
+import InsightsState from "@/components/analytics/InsightsState.vue";
 import { isSessionEnded } from "@/firebase/session";
 
 const POLL_MS = 5000;
@@ -92,9 +97,11 @@ const JOB_STATUSES = ["queued", "running", "done", "ceiling_reached", "failed", 
  * every few seconds.
  */
 export default {
-  components: { PagedTable },
+  components: { PagedTable, InsightsState },
   props: {
+    // `{businessId}` alone until the page has read the business's record (`businessKnown`): the reads need only the id
     business: { type: Object, required: true },
+    businessKnown: { type: Boolean, default: true },
     role: { type: String, default: "owner" },
   },
   data() {

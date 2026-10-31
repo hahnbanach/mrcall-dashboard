@@ -257,8 +257,11 @@ export default {
             }) ;
         }) ;
     },
-    checkUserHasBusinesses: function(user, store) {
-        return user.getIdToken(true).then(function(accessToken) {
+    // `fresh`: whether to force a token refresh first (the default, as every call of this module). The analytics pages
+    // read with the session's token (`user.accessToken`, which the axios interceptor renews on a 401) and ask none.
+    checkUserHasBusinesses: function(user, store, { fresh = true } = {}) {
+        const token = fresh || !user.accessToken ? user.getIdToken(true) : Promise.resolve(user.accessToken);
+        return token.then(function(accessToken) {
             const headers = {
                 "Content-type": "application/json; charset=UTF-8",
                 "auth": accessToken

@@ -1,5 +1,8 @@
 <template>
   <div class="reports-tab">
+    <!-- the history and jobs are read already; their days are said in the business's zone, so drawn once it is known -->
+    <InsightsState v-if="!businessKnown" status="loading" />
+    <template v-else>
     <!-- The schedule: how often, the next one, a report held back for credit -->
     <section class="analytics-section call-insights-section reports-schedule" :aria-labelledby="'schedule-title'">
       <h3 id="schedule-title" class="section-title">{{ $t("components.callInsights.reportsTab.scheduleTitle") }}</h3>
@@ -172,6 +175,7 @@
       :report="deleting"
       @deleted="onDeleted"
     />
+    </template>
   </div>
 </template>
 
@@ -197,7 +201,9 @@ const RECENT_POLL_MS = 5000;
 export default {
   components: { InsightsState, PagedTable, InsightsRequestDialog, ReportDeleteDialog },
   props: {
+    // `{businessId}` alone until the page has read the business's record (`businessKnown`): the reads need only the id
     business: { type: Object, required: true },
+    businessKnown: { type: Boolean, default: true },
     role: { type: String, default: "owner" },
   },
   emits: ["job-started"],

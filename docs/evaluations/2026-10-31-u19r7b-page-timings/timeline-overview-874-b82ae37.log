@@ -1,0 +1,16 @@
+    2    33 GET https://dashboard-test.mrcall.ai/analytics
+   87   207 GET https://dashboard-test.mrcall.ai/js/app.c98a5587.js
+  461   666 GET https://test-env-0.scw.hbsrv.net/mrcall/v1/mrcall0/reseller/managed-owners
+  462   661 GET https://test-env-0.scw.hbsrv.net/mrcall/v1/mrcall0/reseller/profile
+  469   745 GET https://test-env-0.scw.hbsrv.net/mrcall/v1/mrcall0/crm/business
+  469   751 POST https://test-env-0.scw.hbsrv.net/mrcall/v1/mrcall0/customer/analytics/timeseries
+  469   752 POST https://test-env-0.scw.hbsrv.net/mrcall/v1/mrcall0/customer/analytics/dashboard
+  469   777 POST https://test-env-0.scw.hbsrv.net/mrcall/v1/mrcall0/customer/analytics/callers
+  469   780 POST https://test-env-0.scw.hbsrv.net/mrcall/v1/mrcall0/customer/analytics/quality
+  469   781 POST https://test-env-0.scw.hbsrv.net/mrcall/v1/mrcall0/customer/analytics/duration-distribution
+  469   793 POST https://test-env-0.scw.hbsrv.net/mrcall/v1/mrcall0/customer/analytics/hourly-heatmap
+  469   805 POST https://test-env-0.scw.hbsrv.net/mrcall/v1/mrcall0/customer/analytics/outcomes
+  469   868 POST https://test-env-0.scw.hbsrv.net/mrcall/v1/mrcall0/customer/analytics/topics
+  472   600 GET https://test-env-0.scw.hbsrv.net/mrcall/v1/mrcall0/customer/insights/categories
+  472   745 POST https://test-env-0.scw.hbsrv.net/mrcall/v1/mrcall0/crm/business/search
+  473   837 GET https://test-env-0.scw.hbsrv.net/mrcall/v1/mrcall0/customer/insights/feedback
