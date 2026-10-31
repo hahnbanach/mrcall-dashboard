@@ -113,15 +113,27 @@ test.describe('P17: what the early reads keep', () => {
     expect(asked.outcomes).toHaveLength(3)
   })
 
+  // The record is held until the test lets it go, not for a fixed time: under parallel load a 2 s hold could end before
+  // the reports read was seen (P17's review). Nothing here depends on how fast anything answers.
   test('the Report tab reads at once and draws its rows only once the business\'s zone is known', async ({ authenticatedPage: page }) => {
-    const asked = await mockInsights(page)
+    await mockInsights(page)
     await mockClassifications(page)
-    const record = await hold(page, /\/crm\/business\?id=/, (route) => route.fallback())
+    let release
+    const released = new Promise((r) => { release = r })
+    const record = { at: 0 }
+    await page.route(/\/crm\/business\?id=/, async (route) => { await released; record.at = Date.now(); await route.fallback() })
+    const reportsAnswered = page.waitForResponse((r) => /\/customer\/insights\/reports\?/.test(r.url()), { timeout: 30000 })
     await page.goto(`/analytics?id=${BUSINESS_ID}&tab=reports`)
-    await expect.poll(() => asked.reports.length).toBeGreaterThan(0)
-    expect(record.at).toBe(0)
-    await expect(page.getByRole('table', { name: 'All reports' })).toHaveCount(0)
+    const reports = await reportsAnswered
+    const askedAt = Date.now()
+    expect(reports.ok()).toBe(true)
+    // the reports answered with the record still held: the page has had every chance to draw them, and draws nothing
+    await page.waitForLoadState('domcontentloaded')
+    await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))))
+    expect(record.at, 'the record is still held').toBe(0)
+    expect(await page.getByRole('table', { name: 'All reports' }).count(), 'no rows before the zone is known').toBe(0)
+    release()
     await expect(page.getByRole('table', { name: 'All reports' })).toBeVisible({ timeout: 15000 })
-    expect(record.at).toBeGreaterThan(0)
+    expect(askedAt).toBeLessThan(record.at)
   })
 })
