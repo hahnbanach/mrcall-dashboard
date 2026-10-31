@@ -1,0 +1,9 @@
+{
+  "businessId": "test-biz-001",
+  "counted": true,
+  "from": 0,
+  "hasUnanswered": true,
+  "lightweight": true,
+  "message": "incomplete",
+  "size": 10
+}

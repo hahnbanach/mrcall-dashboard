@@ -1,0 +1,10 @@
+{
+  "businessId": "test-biz-001",
+  "counted": true,
+  "from": 0,
+  "gap": "out_of_scope",
+  "lightweight": true,
+  "size": 10,
+  "timestampGte": 1790812800000,
+  "timestampLte": 1793404799999
+}

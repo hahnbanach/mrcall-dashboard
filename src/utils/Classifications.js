@@ -384,6 +384,64 @@ function searchFromQuery(query) {
     return { body, filters, unknown };
 }
 
+// The search fields a count's list draws as a control of its own (the conversations page's dropdowns and toggles), in
+// body form, and the address keys they are read from; the window sets the range; every other filter is a chip.
+const CONTROLLED_FIELDS = ["resolution", "message", "booked", "transferred", "hasUnanswered"];
+const CONTROLLED_KEYS = ["resolution", "message", "booked", "transferred", "unanswered"];
+const WINDOW_FIELDS = ["timestampGte", "timestampLte"];
+
+/**
+ * A count's address read once (a count opening its calls, brief docs/briefs/2026-10-27-classification-feedback.md
+ * scope 6): `controls` (in body form), `window`, `extra` (the other filters, sent as they are), `counted`, `filters`
+ * (the chips: the filters with no control) and `unknown` (address keys whose value is outside its closed set).
+ * The conversations page reads it into its live state; the counted-calls panel composes from it directly.
+ */
+function readCountAddress(query) {
+    const read = searchFromQuery(query);
+    const controls = {};
+    const window = {};
+    const extra = {};
+    for (const [key, value] of Object.entries(read.body)) {
+        if (CONTROLLED_FIELDS.includes(key)) controls[key] = value;
+        else if (WINDOW_FIELDS.includes(key)) window[key] = value;
+        else if (key !== "counted") extra[key] = value;
+    }
+    return {
+        controls, window, extra,
+        counted: read.body.counted === true,
+        filters: read.filters.filter((f) => !CONTROLLED_KEYS.includes(f.key)),
+        unknown: read.unknown,
+    };
+}
+
+/**
+ * The one search body of a conversations list, from whatever holds its state: the conversations page passes its live
+ * state (the range and the controls can change after the address was read, chips can be removed), the counted-calls
+ * panel passes `readCountAddress` of a link. A counted list is the calls the statistics count, archived ones included
+ * (StarChat's `counted`: finalised and not deleted), so the view's narrowing is not applied to it. `extra` is applied
+ * last, as the page always did with the address's filters.
+ */
+function composeSearch({ businessId, counted = false, viewFilters = {}, window = {}, controls = {}, extra = {} }) {
+    const body = { businessId, ...(counted ? {} : viewFilters) };
+    if (window.timestampGte != null) body.timestampGte = window.timestampGte;
+    if (window.timestampLte != null) body.timestampLte = window.timestampLte;
+    if (controls.resolution) body.resolution = controls.resolution;
+    if (controls.message) body.message = controls.message;
+    if (controls.booked === true || controls.booked === false) body.booked = controls.booked;
+    if (controls.transferred === true) body.transferred = true;
+    if (controls.hasUnanswered === true) body.hasUnanswered = true;
+    if (counted) body.counted = true;
+    return Object.assign(body, extra);
+}
+
+/**
+ * The query suffix of a count list's search: a report's count asks StarChat how many of its calls the reader cannot
+ * open (`leftOut=true`, StarChat dc4d7f7f6). It is a query parameter, never a body field.
+ */
+function searchQuery(query) {
+    return query && query.leftOut === "true" ? "&leftOut=true" : "";
+}
+
 function withoutFilter(query, key) {
     const q = { ...(query || {}) };
     delete q[key];
@@ -500,6 +558,9 @@ export default {
     withDecision,
     withCurrent,
     searchFromQuery,
+    readCountAddress,
+    composeSearch,
+    searchQuery,
     withoutFilter,
     countLink,
     isOwnerOf,

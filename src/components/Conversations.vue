@@ -639,30 +639,6 @@ import JudgementChip from "@/components/feedback/JudgementChip.vue";
 import BulkBar from "@/components/feedback/BulkBar.vue";
 import { isSessionEnded } from "@/firebase/session";
 
-// The search filters a link carried (a count opening its calls, brief docs/briefs/2026-10-27-classification-feedback.md
-// scope 6): those with a control of their own on this page set the control; the window sets the range; the others are
-// sent as they are and shown as chips. Read once, when the page opens.
-const CONTROLLED = ["resolution", "message", "booked", "transferred", "hasUnanswered"];
-const WINDOW = ["timestampGte", "timestampLte"];
-function readAddress(query) {
-  const read = Classifications.searchFromQuery(query);
-  const controls = {};
-  const window = {};
-  const extra = {};
-  for (const [key, value] of Object.entries(read.body)) {
-    if (CONTROLLED.includes(key)) controls[key] = value;
-    else if (WINDOW.includes(key)) window[key] = value;
-    else if (key !== "counted") extra[key] = value;
-  }
-  const controlledKeys = ["resolution", "message", "booked", "transferred", "unanswered"];
-  return {
-    controls, window, extra,
-    counted: read.body.counted === true,
-    filters: read.filters.filter((f) => !controlledKeys.includes(f.key)),
-    unknown: read.unknown,
-  };
-}
-
 export default {
   components: { CallDetailsPanel, UndoBar, JudgementChip, BulkBar },
   setup() {
@@ -680,7 +656,7 @@ export default {
   },
   data() {
     const locale = Tr.getLocale();
-    const address = readAddress(router.currentRoute.value.query);
+    const address = Classifications.readCountAddress(router.currentRoute.value.query);
     return {
       locale,
       periodicEvent: null,
@@ -728,7 +704,7 @@ export default {
       addressUnknown: address.unknown,
       counted: address.counted,
       // a report count's list (`leftOut=true`): how many of its calls the reader cannot open, as StarChat counts them
-      asksLeftOut: router.currentRoute.value.query.leftOut === "true",
+      leftOutQuery: Classifications.searchQuery(router.currentRoute.value.query),
       leftOut: 0,
       categoryLabels: null,
       // the calls selected for a gesture, by id (`createSelection`: a long-press mode on a narrow screen)
@@ -1048,21 +1024,22 @@ export default {
     // specific to one caller (pagination, `lightweight`, the poll's own `timestampGte`), applied
     // after the shared fields so it can override them.
     searchBody(extra = {}) {
-      // A count's list is the calls the statistics count, archived ones included (StarChat's `counted`: finalised and
-      // not deleted); the inbox's narrowing to calls not archived would make it shorter than its count.
-      const body = {
+      // the page's live state in the shared composition's terms (Classifications.composeSearch, also the
+      // counted-calls panel's): the range and the controls may have changed since the address was read
+      const body = Classifications.composeSearch({
         businessId: this.businessId,
-        ...(this.counted ? {} : this.getViewFilters()),
-      };
-      if (this.timestampGte != null) body.timestampGte = this.timestampGte;
-      if (this.timestampLte != null) body.timestampLte = this.timestampLte;
-      if (this.resolutionFilter) body.resolution = this.resolutionFilter;
-      if (this.messageFilter) body.message = this.messageFilter;
-      if (this.bookedFilter) body.booked = this.bookedFilter === "booked";
-      if (this.transferredFilter) body.transferred = true;
-      if (this.unansweredFilter) body.hasUnanswered = true;
-      if (this.counted) body.counted = true;
-      Object.assign(body, this.addressBody);
+        counted: this.counted,
+        viewFilters: this.getViewFilters(),
+        window: { timestampGte: this.timestampGte, timestampLte: this.timestampLte },
+        controls: {
+          resolution: this.resolutionFilter,
+          message: this.messageFilter,
+          booked: this.bookedFilter ? this.bookedFilter === "booked" : null,
+          transferred: this.transferredFilter,
+          hasUnanswered: this.unansweredFilter,
+        },
+        extra: this.addressBody,
+      });
       return { ...body, ...extra };
     },
     // A changed view or filter invalidates the page shown: start over from the first one, as
@@ -1156,12 +1133,11 @@ export default {
       };
       // the recordings stay out of the list: CallDetailsPanel reads one when it is played
       const request = self.searchBody({ lightweight: true, from: self.first, size: self.size });
-      const leftOutQuery = self.asksLeftOut ? "&leftOut=true" : "";
       self.showProgressBar = true;
       axios
         .post(
           process.env.VUE_APP_STARCHAT_URL +
-            "/mrcall/v1/mrcall0/customer/conversation/search?enableDataMap=true" + leftOutQuery,
+            "/mrcall/v1/mrcall0/customer/conversation/search?enableDataMap=true" + self.leftOutQuery,
           request,
           {
             headers: headers,

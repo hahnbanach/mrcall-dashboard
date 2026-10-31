@@ -216,13 +216,15 @@ the chips can all change afterwards). The panel (A2) needs the same composition 
 - `npm run test:unit`: 40 files, 574 tests passed.
 - `vue-cli-service build --mode test`: complete, sitemap generated. `npm run build` without `--mode` fails in the
   sitemap plugin (no environment file read), unrelated to this work.
-- `npx playwright test`: running at the time of writing; its result is recorded here before A1.
+- `npx playwright test`: 2009 passed, 9 skipped, 9 failed (25.0 min), none in analytics or insights; the 9 passed
+  when re-run alone (`--last-failed`, 14.8 s): load flakiness of admin, skills, wizard, session-guard, signup and
+  responsive specs, as `active-context.md` already records for a full run.
 
 ## Verification table
 
 | Step | Status | Evidence |
 |---|---|---|
-| A1 | planned | |
+| A1 | done | Pins at the network edge instead of a mounted unit test (the page needs the store, router and PrimeVue; the request body is the contract): `tests/e2e/insights/count-list-body.spec.js`, 14 cases x 3 viewports, snapshots recorded on 508b014 before the move, passing after it; perturbation (the `hasUnanswered` rule dropped from `composeSearch`) fails `edit-2-control-changed`. `tests/unit/countSearch.spec.js` seen failing before the functions existed, 6 passing after. `npm run test:unit` 41 files, 580 tests. |
 | A2 | planned | |
 | A3 | planned | |
 | A4 | planned | |
