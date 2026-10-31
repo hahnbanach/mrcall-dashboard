@@ -32,16 +32,19 @@
         >{{ $t("components.callInsights.tabs." + tab) }}</router-link>
       </nav>
 
+      <!-- mounted at once, so their reads start with the page: they need the business's id, not its record (U19r7b) -->
       <ReportsTab
-        v-if="businessId && currentTab === 'reports' && businessRecord"
+        v-if="businessId && currentTab === 'reports'"
         :key="'reports-' + businessId"
-        :business="businessRecord"
+        :business="businessRecord || { businessId }"
+        :business-known="!!businessRecord"
         :role="store.state.role || 'owner'"
       />
       <JobsTab
-        v-if="businessId && currentTab === 'jobs' && businessRecord"
+        v-if="businessId && currentTab === 'jobs'"
         :key="'jobs-' + businessId"
-        :business="businessRecord"
+        :business="businessRecord || { businessId }"
+        :business-known="!!businessRecord"
         :role="store.state.role || 'owner'"
       />
 
@@ -642,13 +645,18 @@ export default {
       return;
     }
     this.setPresetRange('30d');
-    const proceed = async () => {
-      // The role on the server is the gate; this is only what decides which sections to ask for,
-      // before any of them is asked (Business.js:262-275, the same search that already sets it
-      // elsewhere in this dashboard).
-      await this.establishRole();
-      this.roleReady = true;
-      this.fetchAllData();
+    // A read starts as soon as its inputs exist (U19r7b: on test the pages spent 370-800 ms behind a forced token
+    // refresh, the role search and the business record, one after the other, before their first read). A business's
+    // page needs its id and its window: its reads start at once, beside the role search. The role on the server is the
+    // gate; here it only decides which sections a page without a business shows (a reseller's scope page), so that
+    // page waits for it, and a business's page asks again only if the role turned out other than the one it read with.
+    const proceed = () => {
+      const roleRead = this.store.state.role;
+      if (this.businessId) this.fetchAllData();
+      this.establishRole().then(() => {
+        this.roleReady = true;
+        if (!this.businessId || this.store.state.role !== roleRead) this.fetchAllData();
+      });
     };
     if (!this.store.state.user) {
       onAuthStateChanged(auth, (user) => {
@@ -665,7 +673,8 @@ export default {
       const user = this.store.state.user;
       if (!user || !user.accessToken) return;
       try {
-        await businessUtils.checkUserHasBusinesses(user, this.store);
+        // the session's token, as every read of this page; a forced refresh cost 200 ms before every page on test
+        await businessUtils.checkUserHasBusinesses(user, this.store, { fresh: false });
       } catch (error) {
         this.handleApiError(error, 'role');
       }

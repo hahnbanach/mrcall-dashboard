@@ -666,21 +666,18 @@ export default {
     this.ownerIdInput = this.ownerId;
     this.planInput = this.plan;
     this.setPresetRange('30d');
-    const proceed = async () => {
-      // The role on the server is the gate (admin-only routes answer 404 to anyone else); this is
-      // only what decides whether to ask for MrCall's own configuration suggestions at all, so the
-      // scope-wide lists start (`roleReady`) strictly after the role resolves.
-      await this.establishRole();
-      // The platform page is an admin's: anyone else is taken to their own statistics, never to a page titled for
-      // all businesses that shows their own or nothing (U19 m12). StarChat refuses the admin routes either way.
-      const role = this.store.state.role;
-      if (role && role !== "admin") {
-        this.$router.replace({ path: "/analytics" });
-        return;
-      }
+    // The role on the server is the gate: admin-only routes answer 404 to anyone else. So the page's reads start at
+    // once, beside the role search, rather than behind it (U19r7b: on test 700-800 ms passed before the first read). A
+    // reader the search finds not to be an admin is taken to their own statistics, never left on a page titled for all
+    // businesses (U19 m12); the reads already asked are answered as StarChat answers a non-admin.
+    const proceed = () => {
       this.roleReady = true;
       this.fetchAllData();
       this.fetchTemplates();
+      this.establishRole().then(() => {
+        const role = this.store.state.role;
+        if (role && role !== "admin") this.$router.replace({ path: "/analytics" });
+      });
     };
     if (!this.store.state.user) {
       onAuthStateChanged(auth, (user) => {
@@ -697,7 +694,8 @@ export default {
       const user = this.store.state.user;
       if (!user || !user.accessToken) return;
       try {
-        await businessUtils.checkUserHasBusinesses(user, this.store);
+        // the session's token, as every read of this page; a forced refresh cost 200 ms before the page's reads on test
+        await businessUtils.checkUserHasBusinesses(user, this.store, { fresh: false });
       } catch (error) {
         this.handleApiError(error, 'role');
       }
