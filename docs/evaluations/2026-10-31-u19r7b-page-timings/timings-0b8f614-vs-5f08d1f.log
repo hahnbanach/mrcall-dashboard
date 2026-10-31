@@ -1,0 +1,68 @@
+=== before
+FIRST median 465 
+PAGE owner /analytics?id=80e23bdc-4af0-3c03-8e9a-c05bd62ff974 median 1066 ms runs 1066/1199/991 codes 200
+FIRST median 855 
+PAGE owner /analytics?id=80e23bdc-4af0-3c03-8e9a-c05bd62ff974&tab=reports median 1036 ms runs 1046/1036/987 codes 200
+FIRST median 818 
+PAGE owner /analytics?id=80e23bdc-4af0-3c03-8e9a-c05bd62ff974&tab=jobs median 977 ms runs 933/977/1012 codes 200
+FIRST median 733 
+PAGE reseller /analytics median 1389 ms runs 1804/1308/1389 codes 200
+FIRST median 471 
+PAGE reseller /analytics?id=2d81b01d-4114-34be-8973-be2a6e135874 median 1137 ms runs 1137/1289/1024 codes 200
+FIRST median 867 
+PAGE reseller /analytics?id=2d81b01d-4114-34be-8973-be2a6e135874&tab=reports median 1234 ms runs 1173/1238/1234 codes 200
+FIRST median 849 
+PAGE reseller /analytics?id=2d81b01d-4114-34be-8973-be2a6e135874&tab=jobs median 1062 ms runs 1062/1025/1121 codes 200
+FIRST median 727 
+PAGE admin /analytics-admin median 1356 ms runs 1489/1356/1215 codes 200
+=== after
+FIRST median 460 
+PAGE owner /analytics?id=80e23bdc-4af0-3c03-8e9a-c05bd62ff974 median 741 ms runs 741/900/675 codes 200
+FIRST median 429 
+PAGE owner /analytics?id=80e23bdc-4af0-3c03-8e9a-c05bd62ff974&tab=reports median 767 ms runs 767/774/594 codes 200
+FIRST median 425 
+PAGE owner /analytics?id=80e23bdc-4af0-3c03-8e9a-c05bd62ff974&tab=jobs median 604 ms runs 539/604/742 codes 200
+FIRST median 581 
+PAGE reseller /analytics median 1581 ms runs 1581/1707/1572 codes 200
+FIRST median 434 
+PAGE reseller /analytics?id=2d81b01d-4114-34be-8973-be2a6e135874 median 776 ms runs 900/776/739 codes 200
+FIRST median 453 
+PAGE reseller /analytics?id=2d81b01d-4114-34be-8973-be2a6e135874&tab=reports median 807 ms runs 807/799/810 codes 200
+FIRST median 449 
+PAGE reseller /analytics?id=2d81b01d-4114-34be-8973-be2a6e135874&tab=jobs median 639 ms runs 639/689/626 codes 200
+FIRST median 452 
+PAGE admin /analytics-admin median 1087 ms runs 1209/1087/1046 codes 200
+=== before
+FIRST median 440 
+PAGE owner /analytics?id=80e23bdc-4af0-3c03-8e9a-c05bd62ff974 median 1027 ms runs 1027/819/1078 codes 200
+FIRST median 896 
+PAGE owner /analytics?id=80e23bdc-4af0-3c03-8e9a-c05bd62ff974&tab=reports median 1134 ms runs 1134/1053/1296 codes 200
+FIRST median 820 
+PAGE owner /analytics?id=80e23bdc-4af0-3c03-8e9a-c05bd62ff974&tab=jobs median 970 ms runs 996/899/970 codes 200
+FIRST median 767 
+PAGE reseller /analytics median 1826 ms runs 2184/1826/1583 codes 200
+FIRST median 437 
+PAGE reseller /analytics?id=2d81b01d-4114-34be-8973-be2a6e135874 median 1475 ms runs 1068/1475/1748 codes 200
+FIRST median 935 
+PAGE reseller /analytics?id=2d81b01d-4114-34be-8973-be2a6e135874&tab=reports median 1250 ms runs 1287/1192/1250 codes 200
+FIRST median 869 
+PAGE reseller /analytics?id=2d81b01d-4114-34be-8973-be2a6e135874&tab=jobs median 1063 ms runs 1050/1165/1063 codes 200
+FIRST median Infinity 
+PAGE admin /analytics-admin median -Infinity ms runs 20748/-Infinity/-Infinity codes 200
+=== after
+FIRST median 482 
+PAGE owner /analytics?id=80e23bdc-4af0-3c03-8e9a-c05bd62ff974 median 6219 ms runs 7415/6219/1848 codes 200
+FIRST median 472 
+PAGE owner /analytics?id=80e23bdc-4af0-3c03-8e9a-c05bd62ff974&tab=reports median 779 ms runs 783/661/779 codes 200
+FIRST median 448 
+PAGE owner /analytics?id=80e23bdc-4af0-3c03-8e9a-c05bd62ff974&tab=jobs median 615 ms runs 579/721/615 codes 200
+FIRST median 593 
+PAGE reseller /analytics median 1788 ms runs 1527/1946/1788 codes 200
+FIRST median 420 
+PAGE reseller /analytics?id=2d81b01d-4114-34be-8973-be2a6e135874 median 1006 ms runs 804/1006/1384 codes 200
+FIRST median 457 
+PAGE reseller /analytics?id=2d81b01d-4114-34be-8973-be2a6e135874&tab=reports median 816 ms runs 884/816/816 codes 200
+FIRST median 496 
+PAGE reseller /analytics?id=2d81b01d-4114-34be-8973-be2a6e135874&tab=jobs median 937 ms runs 1370/834/937 codes 200
+FIRST median 487 
+PAGE admin /analytics-admin median 1449 ms runs 1449/1171/1602 codes 200
