@@ -106,7 +106,11 @@ test.describe('P17: what the early reads keep', () => {
     await page.route('**/crm/business/search*', (route) => route.fulfill({ status: 200, contentType: 'application/json', body: '[]',
       headers: { 'x-mrcall-role': 'reseller', 'access-control-expose-headers': 'x-mrcall-role' } }))
     await page.reload()
-    await expect.poll(() => asked.outcomes.length).toBe(3)
+    // once the page is settled, exactly one read at once and one after the role found: a duplicate would make four
+    await expect.poll(() => asked.outcomes.length).toBeGreaterThanOrEqual(3)
+    await page.waitForLoadState('networkidle')
+    await page.waitForTimeout(1500)
+    expect(asked.outcomes).toHaveLength(3)
   })
 
   test('the Report tab reads at once and draws its rows only once the business\'s zone is known', async ({ authenticatedPage: page }) => {
