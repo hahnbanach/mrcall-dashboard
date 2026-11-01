@@ -2070,7 +2070,6 @@
         "askedOf": "{category}: {n} αίτημα | {category}: {n} αιτήματα",
         "latestReport": "Τελευταία αναφορά",
         "countOf": "({count} από {total})",
-        "focusTitle": "Βοηθός: {name}",
         "openBusiness": "Άνοιγμα των στατιστικών αυτής της επιχείρησης"
       },
       "scope": {

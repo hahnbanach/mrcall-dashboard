@@ -33,6 +33,16 @@ Substantial: new shared components used on four pages, one moved search composit
   locale check's namespace, the e2e extraction pin and the S2-S4 refusal mocks), then REVISE (the report's quality
   counts not linked), then APPROVED, same fresh reviewer, 2026-11-01.
 
+- Milestone A1-A6a: REVISE (16 browser regressions in `tests/e2e/admin/` and `tests/e2e/visual/`, which no run after the
+  baseline had covered; the business card dropping to a lone "Loading" while the page reloads; the panel printing
+  " call" for a count not known; the per-signal unit test missing; O1 untested on the scope page), fresh reviewer,
+  2026-11-01. Repaired: the card keeps its content while loading and the section keeps its name (the business is the
+  card's heading); the panel states no number for an unknown count; `tests/unit/signals.spec.js`; the scope page cases
+  in `overlays.spec.js` and `signals.spec.js`; the admin and visual specs moved to the brief's behaviour. Full suite on
+  the repaired tree: 2083 passed, 14 skipped, 17 failed, the 17 passing alone (`--last-failed`, 21.5 s); against the
+  baseline's 9 such failures, the difference is not explained (none of the 17 is in a spec this work changed but
+  `u19r7-start` and `u19c-scope:144`, both passing alone).
+
 ## Dependencies and order
 
 A1 → A2 → A3. A4 is independent of A1-A3. A5a needs A4 (the card replaces a table). A6a needs A4 (its texts sit beside

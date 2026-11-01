@@ -2070,7 +2070,6 @@
         "askedOf": "{category}: {n} forespørsel | {category}: {n} forespørsler",
         "latestReport": "Siste rapport",
         "countOf": "({count} av {total})",
-        "focusTitle": "Assistent: {name}",
         "openBusiness": "Åpne statistikken for denne bedriften"
       },
       "scope": {

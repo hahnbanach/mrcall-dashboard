@@ -54,7 +54,7 @@ test.describe('insights screens: owner', () => {
     await page.getByRole('navigation', { name: 'Pages of All reports' }).getByRole('button', { name: 'Page 3' }).click()
     await expect(page.getByText('21–25 of 25')).toBeVisible()
     await shoot(page, 'owner-reports-page3')
-    await page.getByRole('table', { name: 'All reports' }).getByRole('button', { name: 'Calls' }).click()
+    await page.getByRole('table', { name: 'All reports' }).getByRole('button', { name: 'Calls', exact: true }).click()
     await shoot(page, 'owner-reports-sorted-calls')
     await page.getByRole('combobox', { name: 'Type' }).click()
     await page.getByRole('option', { name: 'On request' }).click()

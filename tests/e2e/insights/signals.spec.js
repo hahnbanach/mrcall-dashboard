@@ -47,6 +47,14 @@ test.describe('every quality signal says what it means and what to do', () => {
     await expect(quality.getByText(ACTIONS[1])).toBeVisible()
   })
 
+  test('a reseller\'s scope page', async ({ resellerPage: page }) => {
+    await mockInsights(page, { role: 'reseller', quality: QUALITY })
+    await page.goto('/analytics')
+    const quality = page.locator('.call-insights-section').filter({ has: page.getByRole('heading', { name: 'Quality', exact: true }) })
+    await expect(quality.getByText(MEANINGS[3])).toBeVisible({ timeout: 15000 })
+    await expect(quality.getByText(ACTIONS[0])).toBeVisible()
+  })
+
   test('the report page: its quality table and its gap groups', async ({ authenticatedPage: page }) => {
     await mockInsights(page)
     await page.goto(`/analytics/report?id=${BUSINESS_ID}&start=${REPORT.periodStart}&requestId=job-req-1`)

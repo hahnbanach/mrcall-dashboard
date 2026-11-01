@@ -2075,7 +2075,6 @@
         "askedOf": "{category}: {n} request | {category}: {n} requests",
         "latestReport": "Latest report",
         "countOf": "({count} of {total})",
-        "focusTitle": "Assistant: {name}",
         "openBusiness": "Open this business's analytics"
       },
       "scope": {

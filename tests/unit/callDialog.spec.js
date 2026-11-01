@@ -128,6 +128,18 @@ describe('CountedCallsPanel', () => {
     expect(wrapper.find('.counted-calls-note').text()).toMatch(/3/)
   })
 
+  it('a count not known (a report group whose analytics were not read) states no number, never " call"', async () => {
+    vi.spyOn(ConversationApi, 'page').mockResolvedValue({ items: docs, total: 2, leftOut: 0 })
+    const wrapper = draw(Classifications.countLink('biz-1', { from: 10, to: 20 }, 'gap', 'missing_info', { report: true }), null)
+    await flushPromises()
+    // vue-i18n turned the plural of a null count into " call"
+    expect(wrapper.find('.counted-calls-count').exists()).toBe(false)
+    expect(wrapper.findAll('p').map((p) => p.text().trim())).not.toContain('call')
+    expect(wrapper.text()).not.toContain('null')
+    // the list still says how many it found
+    expect(wrapper.text()).toContain('1–2 of 2')
+  })
+
   it('an empty answer is said, a failure offers a retry', async () => {
     vi.spyOn(ConversationApi, 'page').mockResolvedValueOnce({ items: [], total: 0, leftOut: 0 }).mockRejectedValueOnce(new Error('500'))
     const wrapper = draw(Classifications.countLink('biz-1', { from: 10, to: 20 }, 'check', 'caller_repeated'), 0)

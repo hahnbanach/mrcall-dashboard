@@ -18,12 +18,12 @@ function quality(data, totalCalls) {
 
 const base = { callsWithUnanswered: 0, callsWithUnansweredRecorded: 0, gaps: {}, checks: {}, callsWithChecks: 0, callsWithSkillErrors: 0 }
 
-/** Extraction issues are `http_error` and `failed` over the calls whose extraction ran, as StarChat's
+/** Extraction issues are `http_error`, `failed` and `too_long` over the calls whose extraction ran, as StarChat's
   * `extractions` counts them: a call from before the extraction recorded an outcome is not an issue,
   * and `not_managed` (a call the assistant did not manage, never asked of the model) is neither an
   * issue nor in the base (brief outcome 9). */
 describe('CallQuality extraction issues', () => {
-  it('counts http_error and failed over the calls whose extraction ran, not over every call', () => {
+  it('counts the failures over the calls whose extraction ran, not over every call', () => {
     // the analytics guide's example: 113 extractions ran, 3 failed, 7 calls not managed; 200 calls in the period
     const text = quality({ ...base, extractions: { ok: 110, http_error: 2, failed: 1, not_managed: 7 } }, 200).text()
     expect(text).toContain('3 of 113 calls')

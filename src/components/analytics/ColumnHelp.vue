@@ -19,7 +19,8 @@
          with the button, without becoming part of the header's own text; and the bubble, drawn when shown, is never
          clipped by the table's sideways-scroll wrapper -->
     <Teleport to="body">
-      <span :id="id" class="column-help-text">{{ text }}</span>
+      <!-- `hidden`: never read on its own where it sits on the body; aria-describedby still reads a hidden node -->
+      <span :id="id" class="column-help-text" hidden>{{ text }}</span>
       <span v-if="shown && placed" class="column-help-bubble" role="tooltip" aria-hidden="true" :style="position">{{ text }}</span>
     </Teleport>
   </span>

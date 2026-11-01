@@ -1,7 +1,8 @@
 <template>
   <Drawer :visible="visible" position="right" class="counted-calls-panel" :header="label"
           @update:visible="v => $emit('update:visible', v)" @show="load">
-    <p class="counted-calls-count">{{ $t("components.callInsights.countedCalls.count", { n: count }, count) }}</p>
+    <!-- a count not known (a report's group whose analytics were not read): no number is printed, the list says its own -->
+    <p v-if="count !== null" class="counted-calls-count">{{ $t("components.callInsights.countedCalls.count", { n: count }, count) }}</p>
     <p v-if="leftOut > 0" class="counted-calls-note" role="status">{{ $t("components.callInsights.feedback.filters.leftOut", { n: leftOut }, leftOut) }}</p>
     <PagedTable
       :state="table"
@@ -47,7 +48,8 @@ export default {
     // the count's link: `{path: "/conversations", query}`
     link: { type: Object, default: null },
     label: { type: String, default: "" },
-    count: { type: Number, default: 0 },
+    // null when the count is not known: the panel then states none (the pager still says how many it found)
+    count: { type: Number, default: null },
     user: { type: Object, required: true },
   },
   emits: ["update:visible", "open-call"],

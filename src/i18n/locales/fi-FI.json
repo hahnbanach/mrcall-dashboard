@@ -2070,7 +2070,6 @@
         "askedOf": "{category}: {n} pyyntö | {category}: {n} pyyntöä",
         "latestReport": "Viimeisin raportti",
         "countOf": "({count} / {total})",
-        "focusTitle": "Avustaja: {name}",
         "openBusiness": "Avaa tämän yrityksen analytiikka"
       },
       "scope": {

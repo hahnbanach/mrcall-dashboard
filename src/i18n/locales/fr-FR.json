@@ -2072,7 +2072,6 @@
         "askedOf": "{category} : {n} demande | {category} : {n} demandes",
         "latestReport": "Dernier rapport",
         "countOf": "({count} sur {total})",
-        "focusTitle": "Assistant : {name}",
         "openBusiness": "Ouvrir les statistiques de cette entreprise"
       },
       "scope": {

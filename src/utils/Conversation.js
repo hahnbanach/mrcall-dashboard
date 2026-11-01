@@ -38,11 +38,6 @@ export default {
             }
         })
     },
-    /**
-     * One call, read by id with its recording and its transcript, whether it is in the inbox, the
-     * archive or the trash: a search by id is not narrowed by those views. Resolves to the call, or
-     * to null when the owner has no call with that id.
-     */
     // One page of a list's calls as the conversations page reads it (`enableDataMap`, `lightweight`: no recording):
     // `{items, total, leftOut}`, `leftOut` being how many of a report count's calls the reader cannot open when the
     // query asks for it (`Classifications.searchQuery`), else 0.
@@ -59,6 +54,11 @@ export default {
             };
         });
     },
+    /**
+     * One call, read by id with its recording and its transcript, whether it is in the inbox, the
+     * archive or the trash: a search by id is not narrowed by those views. Resolves to the call, or
+     * to null when the owner has no call with that id.
+     */
     get: function(user, businessId, id) {
         return axios.post(BASE_URL + "/search?enableDataMap=true",
             { businessId: businessId, id: id, size: 1 },

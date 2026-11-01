@@ -1,6 +1,7 @@
 // @ts-check
 const { expect } = require('@playwright/test')
 const { test } = require('../fixtures/auth')
+const { opensCall } = require('../fixtures/overlays')
 const { mockBusiness } = require('../fixtures/mock-data')
 const { sortBy, reachFilterBar } = require('../fixtures/insights')
 
@@ -99,7 +100,8 @@ test.describe('AnalyticsAdmin: assistants to review, outcome 9', () => {
     // skill errors stay over all calls
     await expect(await cellUnder(assistants, 'Extraction')).toHaveText('3% (1 of 36)')
     await expect(await cellUnder(assistants, 'Skill errors')).toHaveText('0% (0 of 40)')
-    await expect(assistants.getByRole('definition').filter({ hasText: 'calls whose data extraction failed, over the calls whose extraction ran' })).toBeVisible()
+    // the column's base, once in a legend under the table, is its help (brief 2026-10-31-analytics-ux, O4)
+    await expect(assistants.getByRole('button', { name: 'How this column is counted: Extraction', exact: true })).toHaveAccessibleDescription(/calls whose data extraction failed, over the calls whose extraction ran/)
     // caller_left is the assistant's own judgement, as unresolved is
     await expect(assistants.getByRole('columnheader', { name: /^No request/ })).toContainText('assessed')
   })
@@ -191,14 +193,16 @@ test.describe('AnalyticsAdmin: assistants by name, and the business filter undon
     await expect(assistants.getByRole('row', { name: /biz-unnamed/ }).getByText('No name on record')).toBeVisible()
   })
 
-  test('the business chosen from the table is marked in it, and a control on the table clears it', async ({ adminPage: page }) => {
+  test('the business chosen from the table becomes its card, and a control on the section clears it', async ({ adminPage: page }) => {
     await assistantsRoute(page, named())
     await page.goto('/analytics-admin')
     const assistants = section(page, 'Assistants to review')
     await expect(assistants.getByRole('button', { name: 'Show all businesses' })).toHaveCount(0, { timeout: 15000 })
     await assistants.getByRole('button', { name: 'Studio Demo' }).click()
     await expect(page).toHaveURL(new RegExp(`[?&]businessId=${BUSINESS_ID}(&|$)`))
-    await expect(assistants.getByRole('button', { name: 'Studio Demo' })).toHaveAttribute('aria-pressed', 'true')
+    // a ranking of one row ranks nothing: the chosen business is drawn as its card (brief 2026-10-31-analytics-ux, O3)
+    await expect(assistants.getByRole('heading', { name: 'Studio Demo' })).toBeVisible()
+    await expect(assistants.getByRole('table')).toHaveCount(0)
 
     await assistants.getByRole('button', { name: 'Show all businesses' }).click()
     await expect(page).not.toHaveURL(/businessId=/)
@@ -221,13 +225,13 @@ test.describe('AnalyticsAdmin: the first load asks each section once', () => {
 })
 
 test.describe('AnalyticsAdmin: the assistants table reads on one screen', () => {
-  test('short headers (the full wording in a legend), and the business column stays while the table scrolls sideways', async ({ adminPage: page }) => {
+  test('short headers (the full wording in each column\'s help), and the business column stays while the table scrolls sideways', async ({ adminPage: page }) => {
     await assistantsRoute(page, named())
     await page.setViewportSize({ width: 1024, height: 900 })
     await page.goto('/analytics-admin')
     const assistants = section(page, 'Assistants to review')
     await expect(assistants.getByRole('button', { name: 'Studio Demo' })).toBeVisible({ timeout: 15000 })
-    await expect(assistants.getByRole('definition').filter({ hasText: 'Hung up without speaking' })).toBeVisible()
+    await expect(assistants.getByRole('button', { name: 'How this column is counted: Silent callers', exact: true })).toHaveAccessibleDescription(/Hung up without speaking/)
 
     const cell = assistants.getByRole('cell', { name: /Studio Demo/ })
     await cell.scrollIntoViewIfNeeded()
@@ -241,7 +245,7 @@ test.describe('AnalyticsAdmin: the assistants table reads on one screen', () => 
 })
 
 test.describe('AnalyticsAdmin: a row chosen on a phone', () => {
-  test('the table stays while it reloads, and the control that widens the page again is on screen', async ({ adminPage: page }) => {
+  test('the section stays while it reloads (the chosen business already drawn as its card), and the control that widens the page again is on screen', async ({ adminPage: page }) => {
     await page.setViewportSize({ width: 375, height: 812 })
     let calls = 0
     await page.route('**/customer/analytics/assistants*', async (route) => {
@@ -256,7 +260,8 @@ test.describe('AnalyticsAdmin: a row chosen on a phone', () => {
     await choose.click()
     // while the new answer is held back (4 s): the assertions must not wait it out
     await expect(assistants.locator('.insights-state')).toHaveAttribute('aria-busy', 'true')
-    await expect(choose).toBeVisible({ timeout: 1000 })
+    // the card of the business chosen, from the answer already on screen, never a lone "Loading" (O3)
+    await expect(assistants.getByRole('heading', { name: 'Studio Demo' })).toBeVisible({ timeout: 1000 })
     await expect(assistants.getByRole('button', { name: 'Show all businesses' })).toBeInViewport({ timeout: 1000 })
   })
 })
@@ -370,10 +375,11 @@ test.describe('Analytics: an admin reading one business\'s report', () => {
     await page.goto(`/analytics/report?id=${BUSINESS_ID}&start=1700000000000`)
     await expect(page.getByText('Turn on the restaurant skill.')).toBeVisible({ timeout: 15000 })
     await expect(page.getByText('Ask about parking.')).toBeVisible()
-    // named by when it started, the caller being the owner's alone, and a link to the call
+    // named by when it started, the caller being the owner's alone, and opening the call over the report (brief
+    // 2026-10-31-analytics-ux, O1)
     const name = await page.evaluate((t) => new Date(t).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }),
       Date.UTC(2026, 9, 14, 9, 30))
-    await expect(page.getByRole('link', { name })).toHaveAttribute('href', `/conversations?id=${BUSINESS_ID}&conversation=CON-9`)
+    await opensCall(page, page.getByRole('button', { name }), { businessId: BUSINESS_ID, conversationId: 'CON-9' })
     await expect(page.getByText('CON-9')).toHaveCount(0)
   })
 })

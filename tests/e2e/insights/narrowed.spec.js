@@ -21,8 +21,8 @@ test.describe('a narrowed admin or scope page', () => {
     await mockInsights(page, { role: 'admin' })
     await mockClassifications(page, { role: 'admin' })
     await page.goto('/analytics-admin?businessId=biz-2')
-    const card = section(page, 'Assistant: Studio 2')
-    await expect(card).toBeVisible({ timeout: 15000 })
+    const card = section(page, 'Assistants to review')
+    await expect(card.getByRole('heading', { name: 'Studio 2' })).toBeVisible({ timeout: 15000 })
     await expect(page.getByRole('table', { name: 'Assistants to review' })).toHaveCount(0)
     await expect(page.getByRole('heading', { name: 'Business Breakdown' })).toHaveCount(0)
     // the row's facts, each under its column's name, and the way to the business's own page

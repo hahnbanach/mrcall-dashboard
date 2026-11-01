@@ -2072,7 +2072,6 @@
         "askedOf": "{category}: {n} Anfrage | {category}: {n} Anfragen",
         "latestReport": "Letzter Bericht",
         "countOf": "({count} von {total})",
-        "focusTitle": "Assistent: {name}",
         "openBusiness": "Analysen dieses Unternehmens öffnen"
       },
       "scope": {

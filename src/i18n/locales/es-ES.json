@@ -2084,7 +2084,6 @@
         "askedOf": "{category}: {n} solicitud | {category}: {n} solicitudes",
         "latestReport": "Último informe",
         "countOf": "({count} de {total})",
-        "focusTitle": "Asistente: {name}",
         "openBusiness": "Abrir las estadísticas de este negocio"
       },
       "scope": {

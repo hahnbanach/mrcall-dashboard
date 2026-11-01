@@ -1,6 +1,6 @@
 <template>
   <section v-if="table.status !== 'absent'" class="analytics-section call-insights-section assistants-section" aria-labelledby="assistants-title">
-    <h3 id="assistants-title" class="section-title">{{ focused && focusedRow ? $t("components.callInsights.assistants.focusTitle", { name: businessLabel(focusedRow) }) : $t("components.callInsights.assistants.title") }}</h3>
+    <h3 id="assistants-title" class="section-title">{{ $t("components.callInsights.assistants.title") }}</h3>
     <form class="assistants-sort" role="search" @submit.prevent="applySearch">
       <Button
         v-if="selectedBusinessId"
@@ -30,14 +30,18 @@
     </form>
     <!-- One business chosen (brief docs/briefs/2026-10-31-analytics-ux.md, O3): a ranking of one row ranks nothing, so
          its facts are drawn as a card, each under its column's name and help, with the same rules as the table's cells -->
+    <!-- the card stays, dimmed, while the page reloads under the row just chosen: a section that emptied itself made the
+         page shrink under the user (the D12 review, a row chosen on a phone) -->
     <InsightsState
       v-if="focused"
       :status="table.status"
+      :keep-content="table.status === 'loading' && !!focusedRow"
       :empty="table.status === 'ok' && !focusedRow"
       :empty-text="$t('components.callInsights.assistants.none')"
       @retry="table.retry()"
     >
       <div v-if="focusedRow" class="assistant-card">
+        <h4 class="assistant-card-title">{{ businessLabel(focusedRow) }}</h4>
         <dl class="assistant-card-facts">
           <div v-for="column in cardColumns" :key="column.key" class="assistant-card-fact">
             <dt>{{ column.label }}<ColumnHelp v-if="column.help" :column="column.label" :text="column.help" /></dt>
@@ -526,6 +530,13 @@ export default {
   border: 1px solid @mrcall_borders;
   border-radius: 12px;
   padding: 16px;
+}
+
+.assistant-card-title {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: @mrcall_dark_grey_text;
 }
 
 .assistant-card-facts {

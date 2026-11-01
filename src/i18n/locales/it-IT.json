@@ -2076,7 +2076,6 @@
         "askedOf": "{category}: {n} richiesta | {category}: {n} richieste",
         "latestReport": "Ultimo report",
         "countOf": "({count} di {total})",
-        "focusTitle": "Assistente: {name}",
         "openBusiness": "Apri gli analytics di questa attività"
       },
       "scope": {

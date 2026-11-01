@@ -2070,7 +2070,6 @@
         "askedOf": "{category}: {n} verzoek | {category}: {n} verzoeken",
         "latestReport": "Laatste rapport",
         "countOf": "({count} van de {total})",
-        "focusTitle": "Assistent: {name}",
         "openBusiness": "Statistieken van dit bedrijf openen"
       },
       "scope": {

@@ -47,7 +47,7 @@ export default {
   data() {
     return {
       call: { visible: false, ids: [], businessId: null },
-      panel: { visible: false, link: null, label: "", count: 0 },
+      panel: { visible: false, link: null, label: "", count: null },
     };
   },
   computed: {
@@ -62,7 +62,7 @@ export default {
     },
     openCount(link, label, count) {
       if (!link) return;
-      this.panel = { visible: true, link, label, count };
+      this.panel = { visible: true, link, label, count: typeof count === "number" ? count : null };
     },
   },
 };
