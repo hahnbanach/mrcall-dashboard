@@ -1945,6 +1945,10 @@
           "no_credit": "Refused for lack of credit",
           "talk_and_hangup": "Message played, then hung up",
           "not_answered": "Not answered by the assistant"
+        },
+        "columns": {
+          "reason": "Reason",
+          "calls": "Calls"
         }
       },
       "topics": {
@@ -1962,7 +1966,19 @@
         "checksTitle": "Checks",
         "skillErrorsTitle": "Skill errors",
         "extractionTitle": "Extraction issues",
-        "countOfTotal": "{count} of {total} calls"
+        "anyUnanswered": "At least one unanswered question",
+        "technicalTitle": "Technical errors",
+        "columns": {
+          "signal": "Signal",
+          "calls": "Calls",
+          "base": "Out of",
+          "share": "Share",
+          "actions": "Actions"
+        },
+        "help": {
+          "base": "The calls the signal is counted on: for questions, those whose questions were recorded; for checks, those checked; for functions, all; for extraction, those where it ran.",
+          "share": "The calls with the signal divided by the calls it is counted on."
+        }
       },
       "reports": {
         "topicsTitle": "Topics",

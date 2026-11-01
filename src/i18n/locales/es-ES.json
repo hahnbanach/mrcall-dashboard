@@ -1954,6 +1954,10 @@
           "no_credit": "Rechazada por falta de crédito",
           "talk_and_hangup": "Mensaje reproducido y luego colgada",
           "not_answered": "No atendida por el asistente"
+        },
+        "columns": {
+          "reason": "Motivo",
+          "calls": "Llamadas"
         }
       },
       "topics": {
@@ -1971,7 +1975,19 @@
         "checksTitle": "Controles",
         "skillErrorsTitle": "Errores de funciones",
         "extractionTitle": "Problemas de extracción",
-        "countOfTotal": "{count} de {total} llamadas"
+        "anyUnanswered": "Al menos una pregunta sin respuesta",
+        "technicalTitle": "Errores técnicos",
+        "columns": {
+          "signal": "Señal",
+          "calls": "Llamadas",
+          "base": "De",
+          "share": "Proporción",
+          "actions": "Acciones"
+        },
+        "help": {
+          "base": "Las llamadas sobre las que se cuenta la señal: para las preguntas, aquellas cuyas preguntas se registraron; para los controles, las controladas; para las funciones, todas; para la extracción, aquellas en las que se ejecutó.",
+          "share": "Las llamadas con la señal divididas entre las llamadas sobre las que se cuenta."
+        }
       },
       "reports": {
         "topicsTitle": "Temas",

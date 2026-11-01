@@ -3,17 +3,23 @@ import { mount } from '@vue/test-utils'
 import { createI18n } from 'vue-i18n'
 import CallQuality from '@/components/analytics/CallQuality.vue'
 
-// Only the counting text matters here: every other key stands for itself.
+// Only the numbers matter here: every key stands for itself.
 const i18n = createI18n({
   legacy: false,
   locale: 'en',
-  messages: { en: { components: { callInsights: { quality: { countOfTotal: '{count} of {total} calls' } } } } },
+  messages: { en: {} },
   missingWarn: false,
   fallbackWarn: false
 })
 
 function quality(data, totalCalls) {
   return mount(CallQuality, { props: { status: 'ok', data, totalCalls }, global: { plugins: [i18n] } })
+}
+
+/** The extraction row's count and the calls it is counted on, from their columns. */
+function extraction(wrapper) {
+  const row = wrapper.find('tr[data-signal="extraction"]')
+  return `${row.find('.quality-count').text()} of ${row.find('.quality-base').text()}`
 }
 
 const base = { callsWithUnanswered: 0, callsWithUnansweredRecorded: 0, gaps: {}, checks: {}, callsWithChecks: 0, callsWithSkillErrors: 0 }
@@ -25,20 +31,17 @@ const base = { callsWithUnanswered: 0, callsWithUnansweredRecorded: 0, gaps: {},
 describe('CallQuality extraction issues', () => {
   it('counts the failures over the calls whose extraction ran, not over every call', () => {
     // the analytics guide's example: 113 extractions ran, 3 failed, 7 calls not managed; 200 calls in the period
-    const text = quality({ ...base, extractions: { ok: 110, http_error: 2, failed: 1, not_managed: 7 } }, 200).text()
-    expect(text).toContain('3 of 113 calls')
-    expect(text).not.toContain('10 of 120 calls')
-    expect(text).not.toContain('90 of 200 calls')
+    expect(extraction(quality({ ...base, extractions: { ok: 110, http_error: 2, failed: 1, not_managed: 7 } }, 200))).toBe('3 of 113')
   })
 
   it('counts too_long, refused for size, as StarChat does (brief 2026-10-31-analytics-ux, O5)', () => {
-    const text = quality({ ...base, extractions: { ok: 110, http_error: 2, failed: 1, too_long: 4, not_managed: 7 } }, 200).text()
-    expect(text).toContain('7 of 117 calls')
+    expect(extraction(quality({ ...base, extractions: { ok: 110, http_error: 2, failed: 1, too_long: 4, not_managed: 7 } }, 200))).toBe('7 of 117')
   })
 
   it('shows no issue when no call in the period carries an extraction outcome', () => {
-    const text = quality({ ...base, extractions: {} }, 50).text()
-    expect(text).toContain('0 of 0 calls')
-    expect(text).not.toContain('50 of 50 calls')
+    const wrapper = quality({ ...base, extractions: {} }, 50)
+    expect(extraction(wrapper)).toBe('0 of 0')
+    // no base, no share: never 0% of nothing
+    expect(wrapper.find('tr[data-signal="extraction"] .quality-share-value').text()).toBe('-')
   })
 })

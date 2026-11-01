@@ -1940,6 +1940,10 @@
           "no_credit": "Hylätty saldon puutteen vuoksi",
           "talk_and_hangup": "Viesti toistettiin, sitten puhelu lopetettiin",
           "not_answered": "Avustaja ei vastannut"
+        },
+        "columns": {
+          "reason": "Syy",
+          "calls": "Puhelut"
         }
       },
       "topics": {
@@ -1957,7 +1961,19 @@
         "checksTitle": "Tarkistukset",
         "skillErrorsTitle": "Toimintovirheet",
         "extractionTitle": "Poiminnan ongelmat",
-        "countOfTotal": "{count} / {total} puhelua"
+        "anyUnanswered": "Vähintään yksi vastaamaton kysymys",
+        "technicalTitle": "Tekniset virheet",
+        "columns": {
+          "signal": "Signaali",
+          "calls": "Puhelut",
+          "base": "Kaikista",
+          "share": "Osuus",
+          "actions": "Toiminnot"
+        },
+        "help": {
+          "base": "Puhelut, joista signaali lasketaan: kysymyksissä ne, joiden kysymykset tallennettiin; tarkistuksissa tarkistetut; toiminnoissa kaikki; poiminnassa ne, joissa se ajettiin.",
+          "share": "Signaalin sisältävät puhelut jaettuna puheluilla, joista se lasketaan."
+        }
       },
       "reports": {
         "topicsTitle": "Aiheet",

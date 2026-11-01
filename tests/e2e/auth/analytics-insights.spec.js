@@ -273,13 +273,13 @@ test.describe('Analytics: how the calls went (outcome 9, owner, business page)',
       ['Not answered by the assistant', '1'],
     ]
     for (const [label, count] of reasons) {
-      const row = none.locator('li').filter({ hasText: label })
+      const row = none.locator('tbody tr').filter({ hasText: label })
       await expect(row).toHaveCount(1)
       await expect(row.locator('.no-conversation-count')).toHaveText(count)
     }
     // never a rate, never a failure colour
     await expect(none).not.toContainText('%')
-    for (const row of await none.locator('li').all()) {
+    for (const row of await none.locator('tbody tr').all()) {
       const colours = await row.evaluate((el) => [el, ...el.querySelectorAll('*')].map((e) => getComputedStyle(e).color))
       for (const colour of colours) expect(FAILURE_COLOURS).not.toContain(colour)
     }
@@ -326,8 +326,9 @@ test.describe('Analytics: how the calls went (outcome 9, owner, business page)',
       }),
     }))
     await page.goto(`/analytics?id=${BUSINESS_ID}`)
-    const extraction = section(page, 'Quality').locator('.quality-group').filter({ hasText: 'Extraction issues' })
-    await expect(extraction.locator('.quality-row').first()).toHaveText('7 of 117 calls', { timeout: 15000 })
+    const extraction = section(page, 'Quality').locator('tr[data-signal="extraction"]')
+    await expect(extraction.locator('.quality-count')).toHaveText('7', { timeout: 15000 })
+    await expect(extraction.locator('.quality-base')).toHaveText('117')
   })
 })
 

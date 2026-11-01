@@ -1940,6 +1940,10 @@
           "no_credit": "Avvist på grunn av manglende kreditt",
           "talk_and_hangup": "Melding spilt av, deretter lagt på",
           "not_answered": "Ikke besvart av assistenten"
+        },
+        "columns": {
+          "reason": "Årsak",
+          "calls": "Anrop"
         }
       },
       "topics": {
@@ -1957,7 +1961,19 @@
         "checksTitle": "Kontroller",
         "skillErrorsTitle": "Funksjonsfeil",
         "extractionTitle": "Uttrekksproblemer",
-        "countOfTotal": "{count} av {total} samtaler"
+        "anyUnanswered": "Minst ett ubesvart spørsmål",
+        "technicalTitle": "Tekniske feil",
+        "columns": {
+          "signal": "Signal",
+          "calls": "Anrop",
+          "base": "Av",
+          "share": "Andel",
+          "actions": "Handlinger"
+        },
+        "help": {
+          "base": "Anropene signalet telles på: for spørsmål de der spørsmålene ble registrert; for kontroller de kontrollerte; for funksjoner alle; for uttrekk de der det ble kjørt.",
+          "share": "Anropene med signalet delt på anropene det telles på."
+        }
       },
       "reports": {
         "topicsTitle": "Emner",

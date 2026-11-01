@@ -1942,6 +1942,10 @@
           "no_credit": "Refusé faute de crédit",
           "talk_and_hangup": "Message diffusé, puis raccroché",
           "not_answered": "Sans réponse de l'assistant"
+        },
+        "columns": {
+          "reason": "Motif",
+          "calls": "Appels"
         }
       },
       "topics": {
@@ -1959,7 +1963,19 @@
         "checksTitle": "Vérifications",
         "skillErrorsTitle": "Erreurs de fonctions",
         "extractionTitle": "Problèmes d'extraction",
-        "countOfTotal": "{count} appels sur {total}"
+        "anyUnanswered": "Au moins une question sans réponse",
+        "technicalTitle": "Erreurs techniques",
+        "columns": {
+          "signal": "Signal",
+          "calls": "Appels",
+          "base": "Sur",
+          "share": "Part",
+          "actions": "Actions"
+        },
+        "help": {
+          "base": "Les appels sur lesquels le signal est compté : pour les questions, ceux dont les questions ont été enregistrées ; pour les contrôles, ceux contrôlés ; pour les fonctions, tous ; pour l'extraction, ceux où elle a été exécutée.",
+          "share": "Les appels avec le signal divisés par les appels sur lesquels il est compté."
+        }
       },
       "reports": {
         "topicsTitle": "Sujets",

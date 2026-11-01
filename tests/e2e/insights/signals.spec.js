@@ -36,7 +36,10 @@ test.describe('every quality signal says what it means and what to do', () => {
     await expect(quality.getByText(MEANINGS[0])).toBeVisible({ timeout: 15000 })
     for (const text of [...MEANINGS, ...ACTIONS]) await expect(quality.getByText(text)).toBeVisible()
     // extraction counts too_long as StarChat does
-    await expect(quality.locator('.quality-group').filter({ hasText: 'Extraction issues' }).locator('.quality-row')).toHaveText('2 of 102 calls')
+    const extraction = quality.locator('tr[data-signal="extraction"]')
+    await expect(extraction.locator('.quality-count')).toHaveText('2')
+    await expect(extraction.locator('.quality-base')).toHaveText('102')
+    await expect(extraction.locator('.quality-share-value')).toHaveText('2%')
   })
 
   test('the admin page', async ({ adminPage: page }) => {

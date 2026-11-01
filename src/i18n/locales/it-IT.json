@@ -1946,6 +1946,10 @@
           "no_credit": "Rifiutata per credito insufficiente",
           "talk_and_hangup": "Messaggio riprodotto, poi chiusa",
           "not_answered": "Non risposta dall'assistente"
+        },
+        "columns": {
+          "reason": "Motivo",
+          "calls": "Chiamate"
         }
       },
       "topics": {
@@ -1963,7 +1967,19 @@
         "checksTitle": "Controlli",
         "skillErrorsTitle": "Errori delle funzioni",
         "extractionTitle": "Problemi di estrazione",
-        "countOfTotal": "{count} di {total} chiamate"
+        "anyUnanswered": "Almeno una domanda senza risposta",
+        "technicalTitle": "Errori tecnici",
+        "columns": {
+          "signal": "Segnale",
+          "calls": "Chiamate",
+          "base": "Su",
+          "share": "Quota",
+          "actions": "Azioni"
+        },
+        "help": {
+          "base": "Le chiamate su cui il segnale è contato: per le domande, quelle di cui sono state registrate le domande; per i controlli, quelle controllate; per le funzioni, tutte; per l'estrazione, quelle in cui è stata eseguita.",
+          "share": "Le chiamate con il segnale divise per le chiamate su cui è contato."
+        }
       },
       "reports": {
         "topicsTitle": "Argomenti",

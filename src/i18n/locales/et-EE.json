@@ -1940,6 +1940,10 @@
           "no_credit": "Keelatud krediidi puudumise tõttu",
           "talk_and_hangup": "Teade esitati, seejärel kõne lõpetati",
           "not_answered": "Assistent ei vastanud"
+        },
+        "columns": {
+          "reason": "Põhjus",
+          "calls": "Kõned"
         }
       },
       "topics": {
@@ -1957,7 +1961,19 @@
         "checksTitle": "Kontrollid",
         "skillErrorsTitle": "Funktsioonivead",
         "extractionTitle": "Väljavõtteprobleemid",
-        "countOfTotal": "{count} kõnet {total}-st"
+        "anyUnanswered": "Vähemalt üks vastamata küsimus",
+        "technicalTitle": "Tehnilised vead",
+        "columns": {
+          "signal": "Signaal",
+          "calls": "Kõned",
+          "base": "Kokku",
+          "share": "Osakaal",
+          "actions": "Toimingud"
+        },
+        "help": {
+          "base": "Kõned, millelt signaali loetakse: küsimuste puhul need, mille küsimused salvestati; kontrollide puhul kontrollitud; funktsioonide puhul kõik; eraldamise puhul need, kus see käivitati.",
+          "share": "Signaaliga kõned jagatud kõnedega, millelt seda loetakse."
+        }
       },
       "reports": {
         "topicsTitle": "Teemad",

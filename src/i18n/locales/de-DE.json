@@ -1942,6 +1942,10 @@
           "no_credit": "Mangels Guthaben abgelehnt",
           "talk_and_hangup": "Ansage abgespielt, dann aufgelegt",
           "not_answered": "Vom Assistenten nicht angenommen"
+        },
+        "columns": {
+          "reason": "Grund",
+          "calls": "Anrufe"
         }
       },
       "topics": {
@@ -1959,7 +1963,19 @@
         "checksTitle": "Prüfungen",
         "skillErrorsTitle": "Funktionsfehler",
         "extractionTitle": "Extraktionsprobleme",
-        "countOfTotal": "{count} von {total} Anrufen"
+        "anyUnanswered": "Mindestens eine unbeantwortete Frage",
+        "technicalTitle": "Technische Fehler",
+        "columns": {
+          "signal": "Signal",
+          "calls": "Anrufe",
+          "base": "Von",
+          "share": "Anteil",
+          "actions": "Aktionen"
+        },
+        "help": {
+          "base": "Die Anrufe, auf die das Signal gezählt wird: bei Fragen jene, deren Fragen erfasst wurden; bei Prüfungen die geprüften; bei Funktionen alle; bei der Extraktion jene, in denen sie lief.",
+          "share": "Die Anrufe mit dem Signal geteilt durch die Anrufe, auf die es gezählt wird."
+        }
       },
       "reports": {
         "topicsTitle": "Themen",

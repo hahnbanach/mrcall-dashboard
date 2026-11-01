@@ -108,12 +108,25 @@
       <div v-if="noConversation" class="no-conversation" :class="{ 'is-updating': updating }">
         <h4 class="insight-dimension-title">{{ $t("components.callInsights.noConversation.title") }}</h4>
         <p class="coverage-note">{{ $t("components.callInsights.noConversation.note") }}</p>
-        <ul class="no-conversation-list">
-          <li v-for="row in noConversation" :key="row.key">
-            <span>{{ $t("components.callInsights.noConversation.reasons." + row.key) }}</span>
-            <span class="no-conversation-count"><CountLink :to="linkTo('noConversation', row.key)" :count="row.count" :display="formatNumber(row.count)" :label="$t('components.callInsights.noConversation.reasons.' + row.key)" /></span>
-          </li>
-        </ul>
+        <!-- a ruled table, each count on the line of its reason (the CTO, 2026-11-01: the list's numbers sat at the far
+             right with nothing leading the eye back to their label) -->
+        <div class="no-conversation-wrap">
+          <table class="no-conversation-table">
+            <caption class="visually-hidden">{{ $t("components.callInsights.noConversation.title") }}</caption>
+            <thead>
+              <tr>
+                <th scope="col">{{ $t("components.callInsights.noConversation.columns.reason") }}</th>
+                <th scope="col" class="num">{{ $t("components.callInsights.noConversation.columns.calls") }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="row in noConversation" :key="row.key" :data-reason="row.key">
+                <th scope="row">{{ $t("components.callInsights.noConversation.reasons." + row.key) }}</th>
+                <td class="num no-conversation-count" :data-label="$t('components.callInsights.noConversation.columns.calls')"><CountLink :to="linkTo('noConversation', row.key)" :count="row.count" :display="formatNumber(row.count)" :label="$t('components.callInsights.noConversation.reasons.' + row.key)" /></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </template>
   </div>
@@ -399,24 +412,62 @@ export default {
   margin-top: 24px;
 }
 
-.no-conversation-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
 
-  li {
-    display: flex;
-    justify-content: space-between;
-    font-size: 14px;
+.no-conversation-wrap {
+  max-width: 560px;
+  background: @mrcall_white;
+  border: 1px solid @mrcall_borders;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.no-conversation-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  color: @mrcall_dark_grey_text;
+
+  th, td {
+    text-align: left;
+    padding: 9px 14px;
+    border-bottom: 1px solid @mrcall_borders;
+  }
+
+  thead th {
+    font-size: 12px;
+    font-weight: 700;
     color: @mrcall_grey_text;
+  }
+
+  tbody th {
+    font-weight: 400;
+  }
+
+  tbody tr:last-child > * {
+    border-bottom: none;
+  }
+
+  tbody tr:hover > * {
+    background: #fafbfc;
+  }
+
+  .num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
   }
 }
 
 .no-conversation-count {
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .outcome-legend {

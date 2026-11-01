@@ -267,7 +267,9 @@ for the four dimensions lives in `src/utils/CallInsights.js`.
   the focus back to the control that opened it, and Escape closes only what is on top (the panels ignore it while the
   call's dialog is open). Outside a host both stay links. Every quality signal (each gap reason, each check, skill
   errors, extraction problems: `http_error`, `failed` and `too_long`, as StarChat counts them) says what it means and
-  what to do (`SignalExplain.vue`), in `CallQuality.vue` and on the report page, and leads to where it happened: on one
+  what to do (`SignalExplain.vue`), in `CallQuality.vue` and on the report page. `CallQuality.vue` is one ruled table
+  (signal with its explanation, calls, the calls it is counted on, share; the groups as rows), and each signal leads to
+  where it happened: on one
   business's page each count opens its calls (skill errors and extraction problems through the search's `skillErrors`
   and `extractionFailed`); on a page over several businesses each count opens `SignalBusinessesPanel.vue` (the
   businesses with the signal, by share, from `analytics/assistants` with the signal's sort and `present=true`, mapped
@@ -279,7 +281,8 @@ for the four dimensions lives in `src/utils/CallInsights.js`.
   "How the calls went" shows the outcome of the calls where the caller asked something in four lines adding up to
   their base (resolved in the call; passed to the business, split by the message taken; passed to a person; not
   resolved), from StarChat's `outcome` and `callsWithRequest`, with `caller_left` and `spam_wrong_number` beside
-  it in neutral colours, the message, booked and transferred, and the calls without a conversation by reason.
+  it in neutral colours, the message, booked and transferred, and the calls without a conversation by reason in a ruled
+  table of their own (reason, calls).
   Every change against the period before is neutral in colour, and "n/a" with its reason under a base of 20 calls or
   over a previous window with calls for part of its days (StarChat's `previousPartial`).
   No section shows a cost, a credit amount or a token count: StarChat answers none.

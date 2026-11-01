@@ -1940,6 +1940,10 @@
           "no_credit": "Nekat på grund av otillräcklig kredit",
           "talk_and_hangup": "Meddelandet spelades upp, sedan avslutat",
           "not_answered": "Inte besvarat av assistenten"
+        },
+        "columns": {
+          "reason": "Orsak",
+          "calls": "Samtal"
         }
       },
       "topics": {
@@ -1957,7 +1961,19 @@
         "checksTitle": "Kontroller",
         "skillErrorsTitle": "Funktionsfel",
         "extractionTitle": "Extraktionsproblem",
-        "countOfTotal": "{count} av {total} samtal"
+        "anyUnanswered": "Minst en obesvarad fråga",
+        "technicalTitle": "Tekniska fel",
+        "columns": {
+          "signal": "Signal",
+          "calls": "Samtal",
+          "base": "Av",
+          "share": "Andel",
+          "actions": "Åtgärder"
+        },
+        "help": {
+          "base": "Samtalen som signalen räknas på: för frågor de vars frågor registrerades; för kontroller de kontrollerade; för funktioner alla; för extrahering de där den kördes.",
+          "share": "Samtalen med signalen delat med samtalen den räknas på."
+        }
       },
       "reports": {
         "topicsTitle": "Ämnen",

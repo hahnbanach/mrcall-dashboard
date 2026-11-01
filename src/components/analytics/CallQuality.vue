@@ -7,68 +7,54 @@
     <!-- While a new answer is on its way the previous one stays (marked busy): a section that emptied
          itself made the page shrink and jump under the user (the D12 review, a row chosen on a phone). -->
     <template v-else-if="(status === 'ok' || status === 'loading') && data">
-      <div class="quality-group">
-        <h4 class="quality-group-title">{{ $t("components.callInsights.quality.unansweredTitle") }}</h4>
-        <i18n-t keypath="components.callInsights.quality.countOfTotal" tag="p" class="quality-row quality-row-total" scope="global">
-          <template #count><CountLink :to="linkTo('unanswered', true)" :signal="signalOf('unanswered', true)" :body="signalBody" :count="data.callsWithUnanswered || 0" :label="$t('components.callInsights.filters.unansweredLabel')" /></template>
-          <template #total>{{ data.callsWithUnansweredRecorded }}</template>
-        </i18n-t>
-        <ul class="quality-breakdown">
-          <li v-for="key in gapKeys" :key="key">
-            <div class="quality-item">
-              <span>{{ $t("components.callInsights.gaps." + key) }}</span>
-              <span class="quality-item-end">
-              <i18n-t keypath="components.callInsights.quality.countOfTotal" tag="span" class="quality-count" scope="global">
-                <template #count><CountLink :to="linkTo('gap', key)" :signal="signalOf('gap', key)" :body="signalBody" :count="gaps[key] || 0" :label="$t('components.callInsights.gaps.' + key)" /></template>
-                <template #total>{{ data.callsWithUnansweredRecorded }}</template>
-              </i18n-t>
-              <Button
-                v-if="questionsBody && analyticsOverlay && (gaps[key] || 0) > 0"
-                type="button" text size="small" class="quality-questions"
-                :label="$t('components.callInsights.questionsPanel.show')"
-                :aria-label="$t('components.callInsights.questionsPanel.showOf', { label: $t('components.callInsights.gaps.' + key) })"
-                @click="openQuestions(key, $event.currentTarget)"
-              />
-              </span>
-            </div>
-            <SignalExplain :signal="key" />
-          </li>
-        </ul>
-      </div>
-
-      <div class="quality-group">
-        <h4 class="quality-group-title">{{ $t("components.callInsights.quality.checksTitle") }}</h4>
-        <ul class="quality-breakdown">
-          <li v-for="key in checkKeys" :key="key">
-            <div class="quality-item">
-              <span>{{ $t("components.callInsights.checks." + key) }}</span>
-              <i18n-t keypath="components.callInsights.quality.countOfTotal" tag="span" class="quality-count" scope="global">
-                <template #count><CountLink :to="linkTo('check', key)" :signal="signalOf('check', key)" :body="signalBody" :count="checks[key] || 0" :label="$t('components.callInsights.checks.' + key)" /></template>
-                <template #total>{{ data.callsWithChecks }}</template>
-              </i18n-t>
-            </div>
-            <SignalExplain :signal="key" />
-          </li>
-        </ul>
-      </div>
-
-      <div class="quality-group">
-        <h4 class="quality-group-title">{{ $t("components.callInsights.quality.skillErrorsTitle") }}</h4>
-        <i18n-t v-if="totalCalls != null" keypath="components.callInsights.quality.countOfTotal" tag="p" class="quality-row" scope="global">
-          <template #count><CountLink :to="linkTo('skillErrors', true)" :signal="signalOf('skillErrors', true)" :body="signalBody" :count="data.callsWithSkillErrors || 0" :label="$t('components.callInsights.quality.skillErrorsTitle')" /></template>
-          <template #total>{{ totalCalls }}</template>
-        </i18n-t>
-        <p v-else class="quality-row"><CountLink :to="linkTo('skillErrors', true)" :signal="signalOf('skillErrors', true)" :body="signalBody" :count="data.callsWithSkillErrors || 0" :label="$t('components.callInsights.quality.skillErrorsTitle')" /></p>
-        <SignalExplain signal="skillErrors" />
-      </div>
-
-      <div class="quality-group">
-        <h4 class="quality-group-title">{{ $t("components.callInsights.quality.extractionTitle") }}</h4>
-        <i18n-t keypath="components.callInsights.quality.countOfTotal" tag="p" class="quality-row" scope="global">
-          <template #count><CountLink :to="linkTo('extractionFailed', true)" :signal="signalOf('extractionFailed', true)" :body="signalBody" :count="extractionIssues.count" :label="$t('components.callInsights.quality.extractionTitle')" /></template>
-          <template #total>{{ extractionIssues.base }}</template>
-        </i18n-t>
-        <SignalExplain signal="extraction" />
+      <!-- One table for every signal, so that each number sits under its column's name on a ruled line: the CTO found
+           the earlier list unreadable (2026-11-01), counts floating at the far right of long explanations, each repeating
+           "of N calls". The count, the calls it is counted on and the share are three columns; a group's name is a row. -->
+      <div class="quality-table-wrap">
+        <table class="quality-table">
+          <caption class="visually-hidden">{{ $t("components.callInsights.quality.title") }}</caption>
+          <thead>
+            <tr>
+              <th scope="col">{{ $t("components.callInsights.quality.columns.signal") }}</th>
+              <th scope="col" class="num">{{ $t("components.callInsights.quality.columns.calls") }}</th>
+              <th scope="col" class="num">
+                <span class="quality-head">{{ $t("components.callInsights.quality.columns.base") }}<ColumnHelp :column="$t('components.callInsights.quality.columns.base')" :text="$t('components.callInsights.quality.help.base')" /></span>
+              </th>
+              <th scope="col">
+                <span class="quality-head">{{ $t("components.callInsights.quality.columns.share") }}<ColumnHelp :column="$t('components.callInsights.quality.columns.share')" :text="$t('components.callInsights.quality.help.share')" /></span>
+              </th>
+              <th scope="col"><span class="visually-hidden">{{ $t("components.callInsights.quality.columns.actions") }}</span></th>
+            </tr>
+          </thead>
+          <tbody v-for="group in groups" :key="group.key" class="quality-group" :data-group="group.key">
+            <tr class="quality-group-row">
+              <th scope="colgroup" colspan="5">{{ $t(group.title) }}</th>
+            </tr>
+            <tr v-for="row in group.rows" :key="row.id" class="quality-row" :class="{ 'quality-row-total': row.total, 'quality-row-sub': row.sub }" :data-signal="row.id">
+              <th scope="row" class="quality-signal">
+                <span class="quality-label">{{ $t(row.label) }}</span>
+                <SignalExplain v-if="row.explain" :signal="row.explain" />
+              </th>
+              <td class="num quality-count" :data-label="$t('components.callInsights.quality.columns.calls')">
+                <CountLink :to="linkTo(row.kind, row.key)" :signal="signalOf(row.kind, row.key)" :body="signalBody" :count="row.count" :display="formatNumber(row.count)" :label="$t(row.countLabel || row.label)" />
+              </td>
+              <td class="num quality-base" :data-label="$t('components.callInsights.quality.columns.base')">{{ formatNumber(row.base) }}</td>
+              <td class="quality-share" :data-label="$t('components.callInsights.quality.columns.share')">
+                <span class="quality-share-value">{{ formatShare(row) }}</span>
+                <span class="quality-bar" aria-hidden="true"><span class="quality-bar-fill" :style="{ width: barWidth(row) }"></span></span>
+              </td>
+              <td class="quality-actions" :class="{ 'quality-actions-none': !showQuestions(row) }">
+                <Button
+                  v-if="showQuestions(row)"
+                  type="button" text size="small" class="quality-questions"
+                  :label="$t('components.callInsights.questionsPanel.show')"
+                  :aria-label="$t('components.callInsights.questionsPanel.showOf', { label: $t(row.label) })"
+                  @click="openQuestions(row.key, $event.currentTarget)"
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </template>
   </div>
@@ -78,6 +64,9 @@
 import CallInsights from "@/utils/CallInsights";
 import CountLink from "@/components/analytics/CountLink.vue";
 import SignalExplain from "@/components/analytics/SignalExplain.vue";
+import ColumnHelp from "@/components/analytics/ColumnHelp.vue";
+
+const Q = "components.callInsights.";
 
 /**
  * The quality signals of the calls in the period (brief outcome 3), each beside the number of
@@ -89,7 +78,7 @@ import SignalExplain from "@/components/analytics/SignalExplain.vue";
  * what to do about it (`SignalExplain`, brief docs/briefs/2026-10-31-analytics-ux.md, O5).
  */
 export default {
-  components: { CountLink, SignalExplain },
+  components: { CountLink, SignalExplain, ColumnHelp },
   inject: { analyticsOverlay: { default: null } },
   props: {
     status: { type: String, required: true },
@@ -123,6 +112,36 @@ export default {
     extractionIssues() {
       return CallInsights.extractionProblems(this.data && this.data.extractions);
     },
+    // The table's rows, by group: each its count, the calls it is counted on (StarChat's base for that signal) and
+    // what it opens. Skill errors and extraction issues share a group: one row each under a heading of their own read
+    // as the heading said twice.
+    groups() {
+      const d = this.data || {};
+      const recorded = d.callsWithUnansweredRecorded;
+      return [
+        {
+          key: "unanswered",
+          title: Q + "quality.unansweredTitle",
+          rows: [
+            { id: "unanswered", kind: "unanswered", key: true, total: true, label: Q + "quality.anyUnanswered", countLabel: Q + "filters.unansweredLabel", count: d.callsWithUnanswered || 0, base: recorded },
+            ...this.gapKeys.map((key) => ({ id: key, kind: "gap", key, sub: true, label: Q + "gaps." + key, explain: key, count: this.gaps[key] || 0, base: recorded, questions: true })),
+          ],
+        },
+        {
+          key: "checks",
+          title: Q + "quality.checksTitle",
+          rows: this.checkKeys.map((key) => ({ id: key, kind: "check", key, label: Q + "checks." + key, explain: key, count: this.checks[key] || 0, base: d.callsWithChecks })),
+        },
+        {
+          key: "technical",
+          title: Q + "quality.technicalTitle",
+          rows: [
+            { id: "skillErrors", kind: "skillErrors", key: true, label: Q + "quality.skillErrorsTitle", explain: "skillErrors", count: d.callsWithSkillErrors || 0, base: this.totalCalls },
+            { id: "extraction", kind: "extractionFailed", key: true, label: Q + "quality.extractionTitle", explain: "extraction", count: this.extractionIssues.count, base: this.extractionIssues.base },
+          ],
+        },
+      ];
+    },
   },
   methods: {
     linkTo(kind, key) {
@@ -130,6 +149,26 @@ export default {
     },
     signalOf(kind, key) {
       return this.signalBody ? CallInsights.qualitySignal(kind, key) : null;
+    },
+    formatNumber(n) {
+      return n == null ? "-" : n.toLocaleString(this.$i18n.locale);
+    },
+    share(row) {
+      return row.base ? row.count / row.base : null;
+    },
+    formatShare(row) {
+      const share = this.share(row);
+      if (share == null) return "-";
+      return share.toLocaleString(this.$i18n.locale, { style: "percent", maximumFractionDigits: 1 });
+    },
+    // a count above zero always shows a sliver, so that 1 of 4,000 does not read as none
+    barWidth(row) {
+      const share = this.share(row);
+      if (!share) return "0";
+      return "max(2px, " + Math.min(100, share * 100).toFixed(2) + "%)";
+    },
+    showQuestions(row) {
+      return !!(row.questions && this.questionsBody && this.analyticsOverlay && row.count > 0);
     },
     openQuestions(gap, trigger) {
       const label = this.$t("components.callInsights.questionsPanel.title", { label: this.$t("components.callInsights.gaps." + gap) });
@@ -141,78 +180,214 @@ export default {
 
 <style lang="less" scoped>
 @import "../../assets/style/colors";
+@import "../../assets/style/tableCards";
 
 .insights-note {
   color: @mrcall_grey_text;
   font-size: 14px;
 }
 
-.quality-group {
-  margin-bottom: 18px;
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
 
-  &:last-child {
-    margin-bottom: 0;
+// On white as every analytics table (PagedTable.vue): the blue counts read 4.7:1 there, the grey texts above 4.5:1
+.quality-table-wrap {
+  overflow-x: auto;
+  background: @mrcall_white;
+  border: 1px solid @mrcall_borders;
+  border-radius: 12px;
+}
+
+.quality-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  color: @mrcall_dark_grey_text;
+
+  th, td {
+    text-align: left;
+    padding: 10px 12px;
+    border-bottom: 1px solid @mrcall_borders;
+    vertical-align: top;
+  }
+
+  thead th {
+    font-size: 12px;
+    font-weight: 700;
+    color: @mrcall_grey_text;
+    white-space: nowrap;
+    background: @mrcall_white;
+  }
+
+  .num {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  thead th.num .quality-head {
+    justify-content: flex-end;
+  }
+
+  tbody:last-child tr:last-child > * {
+    border-bottom: none;
   }
 }
 
-.quality-group-title {
-  margin: 0 0 6px 0;
-  font-size: 13px;
+.quality-head {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+
+// A group's name across the table, on a tinted band, so that the groups read apart
+.quality-group-row th {
+  padding: 8px 12px;
+  font-size: 12px;
   font-weight: 700;
-  // on the page's grey @mrcall_grey_text2 is 3.7:1 (U19c m2)
   color: @mrcall_grey_text;
   text-transform: uppercase;
   letter-spacing: 0.04em;
+  background: #f5f7fa;
 }
 
-.quality-row {
-  margin: 0;
+.quality-row:hover > * {
+  background: #fafbfc;
+}
+
+.quality-signal {
+  font-weight: 400;
+  min-width: 260px;
+}
+
+.quality-label {
+  display: block;
   font-size: 15px;
+  font-weight: 600;
   color: @mrcall_dark_grey_text;
 }
 
-.quality-row-total {
-  font-weight: 600;
-  margin-bottom: 6px;
+// the explanation reads as a note under its signal, not as a second label: one size down and grey throughout
+.quality-signal :deep(.signal-explain),
+.quality-signal :deep(.signal-action) {
+  margin-top: 3px;
+  font-size: 13px;
+  color: @mrcall_grey_text;
 }
 
-.quality-breakdown {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+.quality-row-total .quality-label {
+  font-weight: 700;
+}
 
-  li {
-    font-size: 14px;
-    color: @mrcall_dark_grey_text;
-  }
-
-  .quality-item {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 4px 12px;
-  }
-
-  .quality-item-end {
-    display: inline-flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    justify-content: flex-end;
-    gap: 0 8px;
-    margin-left: auto;
-  }
-
-  .quality-questions.p-button {
-    padding: 0 4px;
-    color: @mrcall_blue_text;
-  }
+// the reasons are parts of the total row above them
+.quality-row-sub .quality-signal {
+  padding-left: 28px;
 }
 
 .quality-count {
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.quality-base {
   color: @mrcall_grey_text;
+}
+
+.quality-share {
+  white-space: nowrap;
+  width: 160px;
+}
+
+.quality-share-value {
+  display: inline-block;
+  min-width: 48px;
+  font-variant-numeric: tabular-nums;
+}
+
+// neutral, never a failure colour: a share is how often, not how bad
+.quality-bar {
+  display: inline-block;
+  vertical-align: middle;
+  width: 90px;
+  height: 6px;
+  margin-left: 8px;
+  border-radius: 3px;
+  background: #e8edf3;
+  overflow: hidden;
+}
+
+.quality-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: #5b7fa6;
+}
+
+.quality-actions {
+  white-space: nowrap;
+  text-align: right;
+  width: 1%;
+}
+
+.quality-questions.p-button {
+  padding: 0 4px;
+  color: @mrcall_blue_text;
+}
+
+// Phones: each signal a card, each value under its column's name (src/assets/style/tableCards.less)
+@media screen and (max-width: 640px) {
+  .quality-table-wrap {
+    border: none;
+    background: transparent;
+  }
+
+  .quality-table {
+    .table-cards();
+
+    .num {
+      text-align: left;
+    }
+
+    tbody tr.quality-group-row {
+      display: block;
+      background: transparent;
+      border: none;
+      margin: 8px 0 4px 0;
+      padding: 0;
+
+      th {
+        background: transparent;
+        padding: 0 4px;
+      }
+    }
+
+    .quality-row-sub .quality-signal {
+      padding-left: 12px;
+    }
+
+    .quality-signal {
+      min-width: 0;
+    }
+
+    // a card's cells are flex columns: keep each value at its label's start, and the action at its natural width
+    td {
+      align-items: flex-start;
+    }
+
+    .quality-share,
+    .quality-actions {
+      width: auto;
+    }
+
+    .quality-actions-none {
+      display: none;
+    }
+  }
 }
 </style>

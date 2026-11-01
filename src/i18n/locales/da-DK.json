@@ -1940,6 +1940,10 @@
           "no_credit": "Afvist på grund af manglende kredit",
           "talk_and_hangup": "Besked afspillet, derefter lagt på",
           "not_answered": "Ikke besvaret af assistenten"
+        },
+        "columns": {
+          "reason": "Årsag",
+          "calls": "Opkald"
         }
       },
       "topics": {
@@ -1957,7 +1961,19 @@
         "checksTitle": "Kontroller",
         "skillErrorsTitle": "Funktionsfejl",
         "extractionTitle": "Udtræksproblemer",
-        "countOfTotal": "{count} ud af {total} opkald"
+        "anyUnanswered": "Mindst ét ubesvaret spørgsmål",
+        "technicalTitle": "Tekniske fejl",
+        "columns": {
+          "signal": "Signal",
+          "calls": "Opkald",
+          "base": "Ud af",
+          "share": "Andel",
+          "actions": "Handlinger"
+        },
+        "help": {
+          "base": "De opkald, signalet tælles på: for spørgsmål dem, hvis spørgsmål blev registreret; for kontroller de kontrollerede; for funktioner alle; for udtræk dem, hvor det blev kørt.",
+          "share": "Opkaldene med signalet divideret med de opkald, det tælles på."
+        }
       },
       "reports": {
         "topicsTitle": "Emner",

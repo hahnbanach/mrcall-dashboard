@@ -1940,6 +1940,10 @@
           "no_credit": "Geweigerd wegens onvoldoende tegoed",
           "talk_and_hangup": "Bericht afgespeeld, daarna opgehangen",
           "not_answered": "Niet beantwoord door de assistent"
+        },
+        "columns": {
+          "reason": "Reden",
+          "calls": "Gesprekken"
         }
       },
       "topics": {
@@ -1957,7 +1961,19 @@
         "checksTitle": "Controles",
         "skillErrorsTitle": "Functiefouten",
         "extractionTitle": "Extractieproblemen",
-        "countOfTotal": "{count} van de {total} gesprekken"
+        "anyUnanswered": "Minstens één onbeantwoorde vraag",
+        "technicalTitle": "Technische fouten",
+        "columns": {
+          "signal": "Signaal",
+          "calls": "Gesprekken",
+          "base": "Van",
+          "share": "Aandeel",
+          "actions": "Acties"
+        },
+        "help": {
+          "base": "De gesprekken waarop het signaal wordt geteld: bij vragen die waarvan de vragen zijn vastgelegd; bij controles de gecontroleerde; bij functies alle; bij extractie die waarin ze is uitgevoerd.",
+          "share": "De gesprekken met het signaal gedeeld door de gesprekken waarop het wordt geteld."
+        }
       },
       "reports": {
         "topicsTitle": "Onderwerpen",
