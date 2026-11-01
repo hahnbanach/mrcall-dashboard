@@ -2428,10 +2428,6 @@
           "classify": "Classer ces demandes",
           "open": "Ouvrir les demandes"
         },
-        "wide": {
-          "business": "Ces demandes sont comptées sur toutes les entreprises, pas seulement celle choisie.",
-          "owner": "Ces demandes sont comptées sur les entreprises de tous les propriétaires, pas seulement du propriétaire choisi."
-        },
         "archiveWhere": "L'archivage s'applique à toutes les entreprises : retirez les filtres d'entreprise et de propriétaire pour archiver ou restaurer."
       },
       "admin": {
@@ -2560,7 +2556,9 @@
             "category": "Catégorie de la demande",
             "requestOutcome": "Issue de la demande",
             "noConversation": "Sans conversation",
-            "corrected": "Corrigé"
+            "corrected": "Corrigé",
+            "skillErrors": "Erreurs des skills",
+            "extractionFailed": "Problème d'extraction"
           },
           "counted": "Appels : comme les comptent les statistiques, archivés compris",
           "leftOut": "{n} appel non visible avec votre accès | {n} appels non visibles avec votre accès"
@@ -2791,6 +2789,41 @@
           "meaning": "Les données que l'assistant extrait en fin d'appel n'ont pas pu être extraites, ou l'appel était trop long pour être envoyé.",
           "action": "Si cela se répète, revoyez les champs que l'assistant extrait ; sinon contactez le support."
         }
+      },
+      "signalPanel": {
+        "openFrom": "Voir où c'est arrivé : {label} ({n} appel) | Voir où c'est arrivé : {label} ({n} appels)",
+        "count": "{n} appel sur la période | {n} appels sur la période",
+        "help": "Les entreprises où c'est arrivé au moins une fois, de la part la plus élevée à la plus basse. Ouvrez-en une pour voir ses appels.",
+        "caption": "Entreprises avec : {label}",
+        "empty": "Aucune entreprise sur la période.",
+        "columns": {
+          "business": "Entreprise",
+          "share": "Part de ses appels",
+          "open": "Appels"
+        },
+        "share": "{pct} % ({count} sur {base})",
+        "open": "Ouvrir les appels",
+        "openOf": "Ouvrir les appels de {name} : {label}",
+        "back": "Toutes les entreprises"
+      },
+      "questionsPanel": {
+        "show": "Voir les questions",
+        "showOf": "Voir les questions sans réponse : {label}",
+        "title": "Questions sans réponse : {label}",
+        "count": "{n} question dans {calls} | {n} questions dans {calls}",
+        "calls": "{n} appel | {n} appels",
+        "help": "Ce que les appelants ont demandé, des plus récentes aux plus anciennes, avec ce qu'il faut donner à l'assistant pour qu'il sache répondre la prochaine fois.",
+        "caption": "Questions sans réponse : {label}",
+        "empty": "Aucune question de ce type sur la période.",
+        "suggestion": "Suggestion : {text}",
+        "columns": {
+          "question": "Question",
+          "business": "Entreprise",
+          "when": "Quand",
+          "open": "Appel"
+        },
+        "open": "Ouvrir l'appel",
+        "openOf": "Ouvrir l'appel : {text}"
       }
     },
     "datePicker": {

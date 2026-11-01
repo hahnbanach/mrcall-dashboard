@@ -2426,10 +2426,6 @@
           "classify": "Luokittele nämä pyynnöt",
           "open": "Avaa pyynnöt"
         },
-        "wide": {
-          "business": "Nämä pyynnöt lasketaan kaikista yrityksistä, ei vain valitusta.",
-          "owner": "Nämä pyynnöt lasketaan kaikkien omistajien yrityksistä, ei vain valitun omistajan."
-        },
         "archiveWhere": "Arkistointi koskee kaikkia yrityksiä: poista yritys- ja omistajasuodattimet arkistoidaksesi tai palauttaaksesi."
       },
       "admin": {
@@ -2558,7 +2554,9 @@
             "category": "Pyynnön luokka",
             "requestOutcome": "Pyynnön lopputulos",
             "noConversation": "Ei keskustelua",
-            "corrected": "Korjattu"
+            "corrected": "Korjattu",
+            "skillErrors": "Skill-virheet",
+            "extractionFailed": "Poimintaongelma"
           },
           "counted": "Puhelut: kuten tilastot ne laskevat, arkistoidut mukaan lukien",
           "leftOut": "{n} puhelu ei näy käyttöoikeuksillasi | {n} puhelua ei näy käyttöoikeuksillasi"
@@ -2789,6 +2787,41 @@
           "meaning": "Tietoja, jotka avustaja poimii puhelun lopussa, ei voitu poimia, tai puhelu oli liian pitkä lähetettäväksi.",
           "action": "Jos se toistuu, tarkista kentät, jotka avustaja poimii; muuten ota yhteyttä tukeen."
         }
+      },
+      "signalPanel": {
+        "openFrom": "Katso, missä se tapahtui: {label} ({n} puhelu) | Katso, missä se tapahtui: {label} ({n} puhelua)",
+        "count": "{n} puhelu jaksolla | {n} puhelua jaksolla",
+        "help": "Yritykset, joissa se tapahtui ainakin kerran, suurin osuus ensin. Avaa yksi nähdäksesi sen puhelut.",
+        "caption": "Yritykset: {label}",
+        "empty": "Ei yrityksiä jaksolla.",
+        "columns": {
+          "business": "Yritys",
+          "share": "Osuus sen puheluista",
+          "open": "Puhelut"
+        },
+        "share": "{pct} % ({count}/{base})",
+        "open": "Avaa puhelut",
+        "openOf": "Avaa yrityksen {name} puhelut: {label}",
+        "back": "Kaikki yritykset"
+      },
+      "questionsPanel": {
+        "show": "Näytä kysymykset",
+        "showOf": "Näytä vastaamattomat kysymykset: {label}",
+        "title": "Vastaamattomat kysymykset: {label}",
+        "count": "{n} kysymys, {calls} | {n} kysymystä, {calls}",
+        "calls": "{n} puhelu | {n} puhelua",
+        "help": "Mitä soittajat kysyivät, uusimmat ensin, ja mitä avustaja tarvitsee osatakseen vastata ensi kerralla.",
+        "caption": "Vastaamattomat kysymykset: {label}",
+        "empty": "Ei tämän tyyppisiä kysymyksiä jaksolla.",
+        "suggestion": "Ehdotus: {text}",
+        "columns": {
+          "question": "Kysymys",
+          "business": "Yritys",
+          "when": "Milloin",
+          "open": "Puhelu"
+        },
+        "open": "Avaa puhelu",
+        "openOf": "Avaa puhelu: {text}"
       }
     },
     "datePicker": {

@@ -10,17 +10,26 @@
       <div class="quality-group">
         <h4 class="quality-group-title">{{ $t("components.callInsights.quality.unansweredTitle") }}</h4>
         <i18n-t keypath="components.callInsights.quality.countOfTotal" tag="p" class="quality-row quality-row-total" scope="global">
-          <template #count><CountLink :to="linkTo('unanswered', true)" :count="data.callsWithUnanswered || 0" :label="$t('components.callInsights.filters.unansweredLabel')" /></template>
+          <template #count><CountLink :to="linkTo('unanswered', true)" :signal="signalOf('unanswered', true)" :body="signalBody" :count="data.callsWithUnanswered || 0" :label="$t('components.callInsights.filters.unansweredLabel')" /></template>
           <template #total>{{ data.callsWithUnansweredRecorded }}</template>
         </i18n-t>
         <ul class="quality-breakdown">
           <li v-for="key in gapKeys" :key="key">
             <div class="quality-item">
               <span>{{ $t("components.callInsights.gaps." + key) }}</span>
+              <span class="quality-item-end">
               <i18n-t keypath="components.callInsights.quality.countOfTotal" tag="span" class="quality-count" scope="global">
-                <template #count><CountLink :to="linkTo('gap', key)" :count="gaps[key] || 0" :label="$t('components.callInsights.gaps.' + key)" /></template>
+                <template #count><CountLink :to="linkTo('gap', key)" :signal="signalOf('gap', key)" :body="signalBody" :count="gaps[key] || 0" :label="$t('components.callInsights.gaps.' + key)" /></template>
                 <template #total>{{ data.callsWithUnansweredRecorded }}</template>
               </i18n-t>
+              <Button
+                v-if="questionsBody && analyticsOverlay && (gaps[key] || 0) > 0"
+                type="button" text size="small" class="quality-questions"
+                :label="$t('components.callInsights.questionsPanel.show')"
+                :aria-label="$t('components.callInsights.questionsPanel.showOf', { label: $t('components.callInsights.gaps.' + key) })"
+                @click="openQuestions(key, $event.currentTarget)"
+              />
+              </span>
             </div>
             <SignalExplain :signal="key" />
           </li>
@@ -34,7 +43,7 @@
             <div class="quality-item">
               <span>{{ $t("components.callInsights.checks." + key) }}</span>
               <i18n-t keypath="components.callInsights.quality.countOfTotal" tag="span" class="quality-count" scope="global">
-                <template #count><CountLink :to="linkTo('check', key)" :count="checks[key] || 0" :label="$t('components.callInsights.checks.' + key)" /></template>
+                <template #count><CountLink :to="linkTo('check', key)" :signal="signalOf('check', key)" :body="signalBody" :count="checks[key] || 0" :label="$t('components.callInsights.checks.' + key)" /></template>
                 <template #total>{{ data.callsWithChecks }}</template>
               </i18n-t>
             </div>
@@ -45,13 +54,20 @@
 
       <div class="quality-group">
         <h4 class="quality-group-title">{{ $t("components.callInsights.quality.skillErrorsTitle") }}</h4>
-        <p class="quality-row">{{ countOfTotal(data.callsWithSkillErrors, totalCalls) }}</p>
+        <i18n-t v-if="totalCalls != null" keypath="components.callInsights.quality.countOfTotal" tag="p" class="quality-row" scope="global">
+          <template #count><CountLink :to="linkTo('skillErrors', true)" :signal="signalOf('skillErrors', true)" :body="signalBody" :count="data.callsWithSkillErrors || 0" :label="$t('components.callInsights.quality.skillErrorsTitle')" /></template>
+          <template #total>{{ totalCalls }}</template>
+        </i18n-t>
+        <p v-else class="quality-row"><CountLink :to="linkTo('skillErrors', true)" :signal="signalOf('skillErrors', true)" :body="signalBody" :count="data.callsWithSkillErrors || 0" :label="$t('components.callInsights.quality.skillErrorsTitle')" /></p>
         <SignalExplain signal="skillErrors" />
       </div>
 
       <div class="quality-group">
         <h4 class="quality-group-title">{{ $t("components.callInsights.quality.extractionTitle") }}</h4>
-        <p class="quality-row">{{ countOfTotal(extractionIssues.count, extractionIssues.base) }}</p>
+        <i18n-t keypath="components.callInsights.quality.countOfTotal" tag="p" class="quality-row" scope="global">
+          <template #count><CountLink :to="linkTo('extractionFailed', true)" :signal="signalOf('extractionFailed', true)" :body="signalBody" :count="extractionIssues.count" :label="$t('components.callInsights.quality.extractionTitle')" /></template>
+          <template #total>{{ extractionIssues.base }}</template>
+        </i18n-t>
         <SignalExplain signal="extraction" />
       </div>
     </template>
@@ -74,12 +90,18 @@ import SignalExplain from "@/components/analytics/SignalExplain.vue";
  */
 export default {
   components: { CountLink, SignalExplain },
+  inject: { analyticsOverlay: { default: null } },
   props: {
     status: { type: String, required: true },
     data: { type: Object, default: null },
     totalCalls: { type: Number, default: null },
     // (kind, key) => the conversations list of the counted calls, or null (CallOutcomes.vue's `linkFor`)
     linkFor: { type: Function, default: null },
+    // a page over several businesses: its analytics body, so that each count opens the businesses where it happened
+    // (StarChat's analytics guide §9); null on one business's page, where the counts open their calls
+    signalBody: { type: Object, default: null },
+    // the page's analytics body for a gap reason's unanswered questions (§14), on every page that has a host
+    questionsBody: { type: Object, default: null },
   },
   computed: {
     gapKeys() {
@@ -106,10 +128,12 @@ export default {
     linkTo(kind, key) {
       return this.linkFor ? this.linkFor(kind, key) : null;
     },
-    countOfTotal(count, total) {
-      const safeCount = count || 0;
-      if (total == null) return String(safeCount);
-      return this.$t("components.callInsights.quality.countOfTotal", { count: safeCount, total });
+    signalOf(kind, key) {
+      return this.signalBody ? CallInsights.qualitySignal(kind, key) : null;
+    },
+    openQuestions(gap, trigger) {
+      const label = this.$t("components.callInsights.questionsPanel.title", { label: this.$t("components.callInsights.gaps." + gap) });
+      this.analyticsOverlay.openQuestions(gap, label, this.questionsBody, !!this.signalBody, trigger);
     },
   },
 };
@@ -167,8 +191,24 @@ export default {
 
   .quality-item {
     display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
     justify-content: space-between;
-    gap: 12px;
+    gap: 4px 12px;
+  }
+
+  .quality-item-end {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: flex-end;
+    gap: 0 8px;
+    margin-left: auto;
+  }
+
+  .quality-questions.p-button {
+    padding: 0 4px;
+    color: @mrcall_blue_text;
   }
 }
 

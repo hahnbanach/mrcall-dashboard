@@ -96,6 +96,9 @@ test.describe('a call and a count\'s calls open over the analytics page', () => 
     expect(searches.filter((s) => s.id).map((s) => s.id)).toEqual(['CON-g2'])
     await page.keyboard.press('Escape')
     await expect(dialog).toHaveCount(0)
+    // one Escape closes the dialog only: the panel under it stays
+    await expect(panel).toBeVisible()
+    await expect(panel.getByRole('button', { name: /^Open the call of Caller 2,/ })).toBeVisible()
     await page.keyboard.press('Escape')
     await expect(panel).toHaveCount(0)
     await expect(count).toBeFocused()

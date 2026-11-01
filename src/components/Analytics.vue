@@ -245,6 +245,8 @@
         :data="qualityData"
         :total-calls="outcomesData && outcomesData.totalCalls"
         :link-for="countLinkFor"
+        :signal-body="showScopePage ? scopeBody : null"
+        :questions-body="questionsBody"
       />
 
       <!-- Assistants to review and the callers' requests: the reseller's scope page only, both following the
@@ -392,6 +394,14 @@ export default {
           return null;
         }
       };
+    },
+    // The body a gap reason's unanswered questions are read with (StarChat's analytics guide §14): the business's period
+    // on its page, the scope's (and its owner) on the reseller's scope page.
+    questionsBody() {
+      if (this.businessId && !this.businessMissing) {
+        return { timestampGte: this.timestampGte, timestampLte: this.timestampLte, businessId: this.businessId };
+      }
+      return this.showScopePage ? this.scopeBody : null;
     },
     // A reseller with no business chosen (the entry a bookmark or the reseller dashboard takes,
     // `ResellerDashboard.vue:87`) reads its whole scope instead of one business.

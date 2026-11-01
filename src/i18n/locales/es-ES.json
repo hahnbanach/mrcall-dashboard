@@ -2440,10 +2440,6 @@
           "classify": "Clasifica estas solicitudes",
           "open": "Abre las solicitudes"
         },
-        "wide": {
-          "business": "Estas solicitudes se cuentan en todos los negocios, no solo en el elegido.",
-          "owner": "Estas solicitudes se cuentan en los negocios de todos los propietarios, no solo del propietario elegido."
-        },
         "archiveWhere": "Archivar afecta a todos los negocios: quita los filtros de negocio y propietario para archivar o restaurar."
       },
       "admin": {
@@ -2572,7 +2568,9 @@
             "category": "Categoría de la solicitud",
             "requestOutcome": "Resultado de la solicitud",
             "noConversation": "Sin conversación",
-            "corrected": "Corregida"
+            "corrected": "Corregida",
+            "skillErrors": "Errores de las skills",
+            "extractionFailed": "Problema de extracción"
           },
           "counted": "Llamadas: como las cuentan las estadísticas, archivadas incluidas",
           "leftOut": "{n} llamada no visible con tu acceso | {n} llamadas no visibles con tu acceso"
@@ -2803,6 +2801,41 @@
           "meaning": "No se pudieron extraer los datos que el asistente extrae al final de la llamada, o la llamada era demasiado larga para enviarla.",
           "action": "Si se repite, revisa los campos que extrae el asistente; si no, contacta con soporte."
         }
+      },
+      "signalPanel": {
+        "openFrom": "Ver dónde ocurrió: {label} ({n} llamada) | Ver dónde ocurrió: {label} ({n} llamadas)",
+        "count": "{n} llamada en el periodo | {n} llamadas en el periodo",
+        "help": "Los negocios donde ocurrió al menos una vez, de mayor a menor proporción. Abre uno para ver sus llamadas.",
+        "caption": "Negocios con: {label}",
+        "empty": "Ningún negocio en el periodo.",
+        "columns": {
+          "business": "Negocio",
+          "share": "Proporción de sus llamadas",
+          "open": "Llamadas"
+        },
+        "share": "{pct} % ({count} de {base})",
+        "open": "Abrir las llamadas",
+        "openOf": "Abrir las llamadas de {name}: {label}",
+        "back": "Todos los negocios"
+      },
+      "questionsPanel": {
+        "show": "Ver las preguntas",
+        "showOf": "Ver las preguntas sin respuesta: {label}",
+        "title": "Preguntas sin respuesta: {label}",
+        "count": "{n} pregunta en {calls} | {n} preguntas en {calls}",
+        "calls": "{n} llamada | {n} llamadas",
+        "help": "Lo que preguntaron los llamantes, de las más recientes a las más antiguas, con lo que hay que dar al asistente para que sepa responder la próxima vez.",
+        "caption": "Preguntas sin respuesta: {label}",
+        "empty": "Ninguna pregunta de este tipo en el periodo.",
+        "suggestion": "Sugerencia: {text}",
+        "columns": {
+          "question": "Pregunta",
+          "business": "Negocio",
+          "when": "Cuándo",
+          "open": "Llamada"
+        },
+        "open": "Abrir la llamada",
+        "openOf": "Abrir la llamada: {text}"
       }
     },
     "datePicker": {

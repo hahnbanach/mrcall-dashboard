@@ -2426,10 +2426,6 @@
           "classify": "Deze verzoeken indelen",
           "open": "Open de verzoeken"
         },
-        "wide": {
-          "business": "Deze verzoeken worden over alle bedrijven geteld, niet alleen het gekozen bedrijf.",
-          "owner": "Deze verzoeken worden over de bedrijven van alle eigenaren geteld, niet alleen van de gekozen eigenaar."
-        },
         "archiveWhere": "Archiveren geldt voor alle bedrijven: wis de bedrijfs- en eigenaarfilters om te archiveren of te herstellen."
       },
       "admin": {
@@ -2558,7 +2554,9 @@
             "category": "Categorie van het verzoek",
             "requestOutcome": "Uitkomst van het verzoek",
             "noConversation": "Geen gesprek",
-            "corrected": "Gecorrigeerd"
+            "corrected": "Gecorrigeerd",
+            "skillErrors": "Skillfouten",
+            "extractionFailed": "Extractieprobleem"
           },
           "counted": "Oproepen: zoals de statistieken ze tellen, gearchiveerde inbegrepen",
           "leftOut": "{n} oproep niet zichtbaar met uw toegang | {n} oproepen niet zichtbaar met uw toegang"
@@ -2789,6 +2787,41 @@
           "meaning": "De gegevens die de assistent aan het eind van het gesprek extraheert, konden niet worden geëxtraheerd, of het gesprek was te lang om te versturen.",
           "action": "Als het terugkomt, bekijk dan de velden die de assistent extraheert; neem anders contact op met support."
         }
+      },
+      "signalPanel": {
+        "openFrom": "Bekijk waar het gebeurde: {label} ({n} gesprek) | Bekijk waar het gebeurde: {label} ({n} gesprekken)",
+        "count": "{n} gesprek in de periode | {n} gesprekken in de periode",
+        "help": "De bedrijven waar het minstens één keer gebeurde, met het hoogste aandeel eerst. Open er een om de gesprekken te zien.",
+        "caption": "Bedrijven met: {label}",
+        "empty": "Geen bedrijf in deze periode.",
+        "columns": {
+          "business": "Bedrijf",
+          "share": "Aandeel van de gesprekken",
+          "open": "Gesprekken"
+        },
+        "share": "{pct}% ({count} van {base})",
+        "open": "Gesprekken openen",
+        "openOf": "Gesprekken van {name} openen: {label}",
+        "back": "Alle bedrijven"
+      },
+      "questionsPanel": {
+        "show": "Vragen bekijken",
+        "showOf": "Onbeantwoorde vragen bekijken: {label}",
+        "title": "Onbeantwoorde vragen: {label}",
+        "count": "{n} vraag in {calls} | {n} vragen in {calls}",
+        "calls": "{n} gesprek | {n} gesprekken",
+        "help": "Wat bellers vroegen, nieuwste eerst, met wat de assistent nodig heeft om de volgende keer te antwoorden.",
+        "caption": "Onbeantwoorde vragen: {label}",
+        "empty": "Geen vraag van deze soort in deze periode.",
+        "suggestion": "Suggestie: {text}",
+        "columns": {
+          "question": "Vraag",
+          "business": "Bedrijf",
+          "when": "Wanneer",
+          "open": "Gesprek"
+        },
+        "open": "Gesprek openen",
+        "openOf": "Gesprek openen: {text}"
       }
     },
     "datePicker": {

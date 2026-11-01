@@ -191,6 +191,44 @@ function notSolvedChange(row) {
     return Math.round((r.notSolved / r.callsWithRequest - r.previousNotSolved / r.previousCallsWithRequest) * 100);
 }
 
+/*
+ * A quality count as a signal StarChat ranks the assistants by (brief docs/briefs/2026-10-31-analytics-ux.md, O5;
+ * StarChat's analytics guide §9, `sort` with `present=true`): the count's kind and key as `CallQuality.vue` names them
+ * (the same as `Classifications.countLink`'s), the sort key, and the row's count and base for that signal, as the
+ * guide's table of sorts states them. Throws on a kind or key with no sort, so that no count opens a list that is not
+ * its own.
+ */
+const QUALITY_SIGNALS = {
+    unanswered: (key) => key === true && {
+        sort: "unanswered", count: (r) => r.callsWithUnanswered, base: (r) => r.callsWithUnansweredRecorded,
+    },
+    gap: (key) => GAP_KEYS.includes(key) && {
+        sort: "gap:" + key, count: (r) => (r.gaps || {})[key] || 0, base: (r) => r.callsWithUnansweredRecorded,
+    },
+    check: (key) => CHECK_KEYS.includes(key) && {
+        sort: "check:" + key, count: (r) => (r.checks || {})[key] || 0, base: (r) => r.callsWithChecks,
+    },
+    skillErrors: (key) => key === true && {
+        sort: "skill_errors", count: (r) => r.callsWithSkillErrors, base: (r) => r.totalCalls,
+    },
+    extractionFailed: (key) => key === true && {
+        sort: "extraction_failures", count: (r) => r.extractionsNotOk, base: (r) => r.extractionsRun,
+    },
+};
+
+function qualitySignal(kind, key) {
+    const of = QUALITY_SIGNALS[kind];
+    const signal = of && of(key);
+    if (!signal) throw new Error("CallInsights.qualitySignal: no signal for " + kind + " " + JSON.stringify(key));
+    return { kind, key, ...signal };
+}
+
+// One business row's count, base and share for a signal (`qualitySignal`)
+function signalShare(row, signal) {
+    const r = row || {};
+    return share(signal.count(r), signal.base(r));
+}
+
 function assistantShare(row, key) {
     const of = ASSISTANT_SHARES[key];
     if (!of) throw new Error("CallInsights.assistantShare: " + key + " is not a share");
@@ -451,6 +489,8 @@ export default {
     noConversationRows,
     extractionProblems,
     assistantShare,
+    qualitySignal,
+    signalShare,
     notSolvedChange,
     PAGE_SIZE,
     pageOf,
@@ -474,12 +514,21 @@ export default {
     },
     // One page of the assistants table (StarChat's analytics guide §9): `sort` and `direction` its order, `from` and
     // `size` the page, `search` a company name to narrow it to. Answers `{businesses, total, from, size, ...}`.
-    assistants: function (user, body, { sort, direction = "desc", from = 0, size = PAGE_SIZE, search } = {}) {
+    // `present`: only the businesses where the sort's signal occurred at least once (StarChat 9.34, S2).
+    assistants: function (user, body, { sort, direction = "desc", from = 0, size = PAGE_SIZE, search, present = false } = {}) {
         return unwrap(axios.post(
-            ANALYTICS_BASE + "/assistants" + query({ sort, direction, from, size, search }),
+            ANALYTICS_BASE + "/assistants" + query({ sort, direction, from, size, search, present: present ? "true" : undefined }),
             body,
             { headers: getHeaders(user) }
         ));
+    },
+    // The unanswered questions of one gap reason over the analytics body's period and scope (StarChat's analytics guide
+    // §14): `{gap, period, asOf, total, calls, from, size, items}`, one item per question, newest call first; `total`
+    // counts questions, `calls` the distinct calls (the quality read's `gaps[gap]` on the same body). The gap is
+    // closed: an unknown one is refused here, before the request.
+    unanswered: function (user, body, { gap, from = 0, size = PAGE_SIZE, asOf } = {}) {
+        if (!GAP_KEYS.includes(gap)) return Promise.reject(new Error("CallInsights.unanswered: gap must be one of " + GAP_KEYS.join(", ")));
+        return unwrap(axios.post(ANALYTICS_BASE + "/unanswered" + query({ gap, from, size, asOf }), body, { headers: getHeaders(user) }));
     },
     // One business's topics (StarChat's analytics guide §11): StarChat answers a body without a
     // business 400, so the call is refused here, before the request; the page asks only when exactly

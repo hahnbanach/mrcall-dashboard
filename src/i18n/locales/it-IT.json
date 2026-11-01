@@ -2432,10 +2432,6 @@
           "classify": "Classifica queste richieste",
           "open": "Apri le richieste"
         },
-        "wide": {
-          "business": "Queste richieste sono contate su tutte le attività, non solo su quella scelta.",
-          "owner": "Queste richieste sono contate sulle attività di tutti i proprietari, non solo del proprietario scelto."
-        },
         "archiveWhere": "L'archiviazione vale per tutte le attività: togli i filtri di attività e proprietario per archiviare o ripristinare."
       },
       "admin": {
@@ -2564,7 +2560,9 @@
             "category": "Categoria della richiesta",
             "requestOutcome": "Esito della richiesta",
             "noConversation": "Nessuna conversazione",
-            "corrected": "Corretta"
+            "corrected": "Corretta",
+            "skillErrors": "Errori delle skill",
+            "extractionFailed": "Problema di estrazione"
           },
           "counted": "Chiamate: come le contano le statistiche, archiviate comprese",
           "leftOut": "{n} chiamata non visibile con il tuo accesso | {n} chiamate non visibili con il tuo accesso"
@@ -2795,6 +2793,41 @@
           "meaning": "I dati che l'assistente estrae a fine chiamata non sono stati estratti, oppure la chiamata era troppo lunga da inviare.",
           "action": "Se si ripete, rivedi i campi che l'assistente estrae; altrimenti contatta l'assistenza."
         }
+      },
+      "signalPanel": {
+        "openFrom": "Vedi dove è successo: {label} ({n} chiamata) | Vedi dove è successo: {label} ({n} chiamate)",
+        "count": "{n} chiamata nel periodo | {n} chiamate nel periodo",
+        "help": "Le attività in cui è successo almeno una volta, dalla quota più alta. Aprine una per vederne le chiamate.",
+        "caption": "Attività con: {label}",
+        "empty": "Nessuna attività nel periodo.",
+        "columns": {
+          "business": "Attività",
+          "share": "Quota delle sue chiamate",
+          "open": "Chiamate"
+        },
+        "share": "{pct}% ({count} su {base})",
+        "open": "Apri le chiamate",
+        "openOf": "Apri le chiamate di {name}: {label}",
+        "back": "Tutte le attività"
+      },
+      "questionsPanel": {
+        "show": "Vedi le domande",
+        "showOf": "Vedi le domande senza risposta: {label}",
+        "title": "Domande senza risposta: {label}",
+        "count": "{n} domanda in {calls} | {n} domande in {calls}",
+        "calls": "{n} chiamata | {n} chiamate",
+        "help": "Cosa hanno chiesto i chiamanti, dalle più recenti, con cosa dare all'assistente perché la prossima volta sappia rispondere.",
+        "caption": "Domande senza risposta: {label}",
+        "empty": "Nessuna domanda di questo tipo nel periodo.",
+        "suggestion": "Suggerimento: {text}",
+        "columns": {
+          "question": "Domanda",
+          "business": "Attività",
+          "when": "Quando",
+          "open": "Chiamata"
+        },
+        "open": "Apri la chiamata",
+        "openOf": "Apri la chiamata: {text}"
       }
     },
     "datePicker": {

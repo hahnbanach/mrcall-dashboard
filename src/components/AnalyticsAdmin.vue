@@ -254,7 +254,9 @@
       <!-- What the calls were about (brief outcome 9): only with the business filter set; across
            several businesses it says to choose one and never asks -->
       <CallTopics :status="businessId ? topicsStatus : 'needsBusiness'" :data="topicsData" :link-for="countLinkFor" />
-      <CallQuality :status="qualityStatus" :data="qualityData" :total-calls="outcomesData && outcomesData.totalCalls" :link-for="countLinkFor" />
+      <!-- over several businesses a count opens where it happened; with one, its calls; a reason its questions (O5) -->
+      <CallQuality :status="qualityStatus" :data="qualityData" :total-calls="outcomesData && outcomesData.totalCalls" :link-for="countLinkFor"
+                   :signal-body="businessId ? null : requestBody" :questions-body="requestBody" />
 
       <!-- Assistants to review and the callers' requests, following the filters above; MrCall's own configuration
            suggestions across the platform -->

@@ -351,6 +351,10 @@ const ADDRESS_FILTERS = [
     { key: "topicLabel", body: "topicLabels", read: list(text) },
     { key: "gap", body: "gap", read: oneOf(GAP_KEYS) },
     { key: "check", body: "check", read: oneOf(CHECK_KEYS) },
+    // the calls the quality read counts as skill errors and as failed extractions (StarChat 9.34, S3 of brief
+    // docs/briefs/2026-10-31-analytics-ux.md); false is the complement
+    { key: "skillErrors", body: "skillErrors", read: bool },
+    { key: "extractionFailed", body: "extractionFailed", read: bool },
     { key: "category", body: "requestCategory", read: text },
     { key: "requestOutcome", body: "requestOutcomes", read: list(oneOf(REQUEST_OUTCOME_KEYS)) },
     { key: "corrected", body: "corrected", read: bool },
@@ -467,6 +471,8 @@ const COUNT_KINDS = {
     },
     gap: (k) => ({ gap: oneOf(GAP_KEYS)(k) }),
     check: (k) => ({ check: oneOf(CHECK_KEYS)(k) }),
+    skillErrors: (k) => ({ skillErrors: k === true ? "true" : undefined }),
+    extractionFailed: (k) => ({ extractionFailed: k === true ? "true" : undefined }),
     requestCategory: (k) => {
         const c = k || {};
         const out = { category: c.category === null ? UNCLASSIFIED : text(c.category) };

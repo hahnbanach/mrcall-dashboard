@@ -890,6 +890,8 @@ export default {
         case "gap": return t(f.key, this.$t("components.callInsights.gaps." + v));
         case "check": return t(f.key, this.$t("components.callInsights.checks." + v));
         case "requestOutcome": return t(f.key, v.map((o) => this.$t("components.callInsights.feedback.outcome." + o)).join(", "));
+        case "skillErrors":
+        case "extractionFailed":
         case "corrected": return t(f.key, this.$t("components.callInsights.feedback.filters." + (v ? "yes" : "no")));
         case "topicLabel": return t("topic", v.join(", "));
         case "category": {

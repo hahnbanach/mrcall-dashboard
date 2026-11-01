@@ -2426,10 +2426,6 @@
           "classify": "Klassificera dessa förfrågningar",
           "open": "Öppna förfrågningarna"
         },
-        "wide": {
-          "business": "De här förfrågningarna räknas över alla företag, inte bara det valda.",
-          "owner": "De här förfrågningarna räknas över alla ägares företag, inte bara den valda ägarens."
-        },
         "archiveWhere": "Arkivering gäller alla företag: ta bort företags- och ägarfiltren för att arkivera eller återställa."
       },
       "admin": {
@@ -2558,7 +2554,9 @@
             "category": "Kategori för begäran",
             "requestOutcome": "Utfall för begäran",
             "noConversation": "Inget samtal",
-            "corrected": "Korrigerad"
+            "corrected": "Korrigerad",
+            "skillErrors": "Skill-fel",
+            "extractionFailed": "Extraktionsproblem"
           },
           "counted": "Samtal: som statistiken räknar dem, arkiverade inräknade",
           "leftOut": "{n} samtal syns inte med din behörighet | {n} samtal syns inte med din behörighet"
@@ -2789,6 +2787,41 @@
           "meaning": "Uppgifterna som assistenten extraherar i slutet av samtalet kunde inte extraheras, eller samtalet var för långt att skicka.",
           "action": "Om det upprepas, se över fälten som assistenten extraherar; kontakta annars support."
         }
+      },
+      "signalPanel": {
+        "openFrom": "Se var det hände: {label} ({n} samtal) | Se var det hände: {label} ({n} samtal)",
+        "count": "{n} samtal under perioden | {n} samtal under perioden",
+        "help": "Företagen där det hände minst en gång, med högst andel först. Öppna ett för att se dess samtal.",
+        "caption": "Företag med: {label}",
+        "empty": "Inget företag under perioden.",
+        "columns": {
+          "business": "Företag",
+          "share": "Andel av dess samtal",
+          "open": "Samtal"
+        },
+        "share": "{pct} % ({count} av {base})",
+        "open": "Öppna samtalen",
+        "openOf": "Öppna samtalen för {name}: {label}",
+        "back": "Alla företag"
+      },
+      "questionsPanel": {
+        "show": "Se frågorna",
+        "showOf": "Se de obesvarade frågorna: {label}",
+        "title": "Obesvarade frågor: {label}",
+        "count": "{n} fråga i {calls} | {n} frågor i {calls}",
+        "calls": "{n} samtal | {n} samtal",
+        "help": "Vad uppringarna frågade, senaste först, med vad assistenten behöver för att kunna svara nästa gång.",
+        "caption": "Obesvarade frågor: {label}",
+        "empty": "Inga frågor av det här slaget under perioden.",
+        "suggestion": "Förslag: {text}",
+        "columns": {
+          "question": "Fråga",
+          "business": "Företag",
+          "when": "När",
+          "open": "Samtal"
+        },
+        "open": "Öppna samtalet",
+        "openOf": "Öppna samtalet: {text}"
       }
     },
     "datePicker": {

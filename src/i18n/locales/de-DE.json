@@ -2428,10 +2428,6 @@
           "classify": "Diese Anfragen einordnen",
           "open": "Anfragen öffnen"
         },
-        "wide": {
-          "business": "Diese Anfragen werden über alle Unternehmen gezählt, nicht nur über das gewählte.",
-          "owner": "Diese Anfragen werden über die Unternehmen aller Inhaber gezählt, nicht nur des gewählten Inhabers."
-        },
         "archiveWhere": "Archivieren wirkt für alle Unternehmen: Entfernen Sie die Unternehmens- und Inhaberfilter, um zu archivieren oder wiederherzustellen."
       },
       "admin": {
@@ -2560,7 +2556,9 @@
             "category": "Kategorie der Anfrage",
             "requestOutcome": "Ergebnis der Anfrage",
             "noConversation": "Kein Gespräch",
-            "corrected": "Korrigiert"
+            "corrected": "Korrigiert",
+            "skillErrors": "Skill-Fehler",
+            "extractionFailed": "Extraktionsproblem"
           },
           "counted": "Anrufe: wie die Statistik sie zählt, archivierte eingeschlossen",
           "leftOut": "{n} Anruf mit Ihrem Zugang nicht sichtbar | {n} Anrufe mit Ihrem Zugang nicht sichtbar"
@@ -2791,6 +2789,41 @@
           "meaning": "Die Daten, die der Assistent am Ende des Anrufs extrahiert, konnten nicht extrahiert werden, oder der Anruf war zu lang zum Senden.",
           "action": "Wenn es sich wiederholt, prüfen Sie die Felder, die der Assistent extrahiert; sonst wenden Sie sich an den Support."
         }
+      },
+      "signalPanel": {
+        "openFrom": "Sehen, wo es passiert ist: {label} ({n} Anruf) | Sehen, wo es passiert ist: {label} ({n} Anrufe)",
+        "count": "{n} Anruf im Zeitraum | {n} Anrufe im Zeitraum",
+        "help": "Die Unternehmen, bei denen es mindestens einmal passiert ist, mit dem höchsten Anteil zuerst. Öffnen Sie eines, um seine Anrufe zu sehen.",
+        "caption": "Unternehmen mit: {label}",
+        "empty": "Kein Unternehmen im Zeitraum.",
+        "columns": {
+          "business": "Unternehmen",
+          "share": "Anteil seiner Anrufe",
+          "open": "Anrufe"
+        },
+        "share": "{pct} % ({count} von {base})",
+        "open": "Anrufe öffnen",
+        "openOf": "Anrufe von {name} öffnen: {label}",
+        "back": "Alle Unternehmen"
+      },
+      "questionsPanel": {
+        "show": "Fragen ansehen",
+        "showOf": "Unbeantwortete Fragen ansehen: {label}",
+        "title": "Unbeantwortete Fragen: {label}",
+        "count": "{n} Frage in {calls} | {n} Fragen in {calls}",
+        "calls": "{n} Anruf | {n} Anrufen",
+        "help": "Was Anrufer gefragt haben, die neuesten zuerst, mit dem, was der Assistent braucht, um beim nächsten Mal zu antworten.",
+        "caption": "Unbeantwortete Fragen: {label}",
+        "empty": "Keine Frage dieser Art im Zeitraum.",
+        "suggestion": "Vorschlag: {text}",
+        "columns": {
+          "question": "Frage",
+          "business": "Unternehmen",
+          "when": "Wann",
+          "open": "Anruf"
+        },
+        "open": "Anruf öffnen",
+        "openOf": "Anruf öffnen: {text}"
       }
     },
     "datePicker": {

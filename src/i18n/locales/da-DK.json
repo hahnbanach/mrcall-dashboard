@@ -2426,10 +2426,6 @@
           "classify": "Klassificér disse forespørgsler",
           "open": "Åbn forespørgslerne"
         },
-        "wide": {
-          "business": "Disse anmodninger tælles på tværs af alle virksomheder, ikke kun den valgte.",
-          "owner": "Disse anmodninger tælles på tværs af alle ejeres virksomheder, ikke kun den valgte ejers."
-        },
         "archiveWhere": "Arkivering gælder alle virksomheder: fjern virksomheds- og ejerfiltrene for at arkivere eller gendanne."
       },
       "admin": {
@@ -2558,7 +2554,9 @@
             "category": "Kategori for anmodningen",
             "requestOutcome": "Udfald af anmodningen",
             "noConversation": "Ingen samtale",
-            "corrected": "Rettet"
+            "corrected": "Rettet",
+            "skillErrors": "Skill-fejl",
+            "extractionFailed": "Udtrækningsproblem"
           },
           "counted": "Opkald: som statistikken tæller dem, arkiverede medregnet",
           "leftOut": "{n} opkald er ikke synligt med din adgang | {n} opkald er ikke synlige med din adgang"
@@ -2789,6 +2787,41 @@
           "meaning": "De data, assistenten udtrækker ved opkaldets slutning, kunne ikke udtrækkes, eller opkaldet var for langt til at sende.",
           "action": "Gentager det sig, så gennemgå de felter, assistenten udtrækker; ellers kontakt support."
         }
+      },
+      "signalPanel": {
+        "openFrom": "Se hvor det skete: {label} ({n} opkald) | Se hvor det skete: {label} ({n} opkald)",
+        "count": "{n} opkald i perioden | {n} opkald i perioden",
+        "help": "Virksomhederne hvor det skete mindst én gang, med den højeste andel først. Åbn en for at se dens opkald.",
+        "caption": "Virksomheder med: {label}",
+        "empty": "Ingen virksomhed i perioden.",
+        "columns": {
+          "business": "Virksomhed",
+          "share": "Andel af dens opkald",
+          "open": "Opkald"
+        },
+        "share": "{pct} % ({count} af {base})",
+        "open": "Åbn opkaldene",
+        "openOf": "Åbn opkaldene for {name}: {label}",
+        "back": "Alle virksomheder"
+      },
+      "questionsPanel": {
+        "show": "Se spørgsmålene",
+        "showOf": "Se de ubesvarede spørgsmål: {label}",
+        "title": "Ubesvarede spørgsmål: {label}",
+        "count": "{n} spørgsmål i {calls} | {n} spørgsmål i {calls}",
+        "calls": "{n} opkald | {n} opkald",
+        "help": "Hvad opkalderne spurgte om, nyeste først, med hvad assistenten skal have for at kunne svare næste gang.",
+        "caption": "Ubesvarede spørgsmål: {label}",
+        "empty": "Ingen spørgsmål af denne slags i perioden.",
+        "suggestion": "Forslag: {text}",
+        "columns": {
+          "question": "Spørgsmål",
+          "business": "Virksomhed",
+          "when": "Hvornår",
+          "open": "Opkald"
+        },
+        "open": "Åbn opkaldet",
+        "openOf": "Åbn opkaldet: {text}"
       }
     },
     "datePicker": {

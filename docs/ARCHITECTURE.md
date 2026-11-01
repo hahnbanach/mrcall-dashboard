@@ -69,7 +69,8 @@ API clients and business logic:
   `transferred` are recorded facts, `transferred` absent on a version-2 call is "not known"; `forwarded`, a
   request passed to the business, is one entry of the resolution list), the outcome lines over the calls where
   the caller asked something (`outcomeShare`, from StarChat's `outcome` and `callsWithRequest`), and the clients
-  for StarChat's outcomes, quality, assistants, topics, reports (page, one report, overlap, delete), insights jobs
+  for StarChat's outcomes, quality, assistants (a quality count's businesses: `qualitySignal`, `signalShare`, `present`),
+  a gap reason's unanswered questions (`unanswered`), topics, reports (page, one report, overlap, delete), insights jobs
   (estimate, create, read, list, cancel), callers' requests by category (`view=categories`, a category's
   businesses, dismiss and restore) and configuration-suggestions routes; a 404 resolves to `null` (absent
   section), a 503 to `{unavailable: true}`, a refusal's closed code is read by `refusalOf`. `serverPage` is the
@@ -255,14 +256,23 @@ for the four dimensions lives in `src/utils/CallInsights.js`.
   tooltip on hover and focus, drawn on the body, one open at a time, its text the button's description), and on a
   phone the same texts are folded above the cards (`ColumnHelpList.vue`); "Assistants to review" keeps no legend.
   Calls and counts open over the page (brief [2026-10-31-analytics-ux](briefs/2026-10-31-analytics-ux.md)):
-  `AnalyticsOverlayHost.vue`, around the admin, analytics and report pages, provides `openCall` and `openCount`;
+  `AnalyticsOverlayHost.vue`, around the admin, analytics and report pages, provides `openCall`, `openCount`,
+  `openSignal` and `openQuestions`;
   "Apri la chiamata" (`CallLink.vue`) opens `conversations/CallDialog.vue` (the restaurant page's dialog too: the
   owner read per business, read-only for anyone else), a count (`CountLink.vue`) opens `CountedCallsPanel.vue` (a
   `Drawer` listing exactly the counted calls with the conversations list's own search, its count, `leftOut` for a
-  report's count, "Apri in Conversazioni"); neither changes the address, and closing gives the focus back to the
-  control that opened it. Outside a host both stay links. Every quality signal (each gap reason, each check, skill
+  report's count, "Apri in Conversazioni", its list `CountedCallsList.vue`); none changes the address, closing gives
+  the focus back to the control that opened it, and Escape closes only what is on top (the panels ignore it while the
+  call's dialog is open). Outside a host both stay links. Every quality signal (each gap reason, each check, skill
   errors, extraction problems: `http_error`, `failed` and `too_long`, as StarChat counts them) says what it means and
-  what to do (`SignalExplain.vue`), in `CallQuality.vue` and on the report page. Both pages carry `AnalyticsFilterBar.vue`,
+  what to do (`SignalExplain.vue`), in `CallQuality.vue` and on the report page, and leads to where it happened: on one
+  business's page each count opens its calls (skill errors and extraction problems through the search's `skillErrors`
+  and `extractionFailed`); on a page over several businesses each count opens `SignalBusinessesPanel.vue` (the
+  businesses with the signal, by share, from `analytics/assistants` with the signal's sort and `present=true`, mapped
+  by `CallInsights.qualitySignal`; one business's calls of the signal in the same drawer, "Back" to the list); on every
+  page each gap reason's "See the questions" opens `UnansweredQuestionsPanel.vue` (StarChat's `analytics/unanswered`:
+  question, suggestion, business on a page over several, the call in the dialog). The report page does not use it: a
+  report's questions are its own frozen gap groups. Both pages carry `AnalyticsFilterBar.vue`,
   the filters in force each undone where it shows; a business is shown by name wherever an answer names it.
   "How the calls went" shows the outcome of the calls where the caller asked something in four lines adding up to
   their base (resolved in the call; passed to the business, split by the message taken; passed to a person; not
@@ -299,8 +309,8 @@ for the four dimensions lives in `src/utils/CallInsights.js`.
     1440 px; a business's page stays 960 px.
   - `Analytics.vue` with no business, role `reseller` (its scope page): outcomes and quality over its scope (the
     `OwnerSelector` narrows it to one owner), the topics section saying to choose a business,
-    `AssistantsToReview.vue` and `RequestCategories.vue`, both following the period; with an owner chosen the
-    requests say they still count every owner (StarChat narrows them with the brief's S1) and offer no archive.
+    `AssistantsToReview.vue` and `RequestCategories.vue`, both following the period and owner; with an owner chosen
+    the requests offer no archive.
   - `AnalyticsAdmin.vue`: the same sections reacting to its own filters (the business chosen by company name,
     `BusinessAutocomplete.vue`), topics only with a business chosen, the business breakdown only without one,
     "Assistants to review" (with a business chosen, that business's card: its row's facts with the table's rules and
@@ -313,7 +323,8 @@ for the four dimensions lives in `src/utils/CallInsights.js`.
     (StarChat's words, or the dashboard's by `nextActionKind`, the unrated and unclassified rows opening their
     requests), its businesses on demand, archive and
     restore for an admin on the unnarrowed page only, the examples hidden from a row shown and restored with "Show
-    archived"; narrowed to a business or an owner it says it still counts every business, until StarChat's S1), and MrCall's own configuration suggestions (`ConfigSuggestions.vue`, admin only, the
+    archived"; the request routes count the body's business and owner (StarChat 9.34), and narrowed to one business the
+    section draws no column, trend or expansion about several businesses), and MrCall's own configuration suggestions (`ConfigSuggestions.vue`, admin only, the
     one section that follows no filter, which the bar says while it is on screen).
   - Both pages establish the role on mount (the same business search that already sets it,
     `Business.js`'s `checkUserHasBusinesses`) before choosing which sections to show; the server remains the

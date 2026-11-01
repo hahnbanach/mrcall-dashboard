@@ -241,7 +241,9 @@ const CATEGORIES = {
 function assistantRow (i) {
   return {
     businessId: `biz-${i}`, businessName: i === 3 ? undefined : `Studio ${i}`, totalCalls: 100 - i, callsWithResolution: 80, resolution: {},
-    callsWithChecks: 80, checks: { caller_repeated: 2 }, callsWithUnansweredRecorded: 80, callsWithUnanswered: 8, gaps: {}, callsWithSkillErrors: 1,
+    callsWithChecks: 80, checks: { caller_repeated: 2 }, callsWithUnansweredRecorded: 80, callsWithUnanswered: 8,
+    // "out of scope" on every third business, more on the later ones; "assistant error" on one (StarChat 9.34, S2)
+    gaps: i % 3 === 0 ? { out_of_scope: i / 3, ...(i === 6 ? { assistant_error: 2 } : {}) } : {}, callsWithSkillErrors: 1,
     extractionsNotOk: 0, extractionsRun: 80, callsManaged: 80, noConversation: { caller_silent: 4 }, callsAnswered: 84, callsOffered: 90,
     callsWithRequest: 60, notSolved: 30 - i, callsWithAnyCheck: 2,
     // the period before (StarChat U13c): row 1 at 20 of 50, row 2 with no request then, row 5 on 8 calls (U19 M13)
@@ -259,16 +261,73 @@ function assistantRow (i) {
   }
 }
 
+// StarChat's analytics guide §9: each sort's count and base (`calls` has none), `gap:<reason>` and `check:<check>`
+// included (9.34, S2)
+const GAPS = ['missing_info', 'needs_integration', 'out_of_scope', 'assistant_error']
+const CHECKS = ['caller_repeated', 'caller_unsatisfied', 'promise_not_kept_in_call']
+const SORT_SIGNALS = {
+  not_solved: (r) => [r.notSolved, r.callsWithRequest],
+  caller_silent: (r) => [r.noConversation.caller_silent || 0, r.callsAnswered],
+  not_answered: (r) => [r.noConversation.not_answered || 0, r.callsOffered],
+  caller_left: (r) => [r.resolution.caller_left || 0, r.callsWithResolution],
+  unanswered: (r) => [r.callsWithUnanswered, r.callsWithUnansweredRecorded],
+  checks: (r) => [r.callsWithAnyCheck, r.callsWithChecks],
+  skill_errors: (r) => [r.callsWithSkillErrors, r.totalCalls],
+  extraction_failures: (r) => [r.extractionsNotOk, r.extractionsRun],
+  ...Object.fromEntries(GAPS.map((g) => ['gap:' + g, (r) => [r.gaps[g] || 0, r.callsWithUnansweredRecorded]])),
+  ...Object.fromEntries(CHECKS.map((c) => ['check:' + c, (r) => [r.checks[c] || 0, r.callsWithChecks]])),
+}
+const SORT_KEYS = ['calls', ...Object.keys(SORT_SIGNALS)]
+
+/**
+ * One page of the assistants as StarChat answers it: an unknown sort, or `present=true` with `sort=calls`, is 400 with
+ * the valid keys (`{status: 400, body}`); `present=true` keeps the rows whose count for the sort is above 0. A signal
+ * sort orders by share, highest first (StarChat ranks by the share's Wilson lower bound: on these rows, whose bases are
+ * equal, the order is the same).
+ */
 function assistantsPage (url, forAdmin = false) {
   const q = new URL(url).searchParams
   const from = Number(q.get('from') || 0)
   const size = Number(q.get('size') || 10)
+  const sort = q.get('sort') || 'not_solved'
+  if (!SORT_KEYS.includes(sort)) return { status: 400, body: { message: 'sort must be one of ' + SORT_KEYS.join(', ') } }
+  const present = q.get('present') === 'true'
+  if (present && sort === 'calls') return { status: 400, body: { message: 'present has no signal with sort=calls' } }
   let all = Array.from({ length: 23 }, (_, i) => assistantRow(i + 1))
   const search = q.get('search')
   if (search) all = all.filter((r) => (r.businessName || '').toLowerCase().includes(search.toLowerCase()))
+  if (present) {
+    all = all.filter((r) => SORT_SIGNALS[sort](r)[0] > 0)
+      .sort((a, b) => { const [ca, ba] = SORT_SIGNALS[sort](a); const [cb, bb] = SORT_SIGNALS[sort](b); return cb / bb - ca / ba })
+  }
   // MrCall's configuration suggestions of each row's latest automatic report, for an admin only; none without a report
   if (forAdmin) all = all.map((r, i) => (i === 2 ? r : { ...r, configSuggestions: i + 1 }))
   return { period: { from: 0, to: 0 }, sort: q.get('sort') || 'not_solved', businesses: all.slice(from, from + size), total: all.length, from, size, direction: q.get('direction') || 'desc' }
+}
+
+/**
+ * StarChat's analytics guide §14 (9.34, S4): the unanswered questions of one gap reason, newest call first, `total`
+ * questions and `calls` distinct calls; `gap` absent or unknown is 400, `size` from 1 to 100. `questions(gap, body)`
+ * replaces the default list (23 questions of 12 calls over three businesses, or one business when the body names it).
+ */
+const UNANSWERED_ASOF = 1761300000000
+function unansweredPage (url, body, questions) {
+  const q = new URL(url).searchParams
+  const gap = q.get('gap')
+  if (!GAPS.includes(gap)) return { status: 400, body: { message: 'gap must be one of ' + GAPS.join(', ') } }
+  const from = Number(q.get('from') || 0)
+  const size = Number(q.get('size') || 20)
+  if (!(size >= 1 && size <= 100)) return { status: 400, body: { message: 'size must be from 1 to 100' } }
+  const all = questions ? questions(gap, body) : Array.from({ length: 23 }, (_, i) => {
+    const businessId = body.businessId || ['biz-3', 'biz-6', 'biz-9'][i % 3]
+    return {
+      question: `Question ${i + 1} (${gap})`, ...(i % 2 === 0 ? { suggestion: `Tell the assistant answer ${i + 1}` } : {}), gap,
+      businessId, businessName: businessId === 'biz-3' ? undefined : `Studio ${businessId.slice(4)}`,
+      conversationId: `CON-q${Math.floor(i / 2) + 1}`, startTimestamp: UNANSWERED_ASOF - 3600000 * (i + 1),
+    }
+  })
+  const calls = new Set(all.map((x) => x.conversationId)).size
+  return { gap, period: { from: body.timestampGte || 0, to: body.timestampLte || 0 }, asOf: Number(q.get('asOf') || UNANSWERED_ASOF), total: all.length, calls, from, size, items: all.slice(from, from + size) }
 }
 
 /**
@@ -310,7 +369,7 @@ const json = (body, status = 200) => ({ status, contentType: 'application/json',
  */
 async function mockInsights (page, options = {}) {
   const asked = { reports: [], report: [], overlap: [], estimate: [], create: [], job: [], jobs: [], cancel: [], delete: [],
-    categories: [], businesses: [], dismiss: [], restore: [], assistants: [], outcomes: [], quality: [], search: [] }
+    categories: [], businesses: [], dismiss: [], restore: [], assistants: [], unanswered: [], outcomes: [], quality: [], search: [] }
   const record = (key, route) => {
     const r = route.request()
     let body = null
@@ -324,7 +383,16 @@ async function mockInsights (page, options = {}) {
     route.fulfill(json(forReport ? (options.reportOutcomes || REPORT_OUTCOMES) : (options.outcomes || OUTCOMES)))
   })
   await page.route('**/customer/analytics/quality*', (route) => { record('quality', route); route.fulfill(json(options.quality || REPORT_QUALITY)) })
-  await page.route('**/customer/analytics/assistants*', (route) => { record('assistants', route); route.fulfill(json(assistantsPage(route.request().url(), options.role === 'admin'))) })
+  await page.route('**/customer/analytics/assistants*', (route) => {
+    record('assistants', route)
+    const answer = assistantsPage(route.request().url(), options.role === 'admin')
+    route.fulfill(answer.status ? json(answer.body, answer.status) : json(answer))
+  })
+  await page.route('**/customer/analytics/unanswered*', (route) => {
+    record('unanswered', route)
+    const answer = unansweredPage(route.request().url(), route.request().postDataJSON() || {}, options.unanswered)
+    route.fulfill(answer.status ? json(answer.body, answer.status) : json(answer))
+  })
   await page.route('**/customer/insights/reports*', (route) => {
     record('reports', route)
     route.fulfill(json(options.reports ? options.reports(route.request().url()) : reportsPage(route.request().url())))
@@ -422,6 +490,6 @@ async function reachFilterBar (page, bar) {
 
 module.exports = {
   BUSINESS_ID, DAY, rome, historyRows, reportsPage, SCHEDULE, REPORT, REPORT_OUTCOMES, REPORT_QUALITY, OUTCOMES,
-  job, estimateJob, REPORT_ESTIMATE, RECOMPUTE_ESTIMATE, JOBS, JOBS_U19, jobsPage, CATEGORIES, category, assistantRow, assistantsPage, mockInsights, sortBy,
+  job, estimateJob, REPORT_ESTIMATE, RECOMPUTE_ESTIMATE, JOBS, JOBS_U19, jobsPage, CATEGORIES, category, assistantRow, assistantsPage, unansweredPage, UNANSWERED_ASOF, mockInsights, sortBy,
   reachFilterBar,
 }

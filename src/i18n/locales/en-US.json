@@ -2431,10 +2431,6 @@
           "classify": "Classify these requests",
           "open": "Open the requests"
         },
-        "wide": {
-          "business": "These requests are counted across every business, not only the one chosen.",
-          "owner": "These requests are counted across every owner's businesses, not only the chosen owner's."
-        },
         "archiveWhere": "Archiving acts on every business: clear the business and owner filters to archive or restore."
       },
       "admin": {
@@ -2563,7 +2559,9 @@
             "category": "Request category",
             "requestOutcome": "Request outcome",
             "noConversation": "No conversation",
-            "corrected": "Corrected"
+            "corrected": "Corrected",
+            "skillErrors": "Skill errors",
+            "extractionFailed": "Extraction problem"
           },
           "counted": "Calls: as the statistics count them, archived included",
           "leftOut": "{n} call not visible with your access | {n} calls not visible with your access"
@@ -2794,6 +2792,41 @@
           "meaning": "The data the assistant extracts at the end of the call could not be extracted, or the call was too long to send.",
           "action": "If it repeats, review the fields the assistant extracts; otherwise contact support."
         }
+      },
+      "signalPanel": {
+        "openFrom": "See where it happened: {label} ({n} call) | See where it happened: {label} ({n} calls)",
+        "count": "{n} call in the period | {n} calls in the period",
+        "help": "The businesses where it happened at least once, highest share first. Open one to see its calls.",
+        "caption": "Businesses with: {label}",
+        "empty": "No business had it in this period.",
+        "columns": {
+          "business": "Business",
+          "share": "Share of its calls",
+          "open": "Calls"
+        },
+        "share": "{pct}% ({count} of {base})",
+        "open": "Open the calls",
+        "openOf": "Open the calls of {name}: {label}",
+        "back": "All businesses"
+      },
+      "questionsPanel": {
+        "show": "See the questions",
+        "showOf": "See the unanswered questions: {label}",
+        "title": "Unanswered questions: {label}",
+        "count": "{n} question in {calls} | {n} questions in {calls}",
+        "calls": "{n} call | {n} calls",
+        "help": "What callers asked, newest first, with what to give the assistant so that it can answer next time.",
+        "caption": "Unanswered questions: {label}",
+        "empty": "No question of this kind in this period.",
+        "suggestion": "Suggested: {text}",
+        "columns": {
+          "question": "Question",
+          "business": "Business",
+          "when": "When",
+          "open": "Call"
+        },
+        "open": "Open the call",
+        "openOf": "Open the call: {text}"
       }
     },
     "datePicker": {

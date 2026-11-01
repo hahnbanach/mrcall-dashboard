@@ -75,3 +75,26 @@ describe('searchQuery', () => {
     expect(Classifications.composeSearch({ businessId: BIZ, ...Classifications.readCountAddress(link.query) })).not.toHaveProperty('leftOut')
   })
 })
+
+/**
+ * Step A6b (brief S3): skill errors and failed extractions open their calls. The count's address carries the filter, the
+ * search body sends StarChat's boolean (customer conversation guide, `skillErrors` and `extractionFailed`), and the chip
+ * names it. Seen failing, 2026-11-01, before the two kinds existed (countLink threw "no filter for skillErrors").
+ */
+describe('skill errors and failed extractions', () => {
+  for (const kind of ['skillErrors', 'extractionFailed']) {
+    it(`${kind}: link, address and body agree`, () => {
+      const link = Classifications.countLink(BIZ, WINDOW, kind, true)
+      expect(link.query[kind]).toBe('true')
+      const read = Classifications.readCountAddress(link.query)
+      expect(read.extra).toEqual({ [kind]: true })
+      expect(read.filters.map((f) => f.key)).toEqual([kind])
+      expect(Classifications.composeSearch({ businessId: BIZ, ...read })).toEqual({
+        businessId: BIZ, timestampGte: WINDOW.from, timestampLte: WINDOW.to, counted: true, [kind]: true,
+      })
+    })
+    it(`${kind}: only true has a list`, () => {
+      expect(() => Classifications.countLink(BIZ, WINDOW, kind, false)).toThrow()
+    })
+  }
+})

@@ -2426,10 +2426,6 @@
           "classify": "Liigita need päringud",
           "open": "Ava päringud"
         },
-        "wide": {
-          "business": "Need päringud loetakse kõigi ettevõtete peale, mitte ainult valitud ettevõtte.",
-          "owner": "Need päringud loetakse kõigi omanike ettevõtete peale, mitte ainult valitud omaniku omade."
-        },
         "archiveWhere": "Arhiveerimine kehtib kõigile ettevõtetele: eemalda ettevõtte ja omaniku filtrid, et arhiveerida või taastada."
       },
       "admin": {
@@ -2558,7 +2554,9 @@
             "category": "Päringu kategooria",
             "requestOutcome": "Päringu tulemus",
             "noConversation": "Vestlust pole",
-            "corrected": "Parandatud"
+            "corrected": "Parandatud",
+            "skillErrors": "Skill'i vead",
+            "extractionFailed": "Väljavõtte probleem"
           },
           "counted": "Kõned: nagu statistika neid loeb, arhiveeritud kaasa arvatud",
           "leftOut": "{n} kõne pole sinu juurdepääsuga nähtav | {n} kõnet pole sinu juurdepääsuga nähtavad"
@@ -2789,6 +2787,41 @@
           "meaning": "Andmeid, mida assistent kõne lõpus välja võtab, ei õnnestunud välja võtta, või kõne oli saatmiseks liiga pikk.",
           "action": "Kui see kordub, vaata üle väljad, mida assistent välja võtab; muidu võta ühendust toega."
         }
+      },
+      "signalPanel": {
+        "openFrom": "Vaata, kus see juhtus: {label} ({n} kõne) | Vaata, kus see juhtus: {label} ({n} kõnet)",
+        "count": "{n} kõne perioodis | {n} kõnet perioodis",
+        "help": "Ettevõtted, kus see juhtus vähemalt korra, suurima osakaaluga eespool. Ava üks, et näha selle kõnesid.",
+        "caption": "Ettevõtted: {label}",
+        "empty": "Perioodis ei ole ühtegi ettevõtet.",
+        "columns": {
+          "business": "Ettevõte",
+          "share": "Osakaal tema kõnedest",
+          "open": "Kõned"
+        },
+        "share": "{pct}% ({count}/{base})",
+        "open": "Ava kõned",
+        "openOf": "Ava ettevõtte {name} kõned: {label}",
+        "back": "Kõik ettevõtted"
+      },
+      "questionsPanel": {
+        "show": "Vaata küsimusi",
+        "showOf": "Vaata vastamata küsimusi: {label}",
+        "title": "Vastamata küsimused: {label}",
+        "count": "{n} küsimus, {calls} | {n} küsimust, {calls}",
+        "calls": "{n} kõne | {n} kõnet",
+        "help": "Mida helistajad küsisid, uusimad eespool, ja mida assistent vajab, et järgmisel korral vastata.",
+        "caption": "Vastamata küsimused: {label}",
+        "empty": "Perioodis seda tüüpi küsimusi ei ole.",
+        "suggestion": "Soovitus: {text}",
+        "columns": {
+          "question": "Küsimus",
+          "business": "Ettevõte",
+          "when": "Millal",
+          "open": "Kõne"
+        },
+        "open": "Ava kõne",
+        "openOf": "Ava kõne: {text}"
       }
     },
     "datePicker": {

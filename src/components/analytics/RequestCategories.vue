@@ -2,10 +2,9 @@
   <section v-if="status !== 'absent'" class="analytics-section call-insights-section requests-section" aria-labelledby="requests-title">
     <h3 id="requests-title" class="section-title">{{ $t("components.callInsights.requests.title") }}</h3>
     <p class="requests-purpose">{{ $t("components.callInsights.requests.purpose") }}</p>
-    <!-- The page is narrowed to a business or an owner (brief docs/briefs/2026-10-31-analytics-ux.md, O3). Until StarChat
-         narrows these counts too (the brief's S1), the section says it still counts every business, so it never reads as
-         narrowed when it is not. Archiving acts on every business, so it is not offered from a narrowed page. -->
-    <p v-if="narrowed" class="requests-note requests-wide" role="note">{{ $t("components.callInsights.requests.wide." + narrowed) }}</p>
+    <!-- The page is narrowed to a business or an owner (brief docs/briefs/2026-10-31-analytics-ux.md, O3): StarChat counts
+         these requests on the body's business and owner (9.34, the brief's S1). Archiving acts on every business, so it
+         is not offered from a narrowed page; narrowed to one business, the columns about several businesses are not drawn. -->
     <p v-if="narrowed && isAdmin" class="requests-note">{{ $t("components.callInsights.requests.archiveWhere") }}</p>
     <div class="requests-controls">
       <label class="requests-control">
@@ -53,7 +52,7 @@
             <tr>
               <th scope="col">{{ $t("components.callInsights.requests.columns.category") }}</th>
               <th scope="col" :aria-label="$t('components.callInsights.feedback.categories.columns.calls')">{{ $t("components.callInsights.feedback.categories.columns.calls") }}<ColumnHelp :column="$t('components.callInsights.feedback.categories.columns.calls')" :text="$t('components.callInsights.help.requests.calls')" /></th>
-              <th scope="col" :aria-label="$t('components.callInsights.requests.columns.businesses')" :aria-sort="sort === 'businesses' ? 'descending' : 'none'">{{ $t("components.callInsights.requests.columns.businesses") }}<ColumnHelp :column="$t('components.callInsights.requests.columns.businesses')" :text="$t('components.callInsights.help.requests.businesses')" /></th>
+              <th v-if="manyBusinesses" scope="col" :aria-label="$t('components.callInsights.requests.columns.businesses')" :aria-sort="sort === 'businesses' ? 'descending' : 'none'">{{ $t("components.callInsights.requests.columns.businesses") }}<ColumnHelp :column="$t('components.callInsights.requests.columns.businesses')" :text="$t('components.callInsights.help.requests.businesses')" /></th>
               <th scope="col" :aria-label="$t('components.callInsights.requests.columns.trend')">{{ $t("components.callInsights.requests.columns.trend") }}<ColumnHelp :column="$t('components.callInsights.requests.columns.trend')" :text="$t('components.callInsights.help.requests.trend')" /></th>
               <th scope="col" :aria-label="$t('components.callInsights.requests.columns.freshness')">{{ $t("components.callInsights.requests.columns.freshness") }}<ColumnHelp :column="$t('components.callInsights.requests.columns.freshness')" :text="$t('components.callInsights.help.requests.freshness')" /></th>
               <th scope="col" :aria-label="$t('components.callInsights.requests.nextAction')">{{ $t("components.callInsights.requests.nextAction") }}<ColumnHelp :column="$t('components.callInsights.requests.nextAction')" :text="$t('components.callInsights.help.requests.nextAction')" /></th>
@@ -66,12 +65,13 @@
                 <td :data-label="$t('components.callInsights.requests.columns.category')">
                   <span class="requests-category">{{ rowLabel(row) }}</span>
                   <span class="requests-status" :class="'requests-status-' + row.status">{{ $t("components.callInsights.requests.status." + row.status) }}</span>
-                  <span v-if="row.dismissal && row.dismissal.reopened" class="requests-reopened">
+                  <span v-if="manyBusinesses && row.dismissal && row.dismissal.reopened" class="requests-reopened">
                     {{ $t("components.callInsights.requests.reopened", { n: row.dismissal.reopened.newBusinesses, date: day(row.dismissal.reopened.since) }) }}
                   </span>
                   <span v-else-if="row.dismissal" class="requests-reopened">{{ dismissalText(row.dismissal) }}</span>
                   <span v-if="row.category != null" class="requests-row-actions">
                     <Button
+                      v-if="manyBusinesses"
                       type="button" text size="small"
                       :icon="expanded === row.category ? 'pi pi-chevron-up' : 'pi pi-chevron-down'"
                       :label="$t('components.callInsights.requests.whoAsked')"
@@ -121,7 +121,7 @@
                     </li>
                   </ul>
                 </td>
-                <td :data-label="$t('components.callInsights.requests.columns.businesses')">
+                <td v-if="manyBusinesses" :data-label="$t('components.callInsights.requests.columns.businesses')">
                   <span class="requests-count">{{ $t("components.callInsights.requests.businesses", { n: row.businesses }) }}</span>
                   <span class="requests-sub">{{ trendText(row) }}</span>
                   <span class="requests-sub">{{ $t("components.callInsights.requests.share", { pct: percent(row.share) }) }}</span>
@@ -205,7 +205,7 @@
                 </td>
               </tr>
               <tr v-if="list && list.key === rowKey(row)" class="requests-expansion">
-                <td colspan="7">
+                <td :colspan="columnCount">
                   <CategoryRequests
                     :category="row.category"
                     :label="rowLabel(row)"
@@ -217,7 +217,7 @@
                 </td>
               </tr>
               <tr v-if="expanded === row.category" class="requests-expansion">
-                <td colspan="7" :id="'requests-businesses-' + row.category">
+                <td :colspan="columnCount" :id="'requests-businesses-' + row.category">
                   <PagedTable
                     :state="businesses"
                     :columns="businessColumns"
@@ -338,10 +338,17 @@ export default {
     // how each column is counted, listed on a phone, where the header row with its help buttons is not shown
     helpItems() {
       const t = (k) => this.$t("components.callInsights." + k);
-      return ["calls", "businesses", "trend", "freshness", "nextAction"].map((k) => ({
+      return ["calls", "businesses", "trend", "freshness", "nextAction"].filter((k) => k !== "businesses" || this.manyBusinesses).map((k) => ({
         label: k === "calls" ? t("feedback.categories.columns.calls") : k === "nextAction" ? t("requests.nextAction") : t("requests.columns." + k),
         help: t("help.requests." + k),
       }));
+    },
+    // a page narrowed to one business draws no column, trend or expansion about several businesses
+    manyBusinesses() {
+      return this.narrowed !== "business";
+    },
+    columnCount() {
+      return this.manyBusinesses ? 7 : 6;
     },
     // archive and restore act on every business: never from a page narrowed to one business or owner
     canArchive() {

@@ -2426,10 +2426,6 @@
           "classify": "Klassifiser disse forespørslene",
           "open": "Åpne forespørslene"
         },
-        "wide": {
-          "business": "Disse forespørslene telles på tvers av alle bedrifter, ikke bare den valgte.",
-          "owner": "Disse forespørslene telles på tvers av alle eieres bedrifter, ikke bare den valgte eierens."
-        },
         "archiveWhere": "Arkivering gjelder alle bedrifter: fjern bedrifts- og eierfiltrene for å arkivere eller gjenopprette."
       },
       "admin": {
@@ -2558,7 +2554,9 @@
             "category": "Kategori for forespørselen",
             "requestOutcome": "Utfall av forespørselen",
             "noConversation": "Ingen samtale",
-            "corrected": "Rettet"
+            "corrected": "Rettet",
+            "skillErrors": "Skill-feil",
+            "extractionFailed": "Uttrekksproblem"
           },
           "counted": "Samtaler: slik statistikken teller dem, arkiverte medregnet",
           "leftOut": "{n} samtale er ikke synlig med din tilgang | {n} samtaler er ikke synlige med din tilgang"
@@ -2789,6 +2787,41 @@
           "meaning": "Dataene assistenten henter ut på slutten av samtalen kunne ikke hentes ut, eller samtalen var for lang til å sendes.",
           "action": "Gjentar det seg, gå gjennom feltene assistenten henter ut; ellers kontakt support."
         }
+      },
+      "signalPanel": {
+        "openFrom": "Se hvor det skjedde: {label} ({n} samtale) | Se hvor det skjedde: {label} ({n} samtaler)",
+        "count": "{n} samtale i perioden | {n} samtaler i perioden",
+        "help": "Bedriftene der det skjedde minst én gang, med høyest andel først. Åpne en for å se samtalene.",
+        "caption": "Bedrifter med: {label}",
+        "empty": "Ingen bedrift i perioden.",
+        "columns": {
+          "business": "Bedrift",
+          "share": "Andel av samtalene",
+          "open": "Samtaler"
+        },
+        "share": "{pct} % ({count} av {base})",
+        "open": "Åpne samtalene",
+        "openOf": "Åpne samtalene til {name}: {label}",
+        "back": "Alle bedrifter"
+      },
+      "questionsPanel": {
+        "show": "Se spørsmålene",
+        "showOf": "Se de ubesvarte spørsmålene: {label}",
+        "title": "Ubesvarte spørsmål: {label}",
+        "count": "{n} spørsmål i {calls} | {n} spørsmål i {calls}",
+        "calls": "{n} samtale | {n} samtaler",
+        "help": "Hva innringerne spurte om, nyeste først, med hva assistenten trenger for å kunne svare neste gang.",
+        "caption": "Ubesvarte spørsmål: {label}",
+        "empty": "Ingen spørsmål av denne typen i perioden.",
+        "suggestion": "Forslag: {text}",
+        "columns": {
+          "question": "Spørsmål",
+          "business": "Bedrift",
+          "when": "Når",
+          "open": "Samtale"
+        },
+        "open": "Åpne samtalen",
+        "openOf": "Åpne samtalen: {text}"
       }
     },
     "datePicker": {
