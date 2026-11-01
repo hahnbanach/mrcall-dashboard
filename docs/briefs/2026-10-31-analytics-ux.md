@@ -101,7 +101,7 @@ combined with the CTO; its analytics API guide and customer conversation API gui
 dashboard is written against them. As agreed:
 
 - **S1.** The three request routes honour `businessId` and `ownerId` from the body, scope-checked as in §1-6; out of
-  scope is answered as absent (empty), never 403. On `categories/{c}/requests` the query parameter `businessId` stays,
+  scope is 404 (absent, as §7-13), never 403; in scope with no requests in the window is 200 with an empty page. On `categories/{c}/requests` the query parameter `businessId` stays,
   and a different `businessId` in the body is 400.
 - **S2.** `analytics/assistants` takes `sort=gap:<reason>` (base `callsWithUnansweredRecorded`) and
   `sort=check:<check>` (base `callsWithChecks`), ranked as the other shares; `present=true` keeps only the businesses
