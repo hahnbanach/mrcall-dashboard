@@ -1589,17 +1589,6 @@
         "joinRemoved": "Ühendus eemaldatud: {label}",
         "joinRange": "Ühendus {label}: inimesi {from} → {to}"
       },
-      "calls": {
-        "title": "Kõne",
-        "titleOf": "Kõne: {name}",
-        "list": "Selle broneeringuga seotud kõned",
-        "latest": "Viimane kõne",
-        "first": "Esimene kõne",
-        "nth": "Kõne {n}",
-        "loading": "Loen kõnet…",
-        "missing": "See kõne pole enam saadaval.",
-        "error": "Kõnet ei õnnestunud lugeda."
-      },
       "wizard": {
         "title": "Seadistame saali",
         "intro": "Mõned sammud, paar minutit. Kuni on vähemalt üks laud, assistent ei broneeri: ta võtab nime ja jätab sulle teate.",
@@ -2699,6 +2688,31 @@
         "withdrawRefused": {
           "not_author": "Ettepaneku saab tagasi võtta ainult selle tegija.",
           "feedback_state": "Selle ettepaneku üle on juba otsustatud."
+        }
+      },
+      "callDialog": {
+        "title": "Kõne",
+        "titleOf": "Kõne: {name}",
+        "list": "Selle broneeringuga seotud kõned",
+        "latest": "Viimane kõne",
+        "first": "Esimene kõne",
+        "nth": "Kõne {n}",
+        "loading": "Loen kõnet…",
+        "missing": "See kõne pole enam saadaval.",
+        "error": "Kõnet ei õnnestunud lugeda."
+      },
+      "countedCalls": {
+        "count": "{n} kõne | {n} kõnet",
+        "caption": "Loetud kõned: {label}",
+        "empty": "Pole kõnesid, mida näidata.",
+        "open": "Ava kõne",
+        "openOf": "Ava kõne: {name}, {when}",
+        "openInConversations": "Ava Vestlustes",
+        "columns": {
+          "when": "Millal",
+          "caller": "Helistaja",
+          "summary": "Kokkuvõte",
+          "open": "Kõne"
         }
       }
     },

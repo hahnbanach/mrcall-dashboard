@@ -1,5 +1,6 @@
 // @ts-check
 const { expect } = require('@playwright/test')
+const { opensCall } = require('../fixtures/overlays')
 const { test, setupAuthPage } = require('../fixtures/auth')
 const { mockResellerUser } = require('../fixtures/mock-data')
 const { mockInsights, BUSINESS_ID } = require('../fixtures/insights')
@@ -62,8 +63,8 @@ test.describe('the queues of corrections', () => {
     await fact.getByRole('button', { name: 'Mark as handled' }).click()
     await expect.poll(() => sent.filter((s) => s.path === 'decide').length).toBe(3)
     expect(sent.filter((s) => s.path === 'decide')[2]).toMatchObject({ id: 13, move: 'apply' })
-    // each signal links to its call
-    await expect(first.getByRole('link', { name: 'Open the call' })).toHaveAttribute('href', '/conversations?id=biz-2&conversation=CON-p1')
+    // each signal opens its call, over the page (brief docs/briefs/2026-10-31-analytics-ux.md, O1)
+    await opensCall(page, first.getByRole('button', { name: 'Open the call' }), { businessId: 'biz-2', conversationId: 'CON-p1' })
   })
 
   test('an admin applies the selected corrections, one call each, and reads what happened', async ({ adminPage: page }) => {

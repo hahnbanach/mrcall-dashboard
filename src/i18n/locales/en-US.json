@@ -1594,17 +1594,6 @@
         "joinRemoved": "Join removed: {label}",
         "joinRange": "Join {label}: people {from} → {to}"
       },
-      "calls": {
-        "title": "The call",
-        "titleOf": "Call of {name}",
-        "list": "Calls about this booking",
-        "latest": "Latest call",
-        "first": "First call",
-        "nth": "Call {n}",
-        "loading": "Reading the call…",
-        "missing": "This call is no longer available.",
-        "error": "The call could not be read."
-      },
       "wizard": {
         "title": "Let's set up the room",
         "intro": "A few steps, a couple of minutes. Until there is at least one table the assistant does not book: it takes the name and leaves you a message.",
@@ -2704,6 +2693,31 @@
         "withdrawRefused": {
           "not_author": "Only its author can withdraw a proposal.",
           "feedback_state": "This proposal has already been decided."
+        }
+      },
+      "callDialog": {
+        "title": "The call",
+        "titleOf": "Call of {name}",
+        "list": "Calls about this booking",
+        "latest": "Latest call",
+        "first": "First call",
+        "nth": "Call {n}",
+        "loading": "Reading the call…",
+        "missing": "This call is no longer available.",
+        "error": "The call could not be read."
+      },
+      "countedCalls": {
+        "count": "{n} call | {n} calls",
+        "caption": "The calls counted: {label}",
+        "empty": "No calls to show.",
+        "open": "Open the call",
+        "openOf": "Open the call of {name}, {when}",
+        "openInConversations": "Open in Conversations",
+        "columns": {
+          "when": "When",
+          "caller": "Caller",
+          "summary": "Summary",
+          "open": "Call"
         }
       }
     },

@@ -163,12 +163,13 @@
                       <span>{{ e.text }}</span>
                       <!-- StarChat names an example's business and call (`RequestExampleView`), never a report of it -->
                       <span class="requests-sub">{{ businessName(e) }}</span>
-                      <router-link
+                      <CallLink
                         v-if="e.conversationId"
-                        :to="{ path: '/conversations', query: { id: e.businessId, conversation: e.conversationId } }"
+                        :business-id="e.businessId"
+                        :conversation-id="e.conversationId"
                         class="requests-sub"
                         :aria-label="$t('components.callInsights.feedback.categories.openCall', { text: e.text })"
-                      >{{ $t("components.callInsights.feedback.categories.call") }}</router-link>
+                      />
                       <Button
                         v-if="isAdmin"
                         type="button" text size="small" severity="secondary"
@@ -264,6 +265,7 @@
 </template>
 
 <script>
+import CallLink from "@/components/analytics/CallLink.vue";
 import CallInsights from "@/utils/CallInsights";
 import InsightsReports from "@/utils/InsightsReports";
 import InsightsState from "@/components/analytics/InsightsState.vue";
@@ -286,7 +288,7 @@ const REASONS = ["done", "not_relevant", "already_integrated"];
  * are at most the active categories, so the answer is not paged; the businesses of a row are.
  */
 export default {
-  components: { InsightsState, PagedTable, CategoryRequests },
+  components: { CallLink, InsightsState, PagedTable, CategoryRequests },
   props: {
     // the page's window and plan: {timestampGte, timestampLte, plan?}
     body: { type: Object, default: null },

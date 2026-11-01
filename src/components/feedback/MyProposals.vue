@@ -14,7 +14,7 @@
           <p v-if="s.requestText" class="my-proposal-text">{{ s.requestText }}</p>
           <p class="my-proposal-meta">
             <span class="my-proposal-state">{{ stateLabel(s) }}</span> · {{ labels.when(s.createdAt) }} ·
-            <router-link :to="{ path: '/conversations', query: { id: s.businessId, conversation: s.conversationId } }">{{ $t("components.callInsights.feedback.categories.call") }}</router-link>
+            <CallLink :business-id="s.businessId" :conversation-id="s.conversationId" />
           </p>
           <!-- the author withdraws a proposal still waiting (the amendment of 2026-10-30, rule 5) -->
           <Button
@@ -39,6 +39,7 @@
 </template>
 
 <script>
+import CallLink from "@/components/analytics/CallLink.vue";
 import CallInsights from "@/utils/CallInsights";
 import Classifications from "@/utils/Classifications";
 import InsightsState from "@/components/analytics/InsightsState.vue";
@@ -56,7 +57,7 @@ const STATUSES = "proposed,applied,rejected,closed,withdrawn";
  * admin page), as StarChat's queue answers them grouped, paged over groups (`GET insights/feedback?mine=true`).
  */
 export default {
-  components: { InsightsState },
+  components: { CallLink, InsightsState },
   props: {
     businessId: { type: String, default: null },
   },

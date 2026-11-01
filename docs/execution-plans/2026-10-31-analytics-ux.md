@@ -225,8 +225,8 @@ the chips can all change afterwards). The panel (A2) needs the same composition 
 | Step | Status | Evidence |
 |---|---|---|
 | A1 | done | Pins at the network edge instead of a mounted unit test (the page needs the store, router and PrimeVue; the request body is the contract): `tests/e2e/insights/count-list-body.spec.js`, 14 cases x 3 viewports, snapshots recorded on 508b014 before the move, passing after it; perturbation (the `hasUnanswered` rule dropped from `composeSearch`) fails `edit-2-control-changed`. `tests/unit/countSearch.spec.js` seen failing before the functions existed, 6 passing after. `npm run test:unit` 41 files, 580 tests. |
-| A2 | planned | |
-| A3 | planned | |
+| A2 | done | `CallDialog.vue` replaces `RestaurantCallModal.vue` (restaurant specs 142 passed); owner read per business, `tests/unit/callDialog.spec.js` seen failing with the old rule (owner read once) by perturbation. `CountedCallsPanel.vue` (PrimeVue `Drawer`, registered), `AnalyticsOverlayHost.vue` on the three pages; the pages' undo bar moved into the host and hidden (not removed) while the dialog is open, so one live region speaks at a time. Added `@mrcall_radius_pill` to `colors.less` (no radius token existed). |
+| A3 | done | `CallLink.vue` for every "Open the call"; `CountLink.vue` opens the panel under a host, keeps its link elsewhere, accepts an unknown count. The report's quality counts link (`CallReportDetail.vue`). Eight specs that asserted `/conversations` hrefs now assert the panel's search and the dialog's read (`tests/e2e/fixtures/overlays.js`). `tests/e2e/insights/overlays.spec.js` (address, history, scroll of `#app-central-content`, expanded section, panel total, non-owner read-only) seen failing with `src/` stashed, 6 passed on three viewports. Insights, restaurant and analytics specs: 858 passed, 6 skipped, 9 failed, the 9 passing alone (`--last-failed`); none of the 9 was failing in the baseline full run, not yet explained, re-checked at A8. |
 | A4 | planned | |
 | A5a | planned | |
 | A5b | planned (blocked on S1) | |

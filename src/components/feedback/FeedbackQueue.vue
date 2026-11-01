@@ -34,7 +34,7 @@
               <p v-if="s.requestText" class="feedback-signal-text">{{ s.requestText }}</p>
               <p class="feedback-signal-who">
                 {{ labels.who(s) }} · {{ labels.when(s.createdAt) }} ·
-                <router-link :to="{ path: '/conversations', query: { id: s.businessId, conversation: s.conversationId } }">{{ $t("components.callInsights.feedback.categories.call") }}</router-link>
+                <CallLink :business-id="s.businessId" :conversation-id="s.conversationId" />
               </p>
               <div class="feedback-signal-actions">
                 <template v-if="s.status === 'proposed'">
@@ -67,6 +67,7 @@
 </template>
 
 <script>
+import CallLink from "@/components/analytics/CallLink.vue";
 import CallInsights from "@/utils/CallInsights";
 import Classifications from "@/utils/Classifications";
 import InsightsState from "@/components/analytics/InsightsState.vue";
@@ -85,7 +86,7 @@ const GROUPS_PER_PAGE = 10;
  * happened is said.
  */
 export default {
-  components: { InsightsState },
+  components: { CallLink, InsightsState },
   data() {
     const user = () => this.$store.state.user;
     return {

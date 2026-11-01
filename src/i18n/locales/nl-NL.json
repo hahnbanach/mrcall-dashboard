@@ -1589,17 +1589,6 @@
         "joinRemoved": "Koppeling verwijderd: {label}",
         "joinRange": "Koppeling {label}: personen {from} → {to}"
       },
-      "calls": {
-        "title": "Het gesprek",
-        "titleOf": "Gesprek van {name}",
-        "list": "Gesprekken over deze reservering",
-        "latest": "Laatste gesprek",
-        "first": "Eerste gesprek",
-        "nth": "Gesprek {n}",
-        "loading": "Het gesprek lezen…",
-        "missing": "Dit gesprek is niet meer beschikbaar.",
-        "error": "Het gesprek kon niet worden gelezen."
-      },
       "wizard": {
         "title": "We stellen de zaal in",
         "intro": "Een paar stappen, een paar minuten. Zolang er geen enkele tafel is, reserveert de assistent niet: hij noteert de naam en laat je een bericht achter.",
@@ -2699,6 +2688,31 @@
         "withdrawRefused": {
           "not_author": "Alleen wie een voorstel deed, kan het intrekken.",
           "feedback_state": "Over dit voorstel is al beslist."
+        }
+      },
+      "callDialog": {
+        "title": "Het gesprek",
+        "titleOf": "Gesprek van {name}",
+        "list": "Gesprekken over deze reservering",
+        "latest": "Laatste gesprek",
+        "first": "Eerste gesprek",
+        "nth": "Gesprek {n}",
+        "loading": "Het gesprek lezen…",
+        "missing": "Dit gesprek is niet meer beschikbaar.",
+        "error": "Het gesprek kon niet worden gelezen."
+      },
+      "countedCalls": {
+        "count": "{n} gesprek | {n} gesprekken",
+        "caption": "De getelde gesprekken: {label}",
+        "empty": "Geen gesprekken om te tonen.",
+        "open": "Gesprek openen",
+        "openOf": "Gesprek van {name} openen, {when}",
+        "openInConversations": "Openen in Gesprekken",
+        "columns": {
+          "when": "Wanneer",
+          "caller": "Beller",
+          "summary": "Samenvatting",
+          "open": "Gesprek"
         }
       }
     },

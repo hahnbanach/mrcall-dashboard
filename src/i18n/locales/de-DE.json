@@ -1591,17 +1591,6 @@
         "joinRemoved": "Verbindung entfernt: {label}",
         "joinRange": "Verbindung {label}: Personen {from} → {to}"
       },
-      "calls": {
-        "title": "Der Anruf",
-        "titleOf": "Anruf von {name}",
-        "list": "Anrufe zu dieser Reservierung",
-        "latest": "Letzter Anruf",
-        "first": "Erster Anruf",
-        "nth": "Anruf {n}",
-        "loading": "Anruf wird gelesen…",
-        "missing": "Dieser Anruf ist nicht mehr verfügbar.",
-        "error": "Der Anruf konnte nicht gelesen werden."
-      },
       "wizard": {
         "title": "Den Raum einrichten",
         "intro": "Ein paar Schritte, ein paar Minuten. Solange es keinen Tisch gibt, reserviert der Assistent nicht: Er nimmt den Namen auf und hinterlässt eine Nachricht.",
@@ -2701,6 +2690,31 @@
         "withdrawRefused": {
           "not_author": "Nur wer einen Vorschlag gemacht hat, kann ihn zurückziehen.",
           "feedback_state": "Über diesen Vorschlag wurde bereits entschieden."
+        }
+      },
+      "callDialog": {
+        "title": "Der Anruf",
+        "titleOf": "Anruf von {name}",
+        "list": "Anrufe zu dieser Reservierung",
+        "latest": "Letzter Anruf",
+        "first": "Erster Anruf",
+        "nth": "Anruf {n}",
+        "loading": "Anruf wird gelesen…",
+        "missing": "Dieser Anruf ist nicht mehr verfügbar.",
+        "error": "Der Anruf konnte nicht gelesen werden."
+      },
+      "countedCalls": {
+        "count": "{n} Anruf | {n} Anrufe",
+        "caption": "Die gezählten Anrufe: {label}",
+        "empty": "Keine Anrufe anzuzeigen.",
+        "open": "Anruf öffnen",
+        "openOf": "Anruf von {name} öffnen, {when}",
+        "openInConversations": "In Gespräche öffnen",
+        "columns": {
+          "when": "Wann",
+          "caller": "Anrufer",
+          "summary": "Zusammenfassung",
+          "open": "Anruf"
         }
       }
     },

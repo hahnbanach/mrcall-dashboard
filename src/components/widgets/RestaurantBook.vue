@@ -93,7 +93,7 @@
       </aside>
     </template>
 
-    <RestaurantCallModal v-model:visible="calls.visible" :ids="calls.ids" :title="calls.title" :user="user" :business-id="businessId" />
+    <CallDialog v-model:visible="calls.visible" class="rb-modal restaurant-call-dialog" :ids="calls.ids" :title="calls.title" :user="user" :business-id="businessId" />
 
     <div class="toasts" aria-live="polite">
       <div v-if="toast" class="toast" :class="{ err: toast.error }" role="status">
@@ -120,7 +120,7 @@ import RestaurantBookingPanel from "@/components/widgets/restaurant/RestaurantBo
 import RestaurantNewPanel from "@/components/widgets/restaurant/RestaurantNewPanel.vue";
 import RestaurantRoomEditor from "@/components/widgets/restaurant/RestaurantRoomEditor.vue";
 import RestaurantWizard from "@/components/widgets/restaurant/RestaurantWizard.vue";
-import RestaurantCallModal from "@/components/widgets/restaurant/RestaurantCallModal.vue";
+import CallDialog from "@/components/conversations/CallDialog.vue";
 import RestaurantRulesEditor from "@/components/widgets/restaurant/RestaurantRulesEditor.vue";
 import RestaurantAcceptPanel from "@/components/widgets/restaurant/RestaurantAcceptPanel.vue";
 
@@ -153,7 +153,7 @@ const SEARCH_LIMIT = 20;
  */
 export default {
   components: { RestaurantStrip, RestaurantDayView, RestaurantBookingPanel, RestaurantNewPanel, RestaurantRoomEditor, RestaurantWizard,
-    RestaurantCallModal, RestaurantRulesEditor, RestaurantAcceptPanel },
+    CallDialog, RestaurantRulesEditor, RestaurantAcceptPanel },
   setup() {
     return { confirm: useConfirm() };
   },

@@ -43,6 +43,7 @@ import Column from 'primevue/column'
 import DataTable from 'primevue/datatable'
 import ConfirmDialog from 'primevue/confirmdialog'
 import Dialog from 'primevue/dialog'
+import Drawer from 'primevue/drawer'
 import Divider from 'primevue/divider'
 import Dropdown from 'primevue/dropdown'
 import Fieldset from 'primevue/fieldset'
@@ -169,6 +170,7 @@ app.component('Column', Column)
 app.component('DataTable', DataTable)
 app.component('ConfirmDialog', ConfirmDialog)
 app.component('Dialog', Dialog)
+app.component('Drawer', Drawer)
 app.component('Divider', Divider)
 app.component('Dropdown', Dropdown)
 app.component('Fieldset', Fieldset)

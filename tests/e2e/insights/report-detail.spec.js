@@ -1,5 +1,6 @@
 // @ts-check
 const { expect } = require('@playwright/test')
+const { opensCall } = require('../fixtures/overlays')
 const { test } = require('../fixtures/auth')
 const { mockInsights, BUSINESS_ID, REPORT } = require('../fixtures/insights')
 
@@ -46,15 +47,16 @@ test.describe('the report\'s own page, as the U19 attack repaired it', () => {
     await mockInsights(page)
     await page.goto(detail)
     const back = page.getByRole('region', { name: 'Calls to call back' })
-    await expect(back.getByRole('link')).toHaveCount(2, { timeout: 15000 })
-    await expect(back.getByRole('link', { name: /Giulia Verdi/ })).toHaveAttribute('href', `/conversations?id=${BUSINESS_ID}&conversation=CON-1`)
+    // each opens its call over the report (brief docs/briefs/2026-10-31-analytics-ux.md, O1, O6)
+    await expect(back.getByRole('button')).toHaveCount(2, { timeout: 15000 })
+    await opensCall(page, back.getByRole('button', { name: /Giulia Verdi/ }), { businessId: BUSINESS_ID, conversationId: 'CON-1' })
     // a call StarChat did not name is said by its place in the list, never by its id
-    await expect(back.getByRole('link', { name: 'Call 3' })).toHaveAttribute('href', `/conversations?id=${BUSINESS_ID}&conversation=CON-5`)
+    await opensCall(page, back.getByRole('button', { name: 'Call 3' }), { businessId: BUSINESS_ID, conversationId: 'CON-5' })
     await expect(back.getByText('CON-5')).toHaveCount(0)
     const gaps = page.getByRole('region', { name: 'Questions left unanswered' })
-    await expect(gaps.getByRole('link', { name: 'Call 1' })).toHaveAttribute('href', `/conversations?id=${BUSINESS_ID}&conversation=CON-3`)
+    await opensCall(page, gaps.getByRole('button', { name: 'Call 1' }), { businessId: BUSINESS_ID, conversationId: 'CON-3' })
     // numbered across the report, so two different calls never share a name
-    await expect(gaps.getByRole('link', { name: 'Call 2' })).toHaveAttribute('href', `/conversations?id=${BUSINESS_ID}&conversation=CON-4`)
+    await opensCall(page, gaps.getByRole('button', { name: 'Call 2' }), { businessId: BUSINESS_ID, conversationId: 'CON-4' })
   })
 
   test('rule 3: a question about the caller\'s own medical case keeps its summary and offers no "Add the answer"', async ({ authenticatedPage: page }) => {

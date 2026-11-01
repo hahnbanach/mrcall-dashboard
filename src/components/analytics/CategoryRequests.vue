@@ -45,7 +45,7 @@
         />
       </template>
       <template #cell-call="{ row: r }">
-        <router-link :to="callLink(r)" :aria-label="$t('components.callInsights.feedback.categories.openCall', { text: r.text })">{{ $t("components.callInsights.feedback.categories.call") }}</router-link>
+        <CallLink :business-id="r.businessId" :conversation-id="r.conversationId" :aria-label="$t('components.callInsights.feedback.categories.openCall', { text: r.text })" />
       </template>
     </PagedTable>
     <p v-if="note" class="category-requests-note" role="status">{{ note }}</p>
@@ -84,6 +84,7 @@
 </template>
 
 <script>
+import CallLink from "@/components/analytics/CallLink.vue";
 import CallInsights from "@/utils/CallInsights";
 import Classifications from "@/utils/Classifications";
 import UndoGesture from "@/utils/UndoGesture";
@@ -107,7 +108,7 @@ import { isSessionEnded } from "@/firebase/session";
  * a row knows; the call's own chips (its link) carry the history, the proposals and the restore.
  */
 export default {
-  components: { PagedTable, JudgementChip, BulkBar },
+  components: { CallLink, PagedTable, JudgementChip, BulkBar },
   props: {
     category: { type: String, default: null },
     label: { type: String, required: true },
@@ -203,9 +204,6 @@ export default {
         if (action) first = false;
         return out;
       });
-    },
-    callLink(r) {
-      return { path: "/conversations", query: { id: r.businessId, conversation: r.conversationId } };
     },
     ask(r, field, signal, valueTo) {
       return Classifications.ask({

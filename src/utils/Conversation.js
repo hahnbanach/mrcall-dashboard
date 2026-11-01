@@ -43,6 +43,22 @@ export default {
      * archive or the trash: a search by id is not narrowed by those views. Resolves to the call, or
      * to null when the owner has no call with that id.
      */
+    // One page of a list's calls as the conversations page reads it (`enableDataMap`, `lightweight`: no recording):
+    // `{items, total, leftOut}`, `leftOut` being how many of a report count's calls the reader cannot open when the
+    // query asks for it (`Classifications.searchQuery`), else 0.
+    page: function(user, body, { from = 0, size = 10, querySuffix = "" } = {}) {
+        return axios.post(BASE_URL + "/search?enableDataMap=true" + querySuffix,
+            { ...body, lightweight: true, from, size },
+            { headers: getHeaders(user) }
+        ).then((response) => {
+            const data = response.data || {};
+            return {
+                items: Array.isArray(data.hits) ? data.hits.map((h) => h.document) : [],
+                total: typeof data.totalHits === "number" ? data.totalHits : 0,
+                leftOut: typeof data.leftOut === "number" ? data.leftOut : 0,
+            };
+        });
+    },
     get: function(user, businessId, id) {
         return axios.post(BASE_URL + "/search?enableDataMap=true",
             { businessId: businessId, id: id, size: 1 },

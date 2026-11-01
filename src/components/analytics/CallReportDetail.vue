@@ -102,7 +102,7 @@
           <p class="report-note">{{ $t("components.callInsights.reportDetail." + flaggedCaption + "Note") }}</p>
           <ul class="report-calls">
             <li v-for="id in flagged" :key="id">
-              <router-link :to="conversationLink(id)">{{ exampleName(id) }}</router-link>
+              <CallLink :business-id="businessId" :conversation-id="id">{{ exampleName(id) }}</CallLink>
             </li>
           </ul>
         </section>
@@ -113,12 +113,14 @@
             <h4 class="report-gap-reason">
               {{ $t("components.callInsights.gaps." + group.key) }}
               <!-- the group's count, the analytics' over the report's days, which is what its list holds (m4) -->
-              <router-link
+              <CountLink
                 v-if="link('gap', group.key)"
                 :to="link('gap', group.key)"
                 class="report-gap-calls"
-                :aria-label="$t('components.callInsights.feedback.links.openAll', { label: $t('components.callInsights.gaps.' + group.key) })"
-              >{{ gapCount(group.key) === null ? $t("components.callInsights.feedback.links.calls") : $t("components.callInsights.reportDetail.calls", { n: gapCount(group.key) }, gapCount(group.key)) }}</router-link>
+                :count="gapCount(group.key)"
+                :label="$t('components.callInsights.gaps.' + group.key)"
+                :display="gapCount(group.key) === null ? $t('components.callInsights.feedback.links.calls') : $t('components.callInsights.reportDetail.calls', { n: gapCount(group.key) }, gapCount(group.key))"
+              />
             </h4>
             <ul class="report-list">
               <li v-for="(gap, i) in group.gaps" :key="i" class="report-gap">
@@ -128,7 +130,7 @@
                   <span>{{ $t("components.callInsights.reports.examples") }}</span>{{ " " }}
                   <template v-for="(id, k) in gap.examples" :key="id">
                     <span v-if="k > 0">, </span>
-                    <router-link :to="conversationLink(id)">{{ exampleName(id) }}</router-link>
+                    <CallLink :business-id="businessId" :conversation-id="id">{{ exampleName(id) }}</CallLink>
                   </template>
                 </p>
                 <Button
@@ -175,7 +177,8 @@
             <tbody>
               <tr v-for="row in qualityRows" :key="row.key">
                 <th scope="row">{{ $t("components.callInsights.gaps." + row.key) }}</th>
-                <td>{{ row.now }}</td>
+                <!-- the report's own count of the reason opens its calls; the period before has no report to scope a list to -->
+                <td><CountLink :to="link('gap', row.key)" :count="row.now" :label="$t('components.callInsights.gaps.' + row.key)" /></td>
                 <td>{{ row.before }}</td>
               </tr>
             </tbody>
@@ -207,6 +210,7 @@
 </template>
 
 <script>
+import CallLink from "@/components/analytics/CallLink.vue";
 import CallInsights from "@/utils/CallInsights";
 import InsightsReports from "@/utils/InsightsReports";
 import { KNOWLEDGE_BASE_SECTION, cleanQuestion } from "@/utils/KnowledgeBase";
@@ -234,7 +238,7 @@ import Classifications from "@/utils/Classifications";
  * after the report was written (`correctedAfterReport`) are said, and marked on the gaps resting on them.
  */
 export default {
-  components: { InsightsState, InsightsRequestDialog, ReportDeleteDialog, CountLink },
+  components: { CallLink, InsightsState, InsightsRequestDialog, ReportDeleteDialog, CountLink },
   props: {
     businessId: { type: String, required: true },
     periodStart: { type: Number, required: true },
@@ -477,9 +481,6 @@ export default {
     },
     correctedSince(gap) {
       return Array.isArray(gap.requests) && gap.requests.some((id) => this.correctedIds.has(id));
-    },
-    conversationLink(conversationId) {
-      return { path: "/conversations", query: { id: this.businessId, conversation: conversationId } };
     },
     onDeleted() {
       this.$router.push(this.backLink);

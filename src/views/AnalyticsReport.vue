@@ -1,12 +1,13 @@
 <template>
-  <div class="main-page-content-section analytics-report-page">
+  <!-- calls and counts open over the page (brief docs/briefs/2026-10-31-analytics-ux.md, O1-O2) -->
+  <AnalyticsOverlayHost class="main-page-content-section analytics-report-page">
     <CallReportDetail
       v-if="ready && businessId && periodStart"
       :business-id="businessId"
       :period-start="periodStart"
       :request-id="requestId"
     />
-  </div>
+  </AnalyticsOverlayHost>
   <footer id="pre-footer">
     <PreFooterRequireAssistance/>
   </footer>
@@ -18,6 +19,7 @@ import { auth } from "@/firebase/config";
 import businessUtils from "@/utils/Business";
 import { isSessionEnded } from "@/firebase/session";
 import CallReportDetail from "@/components/analytics/CallReportDetail.vue";
+import AnalyticsOverlayHost from "@/components/analytics/AnalyticsOverlayHost.vue";
 import PreFooterRequireAssistance from "@/components/PreFooterRequireAssistance";
 
 /**
@@ -25,7 +27,7 @@ import PreFooterRequireAssistance from "@/components/PreFooterRequireAssistance"
  * the admin's actions, so it is read first, as the analytics pages read it; the server stays the gate.
  */
 export default {
-  components: { CallReportDetail, PreFooterRequireAssistance },
+  components: { CallReportDetail, PreFooterRequireAssistance, AnalyticsOverlayHost },
   data() {
     return { ready: false };
   },

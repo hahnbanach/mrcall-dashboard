@@ -1589,17 +1589,6 @@
         "joinRemoved": "Yhdistelmä poistettu: {label}",
         "joinRange": "Yhdistelmä {label}: henkilöt {from} → {to}"
       },
-      "calls": {
-        "title": "Puhelu",
-        "titleOf": "Puhelu: {name}",
-        "list": "Tähän varaukseen liittyvät puhelut",
-        "latest": "Viimeisin puhelu",
-        "first": "Ensimmäinen puhelu",
-        "nth": "Puhelu {n}",
-        "loading": "Luetaan puhelua…",
-        "missing": "Tämä puhelu ei ole enää saatavilla.",
-        "error": "Puhelua ei voitu lukea."
-      },
       "wizard": {
         "title": "Määritetään sali",
         "intro": "Muutama vaihe, pari minuuttia. Kunnes pöytiä on vähintään yksi, avustaja ei tee varauksia: se ottaa nimen ja jättää sinulle viestin.",
@@ -2699,6 +2688,31 @@
         "withdrawRefused": {
           "not_author": "Vain ehdotuksen tekijä voi perua sen.",
           "feedback_state": "Tästä ehdotuksesta on jo päätetty."
+        }
+      },
+      "callDialog": {
+        "title": "Puhelu",
+        "titleOf": "Puhelu: {name}",
+        "list": "Tähän varaukseen liittyvät puhelut",
+        "latest": "Viimeisin puhelu",
+        "first": "Ensimmäinen puhelu",
+        "nth": "Puhelu {n}",
+        "loading": "Luetaan puhelua…",
+        "missing": "Tämä puhelu ei ole enää saatavilla.",
+        "error": "Puhelua ei voitu lukea."
+      },
+      "countedCalls": {
+        "count": "{n} puhelu | {n} puhelua",
+        "caption": "Lasketut puhelut: {label}",
+        "empty": "Ei näytettäviä puheluita.",
+        "open": "Avaa puhelu",
+        "openOf": "Avaa puhelu: {name}, {when}",
+        "openInConversations": "Avaa Keskusteluissa",
+        "columns": {
+          "when": "Milloin",
+          "caller": "Soittaja",
+          "summary": "Yhteenveto",
+          "open": "Puhelu"
         }
       }
     },

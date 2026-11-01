@@ -1591,17 +1591,6 @@
         "joinRemoved": "Jonction retirée : {label}",
         "joinRange": "Jonction {label} : personnes {from} → {to}"
       },
-      "calls": {
-        "title": "L'appel",
-        "titleOf": "Appel de {name}",
-        "list": "Appels concernant cette réservation",
-        "latest": "Dernier appel",
-        "first": "Premier appel",
-        "nth": "Appel {n}",
-        "loading": "Lecture de l'appel…",
-        "missing": "Cet appel n'est plus disponible.",
-        "error": "L'appel n'a pas pu être lu."
-      },
       "wizard": {
         "title": "Configurons la salle",
         "intro": "Quelques étapes, quelques minutes. Tant qu'il n'y a pas au moins une table, l'assistant ne réserve pas : il note le nom et vous laisse un message.",
@@ -2701,6 +2690,31 @@
         "withdrawRefused": {
           "not_author": "Seul son auteur peut retirer une proposition.",
           "feedback_state": "Cette proposition a déjà été tranchée."
+        }
+      },
+      "callDialog": {
+        "title": "L'appel",
+        "titleOf": "Appel de {name}",
+        "list": "Appels concernant cette réservation",
+        "latest": "Dernier appel",
+        "first": "Premier appel",
+        "nth": "Appel {n}",
+        "loading": "Lecture de l'appel…",
+        "missing": "Cet appel n'est plus disponible.",
+        "error": "L'appel n'a pas pu être lu."
+      },
+      "countedCalls": {
+        "count": "{n} appel | {n} appels",
+        "caption": "Les appels comptés : {label}",
+        "empty": "Aucun appel à afficher.",
+        "open": "Ouvrir l'appel",
+        "openOf": "Ouvrir l'appel de {name}, {when}",
+        "openInConversations": "Ouvrir dans Conversations",
+        "columns": {
+          "when": "Quand",
+          "caller": "Appelant",
+          "summary": "Résumé",
+          "open": "Appel"
         }
       }
     },

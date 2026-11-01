@@ -1589,17 +1589,6 @@
         "joinRemoved": "Hopslagning borttagen: {label}",
         "joinRange": "Hopslagning {label}: personer {from} → {to}"
       },
-      "calls": {
-        "title": "Samtalet",
-        "titleOf": "Samtal från {name}",
-        "list": "Samtal om den här bokningen",
-        "latest": "Senaste samtalet",
-        "first": "Första samtalet",
-        "nth": "Samtal {n}",
-        "loading": "Läser samtalet…",
-        "missing": "Det här samtalet är inte längre tillgängligt.",
-        "error": "Samtalet kunde inte läsas."
-      },
       "wizard": {
         "title": "Vi ställer in salen",
         "intro": "Några steg, ett par minuter. Tills det finns minst ett bord bokar inte assistenten: den tar emot namnet och lämnar ett meddelande till dig.",
@@ -2699,6 +2688,31 @@
         "withdrawRefused": {
           "not_author": "Bara den som gjorde ett förslag kan dra tillbaka det.",
           "feedback_state": "Det här förslaget är redan avgjort."
+        }
+      },
+      "callDialog": {
+        "title": "Samtalet",
+        "titleOf": "Samtal från {name}",
+        "list": "Samtal om den här bokningen",
+        "latest": "Senaste samtalet",
+        "first": "Första samtalet",
+        "nth": "Samtal {n}",
+        "loading": "Läser samtalet…",
+        "missing": "Det här samtalet är inte längre tillgängligt.",
+        "error": "Samtalet kunde inte läsas."
+      },
+      "countedCalls": {
+        "count": "{n} samtal | {n} samtal",
+        "caption": "De räknade samtalen: {label}",
+        "empty": "Inga samtal att visa.",
+        "open": "Öppna samtalet",
+        "openOf": "Öppna samtalet från {name}, {when}",
+        "openInConversations": "Öppna i Konversationer",
+        "columns": {
+          "when": "När",
+          "caller": "Uppringare",
+          "summary": "Sammanfattning",
+          "open": "Samtal"
         }
       }
     },

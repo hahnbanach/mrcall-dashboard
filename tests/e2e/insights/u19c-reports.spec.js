@@ -1,5 +1,6 @@
 // @ts-check
 const { expect } = require('@playwright/test')
+const { opensCall } = require('../fixtures/overlays')
 const { test } = require('../fixtures/auth')
 const { mockInsights, BUSINESS_ID, rome, REPORT, REPORT_ESTIMATE, estimateJob, job, historyRows, reportsPage, SCHEDULE, JOBS_U19, jobsPage } = require('../fixtures/insights')
 const { mockConversations, conversation } = require('../fixtures/classifications')
@@ -74,8 +75,10 @@ test.describe('m4, m5: the questions left without an answer', () => {
     await mockInsights(page)
     await page.goto(reportUrl(REPORT))
     const gaps = page.getByRole('region', { name: 'Questions left unanswered' })
-    await expect(gaps.getByRole('link', { name: /Open the calls: Missing information/ })).toHaveText('6 calls', { timeout: 15000 })
-    await expect(gaps.getByRole('link', { name: /Open the calls: Needs an integration/ })).toHaveText('3 calls')
+    // the count is in its text and, since the group's count opens over the page (brief 2026-10-31-analytics-ux, O2), in
+    // its name too
+    await expect(gaps.getByRole('button', { name: 'Open the 6 calls: Missing information' })).toHaveText('6 calls', { timeout: 15000 })
+    await expect(gaps.getByRole('button', { name: 'Open the 3 calls: Needs an integration' })).toHaveText('3 calls')
   })
 
   test('"Add the answer" is not offered on a gap that needs an integration', async ({ authenticatedPage: page }) => {

@@ -1589,17 +1589,6 @@
         "joinRemoved": "Sammenslåing fjernet: {label}",
         "joinRange": "Sammenslåing {label}: personer {from} → {to}"
       },
-      "calls": {
-        "title": "Samtalen",
-        "titleOf": "Samtale med {name}",
-        "list": "Samtaler om denne reservasjonen",
-        "latest": "Siste samtale",
-        "first": "Første samtale",
-        "nth": "Samtale {n}",
-        "loading": "Leser samtalen…",
-        "missing": "Denne samtalen er ikke lenger tilgjengelig.",
-        "error": "Samtalen kunne ikke leses."
-      },
       "wizard": {
         "title": "La oss sette opp salen",
         "intro": "Noen få steg, et par minutter. Frem til det finnes minst ett bord reserverer ikke assistenten: den tar imot navnet og legger igjen en melding til deg.",
@@ -2699,6 +2688,31 @@
         "withdrawRefused": {
           "not_author": "Bare den som laget et forslag, kan trekke det tilbake.",
           "feedback_state": "Dette forslaget er allerede avgjort."
+        }
+      },
+      "callDialog": {
+        "title": "Samtalen",
+        "titleOf": "Samtale med {name}",
+        "list": "Samtaler om denne reservasjonen",
+        "latest": "Siste samtale",
+        "first": "Første samtale",
+        "nth": "Samtale {n}",
+        "loading": "Leser samtalen…",
+        "missing": "Denne samtalen er ikke lenger tilgjengelig.",
+        "error": "Samtalen kunne ikke leses."
+      },
+      "countedCalls": {
+        "count": "{n} samtale | {n} samtaler",
+        "caption": "De talte samtalene: {label}",
+        "empty": "Ingen samtaler å vise.",
+        "open": "Åpne samtalen",
+        "openOf": "Åpne samtalen fra {name}, {when}",
+        "openInConversations": "Åpne i Samtaler",
+        "columns": {
+          "when": "Når",
+          "caller": "Innringer",
+          "summary": "Sammendrag",
+          "open": "Samtale"
         }
       }
     },

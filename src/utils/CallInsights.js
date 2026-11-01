@@ -106,6 +106,17 @@ function isWebCaller(conversation) {
     return [c.contactNumber, d.callerNumber, c.contactName, d.callerName].some((v) => typeof v === "string" && WEB_IDENTITY.test(v.trim()));
 }
 
+/**
+ * Who called, as every list names them: `{web: true}` for a web call (named "Web call", never by its identity string,
+ * U19c m15), else `{name}`, the caller's name or the contact's, null when neither is known.
+ */
+function callerOf(conversation) {
+    if (isWebCaller(conversation)) return { web: true, name: null };
+    const c = conversation || {};
+    const d = c.details || {};
+    return { web: false, name: d.callerName || c.contactName || null };
+}
+
 function outcomeShare(outcomes) {
     const o = outcomes && outcomes.outcome;
     if (!o || typeof o !== "object" || !o.totals || typeof outcomes.callsWithRequest !== "number") return null;
@@ -432,6 +443,7 @@ export default {
     outcomeShare,
     resolutionOfLine,
     isWebCaller,
+    callerOf,
     outsideRows,
     noConversationRows,
     extractionProblems,

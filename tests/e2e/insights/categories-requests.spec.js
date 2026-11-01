@@ -1,5 +1,6 @@
 // @ts-check
 const { expect } = require('@playwright/test')
+const { opensCall } = require('../fixtures/overlays')
 const { test } = require('../fixtures/auth')
 const { mockInsights, category, rome } = require('../fixtures/insights')
 const { mockClassifications } = require('../fixtures/classifications')
@@ -85,8 +86,8 @@ test.describe('callers\' requests on request records', () => {
     expect(new URL(asked.categories.pop().url).searchParams.get('all')).toBeNull()
     await section(page).getByRole('checkbox', { name: 'All requests, the ones the assistant handled too' }).check()
     await expect.poll(() => new URL(asked.categories[asked.categories.length - 1].url).searchParams.get('all')).toBe('true')
-    // an example opens its call
-    await expect(section(page).getByRole('link', { name: 'Open the call: How much is a visit?' })).toHaveAttribute('href', '/conversations?id=biz-2&conversation=CON-p9')
+    // an example opens its call, over the page (brief docs/briefs/2026-10-31-analytics-ux.md, O1)
+    await opensCall(page, section(page).getByRole('button', { name: 'Open the call: How much is a visit?' }), { businessId: 'biz-2', conversationId: 'CON-p9' })
   })
 
   test('a row\'s calls open its requests, each with its business, its call and its chips', async ({ adminPage: page }) => {
@@ -100,7 +101,7 @@ test.describe('callers\' requests on request records', () => {
     expect(asked.body).toMatchObject({ timestampGte: expect.any(Number), timestampLte: expect.any(Number) })
     const row = list.getByRole('row').filter({ hasText: 'How much is a whitening?' })
     await expect(row).toContainText('Studio Bianchi')
-    await expect(row.getByRole('link', { name: 'Open the call: How much is a whitening?' })).toHaveAttribute('href', '/conversations?id=biz-2&conversation=CON-p1')
+    await opensCall(page, row.getByRole('button', { name: 'Open the call: How much is a whitening?' }), { businessId: 'biz-2', conversationId: 'CON-p1' })
     await expect(row.getByRole('button', { name: /^Request outcome: Taken for the business/ })).toBeVisible()
     await expect(row.getByRole('button', { name: /^Category: Prices and quotes/ })).toBeVisible()
   })

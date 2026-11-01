@@ -1603,17 +1603,6 @@
         "joinRemoved": "Unión quitada: {label}",
         "joinRange": "Unión {label}: personas {from} → {to}"
       },
-      "calls": {
-        "title": "La llamada",
-        "titleOf": "Llamada de {name}",
-        "list": "Llamadas sobre esta reserva",
-        "latest": "Última llamada",
-        "first": "Primera llamada",
-        "nth": "Llamada {n}",
-        "loading": "Leyendo la llamada…",
-        "missing": "Esta llamada ya no está disponible.",
-        "error": "No se ha podido leer la llamada."
-      },
       "wizard": {
         "title": "Configuremos la sala",
         "intro": "Unos pasos, un par de minutos. Mientras no haya al menos una mesa el asistente no reserva: toma el nombre y te deja un mensaje.",
@@ -2713,6 +2702,31 @@
         "withdrawRefused": {
           "not_author": "Solo su autor puede retirar una propuesta.",
           "feedback_state": "Esta propuesta ya se ha decidido."
+        }
+      },
+      "callDialog": {
+        "title": "La llamada",
+        "titleOf": "Llamada de {name}",
+        "list": "Llamadas sobre esta reserva",
+        "latest": "Última llamada",
+        "first": "Primera llamada",
+        "nth": "Llamada {n}",
+        "loading": "Leyendo la llamada…",
+        "missing": "Esta llamada ya no está disponible.",
+        "error": "No se ha podido leer la llamada."
+      },
+      "countedCalls": {
+        "count": "{n} llamada | {n} llamadas",
+        "caption": "Las llamadas contadas: {label}",
+        "empty": "No hay llamadas que mostrar.",
+        "open": "Abrir la llamada",
+        "openOf": "Abrir la llamada de {name}, {when}",
+        "openInConversations": "Abrir en Conversaciones",
+        "columns": {
+          "when": "Cuándo",
+          "caller": "Llamante",
+          "summary": "Resumen",
+          "open": "Llamada"
         }
       }
     },

@@ -1,5 +1,6 @@
 <template>
-  <div style="width: 100%; height: 100%">
+  <!-- calls and counts open over the page (AnalyticsOverlayHost: brief docs/briefs/2026-10-31-analytics-ux.md, O1-O2) -->
+  <AnalyticsOverlayHost style="width: 100%; height: 100%">
     <Toast />
     <ProgressBar
       mode="indeterminate"
@@ -290,13 +291,13 @@
       </div>
 
     </div>
-    <!-- The one undo of a gesture on callers' requests (brief docs/briefs/2026-10-27-classification-feedback.md, scope 2) -->
-    <UndoBar />
-  </div>
+    <!-- the page's undo bar is the host's (AnalyticsOverlayHost), so that one bar speaks at a time -->
+  </AnalyticsOverlayHost>
 </template>
 
 <script>
 import { computed } from "vue";
+import AnalyticsOverlayHost from "@/components/analytics/AnalyticsOverlayHost.vue";
 import { useStore } from "vuex";
 import { useToast } from "primevue/usetoast";
 import router from "@/router";
@@ -307,7 +308,6 @@ import AnalyticsApi from "@/utils/Analytics";
 import TemplatesApi from "@/utils/Templates";
 import CallInsights from "@/utils/CallInsights";
 import Classifications from "@/utils/Classifications";
-import UndoBar from "@/components/feedback/UndoBar.vue";
 import FeedbackQueue from "@/components/feedback/FeedbackQueue.vue";
 import MyProposals from "@/components/feedback/MyProposals.vue";
 import { scrollBelowBar } from "@/utils/scrollBelowBar";
@@ -324,7 +324,7 @@ import InsightsReports from "@/utils/InsightsReports";
 import NotAvailable from "@/components/analytics/NotAvailable.vue";
 
 export default {
-  components: { CallOutcomes, CallTopics, CallQuality, AssistantsToReview, RequestCategories, ConfigSuggestions, BusinessAutocomplete, AnalyticsFilterBar, UndoBar, FeedbackQueue, MyProposals, NotAvailable },
+  components: { AnalyticsOverlayHost, CallOutcomes, CallTopics, CallQuality, AssistantsToReview, RequestCategories, ConfigSuggestions, BusinessAutocomplete, AnalyticsFilterBar, FeedbackQueue, MyProposals, NotAvailable },
   setup() {
     const store = useStore();
     const toast = useToast();

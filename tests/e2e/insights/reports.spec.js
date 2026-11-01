@@ -1,5 +1,6 @@
 // @ts-check
 const { expect } = require('@playwright/test')
+const { opensCall } = require('../fixtures/overlays')
 const { test } = require('../fixtures/auth')
 const { mockBusiness } = require('../fixtures/mock-data')
 const { mockInsights, BUSINESS_ID, rome, REPORT, historyRows, reportsPage, sortBy } = require('../fixtures/insights')
@@ -133,10 +134,12 @@ test.describe('the report\'s own page', () => {
     // the analytics count 125 calls of these days with insights now, the report read 120
     await expect(page.getByText('Since this report was written, 5 more calls of these days have been analysed: regenerate it to include them.')).toBeVisible()
     await expect(page.getByText('Parking', { exact: true })).toBeVisible()
-    await expect(page.getByRole('region', { name: 'Questions left unanswered' }).getByRole('link', { name: /Giulia Verdi/ })).toHaveAttribute('href', `/conversations?id=${BUSINESS_ID}&conversation=CON-1`)
+    await opensCall(page, page.getByRole('region', { name: 'Questions left unanswered' }).getByRole('button', { name: /Giulia Verdi/ }), { businessId: BUSINESS_ID, conversationId: 'CON-1' })
     await expect(page.getByText('Shorten the greeting.')).toHaveCount(0)
     const quality = page.getByRole('table', { name: 'Questions without an answer, compared with the period before' })
-    await expect(quality.getByRole('row', { name: /Missing information 6 9/ })).toBeVisible()
+    // now and before; the count now opens its calls (brief 2026-10-31-analytics-ux, A3), so the row reads by its cells
+    const missing = quality.getByRole('row').filter({ has: page.getByRole('rowheader', { name: 'Missing information' }) })
+    await expect(missing.getByRole('cell')).toHaveText(['6', '9'])
 
     // the knowledge base, its pairs a tuples variable of the __KNOWLEDGE_BASE__ collection
     const pairs = { name: 'KNOWLEDGE_BASE_ANSWER_INSTRUCTIONS', humanName: 'How to answer', class: 'variable', templateName: 'generic_onboarding',

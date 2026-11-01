@@ -1589,17 +1589,6 @@
         "joinRemoved": "Sammenlægning fjernet: {label}",
         "joinRange": "Sammenlægning {label}: personer {from} → {to}"
       },
-      "calls": {
-        "title": "Samtalen",
-        "titleOf": "Samtale med {name}",
-        "list": "Samtaler om denne reservation",
-        "latest": "Seneste samtale",
-        "first": "Første samtale",
-        "nth": "Samtale {n}",
-        "loading": "Læser samtalen…",
-        "missing": "Denne samtale er ikke længere tilgængelig.",
-        "error": "Samtalen kunne ikke læses."
-      },
       "wizard": {
         "title": "Lad os indstille salen",
         "intro": "Nogle få trin, et par minutter. Indtil der er mindst ét bord, reserverer assistenten ikke: den tager imod navnet og efterlader en besked til dig.",
@@ -2699,6 +2688,31 @@
         "withdrawRefused": {
           "not_author": "Kun den, der har lavet et forslag, kan trække det tilbage.",
           "feedback_state": "Der er allerede taget stilling til dette forslag."
+        }
+      },
+      "callDialog": {
+        "title": "Samtalen",
+        "titleOf": "Samtale med {name}",
+        "list": "Samtaler om denne reservation",
+        "latest": "Seneste samtale",
+        "first": "Første samtale",
+        "nth": "Samtale {n}",
+        "loading": "Læser samtalen…",
+        "missing": "Denne samtale er ikke længere tilgængelig.",
+        "error": "Samtalen kunne ikke læses."
+      },
+      "countedCalls": {
+        "count": "{n} opkald | {n} opkald",
+        "caption": "De talte opkald: {label}",
+        "empty": "Ingen opkald at vise.",
+        "open": "Åbn opkaldet",
+        "openOf": "Åbn opkaldet fra {name}, {when}",
+        "openInConversations": "Åbn i Samtaler",
+        "columns": {
+          "when": "Hvornår",
+          "caller": "Opkalder",
+          "summary": "Resumé",
+          "open": "Opkald"
         }
       }
     },

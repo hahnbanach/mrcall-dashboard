@@ -963,10 +963,9 @@ export default {
     },
     // A web call is named as the analytics name it, never by its caller's identity string (U19c m15).
     callerName(conversation) {
-      const details = conversation.details || {};
-      if (CallInsights.isWebCaller(conversation)) return this.$t("components.callInsights.callers.web");
-      return details.callerName || conversation.contactName ||
-        this.$t("components.conversations.unknownContact");
+      const caller = CallInsights.callerOf(conversation);
+      if (caller.web) return this.$t("components.callInsights.callers.web");
+      return caller.name || this.$t("components.conversations.unknownContact");
     },
     callerNumber(conversation) {
       return CallInsights.isWebCaller(conversation) ? null : conversation.contactNumber || null;

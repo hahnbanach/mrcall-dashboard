@@ -1592,17 +1592,6 @@
         "joinRemoved": "Unione tolta: {label}",
         "joinRange": "Unione {label}: persone {from} → {to}"
       },
-      "calls": {
-        "title": "La chiamata",
-        "titleOf": "Chiamata di {name}",
-        "list": "Chiamate su questa prenotazione",
-        "latest": "Ultima chiamata",
-        "first": "Prima chiamata",
-        "nth": "Chiamata {n}",
-        "loading": "Leggo la chiamata…",
-        "missing": "Questa chiamata non è più disponibile.",
-        "error": "Non è stato possibile leggere la chiamata."
-      },
       "wizard": {
         "title": "Prepariamo la sala",
         "intro": "Pochi passi, un paio di minuti. Finché non c'è almeno un tavolo l'assistente non prenota: prende il nome e vi lascia un messaggio.",
@@ -2705,6 +2694,31 @@
         "withdrawRefused": {
           "not_author": "Solo chi l'ha fatta può ritirare una proposta.",
           "feedback_state": "Questa proposta è già stata decisa."
+        }
+      },
+      "callDialog": {
+        "title": "La chiamata",
+        "titleOf": "Chiamata di {name}",
+        "list": "Chiamate su questa prenotazione",
+        "latest": "Ultima chiamata",
+        "first": "Prima chiamata",
+        "nth": "Chiamata {n}",
+        "loading": "Leggo la chiamata…",
+        "missing": "Questa chiamata non è più disponibile.",
+        "error": "Non è stato possibile leggere la chiamata."
+      },
+      "countedCalls": {
+        "count": "{n} chiamata | {n} chiamate",
+        "caption": "Le chiamate contate: {label}",
+        "empty": "Nessuna chiamata da mostrare.",
+        "open": "Apri la chiamata",
+        "openOf": "Apri la chiamata di {name}, {when}",
+        "openInConversations": "Apri in Conversazioni",
+        "columns": {
+          "when": "Quando",
+          "caller": "Chiamante",
+          "summary": "Riepilogo",
+          "open": "Chiamata"
         }
       }
     },
