@@ -1,6 +1,6 @@
 <template>
   <section v-if="table.status !== 'absent'" class="analytics-section call-insights-section assistants-section" aria-labelledby="assistants-title">
-    <h3 id="assistants-title" class="section-title">{{ $t("components.callInsights.assistants.title") }}</h3>
+    <h3 id="assistants-title" class="section-title">{{ focused && focusedRow ? $t("components.callInsights.assistants.focusTitle", { name: businessLabel(focusedRow) }) : $t("components.callInsights.assistants.title") }}</h3>
     <form class="assistants-sort" role="search" @submit.prevent="applySearch">
       <Button
         v-if="selectedBusinessId"
@@ -13,21 +13,89 @@
         @click="$emit('clear-business')"
       />
       <InputText
+        v-if="!focused"
         v-model="searchInput"
         type="search"
         :aria-label="$t('components.callInsights.assistants.search')"
         :placeholder="$t('components.callInsights.assistants.search')"
         class="assistants-search"
       />
-      <Button type="submit" size="small" outlined icon="pi pi-search" :label="$t('components.callInsights.assistants.searchButton')" />
+      <Button v-if="!focused" type="submit" size="small" outlined icon="pi pi-search" :label="$t('components.callInsights.assistants.searchButton')" />
       <Button
-        v-if="search"
+        v-if="search && !focused"
         type="button" size="small" text icon="pi pi-times"
         :label="$t('components.callInsights.assistants.clearSearch', { term: search })"
         @click="clearSearch"
       />
     </form>
+    <!-- One business chosen (brief docs/briefs/2026-10-31-analytics-ux.md, O3): a ranking of one row ranks nothing, so
+         its facts are drawn as a card, each under its column's name and help, with the same rules as the table's cells -->
+    <InsightsState
+      v-if="focused"
+      :status="table.status"
+      :empty="table.status === 'ok' && !focusedRow"
+      :empty-text="$t('components.callInsights.assistants.none')"
+      @retry="table.retry()"
+    >
+      <div v-if="focusedRow" class="assistant-card">
+        <dl class="assistant-card-facts">
+          <div v-for="column in cardColumns" :key="column.key" class="assistant-card-fact">
+            <dt>{{ column.label }}<ColumnHelp v-if="column.help" :column="column.label" :text="column.help" /></dt>
+            <dd>
+              <template v-if="column.key === 'calls'">{{ focusedRow.totalCalls }}</template>
+              <template v-else-if="column.key === 'change'">
+                <NotAvailable v-if="changeOf(focusedRow).reason" :change="{ available: false, reason: changeOf(focusedRow).reason }" />
+                <span v-else>{{ changeOf(focusedRow).text }}</span>
+              </template>
+              <template v-else-if="column.key === 'suggestions'">{{ typeof focusedRow.configSuggestions === "number" ? focusedRow.configSuggestions : "–" }}</template>
+              <template v-else-if="column.key === 'health'">
+                <span class="assistant-health"><span v-for="word in healthOf(focusedRow)" :key="word" class="assistant-health-flag">{{ word }}</span></span>
+              </template>
+              <template v-else>
+                <span v-if="shareOf(focusedRow, column.key).percent === null" class="assistant-share">—</span>
+                <span v-else class="assistant-share">
+                  <span class="assistant-share-percent">{{ shareOf(focusedRow, column.key).percent }}</span>{{ " " }}<span class="assistant-share-base">{{ shareOf(focusedRow, column.key).of }}</span>
+                </span>
+              </template>
+            </dd>
+          </div>
+        </dl>
+        <div class="assistant-card-asks">
+          <h4 class="assistant-card-subtitle">{{ $t("components.callInsights.assistants.short.asks") }}<ColumnHelp :column="$t('components.callInsights.assistants.short.asks')" :text="$t('components.callInsights.help.assistants.asks')" /></h4>
+          <ul v-if="asksOf(focusedRow).length" class="assistant-asks">
+            <li v-for="c in asksOf(focusedRow)" :key="c.category">
+              <button
+                type="button"
+                class="assistant-ask"
+                :aria-label="$t('components.callInsights.assistants.askedOf', { category: c.label, n: c.count }, c.count)"
+                :aria-expanded="isAskOpen(focusedRow, c) ? 'true' : 'false'"
+                :aria-controls="asksRegion(focusedRow)"
+                @click="toggleAsk(focusedRow, c)"
+              >{{ c.label }} <strong>{{ c.count }}</strong></button>
+            </li>
+          </ul>
+          <span v-else>–</span>
+          <div :id="asksRegion(focusedRow)">
+            <CategoryRequests
+              v-if="openAsk && openAsk.businessId === focusedRow.businessId"
+              :category="openAsk.category"
+              :label="openAsk.label"
+              :body="body"
+              :business-id="focusedRow.businessId"
+              :all="true"
+            />
+          </div>
+        </div>
+        <p class="assistant-card-links">
+          <router-link :to="{ path: '/analytics', query: { id: focusedRow.businessId } }">{{ $t("components.callInsights.assistants.openBusiness") }}</router-link>
+          <router-link v-if="focusedRow.latestReport && focusedRow.latestReport.periodStart != null" :to="latestReportLink(focusedRow)">
+            {{ $t("components.callInsights.assistants.latestReport") }}
+          </router-link>
+        </p>
+      </div>
+    </InsightsState>
     <PagedTable
+      v-else
       :state="table"
       :columns="columns"
       :row-key="(row) => row.businessId"
@@ -106,6 +174,8 @@
 import CallInsights from "@/utils/CallInsights";
 import InsightsReports from "@/utils/InsightsReports";
 import PagedTable from "@/components/analytics/PagedTable.vue";
+import InsightsState from "@/components/analytics/InsightsState.vue";
+import ColumnHelp from "@/components/analytics/ColumnHelp.vue";
 import CategoryRequests from "@/components/analytics/CategoryRequests.vue";
 import NotAvailable from "@/components/analytics/NotAvailable.vue";
 
@@ -133,12 +203,14 @@ const SHARE_COLUMNS = CallInsights.ASSISTANT_SORT_KEYS
   .map((sort) => ({ sort, ...SHARE_LABELS[sort] }));
 
 export default {
-  components: { PagedTable, CategoryRequests, NotAvailable },
+  components: { PagedTable, InsightsState, ColumnHelp, CategoryRequests, NotAvailable },
   props: {
     // the page's filters, as every other section sends them
     body: { type: Object, default: null },
     // the business the page is narrowed to, marked in the table; null for none
     selectedBusinessId: { type: String, default: null },
+    // the page is narrowed to `selectedBusinessId`: its card instead of the table
+    focused: { type: Boolean, default: false },
   },
   emits: ["select-business", "clear-business", "names", "error"],
   data() {
@@ -163,6 +235,14 @@ export default {
       const seen = new Map();
       this.table.items.forEach((row) => { if (row.businessName) seen.set(row.businessName, (seen.get(row.businessName) || 0) + 1); });
       return new Set([...seen].filter(([, n]) => n > 1).map(([name]) => name));
+    },
+    // the one row of the business the page is narrowed to
+    focusedRow() {
+      return this.focused ? this.table.items.find((r) => r.businessId === this.selectedBusinessId) || null : null;
+    },
+    // the card's facts: the table's columns but the business (the card's title) and what callers ask (its own block)
+    cardColumns() {
+      return this.columns.filter((c) => c.key !== "business" && c.key !== "asks");
     },
     shareColumns() {
       return SHARE_COLUMNS;
@@ -440,4 +520,49 @@ export default {
   min-width: 130px;
 }
 
+
+.assistant-card {
+  background: @mrcall_white;
+  border: 1px solid @mrcall_borders;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.assistant-card-facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px 16px;
+  margin: 0 0 16px 0;
+
+  dt {
+    font-size: 12px;
+    font-weight: 700;
+    color: @mrcall_grey_text2;
+  }
+
+  dd {
+    margin: 2px 0 0 0;
+    font-size: 14px;
+    color: @mrcall_dark_grey_text;
+  }
+}
+
+.assistant-card-subtitle {
+  margin: 0 0 6px 0;
+  font-size: 12px;
+  font-weight: 700;
+  color: @mrcall_grey_text2;
+}
+
+.assistant-card-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin: 16px 0 0 0;
+
+  a {
+    color: @mrcall_blue;
+    font-weight: 600;
+  }
+}
 </style>

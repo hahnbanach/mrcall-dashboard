@@ -2069,7 +2069,9 @@
         "changePoints": "{sign}{n} poeng",
         "askedOf": "{category}: {n} forespørsel | {category}: {n} forespørsler",
         "latestReport": "Siste rapport",
-        "countOf": "({count} av {total})"
+        "countOf": "({count} av {total})",
+        "focusTitle": "Assistent: {name}",
+        "openBusiness": "Åpne statistikken for denne bedriften"
       },
       "scope": {
         "allBusinesses": "På tvers av alle virksomheter du kan se, de siste 30 dagene.",
@@ -2261,7 +2263,8 @@
         "reviewTitle": "Samtaler som bør gjennomgås",
         "reviewNote": "Ikke løst, med ubesvarte spørsmål eller kontroller som slo ut.",
         "quietDays": "Den dekker også dagene uten samtaler fra {from} til {to}.",
-        "quietDay": "Den dekker også en dag uten samtaler, {day}."
+        "quietDay": "Den dekker også en dag uten samtaler, {day}.",
+        "qualityMeaning": "Hva det betyr og hva du bør gjøre"
       },
       "deleteReport": {
         "title": "Slett rapporten",
@@ -2423,7 +2426,12 @@
           "unrated": "Utfallet er ikke vurdert ennå: åpne forespørslene",
           "classify": "Klassifiser disse forespørslene",
           "open": "Åpne forespørslene"
-        }
+        },
+        "wide": {
+          "business": "Disse forespørslene telles på tvers av alle bedrifter, ikke bare den valgte.",
+          "owner": "Disse forespørslene telles på tvers av alle eieres bedrifter, ikke bare den valgte eierens."
+        },
+        "archiveWhere": "Arkivering gjelder alle bedrifter: fjern bedrifts- og eierfiltrene for å arkivere eller gjenopprette."
       },
       "admin": {
         "reason": {
@@ -2743,6 +2751,44 @@
         },
         "jobs": {
           "progress": "Samtaler behandlet så langt, av samtalene oppgaven skal behandle."
+        }
+      },
+      "signals": {
+        "missing_info": {
+          "meaning": "Bedriften har aldri fortalt assistenten det innringeren spurte om.",
+          "action": "Legg til svaret i assistentens informasjon: hver samtale viser spørsmålet og et forslag."
+        },
+        "needs_integration": {
+          "meaning": "Svaret ligger i et system assistenten ikke er koblet til.",
+          "action": "Koble til det systemet, eller be assistenten ta imot en beskjed for disse forespørslene."
+        },
+        "out_of_scope": {
+          "meaning": "Ikke noe denne bedriften svarer på over telefon.",
+          "action": "Si til assistenten hvor disse innringerne skal henvises, eller at den skal sette over eller ta en beskjed."
+        },
+        "assistant_error": {
+          "meaning": "Assistenten hadde informasjonen og klarte likevel ikke å svare.",
+          "action": "Åpne samtalene for å se hva som gikk galt, og rett assistentens instruksjoner om emnet."
+        },
+        "caller_repeated": {
+          "meaning": "Innringeren måtte gjenta noe fordi assistenten ikke forsto.",
+          "action": "Lytt til samtalene: lyden, en lang hilsen eller et uklart spørsmål er de vanlige årsakene."
+        },
+        "caller_unsatisfied": {
+          "meaning": "Innringeren virket misfornøyd eller irritert.",
+          "action": "Åpne samtalene for å se hva innringeren manglet, og gi det til assistenten."
+        },
+        "promise_not_kept_in_call": {
+          "meaning": "Assistenten sa at den hadde gjort noe i bedriftens systemer (en booking, en viderekobling) og gjorde det ikke.",
+          "action": "Åpne samtalene og sjekk funksjonen eller instruksjonen bak handlingen."
+        },
+        "skillErrors": {
+          "meaning": "En funksjon assistenten kalte (en booking, et oppslag) feilet.",
+          "action": "Sjekk oppsettet og tilkoblingen til den funksjonen blant assistentens funksjoner."
+        },
+        "extraction": {
+          "meaning": "Dataene assistenten henter ut på slutten av samtalen kunne ikke hentes ut, eller samtalen var for lang til å sendes.",
+          "action": "Gjentar det seg, gå gjennom feltene assistenten henter ut; ellers kontakt support."
         }
       }
     },

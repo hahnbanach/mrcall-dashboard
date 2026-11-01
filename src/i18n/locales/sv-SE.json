@@ -2069,7 +2069,9 @@
         "changePoints": "{sign}{n} enheter",
         "askedOf": "{category}: {n} förfrågan | {category}: {n} förfrågningar",
         "latestReport": "Senaste rapport",
-        "countOf": "({count} av {total})"
+        "countOf": "({count} av {total})",
+        "focusTitle": "Assistent: {name}",
+        "openBusiness": "Öppna statistiken för det här företaget"
       },
       "scope": {
         "allBusinesses": "Över alla verksamheter du kan se, de senaste 30 dagarna.",
@@ -2261,7 +2263,8 @@
         "reviewTitle": "Samtal att granska",
         "reviewNote": "Inte lösta, med obesvarade frågor eller kontroller som slog till.",
         "quietDays": "Den täcker också dagarna utan samtal från {from} till {to}.",
-        "quietDay": "Den täcker också en dag utan samtal, {day}."
+        "quietDay": "Den täcker också en dag utan samtal, {day}.",
+        "qualityMeaning": "Vad det betyder och vad du ska göra"
       },
       "deleteReport": {
         "title": "Ta bort rapporten",
@@ -2423,7 +2426,12 @@
           "unrated": "Utfallet är inte bedömt än: öppna förfrågningarna",
           "classify": "Klassificera dessa förfrågningar",
           "open": "Öppna förfrågningarna"
-        }
+        },
+        "wide": {
+          "business": "De här förfrågningarna räknas över alla företag, inte bara det valda.",
+          "owner": "De här förfrågningarna räknas över alla ägares företag, inte bara den valda ägarens."
+        },
+        "archiveWhere": "Arkivering gäller alla företag: ta bort företags- och ägarfiltren för att arkivera eller återställa."
       },
       "admin": {
         "reason": {
@@ -2743,6 +2751,44 @@
         },
         "jobs": {
           "progress": "Samtal som bearbetats hittills, i förhållande till samtalen uppgiften ska bearbeta."
+        }
+      },
+      "signals": {
+        "missing_info": {
+          "meaning": "Företaget har aldrig berättat för assistenten det som uppringaren frågade om.",
+          "action": "Lägg till svaret i assistentens information: varje samtal visar frågan och ett förslag."
+        },
+        "needs_integration": {
+          "meaning": "Svaret finns i ett system som assistenten inte är ansluten till.",
+          "action": "Anslut det systemet, eller be assistenten ta emot ett meddelande för de här förfrågningarna."
+        },
+        "out_of_scope": {
+          "meaning": "Inget som det här företaget svarar på i telefon.",
+          "action": "Säg till assistenten vart de här uppringarna ska hänvisas, eller att den ska koppla vidare eller ta ett meddelande."
+        },
+        "assistant_error": {
+          "meaning": "Assistenten hade informationen men lyckades ändå inte svara.",
+          "action": "Öppna samtalen för att se vad som gick fel, och rätta assistentens instruktioner om ämnet."
+        },
+        "caller_repeated": {
+          "meaning": "Uppringaren fick upprepa något eftersom assistenten inte förstod.",
+          "action": "Lyssna på samtalen: ljudet, en lång hälsning eller en otydlig fråga är de vanliga orsakerna."
+        },
+        "caller_unsatisfied": {
+          "meaning": "Uppringaren lät missnöjd eller irriterad.",
+          "action": "Öppna samtalen för att se vad uppringaren saknade, och ge det till assistenten."
+        },
+        "promise_not_kept_in_call": {
+          "meaning": "Assistenten sa att den gjort något i företagets system (en bokning, en vidarekoppling) och gjorde det inte.",
+          "action": "Öppna samtalen och kontrollera funktionen eller instruktionen bakom åtgärden."
+        },
+        "skillErrors": {
+          "meaning": "En funktion som assistenten anropade (en bokning, en sökning) misslyckades.",
+          "action": "Kontrollera funktionens inställning och anslutning bland assistentens funktioner."
+        },
+        "extraction": {
+          "meaning": "Uppgifterna som assistenten extraherar i slutet av samtalet kunde inte extraheras, eller samtalet var för långt att skicka.",
+          "action": "Om det upprepas, se över fälten som assistenten extraherar; kontakta annars support."
         }
       }
     },

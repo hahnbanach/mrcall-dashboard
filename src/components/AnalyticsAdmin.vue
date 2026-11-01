@@ -193,7 +193,8 @@
       </div>
 
       <!-- Business Breakdown (admin-only) -->
-      <div v-if="breakdownData" class="analytics-section">
+      <!-- the businesses compared: not drawn for one business, which the assistant's card shows (O3) -->
+      <div v-if="breakdownData && !businessId" class="analytics-section">
         <h3 class="section-title">{{ $t('components.analytics.breakdown.title') }}</h3>
         <div class="kpi-grid" style="margin-bottom: 16px;">
           <div class="kpi-card">
@@ -257,9 +258,11 @@
 
       <!-- Assistants to review and the callers' requests, following the filters above; MrCall's own configuration
            suggestions across the platform -->
+      <!-- with one business chosen, its card instead of a ranking of one row (brief 2026-10-31-analytics-ux, O3) -->
       <AssistantsToReview
         v-if="requestBody"
         :body="requestBody"
+        :focused="!!businessId"
         :selected-business-id="businessId || null"
         @select-business="onAssistantsSelectBusiness"
         @clear-business="onClearFilter('business')"
@@ -269,6 +272,7 @@
       <RequestCategories
         v-if="requestBody && roleReady"
         :body="requestBody"
+        :narrowed="businessId ? 'business' : ownerId ? 'owner' : null"
         :role="store.state.role"
         @names="rememberNames"
         @error="handleApiError"

@@ -31,6 +31,11 @@ describe('CallQuality extraction issues', () => {
     expect(text).not.toContain('90 of 200 calls')
   })
 
+  it('counts too_long, refused for size, as StarChat does (brief 2026-10-31-analytics-ux, O5)', () => {
+    const text = quality({ ...base, extractions: { ok: 110, http_error: 2, failed: 1, too_long: 4, not_managed: 7 } }, 200).text()
+    expect(text).toContain('7 of 117 calls')
+  })
+
   it('shows no issue when no call in the period carries an extraction outcome', () => {
     const text = quality({ ...base, extractions: {} }, 50).text()
     expect(text).toContain('0 of 0 calls')

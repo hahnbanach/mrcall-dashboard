@@ -2069,7 +2069,9 @@
         "changePoints": "{sign}{n} punten",
         "askedOf": "{category}: {n} verzoek | {category}: {n} verzoeken",
         "latestReport": "Laatste rapport",
-        "countOf": "({count} van de {total})"
+        "countOf": "({count} van de {total})",
+        "focusTitle": "Assistent: {name}",
+        "openBusiness": "Statistieken van dit bedrijf openen"
       },
       "scope": {
         "allBusinesses": "Over alle bedrijven die u kunt zien, van de afgelopen 30 dagen.",
@@ -2261,7 +2263,8 @@
         "reviewTitle": "Gesprekken om na te kijken",
         "reviewNote": "Niet opgelost, met onbeantwoorde vragen of controles die afgingen.",
         "quietDays": "Het beslaat ook de dagen zonder gesprekken van {from} tot {to}.",
-        "quietDay": "Het beslaat ook een dag zonder gesprekken, {day}."
+        "quietDay": "Het beslaat ook een dag zonder gesprekken, {day}.",
+        "qualityMeaning": "Wat het betekent en wat te doen"
       },
       "deleteReport": {
         "title": "Het rapport verwijderen",
@@ -2423,7 +2426,12 @@
           "unrated": "Uitkomst nog niet beoordeeld: open de verzoeken",
           "classify": "Deze verzoeken indelen",
           "open": "Open de verzoeken"
-        }
+        },
+        "wide": {
+          "business": "Deze verzoeken worden over alle bedrijven geteld, niet alleen het gekozen bedrijf.",
+          "owner": "Deze verzoeken worden over de bedrijven van alle eigenaren geteld, niet alleen van de gekozen eigenaar."
+        },
+        "archiveWhere": "Archiveren geldt voor alle bedrijven: wis de bedrijfs- en eigenaarfilters om te archiveren of te herstellen."
       },
       "admin": {
         "reason": {
@@ -2743,6 +2751,44 @@
         },
         "jobs": {
           "progress": "Tot nu toe verwerkte gesprekken, ten opzichte van de gesprekken die de taak moet verwerken."
+        }
+      },
+      "signals": {
+        "missing_info": {
+          "meaning": "Het bedrijf heeft de assistent nooit verteld waar de beller om vroeg.",
+          "action": "Voeg het antwoord toe aan de informatie van de assistent: elk gesprek toont de vraag en een suggestie."
+        },
+        "needs_integration": {
+          "meaning": "Het antwoord staat in een systeem waarmee de assistent niet verbonden is.",
+          "action": "Verbind dat systeem, of laat de assistent voor deze verzoeken een bericht aannemen."
+        },
+        "out_of_scope": {
+          "meaning": "Niet iets waar dit bedrijf telefonisch op antwoordt.",
+          "action": "Vertel de assistent waar deze bellers heen moeten, of dat hij doorverbindt of een bericht aanneemt."
+        },
+        "assistant_error": {
+          "meaning": "De assistent had de informatie en kon toch niet antwoorden.",
+          "action": "Open de gesprekken om te zien wat er misging, en corrigeer de instructies van de assistent over dat onderwerp."
+        },
+        "caller_repeated": {
+          "meaning": "De beller moest iets herhalen omdat de assistent het niet begreep.",
+          "action": "Luister de gesprekken terug: het geluid, een lange begroeting of een onduidelijke vraag zijn de gebruikelijke oorzaken."
+        },
+        "caller_unsatisfied": {
+          "meaning": "De beller klonk ontevreden of geïrriteerd.",
+          "action": "Open de gesprekken om te zien wat de beller miste, en geef het aan de assistent."
+        },
+        "promise_not_kept_in_call": {
+          "meaning": "De assistent zei iets te hebben gedaan in de systemen van het bedrijf (een boeking, doorverbinden) en deed het niet.",
+          "action": "Open de gesprekken en controleer de functie of instructie achter die actie."
+        },
+        "skillErrors": {
+          "meaning": "Een functie die de assistent aanriep (een boeking, een opzoeking) is mislukt.",
+          "action": "Controleer de instelling en verbinding van die functie bij de functies van de assistent."
+        },
+        "extraction": {
+          "meaning": "De gegevens die de assistent aan het eind van het gesprek extraheert, konden niet worden geëxtraheerd, of het gesprek was te lang om te versturen.",
+          "action": "Als het terugkomt, bekijk dan de velden die de assistent extraheert; neem anders contact op met support."
         }
       }
     },

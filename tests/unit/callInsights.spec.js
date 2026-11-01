@@ -403,11 +403,17 @@ describe('noConversationRows: the calls the assistant had no conversation in, on
   })
 })
 
-describe('extractionProblems: only http_error and failed, over the calls whose extraction ran', () => {
+describe('extractionProblems: http_error, failed and too_long, over the calls whose extraction ran or was refused for size', () => {
   it('leaves not_managed out of the problems and out of the base', () => {
     // StarChat's analytics guide §8: ok 110, http_error 2, failed 1, not_managed 7
     expect(CallInsights.extractionProblems({ ok: 110, http_error: 2, failed: 1, not_managed: 7 }))
       .toEqual({ count: 3, base: 113 })
+  })
+
+  it('counts too_long as StarChat does (§8 and the assistants\' extractionsNotOk), in the problems and in the base', () => {
+    // brief docs/briefs/2026-10-31-analytics-ux.md, O5: one definition, StarChat's; the dashboard counted 3 of 113 here
+    expect(CallInsights.extractionProblems({ ok: 110, http_error: 2, failed: 1, too_long: 4, not_managed: 7 }))
+      .toEqual({ count: 7, base: 117 })
     expect(CallInsights.extractionProblems({ not_managed: 7 })).toEqual({ count: 0, base: 0 })
     expect(CallInsights.extractionProblems(undefined)).toEqual({ count: 0, base: 0 })
   })

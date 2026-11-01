@@ -2069,7 +2069,9 @@
         "changePoints": "{sign}{n} point",
         "askedOf": "{category}: {n} forespørgsel | {category}: {n} forespørgsler",
         "latestReport": "Seneste rapport",
-        "countOf": "({count} ud af {total})"
+        "countOf": "({count} ud af {total})",
+        "focusTitle": "Assistent: {name}",
+        "openBusiness": "Åbn denne virksomheds statistik"
       },
       "scope": {
         "allBusinesses": "På tværs af alle virksomheder, du kan se, de seneste 30 dage.",
@@ -2261,7 +2263,8 @@
         "reviewTitle": "Opkald, der skal gennemgås",
         "reviewNote": "Ikke løst, med ubesvarede spørgsmål eller kontroller, der slog ud.",
         "quietDays": "Den dækker også dagene uden opkald fra {from} til {to}.",
-        "quietDay": "Den dækker også en dag uden opkald, {day}."
+        "quietDay": "Den dækker også en dag uden opkald, {day}.",
+        "qualityMeaning": "Hvad det betyder, og hvad du skal gøre"
       },
       "deleteReport": {
         "title": "Slet rapporten",
@@ -2423,7 +2426,12 @@
           "unrated": "Resultatet er ikke vurderet endnu: åbn forespørgslerne",
           "classify": "Klassificér disse forespørgsler",
           "open": "Åbn forespørgslerne"
-        }
+        },
+        "wide": {
+          "business": "Disse anmodninger tælles på tværs af alle virksomheder, ikke kun den valgte.",
+          "owner": "Disse anmodninger tælles på tværs af alle ejeres virksomheder, ikke kun den valgte ejers."
+        },
+        "archiveWhere": "Arkivering gælder alle virksomheder: fjern virksomheds- og ejerfiltrene for at arkivere eller gendanne."
       },
       "admin": {
         "reason": {
@@ -2743,6 +2751,44 @@
         },
         "jobs": {
           "progress": "Opkald behandlet indtil nu, i forhold til de opkald opgaven skal behandle."
+        }
+      },
+      "signals": {
+        "missing_info": {
+          "meaning": "Virksomheden har aldrig fortalt assistenten det, opkalderen spurgte om.",
+          "action": "Tilføj svaret til assistentens oplysninger: hvert opkald viser spørgsmålet og et forslag."
+        },
+        "needs_integration": {
+          "meaning": "Svaret findes i et system, assistenten ikke er forbundet til.",
+          "action": "Forbind det system, eller bed assistenten tage imod en besked for disse anmodninger."
+        },
+        "out_of_scope": {
+          "meaning": "Ikke noget, denne virksomhed svarer på i telefonen.",
+          "action": "Fortæl assistenten, hvor disse opkaldere skal henvises, eller at den skal stille om eller tage imod en besked."
+        },
+        "assistant_error": {
+          "meaning": "Assistenten havde oplysningen og kunne alligevel ikke svare.",
+          "action": "Åbn opkaldene for at se, hvad der gik galt, og ret assistentens instruktioner om emnet."
+        },
+        "caller_repeated": {
+          "meaning": "Opkalderen måtte gentage noget, fordi assistenten ikke forstod.",
+          "action": "Lyt til opkaldene: lyden, en lang velkomst eller et uklart spørgsmål er de sædvanlige årsager."
+        },
+        "caller_unsatisfied": {
+          "meaning": "Opkalderen virkede utilfreds eller irriteret.",
+          "action": "Åbn opkaldene for at se, hvad opkalderen manglede, og giv det til assistenten."
+        },
+        "promise_not_kept_in_call": {
+          "meaning": "Assistenten sagde, at den havde gjort noget i virksomhedens systemer (en booking, en omstilling), og gjorde det ikke.",
+          "action": "Åbn opkaldene, og tjek funktionen eller instruktionen bag handlingen."
+        },
+        "skillErrors": {
+          "meaning": "En funktion, assistenten kaldte (en booking, et opslag), mislykkedes.",
+          "action": "Tjek funktionens opsætning og forbindelse under assistentens funktioner."
+        },
+        "extraction": {
+          "meaning": "De data, assistenten udtrækker ved opkaldets slutning, kunne ikke udtrækkes, eller opkaldet var for langt til at sende.",
+          "action": "Gentager det sig, så gennemgå de felter, assistenten udtrækker; ellers kontakt support."
         }
       }
     },

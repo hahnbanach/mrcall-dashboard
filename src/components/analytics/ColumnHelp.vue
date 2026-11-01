@@ -27,6 +27,9 @@
 
 <script>
 let seq = 0;
+// The help shown now: one at a time. On WebKit a click does not focus a button, so a help opened by a click was never
+// blurred when another got focus, and two tooltips stayed on screen (measured at 768 px).
+let open = null;
 
 /**
  * How a column is counted, on its header (brief docs/briefs/2026-10-31-analytics-ux.md, O4): a button named "How
@@ -49,11 +52,14 @@ export default {
   },
   methods: {
     show() {
+      if (open && open !== this) open.hide();
+      open = this;
       if (!this.shown) document.addEventListener("scroll", this.follow, { capture: true, passive: true });
       this.shown = true;
       this.follow();
     },
     hide() {
+      if (open === this) open = null;
       document.removeEventListener("scroll", this.follow, { capture: true });
       this.shown = false;
     },

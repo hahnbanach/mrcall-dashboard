@@ -2074,7 +2074,9 @@
         "changePoints": "{sign}{n} points",
         "askedOf": "{category}: {n} request | {category}: {n} requests",
         "latestReport": "Latest report",
-        "countOf": "({count} of {total})"
+        "countOf": "({count} of {total})",
+        "focusTitle": "Assistant: {name}",
+        "openBusiness": "Open this business's analytics"
       },
       "scope": {
         "allBusinesses": "Across every business you can see, over the last 30 days.",
@@ -2266,7 +2268,8 @@
         "reviewTitle": "Calls to review",
         "reviewNote": "Unresolved, with questions left unanswered or checks that fired.",
         "quietDays": "It also covers the days with no calls from {from} to {to}.",
-        "quietDay": "It also covers a day with no calls, {day}."
+        "quietDay": "It also covers a day with no calls, {day}.",
+        "qualityMeaning": "What it means and what to do"
       },
       "deleteReport": {
         "title": "Delete the report",
@@ -2428,7 +2431,12 @@
           "unrated": "Outcome not rated yet: open the requests",
           "classify": "Classify these requests",
           "open": "Open the requests"
-        }
+        },
+        "wide": {
+          "business": "These requests are counted across every business, not only the one chosen.",
+          "owner": "These requests are counted across every owner's businesses, not only the chosen owner's."
+        },
+        "archiveWhere": "Archiving acts on every business: clear the business and owner filters to archive or restore."
       },
       "admin": {
         "reason": {
@@ -2748,6 +2756,44 @@
         },
         "jobs": {
           "progress": "Calls processed so far, over the calls the job has to process."
+        }
+      },
+      "signals": {
+        "missing_info": {
+          "meaning": "The business never told the assistant what the caller asked.",
+          "action": "Add the answer to the assistant's information: each call shows the question and a suggestion."
+        },
+        "needs_integration": {
+          "meaning": "The answer is in a system the assistant is not connected to.",
+          "action": "Connect that system, or tell the assistant to take a message for these requests."
+        },
+        "out_of_scope": {
+          "meaning": "Not something this business answers by phone.",
+          "action": "Tell the assistant where to send these callers, or to transfer the call or take a message."
+        },
+        "assistant_error": {
+          "meaning": "The assistant had the information and still failed to answer.",
+          "action": "Open the calls to see what went wrong, and correct the assistant's instructions on that topic."
+        },
+        "caller_repeated": {
+          "meaning": "The caller had to repeat something because the assistant did not understand.",
+          "action": "Listen to the calls: the audio, a long greeting or an unclear question are the usual causes."
+        },
+        "caller_unsatisfied": {
+          "meaning": "The caller sounded dissatisfied or annoyed.",
+          "action": "Open the calls to see what the caller was missing, and give it to the assistant."
+        },
+        "promise_not_kept_in_call": {
+          "meaning": "The assistant said it did something in the business's systems (a booking, putting the call through) and did not.",
+          "action": "Open the calls and check the skill or instruction behind that action."
+        },
+        "skillErrors": {
+          "meaning": "A function the assistant called (a booking, a lookup) failed.",
+          "action": "Check that function's setup and connection in the assistant's skills."
+        },
+        "extraction": {
+          "meaning": "The data the assistant extracts at the end of the call could not be extracted, or the call was too long to send.",
+          "action": "If it repeats, review the fields the assistant extracts; otherwise contact support."
         }
       }
     },

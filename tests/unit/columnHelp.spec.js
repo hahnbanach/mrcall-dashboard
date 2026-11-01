@@ -63,6 +63,23 @@ describe('ColumnHelp', () => {
   })
 })
 
+describe('one help at a time', () => {
+  it('opening one closes the one already open (a click does not focus a button on WebKit, so no blur closes it)', async () => {
+    const host = document.createElement('div')
+    document.body.appendChild(host)
+    const wrapper = mount({
+      components: { ColumnHelp },
+      template: '<div><ColumnHelp column="Calls" text="calls text" /><ColumnHelp column="Checks" text="checks text" /></div>'
+    }, { global: { plugins: [i18n] }, attachTo: host })
+    const [calls, checks] = wrapper.findAll('button')
+    await calls.trigger('click')
+    await checks.trigger('focus')
+    const shown = [...document.body.querySelectorAll('.column-help-bubble')].map((b) => b.textContent)
+    expect(shown).toEqual(['checks text'])
+    wrapper.unmount()
+  })
+})
+
 describe('the help of every column the brief lists', () => {
   const help = enUS.components.callInsights.help
   const legend = enUS.components.callInsights.assistants.legend

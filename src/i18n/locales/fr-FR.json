@@ -2071,7 +2071,9 @@
         "changePoints": "{sign}{n} points",
         "askedOf": "{category} : {n} demande | {category} : {n} demandes",
         "latestReport": "Dernier rapport",
-        "countOf": "({count} sur {total})"
+        "countOf": "({count} sur {total})",
+        "focusTitle": "Assistant : {name}",
+        "openBusiness": "Ouvrir les statistiques de cette entreprise"
       },
       "scope": {
         "allBusinesses": "Sur tous les établissements que vous pouvez voir, au cours des 30 derniers jours.",
@@ -2263,7 +2265,8 @@
         "reviewTitle": "Appels à revoir",
         "reviewNote": "Non résolus, avec des questions sans réponse ou des contrôles déclenchés.",
         "quietDays": "Il couvre aussi les jours sans appel du {from} au {to}.",
-        "quietDay": "Il couvre aussi un jour sans appel, le {day}."
+        "quietDay": "Il couvre aussi un jour sans appel, le {day}.",
+        "qualityMeaning": "Ce que cela signifie et que faire"
       },
       "deleteReport": {
         "title": "Supprimer le rapport",
@@ -2425,7 +2428,12 @@
           "unrated": "Résultat pas encore évalué : ouvrir les demandes",
           "classify": "Classer ces demandes",
           "open": "Ouvrir les demandes"
-        }
+        },
+        "wide": {
+          "business": "Ces demandes sont comptées sur toutes les entreprises, pas seulement celle choisie.",
+          "owner": "Ces demandes sont comptées sur les entreprises de tous les propriétaires, pas seulement du propriétaire choisi."
+        },
+        "archiveWhere": "L'archivage s'applique à toutes les entreprises : retirez les filtres d'entreprise et de propriétaire pour archiver ou restaurer."
       },
       "admin": {
         "reason": {
@@ -2745,6 +2753,44 @@
         },
         "jobs": {
           "progress": "Appels traités jusqu'ici, sur les appels que la tâche doit traiter."
+        }
+      },
+      "signals": {
+        "missing_info": {
+          "meaning": "L'entreprise n'a jamais dit à l'assistant ce que l'appelant a demandé.",
+          "action": "Ajoutez la réponse aux informations de l'assistant : chaque appel montre la question et une suggestion."
+        },
+        "needs_integration": {
+          "meaning": "La réponse se trouve dans un système auquel l'assistant n'est pas connecté.",
+          "action": "Connectez ce système, ou demandez à l'assistant de prendre un message pour ces demandes."
+        },
+        "out_of_scope": {
+          "meaning": "Ce n'est pas une chose à laquelle cette entreprise répond par téléphone.",
+          "action": "Dites à l'assistant où orienter ces appelants, ou de transférer l'appel ou de prendre un message."
+        },
+        "assistant_error": {
+          "meaning": "L'assistant avait l'information et n'a pourtant pas su répondre.",
+          "action": "Ouvrez les appels pour voir ce qui n'a pas marché, et corrigez les instructions de l'assistant sur ce sujet."
+        },
+        "caller_repeated": {
+          "meaning": "L'appelant a dû répéter quelque chose car l'assistant n'avait pas compris.",
+          "action": "Écoutez les appels : l'audio, un accueil long ou une question peu claire sont les causes habituelles."
+        },
+        "caller_unsatisfied": {
+          "meaning": "L'appelant semblait mécontent ou agacé.",
+          "action": "Ouvrez les appels pour voir ce qui manquait à l'appelant, et donnez-le à l'assistant."
+        },
+        "promise_not_kept_in_call": {
+          "meaning": "L'assistant a dit avoir fait quelque chose dans les systèmes de l'entreprise (une réservation, un transfert) et ne l'a pas fait.",
+          "action": "Ouvrez les appels et vérifiez la fonction ou l'instruction derrière cette action."
+        },
+        "skillErrors": {
+          "meaning": "Une fonction appelée par l'assistant (une réservation, une recherche) a échoué.",
+          "action": "Vérifiez la configuration et la connexion de cette fonction dans les fonctions de l'assistant."
+        },
+        "extraction": {
+          "meaning": "Les données que l'assistant extrait en fin d'appel n'ont pas pu être extraites, ou l'appel était trop long pour être envoyé.",
+          "action": "Si cela se répète, revoyez les champs que l'assistant extrait ; sinon contactez le support."
         }
       }
     },

@@ -15,11 +15,14 @@
         </i18n-t>
         <ul class="quality-breakdown">
           <li v-for="key in gapKeys" :key="key">
-            <span>{{ $t("components.callInsights.gaps." + key) }}</span>
-            <i18n-t keypath="components.callInsights.quality.countOfTotal" tag="span" class="quality-count" scope="global">
-              <template #count><CountLink :to="linkTo('gap', key)" :count="gaps[key] || 0" :label="$t('components.callInsights.gaps.' + key)" /></template>
-              <template #total>{{ data.callsWithUnansweredRecorded }}</template>
-            </i18n-t>
+            <div class="quality-item">
+              <span>{{ $t("components.callInsights.gaps." + key) }}</span>
+              <i18n-t keypath="components.callInsights.quality.countOfTotal" tag="span" class="quality-count" scope="global">
+                <template #count><CountLink :to="linkTo('gap', key)" :count="gaps[key] || 0" :label="$t('components.callInsights.gaps.' + key)" /></template>
+                <template #total>{{ data.callsWithUnansweredRecorded }}</template>
+              </i18n-t>
+            </div>
+            <SignalExplain :signal="key" />
           </li>
         </ul>
       </div>
@@ -28,11 +31,14 @@
         <h4 class="quality-group-title">{{ $t("components.callInsights.quality.checksTitle") }}</h4>
         <ul class="quality-breakdown">
           <li v-for="key in checkKeys" :key="key">
-            <span>{{ $t("components.callInsights.checks." + key) }}</span>
-            <i18n-t keypath="components.callInsights.quality.countOfTotal" tag="span" class="quality-count" scope="global">
-              <template #count><CountLink :to="linkTo('check', key)" :count="checks[key] || 0" :label="$t('components.callInsights.checks.' + key)" /></template>
-              <template #total>{{ data.callsWithChecks }}</template>
-            </i18n-t>
+            <div class="quality-item">
+              <span>{{ $t("components.callInsights.checks." + key) }}</span>
+              <i18n-t keypath="components.callInsights.quality.countOfTotal" tag="span" class="quality-count" scope="global">
+                <template #count><CountLink :to="linkTo('check', key)" :count="checks[key] || 0" :label="$t('components.callInsights.checks.' + key)" /></template>
+                <template #total>{{ data.callsWithChecks }}</template>
+              </i18n-t>
+            </div>
+            <SignalExplain :signal="key" />
           </li>
         </ul>
       </div>
@@ -40,11 +46,13 @@
       <div class="quality-group">
         <h4 class="quality-group-title">{{ $t("components.callInsights.quality.skillErrorsTitle") }}</h4>
         <p class="quality-row">{{ countOfTotal(data.callsWithSkillErrors, totalCalls) }}</p>
+        <SignalExplain signal="skillErrors" />
       </div>
 
       <div class="quality-group">
         <h4 class="quality-group-title">{{ $t("components.callInsights.quality.extractionTitle") }}</h4>
         <p class="quality-row">{{ countOfTotal(extractionIssues.count, extractionIssues.base) }}</p>
+        <SignalExplain signal="extraction" />
       </div>
     </template>
   </div>
@@ -53,6 +61,7 @@
 <script>
 import CallInsights from "@/utils/CallInsights";
 import CountLink from "@/components/analytics/CountLink.vue";
+import SignalExplain from "@/components/analytics/SignalExplain.vue";
 
 /**
  * The quality signals of the calls in the period (brief outcome 3), each beside the number of
@@ -60,10 +69,11 @@ import CountLink from "@/components/analytics/CountLink.vue";
  * extraction failures. No score: StarChat has not calibrated their weights (Mycelium 5e6dbb40).
  * `totalCalls` is the outcomes answer's own `totalCalls`, the counting base the quality answer
  * itself does not carry for skill errors; extraction failures are counted over its own `extractions`
- * (brief outcome 9: `http_error` and `failed` only).
+ * (brief outcome 9), with StarChat's failures `http_error`, `failed` and `too_long`. Each signal says what it means and
+ * what to do about it (`SignalExplain`, brief docs/briefs/2026-10-31-analytics-ux.md, O5).
  */
 export default {
-  components: { CountLink },
+  components: { CountLink, SignalExplain },
   props: {
     status: { type: String, required: true },
     data: { type: Object, default: null },
@@ -85,7 +95,7 @@ export default {
     checks() {
       return (this.data && this.data.checks) || {};
     },
-    // `http_error` and `failed` over the calls whose extraction ran, from StarChat's `extractions`: a
+    // `http_error`, `failed` and `too_long` over the calls whose extraction ran or was refused for size, from StarChat's `extractions`: a
     // call from before the outcome was recorded is no issue, so the period's total is not the base,
     // and `not_managed` (never asked of the model) is neither an issue nor in the base.
     extractionIssues() {
@@ -148,13 +158,17 @@ export default {
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 10px;
 
   li {
-    display: flex;
-    justify-content: space-between;
     font-size: 14px;
     color: @mrcall_dark_grey_text;
+  }
+
+  .quality-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
   }
 }
 

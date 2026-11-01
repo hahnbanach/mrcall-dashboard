@@ -2075,7 +2075,9 @@
         "changePoints": "{sign}{n} punti",
         "askedOf": "{category}: {n} richiesta | {category}: {n} richieste",
         "latestReport": "Ultimo report",
-        "countOf": "({count} di {total})"
+        "countOf": "({count} di {total})",
+        "focusTitle": "Assistente: {name}",
+        "openBusiness": "Apri gli analytics di questa attività"
       },
       "scope": {
         "allBusinesses": "In tutte le attività che puoi vedere, negli ultimi 30 giorni.",
@@ -2267,7 +2269,8 @@
         "reviewTitle": "Chiamate da rivedere",
         "reviewNote": "Non risolte, con domande senza risposta o controlli scattati.",
         "quietDays": "Copre anche i giorni senza chiamate dal {from} al {to}.",
-        "quietDay": "Copre anche un giorno senza chiamate, il {day}."
+        "quietDay": "Copre anche un giorno senza chiamate, il {day}.",
+        "qualityMeaning": "Cosa significa e cosa fare"
       },
       "deleteReport": {
         "title": "Elimina il report",
@@ -2429,7 +2432,12 @@
           "unrated": "Esito non ancora valutato: apri le richieste",
           "classify": "Classifica queste richieste",
           "open": "Apri le richieste"
-        }
+        },
+        "wide": {
+          "business": "Queste richieste sono contate su tutte le attività, non solo su quella scelta.",
+          "owner": "Queste richieste sono contate sulle attività di tutti i proprietari, non solo del proprietario scelto."
+        },
+        "archiveWhere": "L'archiviazione vale per tutte le attività: togli i filtri di attività e proprietario per archiviare o ripristinare."
       },
       "admin": {
         "reason": {
@@ -2749,6 +2757,44 @@
         },
         "jobs": {
           "progress": "Chiamate elaborate finora, sulle chiamate che il lavoro deve elaborare."
+        }
+      },
+      "signals": {
+        "missing_info": {
+          "meaning": "L'attività non ha mai detto all'assistente ciò che il chiamante ha chiesto.",
+          "action": "Aggiungi la risposta alle informazioni dell'assistente: ogni chiamata mostra la domanda e un suggerimento."
+        },
+        "needs_integration": {
+          "meaning": "La risposta sta in un sistema a cui l'assistente non è collegato.",
+          "action": "Collega quel sistema, oppure di' all'assistente di prendere un messaggio per queste richieste."
+        },
+        "out_of_scope": {
+          "meaning": "Non è qualcosa a cui questa attività risponde al telefono.",
+          "action": "Di' all'assistente dove indirizzare questi chiamanti, oppure di trasferire la chiamata o prendere un messaggio."
+        },
+        "assistant_error": {
+          "meaning": "L'assistente aveva l'informazione e non è comunque riuscito a rispondere.",
+          "action": "Apri le chiamate per vedere cosa non ha funzionato e correggi le istruzioni dell'assistente su quell'argomento."
+        },
+        "caller_repeated": {
+          "meaning": "Il chiamante ha dovuto ripetere qualcosa perché l'assistente non aveva capito.",
+          "action": "Ascolta le chiamate: l'audio, un saluto lungo o una domanda poco chiara sono le cause più comuni."
+        },
+        "caller_unsatisfied": {
+          "meaning": "Il chiamante sembrava insoddisfatto o infastidito.",
+          "action": "Apri le chiamate per vedere cosa mancava al chiamante e dallo all'assistente."
+        },
+        "promise_not_kept_in_call": {
+          "meaning": "L'assistente ha detto di aver fatto qualcosa nei sistemi dell'attività (una prenotazione, un trasferimento) e non l'ha fatto.",
+          "action": "Apri le chiamate e controlla la funzione o l'istruzione dietro quell'azione."
+        },
+        "skillErrors": {
+          "meaning": "Una funzione chiamata dall'assistente (una prenotazione, una ricerca) è fallita.",
+          "action": "Controlla la configurazione e il collegamento di quella funzione nelle funzioni dell'assistente."
+        },
+        "extraction": {
+          "meaning": "I dati che l'assistente estrae a fine chiamata non sono stati estratti, oppure la chiamata era troppo lunga da inviare.",
+          "action": "Se si ripete, rivedi i campi che l'assistente estrae; altrimenti contatta l'assistenza."
         }
       }
     },

@@ -259,6 +259,7 @@
       <RequestCategories
         v-if="showScopePage && roleReady"
         :body="scopeBody"
+        :narrowed="scopeBody && scopeBody.ownerId ? 'owner' : null"
         role="reseller"
         @names="rememberNames"
         @error="handleApiError"

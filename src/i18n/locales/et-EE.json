@@ -2069,7 +2069,9 @@
         "changePoints": "{sign}{n} punkti",
         "askedOf": "{category}: {n} päring | {category}: {n} päringut",
         "latestReport": "Viimane aruanne",
-        "countOf": "({count} / {total})"
+        "countOf": "({count} / {total})",
+        "focusTitle": "Assistent: {name}",
+        "openBusiness": "Ava selle ettevõtte analüütika"
       },
       "scope": {
         "allBusinesses": "Kõigis ettevõtetes, mida näed, viimase 30 päeva jooksul.",
@@ -2261,7 +2263,8 @@
         "reviewTitle": "Ülevaatamist vajavad kõned",
         "reviewNote": "Lahendamata, vastuseta küsimuste või käivitunud kontrollidega.",
         "quietDays": "See hõlmab ka kõnedeta päevi {from}–{to}.",
-        "quietDay": "See hõlmab ka kõnedeta päeva {day}."
+        "quietDay": "See hõlmab ka kõnedeta päeva {day}.",
+        "qualityMeaning": "Mida see tähendab ja mida teha"
       },
       "deleteReport": {
         "title": "Kustuta aruanne",
@@ -2423,7 +2426,12 @@
           "unrated": "Tulemust pole veel hinnatud: ava päringud",
           "classify": "Liigita need päringud",
           "open": "Ava päringud"
-        }
+        },
+        "wide": {
+          "business": "Need päringud loetakse kõigi ettevõtete peale, mitte ainult valitud ettevõtte.",
+          "owner": "Need päringud loetakse kõigi omanike ettevõtete peale, mitte ainult valitud omaniku omade."
+        },
+        "archiveWhere": "Arhiveerimine kehtib kõigile ettevõtetele: eemalda ettevõtte ja omaniku filtrid, et arhiveerida või taastada."
       },
       "admin": {
         "reason": {
@@ -2743,6 +2751,44 @@
         },
         "jobs": {
           "progress": "Seni töödeldud kõned kõnedest, mida töö peab töötlema."
+        }
+      },
+      "signals": {
+        "missing_info": {
+          "meaning": "Ettevõte pole kunagi assistendile öelnud seda, mida helistaja küsis.",
+          "action": "Lisa vastus assistendi teabesse: iga kõne näitab küsimust ja soovitust."
+        },
+        "needs_integration": {
+          "meaning": "Vastus on süsteemis, millega assistent pole ühendatud.",
+          "action": "Ühenda see süsteem või palu assistendil nende päringute kohta sõnum võtta."
+        },
+        "out_of_scope": {
+          "meaning": "Mitte midagi, millele see ettevõte telefonis vastab.",
+          "action": "Ütle assistendile, kuhu need helistajad suunata, või et ta ühendaks kõne edasi või võtaks sõnumi."
+        },
+        "assistant_error": {
+          "meaning": "Assistendil oli teave olemas, kuid ta ei suutnud ikkagi vastata.",
+          "action": "Ava kõned, et näha, mis valesti läks, ja paranda assistendi juhiseid selle teema kohta."
+        },
+        "caller_repeated": {
+          "meaning": "Helistaja pidi midagi kordama, sest assistent ei saanud aru.",
+          "action": "Kuula kõnesid: heli, pikk tervitus või ebaselge küsimus on tavalised põhjused."
+        },
+        "caller_unsatisfied": {
+          "meaning": "Helistaja tundus rahulolematu või ärritunud.",
+          "action": "Ava kõned, et näha, mis helistajal puudu jäi, ja anna see assistendile."
+        },
+        "promise_not_kept_in_call": {
+          "meaning": "Assistent ütles, et tegi midagi ettevõtte süsteemides (broneeringu, kõne edasiühendamise), kuid ei teinud.",
+          "action": "Ava kõned ja kontrolli selle toimingu taga olevat funktsiooni või juhist."
+        },
+        "skillErrors": {
+          "meaning": "Assistendi kutsutud funktsioon (broneering, päring) ebaõnnestus.",
+          "action": "Kontrolli selle funktsiooni seadistust ja ühendust assistendi funktsioonide all."
+        },
+        "extraction": {
+          "meaning": "Andmeid, mida assistent kõne lõpus välja võtab, ei õnnestunud välja võtta, või kõne oli saatmiseks liiga pikk.",
+          "action": "Kui see kordub, vaata üle väljad, mida assistent välja võtab; muidu võta ühendust toega."
         }
       }
     },

@@ -312,20 +312,22 @@ test.describe('Analytics: how the calls went (outcome 9, owner, business page)',
     expect(FAILURE_COLOURS).not.toContain(spamColour)
   })
 
-  test('extraction problems count http_error and failed only, over the extractions that ran: not_managed is no problem', async ({ authenticatedPage: page }) => {
+  test('extraction problems count http_error, failed and too_long, over the extractions that ran or were refused for size: not_managed is no problem', async ({ authenticatedPage: page }) => {
     await page.route('**/customer/analytics/quality*', (route) => route.fulfill({
       status: 200,
       contentType: 'application/json',
       body: JSON.stringify({
         period: { from: 1706140800000, to: 1706745600000 },
-        extractions: { ok: 110, http_error: 2, failed: 1, not_managed: 7 },
+        // StarChat's definition (§8, and the assistants' extractionsNotOk): too_long is a failure too (brief
+        // 2026-10-31-analytics-ux, O5); the dashboard read 3 of 113 here before
+        extractions: { ok: 110, http_error: 2, failed: 1, too_long: 4, not_managed: 7 },
         callsWithChecks: 108, checks: {}, callsWithUnansweredRecorded: 108, callsWithUnanswered: 14, gaps: {},
         callsWithSkillErrors: 3,
       }),
     }))
     await page.goto(`/analytics?id=${BUSINESS_ID}`)
     const extraction = section(page, 'Quality').locator('.quality-group').filter({ hasText: 'Extraction issues' })
-    await expect(extraction.locator('.quality-row')).toHaveText('3 of 113 calls', { timeout: 15000 })
+    await expect(extraction.locator('.quality-row').first()).toHaveText('7 of 117 calls', { timeout: 15000 })
   })
 })
 

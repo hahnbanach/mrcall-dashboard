@@ -122,6 +122,8 @@
                 :display="gapCount(group.key) === null ? $t('components.callInsights.feedback.links.calls') : $t('components.callInsights.reportDetail.calls', { n: gapCount(group.key) }, gapCount(group.key))"
               />
             </h4>
+            <!-- what the reason means and what to do about it (brief docs/briefs/2026-10-31-analytics-ux.md, O5, O6) -->
+            <SignalExplain :signal="group.key" />
             <ul class="report-list">
               <li v-for="(gap, i) in group.gaps" :key="i" class="report-gap">
                 <p class="report-gap-summary">{{ gap.summary }}</p>
@@ -172,6 +174,7 @@
                 <th scope="col">{{ $t("components.callInsights.reportDetail.qualityReason") }}</th>
                 <th scope="col">{{ $t("components.callInsights.reportDetail.qualityNow") }}</th>
                 <th scope="col">{{ $t("components.callInsights.reportDetail.qualityBefore") }}</th>
+                <th scope="col">{{ $t("components.callInsights.reportDetail.qualityMeaning") }}</th>
               </tr>
             </thead>
             <tbody>
@@ -180,6 +183,7 @@
                 <!-- the report's own count of the reason opens its calls; the period before has no report to scope a list to -->
                 <td :data-label="$t('components.callInsights.reportDetail.qualityNow')"><CountLink :to="link('gap', row.key)" :count="row.now" :label="$t('components.callInsights.gaps.' + row.key)" /></td>
                 <td :data-label="$t('components.callInsights.reportDetail.qualityBefore')">{{ row.before }}</td>
+                <td :data-label="$t('components.callInsights.reportDetail.qualityMeaning')"><SignalExplain :signal="row.key" class="report-quality-explain" /></td>
               </tr>
             </tbody>
           </table>
@@ -211,6 +215,7 @@
 
 <script>
 import CallLink from "@/components/analytics/CallLink.vue";
+import SignalExplain from "@/components/analytics/SignalExplain.vue";
 import CallInsights from "@/utils/CallInsights";
 import InsightsReports from "@/utils/InsightsReports";
 import { KNOWLEDGE_BASE_SECTION, cleanQuestion } from "@/utils/KnowledgeBase";
@@ -238,7 +243,7 @@ import Classifications from "@/utils/Classifications";
  * after the report was written (`correctedAfterReport`) are said, and marked on the gaps resting on them.
  */
 export default {
-  components: { CallLink, InsightsState, InsightsRequestDialog, ReportDeleteDialog, CountLink },
+  components: { CallLink, SignalExplain, InsightsState, InsightsRequestDialog, ReportDeleteDialog, CountLink },
   props: {
     businessId: { type: String, required: true },
     periodStart: { type: Number, required: true },
@@ -695,5 +700,9 @@ export default {
   .report-section :deep(table) {
     .table-cards();
   }
+}
+
+.report-quality-explain {
+  margin: 0;
 }
 </style>

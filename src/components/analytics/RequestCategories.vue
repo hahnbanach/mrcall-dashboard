@@ -2,6 +2,11 @@
   <section v-if="status !== 'absent'" class="analytics-section call-insights-section requests-section" aria-labelledby="requests-title">
     <h3 id="requests-title" class="section-title">{{ $t("components.callInsights.requests.title") }}</h3>
     <p class="requests-purpose">{{ $t("components.callInsights.requests.purpose") }}</p>
+    <!-- The page is narrowed to a business or an owner (brief docs/briefs/2026-10-31-analytics-ux.md, O3). Until StarChat
+         narrows these counts too (the brief's S1), the section says it still counts every business, so it never reads as
+         narrowed when it is not. Archiving acts on every business, so it is not offered from a narrowed page. -->
+    <p v-if="narrowed" class="requests-note requests-wide" role="note">{{ $t("components.callInsights.requests.wide." + narrowed) }}</p>
+    <p v-if="narrowed && isAdmin" class="requests-note">{{ $t("components.callInsights.requests.archiveWhere") }}</p>
     <div class="requests-controls">
       <label class="requests-control">
         <span>{{ $t("components.callInsights.requests.sortLabel") }}</span>
@@ -75,7 +80,7 @@
                       :aria-controls="'requests-businesses-' + row.category"
                       @click="toggle(row)"
                     />
-                    <template v-if="isAdmin">
+                    <template v-if="canArchive">
                       <Button
                         v-if="!row.dismissal"
                         type="button" text size="small" severity="secondary"
@@ -172,7 +177,7 @@
                         :aria-label="$t('components.callInsights.feedback.categories.openCall', { text: e.text })"
                       />
                       <Button
-                        v-if="isAdmin"
+                        v-if="canArchive"
                         type="button" text size="small" severity="secondary"
                         :label="$t('components.callInsights.requests.hideExample')"
                         :aria-label="$t('components.callInsights.requests.hideExampleOf', { text: e.text })"
@@ -181,7 +186,7 @@
                     </li>
                   </ul>
                   <!-- With "Mostra archiviate", an admin finds the examples hidden from the row, and restores them -->
-                  <ul v-if="isAdmin && includeDismissed && hiddenOf(row).length" class="requests-examples requests-hidden"
+                  <ul v-if="canArchive && includeDismissed && hiddenOf(row).length" class="requests-examples requests-hidden"
                       :aria-label="$t('components.callInsights.requests.hiddenExamples')">
                     <li v-for="h in hiddenOf(row)" :key="h.text">
                       <q>{{ h.text }}</q>
@@ -296,6 +301,8 @@ export default {
     // the page's window and plan: {timestampGte, timestampLte, plan?}
     body: { type: Object, default: null },
     role: { type: String, default: null },
+    // the page's narrowing: "business", "owner" or null (the whole scope)
+    narrowed: { type: String, default: null, validator: (v) => v === null || v === "business" || v === "owner" },
   },
   emits: ["names", "error"],
   data() {
@@ -335,6 +342,10 @@ export default {
         label: k === "calls" ? t("feedback.categories.columns.calls") : k === "nextAction" ? t("requests.nextAction") : t("requests.columns." + k),
         help: t("help.requests." + k),
       }));
+    },
+    // archive and restore act on every business: never from a page narrowed to one business or owner
+    canArchive() {
+      return this.isAdmin && !this.narrowed;
     },
     isAdmin() {
       return this.role === "admin";

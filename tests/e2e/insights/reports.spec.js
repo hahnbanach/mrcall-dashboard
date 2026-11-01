@@ -139,7 +139,10 @@ test.describe('the report\'s own page', () => {
     const quality = page.getByRole('table', { name: 'Questions without an answer, compared with the period before' })
     // now and before; the count now opens its calls (brief 2026-10-31-analytics-ux, A3), so the row reads by its cells
     const missing = quality.getByRole('row').filter({ has: page.getByRole('rowheader', { name: 'Missing information' }) })
-    await expect(missing.getByRole('cell')).toHaveText(['6', '9'])
+    await expect(missing.getByRole('cell').nth(0)).toHaveText('6')
+    await expect(missing.getByRole('cell').nth(1)).toHaveText('9')
+    // and what the reason means, with what to do (brief 2026-10-31-analytics-ux, O5)
+    await expect(missing.getByRole('cell').nth(2)).toContainText('The business never told the assistant what the caller asked.')
 
     // the knowledge base, its pairs a tuples variable of the __KNOWLEDGE_BASE__ collection
     const pairs = { name: 'KNOWLEDGE_BASE_ANSWER_INSTRUCTIONS', humanName: 'How to answer', class: 'variable', templateName: 'generic_onboarding',

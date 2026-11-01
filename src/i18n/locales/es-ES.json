@@ -2083,7 +2083,9 @@
         "changePoints": "{sign}{n} puntos",
         "askedOf": "{category}: {n} solicitud | {category}: {n} solicitudes",
         "latestReport": "Último informe",
-        "countOf": "({count} de {total})"
+        "countOf": "({count} de {total})",
+        "focusTitle": "Asistente: {name}",
+        "openBusiness": "Abrir las estadísticas de este negocio"
       },
       "scope": {
         "allBusinesses": "En todos los negocios que puedes ver, en los últimos 30 días.",
@@ -2275,7 +2277,8 @@
         "reviewTitle": "Llamadas para revisar",
         "reviewNote": "No resueltas, con preguntas sin respuesta o controles activados.",
         "quietDays": "Cubre también los días sin llamadas del {from} al {to}.",
-        "quietDay": "Cubre también un día sin llamadas, el {day}."
+        "quietDay": "Cubre también un día sin llamadas, el {day}.",
+        "qualityMeaning": "Qué significa y qué hacer"
       },
       "deleteReport": {
         "title": "Eliminar el informe",
@@ -2437,7 +2440,12 @@
           "unrated": "Resultado aún sin valorar: abre las solicitudes",
           "classify": "Clasifica estas solicitudes",
           "open": "Abre las solicitudes"
-        }
+        },
+        "wide": {
+          "business": "Estas solicitudes se cuentan en todos los negocios, no solo en el elegido.",
+          "owner": "Estas solicitudes se cuentan en los negocios de todos los propietarios, no solo del propietario elegido."
+        },
+        "archiveWhere": "Archivar afecta a todos los negocios: quita los filtros de negocio y propietario para archivar o restaurar."
       },
       "admin": {
         "reason": {
@@ -2757,6 +2765,44 @@
         },
         "jobs": {
           "progress": "Llamadas procesadas hasta ahora, sobre las llamadas que la tarea debe procesar."
+        }
+      },
+      "signals": {
+        "missing_info": {
+          "meaning": "El negocio nunca le dijo al asistente lo que el llamante preguntó.",
+          "action": "Añade la respuesta a la información del asistente: cada llamada muestra la pregunta y una sugerencia."
+        },
+        "needs_integration": {
+          "meaning": "La respuesta está en un sistema al que el asistente no está conectado.",
+          "action": "Conecta ese sistema, o indica al asistente que tome un mensaje para estas solicitudes."
+        },
+        "out_of_scope": {
+          "meaning": "No es algo que este negocio responda por teléfono.",
+          "action": "Indica al asistente adónde enviar a estos llamantes, o que transfiera la llamada o tome un mensaje."
+        },
+        "assistant_error": {
+          "meaning": "El asistente tenía la información y aun así no supo responder.",
+          "action": "Abre las llamadas para ver qué falló y corrige las instrucciones del asistente sobre ese tema."
+        },
+        "caller_repeated": {
+          "meaning": "El llamante tuvo que repetir algo porque el asistente no lo entendió.",
+          "action": "Escucha las llamadas: el audio, un saludo largo o una pregunta poco clara son las causas habituales."
+        },
+        "caller_unsatisfied": {
+          "meaning": "El llamante parecía insatisfecho o molesto.",
+          "action": "Abre las llamadas para ver qué le faltaba al llamante y dáselo al asistente."
+        },
+        "promise_not_kept_in_call": {
+          "meaning": "El asistente dijo haber hecho algo en los sistemas del negocio (una reserva, una transferencia) y no lo hizo.",
+          "action": "Abre las llamadas y revisa la función o la instrucción detrás de esa acción."
+        },
+        "skillErrors": {
+          "meaning": "Una función que llamó el asistente (una reserva, una consulta) falló.",
+          "action": "Revisa la configuración y la conexión de esa función en las funciones del asistente."
+        },
+        "extraction": {
+          "meaning": "No se pudieron extraer los datos que el asistente extrae al final de la llamada, o la llamada era demasiado larga para enviarla.",
+          "action": "Si se repite, revisa los campos que extrae el asistente; si no, contacta con soporte."
         }
       }
     },

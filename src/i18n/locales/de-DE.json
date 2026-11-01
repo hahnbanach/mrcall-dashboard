@@ -2071,7 +2071,9 @@
         "changePoints": "{sign}{n} Punkte",
         "askedOf": "{category}: {n} Anfrage | {category}: {n} Anfragen",
         "latestReport": "Letzter Bericht",
-        "countOf": "({count} von {total})"
+        "countOf": "({count} von {total})",
+        "focusTitle": "Assistent: {name}",
+        "openBusiness": "Analysen dieses Unternehmens öffnen"
       },
       "scope": {
         "allBusinesses": "Über alle Unternehmen, die Sie sehen können, in den letzten 30 Tagen.",
@@ -2263,7 +2265,8 @@
         "reviewTitle": "Zu prüfende Anrufe",
         "reviewNote": "Nicht gelöst, mit unbeantworteten Fragen oder ausgelösten Prüfungen.",
         "quietDays": "Er umfasst auch die Tage ohne Anrufe vom {from} bis {to}.",
-        "quietDay": "Er umfasst auch einen Tag ohne Anrufe, den {day}."
+        "quietDay": "Er umfasst auch einen Tag ohne Anrufe, den {day}.",
+        "qualityMeaning": "Was es bedeutet und was zu tun ist"
       },
       "deleteReport": {
         "title": "Bericht löschen",
@@ -2425,7 +2428,12 @@
           "unrated": "Ergebnis noch nicht bewertet: Anfragen öffnen",
           "classify": "Diese Anfragen einordnen",
           "open": "Anfragen öffnen"
-        }
+        },
+        "wide": {
+          "business": "Diese Anfragen werden über alle Unternehmen gezählt, nicht nur über das gewählte.",
+          "owner": "Diese Anfragen werden über die Unternehmen aller Inhaber gezählt, nicht nur des gewählten Inhabers."
+        },
+        "archiveWhere": "Archivieren wirkt für alle Unternehmen: Entfernen Sie die Unternehmens- und Inhaberfilter, um zu archivieren oder wiederherzustellen."
       },
       "admin": {
         "reason": {
@@ -2745,6 +2753,44 @@
         },
         "jobs": {
           "progress": "Bisher verarbeitete Anrufe im Verhältnis zu den Anrufen, die der Auftrag verarbeiten muss."
+        }
+      },
+      "signals": {
+        "missing_info": {
+          "meaning": "Das Unternehmen hat dem Assistenten nie gesagt, wonach der Anrufer fragte.",
+          "action": "Ergänzen Sie die Antwort in den Informationen des Assistenten: Jeder Anruf zeigt die Frage und einen Vorschlag."
+        },
+        "needs_integration": {
+          "meaning": "Die Antwort liegt in einem System, mit dem der Assistent nicht verbunden ist.",
+          "action": "Verbinden Sie dieses System, oder lassen Sie den Assistenten für diese Anfragen eine Nachricht aufnehmen."
+        },
+        "out_of_scope": {
+          "meaning": "Etwas, das dieses Unternehmen nicht am Telefon beantwortet.",
+          "action": "Sagen Sie dem Assistenten, wohin er diese Anrufer schicken soll, oder dass er weiterverbindet oder eine Nachricht aufnimmt."
+        },
+        "assistant_error": {
+          "meaning": "Der Assistent hatte die Information und konnte trotzdem nicht antworten.",
+          "action": "Öffnen Sie die Anrufe, um zu sehen, was schiefging, und korrigieren Sie die Anweisungen des Assistenten zu diesem Thema."
+        },
+        "caller_repeated": {
+          "meaning": "Der Anrufer musste etwas wiederholen, weil der Assistent ihn nicht verstand.",
+          "action": "Hören Sie die Anrufe an: Ton, eine lange Begrüßung oder eine unklare Frage sind die üblichen Ursachen."
+        },
+        "caller_unsatisfied": {
+          "meaning": "Der Anrufer wirkte unzufrieden oder verärgert.",
+          "action": "Öffnen Sie die Anrufe, um zu sehen, was dem Anrufer fehlte, und geben Sie es dem Assistenten."
+        },
+        "promise_not_kept_in_call": {
+          "meaning": "Der Assistent sagte, er habe etwas in den Systemen des Unternehmens getan (eine Buchung, eine Weiterleitung), und tat es nicht.",
+          "action": "Öffnen Sie die Anrufe und prüfen Sie die Funktion oder Anweisung hinter dieser Aktion."
+        },
+        "skillErrors": {
+          "meaning": "Eine vom Assistenten aufgerufene Funktion (eine Buchung, eine Abfrage) ist fehlgeschlagen.",
+          "action": "Prüfen Sie Einrichtung und Verbindung dieser Funktion in den Funktionen des Assistenten."
+        },
+        "extraction": {
+          "meaning": "Die Daten, die der Assistent am Ende des Anrufs extrahiert, konnten nicht extrahiert werden, oder der Anruf war zu lang zum Senden.",
+          "action": "Wenn es sich wiederholt, prüfen Sie die Felder, die der Assistent extrahiert; sonst wenden Sie sich an den Support."
         }
       }
     },

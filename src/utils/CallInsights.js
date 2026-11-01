@@ -52,13 +52,16 @@ const UNKEPT_ACTIONS = ["book", "move", "cancel", "transfer"];
  *   they wanted) and `spam_wrong_number` are counted beside that base, never in it, and neither is a failure.
  * - The calls the assistant had no conversation in (`noConversation`) are facts outside every rate:
  *   counted by reason, never as a share.
- * - An extraction problem is `http_error` or `failed`, over the calls whose extraction ran:
+ * - An extraction problem is `http_error`, `failed` or `too_long`, over the calls whose extraction ran or was refused:
  *   `not_managed` is a call never asked of the model, neither a problem nor in the base.
  */
 const RESOLUTION_REQUEST_KEYS = ["resolved", "forwarded", "handed_over", "unresolved"];
 const RESOLUTION_OUTSIDE_KEYS = ["caller_left", "spam_wrong_number"];
 const NO_CONVERSATION_KEYS = ["caller_silent", "no_credit", "talk_and_hangup", "not_answered"];
-const EXTRACTION_PROBLEM_KEYS = ["http_error", "failed"];
+// StarChat's failures (analytics guide §8, and the assistants' `extractionsNotOk`): `too_long` is a call not sent to the
+// model because it was above the business's input bound. One definition, StarChat's: counting two of the three here
+// made the quality count disagree with the assistants' column and with any list of those calls.
+const EXTRACTION_PROBLEM_KEYS = ["http_error", "failed", "too_long"];
 const EXTRACTION_RAN_KEYS = ["ok", ...EXTRACTION_PROBLEM_KEYS];
 
 function share(count, base) {

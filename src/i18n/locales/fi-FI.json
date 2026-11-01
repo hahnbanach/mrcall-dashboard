@@ -2069,7 +2069,9 @@
         "changePoints": "{sign}{n} prosenttiyksikköä",
         "askedOf": "{category}: {n} pyyntö | {category}: {n} pyyntöä",
         "latestReport": "Viimeisin raportti",
-        "countOf": "({count} / {total})"
+        "countOf": "({count} / {total})",
+        "focusTitle": "Avustaja: {name}",
+        "openBusiness": "Avaa tämän yrityksen analytiikka"
       },
       "scope": {
         "allBusinesses": "Kaikissa yrityksissä, jotka voit nähdä, viimeisten 30 päivän ajalta.",
@@ -2261,7 +2263,8 @@
         "reviewTitle": "Tarkistettavat puhelut",
         "reviewNote": "Ratkaisemattomat, joissa jäi vastaamattomia kysymyksiä tai tarkistuksia laukesi.",
         "quietDays": "Se kattaa myös puheluttomat päivät {from}–{to}.",
-        "quietDay": "Se kattaa myös puhelutoman päivän {day}."
+        "quietDay": "Se kattaa myös puhelutoman päivän {day}.",
+        "qualityMeaning": "Mitä se tarkoittaa ja mitä tehdä"
       },
       "deleteReport": {
         "title": "Poista raportti",
@@ -2423,7 +2426,12 @@
           "unrated": "Lopputulosta ei ole vielä arvioitu: avaa pyynnöt",
           "classify": "Luokittele nämä pyynnöt",
           "open": "Avaa pyynnöt"
-        }
+        },
+        "wide": {
+          "business": "Nämä pyynnöt lasketaan kaikista yrityksistä, ei vain valitusta.",
+          "owner": "Nämä pyynnöt lasketaan kaikkien omistajien yrityksistä, ei vain valitun omistajan."
+        },
+        "archiveWhere": "Arkistointi koskee kaikkia yrityksiä: poista yritys- ja omistajasuodattimet arkistoidaksesi tai palauttaaksesi."
       },
       "admin": {
         "reason": {
@@ -2743,6 +2751,44 @@
         },
         "jobs": {
           "progress": "Tähän mennessä käsitellyt puhelut suhteessa puheluihin, jotka työn on käsiteltävä."
+        }
+      },
+      "signals": {
+        "missing_info": {
+          "meaning": "Yritys ei ole koskaan kertonut avustajalle sitä, mitä soittaja kysyi.",
+          "action": "Lisää vastaus avustajan tietoihin: jokainen puhelu näyttää kysymyksen ja ehdotuksen."
+        },
+        "needs_integration": {
+          "meaning": "Vastaus on järjestelmässä, johon avustajaa ei ole yhdistetty.",
+          "action": "Yhdistä se järjestelmä tai pyydä avustajaa ottamaan viesti näistä pyynnöistä."
+        },
+        "out_of_scope": {
+          "meaning": "Ei asia, johon tämä yritys vastaa puhelimessa.",
+          "action": "Kerro avustajalle, minne nämä soittajat ohjataan, tai että se yhdistää puhelun tai ottaa viestin."
+        },
+        "assistant_error": {
+          "meaning": "Avustajalla oli tieto, mutta se ei silti onnistunut vastaamaan.",
+          "action": "Avaa puhelut nähdäksesi, mikä meni vikaan, ja korjaa avustajan ohjeet aiheesta."
+        },
+        "caller_repeated": {
+          "meaning": "Soittaja joutui toistamaan jotain, koska avustaja ei ymmärtänyt.",
+          "action": "Kuuntele puhelut: ääni, pitkä tervehdys tai epäselvä kysymys ovat tavalliset syyt."
+        },
+        "caller_unsatisfied": {
+          "meaning": "Soittaja kuulosti tyytymättömältä tai ärtyneeltä.",
+          "action": "Avaa puhelut nähdäksesi, mitä soittajalta puuttui, ja anna se avustajalle."
+        },
+        "promise_not_kept_in_call": {
+          "meaning": "Avustaja sanoi tehneensä jotain yrityksen järjestelmissä (varauksen, puhelun yhdistämisen) eikä tehnyt.",
+          "action": "Avaa puhelut ja tarkista toiminnon tai ohjeen taustalla oleva toiminto."
+        },
+        "skillErrors": {
+          "meaning": "Avustajan kutsuma toiminto (varaus, haku) epäonnistui.",
+          "action": "Tarkista toiminnon asetukset ja yhteys avustajan toiminnoista."
+        },
+        "extraction": {
+          "meaning": "Tietoja, jotka avustaja poimii puhelun lopussa, ei voitu poimia, tai puhelu oli liian pitkä lähetettäväksi.",
+          "action": "Jos se toistuu, tarkista kentät, jotka avustaja poimii; muuten ota yhteyttä tukeen."
         }
       }
     },
