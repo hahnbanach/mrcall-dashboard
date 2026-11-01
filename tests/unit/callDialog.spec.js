@@ -114,7 +114,10 @@ describe('CountedCallsPanel', () => {
     expect(text).not.toMatch(/components\.callInsights/)
     expect(JSON.parse(wrapper.find('.to-conversations').attributes('data-to'))).toEqual(link)
     await wrapper.findAll('button').find((b) => b.text() === 'Open the call').trigger('click')
-    expect(wrapper.emitted('open-call')[0]).toEqual(['biz-1', 'CON-1'])
+    const [businessId, id, trigger] = wrapper.emitted('open-call')[0]
+    expect([businessId, id]).toEqual(['biz-1', 'CON-1'])
+    // the row's button, for the page to give the focus back to when the call is closed
+    expect(trigger.tagName).toBe('BUTTON')
   })
 
   it('a report\'s count asks how many calls it leaves out, in the query, and says so', async () => {

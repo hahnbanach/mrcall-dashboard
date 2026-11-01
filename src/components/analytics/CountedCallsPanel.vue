@@ -1,6 +1,6 @@
 <template>
   <Drawer :visible="visible" position="right" class="counted-calls-panel" :header="label"
-          @update:visible="v => $emit('update:visible', v)" @show="load">
+          @update:visible="v => $emit('update:visible', v)" @show="load" @after-hide="$emit('after-hide')">
     <!-- a count not known (a report's group whose analytics were not read): no number is printed, the list says its own -->
     <p v-if="count !== null" class="counted-calls-count">{{ $t("components.callInsights.countedCalls.count", { n: count }, count) }}</p>
     <p v-if="leftOut > 0" class="counted-calls-note" role="status">{{ $t("components.callInsights.feedback.filters.leftOut", { n: leftOut }, leftOut) }}</p>
@@ -18,7 +18,7 @@
         <Button type="button" size="small" outlined
                 :label="$t('components.callInsights.countedCalls.open')"
                 :aria-label="$t('components.callInsights.countedCalls.openOf', { name: callerName(row), when: when(row) })"
-                @click="$emit('open-call', businessId, row.id)" />
+                @click="$emit('open-call', businessId, row.id, $event.currentTarget)" />
       </template>
     </PagedTable>
     <router-link v-if="link" :to="link" class="counted-calls-conversations">
@@ -52,7 +52,7 @@ export default {
     count: { type: Number, default: null },
     user: { type: Object, required: true },
   },
-  emits: ["update:visible", "open-call"],
+  emits: ["update:visible", "open-call", "after-hide"],
   data() {
     return {
       leftOut: 0,

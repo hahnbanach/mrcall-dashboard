@@ -51,12 +51,15 @@ test.describe('a call and a count\'s calls open over the analytics page', () => 
     const top = await scrollTop(page)
     expect(top).toBeGreaterThan(0)
 
-    await row.getByRole('button', { name: 'Open the call: How much is a whitening?' }).click()
+    const trigger = row.getByRole('button', { name: 'Open the call: How much is a whitening?' })
+    await trigger.click()
     const dialog = page.locator('.call-dialog')
     await expect(dialog).toContainText('Asked the price of a whitening.', { timeout: 15000 })
     await expect(dialog.getByText('Read-only view')).toBeVisible()
     await page.keyboard.press('Escape')
     await expect(dialog).toHaveCount(0)
+    // the keyboard is back where it was: on the control that opened the call
+    await expect(trigger).toBeFocused()
 
     expect(page.url()).toBe(url)
     expect(await historyLength(page)).toBe(length)
@@ -76,7 +79,8 @@ test.describe('a call and a count\'s calls open over the analytics page', () => 
     const url = page.url()
     const length = await historyLength(page)
 
-    await page.getByRole('button', { name: 'Open the 6 calls: Missing information', exact: true }).click()
+    const count = page.getByRole('button', { name: 'Open the 6 calls: Missing information', exact: true })
+    await count.click()
     const panel = page.locator('.counted-calls-panel')
     await expect(panel).toBeVisible()
     await expect(panel).toContainText('Missing information')
@@ -94,6 +98,7 @@ test.describe('a call and a count\'s calls open over the analytics page', () => 
     await expect(dialog).toHaveCount(0)
     await page.keyboard.press('Escape')
     await expect(panel).toHaveCount(0)
+    await expect(count).toBeFocused()
 
     expect(page.url()).toBe(url)
     expect(await historyLength(page)).toBe(length)

@@ -1,5 +1,5 @@
 <template>
-  <button v-if="opens && analyticsOverlay" type="button" class="count-link" :aria-label="name" @click="analyticsOverlay.openCount(to, label, count)">{{ text }}</button>
+  <button v-if="opens && analyticsOverlay" type="button" class="count-link" :aria-label="name" @click="analyticsOverlay.openCount(to, label, count, $event.currentTarget)">{{ text }}</button>
   <router-link v-else-if="opens" :to="to" class="count-link" :aria-label="name">{{ text }}</router-link>
   <span v-else>{{ text }}</span>
 </template>

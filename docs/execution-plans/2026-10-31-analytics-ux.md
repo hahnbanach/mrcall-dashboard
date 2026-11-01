@@ -41,7 +41,11 @@ Substantial: new shared components used on four pages, one moved search composit
   in `overlays.spec.js` and `signals.spec.js`; the admin and visual specs moved to the brief's behaviour. Full suite on
   the repaired tree: 2083 passed, 14 skipped, 17 failed, the 17 passing alone (`--last-failed`, 21.5 s); against the
   baseline's 9 such failures, the difference is not explained (none of the 17 is in a spec this work changed but
-  `u19r7-start` and `u19c-scope:144`, both passing alone).
+  `u19r7-start` and `u19c-scope:144`, both passing alone). Then APPROVED by the same reviewer (6aabaa6), with the
+  focus on closing left unmeasured: measured after it, the focus was on the page's body after closing the panel
+  (Chromium) and the dialog (WebKit, where a click does not focus a button); the host now remembers the control that
+  opened each and gives it the focus back on PrimeVue's `after-hide`, `overlays.spec.js` asserting it on three
+  viewports and failing on desktop with the host's change undone.
 
 ## Dependencies and order
 

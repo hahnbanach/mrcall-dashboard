@@ -12,12 +12,14 @@
       :count="panel.count"
       :user="user"
       @open-call="openCall"
+      @after-hide="giveFocusBack('panel')"
     />
     <CallDialog
       v-model:visible="call.visible"
       :ids="call.ids"
       :business-id="call.businessId"
       :user="user"
+      @after-hide="giveFocusBack('call')"
     />
   </div>
 </template>
@@ -39,10 +41,14 @@ export default {
   provide() {
     return {
       analyticsOverlay: {
-        openCall: (businessId, id) => this.openCall(businessId, id),
-        openCount: (link, label, count) => this.openCount(link, label, count),
+        openCall: (businessId, id, trigger) => this.openCall(businessId, id, trigger),
+        openCount: (link, label, count, trigger) => this.openCount(link, label, count, trigger),
       },
     };
+  },
+  created() {
+    // the controls that opened the dialog and the panel: DOM elements, kept out of Vue's reactivity
+    this.triggers = { call: null, panel: null };
   },
   data() {
     return {
@@ -56,13 +62,23 @@ export default {
     },
   },
   methods: {
-    openCall(businessId, id) {
+    openCall(businessId, id, trigger) {
       if (!businessId || !id) return;
+      this.triggers.call = trigger || null;
       this.call = { visible: true, ids: [id], businessId };
     },
-    openCount(link, label, count) {
+    openCount(link, label, count, trigger) {
       if (!link) return;
+      this.triggers.panel = trigger || null;
       this.panel = { visible: true, link, label, count: typeof count === "number" ? count : null };
+    },
+    // Closing returns the keyboard to the control that opened the dialog or the panel. The control is remembered
+    // rather than read from the focus: WebKit does not focus a button on click, and PrimeVue's Drawer gives no focus
+    // back, so after a close the focus was on the page's body (measured on both).
+    giveFocusBack(which) {
+      const trigger = this.triggers[which];
+      this.triggers[which] = null;
+      if (trigger && trigger.isConnected && typeof trigger.focus === "function") trigger.focus();
     },
   },
 };

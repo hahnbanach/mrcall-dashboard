@@ -1,6 +1,6 @@
 <template>
   <Dialog :visible="visible" modal :header="header" class="call-dialog"
-          :dismissableMask="true" @update:visible="v => $emit('update:visible', v)" @show="open(ids[0])">
+          :dismissableMask="true" @update:visible="v => $emit('update:visible', v)" @show="open(ids[0])" @after-hide="$emit('after-hide')">
     <div v-if="ids.length > 1" class="call-dialog-list" role="group" :aria-label="$t('components.callInsights.callDialog.list')">
       <button v-for="(id, i) in ids" :key="id" type="button" :aria-pressed="id === current" @click="open(id)">
         {{ i === 0 ? $t("components.callInsights.callDialog.latest") : i === ids.length - 1 ? $t("components.callInsights.callDialog.first") : $t("components.callInsights.callDialog.nth", { n: ids.length - i }) }}
@@ -57,7 +57,7 @@ export default {
     user: { type: Object, required: true },
     businessId: { type: String, default: null },
   },
-  emits: ["update:visible"],
+  emits: ["update:visible", "after-hide"],
   data() {
     return { current: null, conversation: null, state: "idle", owners: {} };
   },

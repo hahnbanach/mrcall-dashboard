@@ -1,5 +1,5 @@
 <template>
-  <button v-if="analyticsOverlay" type="button" class="call-link" @click="analyticsOverlay.openCall(businessId, conversationId)"><slot>{{ $t("components.callInsights.feedback.categories.call") }}</slot></button>
+  <button v-if="analyticsOverlay" type="button" class="call-link" @click="analyticsOverlay.openCall(businessId, conversationId, $event.currentTarget)"><slot>{{ $t("components.callInsights.feedback.categories.call") }}</slot></button>
   <router-link v-else :to="{ path: '/conversations', query: { id: businessId, conversation: conversationId } }" class="call-link"><slot>{{ $t("components.callInsights.feedback.categories.call") }}</slot></router-link>
 </template>
 
