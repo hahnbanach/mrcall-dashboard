@@ -40,6 +40,8 @@ test.describe('a narrowed admin or scope page', () => {
     expect(asked.categories.pop().body).toMatchObject({ businessId: 'biz-2' })
     const table = requests.locator('table.requests-table')
     await expect(table.getByRole('columnheader', { name: 'Businesses' })).toHaveCount(0)
+    await expect(table.getByRole('columnheader', { name: 'Trend' })).toHaveCount(0)
+    await expect(table.locator('.requests-histogram')).toHaveCount(0)
     await expect(requests.getByRole('button', { name: /^Who asked/ })).toHaveCount(0)
     await expect(requests.getByRole('button', { name: /^Archive / })).toHaveCount(0)
     await expect(requests.getByRole('button', { name: /^Hide the example/ })).toHaveCount(0)

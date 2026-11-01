@@ -53,7 +53,7 @@
               <th scope="col">{{ $t("components.callInsights.requests.columns.category") }}</th>
               <th scope="col" :aria-label="$t('components.callInsights.feedback.categories.columns.calls')">{{ $t("components.callInsights.feedback.categories.columns.calls") }}<ColumnHelp :column="$t('components.callInsights.feedback.categories.columns.calls')" :text="$t('components.callInsights.help.requests.calls')" /></th>
               <th v-if="manyBusinesses" scope="col" :aria-label="$t('components.callInsights.requests.columns.businesses')" :aria-sort="sort === 'businesses' ? 'descending' : 'none'">{{ $t("components.callInsights.requests.columns.businesses") }}<ColumnHelp :column="$t('components.callInsights.requests.columns.businesses')" :text="$t('components.callInsights.help.requests.businesses')" /></th>
-              <th scope="col" :aria-label="$t('components.callInsights.requests.columns.trend')">{{ $t("components.callInsights.requests.columns.trend") }}<ColumnHelp :column="$t('components.callInsights.requests.columns.trend')" :text="$t('components.callInsights.help.requests.trend')" /></th>
+              <th v-if="manyBusinesses" scope="col" :aria-label="$t('components.callInsights.requests.columns.trend')">{{ $t("components.callInsights.requests.columns.trend") }}<ColumnHelp :column="$t('components.callInsights.requests.columns.trend')" :text="$t('components.callInsights.help.requests.trend')" /></th>
               <th scope="col" :aria-label="$t('components.callInsights.requests.columns.freshness')">{{ $t("components.callInsights.requests.columns.freshness") }}<ColumnHelp :column="$t('components.callInsights.requests.columns.freshness')" :text="$t('components.callInsights.help.requests.freshness')" /></th>
               <th scope="col" :aria-label="$t('components.callInsights.requests.nextAction')">{{ $t("components.callInsights.requests.nextAction") }}<ColumnHelp :column="$t('components.callInsights.requests.nextAction')" :text="$t('components.callInsights.help.requests.nextAction')" /></th>
               <th scope="col">{{ $t("components.callInsights.requests.examples") }}</th>
@@ -126,7 +126,8 @@
                   <span class="requests-sub">{{ trendText(row) }}</span>
                   <span class="requests-sub">{{ $t("components.callInsights.requests.share", { pct: percent(row.share) }) }}</span>
                 </td>
-                <td :data-label="$t('components.callInsights.requests.columns.trend')">
+                <!-- businesses asking per week: a trend over several businesses -->
+                <td v-if="manyBusinesses" :data-label="$t('components.callInsights.requests.columns.trend')">
                   <svg
                     class="requests-histogram"
                     role="img"
@@ -338,7 +339,7 @@ export default {
     // how each column is counted, listed on a phone, where the header row with its help buttons is not shown
     helpItems() {
       const t = (k) => this.$t("components.callInsights." + k);
-      return ["calls", "businesses", "trend", "freshness", "nextAction"].filter((k) => k !== "businesses" || this.manyBusinesses).map((k) => ({
+      return ["calls", "businesses", "trend", "freshness", "nextAction"].filter((k) => this.manyBusinesses || (k !== "businesses" && k !== "trend")).map((k) => ({
         label: k === "calls" ? t("feedback.categories.columns.calls") : k === "nextAction" ? t("requests.nextAction") : t("requests.columns." + k),
         help: t("help.requests." + k),
       }));
@@ -348,7 +349,7 @@ export default {
       return this.narrowed !== "business";
     },
     columnCount() {
-      return this.manyBusinesses ? 7 : 6;
+      return this.manyBusinesses ? 7 : 5;
     },
     // archive and restore act on every business: never from a page narrowed to one business or owner
     canArchive() {
@@ -371,7 +372,7 @@ export default {
     sortOptions() {
       return [
         { value: "score", label: this.$t("components.callInsights.requests.sortScore") },
-        { value: "businesses", label: this.$t("components.callInsights.requests.sortBusinesses") },
+        ...(this.manyBusinesses ? [{ value: "businesses", label: this.$t("components.callInsights.requests.sortBusinesses") }] : []),
       ];
     },
     windowText() {
@@ -391,6 +392,10 @@ export default {
     },
   },
   watch: {
+    // ordering by businesses means nothing on one business's requests
+    manyBusinesses(many) {
+      if (!many && this.sort === "businesses") this.sort = "score";
+    },
     body: { deep: true, handler(value) { if (value) this.load(); } },
     sort() { this.load(); },
     includeDismissed() { this.load(); },

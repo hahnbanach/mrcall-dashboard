@@ -127,7 +127,9 @@ test.describe('a quality count leads to where it happened', () => {
   test('a business\'s page: skill errors and extraction issues open their calls; the questions are the business\'s, without a business column', async ({ authenticatedPage: page }) => {
     const asked = await mockInsights(page, { quality: QUALITY })
     await mockClassifications(page, {})
-    const docs = [1, 2, 3].map((n) => conversation({ id: `CON-s${n}`, owner: 'test-uid-12345', details: { callerName: `Caller ${n}` } }))
+    // five calls: three with a skill error, two whose extraction failed (one of each overlapping), as StarChat stores them
+    const flags = [{ skillErrors: true }, { skillErrors: true, extractionOutcome: 'failed' }, { skillErrors: true }, { extractionOutcome: 'too_long' }, { extractionOutcome: 'ok' }]
+    const docs = flags.map((f, i) => conversation({ id: `CON-s${i + 1}`, owner: 'test-uid-12345', details: { callerName: `Caller ${i + 1}`, ...f } }))
     const searches = await mockConversations(page, docs)
     await page.goto(`/analytics?id=${BUSINESS_ID}`)
     const quality = qualitySection(page)
@@ -135,12 +137,16 @@ test.describe('a quality count leads to where it happened', () => {
     await quality.getByRole('button', { name: 'Open the 3 calls: Skill errors', exact: true }).click()
     const calls = page.locator('.counted-calls-panel')
     await expect(calls).toContainText('3 calls')
+    // the list is the count's own: StarChat's filter answers exactly the three
+    await expect(calls.getByRole('button', { name: /^Open the call of Caller \d/ })).toHaveCount(3)
     expect(searches.filter((s) => !s.id).pop()).toMatchObject({ businessId: BUSINESS_ID, counted: true, skillErrors: true })
     await page.keyboard.press('Escape')
     await expect(calls).toHaveCount(0)
 
     await quality.getByRole('button', { name: 'Open the 2 calls: Extraction issues', exact: true }).click()
-    await expect(calls).toBeVisible()
+    await expect(calls.getByRole('button', { name: /^Open the call of Caller \d/ })).toHaveCount(2)
+    await expect(calls.getByRole('button', { name: /^Open the call of Caller 2,/ })).toBeVisible()
+    await expect(calls.getByRole('button', { name: /^Open the call of Caller 4,/ })).toBeVisible()
     expect(searches.filter((s) => !s.id).pop()).toMatchObject({ businessId: BUSINESS_ID, counted: true, extractionFailed: true })
     await page.keyboard.press('Escape')
 
@@ -151,5 +157,15 @@ test.describe('a quality count leads to where it happened', () => {
     expect(asked.unanswered[0].body).toMatchObject({ businessId: BUSINESS_ID })
     // no business-ranking link on one business's page: its counts open its calls
     await expect(quality.getByRole('button', { name: /^See where it happened/ })).toHaveCount(0)
+  })
+
+  test('a reason with no question in the period: the panel says so', async ({ authenticatedPage: page }) => {
+    await mockInsights(page, { quality: QUALITY, unanswered: () => [] })
+    await mockClassifications(page, {})
+    await page.goto(`/analytics?id=${BUSINESS_ID}`)
+    await qualitySection(page).getByRole('button', { name: 'See the unanswered questions: Assistant error' }).click()
+    const panel = page.locator('.questions-panel')
+    await expect(panel.getByText('No question of this kind in this period.')).toBeVisible()
+    await expect(panel).toContainText('0 questions in 0 calls')
   })
 })

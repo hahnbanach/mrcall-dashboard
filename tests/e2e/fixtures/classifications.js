@@ -296,6 +296,10 @@ async function mockClassifications (page, options = {}) {
   })
   await page.route('**/customer/insights/categories/*/requests*', (route) => {
     const url = new URL(route.request().url())
+    // StarChat 9.34 (S1): a body businessId that differs from the query's is 400
+    const requestBody = route.request().postDataJSON() || {}
+    const queryBusiness = url.searchParams.get('businessId')
+    if (queryBusiness && requestBody.businessId && requestBody.businessId !== queryBusiness) return json(route, 400, { message: 'businessId in the body differs from the query' })
     sent.push({ method: 'POST', path: 'category-requests', category: decodeURIComponent(url.pathname.split('/categories/')[1].split('/')[0]), query: Object.fromEntries(url.searchParams), body: route.request().postDataJSON() })
     json(route, 200, typeof options.categoryRequests === 'function' ? options.categoryRequests(url) : (options.categoryRequests || { total: 0, calls: 0, asOf: 1, items: [] }))
   })
@@ -311,6 +315,17 @@ async function mockClassifications (page, options = {}) {
 }
 
 /** The conversation search, answering `docs` for a list and the doc with the asked id for a read by id. */
+// StarChat 9.34 (S3, customer conversation guide): `skillErrors` and `extractionFailed`, true the calls the quality read
+// counts, false the complement (the key absent included). StarChat reads them from the call's stored summary
+// (`skillErrors`, `extractionOutcome`); a mock call carries them in `details`.
+const EXTRACTION_FAILURES = ['http_error', 'failed', 'too_long']
+function matchesInsightFilters (doc, body) {
+  const d = doc.details || {}
+  if (typeof body.skillErrors === 'boolean' && (d.skillErrors === true) !== body.skillErrors) return false
+  if (typeof body.extractionFailed === 'boolean' && EXTRACTION_FAILURES.includes(d.extractionOutcome) !== body.extractionFailed) return false
+  return true
+}
+
 async function mockConversations (page, docs, { byId, leftOut } = {}) {
   const searches = []
   await page.route('**/customer/conversation/search*', (route) => {
@@ -325,7 +340,7 @@ async function mockConversations (page, docs, { byId, leftOut } = {}) {
       const found = (byId || docs).find((d) => d.id === body.id)
       return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(searchAnswer(found ? [found] : [])) })
     }
-    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(searchAnswer(docs)) })
+    route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(searchAnswer(docs.filter((d) => matchesInsightFilters(d, body)))) })
   })
   return searches
 }

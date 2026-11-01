@@ -46,6 +46,14 @@ Substantial: new shared components used on four pages, one moved search composit
   (Chromium) and the dialog (WebKit, where a click does not focus a button); the host now remembers the control that
   opened each and gives it the focus back on PrimeVue's `after-hide`, `overlays.spec.js` asserting it on three
   viewports and failing on desktop with the host's change undone.
+- Milestone after A7 (b7eeb44): REVISE, three findings. The trend column (businesses per week) and the sort by
+  businesses still drawn on requests narrowed to one business, which ARCHITECTURE said were not; the search mock
+  ignored S3's filters, so the extraction list showed three calls under a count of two and the test passed; the S1
+  400 (body and query `businessId` differ) not mocked and S4's empty answer not tested; the plan still said S1's out
+  of scope was empty. Repaired: the column, the sort option and the help hidden when narrowed to a business (the sort
+  reset to score), seen failing with the old template; the search mock filters `skillErrors`/`extractionFailed` as
+  StarChat does and the spec asserts the list equals the count; the S1 400 in the mock; the empty S4 case; the plan
+  says 404. Affected specs 81 passed on three viewports.
 
 ## Dependencies and order
 
@@ -65,7 +73,7 @@ Every step writes its tests first and sees them fail against the tree before the
 message. New user-facing strings go under `components.callInsights` in all 12 locales in the same commit, so that
 `tests/unit/callInsightsLocales.spec.js` (which checks that namespace only) covers every one of them; the restaurant
 dialog's strings move there with the dialog (A2). Each step keeps `npm run test:unit` and its Playwright specs green.
-StarChat mocks in `tests/e2e` implement the published contract with its refusals: S1 out of scope answered empty and a
+StarChat mocks in `tests/e2e` implement the published contract with its refusals: S1 out of scope answered 404 and a
 body `businessId` differing from the query parameter 400; S2 an unknown reason or check 400, `present=true` with
 `sort=calls` 400; S3 both booleans and their complement; S4 a missing or unknown `gap` 400.
 
