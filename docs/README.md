@@ -45,6 +45,10 @@ count opens are read by `src/utils/Classifications.js`, against StarChat's brief
 - [Readable review and assistant Google connection](briefs/2026-10-26-readable-skill-preview.md)
   — [clean TEST delivery plan](execution-plans/2026-10-26-readable-skill-preview.md).
 
+- [Analytics navigation and quality drill-down](briefs/2026-10-31-analytics-ux.md) —
+  [plan](execution-plans/2026-10-31-analytics-ux.md): calls and counts open over the page, sticky headers and column
+  help, the narrowed admin page, quality signals that explain themselves; the drill-down waits on StarChat's S1-S4.
+
 - [OAuth Google Sheets call log](briefs/2026-10-27-sheets-oauth-call-log.md) —
   [source plan](execution-plans/2026-10-27-sheets-oauth-call-log.md), account consent and editable post-call columns.
 

@@ -52,6 +52,12 @@ Reusable UI building blocks:
 - `widgets/restaurant/` — the restaurant page's panels and editors; `widgets/skills/` — the skill card and its field widgets
 - Root: Navbar, Businesses, Conversations, Contacts, Analytics, ZylchChat, Plans, Subscription, etc.
 
+### Directives (`src/directives/`)
+- `stickyHead.js` (`v-sticky-head`, registered in `src/main.js`) — keeps a table's header row in view under the page's
+  sticky bars (`data-sticky-anchor`, the analytics filter bar) while its rows scroll, by moving the real header cells
+  inside the table's `overflow-x: auto` wrapper, so sideways scroll, a frozen column and the sort buttons keep working;
+  a nested table stops under its outer table's header; off under 641 px, where rows are cards
+
 ### Utilities (`src/utils/`)
 API clients and business logic:
 - `Business.js` — Business CRUD, variable defaults, type handling
@@ -80,7 +86,10 @@ API clients and business logic:
   [2026-10-27-classification-feedback](briefs/2026-10-27-classification-feedback.md)): the closed value sets, who
   applies and who proposes, a chip's state from a judgement and the call's history (a correction, a confirmation, the
   reader's own proposal), a chip's menu, the asks of a gesture (`valueFrom` always sent, `fact_wrong` for a fact), THE
-  FILTER TABLE from every count kind to its conversation-search filter (`countLink`, `searchFromQuery`), whether the
+  FILTER TABLE from every count kind to its conversation-search filter (`countLink`, `searchFromQuery`), the one
+  composition of a count list's search (`readCountAddress` reads a count's address once, `composeSearch` builds the
+  body from the conversations page's live state or from a link, `searchQuery` the report count's `leftOut` query),
+  whether the
   reader owns a business (`isOwnerOf`: true, false or unknown), and the clients of StarChat's judgements, signals and
   their undo, queues, caller rules, a category's requests, the category list, the access record and the one-time
   audio link; and how a gesture's answer becomes the call's judgements (`withCallState`, `withSignal`, which marks
@@ -88,6 +97,10 @@ API clients and business logic:
   `withReverted`, `withDecision`, `withCurrent`; `isCallState`/`stateIn`: only a full call state is taken; without it
   the judged field takes the answered `value` and the call is read again, the chips kept if that read is refused; a stale value's refusal is taken and then the call read once).
   Pinned by `tests/unit/classifications.spec.js`
+- `tableCells.js` — `cellLabel(header)`, the PrimeVue `Column` passthrough that names a body cell by its column
+  (`data-label`, drawn above the value on a phone) and the header cell by the column alone
+- `scrollBelowBar.js` — brings a section under the page's sticky filter bar; `scrollContainerOf` finds an element's
+  scroll container (`#app-central-content` on every page), also used by `v-sticky-head`
 - `UndoGesture.js` — the last gesture on judgements, for the page's one undo bar, with the touched calls' state and
   the signals it wrote, which every other panel of those calls takes when the gesture is made or undone
 - `Selection.js` — the selection of a list's rows (a checkbox on a wide screen, a long-press mode under 600 px)
@@ -206,7 +219,7 @@ for the four dimensions lives in `src/utils/CallInsights.js`.
   the feature draws with none of this.
 - **The judgements as chips** (`src/components/feedback/`; brief
   [2026-10-27-classification-feedback](briefs/2026-10-27-classification-feedback.md)): `CallJudgements.vue` in the
-  call's panel, on the pages that ask for it (`with-judgements`: the conversations page, the restaurant call dialog),
+  call's panel, on the pages that ask for it (`with-judgements`: the conversations page, the call dialog),
   draws the resolution, the message and each request's outcome and category as `JudgementChip.vue` (a button naming
   value and state; a listbox, a bottom sheet under 600 px), with the history under a chip (`JudgementHistory.vue`);
   an owner's call reads its judgements when opened or in view, a non-owner's only when the person opens a chip; after
@@ -236,7 +249,20 @@ for the four dimensions lives in `src/utils/CallInsights.js`.
   every server-paged list owns its `CallInsights.serverPage` and draws through `PagedTable.vue` (a real table,
   sortable headers with `aria-sort`, page numbers and "1–10 of N", each row a card under 640 pixels with no header
   row drawn), and every
-  loading, empty, unavailable and error state is `InsightsState.vue`. Both pages carry `AnalyticsFilterBar.vue`,
+  loading, empty, unavailable and error state is `InsightsState.vue`. Every analytics table keeps its header in view
+  (`v-sticky-head`) and draws its rows as cards under 641 px (one mixin, `src/assets/style/tableCards.less`; PrimeVue
+  tables through `cellLabel`); a column whose meaning is not self-evident has `ColumnHelp.vue` on its header (a
+  tooltip on hover and focus, drawn on the body, one open at a time, its text the button's description), and on a
+  phone the same texts are folded above the cards (`ColumnHelpList.vue`); "Assistants to review" keeps no legend.
+  Calls and counts open over the page (brief [2026-10-31-analytics-ux](briefs/2026-10-31-analytics-ux.md)):
+  `AnalyticsOverlayHost.vue`, around the admin, analytics and report pages, provides `openCall` and `openCount`;
+  "Apri la chiamata" (`CallLink.vue`) opens `conversations/CallDialog.vue` (the restaurant page's dialog too: the
+  owner read per business, read-only for anyone else), a count (`CountLink.vue`) opens `CountedCallsPanel.vue` (a
+  `Drawer` listing exactly the counted calls with the conversations list's own search, its count, `leftOut` for a
+  report's count, "Apri in Conversazioni"); neither changes the address, and closing gives the focus back to the
+  control that opened it. Outside a host both stay links. Every quality signal (each gap reason, each check, skill
+  errors, extraction problems: `http_error`, `failed` and `too_long`, as StarChat counts them) says what it means and
+  what to do (`SignalExplain.vue`), in `CallQuality.vue` and on the report page. Both pages carry `AnalyticsFilterBar.vue`,
   the filters in force each undone where it shows; a business is shown by name wherever an answer names it.
   "How the calls went" shows the outcome of the calls where the caller asked something in four lines adding up to
   their base (resolved in the call; passed to the business, split by the message taken; passed to a person; not
@@ -273,9 +299,12 @@ for the four dimensions lives in `src/utils/CallInsights.js`.
     1440 px; a business's page stays 960 px.
   - `Analytics.vue` with no business, role `reseller` (its scope page): outcomes and quality over its scope (the
     `OwnerSelector` narrows it to one owner), the topics section saying to choose a business,
-    `AssistantsToReview.vue` and `RequestCategories.vue`, both following the period and owner.
+    `AssistantsToReview.vue` and `RequestCategories.vue`, both following the period; with an owner chosen the
+    requests say they still count every owner (StarChat narrows them with the brief's S1) and offer no archive.
   - `AnalyticsAdmin.vue`: the same sections reacting to its own filters (the business chosen by company name,
-    `BusinessAutocomplete.vue`), topics only with a business chosen, "Assistants to review" (paged, sorted on
+    `BusinessAutocomplete.vue`), topics only with a business chosen, the business breakdown only without one,
+    "Assistants to review" (with a business chosen, that business's card: its row's facts with the table's rules and
+    help, what its callers ask, links to its own page and latest report; otherwise paged, sorted on
     the server, searched by name, a share over a zero base a dash, two businesses of one name told apart by a
     short id, "Unresolved" against the period before in points, "What callers ask" (the business's top request
     categories, each opening that business's requests with all outcomes, and its latest report), MrCall's
@@ -283,7 +312,8 @@ for the four dimensions lives in `src/utils/CallInsights.js`.
     (`RequestCategories.vue`: one row per category with its status, numbers, histogram, freshness and next action
     (StarChat's words, or the dashboard's by `nextActionKind`, the unrated and unclassified rows opening their
     requests), its businesses on demand, archive and
-    restore for an admin, the examples hidden from a row shown and restored with "Show archived"), and MrCall's own configuration suggestions (`ConfigSuggestions.vue`, admin only, the
+    restore for an admin on the unnarrowed page only, the examples hidden from a row shown and restored with "Show
+    archived"; narrowed to a business or an owner it says it still counts every business, until StarChat's S1), and MrCall's own configuration suggestions (`ConfigSuggestions.vue`, admin only, the
     one section that follows no filter, which the bar says while it is on screen).
   - Both pages establish the role on mount (the same business search that already sets it,
     `Business.js`'s `checkUserHasBusinesses`) before choosing which sections to show; the server remains the
