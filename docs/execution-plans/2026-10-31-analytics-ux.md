@@ -53,7 +53,8 @@ Substantial: new shared components used on four pages, one moved search composit
   of scope was empty. Repaired: the column, the sort option and the help hidden when narrowed to a business (the sort
   reset to score), seen failing with the old template; the search mock filters `skillErrors`/`extractionFailed` as
   StarChat does and the spec asserts the list equals the count; the S1 400 in the mock; the empty S4 case; the plan
-  says 404. Affected specs 81 passed on three viewports.
+  says 404. Affected specs 81 passed on three viewports. Then APPROVED by the same reviewer (df1c22e; its own run of the affected specs, 90
+  passed on three viewports).
 
 ## Dependencies and order
 
