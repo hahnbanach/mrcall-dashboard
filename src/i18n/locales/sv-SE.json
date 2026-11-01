@@ -2052,7 +2052,6 @@
           "change": "\"Ej lösta\" nu jämfört med föregående period av samma längd, i procentenheter; ett streck om någon av perioderna saknar samtal med en förfrågan",
           "configSuggestions": "MrCalls konfigurationsförslag i den senaste automatiska rapporten"
         },
-        "legendTitle": "Hur varje kolumn räknas",
         "assessedShort": "bedömt",
         "search": "Sök efter ett företag på namn",
         "searchButton": "Sök",
@@ -2713,6 +2712,37 @@
           "caller": "Uppringare",
           "summary": "Sammanfattning",
           "open": "Samtal"
+        }
+      },
+      "help": {
+        "label": "Så räknas den här kolumnen: {column}",
+        "title": "Så räknas varje kolumn",
+        "assistants": {
+          "calls": "Assistentens avslutade samtal under perioden.",
+          "asks": "De vanligaste förfrågningskategorierna hos den här assistenten, med antal förfrågningar; öppna en för att läsa dem.",
+          "health": "Kontots läge: abonnemang, lågt saldo, skuld."
+        },
+        "requests": {
+          "calls": "Samtal med en förfrågan i den här kategorin; ett samtal med flera förfrågningar räknas i var och en av deras kategorier.",
+          "businesses": "Företag som fick en förfrågan i den här kategorin, förändringen mot föregående period och deras andel av företagen med analyserade samtal.",
+          "trend": "Frågande företag, avsnitt för avsnitt, från det äldsta.",
+          "freshness": "När kategorin senast efterfrågades, och andelen av dess förfrågningar i den senaste delen av perioden.",
+          "nextAction": "Vad som ska göras med den här kategorin."
+        },
+        "breakdown": {
+          "totalCalls": "Företagets avslutade samtal under perioden.",
+          "callPercentage": "Företagets samtal i förhållande till samtalen från alla listade företag."
+        },
+        "topics": {
+          "previousCalls": "Samtal med det här ämnet under den lika långa perioden strax före."
+        },
+        "reports": {
+          "revision": "Hur många gånger rapporten för den här perioden har skrivits: en omgenerering lägger till en.",
+          "status": "Var rapporten står: väntar, skrivs, klar eller misslyckad.",
+          "calls": "Samtalen rapporten läste, i förhållande till samtalen assistenten hanterade under perioden."
+        },
+        "jobs": {
+          "progress": "Samtal som bearbetats hittills, i förhållande till samtalen uppgiften ska bearbeta."
         }
       }
     },

@@ -1,0 +1,52 @@
+@import "colors";
+
+// A table's rows drawn as cards on a phone, each cell under its column's name (its `data-label`): the one layout of
+// every analytics table under 641 px (brief docs/briefs/2026-10-31-analytics-ux.md, O4), first written for
+// PagedTable.vue. Call it inside a `max-width: 640px` media query on the table element.
+// The header row is visually hidden but kept for assistive technology (the column headers and their sort state).
+// A card holds its values two by two; the first cell (what the row is) and the last (its actions) take the card's
+// width. One value per line made a report's card eight lines tall (U19 m19).
+.table-cards() {
+  thead {
+    // !important: PrimeVue's DataTable writes `position: sticky` on its thead as an inline style, which no class rule
+    // outranks; without it the header row stayed drawn above the cards (measured 65 px on the topics table, 375 px)
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  tbody tr {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: @mrcall_white;
+    border: 1px solid @mrcall_borders;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    padding: 6px 0;
+  }
+
+  tbody tr > td,
+  tbody tr > th {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+    border-bottom: none;
+    padding: 6px 12px;
+    text-align: left;
+
+    &:first-child,
+    &:last-child {
+      grid-column: 1 / -1;
+    }
+
+    &[data-label]::before {
+      content: attr(data-label);
+      font-size: 12px;
+      font-weight: 700;
+      color: @mrcall_grey_text2;
+    }
+  }
+}

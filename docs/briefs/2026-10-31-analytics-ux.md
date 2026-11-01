@@ -66,8 +66,8 @@ in the source on branch `v2.2` (508b014) and in StarChat on branch `9.34` (873ce
   platform-wide, are not offered while the page is narrowed to a business or an owner, and the section says where
   to do it. With an owner chosen (admin page, or a reseller's scope page) every section narrows to that owner's
   businesses (S1); the rankings stay, since they rank several businesses.
-- **O4. Headers stay readable, and each column says what it counts.** On the desktop (Playwright `desktop`, 1280 px)
-  and tablet (`tablet`, iPad) viewports, every table's header row stays visible under the page's sticky filter bar
+- **O4. Headers stay readable, and each column says what it counts.** On the desktop (Playwright `desktop`, 1440 x 900)
+  and tablet (`tablet`, iPad, 768 x 1024) viewports, every table's header row stays visible under the page's sticky filter bar
   while any of its rows is on screen, keeping the frozen business column and the horizontal scroll of
   "Assistenti da rivedere". On phones (`mobile`, up to 640 px) every table draws its rows as cards with field labels,
   as `PagedTable.vue` does. These columns get a help control on their header (keyboard reachable, named for

@@ -2052,7 +2052,6 @@
           "change": "\"Ratkaisematta\" nyt verrattuna edelliseen yhtä pitkään jaksoon, prosenttiyksikköinä; viiva, jos kummallakaan jaksolla ei ole puheluita, joissa oli pyyntö",
           "configSuggestions": "MrCallin määritysehdotukset viimeisimmässä automaattisessa raportissa"
         },
-        "legendTitle": "Miten kukin sarake lasketaan",
         "assessedShort": "arvioitu",
         "search": "Hae yritystä nimellä",
         "searchButton": "Hae",
@@ -2713,6 +2712,37 @@
           "caller": "Soittaja",
           "summary": "Yhteenveto",
           "open": "Puhelu"
+        }
+      },
+      "help": {
+        "label": "Näin tämä sarake lasketaan: {column}",
+        "title": "Näin kukin sarake lasketaan",
+        "assistants": {
+          "calls": "Avustajan jakson aikana päättyneet puhelut.",
+          "asks": "Tämän avustajan yleisimmät pyyntöluokat ja pyyntöjen määrä; avaa luokka lukeaksesi ne.",
+          "health": "Tilin tila: tilaus, vähäinen saldo, velka."
+        },
+        "requests": {
+          "calls": "Puhelut, joissa on tämän luokan pyyntö; useita pyyntöjä sisältävä puhelu lasketaan jokaiseen niiden luokkaan.",
+          "businesses": "Yritykset, jotka saivat tämän luokan pyynnön, muutos edelliseen jaksoon ja niiden osuus yrityksistä, joiden puheluita on analysoitu.",
+          "trend": "Kysyvät yritykset jakso jaksolta vanhimmasta alkaen.",
+          "freshness": "Milloin luokkaa kysyttiin viimeksi ja sen pyyntöjen osuus jakson tuoreimmassa osassa.",
+          "nextAction": "Mitä tälle luokalle pitää tehdä."
+        },
+        "breakdown": {
+          "totalCalls": "Yrityksen jakson aikana päättyneet puhelut.",
+          "callPercentage": "Yrityksen puhelut suhteessa kaikkien listattujen yritysten puheluihin."
+        },
+        "topics": {
+          "previousCalls": "Tämän aiheen puhelut yhtä pitkänä jaksona juuri ennen."
+        },
+        "reports": {
+          "revision": "Kuinka monta kertaa tämän jakson raportti on kirjoitettu: uudelleenluonti lisää yhden.",
+          "status": "Missä vaiheessa raportti on: odottaa, kirjoitetaan, valmis tai epäonnistui.",
+          "calls": "Raportin lukemat puhelut suhteessa avustajan jakson aikana hoitamiin puheluihin."
+        },
+        "jobs": {
+          "progress": "Tähän mennessä käsitellyt puhelut suhteessa puheluihin, jotka työn on käsiteltävä."
         }
       }
     },

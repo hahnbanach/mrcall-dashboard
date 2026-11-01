@@ -1,0 +1,10 @@
+@import "../assets/style/colors";
+
+// The header cells `v-sticky-head` moves down over the rows: opaque, and above the rows' cells. A table that freezes
+// a column gives its frozen header cell a z-index above its frozen body cells itself (AssistantsToReview.vue), with
+// the more specific rule that also keeps that cell's `position: sticky` over the `relative` here.
+[data-sticky-head] thead th {
+  position: relative;
+  background: @mrcall_white;
+  z-index: 3;
+}

@@ -2054,7 +2054,6 @@
           "change": "„Ungelöst“ jetzt gegenüber dem vorherigen Zeitraum gleicher Länge, in Prozentpunkten; ein Strich, wenn einer der beiden Zeiträume keine Anrufe mit einem Anliegen hat",
           "configSuggestions": "MrCall-Konfigurationsvorschläge im letzten automatischen Bericht"
         },
-        "legendTitle": "Wie jede Spalte gezählt wird",
         "assessedShort": "eingeschätzt",
         "search": "Unternehmen nach Namen suchen",
         "searchButton": "Suchen",
@@ -2715,6 +2714,37 @@
           "caller": "Anrufer",
           "summary": "Zusammenfassung",
           "open": "Anruf"
+        }
+      },
+      "help": {
+        "label": "So wird diese Spalte gezählt: {column}",
+        "title": "So wird jede Spalte gezählt",
+        "assistants": {
+          "calls": "Die im Zeitraum abgeschlossenen Anrufe des Assistenten.",
+          "asks": "Die häufigsten Anfragekategorien bei diesem Assistenten, mit der Zahl der Anfragen; öffnen Sie eine, um sie zu lesen.",
+          "health": "Der Zustand des Kontos: Abonnement, niedriges Guthaben, Schulden."
+        },
+        "requests": {
+          "calls": "Anrufe mit einer Anfrage in dieser Kategorie; ein Anruf mit mehreren Anfragen zählt in jeder ihrer Kategorien.",
+          "businesses": "Unternehmen, die eine Anfrage in dieser Kategorie erhielten, die Veränderung gegenüber dem Vorzeitraum und ihr Anteil an den Unternehmen mit analysierten Anrufen.",
+          "trend": "Anfragende Unternehmen, Abschnitt für Abschnitt, vom ältesten an.",
+          "freshness": "Wann die Kategorie zuletzt angefragt wurde, und der Anteil ihrer Anfragen im jüngsten Teil des Zeitraums.",
+          "nextAction": "Was bei dieser Kategorie zu tun ist."
+        },
+        "breakdown": {
+          "totalCalls": "Die im Zeitraum abgeschlossenen Anrufe des Unternehmens.",
+          "callPercentage": "Die Anrufe des Unternehmens im Verhältnis zu den Anrufen aller aufgeführten Unternehmen."
+        },
+        "topics": {
+          "previousCalls": "Anrufe mit diesem Thema im gleich langen Zeitraum direkt davor."
+        },
+        "reports": {
+          "revision": "Wie oft der Bericht dieses Zeitraums geschrieben wurde: eine Neuerstellung zählt eins dazu.",
+          "status": "Wo der Bericht steht: wartend, in Arbeit, fertig oder fehlgeschlagen.",
+          "calls": "Die vom Bericht gelesenen Anrufe im Verhältnis zu den vom Assistenten im Zeitraum bearbeiteten Anrufen."
+        },
+        "jobs": {
+          "progress": "Bisher verarbeitete Anrufe im Verhältnis zu den Anrufen, die der Auftrag verarbeiten muss."
         }
       }
     },

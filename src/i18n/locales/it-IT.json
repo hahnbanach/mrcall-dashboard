@@ -2058,7 +2058,6 @@
           "change": "\"Non risolte\" ora rispetto al periodo precedente della stessa durata, in punti percentuali; un trattino se in uno dei due periodi non ci sono chiamate con una richiesta",
           "configSuggestions": "Suggerimenti di configurazione MrCall nell'ultimo report automatico"
         },
-        "legendTitle": "Come si conta ogni colonna",
         "assessedShort": "valutato",
         "search": "Cerca un'attività per nome",
         "searchButton": "Cerca",
@@ -2719,6 +2718,37 @@
           "caller": "Chiamante",
           "summary": "Riepilogo",
           "open": "Chiamata"
+        }
+      },
+      "help": {
+        "label": "Come si conta questa colonna: {column}",
+        "title": "Come si conta ogni colonna",
+        "assistants": {
+          "calls": "Le chiamate dell'assistente concluse nel periodo.",
+          "asks": "Le categorie di richieste più frequenti per questo assistente, con il numero di richieste; aprine una per leggerle.",
+          "health": "Lo stato dell'account: abbonamento, credito basso, debito."
+        },
+        "requests": {
+          "calls": "Chiamate con una richiesta in questa categoria; una chiamata con più richieste conta in ciascuna delle loro categorie.",
+          "businesses": "Attività che hanno ricevuto una richiesta in questa categoria, la variazione rispetto al periodo precedente e la loro quota sulle attività con chiamate analizzate.",
+          "trend": "Attività che la chiedono, periodo per periodo, dal più vecchio.",
+          "freshness": "Quando la categoria è stata chiesta l'ultima volta e la quota delle sue richieste nella parte più recente del periodo.",
+          "nextAction": "Cosa fare per questa categoria."
+        },
+        "breakdown": {
+          "totalCalls": "Le chiamate dell'attività concluse nel periodo.",
+          "callPercentage": "Le chiamate dell'attività sul totale delle chiamate di tutte le attività elencate."
+        },
+        "topics": {
+          "previousCalls": "Chiamate con questo argomento nel periodo di pari durata appena precedente."
+        },
+        "reports": {
+          "revision": "Quante volte è stato scritto il report di questo periodo: una rigenerazione aggiunge uno.",
+          "status": "A che punto è il report: in attesa, in scrittura, pronto o non riuscito.",
+          "calls": "Le chiamate lette dal report, sulle chiamate gestite dall'assistente nel suo periodo."
+        },
+        "jobs": {
+          "progress": "Chiamate elaborate finora, sulle chiamate che il lavoro deve elaborare."
         }
       }
     },

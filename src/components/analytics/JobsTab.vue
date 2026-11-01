@@ -132,7 +132,7 @@ export default {
       return [
         { key: "what", label: t("what") },
         { key: "status", label: t("status") },
-        { key: "progress", label: t("progress") },
+        { key: "progress", label: t("progress"), help: this.$t("components.callInsights.help.jobs.progress") },
         { key: "requestedBy", label: t("requestedBy") },
         { key: "createdAt", label: t("createdAt") },
         { key: "result", label: t("result") },

@@ -72,6 +72,7 @@ import Toast from 'primevue/toast'
 import ToggleButton from 'primevue/togglebutton'
 import Toolbar from "primevue/toolbar";
 import Tooltip from 'primevue/tooltip'
+import stickyHead from '@/directives/stickyHead'
 import VueGtag from "vue-gtag"
 import store from '@/store/index'
 import {createMetaManager, plugin as metaPlugin} from 'vue-meta'
@@ -201,6 +202,7 @@ app.component('Toast', Toast)
 app.component('ToggleButton', ToggleButton)
 app.component('Toolbar', Toolbar)
 app.directive('Tooltip', Tooltip)
+app.directive('sticky-head', stickyHead)
 
 app.use(JsonEditorVue, {
     // global config

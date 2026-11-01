@@ -2052,7 +2052,6 @@
           "change": "\"Niet opgelost\" nu tegenover de vorige periode van dezelfde lengte, in procentpunten; een streepje als een van beide perioden geen gesprekken met een vraag heeft",
           "configSuggestions": "MrCall-configuratiesuggesties in het laatste automatische rapport"
         },
-        "legendTitle": "Hoe elke kolom wordt geteld",
         "assessedShort": "beoordeeld",
         "search": "Zoek een bedrijf op naam",
         "searchButton": "Zoeken",
@@ -2713,6 +2712,37 @@
           "caller": "Beller",
           "summary": "Samenvatting",
           "open": "Gesprek"
+        }
+      },
+      "help": {
+        "label": "Zo wordt deze kolom geteld: {column}",
+        "title": "Zo wordt elke kolom geteld",
+        "assistants": {
+          "calls": "De afgeronde gesprekken van de assistent in de periode.",
+          "asks": "De vaakst gevraagde verzoekcategorieën bij deze assistent, met het aantal verzoeken; open er een om ze te lezen.",
+          "health": "De staat van het account: abonnement, laag tegoed, schuld."
+        },
+        "requests": {
+          "calls": "Gesprekken met een verzoek in deze categorie; een gesprek met meerdere verzoeken telt in elk van hun categorieën.",
+          "businesses": "Bedrijven die een verzoek in deze categorie kregen, de verandering ten opzichte van de vorige periode en hun aandeel in de bedrijven met geanalyseerde gesprekken.",
+          "trend": "Vragende bedrijven, deel voor deel, vanaf het oudste.",
+          "freshness": "Wanneer de categorie het laatst werd gevraagd, en het aandeel van haar verzoeken in het recentste deel van de periode.",
+          "nextAction": "Wat er met deze categorie moet gebeuren."
+        },
+        "breakdown": {
+          "totalCalls": "De afgeronde gesprekken van het bedrijf in de periode.",
+          "callPercentage": "De gesprekken van het bedrijf ten opzichte van de gesprekken van alle vermelde bedrijven."
+        },
+        "topics": {
+          "previousCalls": "Gesprekken met dit onderwerp in de even lange periode direct ervoor."
+        },
+        "reports": {
+          "revision": "Hoe vaak het rapport van deze periode is geschreven: een hergeneratie telt er een bij.",
+          "status": "Waar het rapport staat: wachtend, in bewerking, klaar of mislukt.",
+          "calls": "De gesprekken die het rapport las, ten opzichte van de gesprekken die de assistent in de periode afhandelde."
+        },
+        "jobs": {
+          "progress": "Tot nu toe verwerkte gesprekken, ten opzichte van de gesprekken die de taak moet verwerken."
         }
       }
     },

@@ -2066,7 +2066,6 @@
           "change": "\"No resueltas\" ahora frente al periodo anterior de la misma duración, en puntos porcentuales; un guion si en uno de los dos periodos no hay llamadas con una petición",
           "configSuggestions": "Sugerencias de configuración de MrCall en el último informe automático"
         },
-        "legendTitle": "Cómo se cuenta cada columna",
         "assessedShort": "evaluado",
         "search": "Buscar un negocio por nombre",
         "searchButton": "Buscar",
@@ -2727,6 +2726,37 @@
           "caller": "Llamante",
           "summary": "Resumen",
           "open": "Llamada"
+        }
+      },
+      "help": {
+        "label": "Cómo se cuenta esta columna: {column}",
+        "title": "Cómo se cuenta cada columna",
+        "assistants": {
+          "calls": "Las llamadas del asistente finalizadas en el periodo.",
+          "asks": "Las categorías de solicitudes más frecuentes con este asistente, con cuántas solicitudes; abre una para leerlas.",
+          "health": "El estado de la cuenta: suscripción, crédito bajo, deuda."
+        },
+        "requests": {
+          "calls": "Llamadas con una solicitud en esta categoría; una llamada con varias solicitudes cuenta en cada una de sus categorías.",
+          "businesses": "Negocios que recibieron una solicitud en esta categoría, el cambio respecto al periodo anterior y su proporción sobre los negocios con llamadas analizadas.",
+          "trend": "Negocios que la piden, tramo a tramo, desde el más antiguo.",
+          "freshness": "Cuándo se pidió la categoría por última vez y la proporción de sus solicitudes en la parte más reciente del periodo.",
+          "nextAction": "Qué hacer con esta categoría."
+        },
+        "breakdown": {
+          "totalCalls": "Las llamadas del negocio finalizadas en el periodo.",
+          "callPercentage": "Las llamadas del negocio sobre las llamadas de todos los negocios listados."
+        },
+        "topics": {
+          "previousCalls": "Llamadas con este tema en el periodo de igual duración justo anterior."
+        },
+        "reports": {
+          "revision": "Cuántas veces se redactó el informe de este periodo: una regeneración suma una.",
+          "status": "En qué punto está el informe: en espera, en redacción, listo o fallido.",
+          "calls": "Las llamadas que leyó el informe, sobre las llamadas que gestionó el asistente en su periodo."
+        },
+        "jobs": {
+          "progress": "Llamadas procesadas hasta ahora, sobre las llamadas que la tarea debe procesar."
         }
       }
     },

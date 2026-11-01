@@ -2052,7 +2052,6 @@
           "change": "\"Ikke løst\" nå sammenlignet med forrige periode av samme lengde, i prosentpoeng; en strek hvis en av periodene ikke har samtaler med en forespørsel",
           "configSuggestions": "MrCalls konfigurasjonsforslag i den siste automatiske rapporten"
         },
-        "legendTitle": "Hvordan hver kolonne telles",
         "assessedShort": "vurdert",
         "search": "Søk etter en virksomhet på navn",
         "searchButton": "Søk",
@@ -2713,6 +2712,37 @@
           "caller": "Innringer",
           "summary": "Sammendrag",
           "open": "Samtale"
+        }
+      },
+      "help": {
+        "label": "Slik telles denne kolonnen: {column}",
+        "title": "Slik telles hver kolonne",
+        "assistants": {
+          "calls": "Assistentens avsluttede samtaler i perioden.",
+          "asks": "De vanligste forespørselskategoriene hos denne assistenten, med antall forespørsler; åpne én for å lese dem.",
+          "health": "Kontoens tilstand: abonnement, lav kreditt, gjeld."
+        },
+        "requests": {
+          "calls": "Samtaler med en forespørsel i denne kategorien; en samtale med flere forespørsler telles i hver av kategoriene deres.",
+          "businesses": "Bedrifter som fikk en forespørsel i denne kategorien, endringen mot forrige periode og deres andel av bedriftene med analyserte samtaler.",
+          "trend": "Bedrifter som spør, del for del, fra den eldste.",
+          "freshness": "Når kategorien sist ble etterspurt, og andelen av forespørslene i den siste delen av perioden.",
+          "nextAction": "Hva som bør gjøres med denne kategorien."
+        },
+        "breakdown": {
+          "totalCalls": "Bedriftens avsluttede samtaler i perioden.",
+          "callPercentage": "Bedriftens samtaler av samtalene til alle de oppførte bedriftene."
+        },
+        "topics": {
+          "previousCalls": "Samtaler med dette emnet i den like lange perioden rett før."
+        },
+        "reports": {
+          "revision": "Hvor mange ganger rapporten for denne perioden er skrevet: en ny generering legger til én.",
+          "status": "Hvor rapporten står: venter, skrives, klar eller mislyktes.",
+          "calls": "Samtalene rapporten leste, av samtalene assistenten håndterte i perioden."
+        },
+        "jobs": {
+          "progress": "Samtaler behandlet så langt, av samtalene oppgaven skal behandle."
         }
       }
     },

@@ -18,7 +18,7 @@ export function scrollBelowBar(el) {
     scroller.scrollTop = Math.max(0, scroller.scrollTop + offset - barHeight - 8);
 }
 
-function scrollContainerOf(el) {
+export function scrollContainerOf(el) {
     for (let node = el.parentElement; node; node = node.parentElement) {
         const overflowY = getComputedStyle(node).overflowY;
         if ((overflowY === "auto" || overflowY === "scroll") && node.scrollHeight > node.clientHeight) return node;

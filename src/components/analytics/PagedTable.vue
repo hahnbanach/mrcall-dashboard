@@ -7,6 +7,8 @@
       :keep-content="state.status === 'loading' && state.items.length > 0"
       @retry="state.retry()"
     >
+      <!-- On a phone the header row and its help buttons are hidden: the columns' help is listed here, folded -->
+      <ColumnHelpList :items="columns.filter((c) => c.help).map((c) => ({ label: c.label, help: c.help }))" />
       <!-- On a phone the header row is hidden and every row is a card: the order is chosen here instead. -->
       <div v-if="sortable.length" class="paged-table-mobile-sort">
         <label :for="sortId">{{ $t("components.callInsights.pager.sortBy") }}</label>
@@ -20,28 +22,36 @@
           @click="state.setSort(state.sort)"
         />
       </div>
-      <div class="paged-table-scroll">
+      <!-- the header row stays in view while the rows scroll under it (v-sticky-head, src/directives/stickyHead.js) -->
+      <div v-sticky-head class="paged-table-scroll">
         <table class="paged-table-table">
           <caption class="visually-hidden">{{ caption }}</caption>
           <thead>
             <tr>
+              <!-- a column with a help button is named by its label alone, not by the button inside it -->
               <th
                 v-for="column in columns"
                 :key="column.key"
                 scope="col"
                 :class="column.class"
                 :aria-sort="ariaSort(column)"
+                :aria-label="column.help ? column.label : null"
               >
-                <button
-                  v-if="column.sortKey"
-                  type="button"
-                  class="paged-table-sort"
-                  @click="state.setSort(column.sortKey)"
-                >
-                  <span>{{ column.label }}</span>
-                  <i :class="sortIcon(column)" aria-hidden="true"></i>
-                </button>
-                <span v-else>{{ column.label }}</span>
+                <!-- the name and its help as two items that wrap (Vue drops the whitespace between elements, which
+                     would leave no place to break between them) -->
+                <span class="paged-table-head">
+                  <button
+                    v-if="column.sortKey"
+                    type="button"
+                    class="paged-table-sort"
+                    @click="state.setSort(column.sortKey)"
+                  >
+                    <span>{{ column.label }}</span>
+                    <i :class="sortIcon(column)" aria-hidden="true"></i>
+                  </button>
+                  <span v-else>{{ column.label }}</span>
+                  <ColumnHelp v-if="column.help" :column="column.label" :text="column.help" />
+                </span>
               </th>
             </tr>
           </thead>
@@ -90,6 +100,8 @@
 
 <script>
 import InsightsState from "@/components/analytics/InsightsState.vue";
+import ColumnHelp from "@/components/analytics/ColumnHelp.vue";
+import ColumnHelpList from "@/components/analytics/ColumnHelpList.vue";
 
 /**
  * The one table of the server-paged lists (docs/briefs/2026-10-24-insights-reports-ux.md, "Throughout"): a real
@@ -99,7 +111,7 @@ import InsightsState from "@/components/analytics/InsightsState.vue";
  * the slot `cell-<key>`; `after-row` adds a row under a row (an expansion).
  */
 export default {
-  components: { InsightsState },
+  components: { InsightsState, ColumnHelp, ColumnHelpList },
   props: {
     state: { type: Object, required: true },
     columns: { type: Array, required: true },
@@ -168,6 +180,7 @@ export default {
 
 <style lang="less" scoped>
 @import "../../assets/style/colors";
+@import "../../assets/style/tableCards";
 
 .visually-hidden {
   position: absolute;
@@ -203,6 +216,16 @@ export default {
     font-weight: 700;
     color: @mrcall_grey_text2;
     white-space: nowrap;
+  }
+
+  // A column's name and its help button are two items that wrap, so the help drops under the name when the table is
+  // tight instead of widening it (the reports history at 1440 px grew 6 px with three on one line); the names wrap
+  // inside their sort buttons as they did before. Forcing the names onto one line widened the assistants table by
+  // 256 px.
+  .paged-table-head {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
   }
 
   tbody tr:last-child td {
@@ -281,48 +304,7 @@ export default {
   }
 
   .paged-table-table {
-    // visually hidden but kept for assistive technology (the column headers and their sort state); each cell
-    // carries its column's name, and the order is chosen above
-    thead {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-      clip: rect(0 0 0 0);
-    }
-
-    // A card holds its values two by two, each under its column's name; the first (what the row is) and the last
-    // (its actions) take the card's width. One value per line made a report's card eight lines tall (U19 m19).
-    tbody tr {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      background: @mrcall_white;
-      border: 1px solid @mrcall_borders;
-      border-radius: 12px;
-      margin-bottom: 10px;
-      padding: 6px 0;
-    }
-
-    td {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      min-width: 0;
-      border-bottom: none;
-      padding: 6px 12px;
-
-      &:first-child,
-      &:last-child {
-        grid-column: 1 / -1;
-      }
-
-      &::before {
-        content: attr(data-label);
-        font-size: 12px;
-        font-weight: 700;
-        color: @mrcall_grey_text2;
-      }
-    }
+    .table-cards();
   }
 }
 </style>

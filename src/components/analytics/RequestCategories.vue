@@ -40,17 +40,18 @@
       <p class="requests-window">{{ windowText }}</p>
       <p class="requests-note">{{ $t("components.callInsights.feedback.categories.manyRequests") }}</p>
       <p v-if="backlog > 0" class="requests-note" role="status">{{ $t("components.callInsights.feedback.categories.backlog", { n: backlog }, backlog) }}</p>
-      <div class="requests-scroll">
+      <ColumnHelpList :items="helpItems" />
+      <div v-sticky-head class="requests-scroll">
         <table class="requests-table">
           <caption class="visually-hidden">{{ $t("components.callInsights.requests.title") }}</caption>
           <thead>
             <tr>
               <th scope="col">{{ $t("components.callInsights.requests.columns.category") }}</th>
-              <th scope="col">{{ $t("components.callInsights.feedback.categories.columns.calls") }}</th>
-              <th scope="col" :aria-sort="sort === 'businesses' ? 'descending' : 'none'">{{ $t("components.callInsights.requests.columns.businesses") }}</th>
-              <th scope="col">{{ $t("components.callInsights.requests.columns.trend") }}</th>
-              <th scope="col">{{ $t("components.callInsights.requests.columns.freshness") }}</th>
-              <th scope="col">{{ $t("components.callInsights.requests.nextAction") }}</th>
+              <th scope="col" :aria-label="$t('components.callInsights.feedback.categories.columns.calls')">{{ $t("components.callInsights.feedback.categories.columns.calls") }}<ColumnHelp :column="$t('components.callInsights.feedback.categories.columns.calls')" :text="$t('components.callInsights.help.requests.calls')" /></th>
+              <th scope="col" :aria-label="$t('components.callInsights.requests.columns.businesses')" :aria-sort="sort === 'businesses' ? 'descending' : 'none'">{{ $t("components.callInsights.requests.columns.businesses") }}<ColumnHelp :column="$t('components.callInsights.requests.columns.businesses')" :text="$t('components.callInsights.help.requests.businesses')" /></th>
+              <th scope="col" :aria-label="$t('components.callInsights.requests.columns.trend')">{{ $t("components.callInsights.requests.columns.trend") }}<ColumnHelp :column="$t('components.callInsights.requests.columns.trend')" :text="$t('components.callInsights.help.requests.trend')" /></th>
+              <th scope="col" :aria-label="$t('components.callInsights.requests.columns.freshness')">{{ $t("components.callInsights.requests.columns.freshness") }}<ColumnHelp :column="$t('components.callInsights.requests.columns.freshness')" :text="$t('components.callInsights.help.requests.freshness')" /></th>
+              <th scope="col" :aria-label="$t('components.callInsights.requests.nextAction')">{{ $t("components.callInsights.requests.nextAction") }}<ColumnHelp :column="$t('components.callInsights.requests.nextAction')" :text="$t('components.callInsights.help.requests.nextAction')" /></th>
               <th scope="col">{{ $t("components.callInsights.requests.examples") }}</th>
             </tr>
           </thead>
@@ -265,6 +266,8 @@
 </template>
 
 <script>
+import ColumnHelpList from "@/components/analytics/ColumnHelpList.vue";
+import ColumnHelp from "@/components/analytics/ColumnHelp.vue";
 import CallLink from "@/components/analytics/CallLink.vue";
 import CallInsights from "@/utils/CallInsights";
 import InsightsReports from "@/utils/InsightsReports";
@@ -288,7 +291,7 @@ const REASONS = ["done", "not_relevant", "already_integrated"];
  * are at most the active categories, so the answer is not paged; the businesses of a row are.
  */
 export default {
-  components: { CallLink, InsightsState, PagedTable, CategoryRequests },
+  components: { ColumnHelpList, ColumnHelp, CallLink, InsightsState, PagedTable, CategoryRequests },
   props: {
     // the page's window and plan: {timestampGte, timestampLte, plan?}
     body: { type: Object, default: null },
@@ -325,6 +328,14 @@ export default {
     };
   },
   computed: {
+    // how each column is counted, listed on a phone, where the header row with its help buttons is not shown
+    helpItems() {
+      const t = (k) => this.$t("components.callInsights." + k);
+      return ["calls", "businesses", "trend", "freshness", "nextAction"].map((k) => ({
+        label: k === "calls" ? t("feedback.categories.columns.calls") : k === "nextAction" ? t("requests.nextAction") : t("requests.columns." + k),
+        help: t("help.requests." + k),
+      }));
+    },
     isAdmin() {
       return this.role === "admin";
     },

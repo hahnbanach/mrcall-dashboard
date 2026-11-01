@@ -2057,7 +2057,6 @@
           "change": "\"Unresolved\" now against the period before of the same length, in percentage points; a dash without calls with a request in either",
           "configSuggestions": "MrCall configuration suggestions in the latest automatic report"
         },
-        "legendTitle": "How each column is counted",
         "assessedShort": "assessed",
         "search": "Search a business by name",
         "searchButton": "Search",
@@ -2718,6 +2717,37 @@
           "caller": "Caller",
           "summary": "Summary",
           "open": "Call"
+        }
+      },
+      "help": {
+        "label": "How this column is counted: {column}",
+        "title": "How each column is counted",
+        "assistants": {
+          "calls": "The assistant's calls finalised in the period.",
+          "asks": "The request categories callers raised most with this assistant, with how many requests; open one to read them.",
+          "health": "The account's state: subscription, low credit, debt."
+        },
+        "requests": {
+          "calls": "Calls with a request in this category; a call with several requests counts in each of their categories.",
+          "businesses": "Businesses that received a request in this category, the change against the period before, and their share of the businesses with analysed calls.",
+          "trend": "Businesses asking, period by period, from the oldest.",
+          "freshness": "When the category was last asked, and the share of its requests in the most recent part of the period.",
+          "nextAction": "What to do about this category."
+        },
+        "breakdown": {
+          "totalCalls": "The business's calls finalised in the period.",
+          "callPercentage": "The business's calls over the calls of all the businesses listed."
+        },
+        "topics": {
+          "previousCalls": "Calls with this topic in the period of the same length just before."
+        },
+        "reports": {
+          "revision": "How many times the report of this period was written: a regeneration adds one.",
+          "status": "Where the report is: waiting, being written, ready or failed.",
+          "calls": "The calls the report read, over the calls the assistant managed in its period."
+        },
+        "jobs": {
+          "progress": "Calls processed so far, over the calls the job has to process."
         }
       }
     },

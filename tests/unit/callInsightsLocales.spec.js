@@ -187,7 +187,7 @@ describe('callInsights: the keys of the D12 review', () => {
   const KEYS = [
     ...SHORT.map(k => `assistants.short.${k}`),
     ...SHORT.filter(k => k !== 'calls').map(k => `assistants.legend.${k}`),
-    'assistants.legendTitle', 'assistants.assessedShort',
+    'help.title', 'assistants.assessedShort',
     'filterBar.scopeNote', 'filterBar.notApplied',
   ]
 
@@ -196,7 +196,7 @@ describe('callInsights: the keys of the D12 review', () => {
   })
 
   const get = (obj, path) => path.split('.').reduce((o, k) => (o ? o[k] : undefined), obj)
-  const WORDED = ['assistants.legendTitle', 'filterBar.scopeNote', 'filterBar.notApplied',
+  const WORDED = ['help.title', 'filterBar.scopeNote', 'filterBar.notApplied',
     'assistants.short.callerSilent', 'assistants.legend.notSolved']
   for (const [locale, messages] of Object.entries(LOCALES)) {
     if (locale === 'en-US') continue

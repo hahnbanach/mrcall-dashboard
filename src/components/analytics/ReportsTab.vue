@@ -299,9 +299,9 @@ export default {
       return [
         { key: "period", label: t("period"), sortKey: "periodEnd" },
         { key: "type", label: t("type") },
-        { key: "revision", label: t("revision") },
-        { key: "status", label: t("status") },
-        { key: "calls", label: t("calls"), sortKey: "calls" },
+        { key: "revision", label: t("revision"), help: this.$t("components.callInsights.help.reports.revision") },
+        { key: "status", label: t("status"), help: this.$t("components.callInsights.help.reports.status") },
+        { key: "calls", label: t("calls"), help: this.$t("components.callInsights.help.reports.calls"), sortKey: "calls" },
         { key: "requestedBy", label: t("requestedBy") },
         { key: "createdAt", label: t("createdAt"), sortKey: "createdAt" },
         { key: "actions", label: t("actions") },

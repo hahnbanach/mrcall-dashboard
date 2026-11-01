@@ -2052,7 +2052,6 @@
           "change": "\"Ikke løst\" nu i forhold til den foregående periode af samme længde, i procentpoint; en streg hvis en af perioderne ikke har opkald med en anmodning",
           "configSuggestions": "MrCalls konfigurationsforslag i den seneste automatiske rapport"
         },
-        "legendTitle": "Hvordan hver kolonne tælles",
         "assessedShort": "vurderet",
         "search": "Søg efter en virksomhed på navn",
         "searchButton": "Søg",
@@ -2713,6 +2712,37 @@
           "caller": "Opkalder",
           "summary": "Resumé",
           "open": "Opkald"
+        }
+      },
+      "help": {
+        "label": "Sådan tælles denne kolonne: {column}",
+        "title": "Sådan tælles hver kolonne",
+        "assistants": {
+          "calls": "Assistentens afsluttede opkald i perioden.",
+          "asks": "De hyppigste anmodningskategorier hos denne assistent, med antal anmodninger; åbn en for at læse dem.",
+          "health": "Kontoens tilstand: abonnement, lav kredit, gæld."
+        },
+        "requests": {
+          "calls": "Opkald med en anmodning i denne kategori; et opkald med flere anmodninger tæller i hver af deres kategorier.",
+          "businesses": "Virksomheder, der fik en anmodning i denne kategori, ændringen i forhold til forrige periode og deres andel af virksomhederne med analyserede opkald.",
+          "trend": "Virksomheder, der spørger, afsnit for afsnit, fra det ældste.",
+          "freshness": "Hvornår kategorien sidst blev efterspurgt, og andelen af dens anmodninger i den seneste del af perioden.",
+          "nextAction": "Hvad der skal gøres ved denne kategori."
+        },
+        "breakdown": {
+          "totalCalls": "Virksomhedens afsluttede opkald i perioden.",
+          "callPercentage": "Virksomhedens opkald i forhold til opkaldene fra alle de viste virksomheder."
+        },
+        "topics": {
+          "previousCalls": "Opkald med dette emne i den lige så lange periode lige før."
+        },
+        "reports": {
+          "revision": "Hvor mange gange rapporten for denne periode er skrevet: en gengenerering lægger én til.",
+          "status": "Hvor rapporten er: venter, skrives, klar eller mislykket.",
+          "calls": "De opkald rapporten læste, i forhold til de opkald assistenten håndterede i perioden."
+        },
+        "jobs": {
+          "progress": "Opkald behandlet indtil nu, i forhold til de opkald opgaven skal behandle."
         }
       }
     },

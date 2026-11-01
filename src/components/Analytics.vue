@@ -192,16 +192,16 @@
         <div v-if="callersData.topCallers && callersData.topCallers.length > 0" class="chart-container">
           <Chart type="bar" :data="callersChartData" :options="callersChartOptions" />
         </div>
-        <div v-if="callersData.topCallers && callersData.topCallers.length > 0" class="table-container">
+        <div v-if="callersData.topCallers && callersData.topCallers.length > 0" v-sticky-head class="table-container">
           <DataTable :value="callersData.topCallers" :rows="10" :paginator="callersData.topCallers.length > 10" stripedRows>
-            <Column field="number" :header="$t('components.analytics.callers.number')" />
-            <Column field="callCount" :header="$t('components.analytics.callers.callCount')" sortable />
-            <Column field="totalDuration" :header="$t('components.analytics.callers.totalDuration')" sortable>
+            <Column field="number" :header="$t('components.analytics.callers.number')" :pt="cellLabel($t('components.analytics.callers.number'))" />
+            <Column field="callCount" :header="$t('components.analytics.callers.callCount')" :pt="cellLabel($t('components.analytics.callers.callCount'))" sortable />
+            <Column field="totalDuration" :header="$t('components.analytics.callers.totalDuration')" :pt="cellLabel($t('components.analytics.callers.totalDuration'))" sortable>
               <template #body="slotProps">
                 {{ formatDuration(slotProps.data.totalDuration) }}
               </template>
             </Column>
-            <Column field="lastCall" :header="$t('components.analytics.callers.lastCall')" sortable>
+            <Column field="lastCall" :header="$t('components.analytics.callers.lastCall')" :pt="cellLabel($t('components.analytics.callers.lastCall'))" sortable>
               <template #body="slotProps">
                 {{ formatDate(slotProps.data.lastCall) }}
               </template>
@@ -287,6 +287,7 @@
 </template>
 
 <script>
+import { cellLabel } from "@/utils/tableCells";
 import { computed } from "vue";
 import AnalyticsOverlayHost from "@/components/analytics/AnalyticsOverlayHost.vue";
 import { useStore } from "vuex";
@@ -669,6 +670,7 @@ export default {
     }
   },
   methods: {
+    cellLabel,
     async establishRole() {
       const user = this.store.state.user;
       if (!user || !user.accessToken) return;
@@ -1050,6 +1052,7 @@ export default {
 
 <style lang="less" scoped>
 @import "../assets/style/colors";
+@import "../assets/style/tableCards";
 @import "../assets/style/fonts";
 
 .analytics-container {
@@ -1324,6 +1327,14 @@ export default {
   .date-controls {
     flex-direction: column;
     align-items: stretch;
+  }
+}
+
+// Phones: the rows as cards, each value under its column's name (src/assets/style/tableCards.less, brief
+// docs/briefs/2026-10-31-analytics-ux.md O4)
+@media screen and (max-width: 640px) {
+  .table-container :deep(table) {
+    .table-cards();
   }
 }
 </style>

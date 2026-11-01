@@ -99,21 +99,6 @@
         </span>
       </template>
     </PagedTable>
-    <dl class="assistants-legend" :aria-label="$t('components.callInsights.assistants.legendTitle')">
-      <dt>{{ $t("components.callInsights.assistants.short.change") }}</dt>
-      <dd>{{ $t("components.callInsights.assistants.legend.change") }}</dd>
-      <template v-if="showSuggestions">
-        <dt>{{ $t("components.callInsights.assistants.short.configSuggestions") }}</dt>
-        <dd>{{ $t("components.callInsights.assistants.legend.configSuggestions") }}</dd>
-      </template>
-      <template v-for="column in shareColumns" :key="column.sort">
-        <dt>{{ $t("components.callInsights.assistants.short." + column.label) }}</dt>
-        <dd>
-          {{ $t("components.callInsights.assistants." + column.label) }}<span v-if="column.assessed">
-            ({{ $t("components.callInsights.assessedMarking") }})</span>: {{ $t("components.callInsights.assistants.legend." + column.label) }}
-        </dd>
-      </template>
-    </dl>
   </section>
 </template>
 
@@ -183,17 +168,21 @@ export default {
       return SHARE_COLUMNS;
     },
     columns() {
-      const short = (label) => this.$t("components.callInsights.assistants.short." + label);
+      const t = (key, values) => this.$t("components.callInsights." + key, values);
+      const short = (label) => t("assistants.short." + label);
+      // How each column is counted, on its header (ColumnHelp; on a phone, PagedTable lists them): the share columns'
+      // full name, its "assessed by the assistant" marking and its base, as the legend under the table said them
+      const shareHelp = (c) => t("assistants." + c.label) + (c.assessed ? " (" + t("assessedMarking") + ")" : "") + ": " + t("assistants.legend." + c.label);
       return [
-        { key: "business", label: this.$t("components.callInsights.assistants.businessId"), class: "assistant-business-column" },
-        { key: "calls", label: short("calls"), sortKey: "calls" },
-        ...SHARE_COLUMNS.map((c) => ({ key: c.sort, label: short(c.label) + (c.assessed ? " (" + this.$t("components.callInsights.assistants.assessedShort") + ")" : ""), sortKey: c.sort })),
+        { key: "business", label: t("assistants.businessId"), class: "assistant-business-column" },
+        { key: "calls", label: short("calls"), sortKey: "calls", help: t("help.assistants.calls") },
+        ...SHARE_COLUMNS.map((c) => ({ key: c.sort, label: short(c.label) + (c.assessed ? " (" + t("assistants.assessedShort") + ")" : ""), sortKey: c.sort, help: shareHelp(c) })),
         // "Non risolte" against the period before, beside the shares (not a server sort)
-        { key: "change", label: short("change") },
-        { key: "asks", label: short("asks"), class: "assistant-asks-column" },
+        { key: "change", label: short("change"), help: t("assistants.legend.change") },
+        { key: "asks", label: short("asks"), class: "assistant-asks-column", help: t("help.assistants.asks") },
         // MrCall's configuration suggestions: an admin's only (StarChat sends them to no one else)
-        ...(this.showSuggestions ? [{ key: "suggestions", label: short("configSuggestions") }] : []),
-        { key: "health", label: this.$t("components.callInsights.assistants.healthTitle") },
+        ...(this.showSuggestions ? [{ key: "suggestions", label: short("configSuggestions"), help: t("assistants.legend.configSuggestions") }] : []),
+        { key: "health", label: t("assistants.healthTitle"), help: t("help.assistants.health") },
       ];
     },
   },
@@ -402,23 +391,6 @@ export default {
   white-space: nowrap;
 }
 
-.assistants-legend {
-  display: grid;
-  grid-template-columns: max-content 1fr;
-  gap: 4px 12px;
-  margin: 12px 0 0 0;
-  font-size: 13px;
-  color: @mrcall_grey_text;
-
-  dt {
-    font-weight: 600;
-    color: @mrcall_dark_grey_text;
-  }
-
-  dd {
-    margin: 0;
-  }
-}
 
 // The frozen column needs an opaque background, or the shares show through it as they scroll under:
 // the header cell its own (its row has none), a body cell its row's (striped, selected).
@@ -457,6 +429,10 @@ export default {
     left: 0;
     z-index: 1;
     background: @mrcall_white;
+  }
+  // the header row moves down over the rows (v-sticky-head): its frozen cell stays above the frozen body cells
+  :deep(th.assistant-business-column) {
+    z-index: 4;
   }
 }
 

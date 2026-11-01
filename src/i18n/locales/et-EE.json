@@ -2052,7 +2052,6 @@
           "change": "\"Lahendamata\" nüüd võrreldes eelmise sama pika perioodiga, protsendipunktides; kriips, kui ühelgi kahest perioodist pole päringuga kõnesid",
           "configSuggestions": "MrCalli seadistussoovitused viimases automaatses aruandes"
         },
-        "legendTitle": "Kuidas iga veergu loetakse",
         "assessedShort": "hinnatud",
         "search": "Otsi ettevõtet nime järgi",
         "searchButton": "Otsi",
@@ -2713,6 +2712,37 @@
           "caller": "Helistaja",
           "summary": "Kokkuvõte",
           "open": "Kõne"
+        }
+      },
+      "help": {
+        "label": "Nii see veerg loetakse: {column}",
+        "title": "Nii iga veerg loetakse",
+        "assistants": {
+          "calls": "Assistendi perioodil lõppenud kõned.",
+          "asks": "Selle assistendi kõige sagedasemad päringukategooriad koos päringute arvuga; ava üks, et neid lugeda.",
+          "health": "Konto seis: tellimus, madal krediit, võlg."
+        },
+        "requests": {
+          "calls": "Kõned, milles on selle kategooria päring; mitme päringuga kõne loetakse igasse nende kategooriasse.",
+          "businesses": "Ettevõtted, kes said selle kategooria päringu, muutus võrreldes eelmise perioodiga ja nende osakaal analüüsitud kõnedega ettevõtetest.",
+          "trend": "Küsivad ettevõtted, lõik lõigu haaval, vanimast alates.",
+          "freshness": "Millal kategooriat viimati küsiti ja selle päringute osakaal perioodi kõige värskemas osas.",
+          "nextAction": "Mida selle kategooriaga teha."
+        },
+        "breakdown": {
+          "totalCalls": "Ettevõtte perioodil lõppenud kõned.",
+          "callPercentage": "Ettevõtte kõned kõigi loetletud ettevõtete kõnedest."
+        },
+        "topics": {
+          "previousCalls": "Selle teemaga kõned vahetult eelnenud sama pika perioodi jooksul."
+        },
+        "reports": {
+          "revision": "Mitu korda selle perioodi aruanne on kirjutatud: uuesti loomine lisab ühe.",
+          "status": "Kus aruanne on: ootel, kirjutamisel, valmis või ebaõnnestunud.",
+          "calls": "Aruande loetud kõned assistendi perioodil hallatud kõnedest."
+        },
+        "jobs": {
+          "progress": "Seni töödeldud kõned kõnedest, mida töö peab töötlema."
         }
       }
     },

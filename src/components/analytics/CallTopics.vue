@@ -16,14 +16,16 @@
       <div v-if="topics.length === 0" class="insights-note">
         {{ $t("components.callInsights.topics.none") }}
       </div>
-      <div v-else class="table-container">
+      <div v-else v-sticky-head class="table-container">
+        <ColumnHelpList :items="[{ label: $t('components.callInsights.topics.previousCalls'), help: $t('components.callInsights.help.topics.previousCalls') }]" />
         <!-- A topic is the model's own words: shown as text through the column's field, never as markup -->
         <DataTable :value="topics" :rows="10" :paginator="topics.length > 10" stripedRows>
-          <Column field="topic" :header="$t('components.callInsights.topics.topic')" />
-          <Column :header="$t('components.callInsights.topics.calls')">
+          <Column field="topic" :header="$t('components.callInsights.topics.topic')" :pt="cellLabel($t('components.callInsights.topics.topic'))" />
+          <Column :header="$t('components.callInsights.topics.calls')" :pt="cellLabel($t('components.callInsights.topics.calls'))">
             <template #body="slotProps"><CountLink :to="linkFor ? linkFor('topic', slotProps.data.topic) : null" :count="slotProps.data.calls || 0" :display="formatNumber(slotProps.data.calls)" :label="slotProps.data.topic" /></template>
           </Column>
-          <Column :header="$t('components.callInsights.topics.previousCalls')">
+          <Column :header="$t('components.callInsights.topics.previousCalls')" :pt="cellLabel($t('components.callInsights.topics.previousCalls'))">
+            <template #header><ColumnHelp :column="$t('components.callInsights.topics.previousCalls')" :text="$t('components.callInsights.help.topics.previousCalls')" /></template>
             <template #body="slotProps">{{ formatNumber(slotProps.data.previousCalls) }}</template>
           </Column>
         </DataTable>
@@ -35,6 +37,9 @@
 </template>
 
 <script>
+import ColumnHelpList from "@/components/analytics/ColumnHelpList.vue";
+import ColumnHelp from "@/components/analytics/ColumnHelp.vue";
+import { cellLabel } from "@/utils/tableCells";
 import CountLink from "@/components/analytics/CountLink.vue";
 
 /**
@@ -46,7 +51,7 @@ import CountLink from "@/components/analytics/CountLink.vue";
  * other sections of these pages.
  */
 export default {
-  components: { CountLink },
+  components: { ColumnHelpList, ColumnHelp, CountLink },
   props: {
     status: { type: String, required: true }, // loading | ok | absent | unavailable | needsBusiness
     data: { type: Object, default: null },
@@ -61,6 +66,7 @@ export default {
     },
   },
   methods: {
+    cellLabel,
     formatNumber(n) {
       return n == null ? "-" : n.toLocaleString();
     },
@@ -70,6 +76,7 @@ export default {
 
 <style lang="less" scoped>
 @import "../../assets/style/colors";
+@import "../../assets/style/tableCards";
 
 .insights-note {
   color: @mrcall_grey_text;
@@ -88,5 +95,13 @@ export default {
   border: 1px solid #e5e7eb;
   border-radius: 12px;
   padding: 12px;
+}
+
+// Phones: the rows as cards, each value under its column's name (src/assets/style/tableCards.less, brief
+// docs/briefs/2026-10-31-analytics-ux.md O4)
+@media screen and (max-width: 640px) {
+  .table-container :deep(table) {
+    .table-cards();
+  }
 }
 </style>

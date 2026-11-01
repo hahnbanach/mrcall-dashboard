@@ -1,5 +1,5 @@
 <template>
-  <section class="analytics-filter-bar" :class="{ 'analytics-filter-bar-noted': !!scopeNote }" :aria-label="$t('components.callInsights.filterBar.title')">
+  <section class="analytics-filter-bar" data-sticky-anchor :class="{ 'analytics-filter-bar-noted': !!scopeNote }" :aria-label="$t('components.callInsights.filterBar.title')">
     <span class="filter-bar-title">{{ $t("components.callInsights.filterBar.title") }}</span>
     <span v-if="scopeNote" class="filter-bar-note" role="status">{{ scopeNote }}</span>
     <ul

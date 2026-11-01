@@ -174,16 +174,16 @@
         <div v-if="callersData.topCallers && callersData.topCallers.length > 0" class="chart-container">
           <Chart type="bar" :data="callersChartData" :options="callersChartOptions" />
         </div>
-        <div v-if="callersData.topCallers && callersData.topCallers.length > 0" class="table-container">
+        <div v-if="callersData.topCallers && callersData.topCallers.length > 0" v-sticky-head class="table-container">
           <DataTable :value="callersData.topCallers" :rows="10" :paginator="callersData.topCallers.length > 10" stripedRows>
-            <Column field="number" :header="$t('components.analytics.callers.number')" />
-            <Column field="callCount" :header="$t('components.analytics.callers.callCount')" sortable />
-            <Column field="totalDuration" :header="$t('components.analytics.callers.totalDuration')" sortable>
+            <Column field="number" :header="$t('components.analytics.callers.number')" :pt="cellLabel($t('components.analytics.callers.number'))" />
+            <Column field="callCount" :header="$t('components.analytics.callers.callCount')" :pt="cellLabel($t('components.analytics.callers.callCount'))" sortable />
+            <Column field="totalDuration" :header="$t('components.analytics.callers.totalDuration')" :pt="cellLabel($t('components.analytics.callers.totalDuration'))" sortable>
               <template #body="slotProps">
                 {{ formatDuration(slotProps.data.totalDuration) }}
               </template>
             </Column>
-            <Column field="lastCall" :header="$t('components.analytics.callers.lastCall')" sortable>
+            <Column field="lastCall" :header="$t('components.analytics.callers.lastCall')" :pt="cellLabel($t('components.analytics.callers.lastCall'))" sortable>
               <template #body="slotProps">
                 {{ formatDate(slotProps.data.lastCall) }}
               </template>
@@ -208,13 +208,14 @@
         <div v-if="breakdownData.businesses && breakdownData.businesses.length > 0" class="chart-container" style="height: auto; min-height: 320px;">
           <Chart type="bar" :data="breakdownChartData" :options="breakdownChartOptions" />
         </div>
-        <div v-if="breakdownData.businesses && breakdownData.businesses.length > 0" class="table-container" style="margin-top: 16px;">
+        <div v-if="breakdownData.businesses && breakdownData.businesses.length > 0" v-sticky-head class="table-container" style="margin-top: 16px;">
           <p class="breakdown-hint">{{ $t('components.analytics.filters.breakdownHint') }}</p>
+          <ColumnHelpList :items="[{ label: $t('components.analytics.breakdown.totalCalls'), help: $t('components.callInsights.help.breakdown.totalCalls') }, { label: $t('components.analytics.breakdown.callPercentage'), help: $t('components.callInsights.help.breakdown.callPercentage') }]" />
           <DataTable :value="breakdownData.businesses" :rows="10" :paginator="breakdownData.businesses.length > 10" stripedRows
             sortField="totalCalls" :sortOrder="-1" selectionMode="single" dataKey="businessId"
             :selection="breakdownSelectedRow" :metaKeySelection="false"
             @row-select="onBreakdownRowSelect" @row-unselect="onBreakdownRowSelect">
-            <Column field="businessId" :header="$t('components.callInsights.assistants.businessId')" sortable>
+            <Column field="businessId" :header="$t('components.callInsights.assistants.businessId')" :pt="cellLabel($t('components.callInsights.assistants.businessId'))" sortable>
               <template #body="slotProps">
                 <span class="breakdown-business">
                   <span>{{ businessLabel(slotProps.data.businessId) }}</span>
@@ -222,19 +223,22 @@
                 </span>
               </template>
             </Column>
-            <Column field="totalCalls" :header="$t('components.analytics.breakdown.totalCalls')" sortable />
-            <Column field="avgCallDurationMs" :header="$t('components.analytics.breakdown.avgDuration')" sortable>
+            <Column field="totalCalls" :header="$t('components.analytics.breakdown.totalCalls')" :pt="cellLabel($t('components.analytics.breakdown.totalCalls'))" sortable>
+              <template #header><ColumnHelp :column="$t('components.analytics.breakdown.totalCalls')" :text="$t('components.callInsights.help.breakdown.totalCalls')" /></template>
+            </Column>
+            <Column field="avgCallDurationMs" :header="$t('components.analytics.breakdown.avgDuration')" :pt="cellLabel($t('components.analytics.breakdown.avgDuration'))" sortable>
               <template #body="slotProps">
                 {{ formatDuration(slotProps.data.avgCallDurationMs) }}
               </template>
             </Column>
-            <Column field="totalCallDurationMs" :header="$t('components.analytics.breakdown.totalDuration')" sortable>
+            <Column field="totalCallDurationMs" :header="$t('components.analytics.breakdown.totalDuration')" :pt="cellLabel($t('components.analytics.breakdown.totalDuration'))" sortable>
               <template #body="slotProps">
                 {{ formatDuration(slotProps.data.totalCallDurationMs) }}
               </template>
             </Column>
-            <Column field="uniqueCallers" :header="$t('components.analytics.breakdown.uniqueCallers')" sortable />
-            <Column :header="$t('components.analytics.breakdown.callPercentage')" sortable sortField="totalCalls">
+            <Column field="uniqueCallers" :header="$t('components.analytics.breakdown.uniqueCallers')" :pt="cellLabel($t('components.analytics.breakdown.uniqueCallers'))" sortable />
+            <Column :header="$t('components.analytics.breakdown.callPercentage')" :pt="cellLabel($t('components.analytics.breakdown.callPercentage'))" sortable sortField="totalCalls">
+              <template #header><ColumnHelp :column="$t('components.analytics.breakdown.callPercentage')" :text="$t('components.callInsights.help.breakdown.callPercentage')" /></template>
               <template #body="slotProps">
                 {{ breakdownTotalCalls > 0 ? ((slotProps.data.totalCalls / breakdownTotalCalls) * 100).toFixed(1) + '%' : '-' }}
               </template>
@@ -296,6 +300,9 @@
 </template>
 
 <script>
+import ColumnHelpList from "@/components/analytics/ColumnHelpList.vue";
+import ColumnHelp from "@/components/analytics/ColumnHelp.vue";
+import { cellLabel } from "@/utils/tableCells";
 import { computed } from "vue";
 import AnalyticsOverlayHost from "@/components/analytics/AnalyticsOverlayHost.vue";
 import { useStore } from "vuex";
@@ -324,7 +331,7 @@ import InsightsReports from "@/utils/InsightsReports";
 import NotAvailable from "@/components/analytics/NotAvailable.vue";
 
 export default {
-  components: { AnalyticsOverlayHost, CallOutcomes, CallTopics, CallQuality, AssistantsToReview, RequestCategories, ConfigSuggestions, BusinessAutocomplete, AnalyticsFilterBar, FeedbackQueue, MyProposals, NotAvailable },
+  components: { ColumnHelpList, ColumnHelp, AnalyticsOverlayHost, CallOutcomes, CallTopics, CallQuality, AssistantsToReview, RequestCategories, ConfigSuggestions, BusinessAutocomplete, AnalyticsFilterBar, FeedbackQueue, MyProposals, NotAvailable },
   setup() {
     const store = useStore();
     const toast = useToast();
@@ -698,6 +705,7 @@ export default {
     }
   },
   methods: {
+    cellLabel,
     async establishRole() {
       const user = this.store.state.user;
       if (!user || !user.accessToken) return;
@@ -1077,6 +1085,7 @@ export default {
 
 <style lang="less" scoped>
 @import "../assets/style/colors";
+@import "../assets/style/tableCards";
 @import "../assets/style/fonts";
 
 .breakdown-business {
@@ -1325,6 +1334,14 @@ export default {
   .filter-controls {
     flex-direction: column;
     align-items: stretch;
+  }
+}
+
+// Phones: the rows as cards, each value under its column's name (src/assets/style/tableCards.less, brief
+// docs/briefs/2026-10-31-analytics-ux.md O4)
+@media screen and (max-width: 640px) {
+  .table-container :deep(table) {
+    .table-cards();
   }
 }
 </style>

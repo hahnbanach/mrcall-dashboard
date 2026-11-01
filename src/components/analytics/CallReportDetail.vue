@@ -163,7 +163,7 @@
         </section>
 
         <!-- The quality section's gaps of the report's days, beside the period before of the same length -->
-        <section v-if="qualityRows.length > 0" class="report-section" aria-labelledby="quality-title">
+        <section v-if="qualityRows.length > 0" v-sticky-head class="report-section" aria-labelledby="quality-title">
           <h3 id="quality-title" class="report-section-title">{{ $t("components.callInsights.reportDetail.qualityTitle") }}</h3>
           <table class="report-quality">
             <caption class="visually-hidden">{{ $t("components.callInsights.reportDetail.qualityTitle") }}</caption>
@@ -176,10 +176,10 @@
             </thead>
             <tbody>
               <tr v-for="row in qualityRows" :key="row.key">
-                <th scope="row">{{ $t("components.callInsights.gaps." + row.key) }}</th>
+                <th scope="row" :data-label="$t('components.callInsights.reportDetail.qualityReason')">{{ $t("components.callInsights.gaps." + row.key) }}</th>
                 <!-- the report's own count of the reason opens its calls; the period before has no report to scope a list to -->
-                <td><CountLink :to="link('gap', row.key)" :count="row.now" :label="$t('components.callInsights.gaps.' + row.key)" /></td>
-                <td>{{ row.before }}</td>
+                <td :data-label="$t('components.callInsights.reportDetail.qualityNow')"><CountLink :to="link('gap', row.key)" :count="row.now" :label="$t('components.callInsights.gaps.' + row.key)" /></td>
+                <td :data-label="$t('components.callInsights.reportDetail.qualityBefore')">{{ row.before }}</td>
               </tr>
             </tbody>
           </table>
@@ -491,6 +491,7 @@ export default {
 
 <style lang="less" scoped>
 @import "../../assets/style/colors";
+@import "../../assets/style/tableCards";
 
 .visually-hidden {
   position: absolute;
@@ -685,6 +686,14 @@ export default {
   thead th {
     font-size: 12px;
     color: @mrcall_grey_text2;
+  }
+}
+
+// Phones: the rows as cards, each value under its column's name (src/assets/style/tableCards.less, brief
+// docs/briefs/2026-10-31-analytics-ux.md O4)
+@media screen and (max-width: 640px) {
+  .report-section :deep(table) {
+    .table-cards();
   }
 }
 </style>

@@ -2054,7 +2054,6 @@
           "change": "« Non résolus » maintenant par rapport à la période précédente de même durée, en points de pourcentage ; un tiret si l’une des deux périodes n’a aucun appel avec une demande",
           "configSuggestions": "Suggestions de configuration MrCall du dernier rapport automatique"
         },
-        "legendTitle": "Comment chaque colonne est comptée",
         "assessedShort": "évalué",
         "search": "Rechercher une entreprise par nom",
         "searchButton": "Rechercher",
@@ -2715,6 +2714,37 @@
           "caller": "Appelant",
           "summary": "Résumé",
           "open": "Appel"
+        }
+      },
+      "help": {
+        "label": "Comment cette colonne est comptée : {column}",
+        "title": "Comment chaque colonne est comptée",
+        "assistants": {
+          "calls": "Les appels de l'assistant finalisés sur la période.",
+          "asks": "Les catégories de demandes les plus fréquentes pour cet assistant, avec le nombre de demandes ; ouvrez-en une pour les lire.",
+          "health": "L'état du compte : abonnement, crédit faible, dette."
+        },
+        "requests": {
+          "calls": "Appels avec une demande dans cette catégorie ; un appel avec plusieurs demandes compte dans chacune de leurs catégories.",
+          "businesses": "Entreprises ayant reçu une demande dans cette catégorie, l'évolution par rapport à la période précédente et leur part des entreprises aux appels analysés.",
+          "trend": "Entreprises qui la demandent, tranche par tranche, de la plus ancienne.",
+          "freshness": "La dernière fois que la catégorie a été demandée, et la part de ses demandes dans la partie la plus récente de la période.",
+          "nextAction": "Ce qu'il faut faire pour cette catégorie."
+        },
+        "breakdown": {
+          "totalCalls": "Les appels de l'entreprise finalisés sur la période.",
+          "callPercentage": "Les appels de l'entreprise sur les appels de toutes les entreprises listées."
+        },
+        "topics": {
+          "previousCalls": "Appels sur ce sujet pendant la période de même durée juste avant."
+        },
+        "reports": {
+          "revision": "Combien de fois le rapport de cette période a été rédigé : une régénération en ajoute une.",
+          "status": "Où en est le rapport : en attente, en rédaction, prêt ou échoué.",
+          "calls": "Les appels lus par le rapport, sur les appels gérés par l'assistant pendant sa période."
+        },
+        "jobs": {
+          "progress": "Appels traités jusqu'ici, sur les appels que la tâche doit traiter."
         }
       }
     },
