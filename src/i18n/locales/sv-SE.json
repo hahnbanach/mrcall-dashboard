@@ -2426,7 +2426,11 @@
           "classify": "Klassificera dessa förfrågningar",
           "open": "Öppna förfrågningarna"
         },
-        "archiveWhere": "Arkivering gäller alla företag: ta bort företags- och ägarfiltren för att arkivera eller återställa."
+        "archiveWhere": "Arkivering gäller alla företag: ta bort företags- och ägarfiltren för att arkivera eller återställa.",
+        "purposeNarrowed": {
+          "business": "Vad uppringarna frågar och hur mycket assistenten hanterar, per kategori, för det valda företaget.",
+          "owner": "Vad uppringarna frågar och hur mycket assistenten hanterar, per kategori, för den valda ägarens företag."
+        }
       },
       "admin": {
         "reason": {

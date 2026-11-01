@@ -2432,7 +2432,11 @@
           "classify": "Classifica queste richieste",
           "open": "Apri le richieste"
         },
-        "archiveWhere": "L'archiviazione vale per tutte le attività: togli i filtri di attività e proprietario per archiviare o ripristinare."
+        "archiveWhere": "L'archiviazione vale per tutte le attività: togli i filtri di attività e proprietario per archiviare o ripristinare.",
+        "purposeNarrowed": {
+          "business": "Cosa chiedono i chiamanti e quanto ne gestisce l'assistente, raggruppato per categoria, per l'attività scelta.",
+          "owner": "Cosa chiedono i chiamanti e quanto ne gestisce l'assistente, raggruppato per categoria, sulle attività del proprietario scelto."
+        }
       },
       "admin": {
         "reason": {

@@ -2426,7 +2426,11 @@
           "classify": "Klassificér disse forespørgsler",
           "open": "Åbn forespørgslerne"
         },
-        "archiveWhere": "Arkivering gælder alle virksomheder: fjern virksomheds- og ejerfiltrene for at arkivere eller gendanne."
+        "archiveWhere": "Arkivering gælder alle virksomheder: fjern virksomheds- og ejerfiltrene for at arkivere eller gendanne.",
+        "purposeNarrowed": {
+          "business": "Hvad opkalderne spørger om, og hvor meget assistenten klarer, efter kategori, for den valgte virksomhed.",
+          "owner": "Hvad opkalderne spørger om, og hvor meget assistenten klarer, efter kategori, på tværs af den valgte ejers virksomheder."
+        }
       },
       "admin": {
         "reason": {

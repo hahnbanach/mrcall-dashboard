@@ -2428,7 +2428,11 @@
           "classify": "Classer ces demandes",
           "open": "Ouvrir les demandes"
         },
-        "archiveWhere": "L'archivage s'applique à toutes les entreprises : retirez les filtres d'entreprise et de propriétaire pour archiver ou restaurer."
+        "archiveWhere": "L'archivage s'applique à toutes les entreprises : retirez les filtres d'entreprise et de propriétaire pour archiver ou restaurer.",
+        "purposeNarrowed": {
+          "business": "Ce que demandent les appelants et la part que l'assistant en traite, par catégorie, pour l'entreprise choisie.",
+          "owner": "Ce que demandent les appelants et la part que l'assistant en traite, par catégorie, sur les entreprises du propriétaire choisi."
+        }
       },
       "admin": {
         "reason": {

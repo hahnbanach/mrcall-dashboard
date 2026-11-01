@@ -1,7 +1,7 @@
 <template>
   <section v-if="status !== 'absent'" class="analytics-section call-insights-section requests-section" aria-labelledby="requests-title">
     <h3 id="requests-title" class="section-title">{{ $t("components.callInsights.requests.title") }}</h3>
-    <p class="requests-purpose">{{ $t("components.callInsights.requests.purpose") }}</p>
+    <p class="requests-purpose">{{ $t(narrowed ? "components.callInsights.requests.purposeNarrowed." + narrowed : "components.callInsights.requests.purpose") }}</p>
     <!-- The page is narrowed to a business or an owner (brief docs/briefs/2026-10-31-analytics-ux.md, O3): StarChat counts
          these requests on the body's business and owner (9.34, the brief's S1). Archiving acts on every business, so it
          is not offered from a narrowed page; narrowed to one business, the columns about several businesses are not drawn. -->
@@ -26,7 +26,8 @@
         <input v-model="includeDismissed" type="checkbox" />
         <span>{{ $t("components.callInsights.requests.showDismissed") }}</span>
       </label>
-      <p class="requests-score-help">{{ $t("components.callInsights.requests.scoreHelp") }}</p>
+      <!-- the score counts businesses: said only where there are several -->
+      <p v-if="manyBusinesses" class="requests-score-help">{{ $t("components.callInsights.requests.scoreHelp") }}</p>
     </div>
 
     <p v-if="archived" class="requests-archived" role="status">

@@ -85,9 +85,27 @@ describe('CountedCallsPanel', () => {
   beforeEach(() => vi.restoreAllMocks())
 
   const docs = [
-    { id: 'CON-1', startTimestamp: 1790900000000, details: { callerName: 'Rita', summary: 'Asked for the price list.' } },
-    { id: 'CON-2', startTimestamp: 1790800000000, contactNumber: 'uid:abc', details: { summary: 'Web question.' } }
+    // the owner's own rows: StarChat's full document, which always carries a subject
+    { id: 'CON-1', startTimestamp: 1790900000000, subject: 's', details: { callerName: 'Rita', summary: 'Asked for the price list.' } },
+    { id: 'CON-2', startTimestamp: 1790800000000, subject: 's', contactNumber: 'uid:abc', details: { summary: 'Web question.' } }
   ]
+  // another owner's rows: StarChat's reduced list (customer conversation guide, "reduced"): no subject, caller name or
+  // summary; the masked number and the call's judgements
+  const reducedDocs = [
+    { id: 'CON-9', startTimestamp: 1790900000000, contactNumber: '+39 333 *** **01', details: { resolution: 'unresolved', message: 'none' } }
+  ]
+
+  it('another owner\'s rows show the masked number and the judgements, with the read-only note, never "unknown caller"', async () => {
+    vi.spyOn(ConversationApi, 'page').mockResolvedValue({ items: reducedDocs, total: 1, leftOut: 0 })
+    const wrapper = draw(Classifications.countLink('biz-1', { from: 10, to: 20 }, 'gap', 'out_of_scope'), 1)
+    await flushPromises()
+    const text = wrapper.text()
+    expect(text).toContain('+39 333 *** **01')
+    expect(text).toContain('Unresolved · No message')
+    expect(text).toContain('You are not the owner of these calls')
+    expect(text).not.toContain('Unknown caller')
+    wrapper.unmount()
+  })
 
   function draw (link, count = 2) {
     return mount(CountedCallsPanel, {

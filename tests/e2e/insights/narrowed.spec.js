@@ -41,6 +41,8 @@ test.describe('a narrowed admin or scope page', () => {
     const table = requests.locator('table.requests-table')
     await expect(table.getByRole('columnheader', { name: 'Businesses' })).toHaveCount(0)
     await expect(table.getByRole('columnheader', { name: 'Trend' })).toHaveCount(0)
+    await expect(requests.getByText('What callers ask and how much of it the assistant handles, by category, for the business chosen.')).toBeVisible()
+    await expect(requests.locator('.requests-score-help')).toHaveCount(0)
     await expect(table.locator('.requests-histogram')).toHaveCount(0)
     await expect(requests.getByRole('button', { name: /^Who asked/ })).toHaveCount(0)
     await expect(requests.getByRole('button', { name: /^Archive / })).toHaveCount(0)

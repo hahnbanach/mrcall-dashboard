@@ -1,5 +1,8 @@
 <template>
   <div class="counted-calls-list">
+    <!-- another owner's calls come as StarChat's reduced list (no caller name, no summary: a privacy decision of the
+         classification-feedback brief, decision 14); a call opened is read in full, and that read is recorded -->
+    <p v-if="reduced" class="counted-calls-note" role="note">{{ $t("components.callInsights.feedback.readOnly.note") }}</p>
     <p v-if="leftOut > 0" class="counted-calls-note" role="status">{{ $t("components.callInsights.feedback.filters.leftOut", { n: leftOut }, leftOut) }}</p>
     <PagedTable
       :state="table"
@@ -57,12 +60,17 @@ export default {
     businessId() {
       return this.link && this.link.query ? this.link.query.id : null;
     },
+    // StarChat's reduced row carries no subject, body, caller name or summary (customer conversation guide,
+    // "reduced"); the owner's own row always carries a subject
+    reduced() {
+      return this.table.items.length > 0 && this.table.items.every((row) => !("subject" in row));
+    },
     columns() {
       const t = (k) => this.$t("components.callInsights.countedCalls.columns." + k);
       return [
         { key: "when", label: t("when") },
         { key: "caller", label: t("caller") },
-        { key: "summary", label: t("summary") },
+        { key: "summary", label: this.reduced ? this.$t("components.callInsights.dimensions.resolution") : t("summary") },
         { key: "open", label: t("open") },
       ];
     },
@@ -96,10 +104,17 @@ export default {
     callerName(row) {
       const caller = CallInsights.callerOf(row);
       if (caller.web) return this.$t("components.callInsights.callers.web");
-      return caller.name || this.$t("components.conversations.unknownContact");
+      // a reduced row names no caller: its masked number is what there is
+      return caller.name || row.contactNumber || this.$t("components.conversations.unknownContact");
     },
+    // the call's summary; on a reduced row, which has none, the call's own judgements
     summary(row) {
-      return (row.details && row.details.summary) || "";
+      const d = row.details || {};
+      if (d.summary) return d.summary;
+      const parts = [];
+      if (CallInsights.RESOLUTION_KEYS.includes(d.resolution)) parts.push(this.$t("components.callInsights.resolution." + d.resolution));
+      if (CallInsights.MESSAGE_KEYS.includes(d.message)) parts.push(this.$t("components.callInsights.message." + d.message));
+      return parts.join(" · ");
     },
   },
 };

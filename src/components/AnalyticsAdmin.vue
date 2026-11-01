@@ -206,7 +206,7 @@
             <div class="kpi-value">{{ formatNumber(breakdownTotalCalls) }}</div>
           </div>
         </div>
-        <div v-if="breakdownData.businesses && breakdownData.businesses.length > 0" class="chart-container" style="height: auto; min-height: 320px;">
+        <div v-if="breakdownData.businesses && breakdownData.businesses.length > 0" class="chart-container" :style="{ height: breakdownChartHeight }">
           <Chart type="bar" :data="breakdownChartData" :options="breakdownChartOptions" />
         </div>
         <div v-if="breakdownData.businesses && breakdownData.businesses.length > 0" v-sticky-head class="table-container" style="margin-top: 16px;">
@@ -644,6 +644,11 @@ export default {
           x: { beginAtZero: true, ticks: { precision: 0 } },
         },
       };
+    },
+    // one bar per business, at most the 20 the chart draws: the box grows with them (an auto height left the chart nothing to fill)
+    breakdownChartHeight() {
+      const n = Math.min(20, (this.breakdownData && this.breakdownData.businesses || []).length);
+      return Math.max(320, 80 + n * 28) + "px";
     },
     breakdownTotalBusinesses() {
       if (!this.breakdownData || !this.breakdownData.businesses) return 0;

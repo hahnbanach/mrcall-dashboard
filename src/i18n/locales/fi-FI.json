@@ -2426,7 +2426,11 @@
           "classify": "Luokittele nämä pyynnöt",
           "open": "Avaa pyynnöt"
         },
-        "archiveWhere": "Arkistointi koskee kaikkia yrityksiä: poista yritys- ja omistajasuodattimet arkistoidaksesi tai palauttaaksesi."
+        "archiveWhere": "Arkistointi koskee kaikkia yrityksiä: poista yritys- ja omistajasuodattimet arkistoidaksesi tai palauttaaksesi.",
+        "purposeNarrowed": {
+          "business": "Mitä soittajat kysyvät ja kuinka paljon avustaja hoitaa, luokittain, valitulle yritykselle.",
+          "owner": "Mitä soittajat kysyvät ja kuinka paljon avustaja hoitaa, luokittain, valitun omistajan yrityksissä."
+        }
       },
       "admin": {
         "reason": {

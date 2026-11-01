@@ -25,8 +25,12 @@ test.describe('a quality count leads to where it happened', () => {
   test('admin, every business: a reason opens its businesses by share, one business its calls, a call the dialog; back and close return the focus', async ({ adminPage: page }) => {
     const asked = await mockInsights(page, { role: 'admin', quality: QUALITY })
     await mockClassifications(page, { role: 'admin' })
-    const docs = [1, 2].map((n) => conversation({ id: `CON-o${n}`, businessId: 'biz-21', owner: 'someone-else', details: { callerName: `Caller ${n}`, summary: `Asked something off topic ${n}.` } }))
-    const searches = await mockConversations(page, docs)
+    // another owner's calls: StarChat's reduced list (customer conversation guide, "reduced"): no subject, caller name or
+    // summary, the masked number and the judgements; the call read by id is whole
+    const reduced = (n) => ({ id: `CON-o${n}`, businessId: 'biz-21', startTimestamp: Date.UTC(2026, 9, 20 - n, 9, 30), contactNumber: `+39 333 *** **0${n}`, details: { resolution: 'unresolved', message: 'none' } })
+    const docs = [1, 2].map(reduced)
+    const full = [1, 2].map((n) => conversation({ id: `CON-o${n}`, businessId: 'biz-21', owner: 'someone-else', details: { callerName: `Caller ${n}`, summary: `Asked something off topic ${n}.` } }))
+    const searches = await mockConversations(page, docs, { byId: full })
     await page.goto('/analytics-admin')
 
     const count = qualitySection(page).getByRole('button', { name: 'See where it happened: Out of scope (28 calls)' })
@@ -48,10 +52,14 @@ test.describe('a quality count leads to where it happened', () => {
     await expect(panel.getByRole('heading', { name: 'Studio 21' })).toBeVisible()
     const back = panel.getByRole('button', { name: 'All businesses' })
     await expect(back).toBeFocused()
-    await expect(panel.getByRole('button', { name: /^Open the call of Caller \d/ })).toHaveCount(2)
+    // the reduced rows: the masked number and the outcome, the read-only note, never "unknown caller"
+    await expect(panel.getByRole('button', { name: /^Open the call of \+39 333/ })).toHaveCount(2)
+    await expect(panel).toContainText('Unresolved · No message')
+    await expect(panel).toContainText('You are not the owner of these calls')
+    await expect(panel).not.toContainText('Unknown')
     expect(searches.filter((s) => !s.id).pop()).toMatchObject({ businessId: 'biz-21', counted: true, gap: 'out_of_scope', timestampGte: sent.body.timestampGte, timestampLte: sent.body.timestampLte })
 
-    await panel.getByRole('button', { name: /^Open the call of Caller 1,/ }).click()
+    await panel.getByRole('button', { name: /^Open the call of \+39 333 \*\*\* \*\*01,/ }).click()
     const dialog = page.locator('.call-dialog')
     await expect(dialog).toContainText('Asked something off topic 1.', { timeout: 15000 })
     await page.keyboard.press('Escape')

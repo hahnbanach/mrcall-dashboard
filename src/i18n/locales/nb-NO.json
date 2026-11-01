@@ -2426,7 +2426,11 @@
           "classify": "Klassifiser disse forespørslene",
           "open": "Åpne forespørslene"
         },
-        "archiveWhere": "Arkivering gjelder alle bedrifter: fjern bedrifts- og eierfiltrene for å arkivere eller gjenopprette."
+        "archiveWhere": "Arkivering gjelder alle bedrifter: fjern bedrifts- og eierfiltrene for å arkivere eller gjenopprette.",
+        "purposeNarrowed": {
+          "business": "Hva innringerne spør om og hvor mye assistenten håndterer, etter kategori, for den valgte bedriften.",
+          "owner": "Hva innringerne spør om og hvor mye assistenten håndterer, etter kategori, på tvers av den valgte eierens bedrifter."
+        }
       },
       "admin": {
         "reason": {

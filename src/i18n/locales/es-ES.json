@@ -2440,7 +2440,11 @@
           "classify": "Clasifica estas solicitudes",
           "open": "Abre las solicitudes"
         },
-        "archiveWhere": "Archivar afecta a todos los negocios: quita los filtros de negocio y propietario para archivar o restaurar."
+        "archiveWhere": "Archivar afecta a todos los negocios: quita los filtros de negocio y propietario para archivar o restaurar.",
+        "purposeNarrowed": {
+          "business": "Lo que preguntan los llamantes y cuánto gestiona el asistente, por categoría, para el negocio elegido.",
+          "owner": "Lo que preguntan los llamantes y cuánto gestiona el asistente, por categoría, en los negocios del propietario elegido."
+        }
       },
       "admin": {
         "reason": {

@@ -2426,7 +2426,11 @@
           "classify": "Liigita need päringud",
           "open": "Ava päringud"
         },
-        "archiveWhere": "Arhiveerimine kehtib kõigile ettevõtetele: eemalda ettevõtte ja omaniku filtrid, et arhiveerida või taastada."
+        "archiveWhere": "Arhiveerimine kehtib kõigile ettevõtetele: eemalda ettevõtte ja omaniku filtrid, et arhiveerida või taastada.",
+        "purposeNarrowed": {
+          "business": "Mida helistajad küsivad ja kui palju assistent sellest lahendab, kategooriate kaupa, valitud ettevõtte kohta.",
+          "owner": "Mida helistajad küsivad ja kui palju assistent sellest lahendab, kategooriate kaupa, valitud omaniku ettevõtete kohta."
+        }
       },
       "admin": {
         "reason": {

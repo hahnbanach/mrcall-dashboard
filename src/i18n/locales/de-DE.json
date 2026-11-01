@@ -2428,7 +2428,11 @@
           "classify": "Diese Anfragen einordnen",
           "open": "Anfragen öffnen"
         },
-        "archiveWhere": "Archivieren wirkt für alle Unternehmen: Entfernen Sie die Unternehmens- und Inhaberfilter, um zu archivieren oder wiederherzustellen."
+        "archiveWhere": "Archivieren wirkt für alle Unternehmen: Entfernen Sie die Unternehmens- und Inhaberfilter, um zu archivieren oder wiederherzustellen.",
+        "purposeNarrowed": {
+          "business": "Was Anrufer fragen und wie viel davon der Assistent erledigt, nach Kategorie, für das gewählte Unternehmen.",
+          "owner": "Was Anrufer fragen und wie viel davon der Assistent erledigt, nach Kategorie, über die Unternehmen des gewählten Inhabers."
+        }
       },
       "admin": {
         "reason": {

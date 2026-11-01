@@ -120,8 +120,10 @@ export default {
 <style lang="less">
 @import "../../assets/style/colors";
 
-// not scoped: PrimeVue teleports the drawer to the body, outside this component's root
-.signal-panel.p-drawer {
+// not scoped: PrimeVue teleports the drawer to the body, outside this component's root. Its own `.p-drawer-right .p-drawer`
+// (width 20rem) is injected at runtime, after the production stylesheet, so an equally specific rule here loses there
+// (measured on test, 2026-11-01, while it won on the dev server): the mask class makes this one more specific.
+.p-drawer-right .signal-panel.p-drawer {
   width: min(720px, 100vw);
 
   .signal-panel-count {

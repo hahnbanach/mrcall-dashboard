@@ -2426,7 +2426,11 @@
           "classify": "Deze verzoeken indelen",
           "open": "Open de verzoeken"
         },
-        "archiveWhere": "Archiveren geldt voor alle bedrijven: wis de bedrijfs- en eigenaarfilters om te archiveren of te herstellen."
+        "archiveWhere": "Archiveren geldt voor alle bedrijven: wis de bedrijfs- en eigenaarfilters om te archiveren of te herstellen.",
+        "purposeNarrowed": {
+          "business": "Wat bellers vragen en hoeveel de assistent daarvan afhandelt, per categorie, voor het gekozen bedrijf.",
+          "owner": "Wat bellers vragen en hoeveel de assistent daarvan afhandelt, per categorie, over de bedrijven van de gekozen eigenaar."
+        }
       },
       "admin": {
         "reason": {

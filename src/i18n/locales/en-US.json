@@ -2431,7 +2431,11 @@
           "classify": "Classify these requests",
           "open": "Open the requests"
         },
-        "archiveWhere": "Archiving acts on every business: clear the business and owner filters to archive or restore."
+        "archiveWhere": "Archiving acts on every business: clear the business and owner filters to archive or restore.",
+        "purposeNarrowed": {
+          "business": "What callers ask and how much of it the assistant handles, by category, for the business chosen.",
+          "owner": "What callers ask and how much of it the assistant handles, by category, across the chosen owner's businesses."
+        }
       },
       "admin": {
         "reason": {

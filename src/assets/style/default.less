@@ -303,3 +303,11 @@ body {
 #app {
   flex-shrink: 0!important;
 }
+// PrimeVue's Chart draws its canvas inside a `.p-chart` wrapper that has no height. With `maintainAspectRatio: false`
+// Chart.js sizes the canvas to that wrapper, whose height is in turn the canvas's own: the size settled on whatever the
+// first measure found (150 px measured on test in a 278 px box, sometimes far taller than its box, spilling onto the
+// next section), and a reload could change it. The wrapper takes its box's height, so the canvas has one to fill.
+.chart-container > .p-chart {
+  height: 100%;
+  width: 100%;
+}

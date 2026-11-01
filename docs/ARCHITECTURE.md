@@ -261,7 +261,9 @@ for the four dimensions lives in `src/utils/CallInsights.js`.
   "Apri la chiamata" (`CallLink.vue`) opens `conversations/CallDialog.vue` (the restaurant page's dialog too: the
   owner read per business, read-only for anyone else), a count (`CountLink.vue`) opens `CountedCallsPanel.vue` (a
   `Drawer` listing exactly the counted calls with the conversations list's own search, its count, `leftOut` for a
-  report's count, "Apri in Conversazioni", its list `CountedCallsList.vue`); none changes the address, closing gives
+  report's count, "Apri in Conversazioni", its list `CountedCallsList.vue`; another owner's calls come as StarChat's
+  reduced list, without caller name or summary, so their rows show the masked number and the call's resolution and
+  message with the read-only note, the rest read when the call is opened); none changes the address, closing gives
   the focus back to the control that opened it, and Escape closes only what is on top (the panels ignore it while the
   call's dialog is open). Outside a host both stay links. Every quality signal (each gap reason, each check, skill
   errors, extraction problems: `http_error`, `failed` and `too_long`, as StarChat counts them) says what it means and
@@ -324,7 +326,8 @@ for the four dimensions lives in `src/utils/CallInsights.js`.
     requests), its businesses on demand, archive and
     restore for an admin on the unnarrowed page only, the examples hidden from a row shown and restored with "Show
     archived"; the request routes count the body's business and owner (StarChat 9.34), and narrowed to one business the
-    section draws no column, trend or expansion about several businesses), and MrCall's own configuration suggestions (`ConfigSuggestions.vue`, admin only, the
+    section draws no column, trend, score help or expansion about several businesses, its purpose line naming the
+    business or owner), and MrCall's own configuration suggestions (`ConfigSuggestions.vue`, admin only, the
     one section that follows no filter, which the bar says while it is on screen).
   - Both pages establish the role on mount (the same business search that already sets it,
     `Business.js`'s `checkUserHasBusinesses`) before choosing which sections to show; the server remains the
