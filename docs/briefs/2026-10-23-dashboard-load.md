@@ -15,6 +15,15 @@ proper fixes of a measured diagnosis, numbers 1, 2 and 4 of it. Number 3 (one St
 of businesses) is a contract change in two repositories and is not part of this work. Commit, tag and
 deployment are authorised separately; nothing here authorises a release.
 
+**Restated on 2026-11-02.** On that day the CTO saw production blank for about a minute and asked for the
+cause; the compression part of fix 1 shipped at once, alone (`v2.2.47`, commit `8f194be`: every `.js` and `.css`
+gzipped in place and uploaded with `Content-Encoding: gzip`, caching and deletion unchanged), and he then asked to
+continue with the rest of this work ("Ok prosegui"). The evidence below is of 2026-10-23 unless marked; the code
+facts were re-read at `adbb851` (`v2.2.47`) and still hold: 61 routes, none on demand; the 12 locales imported
+eagerly; `MrCallWebCall` and `JsonEditorVue` imported statically; `app.mount` after `router.isReady()`; `getUser()`
+registering a listener per navigation; `setPersistence` still called; 15 `getIdToken(true)`; `Signin.vue` with
+`reload()` and two `onAuthStateChanged`; `Home.vue` on `/`; no splash.
+
 ## Evidence
 
 Measured on 2026-10-23 at `80946cf` (branch `dashboard-perf`, from `origin/v2.2`), unless stated.
@@ -50,6 +59,10 @@ is what splits the vendors into dozens of files.
 - With no `cache-control` the edge keeps an asset for its fallback TTL (120 s) and the browser
   applies its heuristic: that is the "sometimes". The diagnosis saw 65 of 104 edge misses on a first
   fetch.
+- **Since `v2.2.47` (2026-11-02)** the bundles are stored gzipped with `content-encoding: gzip`, and the edge passes
+  the header through, on a miss and on a hit: production serves 103 initial JS files in 1 991 975 B and 2 CSS
+  files in 81 719 B (gzip, measured with curl), against 7.9 MB before. Still no `cache-control` on any bundle.
+  First paint of `/login` in Chromium throttled to 9 Mbps and 170 ms: 9.3 s before, 3.8 s after.
 
 **First paint** (Playwright Chromium, a fresh context per run with the cache disabled; `/signin`
 because it needs no session). Two figures: the first child of `#app` (the splash, once one exists),
@@ -141,12 +154,12 @@ no Playwright test of this return in `tests/`.
 
 In scope:
 
-1. **A smaller, compressed, cached bundle.** Every route component loaded on demand; locales loaded on
+1. **A smaller, cached bundle.** Every route component loaded on demand; locales loaded on
    demand, the active one (and the fallback) before mount; `MrCallWebCall` and the JSON editor
-   imported dynamically; `splitChunks.maxSize` removed; the deploy uploads hashed assets gzip-encoded
-   under their own keys with `Content-Encoding: gzip` and `Cache-Control: public, max-age=31536000,
-   immutable`, keeps the previous assets for a retention period, and leaves `index.html` and its
-   route copies with `no-cache`; a failed chunk load reloads its target once.
+   imported dynamically; `splitChunks.maxSize` removed; the deploy, which already uploads the bundles
+   gzip-encoded (`v2.2.47`), adds `Cache-Control: public, max-age=31536000, immutable` to the hashed
+   assets, keeps the previous assets for a retention period, and leaves `index.html` and its route
+   copies with `no-cache`; a failed chunk load reloads its target once.
 2. **Mount at once.** A splash in `public/index.html` visible from the first byte; the app mounts
    without waiting for the router, with a loading state in `App.vue` until the first navigation
    resolves; the guard awaits the SDK's single `authStateReady()` instead of a listener per
@@ -174,7 +187,7 @@ stays; `vite.config.js` is not the build that ships).
 - Every user-facing string translated in all 12 locales; no untranslated flash at load (the active
   locale's messages are present before the first render of translated text).
 - The splash uses no text that would need translating, or none at all.
-- A session persisted by `v2.2.30` (in localStorage) must survive the upgrade.
+- A session persisted by the release live before this work (`v2.2.47`; in localStorage, as since `v2.2.30`) must survive the upgrade.
 - No Python in the repository; no credentials written anywhere; Playwright on a port other than 8080.
 - Each milestone of the plan can be left out without breaking the others, except where the plan states
   a dependency.
@@ -194,9 +207,12 @@ Measured on the revision delivered, each figure reported with its commit:
    baseline series the protocol takes immediately before the test deploy; both figures reported per
    run:
    - the splash (first child of `#app`): reported, not gated;
-   - the rendered app (sign-in form visible) at 10 Mbps: median at most half the baseline median.
-     On `v2.2.30-test` that was 6 555 ms (half 3 278 ms; the other series' 6 780 ms gives 3 390 ms),
-     kept for reference;
+   - the rendered app (sign-in form visible) at 10 Mbps: median at most half of 6 555 ms, the
+     uncompressed `v2.2.30-test` median this work set out from, so at most 3 278 ms; and not above
+     the protocol's baseline median on the release then on test, which is gzipped since `v2.2.47`.
+     Halving the gzipped baseline again is not the gate: compression already took most of the
+     transfer that halving was about, and how much of the rest is transfer is known only once the
+     baseline is measured. The candidate's improvement over that baseline is reported per run;
    - the rendered app unthrottled: median not above the baseline median (808 ms on `v2.2.30-test`);
    - loading the active locale before mount adds one request that starts only after the main
      bundle has run. Its time, from the locale chunk's request to its response, is reported
@@ -208,23 +224,23 @@ Measured on the revision delivered, each figure reported with its commit:
    a verified session whose token already carries `email_verified: true`, the network log shows no
    `accounts:lookup` beyond Firebase's initialisation and no `securetoken` call. The one allowed
    refresh is the one a claim mismatch triggers.
-   - A Playwright test of the confirm-email return, written first and seen passing on `80946cf`
+   - A Playwright test of the confirm-email return, written first and seen passing on the base commit
      (the current behaviour is correct, only slow): a session whose `user.emailVerified` is true
      after the start-up `accounts:lookup` and whose cached token says `email_verified: false` lands
      on the first page. The StarChat mock refuses with 403 a token without the claim, so the test
      fails if the refresh is skipped.
    - Its converse: a token that already carries the claim makes no `securetoken` call.
 5. **No regression**: `npm run lint` exit 0; vitest all passing; the whole Playwright suite (desktop,
-   tablet, mobile) with no failure that does not also fail on `80946cf` under the same conditions
-   (failures rerun as in earlier plans); a test seeding a v2.2.30-style localStorage session lands
+   tablet, mobile) with no failure that does not also fail on the base commit under the same conditions
+   (failures rerun as in earlier plans); a test seeding a localStorage session as the live release leaves one lands
    signed in; a test that fails a chunk load recovers to the target page; `static-routes` unchanged.
 
 ## Assumptions
 
-- Scaleway Object Storage keeps the `Content-Encoding` and `Cache-Control` set on upload and Edge
-  Services passes them through. This has not been observed yet. The plan checks it on test with a
-  60-second `max-age` before any immutable upload. If the edge alters the headers, the objects are
-  purged, the pre-compression is left out, and the cache headers are kept.
+- Scaleway Object Storage keeps the `Cache-Control` set on upload and Edge Services passes it through. Observed for
+  `Content-Encoding` on 2026-11-02 (`v2.2.47` on test, beta and production, on misses and hits); not yet for
+  `Cache-Control`. The plan checks it on test with a 60-second `max-age` before any immutable upload. If the edge
+  alters the header, the objects are purged and the cache header is left out.
 - `vue-cli-plugin-compression` writes a `.gz` only when it shrinks the file to 80% or less
   (`minRatio: 0.8`). At `80946cf` every JS file has one; the source maps, the four fonts and two PNG
   images do not.
@@ -247,11 +263,10 @@ Measured on the revision delivered, each figure reported with its commit:
 
 ## Rollback
 
-The work targets the first dashboard release after `v2.2.31`, not `v2.2.31` itself (decided
-2026-10-23: the deploy change could not be rehearsed before it). Rollback redeploys, per environment,
-the tag that environment served before this work, identified and verified before the deploy as the
-plan's release sequence states (on 2026-10-23: `v2.2.30-test`, at `caaff42`, on test;
-`v2.2.25-production`, at `0515932`, on production). A redeploy needs authorisation like any
-deployment. Its `sync` re-uploads raw assets without the new headers, and hashed names make a
+The work targets the first dashboard release after `v2.2.47`, the one that shipped compression alone. Rollback
+redeploys, per environment, the tag that environment served before this work, identified and verified before the
+deploy as the plan's release sequence states (on 2026-11-02: `v2.2.47-test`, `v2.2.47-beta` and `v2.2.47-production`,
+all at `adbb851`). A redeploy needs authorisation like any deployment. Its workflow re-uploads its own assets,
+gzipped as since `v2.2.47` but without the immutable header, and deletes the retained ones; hashed names make a
 browser's immutable copy of a newer file harmless. A wrong header cached on the edge is removed by a
 purge, not by a redeploy.
