@@ -40,7 +40,7 @@ Route-level components organized by domain:
 - `admin/` — Admin management (ProvisionReseller, ResellerDetail, ResellerManagement, UserRoleManagement)
 - `reseller/` — Reseller features (InvitationCodes, ResellerProfile)
 - `oauth/` — OAuth consent flow
-- Root views: Account, Analytics, Businesses, Contacts, Conversations, Zylch, Home, Payment, Plan, etc.
+- Root views: Account, Analytics, Businesses, Contacts, Conversations, Zylch, Payment, Plan, etc. (`/` has no view: it redirects to `/signin`)
 
 ### Components (`src/components/`)
 Reusable UI building blocks:
@@ -413,10 +413,11 @@ separate page refresh failure or retained edits from the confirmed Save outcome.
 - Router guard asks for a session on every route not declared public, and enforces email verification (`router/index.js`); it waits on `readyUser` (`firebase/sessionReady.js`), one readiness promise, not a listener per navigation
 - Sign-in (`components/templates/sign/Signin.vue`): one step after authentication, `afterAuth(user)`, for a resumed session, a password and an email link; no `user.reload()` (Firebase reloads the user when it starts) and no forced refresh beyond the claim check of `readyUser`
 
+- Cross-domain cookie (`mrcall_uid`) for shared mrcall.ai domains (`firebase/authUtils.js`, set and cleared when the sign-in state changes)
+
 ### Start-up
 - `public/index.html` carries a splash inside `#app`, drawn from the first byte with inline CSS. `main.js` asks for the starting locale first and mounts once it is loaded; `App.vue` keeps the splash until the first navigation resolves (`firstNavigation`), and says so with a Reload if it fails. A failed locale reloads the page once (its own `locale-reload:` marker)
 - The JSON editor (`JsonEditorVue`, a global async component) and the call client (`MrCallWebCall`, imported by `WebcallButton.vue` on the first call) are fetched when first used
-- Cross-domain cookie (`mrcall_uid`) for shared mrcall.ai domains
 
 ### Google authorization
 

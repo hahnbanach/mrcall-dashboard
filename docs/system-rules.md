@@ -70,7 +70,7 @@
 - **Views** (`views/`) → may import from `components/`, `utils/`, `store/`, `firebase/`, `i18n/`
 - **Utils** (`utils/`) → may import from `firebase/`, `store/` — must NOT import from `components/` or `views/`
 - **Store** (`store/`) → may import from `firebase/` — must NOT import from `components/`, `views/`, or `utils/`
-- **Router** (`router/`) → may import from `store/`, `firebase/`, `views/`
+- **Router** (`router/`) → may import from `store/`, `firebase/`, its route components (`views/`, and `components/templates/sign/GoogleCallback.vue`, routed directly), and `utils/pageReload.js`, which imports nothing and so cannot close a cycle
 - **Firebase** (`firebase/`) → standalone, imports only from `config/` and external packages
 
 ## Imperative Rules

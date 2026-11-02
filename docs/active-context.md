@@ -41,7 +41,7 @@ the StarChat mock refuses an unverified one, as StarChat does.
   call-history reads available returned no record for it.
 - `tests/unit/skillsOwnerSave.spec.js` takes 3.5 to 5.3 s against a 5 s timeout in a fresh
   worktree, and can time out there.
-- Under a full Playwright run, 10 to 24 tablet and mobile cases fail and pass alone with one worker; it follows the
+- Under a full Playwright run, 10 to 24 tablet and mobile cases fail and pass alone with one worker (commit `c61ddf2`, and the load plan's Status table); it follows the
   machine's load (more with a rehearsal or a build beside it), the cause is not measured further.
 - A blank first load of about a minute was seen once in a Chrome with extensions, right after a deploy, and not in a
   clean Chromium (5 cold runs, 1.0 to 1.3 s): not reproduced, not explained.
