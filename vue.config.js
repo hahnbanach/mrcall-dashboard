@@ -33,14 +33,12 @@ module.exports = {
             'Access-Control-Allow-Headers': 'Content-Type, Authorization'
         }
     },
+    // No splitChunks override: Vue CLI's own groups (chunk-vendors, chunk-common) apply. The override that was here,
+    // `maxSize: 64000`, cut the vendors into about a hundred files of 64 KB, all named by index.html and all needed
+    // before the first paint (103 initial scripts on v2.2.47): one request each, for no cache benefit, since a vendor
+    // update changed most of them anyway (docs/execution-plans/2026-10-23-dashboard-load.md, M1).
     configureWebpack: {
         devtool: 'source-map',
-        optimization: {
-            splitChunks: {
-                chunks: 'async',
-                maxSize: 64000,
-            },
-        }
     },
     transpileDependencies: [
         'vue-meta',
