@@ -1,5 +1,5 @@
 ---
-status: active
+status: completed
 ---
 
 # Plan: the `redirected` outcome and the `handed_over` label
