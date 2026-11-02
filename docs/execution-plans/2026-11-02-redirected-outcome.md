@@ -1,5 +1,5 @@
 ---
-status: planned
+status: active
 ---
 
 # Plan: the `redirected` outcome and the `handed_over` label
@@ -89,4 +89,6 @@ production later, each authorised. Rollback: redeploy the previous tag of the en
 | Step | State | Evidence |
 |---|---|---|
 | Brief | APPROVED at 50c60f1 after one REVISE (ARCHITECTURE.md passage); item 6 worded as acceptance 4 | 956b5a8, 50c60f1 |
-| Plan | REVISE (zero line, acceptance 1 checks, comments), repaired | d9db588, this commit |
+| Plan | APPROVED at f13567e after one REVISE (zero line, acceptance 1 checks, comments) | d9db588, f13567e |
+| R1-R3 | implemented | e3909d8: vitest 622/622, lint clean, build done; the six touched browser specs 63/63 on desktop; the new redirected.spec.js seen failing on the base source (5 of 6, the sixth the no-change case) |
+| Full Playwright run | running | |
