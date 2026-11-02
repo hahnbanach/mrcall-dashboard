@@ -2831,7 +2831,6 @@
         "count": "{n} spørgsmål i {calls} | {n} spørgsmål i {calls}",
         "calls": "{n} opkald | {n} opkald",
         "help": "Hvad opkalderne spurgte om, nyeste først, med hvad assistenten skal have for at kunne svare næste gang.",
-        "caption": "Ubesvarede spørgsmål: {label}",
         "empty": "Ingen spørgsmål af denne slags i perioden.",
         "suggestion": "Forslag: {text}",
         "columns": {

@@ -2837,7 +2837,6 @@
         "count": "{n} domanda in {calls} | {n} domande in {calls}",
         "calls": "{n} chiamata | {n} chiamate",
         "help": "Cosa hanno chiesto i chiamanti, dalle più recenti, con cosa dare all'assistente perché la prossima volta sappia rispondere.",
-        "caption": "Domande senza risposta: {label}",
         "empty": "Nessuna domanda di questo tipo nel periodo.",
         "suggestion": "Suggerimento: {text}",
         "columns": {

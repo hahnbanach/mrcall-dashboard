@@ -2836,7 +2836,6 @@
         "count": "{n} question in {calls} | {n} questions in {calls}",
         "calls": "{n} call | {n} calls",
         "help": "What callers asked, newest first, with what to give the assistant so that it can answer next time.",
-        "caption": "Unanswered questions: {label}",
         "empty": "No question of this kind in this period.",
         "suggestion": "Suggested: {text}",
         "columns": {

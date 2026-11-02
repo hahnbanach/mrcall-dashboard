@@ -2831,7 +2831,6 @@
         "count": "{n} vraag in {calls} | {n} vragen in {calls}",
         "calls": "{n} gesprek | {n} gesprekken",
         "help": "Wat bellers vroegen, nieuwste eerst, met wat de assistent nodig heeft om de volgende keer te antwoorden.",
-        "caption": "Onbeantwoorde vragen: {label}",
         "empty": "Geen vraag van deze soort in deze periode.",
         "suggestion": "Suggestie: {text}",
         "columns": {

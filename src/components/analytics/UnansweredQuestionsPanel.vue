@@ -9,7 +9,7 @@
       :state="table"
       :columns="columns"
       :row-key="(q) => q.conversationId + '\u0000' + q.question"
-      :caption="$t('components.callInsights.questionsPanel.caption', { label })"
+      :caption="label"
       :empty-text="$t('components.callInsights.questionsPanel.empty')"
     >
       <template #cell-question="{ row }">

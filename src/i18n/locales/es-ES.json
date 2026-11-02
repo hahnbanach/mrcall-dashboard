@@ -2845,7 +2845,6 @@
         "count": "{n} pregunta en {calls} | {n} preguntas en {calls}",
         "calls": "{n} llamada | {n} llamadas",
         "help": "Lo que preguntaron los llamantes, de las más recientes a las más antiguas, con lo que hay que dar al asistente para que sepa responder la próxima vez.",
-        "caption": "Preguntas sin respuesta: {label}",
         "empty": "Ninguna pregunta de este tipo en el periodo.",
         "suggestion": "Sugerencia: {text}",
         "columns": {

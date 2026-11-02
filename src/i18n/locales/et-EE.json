@@ -2831,7 +2831,6 @@
         "count": "{n} küsimus, {calls} | {n} küsimust, {calls}",
         "calls": "{n} kõne | {n} kõnet",
         "help": "Mida helistajad küsisid, uusimad eespool, ja mida assistent vajab, et järgmisel korral vastata.",
-        "caption": "Vastamata küsimused: {label}",
         "empty": "Perioodis seda tüüpi küsimusi ei ole.",
         "suggestion": "Soovitus: {text}",
         "columns": {

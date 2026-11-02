@@ -83,7 +83,7 @@ test.describe('a quality count leads to where it happened', () => {
     await show.click()
     const panel = page.locator('.questions-panel')
     await expect(panel).toContainText('23 questions in 12 calls')
-    const table = panel.getByRole('table', { name: 'Unanswered questions: Out of scope' })
+    const table = panel.getByRole('table', { name: 'Unanswered questions: Out of scope', exact: true })
     const first = table.getByRole('row').filter({ hasText: 'Question 1 (out_of_scope)' })
     await expect(first).toContainText('Suggested: Tell the assistant answer 1')
     await expect(table.getByRole('row').filter({ hasText: 'Question 2 (out_of_scope)' })).toContainText('Studio 6')

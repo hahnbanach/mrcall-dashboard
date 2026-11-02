@@ -2833,7 +2833,6 @@
         "count": "{n} question dans {calls} | {n} questions dans {calls}",
         "calls": "{n} appel | {n} appels",
         "help": "Ce que les appelants ont demandé, des plus récentes aux plus anciennes, avec ce qu'il faut donner à l'assistant pour qu'il sache répondre la prochaine fois.",
-        "caption": "Questions sans réponse : {label}",
         "empty": "Aucune question de ce type sur la période.",
         "suggestion": "Suggestion : {text}",
         "columns": {

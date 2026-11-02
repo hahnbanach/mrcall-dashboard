@@ -2831,7 +2831,6 @@
         "count": "{n} kysymys, {calls} | {n} kysymystä, {calls}",
         "calls": "{n} puhelu | {n} puhelua",
         "help": "Mitä soittajat kysyivät, uusimmat ensin, ja mitä avustaja tarvitsee osatakseen vastata ensi kerralla.",
-        "caption": "Vastaamattomat kysymykset: {label}",
         "empty": "Ei tämän tyyppisiä kysymyksiä jaksolla.",
         "suggestion": "Ehdotus: {text}",
         "columns": {

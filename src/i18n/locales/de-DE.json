@@ -2833,7 +2833,6 @@
         "count": "{n} Frage in {calls} | {n} Fragen in {calls}",
         "calls": "{n} Anruf | {n} Anrufen",
         "help": "Was Anrufer gefragt haben, die neuesten zuerst, mit dem, was der Assistent braucht, um beim nächsten Mal zu antworten.",
-        "caption": "Unbeantwortete Fragen: {label}",
         "empty": "Keine Frage dieser Art im Zeitraum.",
         "suggestion": "Vorschlag: {text}",
         "columns": {
