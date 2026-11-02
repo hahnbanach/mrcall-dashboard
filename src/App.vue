@@ -3,13 +3,16 @@
   </metainfo>
   <!-- Until the first page resolves (authentication, its chunk), the splash of public/index.html stays as it was: the
        app mounts as soon as its locale is loaded (main.js), without waiting for the router (plan
-       docs/execution-plans/2026-10-23-dashboard-load.md, M6). A first page that cannot be loaded says so. -->
+       docs/execution-plans/2026-10-23-dashboard-load.md, M6). A first page that cannot be loaded says so.
+       The container is mounted from the start and only hidden (v-show, not v-if): created later, inside this
+       component's update, PrimeVue's Menubar set its mobile mode in mounted() and never re-rendered it, so on a phone
+       the full menu stood in a row, 7 px wider than the screen (tests/e2e/auth/plan.spec.js, mobile). -->
   <div v-if="firstPage === 'loading'" class="app-splash" aria-busy="true"><div class="app-splash-ring"></div></div>
   <div v-else-if="firstPage === 'failed'" class="app-first-page-failed" role="alert">
     <p>{{ $t('components.app.firstPageFailed.text') }}</p>
     <button type="button" class="p-button" @click="reload">{{ $t('components.app.firstPageFailed.reload') }}</button>
   </div>
-  <div v-else id="app-container" class="h-screen">
+  <div v-show="firstPage === 'ready'" id="app-container" class="h-screen">
     <div v-if="!$route.meta.bare" id="navbar">
       <Navbar/>
     </div>

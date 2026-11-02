@@ -1,6 +1,6 @@
 <template>
   <Toast></Toast>
-  <div v-for="product in products.filter(v => (v.visible && (v.template === business.template || v.template === '__BASE__')) || (v.template === business.template || v.template === '__BASE__'))" :key="product.name">
+  <div v-for="product in (business ? products.filter(v => (v.visible && (v.template === business.template || v.template === '__BASE__')) || (v.template === business.template || v.template === '__BASE__')) : [])" :key="product.name">
     <Card>
       <template #title>
         <div class="card-title-row">
@@ -364,8 +364,18 @@ export default {
       })
     }
   },
-  mounted () {
-    this.productList()
+  // The products of the selected business, read once there is one: Plan.vue opened with `?id=` sets it only when its
+  // business has been read, after this component has mounted, and opened without one never sets it. Reading
+  // `business.template` at mount threw on both; in development Vue rethrows an error of a mounted hook, and since the
+  // app mounts its first page along with itself (plan docs/execution-plans/2026-10-23-dashboard-load.md, M6) that
+  // stopped the start-up (tests/e2e/auth/plan.spec.js).
+  watch: {
+    business: {
+      immediate: true,
+      handler (business) {
+        if (business && business.template) this.productList()
+      }
+    }
   }
 }
 </script>
