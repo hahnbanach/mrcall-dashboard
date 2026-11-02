@@ -1857,10 +1857,11 @@
       "resolution": {
         "resolved": "Löst",
         "unresolved": "Olöst",
-        "handed_over": "Överlämnat till en person",
+        "handed_over": "Överlämnat till personalen",
         "caller_left": "Pratade men sa aldrig vad den ville",
         "spam_wrong_number": "Skräppost eller fel nummer",
-        "forwarded": "Ärende vidarebefordrat till företaget"
+        "forwarded": "Ärende vidarebefordrat till företaget",
+        "redirected": "Hänvisat till företagets kanal"
       },
       "message": {
         "complete": "Fullständigt meddelande",
@@ -2117,9 +2118,10 @@
         "title": "Utfall för samtalen där den som ringde bad om något",
         "resolved": "Löst under samtalet",
         "forwarded": "Ärende vidarebefordrat till företaget",
+        "redirected": "Hänvisat till företagets kanal",
         "forwarded_complete": "med ett fullständigt meddelande",
         "forwarded_incomplete": "med ett ofullständigt meddelande",
-        "handed_over": "Överlämnat till en person",
+        "handed_over": "Överlämnat till personalen",
         "unresolved": "Olöst",
         "forwardedHelp": "Assistenten kunde inte ordna det under samtalet och noterade ärendet så att företaget kan agera.",
         "notYet": "Det här utfallet visas när servern läser in ärenden som vidarebefordrats till företaget."
@@ -2474,7 +2476,8 @@
         "outcome": {
           "met": "Uppfylld av assistenten",
           "taken": "Mottagen för företaget",
-          "handed_over": "Överlämnad till en person",
+          "redirected": "Hänvisad till företagets kanal",
+          "handed_over": "Överlämnad till personalen",
           "neither": "Inte uppfylld",
           "withdrawn": "Återkallad av den som ringer"
         },

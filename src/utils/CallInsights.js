@@ -29,7 +29,10 @@ import { isSessionEnded } from "@/firebase/session";
 // `forwarded` (StarChat's brief docs/briefs/2026-10-24-call-resolution-forwarded.md): the caller asked for something the
 // assistant could not give in the call, and it took the request for the business to act on. One more entry of the list,
 // read wherever the list is read; a version-2 call never carries it, and its `resolved` stays what it said.
-const RESOLUTION_KEYS = ["resolved", "forwarded", "handed_over", "unresolved", "caller_left", "spam_wrong_number"];
+// `redirected` (StarChat insight version 8, its brief docs/briefs/2026-11-02-extraction-configuration-and-resolution.md,
+// decision 5): the business handles the request through a channel of its own the assistant gave the caller (a WhatsApp
+// link, an email address); not a failure. A call analysed before version 8 never carries it.
+const RESOLUTION_KEYS = ["resolved", "forwarded", "redirected", "handed_over", "unresolved", "caller_left", "spam_wrong_number"];
 const MESSAGE_KEYS = ["complete", "incomplete", "unintelligible", "none"];
 const ASSESSED_DIMENSIONS = ["resolution", "message"];
 
@@ -47,15 +50,15 @@ const UNKEPT_ACTIONS = ["book", "move", "cancel", "transfer"];
  * The bases below are StarChat's own (its analytics guide §7-§9, `OutcomesResponse`,
  * `AssistantSignals`); the dashboard reads each from the answer rather than rebuilding it, so a
  * column always shows the share StarChat sorts the rows by.
- * - Resolution is a share only over the calls where the caller asked something (resolved, forwarded,
- *   handed_over, unresolved: four lines adding up to the base). `caller_left` (the caller spoke and never said what
+ * - Resolution is a share only over the calls where the caller asked something (resolved, forwarded, redirected,
+ *   handed_over, unresolved: the lines adding up to the base). `caller_left` (the caller spoke and never said what
  *   they wanted) and `spam_wrong_number` are counted beside that base, never in it, and neither is a failure.
  * - The calls the assistant had no conversation in (`noConversation`) are facts outside every rate:
  *   counted by reason, never as a share.
  * - An extraction problem is `http_error`, `failed` or `too_long`, over the calls whose extraction ran or was refused:
  *   `not_managed` is a call never asked of the model, neither a problem nor in the base.
  */
-const RESOLUTION_REQUEST_KEYS = ["resolved", "forwarded", "handed_over", "unresolved"];
+const RESOLUTION_REQUEST_KEYS = ["resolved", "forwarded", "redirected", "handed_over", "unresolved"];
 const RESOLUTION_OUTSIDE_KEYS = ["caller_left", "spam_wrong_number"];
 const NO_CONVERSATION_KEYS = ["caller_silent", "no_credit", "talk_and_hangup", "not_answered"];
 // StarChat's failures (analytics guide §8, and the assistants' `extractionsNotOk`): `too_long` is a call not sent to the
@@ -77,13 +80,17 @@ function sumOf(map, keys) {
 
 /*
  * The outcome of the calls where the caller asked something (StarChat's `OutcomesResponse.outcome`, plan step F3 of
- * docs/execution-plans/2026-10-24-call-resolution-forwarded.md): resolution and message read together into four lines
- * that add up to `callsWithRequest`, the second split by the message the assistant took. The base and every count are
- * StarChat's; nothing here adds resolution keys up. An answer without `outcome` (a server before F3) has no lines.
+ * docs/execution-plans/2026-10-24-call-resolution-forwarded.md): resolution and message read together into lines
+ * that add up to `callsWithRequest`, the forwarded one split by the message the assistant took. The base and every count
+ * are StarChat's; nothing here adds resolution keys up. An answer without `outcome` (a server before F3) has no lines.
+ * `whenPresent`: a line shown only when it or its previous count is above zero. `redirected` is one: a period analysed
+ * before StarChat's insight version 8 cannot carry it, and a zero there would state a measurement never possible. The
+ * base stays StarChat's, so the lines shown still add up to it.
  */
 const OUTCOME_LINES = [
     { key: "resolved", parts: ["resolved"] },
     { key: "forwarded", parts: ["forwarded_complete", "forwarded_incomplete"] },
+    { key: "redirected", parts: ["redirected"], whenPresent: true },
     { key: "handed_over", parts: ["handed_over"] },
     { key: "unresolved", parts: ["unresolved"] },
 ];
@@ -128,7 +135,7 @@ function outcomeShare(outcomes) {
     const prev = o.previousTotals || {};
     return {
         base,
-        lines: OUTCOME_LINES.map((line) => {
+        lines: OUTCOME_LINES.filter((line) => !line.whenPresent || sumOf(t, line.parts) > 0 || sumOf(prev, line.parts) > 0).map((line) => {
             const count = sumOf(t, line.parts);
             const previous = sumOf(prev, line.parts);
             return {

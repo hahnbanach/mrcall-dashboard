@@ -300,14 +300,17 @@ function reportBase(content) {
 
 /*
  * A REPORT'S OUTCOME, from the report's own counts (`content.resolution`, by value, as StarChat's
- * `CallInsightsReportBuilder.content` writes them): the four lines of the calls where the caller asked something, over
+ * `CallInsightsReportBuilder.content` writes them): the lines of the calls where the caller asked something, over
  * their sum, as the analytics show them (StarChat's docs/briefs/2026-10-24-call-resolution-forwarded.md, "Outcome lines").
  * A report is a document of its days: its lines are its own, never the analytics' of today, which may count calls
  * analysed after it. `caller_left` and `spam_wrong_number` stay outside the base, as in the analytics.
  * The forwarded line is not split by message here: the report's content has no resolution-by-message count to split it
  * with, and borrowing today's analytics for it would put two sources in one line.
  */
-const REPORT_OUTCOME_KEYS = ["resolved", "forwarded", "handed_over", "unresolved"];
+// `redirected` (StarChat insight version 8) is a line only when the report counts it: a report of before that version
+// cannot, as in the analytics' outcome (`CallInsights.OUTCOME_LINES`, `whenPresent`).
+const REPORT_OUTCOME_KEYS = ["resolved", "forwarded", "redirected", "handed_over", "unresolved"];
+const REPORT_WHEN_PRESENT = ["redirected"];
 
 function percentOf(count, base) {
     return base > 0 ? Math.round((count / base) * 100) : 0;
@@ -319,7 +322,11 @@ function reportOutcome(content) {
     const counts = REPORT_OUTCOME_KEYS.map((key) => (typeof r[key] === "number" ? r[key] : 0));
     const base = counts.reduce((a, b) => a + b, 0);
     if (base === 0) return null;
-    return { base, lines: REPORT_OUTCOME_KEYS.map((key, i) => ({ key, count: counts[i], percent: percentOf(counts[i], base) })) };
+    return {
+        base,
+        lines: REPORT_OUTCOME_KEYS.map((key, i) => ({ key, count: counts[i], percent: percentOf(counts[i], base) }))
+            .filter((line) => line.count > 0 || !REPORT_WHEN_PRESENT.includes(line.key)),
+    };
 }
 
 // The words of a label as a reader compares them: case and surrounding spaces aside.

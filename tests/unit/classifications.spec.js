@@ -33,14 +33,14 @@ const entry = (over) => ({
 })
 
 describe('the closed sets a chip offers', () => {
-  it('a request\'s outcome is one of StarChat\'s five', () => {
-    expect(Classifications.REQUEST_OUTCOME_KEYS).toEqual(['met', 'taken', 'handed_over', 'neither', 'withdrawn'])
+  it('a request\'s outcome is one of StarChat\'s six', () => {
+    expect(Classifications.REQUEST_OUTCOME_KEYS).toEqual(['met', 'taken', 'redirected', 'handed_over', 'neither', 'withdrawn'])
   })
 
   it('each field offers its own values, a category the configured ones', () => {
-    expect(Classifications.valuesOf('resolution')).toEqual(['resolved', 'forwarded', 'handed_over', 'unresolved', 'caller_left', 'spam_wrong_number'])
+    expect(Classifications.valuesOf('resolution')).toEqual(['resolved', 'forwarded', 'redirected', 'handed_over', 'unresolved', 'caller_left', 'spam_wrong_number'])
     expect(Classifications.valuesOf('message')).toEqual(['complete', 'incomplete', 'unintelligible', 'none'])
-    expect(Classifications.valuesOf('outcome')).toEqual(['met', 'taken', 'handed_over', 'neither', 'withdrawn'])
+    expect(Classifications.valuesOf('outcome')).toEqual(['met', 'taken', 'redirected', 'handed_over', 'neither', 'withdrawn'])
     expect(Classifications.valuesOf('category', [{ key: 'prices', label: 'Prezzi', active: true }, { key: 'old', label: 'Old', active: false }])).toEqual(['prices'])
     expect(Classifications.valuesOf('category', null)).toEqual([])
     expect(() => Classifications.valuesOf('booked')).toThrow()
@@ -142,7 +142,7 @@ describe('the entries of a chip\'s menu', () => {
     const state = { value: 'resolved', kind: 'corrected', canRestore: true, correction: { feedbackId: 9 } }
     const entries = Classifications.menuEntries('resolution', state)
     expect(entries.filter((e) => e.kind === 'value').map((e) => [e.value, e.current])).toEqual([
-      ['resolved', true], ['forwarded', false], ['handed_over', false], ['unresolved', false], ['caller_left', false], ['spam_wrong_number', false],
+      ['resolved', true], ['forwarded', false], ['redirected', false], ['handed_over', false], ['unresolved', false], ['caller_left', false], ['spam_wrong_number', false],
     ])
     expect(entries.filter((e) => e.kind !== 'value').map((e) => e.kind)).toEqual(['right', 'wrong', 'restore', 'history'])
     expect(entries.find((e) => e.kind === 'restore').feedbackId).toBe(9)

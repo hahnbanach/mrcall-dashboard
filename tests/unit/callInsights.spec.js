@@ -37,7 +37,7 @@ describe('insightRows: the one value table for a call\'s four dimensions', () =>
   })
 
   it('knows every code StarChat writes for resolution and message, and drops one it does not know', () => {
-    expect(CallInsights.RESOLUTION_KEYS).toEqual(['resolved', 'forwarded', 'handed_over', 'unresolved', 'caller_left', 'spam_wrong_number'])
+    expect(CallInsights.RESOLUTION_KEYS).toEqual(['resolved', 'forwarded', 'redirected', 'handed_over', 'unresolved', 'caller_left', 'spam_wrong_number'])
     expect(CallInsights.MESSAGE_KEYS).toEqual(['complete', 'incomplete', 'unintelligible', 'none'])
     for (const code of CallInsights.RESOLUTION_KEYS) {
       expect(CallInsights.insightRows({ resolution: code })).toEqual([row('resolution', code, true)])
@@ -460,7 +460,7 @@ describe('outcomeShare: four lines over callsWithRequest, the request passed on 
   }
 
   it('lists resolved, forwarded, handed_over and unresolved, adding up to the base', () => {
-    expect(CallInsights.RESOLUTION_REQUEST_KEYS).toEqual(['resolved', 'forwarded', 'handed_over', 'unresolved'])
+    expect(CallInsights.RESOLUTION_REQUEST_KEYS).toEqual(['resolved', 'forwarded', 'redirected', 'handed_over', 'unresolved'])
     const share = CallInsights.outcomeShare(answer)
     expect(share.base).toBe(100)
     expect(share.lines.map((l) => [l.key, l.count, l.percent, l.previous])).toEqual([
@@ -471,6 +471,25 @@ describe('outcomeShare: four lines over callsWithRequest, the request passed on 
       { key: 'forwarded_complete', count: 20, base: 100, percent: 20 },
       { key: 'forwarded_incomplete', count: 5, base: 100, percent: 5 },
     ])
+  })
+
+  // StarChat insight version 8: `redirected` is a line adding up with the others, shown only when it or its previous
+  // count is above zero (a period analysed before version 8 cannot carry it); the case above, without it, keeps today's
+  // four lines exactly.
+  it('shows redirected after forwarded when it has calls, the lines still adding up to the base', () => {
+    const v8 = { callsWithRequest: 110, outcome: { ...answer.outcome, totals: { ...answer.outcome.totals, redirected: 10 } } }
+    const share = CallInsights.outcomeShare(v8)
+    expect(share.lines.map((l) => [l.key, l.count, l.percent, l.previous])).toEqual([
+      ['resolved', 50, 45, 40], ['forwarded', 25, 23, 20], ['redirected', 10, 9, 0], ['handed_over', 10, 9, 10], ['unresolved', 15, 14, 30],
+    ])
+    expect(share.lines.reduce((sum, l) => sum + l.count, 0)).toBe(v8.callsWithRequest)
+    expect(share.lines[2].parts).toEqual([])
+  })
+
+  it('shows redirected at zero when only the period before had it, with its previous count', () => {
+    const prevOnly = { ...answer, outcome: { ...answer.outcome, previousTotals: { ...answer.outcome.previousTotals, redirected: 4 } } }
+    const line = CallInsights.outcomeShare(prevOnly).lines.find((l) => l.key === 'redirected')
+    expect(line).toMatchObject({ count: 0, percent: 0, previous: 4 })
   })
 
   it('has no lines for an answer without outcome (a server before F3): never rebuilt from resolution', () => {

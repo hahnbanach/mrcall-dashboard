@@ -1857,10 +1857,11 @@
       "resolution": {
         "resolved": "Lahendatud",
         "unresolved": "Lahendamata",
-        "handed_over": "Edastatud inimesele",
+        "handed_over": "Edastatud töötajatele",
         "caller_left": "Rääkis, kuid ei öelnud, mida soovis",
         "spam_wrong_number": "Rämpspost või vale number",
-        "forwarded": "Palve edastatud ettevõttele"
+        "forwarded": "Palve edastatud ettevõttele",
+        "redirected": "Suunatud ettevõtte kanalisse"
       },
       "message": {
         "complete": "Täielik sõnum",
@@ -2117,9 +2118,10 @@
         "title": "Nende kõnede tulemus, kus helistaja midagi küsis",
         "resolved": "Lahendatud kõne ajal",
         "forwarded": "Palve edastatud ettevõttele",
+        "redirected": "Suunatud ettevõtte kanalisse",
         "forwarded_complete": "täieliku sõnumiga",
         "forwarded_incomplete": "puuduliku sõnumiga",
-        "handed_over": "Edastatud inimesele",
+        "handed_over": "Edastatud töötajatele",
         "unresolved": "Lahendamata",
         "forwardedHelp": "Assistent ei saanud sellega kõne ajal hakkama ja võttis palve üles, et ettevõte saaks selle ära teha.",
         "notYet": "See tulemus ilmub, kui server hakkab lugema ettevõttele edastatud palveid."
@@ -2474,7 +2476,8 @@
         "outcome": {
           "met": "Assistent täitis",
           "taken": "Võetud ettevõttele vastu",
-          "handed_over": "Antud inimesele üle",
+          "redirected": "Suunatud ettevõtte kanalisse",
+          "handed_over": "Antud töötajatele üle",
           "neither": "Täitmata",
           "withdrawn": "Helistaja võttis tagasi"
         },

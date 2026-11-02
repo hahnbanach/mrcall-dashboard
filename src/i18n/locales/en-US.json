@@ -1862,10 +1862,11 @@
       "resolution": {
         "resolved": "Resolved",
         "unresolved": "Unresolved",
-        "handed_over": "Handed over",
+        "handed_over": "Escalated to staff",
         "caller_left": "Spoke but never said what they wanted",
         "spam_wrong_number": "Spam or wrong number",
-        "forwarded": "Request passed to the business"
+        "forwarded": "Request passed to the business",
+        "redirected": "Sent to the business's channel"
       },
       "message": {
         "complete": "Complete message",
@@ -2122,9 +2123,10 @@
         "title": "Outcome of the calls where the caller asked something",
         "resolved": "Resolved in the call",
         "forwarded": "Request passed to the business",
+        "redirected": "Sent to the business's channel",
         "forwarded_complete": "with a complete message",
         "forwarded_incomplete": "with an incomplete message",
-        "handed_over": "Passed to a person",
+        "handed_over": "Escalated to staff",
         "unresolved": "Not resolved",
         "forwardedHelp": "The assistant could not do it during the call and took the request for the business to act on.",
         "notYet": "This outcome appears once the server reads requests passed to the business."
@@ -2479,7 +2481,8 @@
         "outcome": {
           "met": "Met by the assistant",
           "taken": "Taken for the business",
-          "handed_over": "Passed to a person",
+          "redirected": "Sent to the business's channel",
+          "handed_over": "Escalated to staff",
           "neither": "Not met",
           "withdrawn": "Withdrawn by the caller"
         },

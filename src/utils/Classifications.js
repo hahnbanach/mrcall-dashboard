@@ -18,10 +18,11 @@ import CallInsights from "@/utils/CallInsights";
 
 const RESOLUTION_KEYS = CallInsights.RESOLUTION_KEYS;
 const MESSAGE_KEYS = CallInsights.MESSAGE_KEYS;
-// a request's outcome, `insights_call_requests.outcome` (StarChat `CallInsights`): met, taken, handed_over, neither,
-// withdrawn
-const REQUEST_OUTCOME_KEYS = ["met", "taken", "handed_over", "neither", "withdrawn"];
-// the outcomes the assistant did not fulfil by itself: the categories view's default (decision 13)
+// a request's outcome, `insights_call_requests.outcome` (StarChat `CallInsights`): met, taken, redirected (insight
+// version 8: sent to a channel of the business's own), handed_over, neither, withdrawn
+const REQUEST_OUTCOME_KEYS = ["met", "taken", "redirected", "handed_over", "neither", "withdrawn"];
+// the outcomes the assistant did not fulfil by itself: the categories view's default (decision 13). StarChat's
+// `RequestCategoryRows.NotFulfilled` leaves `redirected` out: the business handles it through its channel.
 const NOT_FULFILLED = ["taken", "handed_over", "neither"];
 const FIELDS = ["resolution", "message", "outcome", "category"];
 // the facts of a call's own record (StarChat `FeedbackField`, 6d13718c6): reported wrong (`fact_wrong`, "Segnala un

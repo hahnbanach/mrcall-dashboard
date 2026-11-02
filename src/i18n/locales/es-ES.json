@@ -1871,10 +1871,11 @@
       "resolution": {
         "resolved": "Resuelto",
         "unresolved": "Sin resolver",
-        "handed_over": "Pasado a una persona",
+        "handed_over": "Pasado al personal",
         "caller_left": "Habló sin decir qué quería",
         "spam_wrong_number": "Spam o número equivocado",
-        "forwarded": "Petición pasada al negocio"
+        "forwarded": "Petición pasada al negocio",
+        "redirected": "Derivado al canal del negocio"
       },
       "message": {
         "complete": "Mensaje completo",
@@ -2131,9 +2132,10 @@
         "title": "Resultado de las llamadas en las que quien llamó pidió algo",
         "resolved": "Resuelto en la llamada",
         "forwarded": "Petición pasada al negocio",
+        "redirected": "Derivado al canal del negocio",
         "forwarded_complete": "con un mensaje completo",
         "forwarded_incomplete": "con un mensaje incompleto",
-        "handed_over": "Pasado a una persona",
+        "handed_over": "Pasado al personal",
         "unresolved": "Sin resolver",
         "forwardedHelp": "El asistente no pudo hacerlo durante la llamada y tomó nota de la petición para que el negocio actúe.",
         "notYet": "Este resultado aparecerá cuando el servidor lea las peticiones pasadas al negocio."
@@ -2488,7 +2490,8 @@
         "outcome": {
           "met": "Atendida por el asistente",
           "taken": "Tomada para el negocio",
-          "handed_over": "Pasada a una persona",
+          "redirected": "Derivada al canal del negocio",
+          "handed_over": "Pasada al personal",
           "neither": "No atendida",
           "withdrawn": "Retirada por quien llama"
         },

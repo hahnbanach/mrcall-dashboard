@@ -17,8 +17,9 @@
          chart on a canvas that is already gone (a TypeError in `new Chart`, which the dev server's
          overlay shows over the page). -->
     <template v-else-if="data">
-      <!-- The outcome of the calls where the caller asked something: four lines adding up to their base, the
-           request passed on split by the message taken (StarChat's `outcome`, over `callsWithRequest`) -->
+      <!-- The outcome of the calls where the caller asked something: the lines adding up to their base, the
+           request passed on split by the message taken, "redirected" only when it has calls (StarChat's `outcome`,
+           over `callsWithRequest`) -->
       <div class="insight-dimension outcome-block" :class="{ 'is-updating': updating }">
         <h4 class="insight-dimension-title">{{ $t("components.callInsights.outcome.title") }}</h4>
         <template v-if="outcome">
@@ -141,9 +142,9 @@ import NotAvailable from "@/components/analytics/NotAvailable.vue";
 
 /**
  * "How the calls went" (insights version 3, StarChat's brief docs/briefs/2026-10-24-call-resolution-forwarded.md): the
- * outcome of the calls where the caller asked something, in four lines adding up to their base, "Risolte in chiamata",
- * "Richiesta passata all'attività" (split by the message taken, complete or not), "Passate a una persona" and
- * "Non risolte", each against the previous period, from StarChat's `outcome` over `callsWithRequest` (plan step F3);
+ * outcome of the calls where the caller asked something, in lines adding up to their base, "Risolte in chiamata",
+ * "Richiesta passata all'attività" (split by the message taken, complete or not), "Indirizzate al canale dell'attività"
+ * (StarChat insight version 8, shown only when it has calls), "Passate a un operatore" and "Non risolte", each against the previous period, from StarChat's `outcome` over `callsWithRequest` (plan step F3);
  * `caller_left` and `spam_wrong_number` counted beside it, neither a failure. Then the message the assistant took, how
  * many calls carry it at all (`callsWithValue` of `totalCalls`), booked beside the calls it counts on, transferred as
  * a count, and the calls without a conversation by reason, outside every rate. Purely presentational: the parent
@@ -156,6 +157,8 @@ const COLORS = {
   forwarded: "#00897B",
   forwarded_complete: "#00897B",
   forwarded_incomplete: "#F59E0B",
+  // violet: no other key of the outcome chart is near it (green, teal, amber, blue, red)
+  redirected: "#8B5CF6",
   handed_over: "#0068FF",
   unresolved: "#EF4444",
   caller_left: "#6C757D",

@@ -116,7 +116,7 @@ test.describe('Conversations: what the opened call said', () => {
     await expect(fact(page, 'Booking').locator('.insight-assessed-tag')).toHaveCount(0)
     await expect(fact(page, 'Transfer')).toHaveText(/Transferred/)
     await expect(fact(page, 'Transfer').locator('.insight-assessed-tag')).toHaveCount(0)
-    await expect(fact(page, 'Resolution')).toContainText('Handed over')
+    await expect(fact(page, 'Resolution')).toContainText('Escalated to staff')
   })
 
   test('a resolution, a message and a booked that are absent show nothing', async ({ authenticatedPage: page }) => {
@@ -371,7 +371,7 @@ test.describe('Conversations: filtering on what the call said', () => {
     await expect(page.locator('.conversation-card').first()).toBeVisible({ timeout: 15000 })
 
     await dropdown(page, 'Resolution').click()
-    await page.getByRole('option', { name: 'Handed over' }).click()
+    await page.getByRole('option', { name: 'Escalated to staff' }).click()
     await expect.poll(() => searchRequests.at(-1).resolution).toBe('handed_over')
     await page.getByRole('button', { name: 'Transferred', exact: true }).click()
     await expect.poll(() => searchRequests.at(-1).transferred).toBe(true)
@@ -394,7 +394,7 @@ test.describe('Conversations: filtering on what the call said', () => {
     await expect(row('Transfer').getByText('Assessed by the assistant')).toHaveCount(0)
 
     await dropdown(page, 'Resolution').click()
-    await expect(page.getByRole('listbox').getByRole('option')).toHaveText(['Resolved', 'Request passed to the business', 'Handed over', 'Unresolved', 'Spoke but never said what they wanted', 'Spam or wrong number'])
+    await expect(page.getByRole('listbox').getByRole('option')).toHaveText(['Resolved', 'Request passed to the business', 'Sent to the business\'s channel', 'Escalated to staff', 'Unresolved', 'Spoke but never said what they wanted', 'Spam or wrong number'])
     await page.keyboard.press('Escape')
     await dropdown(page, 'Message').click()
     await expect(page.getByRole('listbox').getByRole('option')).toHaveText(['Complete message', 'Incomplete message', 'Unintelligible message', 'No message'])

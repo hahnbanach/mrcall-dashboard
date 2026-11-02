@@ -1859,10 +1859,11 @@
       "resolution": {
         "resolved": "Résolu",
         "unresolved": "Non résolu",
-        "handed_over": "Passé à une personne",
+        "handed_over": "Passé au personnel",
         "caller_left": "A parlé sans dire ce qu'il voulait",
         "spam_wrong_number": "Spam ou faux numéro",
-        "forwarded": "Demande transmise à l'entreprise"
+        "forwarded": "Demande transmise à l'entreprise",
+        "redirected": "Orienté vers un canal de l'entreprise"
       },
       "message": {
         "complete": "Message complet",
@@ -2119,9 +2120,10 @@
         "title": "Issue des appels où l'appelant a demandé quelque chose",
         "resolved": "Résolu pendant l'appel",
         "forwarded": "Demande transmise à l'entreprise",
+        "redirected": "Orienté vers un canal de l'entreprise",
         "forwarded_complete": "avec un message complet",
         "forwarded_incomplete": "avec un message incomplet",
-        "handed_over": "Passé à une personne",
+        "handed_over": "Passé au personnel",
         "unresolved": "Non résolu",
         "forwardedHelp": "L'assistant n'a pas pu le faire pendant l'appel et a noté la demande pour que l'entreprise y donne suite.",
         "notYet": "Cette issue apparaîtra dès que le serveur lira les demandes transmises à l'entreprise."
@@ -2476,7 +2478,8 @@
         "outcome": {
           "met": "Satisfaite par l'assistant",
           "taken": "Prise en charge pour l'entreprise",
-          "handed_over": "Transmise à une personne",
+          "redirected": "Orientée vers un canal de l'entreprise",
+          "handed_over": "Transmise au personnel",
           "neither": "Non satisfaite",
           "withdrawn": "Retirée par l'appelant"
         },

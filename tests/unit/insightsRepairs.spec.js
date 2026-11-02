@@ -18,6 +18,16 @@ describe('M2: a report\'s outcome, from its own counts', () => {
     ])
   })
 
+  // StarChat insight version 8: a report may count `redirected`; it is a line, after forwarded and in the base, only
+  // when counted (the case above, a report without it, keeps its four lines exactly)
+  it('a report counting redirected: five lines, the base including it', () => {
+    const o = R.reportOutcome({ resolution: { ...content.resolution, redirected: 10 } })
+    expect(o.base).toBe(120)
+    expect(o.lines.map((l) => [l.key, l.count, l.percent])).toEqual([
+      ['resolved', 50, 42], ['forwarded', 30, 25], ['redirected', 10, 8], ['handed_over', 10, 8], ['unresolved', 20, 17],
+    ])
+  })
+
   it('none for a report without resolution counts (written before insights version 2)', () => {
     expect(R.reportOutcome({ calls: 3 })).toBeNull()
     expect(R.reportOutcome({ resolution: {} })).toBeNull()
@@ -36,6 +46,11 @@ describe('M2: the themes, by calls, each with its outcome', () => {
     expect(themes.map((t) => [t.topic, t.calls])).toEqual([['Bookings', 70], ['Parking', 12], ['Old', null]])
     expect(themes[0].outcome).toEqual([{ key: 'resolved', count: 40 }, { key: 'forwarded', count: 20 }, { key: 'handed_over', count: 5 }, { key: 'unresolved', count: 5 }])
     expect(themes[1].outcome).toEqual([{ key: 'resolved', count: 4 }, { key: 'unresolved', count: 8 }])
+  })
+
+  it('a theme counting redirected lists it after forwarded', () => {
+    const [t] = R.reportThemes({ topics: [{ topic: 'Orders', calls: 9, labels: [], resolution: { forwarded: 2, redirected: 6, resolved: 1 } }] })
+    expect(t.outcome).toEqual([{ key: 'resolved', count: 1 }, { key: 'forwarded', count: 2 }, { key: 'redirected', count: 6 }])
   })
 
   it('m6: drops a label that only repeats the theme\'s name', () => {

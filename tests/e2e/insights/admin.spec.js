@@ -204,7 +204,7 @@ test.describe('How the calls went: four outcome lines (U16b)', () => {
     await expect(line('Request passed to the business')).toContainText('2525% of 100')
     await expect(line('Request passed to the business')).toContainText('with a complete message2020% of 100')
     await expect(line('Request passed to the business')).toContainText('with an incomplete message55% of 100')
-    await expect(line('Passed to a person')).toContainText('1010% of 100')
+    await expect(line('Escalated to staff')).toContainText('1010% of 100')
     await expect(line('Not resolved')).toContainText('1515% of 100')
     // against the previous period: not resolved fell from 30 to 15
     await expect(line('Not resolved')).toContainText('-50.0%')

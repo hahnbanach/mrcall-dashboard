@@ -1857,10 +1857,11 @@
       "resolution": {
         "resolved": "Løst",
         "unresolved": "Uløst",
-        "handed_over": "Givet videre til en person",
+        "handed_over": "Givet videre til personalet",
         "caller_left": "Talte, men sagde aldrig, hvad de ville",
         "spam_wrong_number": "Spam eller forkert nummer",
-        "forwarded": "Anmodning givet videre til virksomheden"
+        "forwarded": "Anmodning givet videre til virksomheden",
+        "redirected": "Henvist til virksomhedens kanal"
       },
       "message": {
         "complete": "Komplet besked",
@@ -2117,9 +2118,10 @@
         "title": "Udfaldet af de opkald, hvor den, der ringede, spurgte om noget",
         "resolved": "Løst under opkaldet",
         "forwarded": "Anmodning givet videre til virksomheden",
+        "redirected": "Henvist til virksomhedens kanal",
         "forwarded_complete": "med en komplet besked",
         "forwarded_incomplete": "med en ufuldstændig besked",
-        "handed_over": "Givet videre til en person",
+        "handed_over": "Givet videre til personalet",
         "unresolved": "Ikke løst",
         "forwardedHelp": "Assistenten kunne ikke klare det under opkaldet og noterede anmodningen, så virksomheden kan handle på den.",
         "notYet": "Dette udfald vises, når serveren begynder at læse anmodninger, der er givet videre til virksomheden."
@@ -2474,7 +2476,8 @@
         "outcome": {
           "met": "Opfyldt af assistenten",
           "taken": "Modtaget til virksomheden",
-          "handed_over": "Givet videre til en person",
+          "redirected": "Henvist til virksomhedens kanal",
+          "handed_over": "Givet videre til personalet",
           "neither": "Ikke opfyldt",
           "withdrawn": "Trukket tilbage af den, der ringer"
         },

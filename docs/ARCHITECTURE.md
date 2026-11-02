@@ -278,9 +278,10 @@ for the four dimensions lives in `src/utils/CallInsights.js`.
   question, suggestion, business on a page over several, the call in the dialog). The report page does not use it: a
   report's questions are its own frozen gap groups. Both pages carry `AnalyticsFilterBar.vue`,
   the filters in force each undone where it shows; a business is shown by name wherever an answer names it.
-  "How the calls went" shows the outcome of the calls where the caller asked something in four lines adding up to
-  their base (resolved in the call; passed to the business, split by the message taken; passed to a person; not
-  resolved), from StarChat's `outcome` and `callsWithRequest`, with `caller_left` and `spam_wrong_number` beside
+  "How the calls went" shows the outcome of the calls where the caller asked something in lines adding up to their
+  base (resolved in the call; passed to the business, split by the message taken; sent to the business's own channel,
+  StarChat's `redirected`, shown only when it or the previous period has calls, since a period analysed before insight
+  version 8 cannot carry it; escalated to staff; not resolved), from StarChat's `outcome` and `callsWithRequest`, with `caller_left` and `spam_wrong_number` beside
   it in neutral colours, the message, booked and transferred, and the calls without a conversation by reason in a ruled
   table of their own (reason, calls).
   Every change against the period before is neutral in colour, and "n/a" with its reason under a base of 20 calls or

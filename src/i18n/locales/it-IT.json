@@ -1863,10 +1863,11 @@
       "resolution": {
         "resolved": "Risolto",
         "unresolved": "Non risolto",
-        "handed_over": "Passato a una persona",
+        "handed_over": "Passato a un operatore",
         "caller_left": "Ha parlato senza dire cosa voleva",
         "spam_wrong_number": "Spam o numero sbagliato",
-        "forwarded": "Richiesta passata all'attività"
+        "forwarded": "Richiesta passata all'attività",
+        "redirected": "Indirizzato al canale dell'attività"
       },
       "message": {
         "complete": "Messaggio completo",
@@ -2123,9 +2124,10 @@
         "title": "Esito delle chiamate in cui il chiamante ha chiesto qualcosa",
         "resolved": "Risolte in chiamata",
         "forwarded": "Richiesta passata all'attività",
+        "redirected": "Indirizzate al canale dell'attività",
         "forwarded_complete": "con messaggio completo",
         "forwarded_incomplete": "con messaggio incompleto",
-        "handed_over": "Passate a una persona",
+        "handed_over": "Passate a un operatore",
         "unresolved": "Non risolte",
         "forwardedHelp": "L'assistente non poteva farlo durante la chiamata e ha preso la richiesta perché l'attività la gestisca.",
         "notYet": "Questo esito compare quando il server legge le richieste passate all'attività."
@@ -2480,7 +2482,8 @@
         "outcome": {
           "met": "Soddisfatta dall'assistente",
           "taken": "Presa in carico per l'attività",
-          "handed_over": "Passata a una persona",
+          "redirected": "Indirizzata al canale dell'attività",
+          "handed_over": "Passata a un operatore",
           "neither": "Non soddisfatta",
           "withdrawn": "Ritirata dal chiamante"
         },

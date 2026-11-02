@@ -49,7 +49,7 @@
           </p>
         </section>
 
-        <!-- How the calls went, from the report's own counts: four lines over the calls where the caller asked -->
+        <!-- How the calls went, from the report's own counts: the lines over the calls where the caller asked -->
         <section v-if="outcome || hasFacts" class="report-section" aria-labelledby="outcome-title">
           <h3 id="outcome-title" class="report-section-title">{{ $t("components.callInsights.outcome.title") }}</h3>
           <template v-if="outcome">

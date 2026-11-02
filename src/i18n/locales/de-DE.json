@@ -1859,10 +1859,11 @@
       "resolution": {
         "resolved": "Gelöst",
         "unresolved": "Nicht gelöst",
-        "handed_over": "An eine Person übergeben",
+        "handed_over": "An das Personal übergeben",
         "caller_left": "Hat gesprochen, aber nicht gesagt, was er wollte",
         "spam_wrong_number": "Spam oder falsche Nummer",
-        "forwarded": "Anliegen an das Unternehmen weitergegeben"
+        "forwarded": "Anliegen an das Unternehmen weitergegeben",
+        "redirected": "An einen Kanal des Unternehmens verwiesen"
       },
       "message": {
         "complete": "Vollständige Nachricht",
@@ -2119,9 +2120,10 @@
         "title": "Ergebnis der Anrufe, in denen der Anrufer etwas wollte",
         "resolved": "Im Anruf gelöst",
         "forwarded": "Anliegen an das Unternehmen weitergegeben",
+        "redirected": "An einen Kanal des Unternehmens verwiesen",
         "forwarded_complete": "mit vollständiger Nachricht",
         "forwarded_incomplete": "mit unvollständiger Nachricht",
-        "handed_over": "An eine Person übergeben",
+        "handed_over": "An das Personal übergeben",
         "unresolved": "Nicht gelöst",
         "forwardedHelp": "Der Assistent konnte es während des Anrufs nicht erledigen und hat das Anliegen notiert, damit das Unternehmen sich darum kümmert.",
         "notYet": "Dieses Ergebnis erscheint, sobald der Server die an das Unternehmen weitergegebenen Anliegen ausliest."
@@ -2476,7 +2478,8 @@
         "outcome": {
           "met": "Vom Assistenten erfüllt",
           "taken": "Für das Unternehmen aufgenommen",
-          "handed_over": "An eine Person übergeben",
+          "redirected": "An einen Kanal des Unternehmens verwiesen",
+          "handed_over": "An das Personal übergeben",
           "neither": "Nicht erfüllt",
           "withdrawn": "Vom Anrufer zurückgezogen"
         },

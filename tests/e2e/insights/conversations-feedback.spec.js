@@ -179,7 +179,7 @@ test.describe('the conversations list: a count\'s filters and corrections in bul
     await select(page, 'Carla')
     const bar = page.getByRole('toolbar', { name: 'Selected calls' })
     await bar.getByRole('button', { name: 'Change outcome' }).click()
-    await page.getByRole('listbox').getByRole('option', { name: 'Handed over', exact: true }).click()
+    await page.getByRole('listbox').getByRole('option', { name: 'Escalated to staff', exact: true }).click()
     await expect.poll(() => sent.filter((s) => s.path === 'bulk').length).toBe(1)
     const bulk = sent.filter((s) => s.path === 'bulk').pop()
     expect(bulk.body.items).toEqual([{ subject: 'call', conversationId: 'CON-a', field: 'resolution', signal: 'wrong_value', valueFrom: 'resolved', valueTo: 'handed_over' }])

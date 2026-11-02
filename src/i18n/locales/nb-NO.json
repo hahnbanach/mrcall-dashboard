@@ -1857,10 +1857,11 @@
       "resolution": {
         "resolved": "Løst",
         "unresolved": "Uløst",
-        "handed_over": "Overlatt til en person",
+        "handed_over": "Overlatt til de ansatte",
         "caller_left": "Snakket, men sa aldri hva de ville",
         "spam_wrong_number": "Spam eller feil nummer",
-        "forwarded": "Henvendelse sendt videre til virksomheten"
+        "forwarded": "Henvendelse sendt videre til virksomheten",
+        "redirected": "Henvist til virksomhetens kanal"
       },
       "message": {
         "complete": "Fullstendig melding",
@@ -2117,9 +2118,10 @@
         "title": "Utfallet av samtalene der den som ringte, spurte om noe",
         "resolved": "Løst i samtalen",
         "forwarded": "Henvendelse sendt videre til virksomheten",
+        "redirected": "Henvist til virksomhetens kanal",
         "forwarded_complete": "med en fullstendig beskjed",
         "forwarded_incomplete": "med en ufullstendig beskjed",
-        "handed_over": "Overlatt til en person",
+        "handed_over": "Overlatt til de ansatte",
         "unresolved": "Ikke løst",
         "forwardedHelp": "Assistenten klarte det ikke under samtalen og noterte henvendelsen, slik at virksomheten kan følge den opp.",
         "notYet": "Dette utfallet vises når serveren begynner å lese henvendelser som er sendt videre til virksomheten."
@@ -2474,7 +2476,8 @@
         "outcome": {
           "met": "Oppfylt av assistenten",
           "taken": "Tatt imot for bedriften",
-          "handed_over": "Overlevert til en person",
+          "redirected": "Henvist til bedriftens kanal",
+          "handed_over": "Overlevert til de ansatte",
           "neither": "Ikke oppfylt",
           "withdrawn": "Trukket tilbake av innringeren"
         },

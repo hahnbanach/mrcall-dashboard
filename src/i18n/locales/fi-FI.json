@@ -1857,10 +1857,11 @@
       "resolution": {
         "resolved": "Ratkaistu",
         "unresolved": "Ratkaisematta",
-        "handed_over": "Siirretty henkilölle",
+        "handed_over": "Siirretty henkilökunnalle",
         "caller_left": "Puhui, mutta ei kertonut mitä halusi",
         "spam_wrong_number": "Roskapostia tai väärä numero",
-        "forwarded": "Pyyntö välitetty yritykselle"
+        "forwarded": "Pyyntö välitetty yritykselle",
+        "redirected": "Ohjattu yrityksen kanavaan"
       },
       "message": {
         "complete": "Täydellinen viesti",
@@ -2117,9 +2118,10 @@
         "title": "Puhelujen lopputulos, joissa soittaja kysyi jotain",
         "resolved": "Ratkaistu puhelun aikana",
         "forwarded": "Pyyntö välitetty yritykselle",
+        "redirected": "Ohjattu yrityksen kanavaan",
         "forwarded_complete": "täydellisellä viestillä",
         "forwarded_incomplete": "puutteellisella viestillä",
-        "handed_over": "Siirretty henkilölle",
+        "handed_over": "Siirretty henkilökunnalle",
         "unresolved": "Ratkaisematta",
         "forwardedHelp": "Avustaja ei pystynyt hoitamaan asiaa puhelun aikana ja otti pyynnön muistiin, jotta yritys voi toimia sen mukaan.",
         "notYet": "Tämä lopputulos näkyy, kun palvelin alkaa lukea yritykselle välitettyjä pyyntöjä."
@@ -2474,7 +2476,8 @@
         "outcome": {
           "met": "Avustaja hoiti",
           "taken": "Otettu vastaan yritykselle",
-          "handed_over": "Siirretty henkilölle",
+          "redirected": "Ohjattu yrityksen kanavaan",
+          "handed_over": "Siirretty henkilökunnalle",
           "neither": "Ei hoidettu",
           "withdrawn": "Soittaja perui"
         },

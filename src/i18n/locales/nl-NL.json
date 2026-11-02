@@ -1857,10 +1857,11 @@
       "resolution": {
         "resolved": "Opgelost",
         "unresolved": "Niet opgelost",
-        "handed_over": "Doorgegeven aan een persoon",
+        "handed_over": "Doorgegeven aan het personeel",
         "caller_left": "Sprak, maar zei niet wat hij wilde",
         "spam_wrong_number": "Spam of verkeerd nummer",
-        "forwarded": "Verzoek doorgegeven aan het bedrijf"
+        "forwarded": "Verzoek doorgegeven aan het bedrijf",
+        "redirected": "Doorverwezen naar een kanaal van het bedrijf"
       },
       "message": {
         "complete": "Volledig bericht",
@@ -2117,9 +2118,10 @@
         "title": "Afloop van de gesprekken waarin de beller iets vroeg",
         "resolved": "Opgelost tijdens het gesprek",
         "forwarded": "Verzoek doorgegeven aan het bedrijf",
+        "redirected": "Doorverwezen naar een kanaal van het bedrijf",
         "forwarded_complete": "met een volledig bericht",
         "forwarded_incomplete": "met een onvolledig bericht",
-        "handed_over": "Doorgegeven aan een persoon",
+        "handed_over": "Doorgegeven aan het personeel",
         "unresolved": "Niet opgelost",
         "forwardedHelp": "De assistent kon het tijdens het gesprek niet regelen en heeft het verzoek genoteerd zodat het bedrijf ermee aan de slag kan.",
         "notYet": "Deze afloop verschijnt zodra de server de aan het bedrijf doorgegeven verzoeken uitleest."
@@ -2474,7 +2476,8 @@
         "outcome": {
           "met": "Door de assistent afgehandeld",
           "taken": "Genoteerd voor het bedrijf",
-          "handed_over": "Doorgegeven aan een persoon",
+          "redirected": "Doorverwezen naar een kanaal van het bedrijf",
+          "handed_over": "Doorgegeven aan het personeel",
           "neither": "Niet afgehandeld",
           "withdrawn": "Ingetrokken door de beller"
         },

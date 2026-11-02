@@ -223,7 +223,7 @@ test.describe('a call\'s judgements as chips', () => {
     await expect(opened(page).getByRole('alert')).toContainText('This value changed meanwhile')
     // the refusal carries only the current value; the judgements are then read once, for the history the other person
     // wrote (brief, second amendment, item 10)
-    await expect(chip(page, /^Resolution: Handed over, Corrected \(from Resolved to Handed over, Partner Srl, /)).toBeVisible()
+    await expect(chip(page, /^Resolution: Escalated to staff, Corrected \(from Resolved to Escalated to staff, Partner Srl, /)).toBeVisible()
     expect(reads(sent)).toBe(before + 1)
   })
 

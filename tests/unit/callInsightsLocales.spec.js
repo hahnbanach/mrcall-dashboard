@@ -280,7 +280,14 @@ describe('callInsights: the reports, requests and outcomes of 2026-10-24', () =>
     expect(ci.request.automaticPending).toBe('Il report automatico di questo periodo è in preparazione: sarà pronto dopo la prossima elaborazione notturna.')
     expect(ci.outcome.resolved).toBe('Risolte in chiamata')
     expect(ci.outcome.forwarded).toBe("Richiesta passata all'attività")
-    expect(ci.outcome.handed_over).toBe('Passate a una persona')
+    // the CTO's labels of 2026-11-02 (StarChat insight version 8): staff for handed_over, the business's channel for
+    // redirected, each block keeping its agreement
+    expect(ci.outcome.handed_over).toBe('Passate a un operatore')
+    expect(ci.resolution.handed_over).toBe('Passato a un operatore')
+    expect(ci.feedback.outcome.handed_over).toBe('Passata a un operatore')
+    expect(ci.outcome.redirected).toBe("Indirizzate al canale dell'attività")
+    expect(ci.resolution.redirected).toBe("Indirizzato al canale dell'attività")
+    expect(ci.feedback.outcome.redirected).toBe("Indirizzata al canale dell'attività")
     expect(ci.outcome.unresolved).toBe('Non risolte')
     expect(ci.resolution.forwarded).toBe("Richiesta passata all'attività")
     expect(ci.admin.reason.reserve).toBe('Riserva per le chiamate')
