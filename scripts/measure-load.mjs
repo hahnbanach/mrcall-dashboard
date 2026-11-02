@@ -40,7 +40,8 @@ if (!(profile in PROFILES)) throw new Error(`--profile must be one of ${Object.k
 const PAGES = {
   signin: { path: '/signin', figure: '#email, input[type=password]', session: false },
   businesses: { path: '/businesses', figure: '.business-card', session: true },
-  analytics: { path: '/analytics', figure: '.kpi-value', session: true },
+  // an owner's Analytics shows figures only for a chosen business with calls: picked once, before the runs
+  analytics: { path: (businessId) => `/analytics?id=${businessId}`, figure: '.kpi-value', session: true },
 }
 const target = PAGES[pageName]
 if (!target) throw new Error(`--page must be one of ${Object.keys(PAGES).join(', ')}`)
@@ -60,15 +61,43 @@ const OBSERVER = (figure) => {
   new MutationObserver(look).observe(document, { childList: true, subtree: true, attributes: true })
 }
 
+// Signs in through the form and returns the business ids StarChat's business searches answered with.
 async function signIn (page) {
+  const businessIds = []
+  page.on('response', async (response) => {
+    if (!response.url().includes('/crm/business/search') || !response.ok()) return
+    const body = await response.json().catch(() => null)
+    if (Array.isArray(body)) for (const b of body) if (b && b.businessId && !businessIds.includes(b.businessId)) businessIds.push(b.businessId)
+  })
   await page.goto(base + '/signin', { waitUntil: 'domcontentloaded', timeout: 120000 })
   await page.locator('#email').fill(process.env.MEASURE_EMAIL)
   await page.locator('input[type=password]').fill(process.env.MEASURE_PASSWORD)
   await page.locator('input[type=password]').press('Enter')
   await page.waitForURL((url) => !/\/(signin|login)/.test(url.pathname), { timeout: 120000 })
+  await page.waitForTimeout(3000)
+  return businessIds
 }
 
-async function run (browser, kind, context) {
+// The first of the account's businesses whose Analytics shows a figure within 30 s: a business with no call shows
+// a note and no figure, and would measure nothing. MEASURE_BUSINESS_ID, when set, is used as is.
+async function pickBusiness (browser) {
+  if (process.env.MEASURE_BUSINESS_ID) return process.env.MEASURE_BUSINESS_ID
+  const context = await browser.newContext({ locale })
+  const page = await context.newPage()
+  const ids = await signIn(page)
+  try {
+    for (const id of ids) {
+      await page.goto(base + target.path(id), { timeout: 120000 })
+      const shown = await page.locator(target.figure).first().waitFor({ timeout: 30000 }).then(() => true, () => false)
+      if (shown) return id
+    }
+  } finally {
+    await context.close()
+  }
+  throw new Error(`none of the account's ${ids.length} businesses shows an analytics figure`)
+}
+
+async function run (browser, kind, context, businessId) {
   const page = await context.newPage()
   const cdp = await context.newCDPSession(page)
   await cdp.send('Network.enable')
@@ -92,7 +121,8 @@ async function run (browser, kind, context) {
 
   await page.addInitScript(OBSERVER, target.figure)
   const t0 = Date.now()
-  await page.goto(base + target.path, { timeout: 120000 })
+  const path = typeof target.path === 'function' ? target.path(businessId) : target.path
+  await page.goto(base + path, { timeout: 120000 })
   await page.waitForFunction(() => window.__load && window.__load.figure, null, { timeout: 120000 })
   const marks = await page.evaluate(() => ({
     child: window.__load.child ?? null,
@@ -124,6 +154,7 @@ async function run (browser, kind, context) {
 }
 
 const browser = await chromium.launch()
+const chosenBusiness = pageName === 'analytics' ? await pickBusiness(browser) : null
 const result = {
   base, page: pageName, profile, locale,
   chromium: browser.version(),
@@ -134,14 +165,14 @@ const result = {
 for (let i = 0; i < coldRuns; i++) {
   const context = await browser.newContext({ locale })
   if (target.session) await signIn(await context.newPage())
-  result.runs.push(await run(browser, 'cold', context))
+  result.runs.push(await run(browser, 'cold', context, chosenBusiness))
   await context.close()
 }
 if (warmRuns > 0) {
   const context = await browser.newContext({ locale })
   if (target.session) await signIn(await context.newPage())
-  await run(browser, 'prime', context)
-  for (let i = 0; i < warmRuns; i++) result.runs.push(await run(browser, 'warm', context))
+  await run(browser, 'prime', context, chosenBusiness)
+  for (let i = 0; i < warmRuns; i++) result.runs.push(await run(browser, 'warm', context, chosenBusiness))
   await context.close()
 }
 await browser.close()
