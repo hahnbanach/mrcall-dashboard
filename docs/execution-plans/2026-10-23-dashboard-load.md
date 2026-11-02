@@ -175,15 +175,18 @@ secret). It is the only switch between the probe and the immutable header. The d
 not brotli, because the edge neither negotiates nor varies) is written in the script's comments with
 the brief's `curl -I` evidence.
 
-**What the steps cover** (from the baseline `dist/`):
+**What the steps cover** (the baseline `dist/` after the Precompress step, shipped on 2026-11-02: `scripts/precompress.sh`
+replaces every `.js` and `.css` with its gzip bytes in place and deletes the plugin's `.gz` and `.br` siblings, so
+none reaches these steps):
 
 | Path | Content | Upload |
 |---|---|---|
-| `js/` | 122 `.js`, each with `.gz` and `.br`; 122 `.js.map` with no `.gz` | step 1 |
-| `css/` | 8 files, each with `.gz` | step 1 |
-| `fonts/` | 4 files, all without `.gz` | step 1 |
-| `img/` | 23 SVG with `.gz`, 2 PNG without | step 1 |
-| site root | `index.html` (+`.gz`, `.br`); `MrCallWebCall.bundle.js` (+`.gz`, `.br`); `_redirects`, `favicon.ico`, `robots.txt`, `sitemap.xml` | steps 2 and 4 |
+| `js/` | 122 `.js`, gzip bytes; 122 `.js.map`, raw | step 2 |
+| `css/` | 8 files, gzip bytes | step 2 |
+| `fonts/` | 4 files, raw | step 2 |
+| `img/` | 23 SVG and 2 PNG, raw (the SVGs could be added to `precompress.sh`) | step 2 |
+| site root | `MrCallWebCall.bundle.js`, gzip bytes | step 2 |
+| site root | `index.html`; `_redirects`, `favicon.ico`, `robots.txt`, `sitemap.xml` | steps 3 and 4 |
 
 All names under `js/`, `css/`, `fonts/` and `img/` carry a content hash.
 
@@ -207,15 +210,18 @@ secret: the same names are served publicly):
    Orphans are the assets of the release live before this scheme exists (the first deploy has no
    `current.txt`), and the leftovers of a deploy interrupted before step 5. They are retained like
    any superseded key rather than deleted unseen.
-2. **Hashed assets.** Every file under `js/`, `css/`, `fonts/` and `img/` except the `.gz` and `.br`
-   siblings, each with its content type and `ASSET_CACHE_CONTROL`:
-   - with a `.gz` sibling: the sibling's bytes under the original key, with `Content-Encoding: gzip`;
-   - without one (the compression plugin skips a file that does not shrink to 80% or less: today the
-     maps, fonts and PNGs): the raw file, with no `Content-Encoding`;
+2. **Hashed assets, and every `.js` and `.css`.** Every file under `js/`, `css/`, `fonts/` and `img/`, and every
+   `.js` and `.css` elsewhere (today `MrCallWebCall.bundle.js` at the root), each with its content type and
+   `ASSET_CACHE_CONTROL`:
+   - a `.js` or `.css` holds gzip bytes since the Precompress step: uploaded with `Content-Encoding: gzip`. Never
+     decide by the presence of a `.gz` sibling: there is none any more, and a bundle so judged would go up as gzip
+     bytes with no header, which breaks the site;
+   - every other file: raw, with no `Content-Encoding`;
    - no deletion in this step.
 3. **The rest of the site.** `aws s3 sync dist/ --delete` with these excludes:
-   - `js/*`, `css/*`, `fonts/*`, `img/*`: uploaded in step 2 and pruned only in step 6;
-   - `*.gz`, `*.br`: siblings, never keys of their own;
+   - `js/*`, `css/*`, `fonts/*`, `img/*`, and `*.js`, `*.css` anywhere: uploaded in step 2 and pruned only in step 6
+     (a `.js` or `.css` outside the hashed prefixes carries no hash, so step 6 deletes it as soon as the build no
+     longer has it);
    - `index.html`: uploaded last, in step 4;
    - every route key printed by `scripts/static-routes.js`. These copies of `index.html` are not in
      `dist/`, so without the exclude `--delete` would remove them. Today that leaves deep links on
@@ -251,7 +257,7 @@ never written to a file.
 - Three successive builds deployed with the script: the base commit, the candidate, and the
   candidate with one change.
 - After each, read with `aws s3api head-object` and `list-objects-v2`:
-  - every hashed key has the right `Content-Encoding` (gzip where a sibling existed, none otherwise),
+  - every key has the right `Content-Encoding` (gzip on every `.js` and `.css`, none otherwise),
     `Content-Type` and `Cache-Control`;
   - no `.gz` or `.br` key exists;
   - `index.html` and the route keys are present, with `no-cache`;
@@ -439,7 +445,7 @@ Every step past the rehearsal needs Angelo's authorisation, and production needs
 |---|---|---|
 | M0 | build and `/signin` baseline measured (brief); instrument, session figures and suite baseline pending | brief, Evidence |
 | M1 to M4, M6 to M9 | not started | |
-| M5, compression only | shipped ahead of the plan on 2026-11-02, scoped: `scripts/precompress.sh` gzips every `.js` and `.css` in place and the workflow uploads them with `Content-Encoding: gzip` in three syncs (bundles, the rest with `--delete`, then the bundles' own prune). Caching unchanged (edge default), deletion unchanged (superseded bundles go at once, as before). Still pending under M5: the immutable header after the passthrough probe, the retention lists, `scripts/deploy-assets.sh` and its rehearsal | production served 7 891 KB of JS uncompressed on `v2.2.46` (curl, 105 files, `Accept-Encoding: gzip, br`); first paint of `/login` in Chromium throttled to 9 Mbps / 170 ms: 9.3 s on production; 1.6 Mbps / 300 ms: 46.7 s. Same build served locally raw and gzipped: 10.4 s and 46.7 s raw, 5.9 s and 17.7 s gzipped. Edge passthrough of the header: see the test deploy |
+| M5, compression only | shipped ahead of the plan on 2026-11-02, scoped: `scripts/precompress.sh` gzips every `.js` and `.css` in place and the workflow uploads them with `Content-Encoding: gzip` in three syncs (bundles, the rest with `--delete`, then the bundles' own prune). Caching unchanged (edge default), deletion unchanged (superseded bundles go at once, as before). Still pending under M5: the immutable header after the passthrough probe, the retention lists, `scripts/deploy-assets.sh` and its rehearsal | production served 7 891 KB of JS uncompressed on `v2.2.46` (curl, 105 files, `Accept-Encoding: gzip, br`); first paint of `/login` in Chromium throttled to 9 Mbps / 170 ms: 9.3 s on production; 1.6 Mbps / 300 ms: 46.7 s. Same build served locally raw and gzipped: 10.4 s and 46.7 s raw, 5.9 s and 17.7 s gzipped. Edge passthrough proved on `v2.2.47-test` (commit 8f194be, run 41422948921: "precompress: 132 files gzipped"): all 105 initial assets of https://dashboard-test.mrcall.ai answer `content-encoding: gzip`, on `x-cache: miss` and on `hit-fresh`, and decode to JS; 1.98 MB transferred against 7.9 MB; favicon unencoded. Same throttled runs live: 3.7 s at 9 Mbps and 15.8 s at 1.6 Mbps, against 9.3 s and 46.6 s on production `v2.2.46`. A client sending no `Accept-Encoding` also gets gzip: every browser accepts it, and there is no negotiation to fall back on. A rollback to a tag from before 8f194be runs that tag's own workflow, which re-uploads every bundle raw without the header (its files are newer than the objects) |
 
 ## Baseline figures (`80946cf` built locally; `/signin` on dashboard-test serving `v2.2.30-test`, 2026-10-23)
 

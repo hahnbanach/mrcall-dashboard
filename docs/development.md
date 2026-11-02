@@ -36,7 +36,7 @@ Deployment is owned by `.github/workflows/deploy.yml` in this repository.
 
 A bare `vX.Y.Z` tag marks a release and triggers no deployment. Promotion uses environment tags on the same commit. Branches use numbered names such as `v2.0`; there are no `test-env`, `beta-env`, or `production-env` branches.
 
-The workflow selects its GitHub environment from the tag suffix, writes `.env.<mode>` from that environment's `ENV_FILE`, builds, and syncs `dist/` to Scaleway Object Storage in `fr-par`. Each GitHub environment supplies its own `SCW_ACCESS_KEY` and `SCW_SECRET_KEY`. These values belong in GitHub secrets. Every `VUE_APP_*` value is public build configuration, never a place for private secrets.
+The workflow selects its GitHub environment from the tag suffix, writes `.env.<mode>` from that environment's `ENV_FILE`, builds, gzips every `.js` and `.css` in place (`scripts/precompress.sh`: neither the bucket nor the edge negotiates encodings), and syncs `dist/` to Scaleway Object Storage in `fr-par`, the bundles with `Content-Encoding: gzip`. Each GitHub environment supplies its own `SCW_ACCESS_KEY` and `SCW_SECRET_KEY`. These values belong in GitHub secrets. Every `VUE_APP_*` value is public build configuration, never a place for private secrets.
 
 All environment builds explicitly set `NODE_ENV=production` and `BABEL_ENV=production` on the build step; `--mode` selects the environment file. Preserve that separation so test and beta receive production optimization. This documentation does not authorize a release or deployment.
 

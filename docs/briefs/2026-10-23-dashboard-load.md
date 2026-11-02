@@ -229,6 +229,8 @@ Measured on the revision delivered, each figure reported with its commit:
   (`minRatio: 0.8`). At `80946cf` every JS file has one; the source maps, the four fonts and two PNG
   images do not.
   A hashed asset with no `.gz` is uploaded raw, with the same cache header and no `Content-Encoding`.
+  Superseded on 2026-11-02: the deploy gzips every `.js` and `.css` itself (`scripts/precompress.sh`) and drops the
+  siblings, so the encoding follows the file type, not a sibling (plan, M5 step 2).
 - Every browser that uses the dashboard sends `Accept-Encoding: gzip`. A client that does not
   (a bare `curl`) receives gzip bytes for hashed assets.
 - The Edge Services note that requests carrying cookies bypass its cache was not reproduced on test
