@@ -1,5 +1,5 @@
 ---
-status: planned
+status: in progress
 brief: ../briefs/2026-10-23-dashboard-load.md
 owner: the dashboard session of 2026-11-02 (it also holds the v2.2 line), worktree mrcall-dashboard-wt/dashboard-load, branch dashboard-load from v2.2 at the plan's approval, local only (merged into v2.2 by fast-forward, never pushed under that name)
 target: the next dashboard release after v2.2.47
@@ -173,7 +173,8 @@ Each milestone is one or a few commits, verified on its own.
   - a new Playwright check that the first render of `/signin` in `it-IT` contains no English string
     from `en-US.json` (no flash), and the same for `/signin?lang=it-IT` and `/signup?lang=it-IT` in an
     `en-US` browser, and for `/customtokenlogin?language=it` (the query paths); plus a check that
-    `/conversations?lang=it-IT` in an `en-US` browser leaves the interface in English;
+    `/conversations?lang=it-IT` in an `en-US` browser, with a seeded session (without one the guard sends
+    it to `/signin` without `lang` and the check passes vacuously), leaves the interface in English;
   - a failed locale import before mount reloads the page once (the sessionStorage marker of M2); a second
     failure mounts with the messages that did load and logs the error, rather than leaving the splash up.
     A failed JSON editor import shows the async component's error state; a failed webcall import shows
@@ -508,7 +509,12 @@ Every step past the rehearsal needs Angelo's authorisation, and production needs
   10 Mbps cap was already met by `v2.2.47` and the splash ungated, and `checkUserHasBusinesses`' callers were
   stale (Analytics pages pass `fresh: false` since `5f08d1f`). Second pass: the rendered-app gate credited the
   sign-in route and locale chunks as removed although the form waits for them. Both repaired in the brief.
-- Plan: pending.
+- Plan, restated on 2026-11-02: REVISE twice, then APPROVED at `61cb1ee` by one fresh reviewer. First pass: the
+  unhashed root bundle would have been cached as immutable; the `lang` query flashed English before mount; the
+  rollback text was stale and the fallback named for production only; an empty `ASSET_CACHE_CONTROL` had no
+  defined meaning; removing Signin's listeners dropped the GA `login` and `verified_email` events. Second pass:
+  the custom-token route is `/customtokenlogin`, not `/customtokensignin`. All repaired; the reviewer's optional
+  note (the Conversations check needs a seeded session) folded in.
 
 ## Baseline figures (`80946cf` built locally; `/signin` on dashboard-test serving `v2.2.30-test`, 2026-10-23)
 
