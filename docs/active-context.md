@@ -36,8 +36,9 @@ in 9.34 yet); no environment sends the value until that StarChat is deployed, wh
 soon as the dashboard ships.
 
 Session ownership: every nonpublic route needs a session, the Axios interceptor alone ends it, and components suppress
-their failure UI for `isSessionEnded`. Browser tests mock StarChat and mrcall-agent; their ID tokens are JWT-shaped and
-the StarChat mock refuses an unverified one, as StarChat does.
+their failure UI for `isSessionEnded`. Browser tests mock StarChat and mrcall-agent (on `dashboard-load`
+their ID tokens are JWT-shaped and the StarChat mock refuses an unverified one, as StarChat does; on `v2.2` the token
+is a fixed string).
 
 ## Unresolved
 
@@ -50,8 +51,9 @@ the StarChat mock refuses an unverified one, as StarChat does.
   call-history reads available returned no record for it.
 - `tests/unit/skillsOwnerSave.spec.js` takes 3.5 to 5.3 s against a 5 s timeout in a fresh
   worktree, and can time out there.
-- Under a full Playwright run, 10 to 24 tablet and mobile cases fail and pass alone with one worker (commit `c61ddf2`, and the load plan's Status table); it follows the
-  machine's load (more with a rehearsal or a build beside it), the cause is not measured further.
+- Under a full Playwright run, 10 to 24 tablet and mobile cases fail and pass when rerun alone (commit `c61ddf2`; 17
+  on the `redirected` run, all 54 runs of them passing with one worker, its plan's Status table; up to 24 on
+  `dashboard-load`, its plan's Status table there); it follows the machine's load, the cause is not measured further.
 - A blank first load of about a minute was seen once in a Chrome with extensions, right after a deploy, and not in a
   clean Chromium (5 cold runs, 1.0 to 1.3 s): not reproduced, not explained.
 - The `__BOOKING__` section's move into `__CONVERSATION__` by StarChat, and the U19r6 field names assumed against
