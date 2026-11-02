@@ -1,66 +1,66 @@
-import Account from "@/views/Account.vue";
-import ActivateAssistant from "@/views/activation/ActivateAssistant";
-import BusinessConfiguration from "@/views/business/BusinessConfiguration.vue";
-import AladdinConfigurator from "@/views/business/AladdinConfigurator.vue";
-import McpConnectors from "@/views/business/McpConnectors.vue";
-import BusinessPhoneNumberVerification from "@/views/BusinessPhoneNumberVerification";
-import Businesses from "@/views/Businesses"
-import CallBooking from "@/views/CallBooking.vue";
-import CallForwardingGuide from "@/views/CallForwardingGuide";
-import Conversations from "@/views/Conversations";
-import CustomTokenSignin from "@/views/CustomTokenSignin";
-import FailedPayment from "@/views/FailedPayment"
-import FailedPaymentProduct from "@/views/FailedPaymentProduct"
-import Home from '@/views/Home.vue'
-import MagicLink from "@/views/sign/MagicLink";
-import OAuthConsent from "@/views/oauth/OAuthConsent.vue";
-import OnboardingChooseDevice from "@/views/onboarding/OnboardingChooseDevice";
-import OnboardingChoosePlan from "@/views/onboarding/OnboardingChoosePlan";
-import OnboardingForwardingOnLandline from "@/views/onboarding/OnboardingForwardingOnLandline";
-import OnboardingForwardingOnOtherDevice from "@/views/onboarding/OnboardingForwardingOnOtherDevice";
-import OnboardingForwardingOnThisDevice from "@/views/onboarding/OnboardingForwardingOnThisDevice";
-import OnboardingLanguage from "@/views/onboarding/OnboardingLanguage";
-import OnboardingMakeATestCall from "@/views/onboarding/OnboardingMakeATestCall";
-import OnboardingAssistantCreated from "@/views/onboarding/OnboardingAssistantCreated";
-import OnboardingNamePhone from "@/views/onboarding/OnboardingNamePhone";
-import OnboardingNotificationPreview from "@/views/onboarding/OnboardingNotificationPreview";
-import OnboardingPreBookAppointment from "@/views/onboarding/OnboardingPreBookAppointment";
-import OnboardingPrePayment from "@/views/OnboardingPrePayment";
-import OnboardingSearchBusiness from "@/views/onboarding/OnboardingSearchBusiness";
-import OnboardingSwitchboardConfiguration from "@/views/onboarding/OnboardingSwitchboardConfiguration";
-import OnboardingThisOrOtherDevice from "@/views/onboarding/OnboardingThisOrOtherDevice";
-import PartnerProgram from "@/views/PartnerProgram";
-import Payment from "@/views/Payment";
-import Plan from "@/views/Plan";
-import PlanAndProducts from "@/views/PlanAndProducts.vue";
-import PrivacyPolicy from "@/views/PrivacyPolicy";
-import Signin from "@/views/sign/Signin";
-import Signup from "@/views/sign/Signup.vue"
-import SuccessPayment from "@/views/SuccessPayment"
-import SuccessPaymentProduct from "@/views/SuccessPaymentProduct"
-import TermsAndConditions from "@/views/TermsAndConditions";
-import Whatsappweb from "@/views/Whatsappweb";
+const Account = () => import(/* webpackChunkName: "business" */ '@/views/Account.vue')
+const ActivateAssistant = () => import(/* webpackChunkName: "business" */ '@/views/activation/ActivateAssistant')
+const BusinessConfiguration = () => import(/* webpackChunkName: "business" */ '@/views/business/BusinessConfiguration.vue')
+const AladdinConfigurator = () => import(/* webpackChunkName: "business" */ '@/views/business/AladdinConfigurator.vue')
+const McpConnectors = () => import(/* webpackChunkName: "business" */ '@/views/business/McpConnectors.vue')
+const BusinessPhoneNumberVerification = () => import(/* webpackChunkName: "business" */ '@/views/BusinessPhoneNumberVerification')
+const Businesses = () => import(/* webpackChunkName: "business" */ '@/views/Businesses')
+const CallBooking = () => import(/* webpackChunkName: "business" */ '@/views/CallBooking.vue')
+const CallForwardingGuide = () => import(/* webpackChunkName: "business" */ '@/views/CallForwardingGuide')
+const Conversations = () => import(/* webpackChunkName: "conversations" */ '@/views/Conversations')
+const CustomTokenSignin = () => import(/* webpackChunkName: "sign" */ '@/views/CustomTokenSignin')
+const FailedPayment = () => import(/* webpackChunkName: "payment" */ '@/views/FailedPayment')
+const FailedPaymentProduct = () => import(/* webpackChunkName: "payment" */ '@/views/FailedPaymentProduct')
+const Home = () => import(/* webpackChunkName: "sign" */ '@/views/Home.vue')
+const MagicLink = () => import(/* webpackChunkName: "sign" */ '@/views/sign/MagicLink')
+const OAuthConsent = () => import(/* webpackChunkName: "oauth" */ '@/views/oauth/OAuthConsent.vue')
+const OnboardingChooseDevice = () => import(/* webpackChunkName: "onboarding" */ '@/views/onboarding/OnboardingChooseDevice')
+const OnboardingChoosePlan = () => import(/* webpackChunkName: "onboarding" */ '@/views/onboarding/OnboardingChoosePlan')
+const OnboardingForwardingOnLandline = () => import(/* webpackChunkName: "onboarding" */ '@/views/onboarding/OnboardingForwardingOnLandline')
+const OnboardingForwardingOnOtherDevice = () => import(/* webpackChunkName: "onboarding" */ '@/views/onboarding/OnboardingForwardingOnOtherDevice')
+const OnboardingForwardingOnThisDevice = () => import(/* webpackChunkName: "onboarding" */ '@/views/onboarding/OnboardingForwardingOnThisDevice')
+const OnboardingLanguage = () => import(/* webpackChunkName: "onboarding" */ '@/views/onboarding/OnboardingLanguage')
+const OnboardingMakeATestCall = () => import(/* webpackChunkName: "onboarding" */ '@/views/onboarding/OnboardingMakeATestCall')
+const OnboardingAssistantCreated = () => import(/* webpackChunkName: "onboarding" */ '@/views/onboarding/OnboardingAssistantCreated')
+const OnboardingNamePhone = () => import(/* webpackChunkName: "onboarding" */ '@/views/onboarding/OnboardingNamePhone')
+const OnboardingNotificationPreview = () => import(/* webpackChunkName: "onboarding" */ '@/views/onboarding/OnboardingNotificationPreview')
+const OnboardingPreBookAppointment = () => import(/* webpackChunkName: "onboarding" */ '@/views/onboarding/OnboardingPreBookAppointment')
+const OnboardingPrePayment = () => import(/* webpackChunkName: "onboarding" */ '@/views/OnboardingPrePayment')
+const OnboardingSearchBusiness = () => import(/* webpackChunkName: "onboarding" */ '@/views/onboarding/OnboardingSearchBusiness')
+const OnboardingSwitchboardConfiguration = () => import(/* webpackChunkName: "onboarding" */ '@/views/onboarding/OnboardingSwitchboardConfiguration')
+const OnboardingThisOrOtherDevice = () => import(/* webpackChunkName: "onboarding" */ '@/views/onboarding/OnboardingThisOrOtherDevice')
+const PartnerProgram = () => import(/* webpackChunkName: "reseller" */ '@/views/PartnerProgram')
+const Payment = () => import(/* webpackChunkName: "payment" */ '@/views/Payment')
+const Plan = () => import(/* webpackChunkName: "payment" */ '@/views/Plan')
+const PlanAndProducts = () => import(/* webpackChunkName: "payment" */ '@/views/PlanAndProducts.vue')
+const PrivacyPolicy = () => import(/* webpackChunkName: "legal" */ '@/views/PrivacyPolicy')
+const Signin = () => import(/* webpackChunkName: "sign" */ '@/views/sign/Signin')
+const Signup = () => import(/* webpackChunkName: "sign" */ '@/views/sign/Signup.vue')
+const SuccessPayment = () => import(/* webpackChunkName: "payment" */ '@/views/SuccessPayment')
+const SuccessPaymentProduct = () => import(/* webpackChunkName: "payment" */ '@/views/SuccessPaymentProduct')
+const TermsAndConditions = () => import(/* webpackChunkName: "legal" */ '@/views/TermsAndConditions')
+const Whatsappweb = () => import(/* webpackChunkName: "business" */ '@/views/Whatsappweb')
 import {auth} from '@/firebase/config';
 import { isAdmitted } from '@/firebase/admission';
 import {createRouter, createWebHistory} from 'vue-router'
-import Analytics from "@/views/Analytics.vue";
-import AnalyticsAdmin from "@/views/AnalyticsAdmin.vue";
-import AnalyticsReport from "@/views/AnalyticsReport.vue";
-import Contacts from "@/views/Contacts.vue";
-import OutboundCalls from "@/views/OutboundCalls.vue";
-import TestChat from "@/views/TestChat.vue";
-import TestReadWebData from "@/views/TestReadWebData.vue";
-import GoogleCallback from '@/components/templates/sign/GoogleCallback.vue'
-import ResellerDashboardView from "@/views/ResellerDashboard.vue"
-import ResellerInvitationCodes from "@/views/reseller/InvitationCodes.vue"
-import ResellerProfileView from "@/views/reseller/ResellerProfile.vue"
-import ResellerManagement from "@/views/admin/ResellerManagement.vue"
-import ResellerDetail from "@/views/admin/ResellerDetail.vue"
-import ProvisionReseller from "@/views/admin/ProvisionReseller.vue"
-import UserRoleManagement from "@/views/admin/UserRoleManagement.vue"
-const AgentTemplates = () => import('@/views/admin/AgentTemplates.vue')
-const AgentTemplateEditor = () => import('@/views/admin/AgentTemplateEditor.vue')
-const WizardConfiguration = () => import('@/views/wizard/WizardConfiguration.vue')
+const Analytics = () => import(/* webpackChunkName: "analytics" */ '@/views/Analytics.vue')
+const AnalyticsAdmin = () => import(/* webpackChunkName: "analytics" */ '@/views/AnalyticsAdmin.vue')
+const AnalyticsReport = () => import(/* webpackChunkName: "analytics" */ '@/views/AnalyticsReport.vue')
+const Contacts = () => import(/* webpackChunkName: "business" */ '@/views/Contacts.vue')
+const OutboundCalls = () => import(/* webpackChunkName: "business" */ '@/views/OutboundCalls.vue')
+const TestChat = () => import(/* webpackChunkName: "business" */ '@/views/TestChat.vue')
+const TestReadWebData = () => import(/* webpackChunkName: "business" */ '@/views/TestReadWebData.vue')
+const GoogleCallback = () => import(/* webpackChunkName: "sign" */ '@/components/templates/sign/GoogleCallback.vue')
+const ResellerDashboardView = () => import(/* webpackChunkName: "reseller" */ '@/views/ResellerDashboard.vue')
+const ResellerInvitationCodes = () => import(/* webpackChunkName: "reseller" */ '@/views/reseller/InvitationCodes.vue')
+const ResellerProfileView = () => import(/* webpackChunkName: "reseller" */ '@/views/reseller/ResellerProfile.vue')
+const ResellerManagement = () => import(/* webpackChunkName: "admin" */ '@/views/admin/ResellerManagement.vue')
+const ResellerDetail = () => import(/* webpackChunkName: "admin" */ '@/views/admin/ResellerDetail.vue')
+const ProvisionReseller = () => import(/* webpackChunkName: "admin" */ '@/views/admin/ProvisionReseller.vue')
+const UserRoleManagement = () => import(/* webpackChunkName: "admin" */ '@/views/admin/UserRoleManagement.vue')
+const AgentTemplates = () => import(/* webpackChunkName: "admin" */ '@/views/admin/AgentTemplates.vue')
+const AgentTemplateEditor = () => import(/* webpackChunkName: "admin" */ '@/views/admin/AgentTemplateEditor.vue')
+const WizardConfiguration = () => import(/* webpackChunkName: "business" */ '@/views/wizard/WizardConfiguration.vue')
 import store from '@/store'
 
 const routes = [
@@ -556,5 +556,29 @@ router.beforeEach(async (to, from, next) => {
   }
   next();
 });
+
+// Every page is loaded on demand, so its code can be missing when asked for: a tab opened before a deploy asks for a
+// chunk the deploy has replaced, or one request fails. The page it was going to is then loaded again from scratch,
+// once: that load fetches the current chunks. A sessionStorage marker per target stops a chunk that keeps failing
+// from reloading in a loop; it is cleared only once a navigation to that target succeeds. Any other error goes on as it
+// came (plan docs/execution-plans/2026-10-23-dashboard-load.md, M2).
+const CHUNK_FAILURE = /Loading (CSS )?chunk [^ ]+ failed|Failed to fetch dynamically imported module|Importing a module script failed/
+export const isChunkLoadError = (error) =>
+  !!error && (error.name === 'ChunkLoadError' || CHUNK_FAILURE.test(String(error.message || '')))
+const reloadMarker = (fullPath) => 'chunk-reload:' + fullPath
+
+router.onError((error, to) => {
+  if (!isChunkLoadError(error) || !to) throw error
+  const marker = reloadMarker(to.fullPath)
+  // already reloaded for this target and it failed again: no second reload. The marker stays until a navigation
+  // to the target succeeds, so that another attempt in the same tab cannot start the loop again.
+  if (sessionStorage.getItem(marker)) throw error
+  sessionStorage.setItem(marker, '1')
+  window.location.assign(to.fullPath)
+})
+
+router.afterEach((to) => {
+  sessionStorage.removeItem(reloadMarker(to.fullPath))
+})
 
 export default router
