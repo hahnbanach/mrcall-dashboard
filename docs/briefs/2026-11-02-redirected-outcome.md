@@ -39,7 +39,7 @@ the outcome lines (which then no longer add up to their base), and cannot be fil
 5. Code comments and durable docs that enumerate the lines or quote the old label, updated: in particular
    `docs/ARCHITECTURE.md`'s "How the calls went" passage ("four lines ... passed to a person").
 6. Unit and browser tests: the key lists, the outcome lines adding up with `redirected`, a report holding it, a request
-   outcome counted and not in the default not-fulfilled view, the new label where tests read the old one.
+   outcome counted, the default request asking for no outcome and `all=true` listing it, the new label where tests read the old one.
 
 Out of scope: StarChat itself; reading the report's `content.outcome` (StarChat writes it, the dashboard does not read
 it yet: a separate change); any new view; the `notSolved` definition (StarChat's, unchanged: `redirected` is not in
