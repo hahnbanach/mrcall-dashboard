@@ -4,7 +4,8 @@ import App from '@/App.vue'
 import PrimeVue from 'primevue/config'
 import router from '@/router'
 
-import i18n from '@/i18n'
+import i18n, { startLocale } from '@/i18n'
+import { isLeaving, reloadPage } from '@/utils/pageReload'
 import Accordion from "primevue/accordion";
 import AccordionTab from "primevue/accordiontab";
 import ConfirmationService from "primevue/confirmationservice"
@@ -84,6 +85,26 @@ import { setupAuthListener } from './firebase/authUtils'
 import { initGTM, checkDataLayer } from './gtm'
 // Import axios config to set up interceptors globally
 import './firebase/axiosConfig'
+
+// The starting locale's chunk is asked for first, so that its request overlaps the set-up below (plan
+// docs/execution-plans/2026-10-23-dashboard-load.md, M3). If it fails, the page is loaded again once; a second failure
+// mounts with whatever messages did load rather than leaving the page empty. The marker is the locale's own, cleared
+// only when the locale loads: the router's marker for a page chunk is cleared as soon as a navigation succeeds, which
+// here happens before the locale fails, and sharing it reloaded the page in a loop.
+const localeReloadMarker = 'locale-reload:' + window.location.pathname + window.location.search
+const localeReady = startLocale().then(
+    () => sessionStorage.removeItem(localeReloadMarker),
+    (error) => {
+        // cancelled because the page is already leaving (a page chunk's reload, in WebKit): not a failure
+        if (isLeaving()) return new Promise(() => {})
+        if (!sessionStorage.getItem(localeReloadMarker)) {
+            sessionStorage.setItem(localeReloadMarker, '1')
+            reloadPage()
+            return new Promise(() => {})
+        }
+        console.error('The interface language could not be loaded:', error)
+    }
+)
 
 const MrCallPreset = definePreset(predefinedTheme, {
     semantic: {
@@ -208,4 +229,4 @@ app.use(JsonEditorVue, {
     // global config
 })
 
-router.isReady().then(() => app.mount('#app'))
+Promise.all([localeReady, router.isReady()]).then(() => app.mount('#app'))

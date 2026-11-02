@@ -18,7 +18,6 @@
 
 <script>
 import Navbar from '@/components/Navbar'
-import { loadLanguageAsync } from '@/i18n/index.js'
 import { computed, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
@@ -39,16 +38,8 @@ export default {
       primevue.config.locale = { ...primevue.config.locale, ...primeLocale(tag, t) }
     }, { immediate: true })
 
-    async function changeLanguage(locale) {
-      try {
-        await loadLanguageAsync(locale)
-      } catch (error) {
-        console.error('Failed to change language:', error)
-      }
-    }
     return {
       store,
-      changeLanguage,
       managedBy: computed(() => store.state.managedBy),
       user: computed(() => store.state.user),
       authIsReady: computed(() => store.state.authIsReady),

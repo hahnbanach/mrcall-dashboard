@@ -52,3 +52,21 @@ if (globalThis.jsdom) {
     }
   }
 }
+
+/**
+ * The app loads each locale on demand (src/i18n/index.js, plan docs/execution-plans/2026-10-23-dashboard-load.md,
+ * M3), and the shared i18n instance starts with no messages. Specs that mount with it and assert on text would then
+ * depend on a load having finished by accident. The twelve locales are registered here, synchronously, under their
+ * full tag and short alias as the loader registers them; tests/unit/localeLoader.spec.js covers the loader itself.
+ */
+import i18n from '@/i18n'
+import { readdirSync, readFileSync } from 'node:fs'
+import { join } from 'node:path'
+
+const localesDir = join(__dirname, '../../src/i18n/locales')
+for (const file of readdirSync(localesDir).filter((f) => f.endsWith('.json'))) {
+  const locale = file.replace(/\.json$/, '')
+  const messages = JSON.parse(readFileSync(join(localesDir, file), 'utf8'))
+  i18n.global.setLocaleMessage(locale, messages)
+  i18n.global.setLocaleMessage(locale.split('-')[0], messages)
+}

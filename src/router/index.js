@@ -62,6 +62,7 @@ const AgentTemplates = () => import(/* webpackChunkName: "admin" */ '@/views/adm
 const AgentTemplateEditor = () => import(/* webpackChunkName: "admin" */ '@/views/admin/AgentTemplateEditor.vue')
 const WizardConfiguration = () => import(/* webpackChunkName: "business" */ '@/views/wizard/WizardConfiguration.vue')
 import store from '@/store'
+import { isLeaving, reloadPage } from '@/utils/pageReload'
 
 const routes = [
   {
@@ -569,12 +570,14 @@ const reloadMarker = (fullPath) => 'chunk-reload:' + fullPath
 
 router.onError((error, to) => {
   if (!isChunkLoadError(error) || !to) throw error
+  // a download the browser cancelled because the page is leaving: the next page load fetches it anyway
+  if (isLeaving()) return
   const marker = reloadMarker(to.fullPath)
   // already reloaded for this target and it failed again: no second reload. The marker stays until a navigation
   // to the target succeeds, so that another attempt in the same tab cannot start the loop again.
   if (sessionStorage.getItem(marker)) throw error
   sessionStorage.setItem(marker, '1')
-  window.location.assign(to.fullPath)
+  reloadPage(to.fullPath)
 })
 
 router.afterEach((to) => {

@@ -44,8 +44,43 @@ test('a chunk that keeps failing is not reloaded in a loop', async ({ page }) =>
   page.on('request', (r) => { if (r.resourceType() === 'document' && r.url().endsWith('/signin')) documents += 1 })
 
   await page.goto('/signin')
-  await page.waitForTimeout(4000)
+  // the second attempt is the reload's; then nothing more may come
+  await expect.poll(() => asked, { timeout: 15000 }).toBe(2)
+  await page.waitForTimeout(3000)
   // one reload, never a second: the first failure reloads, the second is left to fail
   expect(documents).toBe(2)
   expect(asked).toBe(2)
+})
+
+// M3: each locale is a chunk loaded before the app mounts. A failure reloads the page once, with the same marker.
+const LOCALE_CHUNK = /\/js\/locale-en-US(\.[0-9a-f]+)?\.js(\?.*)?$/
+
+test('a locale whose chunk fails once is loaded again, and the page is in that language', async ({ page }) => {
+  await page.route('**/googleapis.com/**', (route) => route.abort())
+  await page.route('**/googletagmanager.com/**', (route) => route.abort())
+  let asked = 0
+  await page.route(LOCALE_CHUNK, (route) => {
+    asked += 1
+    return asked === 1 ? route.abort() : route.continue()
+  })
+  await page.goto('/signin')
+  await expect(page.locator('#email')).toHaveAttribute('placeholder', 'Enter your email', { timeout: 15000 })
+  expect(asked).toBe(2)
+})
+
+test('a locale that keeps failing still lets the page mount, after one reload', async ({ page }) => {
+  await page.route('**/googleapis.com/**', (route) => route.abort())
+  await page.route('**/googletagmanager.com/**', (route) => route.abort())
+  let asked = 0
+  await page.route(LOCALE_CHUNK, (route) => { asked += 1; return route.abort() })
+  let documents = 0
+  page.on('request', (r) => { if (r.resourceType() === 'document' && r.url().endsWith('/signin')) documents += 1 })
+  const errors = []
+  page.on('console', (m) => { if (m.type() === 'error') errors.push(m.text()) })
+  await page.goto('/signin')
+  // mounted, with the keys in place of the messages: a page that can be used, not a blank one
+  await expect(page.locator('#email')).toBeVisible({ timeout: 15000 })
+  expect(documents).toBe(2)
+  expect(asked).toBe(2)
+  expect(errors.some((e) => e.includes('The interface language could not be loaded'))).toBe(true)
 })
