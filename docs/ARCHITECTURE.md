@@ -412,7 +412,6 @@ separate page refresh failure or retained edits from the confirmed Save outcome.
 - Axios interceptor catches 401 and refreshes token with request queue, and is the only code that ends a session on a 401 (`axiosConfig.js`)
 - Router guard asks for a session on every route not declared public, and enforces email verification (`router/index.js`); it waits on `readyUser` (`firebase/sessionReady.js`), one readiness promise, not a listener per navigation
 - Sign-in (`components/templates/sign/Signin.vue`): one step after authentication, `afterAuth(user)`, for a resumed session, a password and an email link; no `user.reload()` (Firebase reloads the user when it starts) and no forced refresh beyond the claim check of `readyUser`
-
 - Cross-domain cookie (`mrcall_uid`) for shared mrcall.ai domains (`firebase/authUtils.js`, set and cleared when the sign-in state changes)
 
 ### Start-up
