@@ -39,8 +39,10 @@ permissions:
   contents: read
 
 concurrency:
-  # One deploy at a time per environment; two tags for the same one queue up.
-  group: deploy-${{ github.ref_name }}
+  # One deploy at a time per environment; two tags for the same one queue up. The group was the tag, so two tags for
+  # one environment could interleave; with the retention manifests of scripts/deploy-assets.sh (current.txt and the
+  # superseded lists, read and written by every deploy) that would lose a record, so the group is the environment.
+  group: deploy-${{ endsWith(github.ref_name, '-production') && 'production' || endsWith(github.ref_name, '-beta') && 'beta' || 'test' }}
   cancel-in-progress: false
 
 jobs:
@@ -123,17 +125,24 @@ jobs:
       - name: Precompress
         run: scripts/precompress.sh dist
 
-      # sync, not "rm --recursive" then "cp". The old pipeline emptied the bucket and
-      # then refilled it, so for the length of a deploy the site was a 404. sync
-      # writes in place and never empties it.
+      # The upload is scripts/deploy-assets.sh, which the rehearsal (scripts/rehearse-deploy-assets.sh) runs too: the
+      # assets first (gzip .js and .css declared as such, the hashed ones with ASSET_CACHE_CONTROL), then the rest of the
+      # site with --delete, then index.html and its route copies with no-cache, and the assets of earlier releases kept
+      # 14 days after the deploy that replaced them, for tabs opened before it (plan
+      # docs/execution-plans/2026-10-23-dashboard-load.md, M5; the script says why each step is where it is).
       #
-      # Nothing else writes to these buckets: the SDK is consumed from npm and has
-      # no CDN copy, so --delete can own the whole prefix.
+      # ASSET_CACHE_CONTROL is a variable of each GitHub environment, not a secret, and required: the script stops if it
+      # is empty. `none` sets no header (the behaviour before), `public, max-age=60` is the probe, and
+      # `public, max-age=31536000, immutable` the value once the probe has shown the edge keeps it.
+      #
+      # Nothing else writes to these buckets: the SDK is consumed from npm and has no CDN copy, so the script can own
+      # the whole prefix.
       - name: Deploy
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.SCW_ACCESS_KEY }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.SCW_SECRET_KEY }}
           AWS_DEFAULT_REGION: fr-par
+          ASSET_CACHE_CONTROL: ${{ vars.ASSET_CACHE_CONTROL }}
         run: |
           # `gh secret set` with nothing on stdin stores an empty string rather than
           # failing, so a secret can exist and be blank. Without this check the AWS
@@ -143,40 +152,9 @@ jobs:
             echo "SCW_ACCESS_KEY or SCW_SECRET_KEY is empty on the '${{ steps.meta.outputs.mode }}' environment" >&2
             exit 1
           fi
-          # Three passes, because the .js and .css objects hold gzip bytes and must say so, and nothing else may.
-          # 1. The bundles first, so that no page names a bundle not yet there.
-          # 2. Everything else, deleting what the build no longer has, but no bundle: an excluded key is never deleted.
-          # 3. The bundles again, only to delete the ones the build no longer has. Nothing is re-uploaded (the objects
-          #    are newer than the files and the same size), and should one be, it goes up with the same header.
-          # The bundles keep the edge's default caching, as before: a year-long immutable header and keeping superseded
-          # bundles for open tabs are milestone M5 of docs/execution-plans/2026-10-23-dashboard-load.md, which wants a
-          # short-lived trial first, since a wrong header would then stay cached for a year.
-          bucket="s3://${{ steps.meta.outputs.bucket }}"
-          endpoint=https://s3.fr-par.scw.cloud
-          bundles=(--exclude '*' --include '*.js' --include '*.css' --content-encoding gzip)
-          aws s3 sync dist/ "$bucket" "${bundles[@]}" --endpoint-url "$endpoint"
-          aws s3 sync dist/ "$bucket" --delete --exclude '*.js' --exclude '*.css' --endpoint-url "$endpoint"
-          aws s3 sync dist/ "$bucket" "${bundles[@]}" --delete --endpoint-url "$endpoint"
-
-          # Deep links. The bucket answers a key it does not hold with index.html under
-          # status 404, so every route but "/" rendered and reported Not Found; neither the
-          # bucket nor Edge Services can rewrite. index.html is therefore also written under
-          # the key of each route that has no parameter (scripts/static-routes.js says which
-          # and why). After the sync, because --delete removes every key that is not a file
-          # in dist/: for the seconds in between, a deep link falls back to the 404 it had
-          # before, and still renders. The keys have no extension, so the content type is
-          # set here.
-          #
-          # Every copy of index.html, the original included, goes up with no-cache. Without
-          # a Cache-Control header the edge keeps a response for its fallback TTL (120s on
-          # all three pipelines, read 2026-10-03), and the sync above has just deleted the
-          # hashed bundles the previous index.html names: for up to two minutes after each
-          # deploy a cached page would load scripts that no longer exist. The bundles keep
-          # the edge default; their names change with their content.
-          set -o pipefail
-          ( echo index.html; node scripts/static-routes.js | sed 's#^/##' ) | xargs -P 8 -I{} \
-            aws s3 cp dist/index.html "s3://${{ steps.meta.outputs.bucket }}/{}" \
-              --content-type "text/html" \
-              --cache-control "no-cache" \
-              --only-show-errors \
-              --endpoint-url https://s3.fr-par.scw.cloud
+          scripts/deploy-assets.sh \
+            --endpoint https://s3.fr-par.scw.cloud \
+            --bucket "${{ steps.meta.outputs.bucket }}" \
+            --cache-control "$ASSET_CACHE_CONTROL" \
+            --retention-days 14 \
+            --dist dist
