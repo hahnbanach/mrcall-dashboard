@@ -24,6 +24,8 @@ npx playwright test --project=desktop
 
 The base URL is `http://localhost:8080`, or `http://localhost:$E2E_PORT` when `E2E_PORT` is set (for when another process holds 8080: a container bound to `[::1]:8080` answers `localhost` first); the fixtures read the same origin from `tests/e2e/fixtures/origin.js`, and the test server is started on that port. Desktop, tablet and mobile projects use widths of 1440, 768 and 375 pixels. Visual specs run only under the desktop project and select their own viewport sizes. The test server runs `npm run serve -- --mode test --port <port>`; the test process loads `.env.test` when present and otherwise `.env`. Supply local configuration before running the application; do not commit credentials.
 
+Load times are measured with `scripts/measure-load.mjs` (Playwright Chromium): `--base <url> --page signin|businesses|analytics --profile unthrottled|10mbps [--cold 7] [--warm 5] [--locale en-US] [--out file.json]`. Per run it reports the splash, the page's first figure, bytes, requests, the token calls, and the chunks fetched before the figure with their gzip bytes. The `businesses` and `analytics` pages sign in fresh in each run with `MEASURE_EMAIL` and `MEASURE_PASSWORD` read from the environment (keep them in a file outside the repository, never in an argument); `analytics` opens the first of the account's businesses that shows a figure, or `MEASURE_BUSINESS_ID`.
+
 ## Environment routing
 
 Deployment is owned by `.github/workflows/deploy.yml` in this repository.

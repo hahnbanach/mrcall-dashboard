@@ -11,3 +11,5 @@
 | doc | lines at review | verdict | date |
 |---|---|---|---|
 | docs/execution-plans/2026-10-23-dashboard-load.md | 456 | keep whole — active workstream plan read by section | 2026-10-27 |
+| docs/ARCHITECTURE.md | 471 | keep whole — an index, read by section | 2026-11-02 |
+| docs/briefs/2026-10-27-classification-feedback.md | 806 | keep whole — one approved argument, read when entering that area | 2026-11-02 |
