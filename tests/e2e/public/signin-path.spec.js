@@ -95,8 +95,8 @@ test.describe('the sign-in path', () => {
     expect(calls.securetoken).toBe(0)
     // Firebase's own lookup at start-up, and no second one from a user.reload()
     expect(calls.lookup).toBeLessThanOrEqual(1)
-    // a session resumed is no sign-in: `login` fires on a password or magic-link sign-in only, as it did
-    expect(await gaEvents(page)).not.toContain('login')
+    // the events v2.2.47 sent: `login` for a resumed session too (measured there by the M6-M9 review, 4 of 4)
+    expect(await gaEvents(page)).toContain('login')
   })
 
   test('5. / with a session reaches the first page without the sign-in form ever showing', async ({ page }) => {

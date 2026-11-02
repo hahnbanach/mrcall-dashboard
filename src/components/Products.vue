@@ -378,6 +378,8 @@ export default {
       immediate: true,
       handler (business) {
         if (business && business.template) this.productList()
+        // nothing to read: an answer still on its way is stale and dropped, so the bar is not left turning
+        else this.showProgressBar = false
       }
     }
   }

@@ -210,11 +210,20 @@ export default {
 
     // A persisted session: Firebase has reloaded the user at start-up and readyUser has matched the token to it (one
     // refresh, only when the token's email_verified claim lags, as back from the confirmation email), so neither a
-    // user.reload() nor a forced refresh here. A session resumed is no sign-in: no `login` event, as before.
-    const user = await readyUser()
+    // user.reload() nor a forced refresh here. The events are the ones the listeners sent, measured on v2.2.47 (the
+    // M6-M9 review): `login` for a resumed session, `verified_email` instead of it back from the confirmation email.
+    // A token that could not be refreshed leaves the form, as the failed forced refresh did; the next try refreshes.
+    let user = null
+    try {
+      user = await readyUser()
+    } catch (error) {
+      console.error("The session could not be resumed:", error)
+    }
     if(user) {
       if(confirmEmail) {
         this.$gtag.event("verified_email", { 'user_email': user.email })
+      } else {
+        this.$gtag.event("login", { 'user_email': user.email })
       }
       return this.afterAuth(user)
     }
@@ -281,6 +290,9 @@ export default {
         
         console.debug("Login successful, user:", this.store.state.user);
         
+        // `login` for every successful sign-in, verified or not, as the listener sent it on v2.2.47
+        this.$gtag.event("login", { 'user_email': auth.currentUser?.email })
+
         // Add more detailed logging for the email verification check
         if(this.store.state.user) {
           console.debug("Email verified status:", this.store.state.user.emailVerified);
@@ -292,7 +304,6 @@ export default {
             this.errorType = "EMAIL_NOT_VERIFIED";
             this.toggleDialog();
           } else {
-            this.$gtag.event("login", { 'user_email': auth.currentUser?.email })
             await this.afterAuth(auth.currentUser)
           }
         }

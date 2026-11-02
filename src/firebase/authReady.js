@@ -3,8 +3,9 @@
  * that the 401 interceptor never retries. Someone back from the confirmation email holds the token minted before they
  * verified: Firebase's start-up reload updates `user.emailVerified`, not the token. The token is refreshed then, and
  * only then: when its claim, read locally, differs from `user.emailVerified`, or cannot be read (what was done before,
- * on every start). A failed refresh is reported and the way goes on, as it did when the forced refresh failed (plan
- * docs/execution-plans/2026-10-23-dashboard-load.md, M7).
+ * on every start). A failed refresh rejects: the guard then sends to sign-in and Signin.vue stays on its form, as a
+ * failed forced refresh left it, rather than going on with a token StarChat refuses (plan
+ * docs/execution-plans/2026-10-23-dashboard-load.md, M7; the M6-M9 review).
  */
 export async function matchTokenToUser (user) {
   let claim
@@ -15,11 +16,7 @@ export async function matchTokenToUser (user) {
     claim = undefined
   }
   if (claim === user.emailVerified) return false
-  try {
-    await user.getIdToken(true)
-  } catch (error) {
-    console.error('The token could not be refreshed:', error)
-  }
+  await user.getIdToken(true)
   return true
 }
 
@@ -38,7 +35,12 @@ export function userWhenReady (auth) {
     await ready
     const user = auth.currentUser
     if (user) {
-      if (!matched.has(user)) matched.set(user, matchTokenToUser(user))
+      if (!matched.has(user)) {
+        const check = matchTokenToUser(user)
+        // a failed check is forgotten, so that the next navigation or sign-in page tries again
+        check.catch(() => matched.delete(user))
+        matched.set(user, check)
+      }
       await matched.get(user)
     }
     return user

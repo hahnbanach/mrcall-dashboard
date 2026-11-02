@@ -63,3 +63,17 @@ describe('matchTokenToUser', () => {
     expect(user.refreshes).toBe(1)
   })
 })
+
+describe('a refresh that fails', () => {
+  it('rejects, and the next call tries again', async () => {
+    const user = { emailVerified: true, refreshes: 0 }
+    user.getIdTokenResult = () => Promise.resolve({ claims: { email_verified: false } })
+    let fail = true
+    user.getIdToken = () => { user.refreshes += 1; return fail ? Promise.reject(new Error('offline')) : Promise.resolve('t') }
+    const ready = userWhenReady({ currentUser: user, authStateReady: () => Promise.resolve() })
+    await expect(ready()).rejects.toThrow('offline')
+    fail = false
+    await expect(ready()).resolves.toBe(user)
+    expect(user.refreshes).toBe(2)
+  })
+})
