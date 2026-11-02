@@ -2872,6 +2872,11 @@
       "nextDecade": "Década siguiente",
       "today": "Hoy",
       "clear": "Borrar"
+    },
+    "widgets": {
+      "jsonEditor": {
+        "loadFailed": "No se ha podido cargar el editor. Recarga la página para volver a intentarlo; no se ha cambiado nada."
+      }
     }
   },
   "views": {

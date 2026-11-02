@@ -2860,6 +2860,11 @@
       "nextDecade": "Décennie suivante",
       "today": "Aujourd'hui",
       "clear": "Effacer"
+    },
+    "widgets": {
+      "jsonEditor": {
+        "loadFailed": "L'éditeur n'a pas pu être chargé. Rechargez la page pour réessayer ; rien n'a été modifié."
+      }
     }
   },
   "views": {

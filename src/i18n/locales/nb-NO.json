@@ -2858,6 +2858,11 @@
       "nextDecade": "Neste tiår",
       "today": "I dag",
       "clear": "Tøm"
+    },
+    "widgets": {
+      "jsonEditor": {
+        "loadFailed": "Redigeringsverktøyet kunne ikke lastes inn. Last inn siden på nytt for å prøve igjen; ingenting er endret."
+      }
     }
   },
   "views": {

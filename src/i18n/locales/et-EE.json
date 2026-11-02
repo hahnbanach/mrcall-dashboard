@@ -2858,6 +2858,11 @@
       "nextDecade": "Järgmine kümnend",
       "today": "Täna",
       "clear": "Tühjenda"
+    },
+    "widgets": {
+      "jsonEditor": {
+        "loadFailed": "Redaktorit ei õnnestunud laadida. Laadi leht uuesti, et uuesti proovida; midagi ei muudetud."
+      }
     }
   },
   "views": {

@@ -2858,6 +2858,11 @@
       "nextDecade": "Volgend decennium",
       "today": "Vandaag",
       "clear": "Wissen"
+    },
+    "widgets": {
+      "jsonEditor": {
+        "loadFailed": "De editor kon niet worden geladen. Laad de pagina opnieuw om het nog eens te proberen; er is niets gewijzigd."
+      }
     }
   },
   "views": {

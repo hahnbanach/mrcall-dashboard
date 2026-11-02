@@ -1,4 +1,4 @@
-import {createApp} from 'vue'
+import {createApp, defineAsyncComponent} from 'vue'
 
 import App from '@/App.vue'
 import PrimeVue from 'primevue/config'
@@ -79,7 +79,7 @@ import store from '@/store/index'
 import {createMetaManager, plugin as metaPlugin} from 'vue-meta'
 import TieredMenu from "primevue/tieredmenu";
 import PanelMenu from "primevue/panelmenu";
-import JsonEditorVue from 'json-editor-vue';
+import JsonEditorLoadError from '@/components/widgets/JsonEditorLoadError.vue'
 import {definePreset} from "@primevue/themes";
 import { setupAuthListener } from './firebase/authUtils'
 import { initGTM, checkDataLayer } from './gtm'
@@ -225,8 +225,12 @@ app.component('Toolbar', Toolbar)
 app.directive('Tooltip', Tooltip)
 app.directive('sticky-head', stickyHead)
 
-app.use(JsonEditorVue, {
-    // global config
-})
+// The JSON editor (about 0.85 MB with CodeMirror) is fetched by the first page that draws one, not by every page
+// (plan docs/execution-plans/2026-10-23-dashboard-load.md, M4). Same name as the plugin registered, so TupleVariable,
+// BusinessConfiguration and JsonField keep writing <JsonEditorVue>; the plugin had no global option to keep.
+app.component('JsonEditorVue', defineAsyncComponent({
+    loader: () => import(/* webpackChunkName: "json-editor" */ 'json-editor-vue'),
+    errorComponent: JsonEditorLoadError,
+}))
 
 Promise.all([localeReady, router.isReady()]).then(() => app.mount('#app'))

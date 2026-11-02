@@ -2858,6 +2858,11 @@
       "nextDecade": "Nästa decennium",
       "today": "Idag",
       "clear": "Rensa"
+    },
+    "widgets": {
+      "jsonEditor": {
+        "loadFailed": "Redigeraren kunde inte läsas in. Ladda om sidan för att försöka igen; inget har ändrats."
+      }
     }
   },
   "views": {

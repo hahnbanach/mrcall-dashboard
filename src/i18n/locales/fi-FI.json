@@ -2858,6 +2858,11 @@
       "nextDecade": "Seuraava vuosikymmen",
       "today": "Tänään",
       "clear": "Tyhjennä"
+    },
+    "widgets": {
+      "jsonEditor": {
+        "loadFailed": "Editoria ei voitu ladata. Lataa sivu uudelleen yrittääksesi uudestaan; mitään ei muutettu."
+      }
     }
   },
   "views": {

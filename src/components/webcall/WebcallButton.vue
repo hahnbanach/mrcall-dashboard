@@ -22,7 +22,6 @@
 import { ref, computed, shallowRef, markRaw, onMounted, onBeforeUnmount, onUnmounted } from 'vue'
 import Button from 'primevue/button'
 import { useToast } from 'primevue/usetoast'
-import MrCallWebCall from '/public/MrCallWebCall.bundle.js'
 import MicPermissionDialog from './MicPermissionDialog.vue'
 import { classifyVoiceError, getMicPermissionState, watchMicPermission } from '@/utils/voiceErrors'
 
@@ -105,7 +104,22 @@ let lastStartError = null
 const inCall = computed(() => dialing.value || !!callId.value)
 
 /* ---------------- helpers ------------------------------------------------ */
-function buildClientIfNeeded () {
+// The call client (about 1.2 MB) is fetched the first time a call starts, not with every page that shows the button
+// (plan docs/execution-plans/2026-10-23-dashboard-load.md, M4). A failed fetch is forgotten, so the next click tries
+// again; `startCall` shows it as any other start error, while `processing` keeps the button busy.
+let webCallModule = null
+function loadWebCall () {
+  if (!webCallModule) {
+    webCallModule = import(/* webpackChunkName: "webcall" */ '/public/MrCallWebCall.bundle.js')
+      .then((module) => module.default || module)
+    webCallModule.catch(() => { webCallModule = null })
+  }
+  return webCallModule
+}
+
+async function buildClientIfNeeded () {
+  if (client.value) return
+  const MrCallWebCall = await loadWebCall()
   if (client.value) return
 
   const cfg = {
@@ -225,7 +239,7 @@ async function startCall () {
   }
 
   try {
-    buildClientIfNeeded()
+    await buildClientIfNeeded()
     await client.value.initialize()
     const id = await client.value.makeCall()
     callId.value = id

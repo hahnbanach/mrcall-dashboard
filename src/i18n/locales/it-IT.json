@@ -2864,6 +2864,11 @@
       "nextDecade": "Decennio successivo",
       "today": "Oggi",
       "clear": "Cancella"
+    },
+    "widgets": {
+      "jsonEditor": {
+        "loadFailed": "Non è stato possibile caricare l'editor. Ricarica la pagina per riprovare; non è stato modificato nulla."
+      }
     }
   },
   "views": {

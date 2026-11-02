@@ -2858,6 +2858,11 @@
       "nextDecade": "Næste årti",
       "today": "I dag",
       "clear": "Ryd"
+    },
+    "widgets": {
+      "jsonEditor": {
+        "loadFailed": "Editoren kunne ikke indlæses. Genindlæs siden for at prøve igen; intet er ændret."
+      }
     }
   },
   "views": {

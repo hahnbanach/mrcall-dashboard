@@ -2863,6 +2863,11 @@
       "nextDecade": "Next Decade",
       "today": "Today",
       "clear": "Clear"
+    },
+    "widgets": {
+      "jsonEditor": {
+        "loadFailed": "The editor could not be loaded. Reload the page to try again; nothing has been changed."
+      }
     }
   },
   "views": {

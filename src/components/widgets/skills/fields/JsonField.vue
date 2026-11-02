@@ -1,5 +1,5 @@
 <script setup>
-import JsonEditorVue from 'json-editor-vue'
+// <JsonEditorVue> is the global async component of main.js: the editor is fetched when the field is first drawn.
 
 /** A document written by hand. Text mode rather than the tree: what is stored is a string, and a
   * tree editor would reformat it on every open, which shows as a change nobody made. */

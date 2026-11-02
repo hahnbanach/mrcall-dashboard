@@ -451,3 +451,36 @@ test.describe('a new instance takes the default of its phase', () => {
       expect(JSON.parse(d.variables).map(r => [r[0], r[2]])).toEqual([['reason', 'false'], ['FULL_NAME', 'false']])
     })
 })
+
+/**
+ * Plan docs/execution-plans/2026-10-23-dashboard-load.md, M4: the JSON editor is fetched when a JSON field is first
+ * drawn, not with every page. The Sheets card's columns are such a field. Its editor must arrive and show the value;
+ * if its chunk cannot be fetched, the field says so instead of staying blank.
+ */
+test.describe('a JSON field fetches its editor when drawn', () => {
+  const JSON_EDITOR_CHUNK = /\/js\/[^/]*json-editor[^/]*\.js(\?.*)?$/
+
+  test('the Sheets columns open in the editor', async ({ authenticatedPage: page }) => {
+    await mockSkillsScreen(page, { skills: [sheetsRow], during: [] })
+    const fetched = []
+    page.on('request', (r) => { if (JSON_EDITOR_CHUNK.test(r.url())) fetched.push(r.url()) })
+    await page.goto(`/businessconfiguration?id=${business.businessId}&section=${SECTION}`)
+    await expect(page.locator('.agent-skills-configurator')).toBeVisible({ timeout: 20000 })
+    expect(fetched, 'no editor before a JSON field is drawn').toEqual([])
+
+    const card = await addTo(page, 2, 'google_sheets_write')
+    const editor = card.locator('.json-editor-field')
+    await expect(editor).toBeVisible({ timeout: 15000 })
+    await expect(editor.locator('.cm-content')).toContainText('"', { timeout: 15000 })
+    expect(fetched.length).toBeGreaterThan(0)
+  })
+
+  test('an editor that cannot be fetched is said, not left blank', async ({ authenticatedPage: page }) => {
+    await mockSkillsScreen(page, { skills: [sheetsRow], during: [] })
+    await page.route(JSON_EDITOR_CHUNK, (route) => route.abort())
+    await page.goto(`/businessconfiguration?id=${business.businessId}&section=${SECTION}`)
+    await expect(page.locator('.agent-skills-configurator')).toBeVisible({ timeout: 20000 })
+    const card = await addTo(page, 2, 'google_sheets_write')
+    await expect(card.locator('.json-editor-load-error')).toHaveText(/The editor could not be loaded/, { timeout: 15000 })
+  })
+})
