@@ -1,7 +1,7 @@
 ---
 status: planned
 brief: ../briefs/2026-10-23-dashboard-load.md
-owner: the dashboard session of 2026-11-02 (it also holds the v2.2 line), worktree mrcall-dashboard-wt/dashboard-load, branch dashboard-load from v2.2 at the plan's approval
+owner: the dashboard session of 2026-11-02 (it also holds the v2.2 line), worktree mrcall-dashboard-wt/dashboard-load, branch dashboard-load from v2.2 at the plan's approval, local only (merged into v2.2 by fast-forward, never pushed under that name)
 target: the next dashboard release after v2.2.47
 created: 2026-10-23
 ---
@@ -71,12 +71,24 @@ Every figure the brief's acceptance 3 and 4 gate on is produced this way and no 
   1. The baseline series runs on dashboard-test against the release it serves, immediately before
      the test deploy of this work.
   2. The candidate series runs immediately after that deploy's verification, within 60 minutes of
-     the baseline.
+     the baseline. If the window is missed, both series are retaken on beta, which serves the previous
+     release until M9 step 4: baseline there, candidate on test, alternating within one window.
+     Cold runs disable the cache, so the gated figures do not depend on whether the immutable step
+     ran; if the probe fails and step 3 is dropped, acceptance 3 and 4 are measured after step 2, and
+     only the warm-reload item is reported as not applicable.
   3. A second, local A/B corroborates the bundle effect on a quiet edge. Both `dist/` builds (the
      base commit and the candidate) are served from one local static server that sets the same
      headers the deploy sets. Runs alternate A, B, A, B.
 - **Statistic**: the median per figure, page and profile, with minimum and maximum. Every run is
   reported. A run is discarded only for a recorded network error, and is then repeated and listed.
+- **If the unthrottled gate fails**: the extra serialized requests on the path to the form are the
+  suspect (the route chunk and the locale). Two levers, tried in this order and each measured again under
+  the protocol, with the outcome recorded:
+  1. the sign-in route group back in the initial bundle: one request fewer, its bytes counted in
+     acceptance 1;
+  2. the locale import started at the very top of `main.js`, before the rest of its set-up, so that it
+     overlaps the bundle's evaluation. A `<link rel="preload">` cannot do it: which locale chunk is needed
+     is known only at run time.
 - **Gates**: the brief's thresholds are relative to the baseline series of step 1. The brief's
   `v2.2.30-test` figures (uncompressed) and its `v2.2.47` production reference (gzipped, 2026-11-02:
   10 Mbps form median 2 170 ms, splash not yet existing, unthrottled 599 ms) are kept for reference.
@@ -130,8 +142,11 @@ Each milestone is one or a few commits, verified on its own.
   - `switchLanguage` awaits the loader before setting the locale;
   - `getLocale` resolves the locale without setting it (it is called inside computed properties);
   - the setter goes through the loader.
-- `main.js` resolves the active locale (localStorage, then navigator, then the default, the order used
-  today). It awaits that locale and the fallback, in parallel, before `app.mount`, and the splash
+- `main.js` resolves the active locale before mount, in this order: the URL's `lang` query (read by
+  `Signin.vue:177` and `Signup.vue:162` today), or on `/customtokensignin` its `language` query mapped as
+  `CustomTokenSignin.vue:36-42` maps it (`it*` to `it-IT`, anything else to `en-US`); then localStorage, then
+  navigator, then the default (the order used today). Those components keep their switch, which then finds
+  the locale already loaded and does not wait, so a link carrying a language shows no other language first. It awaits that locale and the fallback, in parallel, before `app.mount`, and the splash
   (M6) covers the wait. The wait has a cost:
   - the request can start only once the main bundle has run, so it is serial with it;
   - the locale JSON files gzip to 37 142 B (en-US), 39 601 B (it-IT) and 48 739 B (el-GR, the
@@ -153,7 +168,12 @@ Each milestone is one or a few commits, verified on its own.
   - vitest;
   - the Playwright language-switch specs and the Signin `?lang=` path;
   - a new Playwright check that the first render of `/signin` in `it-IT` contains no English string
-    from `en-US.json` (no flash).
+    from `en-US.json` (no flash), and the same for `/signin?lang=it-IT` and `/signup?lang=it-IT` in an
+    `en-US` browser, and for `/customtokensignin?language=it` (the query paths);
+  - a failed locale import before mount reloads the page once (the sessionStorage marker of M2); a second
+    failure mounts with the messages that did load and logs the error, rather than leaving the splash up.
+    A failed JSON editor import shows the async component's error state; a failed webcall import shows
+    the existing start error (M4). Each has a Playwright check that aborts the chunk.
 - Retention dependency above.
 
 ### M4: the webcall client and the JSON editor on demand
@@ -183,7 +203,9 @@ asset `Cache-Control` value as required arguments with no defaults, and prints t
 before each step.
 
 The cache value comes from a GitHub environment variable (`ASSET_CACHE_CONTROL`, a variable, not a
-secret). It is the only switch between the probe and the immutable header. The design choice (gzip,
+secret). It is the only switch between the probe and the immutable header. It is required: unset or empty,
+the script exits before uploading anything. The literal value `none` means "set no `Cache-Control` on the
+hashed assets", which is today's behaviour and the fallback after a failed probe. The design choice (gzip,
 not brotli, because the edge neither negotiates nor varies) is written in the script's comments with
 the brief's `curl -I` evidence.
 
@@ -197,7 +219,7 @@ none reaches these steps):
 | `css/` | 8 files, gzip bytes | step 2 |
 | `fonts/` | 4 files, raw | step 2 |
 | `img/` | 23 SVG and 2 PNG, raw (the SVGs could be added to `precompress.sh`) | step 2 |
-| site root | `MrCallWebCall.bundle.js`, gzip bytes | step 2 |
+| site root | `MrCallWebCall.bundle.js`, gzip bytes, unhashed: `no-cache`, never `ASSET_CACHE_CONTROL` | step 2 |
 | site root | `index.html`; `_redirects`, `favicon.ico`, `robots.txt`, `sitemap.xml` | steps 3 and 4 |
 
 All names under `js/`, `css/`, `fonts/` and `img/` carry a content hash.
@@ -225,6 +247,9 @@ secret: the same names are served publicly):
 2. **Hashed assets, and every `.js` and `.css`.** Every file under `js/`, `css/`, `fonts/` and `img/`, and every
    `.js` and `.css` elsewhere (today `MrCallWebCall.bundle.js` at the root), each with its content type and
    `ASSET_CACHE_CONTROL`:
+   - a `.js` or `.css` outside the hashed prefixes carries no hash: it goes up with `Cache-Control: no-cache`, never
+     with `ASSET_CACHE_CONTROL`, or a change to it would never reach a browser (brief, scope 1: the header is for
+     hashed assets only);
    - a `.js` or `.css` holds gzip bytes since the Precompress step: uploaded with `Content-Encoding: gzip`. Never
      decide by the presence of a `.gz` sibling: there is none any more, and a bundle so judged would go up as gzip
      bytes with no header, which breaks the site;
@@ -299,6 +324,12 @@ never written to a file.
   - The object count after each deploy is recorded. It must fall once lists age out instead of
     growing with every deploy.
 
+- **Header-only redeploy**, as M9 step 3 does: the same build deployed again with a different
+  `ASSET_CACHE_CONTROL` (`public, max-age=60`, then the immutable value, then `none`). After each, every hashed
+  key carries the new header, no key is deleted, and the manifests are unchanged. `sync` skips an object
+  whose size and date match, so the script must rewrite the metadata of every hashed key whose header
+  differs (a copy onto itself with the new metadata); the rehearsal checks that it does.
+
 The rehearsal proves the script, not the edge; the edge is the probe's job.
 
 ### M6: mount at once
@@ -372,6 +403,12 @@ readiness promise alone would therefore break password sign-in: the state change
   2. `handleSubmit`, after the `login` action resolves. The magic-link and confirm-email branches
      already call it explicitly.
 
+  `afterAuth` works on its `user` argument, never on `store.state.user`, which the readiness promise may
+  precede. It also fires the Google Analytics events the removed listeners fire today, where they fire them
+  today, once per call: `login` (`Signin.vue:203`, with a session or after a password sign-in), `login` with
+  `mode: 'magiclink'` (`:221`) and `verified_email` (`:227`, `:247`, the confirm-email return). Changing what
+  they count is not this work. A Playwright check stubs `gtag` and asserts each event on its path.
+
   The `onAuthStateChanged` listeners in `mounted()` are removed. Tokens use `getIdToken()` without
   forcing.
 - `Signin.vue` calls `Business.checkUserHasBusinesses` with `{ fresh: false }`, after the claim check above.
@@ -418,7 +455,7 @@ Every step past the rehearsal needs Angelo's authorisation, and production needs
    - Then a cold load in Chromium with no decoding error, and the session-guard deep link.
    - **If the edge alters or drops `Cache-Control`:** the affected objects are purged from the test
      pipeline's cache (Edge Services console, "Purge by object", or "Purge all"; the 60 s max-age bounds
-     the exposure if the purge is late), `ASSET_CACHE_CONTROL` is emptied so that the script sets no
+     the exposure if the purge is late), `ASSET_CACHE_CONTROL` is set to `none` so that the script sets no
      cache header, and the immutable step is dropped from this release; retention stays.
 3. **Immutable on test.** `ASSET_CACHE_CONTROL` is set to `public, max-age=31536000, immutable` and
    the workflow is rerun on the same test tag (`workflow_dispatch` on its ref).
@@ -430,15 +467,16 @@ Every step past the rehearsal needs Angelo's authorisation, and production needs
    `ASSET_CACHE_CONTROL` set first, and acceptance 2 checked on each domain. Beta and production get
    the immutable value directly, because the edge behaviour is a property of the service, already
    proven on test. If review prefers, the 60 s probe is repeated on beta.
-5. **Production fallback tag, identified and verified before the production deploy**: the tag
-   production is serving at that moment, and the rollback target. It is verified in two ways:
-   - by `gh run list --workflow deploy.yml`, the last successful `-production` run;
-   - by the `app.<hash>.js` name that the served `https://dashboard.mrcall.ai/index.html` names,
-     found among the upload lines of that run's log.
+5. **Fallback tag per environment, identified and verified before that environment's deploy**: the tag the
+   environment is serving at that moment, and its rollback target. It is verified in two ways:
+   - by `gh run list --workflow deploy.yml`, the last successful run of that environment's suffix;
+   - by the `app.<hash>.js` name that the environment's served `index.html` names, found among the upload
+     lines of that run's log.
 
-   Checked on 2026-11-02 for reference: production serves `v2.2.47-production` (commit `adbb851`, run
-   41426787252), the release that shipped compression. If a later release reaches production first, the
-   fallback becomes its tag, verified the same way.
+   Checked on 2026-11-02 for reference: test serves `v2.2.47-test` (commit `8f194be`, run 41422948921); beta
+   `v2.2.47-beta` and production `v2.2.47-production` (commit `adbb851`, runs 41426787373 and 41426787252). The
+   two commits differ by documentation only. If a later release reaches an environment first, its fallback
+   becomes that tag, verified the same way.
 
 ## Rollback
 
@@ -446,8 +484,8 @@ Every step past the rehearsal needs Angelo's authorisation, and production needs
   together with every one of them that has been deployed.
 - **Deployed**: redeploy the fallback tag of the environment (`workflow_dispatch` on its ref), with
   authorisation.
-  - Its `sync` re-uploads its own assets raw and its `--delete` removes the retained ones and the
-    manifests.
+  - Its workflow re-uploads its own assets gzipped with `Content-Encoding: gzip` (as since `v2.2.47`) and
+    without the immutable header, and its `--delete` removes the retained ones and the manifests.
   - Objects the edge cached with `Content-Encoding: gzip` and the immutable header stay
     self-consistent: the cached response holds both the gzip body and its header.
   - A wrong header cached on the edge is removed by a purge (step 2 of M9), not by a redeploy.
