@@ -10,7 +10,8 @@ export async function matchTokenToUser (user) {
   let claim
   try {
     claim = (await user.getIdTokenResult()).claims.email_verified
-  } catch (error) {
+  } catch {
+    // an unreadable token: refreshed below, as every start did before
     claim = undefined
   }
   if (claim === user.emailVerified) return false
