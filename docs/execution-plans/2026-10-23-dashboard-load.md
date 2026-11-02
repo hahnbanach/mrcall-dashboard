@@ -1,5 +1,5 @@
 ---
-status: in progress
+status: active
 brief: ../briefs/2026-10-23-dashboard-load.md
 owner: the dashboard session of 2026-11-02 (it also holds the v2.2 line), worktree mrcall-dashboard-wt/dashboard-load, branch dashboard-load from v2.2 at the plan's approval, local only (merged into v2.2 by fast-forward, never pushed under that name)
 target: the next dashboard release after v2.2.47

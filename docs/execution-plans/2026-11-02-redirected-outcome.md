@@ -92,4 +92,6 @@ production later, each authorised. Rollback: redeploy the previous tag of the en
 | Plan | APPROVED at f13567e after one REVISE (zero line, acceptance 1 checks, comments) | d9db588, f13567e |
 | R1-R3 | implemented | e3909d8: vitest 622/622, lint clean, build done; the six touched browser specs 63/63 on desktop; the new redirected.spec.js seen failing on the base source (5 of 6, the sixth the no-change case) |
 | Full Playwright run | done | e3909d8: 2137 passed, 14 skipped, 17 failed under load (tablet and mobile wizard, skills, info pages, u19c-scope, u19r7-start; one desktop time zone case), none in a spec this change touches; the 17 rerun alone with one worker on all three projects, 54 of 54 passed |
-| Milestone review | REVISE (a header comment; the counted-calls assertion read the panel header; all=true untested; a title claiming the fall), repaired | this commit: redirected.spec.js 18 of 18 on the three projects |
+| Milestone review | APPROVED at 8822c4b after one REVISE (a header comment; the counted-calls assertion read the panel header; all=true untested; a title claiming the fall) | 8822c4b: redirected.spec.js 18 of 18 on the three projects |
+| Colour | looked at | the outcome section in the dev build with 10 redirected calls: violet line after the request passed on, the stacked bar in the same order |
+| Documentation | reconciled | active-context.md carried over from the `dashboard-load` closure (its archive section too, so the two branches agree), with this branch added; ARCHITECTURE.md's outcome passage |

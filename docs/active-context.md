@@ -11,41 +11,33 @@ Scope: Current dashboard operating state, unresolved verification limits, and im
 
 ## State now
 
-Production and TEST serve the tested v2.2.38 source ab4ca78f.
-Production tag v2.2.38-production succeeds in workflow40879746700; all
-104 served JS/CSS assets match the CI build names and answer HTTP200.
-The production bundle contains Sheets/booking/configured-state paths and points to
-zylch.mrcall.ai and api.mrcall.ai. Backend prod-c40fef81 is healthy,
-with 21 matching source hashes. See the [release plan](execution-plans/2026-10-29-chat-skills-production.md).
+Production, beta and test serve `v2.2.47` (production and beta at `adbb851`, test at `8f194be`, the same code), with
+StarChat 9.34.128 behind production (all three pods, 2026-11-02) and the analytics routes it added on beta too. The
+`v2.2` line holds the classification feedback and the analytics UX rework, both live since `v2.2.45`
+([analytics UX brief](briefs/2026-10-31-analytics-ux.md), [plan](execution-plans/2026-10-31-analytics-ux.md)), and the
+bundles uploaded gzipped (`v2.2.47`): 7.9 MB of JavaScript on a first load became 1.98 MB, the login page's first
+paint at 9 Mbps 9.3 s to 3.8 s.
 
-Sheets authorization returns to actual editable column review before explicit Save.
-Booking uses five separate skills, calendar selection and scoped activation; passive
-setup is hidden for configured groups. The operator confirms TEST setup. Actual
-production consent, model behavior, caller booking and append remain operator-owned.
-The release changes no customer configuration, history or grant and performs no
-model/provider action. Beta and the dirty v2.1 checkout receive no changes.
+The rest of the load work is on branch `dashboard-load` (worktree `mrcall-dashboard-wt/dashboard-load`, local only,
+not deployed): pages, locales, the call client and the JSON editor on demand (initial JS 462 027 B gzip in 2 files,
+from 1 991 975 B in 103), a splash and mounting without waiting for the router, one auth readiness with a claim check
+instead of forced refreshes, and the upload with 14-day retention and a per-environment cache header, rehearsed on a
+local S3 ([brief](briefs/2026-10-23-dashboard-load.md), [plan](execution-plans/2026-10-23-dashboard-load.md), its
+Status table). Its release (M9) is not authorised yet and needs `ASSET_CACHE_CONTROL` on each GitHub environment first:
+the new Deploy step stops without it.
 
-Session ownership: every nonpublic route needs a session, the Axios interceptor alone ends it,
-and components suppress their failure UI for `isSessionEnded`. Browser tests mock StarChat and
-mrcall-agent.
+Branch `redirected` (worktree `mrcall-dashboard-wt/redirected`, local, from `v2.2` at `c02054f`) reads StarChat's
+insight version 8: `redirected` (the business handles the request through a channel of its own the assistant gave the
+caller) as a resolution, an outcome line shown only when it or the period before has calls, and a request outcome
+outside the not-fulfilled default; `handed_over` labelled as staff ("Escalated to staff", "Passato a un operatore")
+([brief](briefs/2026-11-02-redirected-outcome.md), [plan](execution-plans/2026-11-02-redirected-outcome.md)). Verified
+on the repository's mocks against StarChat's code at `d85eb2b70` (branch `extraction-configuration-and-resolution`, not
+in 9.34 yet); no environment sends the value until that StarChat is deployed, while the `handed_over` label changes as
+soon as the dashboard ships.
 
-Branch `classification-feedback` (a fast-forward from `de91ac6`, not merged, not deployed) carries the dashboard side
-of StarChat's classification feedback (its plan's step C8): a call's judgements as chips with one undo, the six facts
-reported from one chip, bulk corrections, every count opening its calls, callers' requests on request records with
-their category chip, "Move to category" and "Mark as spam", the queues, caller rules and the access record, a
-non-owner's read-only call ([brief](briefs/2026-10-27-classification-feedback.md),
-[plan](execution-plans/2026-10-27-classification-feedback.md)). Verified on the repository's mocks only (vitest and
-the full Playwright run); the StarChat pieces it reads are in StarChat 9.34.121 and, for the bulk and undo answers
-of the brief's second amendment (item 10), 9.34.122; the live check comes with StarChat's C11 on 9.34.122.
-
-The same branch carries the dashboard's repairs of the U19c attack (StarChat plan insights-reports-ux, step U19r6,
-and the dashboard part of U19r5: plan step P16): a report requested over analysed calls reaches its confirmation, the
-older reports' caption, "What callers ask", every category's next action, an author's withdrawal and an undo that
-says what StarChat's answer lists, the Report and Processing tabs without Panoramica's reads, the empty cycle's row,
-"n/a" over a partial window, and the amendment's minors. It is written against StarChat fields that StarChat is
-building beside it and whose names are assumed (the plan's "U19r6: the StarChat fields assumed"): until that StarChat
-is on test the screens that read them show what they showed before (no reach line, no withdrawal answered, no
-partial "n/a").
+Session ownership: every nonpublic route needs a session, the Axios interceptor alone ends it, and components suppress
+their failure UI for `isSessionEnded`. Browser tests mock StarChat and mrcall-agent; their ID tokens are JWT-shaped and
+the StarChat mock refuses an unverified one, as StarChat does.
 
 ## Unresolved
 
@@ -58,20 +50,21 @@ partial "n/a").
   call-history reads available returned no record for it.
 - `tests/unit/skillsOwnerSave.spec.js` takes 3.5 to 5.3 s against a 5 s timeout in a fresh
   worktree, and can time out there.
-- Under a full Playwright run, some tablet and mobile cases fail intermittently and pass alone
-  (`skills/oauth.spec.js`, `admin.spec.js`, `analytics-insights.spec.js`); the cause is not
-  measured.
-- The `__BOOKING__` section is not legacy: StarChat serves in it `BOOKING_TRIGGER`,
-  `NO_BOOKING_INSTRUCTIONS` and the hidden `BOOKING_CALENDAR_ID` (a skill's fallback calendar,
-  which businesses booking through the platform's service account rely on). StarChat moves them
-  into `__CONVERSATION__`; the dashboard drops `__BOOKING__` from `menuGroups` once that StarChat
-  version is on test.
+- Under a full Playwright run, 10 to 24 tablet and mobile cases fail and pass alone with one worker (commit `c61ddf2`, and the load plan's Status table); it follows the
+  machine's load (more with a rehearsal or a build beside it), the cause is not measured further.
+- A blank first load of about a minute was seen once in a Chrome with extensions, right after a deploy, and not in a
+  clean Chromium (5 cold runs, 1.0 to 1.3 s): not reproduced, not explained.
+- The `__BOOKING__` section's move into `__CONVERSATION__` by StarChat, and the U19r6 field names assumed against
+  StarChat's U19r7a, were not re-checked on 2026-11-02.
 
 ## Next
 
+- `redirected`: Angelo authorises the fast-forward of `v2.2` and the test tag, deployed to test in one pass with
+  StarChat's tag of the same work (StarChat plan step C13); the commit and tag go back to that StarChat session. If it
+  lands first, `dashboard-load` merges `v2.2` before its own release.
+- Dashboard load, M9: Angelo authorises creating `ASSET_CACHE_CONTROL` (`none`) on the test, beta and production
+  environments and the test deploy; then the 60 s probe, the immutable header, the protocol's measurements on test,
+  and beta and production with their fallback tags verified.
+- Analytics UX: the final review through the final-user path, then this file's closure with `doc-end`.
 - Operator: verify the production flow and actual call results with the chosen account.
-- Remove `__BOOKING__` from `menuGroups` after StarChat's move is on test.
-- Classification feedback (StarChat plan step C8) is built and reviewed on branch
-  `classification-feedback`, a fast-forward from `de91ac6`; the line holder lands it.
-- U19r6 (plan step P16): once StarChat's U19r7a is on test, align the assumed field names, check the fixtures'
-  shapes against answers recorded there, then the code review U19r6b.
+- Remove `__BOOKING__` from `menuGroups` once StarChat's move is on test.
