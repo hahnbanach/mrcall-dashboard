@@ -19,7 +19,7 @@ bundles uploaded gzipped (`v2.2.47`): 7.9 MB of JavaScript on a first load becam
 paint at 9 Mbps 9.3 s to 3.8 s.
 
 The rest of the load work is on branch `dashboard-load` (worktree `mrcall-dashboard-wt/dashboard-load`, local only,
-not deployed): pages, locales, the call client and the JSON editor on demand (initial JS 461 711 B gzip in 2 files,
+not deployed): pages, locales, the call client and the JSON editor on demand (initial JS 462 027 B gzip in 2 files,
 from 1 991 975 B in 103), a splash and mounting without waiting for the router, one auth readiness with a claim check
 instead of forced refreshes, and the upload with 14-day retention and a per-environment cache header, rehearsed on a
 local S3 ([brief](briefs/2026-10-23-dashboard-load.md), [plan](execution-plans/2026-10-23-dashboard-load.md), its

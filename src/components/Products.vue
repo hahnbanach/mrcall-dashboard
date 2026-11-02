@@ -337,6 +337,9 @@ export default {
       }
     },
     productList() {
+      // the business this read is for: if another is selected before the answer arrives, the answer is stale and
+      // dropped, so that a page never shows the products of the business it has left
+      const asked = this.business
       this.showProgressBar = true;
       let headers = {
         "Content-type": "application/json; charset=UTF-8",
@@ -348,6 +351,7 @@ export default {
             headers: headers
           }
       ).then((response) => {
+        if (asked !== this.business) return
         if(response.data) {
           const businessId = this.business.businessId
           const checkSubscriptionFunction = this.checkSubscription

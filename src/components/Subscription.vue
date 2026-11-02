@@ -1,6 +1,8 @@
 <template>
   <Toast></Toast>
-  <div v-for="template in templates.filter(v => (v.visible && v.name === business.template) || v.name === business.template)" :key="template.name">
+  <!-- no plan card until a business is selected: Plan.vue sets it once its business has been read, and on /plan without
+       one never does; reading business.template here threw on both (the load work's final review) -->
+  <div v-for="template in (business ? templates.filter(v => (v.visible && v.name === business.template) || v.name === business.template) : [])" :key="template.name">
     <Card :class="business.template !== template.name && 'card-not-selected'">
       <template #title>
         <div class="card-title-row">
