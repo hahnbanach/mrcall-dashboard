@@ -36,11 +36,13 @@ the outcome lines (which then no longer add up to their base), and cannot be fil
    `handed_over` wording in the same three, keeping each block's grammatical agreement. en-US: "Sent to the business's
    channel" and "Escalated to staff"; it-IT: "Indirizzato/Indirizzate/Indirizzata al canale dell'attività" and
    "Passato/Passate/Passata a un operatore"; the other ten with the same meaning.
-5. Code comments that enumerate the lines or quote the old label, updated.
+5. Code comments and durable docs that enumerate the lines or quote the old label, updated: in particular
+   `docs/ARCHITECTURE.md`'s "How the calls went" passage ("four lines ... passed to a person").
 6. Unit and browser tests: the key lists, the outcome lines adding up with `redirected`, a report holding it, a request
    outcome counted and not in the default not-fulfilled view, the new label where tests read the old one.
 
-Out of scope: StarChat itself; any new view; the `notSolved` definition (StarChat's, unchanged: `redirected` is not in
+Out of scope: StarChat itself; reading the report's `content.outcome` (StarChat writes it, the dashboard does not read
+it yet: a separate change); any new view; the `notSolved` definition (StarChat's, unchanged: `redirected` is not in
 it); the deploy (release and deployment are separately authorised).
 
 ## Constraints
@@ -57,10 +59,12 @@ it); the deploy (release and deployment are separately authorised).
 2. With `redirected` in `outcome.totals`, the outcome section shows its line with its own colour and link
    (`outcomeLine=redirected`), and the lines' counts add up to `callsWithRequest`.
 3. A report whose `content.resolution` holds `redirected` shows the line, and the base includes it.
-4. A category row whose `outcomes` holds `redirected` shows it; the default (not fulfilled) list does not ask for it.
+4. A category row whose `outcomes` holds `redirected` shows it. The not-fulfilled default is StarChat's: the dashboard's
+   default request still sends no `all` and no outcome, and with `all=true` a redirected request is listed.
 5. `handed_over` reads "Escalated to staff" (en-US) and "Passato/Passate/Passata a un operatore" (it-IT) in all three
    blocks; every locale has both keys in all three blocks.
-6. Lint, vitest, build, and the full Playwright run pass (load-sensitive cases retried with one worker, as recorded).
+6. `docs/ARCHITECTURE.md` describes five outcome lines and the staff label.
+7. Lint, vitest, build, and the full Playwright run pass (load-sensitive cases retried with one worker, as recorded).
 
 ## Assumptions
 
