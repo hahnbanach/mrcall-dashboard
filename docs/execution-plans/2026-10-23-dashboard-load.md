@@ -72,7 +72,8 @@ Every figure the brief's acceptance 3 and 4 gate on is produced this way and no 
      the test deploy of this work.
   2. The candidate series runs immediately after that deploy's verification, within 60 minutes of
      the baseline. If the window is missed, both series are retaken on beta, which serves the previous
-     release until M9 step 4: baseline there, candidate on test, alternating within one window.
+     release until M9 step 4: baseline there, candidate on test, alternating within one window. Those
+     figures then compare two environments behind two edge pipelines, and are reported as such.
      Cold runs disable the cache, so the gated figures do not depend on whether the immutable step
      ran; if the probe fails and step 3 is dropped, acceptance 3 and 4 are measured after step 2, and
      only the warm-reload item is reported as not applicable.
@@ -142,8 +143,10 @@ Each milestone is one or a few commits, verified on its own.
   - `switchLanguage` awaits the loader before setting the locale;
   - `getLocale` resolves the locale without setting it (it is called inside computed properties);
   - the setter goes through the loader.
-- `main.js` resolves the active locale before mount, in this order: the URL's `lang` query (read by
-  `Signin.vue:177` and `Signup.vue:162` today), or on `/customtokensignin` its `language` query mapped as
+- `main.js` resolves the active locale before mount, in this order: on `/signin`, `/login` and `/signup` only,
+  the URL's `lang` query (read by `Signin.vue:177` and `Signup.vue:162` today; elsewhere `lang` is not an
+  interface language, e.g. `Conversations.vue:1668` reads it as a date format), or on `/customtokenlogin`
+  (`src/router/index.js:90`) its `language` query mapped as
   `CustomTokenSignin.vue:36-42` maps it (`it*` to `it-IT`, anything else to `en-US`); then localStorage, then
   navigator, then the default (the order used today). Those components keep their switch, which then finds
   the locale already loaded and does not wait, so a link carrying a language shows no other language first. It awaits that locale and the fallback, in parallel, before `app.mount`, and the splash
@@ -169,7 +172,8 @@ Each milestone is one or a few commits, verified on its own.
   - the Playwright language-switch specs and the Signin `?lang=` path;
   - a new Playwright check that the first render of `/signin` in `it-IT` contains no English string
     from `en-US.json` (no flash), and the same for `/signin?lang=it-IT` and `/signup?lang=it-IT` in an
-    `en-US` browser, and for `/customtokensignin?language=it` (the query paths);
+    `en-US` browser, and for `/customtokenlogin?language=it` (the query paths); plus a check that
+    `/conversations?lang=it-IT` in an `en-US` browser leaves the interface in English;
   - a failed locale import before mount reloads the page once (the sessionStorage marker of M2); a second
     failure mounts with the messages that did load and logs the error, rather than leaving the splash up.
     A failed JSON editor import shows the async component's error state; a failed webcall import shows
