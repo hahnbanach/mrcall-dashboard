@@ -52,6 +52,10 @@ count opens are read by `src/utils/Classifications.js`, against StarChat's brief
 - [OAuth Google Sheets call log](briefs/2026-10-27-sheets-oauth-call-log.md) —
   [source plan](execution-plans/2026-10-27-sheets-oauth-call-log.md), account consent and editable post-call columns.
 
+- [The `redirected` outcome](briefs/2026-11-02-redirected-outcome.md) — [plan](execution-plans/2026-11-02-redirected-outcome.md):
+  StarChat insight version 8's `redirected` as a resolution, an outcome line and a request outcome, and `handed_over`
+  labelled as staff.
+
 ## Quick context
 
 - **Stack**: Vue 3, PrimeVue 4, Vuex, Firebase Auth, Axios, vue-i18n (12 locales)
