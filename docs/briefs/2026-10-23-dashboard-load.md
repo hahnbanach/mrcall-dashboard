@@ -19,7 +19,8 @@ deployment are authorised separately; nothing here authorises a release.
 cause; the compression part of fix 1 shipped at once, alone (`v2.2.47`, commit `8f194be`: every `.js` and `.css`
 gzipped in place and uploaded with `Content-Encoding: gzip`, caching and deletion unchanged), and he then asked to
 continue with the rest of this work ("Ok prosegui"). The evidence below is of 2026-10-23 unless marked; the code
-facts were re-read at `adbb851` (`v2.2.47`) and still hold: 61 routes, none on demand; the 12 locales imported
+facts were re-read at `adbb851` (`v2.2.47`) and still hold: 61 routes, three on demand (`AgentTemplates`,
+`AgentTemplateEditor`, `WizardConfiguration`, `src/router/index.js:61-63`); the 12 locales imported
 eagerly; `MrCallWebCall` and `JsonEditorVue` imported statically; `app.mount` after `router.isReady()`; `getUser()`
 registering a listener per navigation; `setPersistence` still called; 15 `getIdToken(true)`; `Signin.vue` with
 `reload()` and two `onAuthStateChanged`; `Home.vue` on `/`; no splash.
@@ -104,8 +105,11 @@ measurement protocol, on the release dashboard-test serves immediately before th
   functions of `Business.js` (among them `getBusiness`, with 17 call sites), in `AiConfigure.js`, in
   the webcall and Whatsapp components, in the 401 interceptor (where forcing is the point) and in the
   50-minute proactive refresh.
-- `checkUserHasBusinesses` is also called by Analytics and AnalyticsAdmin on mount (it sets the role
-  from `x-mrcall-role`). Changing it changes those two pages as well as sign-in.
+- `checkUserHasBusinesses(user, store, { fresh = true })` (`src/utils/Business.js:262`) forces a refresh unless
+  told not to. Since `5f08d1f` (2026-10-31) Analytics and AnalyticsAdmin pass `{ fresh: false }`
+  (`Analytics.vue:690`, `AnalyticsAdmin.vue:725`). The forced default is reached by `Signin.vue:266`,
+  `GoogleCallback.vue:177`, `Conversations.vue:871` and `views/AnalyticsReport.vue:53`. Changing the default
+  would change all four; passing the option from `Signin.vue` changes only sign-in.
 
 **Why one forced refresh must stay** (reviewer's evidence, 2026-10-23, StarChat at its `9.34` line):
 StarChat authorises a Firebase token only when its `email_verified` claim is true
@@ -168,9 +172,11 @@ In scope:
    first page (Firebase reloaded the user at initialisation). A forced token refresh only when the
    cached token's `email_verified` claim differs from `user.emailVerified`, decided in one place once
    authentication is ready, so that a deep link after verification is covered as well as `/signin`;
-   otherwise `getIdToken()` without forcing, in `Signin.vue` and in `checkUserHasBusinesses` (and so
-   on Analytics and AnalyticsAdmin too). `/` redirects without mounting a component; a loading state
-   instead of the sign-in form while a session is being resolved.
+   otherwise `getIdToken()` without forcing in `Signin.vue`, which also calls `checkUserHasBusinesses` with
+   `{ fresh: false }`. The function's default stays forced, so `GoogleCallback.vue` (a Google sign-in returns a
+   fresh token anyway), Conversations and the report page do not change here: their forced refresh belongs to the
+   follow-up. `/` redirects without mounting a component; a loading state instead of the sign-in form while a
+   session is being resolved.
 
 Out of scope: the StarChat overview read (fix 3); the forced refreshes outside the sign-in path
 (Follow-ups); the per-mount `onAuthStateChanged` listeners in
@@ -196,8 +202,10 @@ stays; `vite.config.js` is not the build that ships).
 
 Measured on the revision delivered, each figure reported with its commit:
 
-1. **Bundle**, same build command as above: JS loaded by `index.html` at most half of 1 806 913 B
-   gzipped, in at most 10 files; total and per-file listing before and after recorded in the plan.
+1. **Bundle**, same build command as above, gzipped with `gzip -9 -n` as `scripts/precompress.sh` does: JS
+   loaded by `index.html` at most 903 457 B (half of the 1 806 913 B of 2026-10-23, which were the
+   compression plugin's `.gz` sizes; production served 1 991 975 B on 2026-11-02, measured with curl), in at
+   most 10 files; total and per-file listing before and after recorded in the plan.
    Locales, the webcall client and the JSON editor appear only in async chunks.
 2. **Headers** on dashboard-test after the test deploy (`curl -I`, with and without `Accept-Encoding:
    gzip`): a hashed JS and CSS asset answer `content-encoding: gzip`, `cache-control: public,
@@ -205,18 +213,22 @@ Measured on the revision delivered, each figure reported with its commit:
    `cache-control: no-cache`; an asset of the previous release still answers 200 after the deploy.
 3. **First paint**, measured under the plan's measurement protocol on dashboard-test, against the
    baseline series the protocol takes immediately before the test deploy; both figures reported per
-   run:
-   - the splash (first child of `#app`): reported, not gated;
-   - the rendered app (sign-in form visible) at 10 Mbps: median at most half of 6 555 ms, the
-     uncompressed `v2.2.30-test` median this work set out from, so at most 3 278 ms; and not above
-     the protocol's baseline median on the release then on test, which is gzipped since `v2.2.47`.
-     Halving the gzipped baseline again is not the gate: compression already took most of the
-     transfer that halving was about, and how much of the rest is transfer is known only once the
-     baseline is measured. The candidate's improvement over that baseline is reported per run;
-   - the rendered app unthrottled: median not above the baseline median (808 ms on `v2.2.30-test`);
-   - loading the active locale before mount adds one request that starts only after the main
-     bundle has run. Its time, from the locale chunk's request to its response, is reported
-     separately and is inside the two gated figures, not added to them;
+   run. Reference baseline, production `v2.2.47`, 2026-11-02, `/login`, 7 cold runs per profile with the cache
+   disabled, load average 3.4: at 10 Mbps and 40 ms the sign-in form at 2 156 to 2 269 ms (median 2 170),
+   `index.html` complete at 105 to 168 ms (median 126), 2 715 kB transferred per run; unthrottled, the form
+   at 576 to 705 ms (median 599). At 10 Mbps those 2 715 kB alone take 2.2 s: first paint is transfer.
+   - **the splash** (first child of `#app`) at 10 Mbps: median at most 400 ms. It needs `index.html` and
+     nothing the bundle brings; 400 ms leaves room for the response (126 ms) and for whatever the head
+     still blocks rendering on, which the plan must keep small;
+   - **the rendered app** (sign-in form visible) at 10 Mbps: median at most B - T + 150 ms, where B is the
+     protocol's baseline median and T the transfer time at 10 Mbps of the initial JS bytes acceptance 1
+     removes (baseline initial JS minus candidate initial JS, gzip, over 10 Mbps). The 150 ms are the locale
+     request that M3 adds after the bundle: one 40 ms round trip, at most 50 kB, and parsing. With the
+     reference figures and acceptance 1 just met, B = 2 170 ms and T = 871 ms (1 088 518 B), so at most
+     1 449 ms;
+   - **the rendered app unthrottled**: median not above the baseline median (599 ms in the reference);
+   - the locale request's time, from its request to its response, reported separately on every run; it is
+     inside the gated figures, not added to them;
    - a warm reload transfers at most `index.html` plus requests the cache cannot serve, which are
      listed.
 4. **First data** on Businesses and Analytics, with a real session on dashboard-test, cold and warm,
