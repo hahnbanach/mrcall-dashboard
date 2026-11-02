@@ -218,14 +218,24 @@ Measured on the revision delivered, each figure reported with its commit:
    `index.html` complete at 105 to 168 ms (median 126), 2 715 kB transferred per run; unthrottled, the form
    at 576 to 705 ms (median 599). At 10 Mbps those 2 715 kB alone take 2.2 s: first paint is transfer.
    - **the splash** (first child of `#app`) at 10 Mbps: median at most 400 ms. It needs `index.html` and
-     nothing the bundle brings; 400 ms leaves room for the response (126 ms) and for whatever the head
-     still blocks rendering on, which the plan must keep small;
-   - **the rendered app** (sign-in form visible) at 10 Mbps: median at most B - T + 150 ms, where B is the
-     protocol's baseline median and T the transfer time at 10 Mbps of the initial JS bytes acceptance 1
-     removes (baseline initial JS minus candidate initial JS, gzip, over 10 Mbps). The 150 ms are the locale
-     request that M3 adds after the bundle: one 40 ms round trip, at most 50 kB, and parsing. With the
-     reference figures and acceptance 1 just met, B = 2 170 ms and T = 871 ms (1 088 518 B), so at most
-     1 449 ms;
+     what the head blocks rendering on, which today is the two stylesheets (81 719 B gzip, about 65 ms at
+     10 Mbps, fetched in parallel after the document) and no synchronous script (every script is `defer`):
+     about 126 + 40 + 65 ms on the reference. The plan must keep the head that small;
+   - **the rendered app** (sign-in form visible) at 10 Mbps, with the browser's locale `en-US` (so the
+     active locale is the fallback and one locale chunk is fetched): median at most B - T + 60 ms x R, where
+     - B is the protocol's baseline median;
+     - T is the transfer time at 10 Mbps of the bytes taken off the path to the form: the baseline's
+       initial JS minus the candidate's initial JS and minus every async chunk fetched before the form is
+       visible (the sign-in route chunk and the locale chunk, as the network log of each run shows them),
+       all gzip;
+     - R is the number of those async requests that wait on the bundle or on each other, each allowed one
+       40 ms round trip and 20 ms of parsing.
+
+     The gate therefore credits only what the form no longer waits for. With the reference figures,
+     acceptance 1 just met, and an assumed 150 kB of route and locale chunks over R = 2 (an estimate, not a
+     measurement), it is 2 170 - 751 + 120 = 1 539 ms; the plan records the real figure from the
+     candidate's build. A browser in another locale fetches its own messages and the fallback's, about
+     96 kB together (it-IT 49 763 B and en-US 46 673 B gzip): those runs are reported, not gated;
    - **the rendered app unthrottled**: median not above the baseline median (599 ms in the reference);
    - the locale request's time, from its request to its response, reported separately on every run; it is
      inside the gated figures, not added to them;
