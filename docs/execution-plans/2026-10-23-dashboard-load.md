@@ -1,8 +1,8 @@
 ---
 status: planned
 brief: ../briefs/2026-10-23-dashboard-load.md
-owner: the dashboard-perf session, worktree dashboard-perf (branch dashboard-perf from origin/v2.2 at 80946cf)
-target: the next dashboard release after v2.2.31 (not v2.2.31)
+owner: the dashboard session of 2026-11-02 (it also holds the v2.2 line), worktree mrcall-dashboard-wt/dashboard-load, branch dashboard-load from v2.2 at the plan's approval
+target: the next dashboard release after v2.2.47
 created: 2026-10-23
 ---
 
@@ -18,17 +18,19 @@ rollback for the dashboard load work of 2026-10-23; intent, evidence and accepta
 Substantial development: it changes the router guard, the authentication initialisation, the i18n
 loading and the deploy pipeline's headers and deletion policy. Source edits start only after this
 plan's fresh APPROVED review. Commit, merge into `v2.2`, tags and deployment are authorised
-separately by Angelo; the merge goes through the session that holds the `v2.2` line.
+separately by Angelo; this session holds the `v2.2` line and merges by fast-forward.
 
-Target: the first dashboard release after `v2.2.31`. Decided on 2026-10-23: this work does not ship
-in the `v2.2.31` release, because the deploy change (gzip objects cached as immutable by the edge)
-could not be rehearsed before it. There are no bucket credentials on this machine, passthrough of
-`Content-Encoding` by Edge Services is unproven, and a wrong header would stay cached for a year.
+Target: the first dashboard release after `v2.2.47`. Compression, the part of M5 that needed no cache
+header and no retention, shipped alone in `v2.2.47` on 2026-11-02 (commit `8f194be`): `scripts/precompress.sh`
+and the workflow's three syncs. Edge Services passes `Content-Encoding` through, observed on test, beta and
+production. Still unobserved: passthrough of `Cache-Control`, which the probe of M9 step 2 checks with a 60 s
+value before any immutable upload. There are no bucket credentials on this machine, and a wrong immutable header
+would stay cached for a year.
 
 No backend dependency: StarChat and mrcall-agent contracts are unchanged. Any other session editing
 `src/router/index.js`, `src/main.js`, `src/i18n/`, `tests/e2e/fixtures/auth.js` or
 `.github/workflows/deploy.yml` on `v2.2` is a merge dependency; M9 rebases on the line's head
-(`v2.2.31` or later).
+(`v2.2.47` or later).
 
 Gates run in this worktree: Node 26.5 locally (the workflow builds on Node 18), Playwright with
 `E2E_PORT` on a free port (8080 belongs to another session), the dev server started separately when
@@ -51,7 +53,10 @@ Every figure the brief's acceptance 3 and 4 gate on is produced this way and no 
   Chromium (version recorded), on this laptop. The 1-minute load average is recorded before each
   series.
 - **Pages and figures**: `/signin`, with the first child of `#app` and the rendered app (an email or
-  password input visible). Businesses and Analytics with a real session, with the first business
+  password input visible), in a context whose locale is `en-US` for the gated runs (the brief's
+  acceptance 3), and one `it-IT` series reported beside them. For each `/signin` run the network log
+  lists the async chunks fetched before the form is visible, their gzip bytes and which waited on
+  which: that is what the brief's T and R are computed from. Businesses and Analytics with a real session, with the first business
   row and the first analytics figure, using the selectors fixed in M0. For each run: the locale
   chunk's request-to-response time (once M3 lands), bytes, requests, and the `securetoken` and
   `accounts:lookup` calls.
@@ -73,7 +78,8 @@ Every figure the brief's acceptance 3 and 4 gate on is produced this way and no 
 - **Statistic**: the median per figure, page and profile, with minimum and maximum. Every run is
   reported. A run is discarded only for a recorded network error, and is then repeated and listed.
 - **Gates**: the brief's thresholds are relative to the baseline series of step 1. The brief's
-  `v2.2.30-test` figures are the first such baseline and are kept for reference.
+  `v2.2.30-test` figures (uncompressed) and its `v2.2.47` production reference (gzipped, 2026-11-02:
+  10 Mbps form median 2 170 ms, splash not yet existing, unthrottled 599 ms) are kept for reference.
 
 ## Milestones
 
@@ -87,14 +93,14 @@ Each milestone is one or a few commits, verified on its own.
   its reruns recorded. That is the regression baseline. For reference, the suite on `caaff42`
   (recorded in the call-insights plan, D12) was 1 183 passed, 7 failed and 5 skipped, and the 7
   passed when rerun serially.
-- Verification: the instrument reproduces the brief's `/signin` figures within their spread on the
-  release then on test; the suite baseline recorded below.
+- Verification: the instrument reproduces the brief's `v2.2.47` reference figures within their spread
+  on the release then on test; the suite baseline recorded below.
 
 ### M1: vendors in few files (`vue.config.js`)
 
 - Remove the `configureWebpack.optimization.splitChunks` override (`maxSize: 64000`), leaving Vue
   CLI's default `chunk-vendors` and `chunk-common` groups.
-- The built `index.html` at `80946cf` carries no `prefetch` or `preload` link (counted). This
+- The built `index.html` carries no `prefetch` or `preload` link (counted at `80946cf` and on production `v2.2.47`). This
   milestone and every later one re-count it, because a prefetch of 12 locales and every page would
   undo the saving.
 - Verification: a production build, with the initial file count and bytes recorded; vitest;
@@ -108,8 +114,8 @@ Each milestone is one or a few commits, verified on its own.
   full navigation to the target URL. A sessionStorage marker keeps it from looping. Any other error
   is rethrown unchanged.
 - Verification:
-  - `node scripts/static-routes.js` output identical to `80946cf`; `tests/unit/publicRoutes.spec.js`;
-  - a new Playwright test, written first and seen failing on `80946cf`, that aborts one route chunk
+  - `node scripts/static-routes.js` output identical to the base commit's; `tests/unit/publicRoutes.spec.js`;
+  - a new Playwright test, written first and seen failing on the base commit, that aborts one route chunk
     once and lands on the target;
   - a production build with no route component in the initial files.
 - Retention dependency above.
@@ -129,13 +135,16 @@ Each milestone is one or a few commits, verified on its own.
   (M6) covers the wait. The wait has a cost:
   - the request can start only once the main bundle has run, so it is serial with it;
   - the locale JSON files gzip to 37 142 B (en-US), 39 601 B (it-IT) and 48 739 B (el-GR, the
-    largest), measured at `80946cf`;
+    largest), measured at `80946cf` (en-US 46 673 B and it-IT 49 763 B with `gzip -9 -n` on 2026-11-02);
   - at 10 Mbps and 40 ms latency that is one round trip plus 30 to 40 ms of transfer, about 100 ms
     (estimated, not measured);
   - the import therefore starts when the i18n module is evaluated, ahead of the rest of `main.js`'s
     set-up, so the two overlap;
   - the instrument reports the request's time on every run, and the gated rendered-app figure
     includes it.
+- The fallback is `en-US`. For a browser in `en-US` the active locale is the fallback, and one locale chunk
+  is fetched before mount; in any other locale, two (about 96 kB gzip with `it-IT`). The gated runs are
+  `en-US` (brief, acceptance 3).
 - `tests/unit/setup.js` loads synchronously the messages that unit tests assert on, so no spec
   depends on the async path by accident. One new spec covers the loader: unknown locale, alias,
   cached promise, failure.
@@ -165,8 +174,11 @@ Each milestone is one or a few commits, verified on its own.
 
 ### M5: deploy with compression, cache headers and asset retention
 
-The upload logic moves from inline workflow steps to `scripts/deploy-assets.sh` (bash). The
-workflow calls it, and the rehearsal runs the same file. It takes the endpoint, the bucket and the
+The upload logic moves from the workflow's inline steps (the three syncs of `v2.2.47`) to
+`scripts/deploy-assets.sh` (bash). The workflow calls it after the Precompress step, and the rehearsal runs
+the same file, on a `dist/` that went through `scripts/precompress.sh` first. Before uploading anything the
+script checks that every `.js` and `.css` under `dist/` starts with the gzip magic bytes (`1f 8b`) and stops
+otherwise, so a build that skipped the Precompress step can never go up declared as gzip. It takes the endpoint, the bucket and the
 asset `Cache-Control` value as required arguments with no defaults, and prints the destination
 before each step.
 
@@ -309,14 +321,14 @@ The rehearsal proves the script, not the edge; the edge is the probe's job.
 
 ### M7: the sign-in path
 
-**How sign-in navigates today** (read at `80946cf`). The `login` action (`store/index.js:222`) calls
+**How sign-in navigates today** (read at `80946cf`, re-read at `adbb851`). The `login` action (`store/index.js:223`) calls
 `signInWithEmailAndPassword`, commits the user and does not navigate. `Signin.vue`'s `handleSubmit`
 does not navigate either for a verified user. The move to `redirect`, or to `redirectAfterAuth()`,
 comes from the `onAuthStateChanged` listener registered in `mounted()` (`Signin.vue`, lines 194 to
 215 and 237 to 260). It fires after the password sign-in because it stays subscribed. A one-shot
 readiness promise alone would therefore break password sign-in: the state changes after readiness.
 
-**Tests first.** These run on `80946cf` before any change in this milestone.
+**Tests first.** These run on the base commit before any change in this milestone.
 
 - Fixtures (`tests/e2e/fixtures/auth.js`, today four `mock-id-token` strings):
   - mint unsigned JWT-shaped ID tokens: header `{"alg":"none"}`, claims `iss`, `aud`, `sub` and
@@ -334,7 +346,7 @@ readiness promise alone would therefore break password sign-in: the state change
   2. a password sign-in for an account with no business lands on `/onboardinglang`;
   3. the confirm-email return. `/login?confirm_email=true` with a persisted user whose cached token
      says `email_verified: false`, and whose `accounts:lookup` says `emailVerified: true`, lands on
-     the first page. Expected to pass on `80946cf` (correct today, only slow). Also run once against
+     the first page. Expected to pass on the base commit (correct today, only slow). Also run once against
      the change with the refresh removed, and seen failing, so it is known to guard the refresh;
   4. the converse: `/` with a persisted user whose token carries the claim reaches the first page
      with no `securetoken` call;
@@ -362,14 +374,15 @@ readiness promise alone would therefore break password sign-in: the state change
 
   The `onAuthStateChanged` listeners in `mounted()` are removed. Tokens use `getIdToken()` without
   forcing.
-- `Business.checkUserHasBusinesses`: `getIdToken()` without forcing. Firebase refreshes a token that
-  is expired or within five minutes of expiry by itself. This also changes Analytics and
-  AnalyticsAdmin, which call it on mount.
+- `Signin.vue` calls `Business.checkUserHasBusinesses` with `{ fresh: false }`, after the claim check above.
+  Firebase refreshes a token that is expired or within five minutes of expiry by itself. The function's
+  default stays forced: `GoogleCallback.vue`, Conversations and the report page keep it (brief, scope 3;
+  their refresh is the follow-up). Analytics and AnalyticsAdmin already pass `{ fresh: false }` (`5f08d1f`).
 - Verification:
   - specs 1 to 5 and `session-guard.spec.js:47`;
   - `tests/e2e/public/magiclink.spec.js` (no sign-in spec drives `GoogleCallback.vue`, which this
     milestone does not change);
-  - the Analytics and AnalyticsAdmin specs;
+  - the Analytics, AnalyticsAdmin and Conversations specs (unchanged callers, as a regression check);
   - the instrument shows, from `/` with a verified session whose token carries the claim, no
     `accounts:lookup` beyond initialisation's and no `securetoken` call.
 
@@ -391,23 +404,22 @@ release (brief, Follow-ups).
 
 Every step past the rehearsal needs Angelo's authorisation, and production needs him present.
 
-1. **Integration.** Rebase on the head of `v2.2` (`v2.2.31` or later). The brief's acceptance 1 and
+1. **Integration.** Rebase on the head of `v2.2` (`v2.2.47` or later). The brief's acceptance 1 and
    5 on the integrated head; the M5 rehearsal repeated on that head; an integration review.
-2. **Passthrough probe on test.** The test environment's `ASSET_CACHE_CONTROL` is set to
+2. **Cache header probe on test.** `Content-Encoding` passthrough is already proven (`v2.2.47`, 2026-11-02);
+   what is probed is `Cache-Control`. The test environment's `ASSET_CACHE_CONTROL` is set to
    `public, max-age=60`, then the test tag is pushed and deployed.
    - Verify with `curl -I`, with and without `Accept-Encoding: gzip`, and with
-     `curl --compressed -o` plus a byte comparison against `dist/`, on one gzip JS, one gzip CSS, one
-     raw font and one SVG:
-     - `content-encoding: gzip` exactly where expected and absent elsewhere;
-     - the content type;
-     - `cache-control: public, max-age=60`;
+     `curl --compressed -o` plus a byte comparison against the build before precompression, on one JS,
+     one CSS, one font and one SVG:
+     - `cache-control: public, max-age=60` on all four, on a miss and on a hit;
+     - `content-encoding: gzip` on the JS and CSS only, and the content type;
      - decoded bytes equal to the build's.
    - Then a cold load in Chromium with no decoding error, and the session-guard deep link.
-   - **If the edge alters or drops `Content-Encoding`:**
-     - the affected objects are purged from the test pipeline's cache (Edge Services console,
-       "Purge by object", or "Purge all"; the 60 s max-age bounds the exposure if the purge is late);
-     - the script is switched to upload raw bytes, keeping retention and the cache header;
-     - the probe is repeated.
+   - **If the edge alters or drops `Cache-Control`:** the affected objects are purged from the test
+     pipeline's cache (Edge Services console, "Purge by object", or "Purge all"; the 60 s max-age bounds
+     the exposure if the purge is late), `ASSET_CACHE_CONTROL` is emptied so that the script sets no
+     cache header, and the immutable step is dropped from this release; retention stays.
 3. **Immutable on test.** `ASSET_CACHE_CONTROL` is set to `public, max-age=31536000, immutable` and
    the workflow is rerun on the same test tag (`workflow_dispatch` on its ref).
    - Acceptance 2 is checked again with that header.
@@ -424,10 +436,9 @@ Every step past the rehearsal needs Angelo's authorisation, and production needs
    - by the `app.<hash>.js` name that the served `https://dashboard.mrcall.ai/index.html` names,
      found among the upload lines of that run's log.
 
-   Checked on 2026-10-23 for reference: the last production run is `v2.2.25-production`
-   (2026-10-17 16:59 UTC, tag at `0515932`), and the served `index.html` was last modified at
-   17:01 UTC that day. `docs/active-context.md` still says production runs `v2.2.21`, which is stale.
-   If `v2.2.31` reaches production, the fallback becomes its tag, verified the same way.
+   Checked on 2026-11-02 for reference: production serves `v2.2.47-production` (commit `adbb851`, run
+   41426787252), the release that shipped compression. If a later release reaches production first, the
+   fallback becomes its tag, verified the same way.
 
 ## Rollback
 
@@ -445,9 +456,17 @@ Every step past the rehearsal needs Angelo's authorisation, and production needs
 
 | Milestone | Status | Evidence |
 |---|---|---|
-| M0 | build and `/signin` baseline measured (brief); instrument, session figures and suite baseline pending | brief, Evidence |
+| M0 | build and `/signin` baseline measured (brief: `80946cf` uncompressed, and the `v2.2.47` production reference of 2026-11-02); instrument, session figures and suite baseline pending | brief, Evidence and acceptance 3 |
 | M1 to M4, M6 to M9 | not started | |
 | M5, compression only | shipped ahead of the plan on 2026-11-02, scoped: `scripts/precompress.sh` gzips every `.js` and `.css` in place and the workflow uploads them with `Content-Encoding: gzip` in three syncs (bundles, the rest with `--delete`, then the bundles' own prune). Caching unchanged (edge default), deletion unchanged (superseded bundles go at once, as before). Still pending under M5: the immutable header after the passthrough probe, the retention lists, `scripts/deploy-assets.sh` and its rehearsal | production served 7 891 KB of JS uncompressed on `v2.2.46` (curl, 105 files, `Accept-Encoding: gzip, br`); first paint of `/login` in Chromium throttled to 9 Mbps / 170 ms: 9.3 s on production; 1.6 Mbps / 300 ms: 46.7 s, and 46.6 s in a second run. Same build served locally raw and gzipped: 10.4 s and 46.7 s raw, 5.9 s and 17.7 s gzipped. Edge passthrough proved on `v2.2.47-test` (commit 8f194be, run 41422948921: "precompress: 132 files gzipped"): all 105 initial assets of https://dashboard-test.mrcall.ai answer `content-encoding: gzip`, on `x-cache: miss` and on `hit-fresh`, and decode to JS; 1.98 MB transferred against 7.9 MB; favicon unencoded. Same throttled runs live: 3.7 s at 9 Mbps and 15.8 s at 1.6 Mbps, against 9.3 s and 46.6 s on production `v2.2.46`. A client sending no `Accept-Encoding` also gets gzip: every browser accepts it, and there is no negotiation to fall back on. A rollback to a tag from before 8f194be runs that tag's own workflow, which re-uploads every bundle raw without the header (its files are newer than the objects) |
+
+## Reviews
+
+- Brief, restated on 2026-11-02: REVISE twice, then APPROVED at `672d101` by one fresh reviewer. First pass: the
+  10 Mbps cap was already met by `v2.2.47` and the splash ungated, and `checkUserHasBusinesses`' callers were
+  stale (Analytics pages pass `fresh: false` since `5f08d1f`). Second pass: the rendered-app gate credited the
+  sign-in route and locale chunks as removed although the form waits for them. Both repaired in the brief.
+- Plan: pending.
 
 ## Baseline figures (`80946cf` built locally; `/signin` on dashboard-test serving `v2.2.30-test`, 2026-10-23)
 
