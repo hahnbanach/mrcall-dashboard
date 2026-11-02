@@ -23,12 +23,35 @@ const FIREBASE_API_KEY = process.env.VUE_APP_FIREBASE_API_KEY
 const FIREBASE_APP_NAME = '[DEFAULT]'
 
 /**
+ * An ID token shaped as Firebase's: a JWT with the claims the SDK requires (it rejects a token whose claims lack
+ * `exp`, `auth_time` or `iat`), unsigned, since nothing here verifies it. `email_verified` is the test's to choose:
+ * StarChat authorises a token only when that claim is true (plan docs/execution-plans/2026-10-23-dashboard-load.md, M7),
+ * and the sign-in path refreshes the token only when the claim differs from the user's `emailVerified`.
+ */
+function mintIdToken (user, emailVerified = user.emailVerified) {
+  const b64 = (o) => Buffer.from(JSON.stringify(o)).toString('base64url')
+  const now = Math.floor(Date.now() / 1000)
+  const claims = {
+    iss: 'https://securetoken.google.com/mrcall-project', aud: 'mrcall-project',
+    sub: user.uid, user_id: user.uid, email: user.email, email_verified: emailVerified,
+    iat: now, auth_time: now, exp: now + 3600,
+    firebase: { sign_in_provider: (user.providerData[0] || {}).providerId || 'password' },
+  }
+  return `${b64({ alg: 'none', typ: 'JWT' })}.${b64(claims)}.`
+}
+
+/** The `email_verified` claim of a token minted above, or undefined for any other token. */
+function tokenEmailVerified (token) {
+  try { return JSON.parse(Buffer.from(String(token).split('.')[1], 'base64url').toString()).email_verified } catch (e) { return undefined }
+}
+
+/**
  * Build the IndexedDB record that Firebase Auth SDK expects.
  * Firebase stores auth users in IndexedDB database "firebaseLocalStorageDb",
  * object store "firebaseLocalStorage", with key format:
  *   firebase:authUser:{apiKey}:{appName}
  */
-function buildFirebaseUserRecord(user) {
+function buildFirebaseUserRecord(user, { tokenEmailVerified: claim = user.emailVerified } = {}) {
   const now = Date.now()
   return {
     fbase_key: `firebase:authUser:${FIREBASE_API_KEY}:${FIREBASE_APP_NAME}`,
@@ -51,7 +74,7 @@ function buildFirebaseUserRecord(user) {
       })),
       stsTokenManager: {
         refreshToken: 'mock-refresh-token',
-        accessToken: user.accessToken || 'mock-id-token',
+        accessToken: mintIdToken(user, claim),
         expirationTime: now + 3600 * 1000,
       },
       createdAt: String(now - 86400000),
@@ -66,8 +89,9 @@ function buildFirebaseUserRecord(user) {
  * Seeds Firebase Auth's IndexedDB so the SDK finds a persisted user on init.
  * Must run on the same origin as the app (`ORIGIN`, ./origin.js).
  */
-async function seedFirebaseIndexedDB(page, user) {
-  const record = buildFirebaseUserRecord(user)
+// `options.tokenEmailVerified`: the `email_verified` claim of the persisted token (by default the user's own)
+async function seedFirebaseIndexedDB(page, user, options = {}) {
+  const record = buildFirebaseUserRecord(user, options)
   await page.evaluate(async (record) => {
     return new Promise((resolve, reject) => {
       const request = indexedDB.open('firebaseLocalStorageDb', 1)
@@ -93,8 +117,10 @@ async function seedFirebaseIndexedDB(page, user) {
 /**
  * Intercept Firebase Auth REST endpoints so the SDK never hits real servers.
  */
-async function interceptFirebaseEndpoints(page, user) {
+// `refreshedEmailVerified`: the claim of the tokens a refresh or a sign-in returns (by default the user's own).
+async function interceptFirebaseEndpoints(page, user, { refreshedEmailVerified = user.emailVerified } = {}) {
   const now = Date.now()
+  const token = () => mintIdToken(user, refreshedEmailVerified)
 
   // Token refresh
   await page.route('**/securetoken.googleapis.com/**', (route) => {
@@ -102,11 +128,11 @@ async function interceptFirebaseEndpoints(page, user) {
       status: 200,
       contentType: 'application/json',
       body: JSON.stringify({
-        access_token: user.accessToken || 'mock-id-token',
+        access_token: token(),
         expires_in: '3600',
         token_type: 'Bearer',
         refresh_token: 'mock-refresh-token',
-        id_token: user.accessToken || 'mock-id-token',
+        id_token: token(),
         user_id: user.uid,
         project_id: 'mrcall-project',
       }),
@@ -146,8 +172,9 @@ async function interceptFirebaseEndpoints(page, user) {
         status: 200,
         contentType: 'application/json',
         body: JSON.stringify({
-          idToken: user.accessToken || 'mock-id-token',
+          idToken: token(),
           refreshToken: 'mock-refresh-token',
+          email: user.email,
           expiresIn: '3600',
           localId: user.uid,
         }),
@@ -455,6 +482,16 @@ async function setupApiMocks(page, overrides = {}) {
   await page.route('**/customer/insights/reports/overlap*', (route) => {
     route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify(overrides.overlap || { past: [] }) })
   })
+
+  // Registered last, so checked first: StarChat refuses a token whose `email_verified` claim is false, with Akka's
+  // default 403 (JwtFirebaseTokenService.tokenAuthorize); the dashboard's 401 interceptor never retries a 403. Any other
+  // request goes on to the mocks above. The confirm-email test fails through this if its refresh is skipped.
+  await page.route('**/mrcall/v1/**', (route) => {
+    if (tokenEmailVerified(route.request().headers()['auth']) === false) {
+      return route.fulfill({ status: 403, contentType: 'text/plain', body: 'The supplied authentication is not authorized to access this resource' })
+    }
+    return route.fallback()
+  })
 }
 
 /**
@@ -510,4 +547,6 @@ module.exports = {
   seedFirebaseIndexedDB,
   interceptFirebaseEndpoints,
   buildFirebaseUserRecord,
+  mintIdToken,
+  tokenEmailVerified,
 }

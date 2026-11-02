@@ -9,14 +9,13 @@ class BasePage {
     this.page = page
   }
 
-  /** Wait for the app to mount and render */
+  /**
+   * Wait for the app to mount and its first page to resolve. `#app` having children no longer says so: since the
+   * load work's M6 (docs/execution-plans/2026-10-23-dashboard-load.md) index.html carries a splash inside `#app`, and
+   * App.vue keeps it until the first navigation resolves. The container App.vue draws then, or its stated failure, does.
+   */
   async waitForApp() {
-    await this.page.waitForSelector('#app', { state: 'attached' })
-    // Wait for Vue to hydrate - the app div should have child content
-    await this.page.waitForFunction(() => {
-      const app = document.querySelector('#app')
-      return app && app.children.length > 0
-    }, { timeout: 15000 })
+    await this.page.waitForSelector('#app-container, .app-first-page-failed', { state: 'attached', timeout: 15000 })
   }
 
   /** Check that the navbar is visible */

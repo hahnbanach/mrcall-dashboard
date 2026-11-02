@@ -11,7 +11,6 @@ const Conversations = () => import(/* webpackChunkName: "conversations" */ '@/vi
 const CustomTokenSignin = () => import(/* webpackChunkName: "sign" */ '@/views/CustomTokenSignin')
 const FailedPayment = () => import(/* webpackChunkName: "payment" */ '@/views/FailedPayment')
 const FailedPaymentProduct = () => import(/* webpackChunkName: "payment" */ '@/views/FailedPaymentProduct')
-const Home = () => import(/* webpackChunkName: "sign" */ '@/views/Home.vue')
 const MagicLink = () => import(/* webpackChunkName: "sign" */ '@/views/sign/MagicLink')
 const OAuthConsent = () => import(/* webpackChunkName: "oauth" */ '@/views/oauth/OAuthConsent.vue')
 const OnboardingChooseDevice = () => import(/* webpackChunkName: "onboarding" */ '@/views/onboarding/OnboardingChooseDevice')
@@ -40,8 +39,7 @@ const SuccessPayment = () => import(/* webpackChunkName: "payment" */ '@/views/S
 const SuccessPaymentProduct = () => import(/* webpackChunkName: "payment" */ '@/views/SuccessPaymentProduct')
 const TermsAndConditions = () => import(/* webpackChunkName: "legal" */ '@/views/TermsAndConditions')
 const Whatsappweb = () => import(/* webpackChunkName: "business" */ '@/views/Whatsappweb')
-import {auth} from '@/firebase/config';
-import { userWhenReady } from '@/firebase/authReady';
+import { readyUser } from '@/firebase/sessionReady';
 import { isAdmitted } from '@/firebase/admission';
 import {createRouter, createWebHistory} from 'vue-router'
 const Analytics = () => import(/* webpackChunkName: "analytics" */ '@/views/Analytics.vue')
@@ -67,9 +65,10 @@ import { isLeaving, reloadPage } from '@/utils/pageReload'
 
 const routes = [
   {
+    // Straight to sign-in, which goes on to the first page when there is a session: no component to mount first
+    // (Home.vue replaced the route in its mounted(), one more step before the form or the page; M7).
     path: '/',
-    name: 'Home',
-    component: Home,
+    redirect: '/signin',
     meta: { public: true }
   },
   {
@@ -472,8 +471,9 @@ const router = createRouter({
   base: process.env.BASE_URL || '/'
 })
 
-// One readiness promise for every navigation, not a listener each (src/firebase/authReady.js).
-const getUser = userWhenReady(auth)
+// One readiness promise for every navigation, not a listener each, the token matched to the user once
+// (src/firebase/sessionReady.js).
+const getUser = readyUser
 
 // Capture UTM parameters and reseller referral codes on initial load
 router.beforeEach(async (to, from, next) => {

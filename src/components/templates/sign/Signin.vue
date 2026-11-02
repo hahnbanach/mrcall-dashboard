@@ -1,6 +1,9 @@
 <template>
   <div class="signin-signup-form">
-    <form @submit.prevent="handleSubmit(!v$.$invalid)">
+    <!-- While a persisted session resolves, the splash rather than a form the person would start filling in for
+         nothing (plan docs/execution-plans/2026-10-23-dashboard-load.md, M7) -->
+    <div v-if="resolving" class="app-splash" aria-busy="true"><div class="app-splash-ring"></div></div>
+    <form v-else @submit.prevent="handleSubmit(!v$.$invalid)">
       <div class="p-fluid">
         <div class="p-field">
           <div class="inputboxtitle">
@@ -113,8 +116,8 @@ import {email, minLength, required} from "@vuelidate/validators"
 import {useVuelidate} from "@vuelidate/core"
 import {useRouter} from 'vue-router'
 import {useStore} from 'vuex'
-import {onAuthStateChanged} from "firebase/auth";
 import {auth} from "@/firebase/config";
+import {readyUser} from "@/firebase/sessionReady";
 import {isAdmitted} from "@/firebase/admission";
 import {useI18n} from "vue-i18n";
 import Tr from "@/i18n/translation";
@@ -146,7 +149,11 @@ export default {
       errorDialogTextBefore: null,
       errorDialogTextAfter: null,
       submitted: false,
-      showMessage: false
+      showMessage: false,
+      // true until it is known whether a session exists
+      resolving: true,
+      // where sign-in was asked from ({path, query}), from the `redirect` query
+      redirect: undefined
     }
   },
   validations() {
@@ -189,81 +196,53 @@ export default {
 
     const confirmEmail = this.$route.query.confirm_email;
     const signin = this.$route.query.signin || this.$route.query.mode === "signIn";
-    console.debug("ConfirmEmailMode: ", confirmEmail, signin, this.store.state.user);
-    if(! this.store.state.user && !(signin || confirmEmail)) {
-      onAuthStateChanged(auth, (user) => {
-        console.debug("Auth state changed:", user);
-        if(user) {
-          console.debug("User is logged in, email verified:", user.emailVerified);
-          console.debug("StatusChanged, reloading user: ", user)
-          user.reload().then(() => {
-            console.log("NewUser: ", this.store.state.user)
-          })
-          console.debug("Submitting login event: ", user)
-          this.$gtag.event("login", {
-            'user_email': user.email,
-          })
-          user.getIdToken(true).then((token) => {
-            console.debug("NewToken: ", token)
-            if(redirect && isAdmitted(user)) {
-              this.router.replace({path: redirect.path, query: redirect.query})
-            } else if(this.store.state.user?.emailVerified) {
-              this.redirectAfterAuth();
-            }
-          })
-        }
-      })
-    } else if((signin || confirmEmail) && await this.store.dispatch('completeEmailLinkSignIn', {})) {
-      const email = this.$route.query.email;
-      console.debug("Signup, confirmEmail: ", signin, confirmEmail);
+    this.redirect = redirect
+
+    // A sign-in with an email link (the magic link, or the confirmation email's): its own events, then the one way on.
+    if((signin || confirmEmail) && await this.store.dispatch('completeEmailLinkSignIn', {})) {
       if(signin) {
-        console.debug("Submitting login with magiclink event: ", email)
-        this.$gtag.event("login", {
-          'user_email': email,
-          'mode': 'magiclink'
-        })
-      } else { //if(confirmEmail)
-        console.debug("Submitting verified_email event: ", this.store.state.user)
-        this.$gtag.event("verified_email", {
-          'user_email': this.store.state.user?.email,
-        })
+        this.$gtag.event("login", { 'user_email': this.$route.query.email, 'mode': 'magiclink' })
+      } else {
+        this.$gtag.event("verified_email", { 'user_email': this.store.state.user?.email })
       }
-      if(redirect && isAdmitted(this.store.state.user)) {
-        this.router.replace({path: redirect.path, query: redirect.query})
-      } else if(this.store.state.user?.emailVerified) {
-        this.redirectAfterAuth(true);
-      }
-    } else {
-      onAuthStateChanged(auth, (user) => {
-        console.debug("Auth state changed:", user);
-        if(user) {
-          console.debug("User is logged in, email verified:", user.emailVerified);
-          console.debug("StatusChanged, reloading user: ", user)
-          user.reload().then(() => {
-            console.log("NewUser: ", this.store.state.user)
-          })
-          if(confirmEmail) {
-            console.debug("Submitting verified_email event: ", this.store.state.user)
-            this.$gtag.event("verified_email", {
-              'user_email': this.store.state.user?.email,
-            })
-          }
-          user.getIdToken(true).then((token) => {
-            console.debug("NewToken: ", token)
-            if(redirect && isAdmitted(user)) {
-              this.router.replace({path: redirect.path, query: redirect.query})
-            } else if(this.store.state.user?.emailVerified) {
-              this.redirectAfterAuth();
-            }
-          })
-        }
-      })
+      return this.afterAuth(auth.currentUser, true)
     }
+
+    // A persisted session: Firebase has reloaded the user at start-up and readyUser has matched the token to it (one
+    // refresh, only when the token's email_verified claim lags, as back from the confirmation email), so neither a
+    // user.reload() nor a forced refresh here. A session resumed is no sign-in: no `login` event, as before.
+    const user = await readyUser()
+    if(user) {
+      if(confirmEmail) {
+        this.$gtag.event("verified_email", { 'user_email': user.email })
+      }
+      return this.afterAuth(user)
+    }
+    this.resolving = false
   },
   methods: {
-    async redirectAfterAuth(useReplace = false) {
+    /**
+     * The one step after authentication, for every way in (a session, a password, an email link): to the link that
+     * asked for sign-in, else to the first page; an unverified user stays on the form, where handleSubmit says why.
+     * It works on its `user`, never on store.state.user, which may not be committed yet.
+     */
+    async afterAuth(user, useReplace = false) {
+      if(!user) {
+        this.resolving = false
+        return
+      }
+      if(this.redirect && isAdmitted(user)) {
+        return this.router.replace({path: this.redirect.path, query: this.redirect.query})
+      }
+      if(user.emailVerified) {
+        return this.redirectAfterAuth(user, useReplace)
+      }
+      this.resolving = false
+    },
+    async redirectAfterAuth(user, useReplace = false) {
       try {
-        const hasBusinesses = await businessUtils.checkUserHasBusinesses(this.store.state.user, this.store);
+        // the token is current: readyUser matched it, or a sign-in has just minted it (no second forced refresh)
+        const hasBusinesses = await businessUtils.checkUserHasBusinesses(user, this.store, { fresh: false });
         const path = hasBusinesses ? '/businesses' : '/onboardinglang';
         if (useReplace) {
           this.router.replace(path);
@@ -313,7 +292,8 @@ export default {
             this.errorType = "EMAIL_NOT_VERIFIED";
             this.toggleDialog();
           } else {
-            console.debug("Email verified, should redirect to /businesses");
+            this.$gtag.event("login", { 'user_email': auth.currentUser?.email })
+            await this.afterAuth(auth.currentUser)
           }
         }
       } catch (err) {

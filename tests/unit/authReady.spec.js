@@ -28,3 +28,38 @@ describe('userWhenReady', () => {
     expect(await ready()).toEqual({ uid: 'u1' })
   })
 })
+
+import { matchTokenToUser } from '@/firebase/authReady'
+
+function fakeUser ({ emailVerified, claim, unreadable = false }) {
+  const user = { emailVerified, refreshes: 0 }
+  user.getIdTokenResult = () => unreadable ? Promise.reject(new Error('bad token')) : Promise.resolve({ claims: { email_verified: claim } })
+  user.getIdToken = (force) => { if (force) user.refreshes += 1; return Promise.resolve('t') }
+  return user
+}
+
+// StarChat refuses a token whose email_verified claim is false (M7): refresh only when the claim lags the user.
+describe('matchTokenToUser', () => {
+  it('refreshes a token minted before the email was confirmed', async () => {
+    const user = fakeUser({ emailVerified: true, claim: false })
+    expect(await matchTokenToUser(user)).toBe(true)
+    expect(user.refreshes).toBe(1)
+  })
+  it('leaves alone a token whose claim matches', async () => {
+    const user = fakeUser({ emailVerified: true, claim: true })
+    expect(await matchTokenToUser(user)).toBe(false)
+    expect(user.refreshes).toBe(0)
+  })
+  it('refreshes a token it cannot read, as every start did before', async () => {
+    const user = fakeUser({ emailVerified: true, unreadable: true })
+    await matchTokenToUser(user)
+    expect(user.refreshes).toBe(1)
+  })
+  it('once per user across navigations', async () => {
+    const user = fakeUser({ emailVerified: true, claim: false })
+    const auth = { currentUser: user, authStateReady: () => Promise.resolve() }
+    const ready = userWhenReady(auth)
+    for (let i = 0; i < 5; i++) await ready()
+    expect(user.refreshes).toBe(1)
+  })
+})

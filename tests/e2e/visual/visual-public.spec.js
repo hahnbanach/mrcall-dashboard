@@ -30,11 +30,8 @@ test.describe('Visual Regression - Public Pages', () => {
         await page.goto(pageInfo.path, { waitUntil: 'domcontentloaded' })
 
         // Wait for app to render
-        await page.waitForSelector('#app', { state: 'attached' })
-        await page.waitForFunction(() => {
-          const app = document.querySelector('#app')
-          return app && app.children.length > 0
-        }, { timeout: 15000 })
+        // the mounted app and its first page, not the splash index.html carries inside #app (load work, M6)
+        await page.waitForSelector('#app-container, .app-first-page-failed', { state: 'attached', timeout: 15000 })
 
         // Wait for animations/transitions to settle
         await page.waitForTimeout(1000)
