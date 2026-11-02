@@ -49,7 +49,8 @@ test.describe('redirected: the outcome lines', () => {
     await expect(panel).toBeVisible()
     await expect.poll(() => searches.filter((s) => !s.id).length).toBeGreaterThan(n)
     expect(searches.filter((s) => !s.id).pop()).toMatchObject({ businessId: BUSINESS_ID, counted: true, outcomeLine: 'redirected' })
-    await expect(panel.getByText(LABEL).first()).toBeVisible()
+    // the row's summary names the call's resolution (the panel's header carries the label too, so read the row)
+    await expect(panel.locator('.counted-calls-summary').first()).toContainText(LABEL)
   })
 
   test('a period without them (analysed before version 8): the four lines of before, no redirected line at zero', async ({ authenticatedPage: page }) => {
@@ -60,13 +61,15 @@ test.describe('redirected: the outcome lines', () => {
     await expect(outcomeList(page).getByText(LABEL)).toHaveCount(0)
   })
 
-  test('only the period before had them: the line at zero, so the fall shows', async ({ authenticatedPage: page }) => {
+  test('only the period before had them: the line at zero, its fall against the period before', async ({ authenticatedPage: page }) => {
     await mockInsights(page, { outcomes: { ...OUTCOMES, outcome: { ...OUTCOMES.outcome, previousTotals: { ...OUTCOMES.outcome.previousTotals, redirected: 6 } } } })
     await page.goto(`/analytics?id=${BUSINESS_ID}`)
     await expect(page.getByText('Shares over the 100 calls in which the caller asked for something.')).toBeVisible({ timeout: 15000 })
     const line = outcomeList(page).locator(':scope > li').filter({ has: page.getByText(LABEL, { exact: true }) })
     await expect(line).toHaveCount(1)
     await expect(line).toContainText('00% of 100')
+    // 0 against 6 of the 106 calls with a request before: -100%
+    await expect(line).toContainText('-100.0%')
   })
 })
 
@@ -119,5 +122,16 @@ test.describe('redirected: a call, a report, a category', () => {
     const list = page.getByRole('table', { name: 'Requests of Orders' })
     const row = list.getByRole('row').filter({ hasText: 'Can I order a cake?' })
     await expect(row.getByRole('button', { name: new RegExp(`^Request outcome: ${LABEL}`) })).toBeVisible({ timeout: 15000 })
+    // all requests, the ones the assistant handled too: the switch asks StarChat with all=true, and the row's
+    // redirected requests open from it as well
+    // the outcome's button toggles its list: closed first, so that it opens again over all the requests
+    await section.getByRole('button', { name: `Show the requests of Orders with outcome ${LABEL} (4)` }).click()
+    await expect(list).toHaveCount(0)
+    await section.getByRole('checkbox', { name: 'All requests, the ones the assistant handled too' }).check()
+    await expect.poll(() => new URL(asked.categories[asked.categories.length - 1].url).searchParams.get('all')).toBe('true')
+    await section.getByRole('button', { name: `Show the requests of Orders with outcome ${LABEL} (4)` }).click()
+    await expect.poll(() => sent.filter((s) => s.path === 'category-requests').length).toBeGreaterThan(1)
+    expect(sent.filter((s) => s.path === 'category-requests').pop()).toMatchObject({ category: 'orders', query: { outcome: 'redirected' } })
+    await expect(page.getByRole('table', { name: 'Requests of Orders' }).getByRole('row').filter({ hasText: 'Can I order a cake?' })).toBeVisible()
   })
 })

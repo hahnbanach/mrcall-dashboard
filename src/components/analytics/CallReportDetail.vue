@@ -231,7 +231,7 @@ import Classifications from "@/utils/Classifications";
  * One report, on its own route (`/analytics/report?id=&start=&requestId=`; docs/briefs/2026-10-24-insights-reports-ux.md
  * in StarChat, "The report detail"): its base (the calls it read over the calls the assistant managed, and the calls it
  * did not read, named by why), a note when more calls of its days were analysed after it was written, how its calls went
- * (the four outcome lines, booked and transferred, from its own counts), its themes by calls with their outcome, the
+ * (its outcome lines, booked and transferred, from its own counts), its themes by calls with their outcome, the
  * calls to call back, the questions left without an answer by reason with example calls and "Aggiungi la risposta"
  * (never on a question about the caller's own medical case), its suggestions, and the quality section's gaps of its
  * days beside the period before. The counts of the exclusions, newer calls and quality are the analytics' own
