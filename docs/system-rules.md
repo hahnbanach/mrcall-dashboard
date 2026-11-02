@@ -60,7 +60,7 @@
 
 ### Internationalization
 - 12 supported languages: en-US, it-IT, es-ES, fr-FR, de-DE, nl-NL, sv-SE, da-DK, nb-NO, fi-FI, et-EE, el-GR
-- Use `$t('key')` in templates, `i18n.global.t('key')` in scripts
+- Use `$t('key')` in templates, `i18n.global.t('key')` in scripts, but never at import time: locales are loaded on demand before the app mounts (`src/i18n/index.js`), so a call while modules are evaluated returns the key
 - Default locale: en-US with fallback
 - All user-facing strings must be in translation files
 

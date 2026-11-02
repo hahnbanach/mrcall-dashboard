@@ -126,17 +126,19 @@ API clients and business logic:
 - `modules/tracking.js` — UTM parameters and referral code tracking
 
 ### Firebase (`src/firebase/`)
-- `config.js` — Firebase app initialization (indexedDB + browser persistence)
+- `config.js` — Firebase app initialization (indexedDB, then browser persistence; no `setPersistence` after it, so a session kept in localStorage by earlier releases is found and moved)
+- `authReady.js` — `userWhenReady(auth)`: the SDK's `authStateReady()` asked once, the current user read per call, and its token matched to it once (`matchTokenToUser`: a forced refresh only when the token's `email_verified` claim differs from `user.emailVerified`, as back from the confirmation email, since StarChat refuses a token whose claim is false)
+- `sessionReady.js` — `readyUser`, the app's one instance, awaited by the router's guard and by the sign-in page
 - `authUtils.js` — Auth state listener, proactive token refresh (50-min interval), cross-domain cookie
 - `axiosConfig.js` — Axios 401 interceptor, the only owner of a 401: token refresh with request queue, end of session, `isSessionEnded(error)`
 - `session.js` — `isSessionEnded(error)` with no imports, re-exported by `axiosConfig.js`
 
 ### Router (`src/router/`)
-- `index.js` — Route definitions and the guard. Every route needs a session unless it declares `meta: { public: true }`; `tests/unit/publicRoutes.spec.js` lists the public ones, read from the source by `publicPaths()` in `scripts/static-routes.js`. Role-based access control via `meta.requiresRole`
+- `index.js` — Route definitions and the guard. Every route needs a session unless it declares `meta: { public: true }`; `tests/unit/publicRoutes.spec.js` lists the public ones, read from the source by `publicPaths()` in `scripts/static-routes.js`. Role-based access control via `meta.requiresRole`. Every page is loaded on demand, in chunk groups (`sign`, `onboarding`, `business`, `analytics`, `conversations`, `admin`, `reseller`, `payment`, `legal`, `oauth`); `/` redirects to `/signin`, which goes on to the first page when there is a session. A chunk that fails to load reloads its target once (`router.onError`, a sessionStorage marker kept until that target loads); a failure while the page is leaving is ignored (`utils/pageReload.js`: `pagehide` or the app's own reload, not `beforeunload`, which Chromium fires for a `tel:` link). `firstNavigation` is the first navigation's outcome, taken before the router is installed
 
 ### i18n (`src/i18n/`)
-- `index.js` — i18n configuration
-- `translation.js` — Translation utilities
+- `index.js` — i18n configuration with no messages at start: one chunk per locale, `loadLocaleMessages` (tag and short alias, cached), `initialLocale` (`lang` on the sign-in and sign-up pages, `language` on `/customtokenlogin`, then the stored choice, the browser's, the default) and `startLocale`, which `main.js` calls first and mounts after
+- `translation.js` — The language switch (waits for the locale to load) and `getLocale` (the locale in force, no side effect)
 - `locales/` — 12 JSON translation files
 
 ## Data Flow
@@ -408,7 +410,12 @@ separate page refresh failure or retained edits from the confirmed Save outcome.
 - Firebase Auth handles all auth methods (email/password, Google OAuth, magic links, custom tokens)
 - Proactive token refresh every 50 minutes (`authUtils.js`)
 - Axios interceptor catches 401 and refreshes token with request queue, and is the only code that ends a session on a 401 (`axiosConfig.js`)
-- Router guard asks for a session on every route not declared public, and enforces email verification (`router/index.js`)
+- Router guard asks for a session on every route not declared public, and enforces email verification (`router/index.js`); it waits on `readyUser` (`firebase/sessionReady.js`), one readiness promise, not a listener per navigation
+- Sign-in (`components/templates/sign/Signin.vue`): one step after authentication, `afterAuth(user)`, for a resumed session, a password and an email link; no `user.reload()` (Firebase reloads the user when it starts) and no forced refresh beyond the claim check of `readyUser`
+
+### Start-up
+- `public/index.html` carries a splash inside `#app`, drawn from the first byte with inline CSS. `main.js` asks for the starting locale first and mounts once it is loaded; `App.vue` keeps the splash until the first navigation resolves (`firstNavigation`), and says so with a Reload if it fails. A failed locale reloads the page once (its own `locale-reload:` marker)
+- The JSON editor (`JsonEditorVue`, a global async component) and the call client (`MrCallWebCall`, imported by `WebcallButton.vue` on the first call) are fetched when first used
 - Cross-domain cookie (`mrcall_uid`) for shared mrcall.ai domains
 
 ### Google authorization
