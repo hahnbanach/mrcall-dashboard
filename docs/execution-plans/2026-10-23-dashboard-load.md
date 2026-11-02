@@ -438,7 +438,8 @@ Every step past the rehearsal needs Angelo's authorisation, and production needs
 | Milestone | Status | Evidence |
 |---|---|---|
 | M0 | build and `/signin` baseline measured (brief); instrument, session figures and suite baseline pending | brief, Evidence |
-| M1 to M9 | not started | |
+| M1 to M4, M6 to M9 | not started | |
+| M5, compression only | shipped ahead of the plan on 2026-11-02, scoped: `scripts/precompress.sh` gzips every `.js` and `.css` in place and the workflow uploads them with `Content-Encoding: gzip` in three syncs (bundles, the rest with `--delete`, then the bundles' own prune). Caching unchanged (edge default), deletion unchanged (superseded bundles go at once, as before). Still pending under M5: the immutable header after the passthrough probe, the retention lists, `scripts/deploy-assets.sh` and its rehearsal | production served 7 891 KB of JS uncompressed on `v2.2.46` (curl, 105 files, `Accept-Encoding: gzip, br`); first paint of `/login` in Chromium throttled to 9 Mbps / 170 ms: 9.3 s on production; 1.6 Mbps / 300 ms: 46.7 s. Same build served locally raw and gzipped: 10.4 s and 46.7 s raw, 5.9 s and 17.7 s gzipped. Edge passthrough of the header: see the test deploy |
 
 ## Baseline figures (`80946cf` built locally; `/signin` on dashboard-test serving `v2.2.30-test`, 2026-10-23)
 
