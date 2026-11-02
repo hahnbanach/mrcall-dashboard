@@ -51,9 +51,10 @@ is a fixed string).
   call-history reads available returned no record for it.
 - `tests/unit/skillsOwnerSave.spec.js` takes 3.5 to 5.3 s against a 5 s timeout in a fresh
   worktree, and can time out there.
-- Under a full Playwright run, 10 to 24 tablet and mobile cases fail and pass when rerun alone (commit `c61ddf2`; 17
-  on the `redirected` run, all 54 runs of them passing with one worker, its plan's Status table; up to 24 on
-  `dashboard-load`, its plan's Status table there); it follows the machine's load, the cause is not measured further.
+- Under a full Playwright run, 10 to 21 cases, mostly tablet and mobile, fail under load and pass when rerun alone
+  (commit `c61ddf2`: 10; the `redirected` run: 17, all 54 runs of them passing with one worker, its plan's Status
+  table; `dashboard-load`'s M7 run there: 21 of 24, the other 3 a real defect it fixed); it follows the machine's load,
+  the cause is not measured further.
 - A blank first load of about a minute was seen once in a Chrome with extensions, right after a deploy, and not in a
   clean Chromium (5 cold runs, 1.0 to 1.3 s): not reproduced, not explained.
 - The `__BOOKING__` section's move into `__CONVERSATION__` by StarChat, and the U19r6 field names assumed against
