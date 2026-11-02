@@ -1,7 +1,15 @@
 <template>
   <metainfo>
   </metainfo>
-  <div id="app-container" class="h-screen">
+  <!-- Until the first page resolves (authentication, its chunk), the splash of public/index.html stays as it was: the
+       app mounts as soon as its locale is loaded (main.js), without waiting for the router (plan
+       docs/execution-plans/2026-10-23-dashboard-load.md, M6). A first page that cannot be loaded says so. -->
+  <div v-if="firstPage === 'loading'" class="app-splash" aria-busy="true"><div class="app-splash-ring"></div></div>
+  <div v-else-if="firstPage === 'failed'" class="app-first-page-failed" role="alert">
+    <p>{{ $t('components.app.firstPageFailed.text') }}</p>
+    <button type="button" class="p-button" @click="reload">{{ $t('components.app.firstPageFailed.reload') }}</button>
+  </div>
+  <div v-else id="app-container" class="h-screen">
     <div v-if="!$route.meta.bare" id="navbar">
       <Navbar/>
     </div>
@@ -18,7 +26,9 @@
 
 <script>
 import Navbar from '@/components/Navbar'
-import { computed, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
+import { reloadPage } from '@/utils/pageReload'
+import { firstNavigation } from '@/router'
 import { useStore } from 'vuex'
 import { useI18n } from 'vue-i18n'
 import { usePrimeVue } from 'primevue/config'
@@ -31,6 +41,10 @@ export default {
   },
   setup() {
     const store = useStore()
+    // 'loading' until the first navigation resolves, then 'ready'; 'failed' if it cannot (a page chunk that failed
+    // again after the router's one reload), rather than a splash turning forever
+    const firstPage = ref('loading')
+    firstNavigation.then(() => { firstPage.value = 'ready' }, () => { firstPage.value = 'failed' })
     // PrimeVue's calendar and its spoken labels follow the reader's language (U19 m16)
     const primevue = usePrimeVue()
     const { locale, t } = useI18n({ useScope: 'global' })
@@ -40,6 +54,8 @@ export default {
 
     return {
       store,
+      firstPage,
+      reload: () => reloadPage(),
       managedBy: computed(() => store.state.managedBy),
       user: computed(() => store.state.user),
       authIsReady: computed(() => store.state.authIsReady),
@@ -129,6 +145,16 @@ export default {
 </script>
 
 <style lang="less">
+.app-first-page-failed {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-size: 15px;
+}
+
 .mrcall-confirm-dialog .visibility-reject-button-off {
   visibility: hidden ;
 }

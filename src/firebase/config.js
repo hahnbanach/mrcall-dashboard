@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app'
-import { browserLocalPersistence, setPersistence, initializeAuth, indexedDBLocalPersistence } from 'firebase/auth'
+import { browserLocalPersistence, initializeAuth, indexedDBLocalPersistence } from 'firebase/auth'
 
 // Firebase config from environment variables
 const firebaseConfig = {
@@ -21,10 +21,9 @@ const auth = initializeAuth(app, {
 })
 auth.useDeviceLanguage()
 
-// Set persistence to LOCAL
-setPersistence(auth, browserLocalPersistence)
-  .catch((error) => {
-    console.error("Auth persistence error:", error)
-  })
+// No setPersistence after initializeAuth: it moved the persisted user to localStorage after the SDK had chosen
+// IndexedDB, one more write at every start. The SDK finds a user in either persistence of the list and moves it to the
+// first available, so a session that releases up to v2.2.47 kept in localStorage survives (plan
+// docs/execution-plans/2026-10-23-dashboard-load.md, M6; tests/e2e/public/persisted-session.spec.js).
 
 export { auth }

@@ -2863,6 +2863,12 @@
       "jsonEditor": {
         "loadFailed": "Editoren kunne ikke indlæses. Genindlæs siden for at prøve igen; intet er ændret."
       }
+    },
+    "app": {
+      "firstPageFailed": {
+        "text": "Siden kunne ikke indlæses.",
+        "reload": "Genindlæs"
+      }
     }
   },
   "views": {

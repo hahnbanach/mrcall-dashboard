@@ -2863,6 +2863,12 @@
       "jsonEditor": {
         "loadFailed": "Redigeraren kunde inte läsas in. Ladda om sidan för att försöka igen; inget har ändrats."
       }
+    },
+    "app": {
+      "firstPageFailed": {
+        "text": "Sidan kunde inte läsas in.",
+        "reload": "Ladda om"
+      }
     }
   },
   "views": {

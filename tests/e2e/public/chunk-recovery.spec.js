@@ -50,6 +50,10 @@ test('a chunk that keeps failing is not reloaded in a loop', async ({ page }) =>
   // one reload, never a second: the first failure reloads, the second is left to fail
   expect(documents).toBe(2)
   expect(asked).toBe(2)
+  // and the page says so, with a way to try again, rather than staying blank (M6: the app mounts without waiting for
+  // the router; before, a first page that never loaded left the page empty)
+  await expect(page.locator('.app-first-page-failed')).toContainText('This page could not be loaded.')
+  await expect(page.getByRole('button', { name: 'Reload' })).toBeVisible()
 })
 
 // M3: each locale is a chunk loaded before the app mounts. A failure reloads the page once, with a marker of its own

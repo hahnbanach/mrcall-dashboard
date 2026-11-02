@@ -2863,6 +2863,12 @@
       "jsonEditor": {
         "loadFailed": "Editoria ei voitu ladata. Lataa sivu uudelleen yrittääksesi uudestaan; mitään ei muutettu."
       }
+    },
+    "app": {
+      "firstPageFailed": {
+        "text": "Sivua ei voitu ladata.",
+        "reload": "Lataa uudelleen"
+      }
     }
   },
   "views": {

@@ -41,6 +41,7 @@ const SuccessPaymentProduct = () => import(/* webpackChunkName: "payment" */ '@/
 const TermsAndConditions = () => import(/* webpackChunkName: "legal" */ '@/views/TermsAndConditions')
 const Whatsappweb = () => import(/* webpackChunkName: "business" */ '@/views/Whatsappweb')
 import {auth} from '@/firebase/config';
+import { userWhenReady } from '@/firebase/authReady';
 import { isAdmitted } from '@/firebase/admission';
 import {createRouter, createWebHistory} from 'vue-router'
 const Analytics = () => import(/* webpackChunkName: "analytics" */ '@/views/Analytics.vue')
@@ -471,17 +472,8 @@ const router = createRouter({
   base: process.env.BASE_URL || '/'
 })
 
-const getUser = async () => {
-  const response = new Promise((resolve, reject) => {
-    auth.onAuthStateChanged(user => {
-      resolve(user)
-    }, err => {
-      reject(err)
-    })
-  })
-
-  return response;
-}
+// One readiness promise for every navigation, not a listener each (src/firebase/authReady.js).
+const getUser = userWhenReady(auth)
 
 // Capture UTM parameters and reseller referral codes on initial load
 router.beforeEach(async (to, from, next) => {
@@ -583,5 +575,12 @@ router.onError((error, to) => {
 router.afterEach((to) => {
   sessionStorage.removeItem(reloadMarker(to.fullPath))
 })
+
+// The first navigation's outcome, taken here, before the app installs the router and the navigation starts. Asked
+// later, once that navigation has failed, `isReady()` returns a promise that never settles (vue-router 4.6: it is
+// "ready" with the start location as current route), and App.vue's loading state would turn forever.
+export const firstNavigation = router.isReady()
+// handled here so that a failure before App.vue listens is no unhandled rejection; App.vue still sees it
+firstNavigation.catch(() => {})
 
 export default router

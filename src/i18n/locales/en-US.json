@@ -2868,6 +2868,12 @@
       "jsonEditor": {
         "loadFailed": "The editor could not be loaded. Reload the page to try again; nothing has been changed."
       }
+    },
+    "app": {
+      "firstPageFailed": {
+        "text": "This page could not be loaded.",
+        "reload": "Reload"
+      }
     }
   },
   "views": {

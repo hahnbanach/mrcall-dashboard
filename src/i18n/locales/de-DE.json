@@ -2865,6 +2865,12 @@
       "jsonEditor": {
         "loadFailed": "Der Editor konnte nicht geladen werden. Lade die Seite neu, um es erneut zu versuchen; es wurde nichts geändert."
       }
+    },
+    "app": {
+      "firstPageFailed": {
+        "text": "Diese Seite konnte nicht geladen werden.",
+        "reload": "Neu laden"
+      }
     }
   },
   "views": {

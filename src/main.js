@@ -233,4 +233,6 @@ app.component('JsonEditorVue', defineAsyncComponent({
     errorComponent: JsonEditorLoadError,
 }))
 
-Promise.all([localeReady, router.isReady()]).then(() => app.mount('#app'))
+// Mounted once the locale is in force, not after the first navigation: App.vue shows its loading state until the router
+// is ready, so the page is drawn while authentication and the first page's chunk resolve (M6).
+localeReady.then(() => app.mount('#app'))

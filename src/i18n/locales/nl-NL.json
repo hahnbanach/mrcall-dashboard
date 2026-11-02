@@ -2863,6 +2863,12 @@
       "jsonEditor": {
         "loadFailed": "De editor kon niet worden geladen. Laad de pagina opnieuw om het nog eens te proberen; er is niets gewijzigd."
       }
+    },
+    "app": {
+      "firstPageFailed": {
+        "text": "Deze pagina kon niet worden geladen.",
+        "reload": "Opnieuw laden"
+      }
     }
   },
   "views": {

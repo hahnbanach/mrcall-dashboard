@@ -2863,6 +2863,12 @@
       "jsonEditor": {
         "loadFailed": "Redigeringsverktøyet kunne ikke lastes inn. Last inn siden på nytt for å prøve igjen; ingenting er endret."
       }
+    },
+    "app": {
+      "firstPageFailed": {
+        "text": "Siden kunne ikke lastes inn.",
+        "reload": "Last inn på nytt"
+      }
     }
   },
   "views": {

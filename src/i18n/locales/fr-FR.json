@@ -2865,6 +2865,12 @@
       "jsonEditor": {
         "loadFailed": "L'éditeur n'a pas pu être chargé. Rechargez la page pour réessayer ; rien n'a été modifié."
       }
+    },
+    "app": {
+      "firstPageFailed": {
+        "text": "Cette page n'a pas pu être chargée.",
+        "reload": "Recharger"
+      }
     }
   },
   "views": {

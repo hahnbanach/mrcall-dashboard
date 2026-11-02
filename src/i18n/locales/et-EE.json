@@ -2863,6 +2863,12 @@
       "jsonEditor": {
         "loadFailed": "Redaktorit ei õnnestunud laadida. Laadi leht uuesti, et uuesti proovida; midagi ei muudetud."
       }
+    },
+    "app": {
+      "firstPageFailed": {
+        "text": "Lehte ei õnnestunud laadida.",
+        "reload": "Laadi uuesti"
+      }
     }
   },
   "views": {
