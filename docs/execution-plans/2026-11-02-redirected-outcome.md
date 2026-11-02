@@ -18,16 +18,29 @@ session holding the `v2.2` line. Worktree `mrcall-dashboard-wt/redirected`, bran
 
 ### R1. The value lists (one milestone with R2 and R3)
 
+Decision, the redirected line's visibility: it shows when its count or its previous count is above zero, and is absent
+otherwise. A period analysed before version 8 cannot carry the value, so a zero line there would state a measurement
+that was never possible, and it would change the section of every business that does not use the value (the brief's
+"no regression without the value"). The four existing lines keep showing at zero as today. The base is StarChat's
+`callsWithRequest` either way, so the lines shown still add up to it. The same rule holds for a report's lines
+(count above zero; a report has no previous count) and for its themes (already filtered on count above zero).
+
+
 - `src/utils/CallInsights.js`: `RESOLUTION_KEYS` and `RESOLUTION_REQUEST_KEYS` gain `redirected` after `forwarded`;
-  `OUTCOME_LINES` gains `{ key: "redirected", parts: ["redirected"] }` after the forwarded line (so `OUTCOME_KEYS`, the
+  `OUTCOME_LINES` gains `{ key: "redirected", parts: ["redirected"], whenPresent: true }` after the forwarded line,
+  and `outcomeShare` drops a `whenPresent` line whose count and previous count are both zero (so `OUTCOME_KEYS`, the
   `outcomeLine` filter and the chart datasets follow; StarChat's `outcome.buckets[].counts` are keyed by
   `OutcomeLine.key`, `CallInsightsAnalytics.scala:80` at `d85eb2b70`, so the series carry `redirected` too). The comments that say "four lines" say five.
 - `src/utils/Classifications.js`: `REQUEST_OUTCOME_KEYS` gains `redirected` after `taken` (the chips, the
   `requestOutcomes` filter and `RequestCategories.outcomeSplit` follow); `NOT_FULFILLED` unchanged, with a comment that
   StarChat leaves `redirected` out of it.
-- `src/utils/InsightsReports.js`: `REPORT_OUTCOME_KEYS` gains `redirected` after `forwarded` (base and themes follow).
+- `src/utils/InsightsReports.js`: `REPORT_OUTCOME_KEYS` gains `redirected` after `forwarded` (base and themes follow);
+  `reportOutcome` leaves the redirected line out at zero. The comment at its head lists the lines.
 - `src/components/analytics/CallOutcomes.vue`: a colour for `redirected` not used by any other key of the outcome chart;
-  the header comment lists the five lines.
+  its template comment (line 20) and header comment (lines 143-146, which quote "Passate a una persona") list the lines
+  and the staff label.
+- `src/components/analytics/CallReportDetail.vue`: the comment at line 52 ("four lines").
+- `src/utils/Classifications.js:21`: the comment listing request outcomes.
 - `docs/ARCHITECTURE.md`, "How the calls went": five lines (redirected beside passed to the business), the staff label.
 - The brief review found no other reader: every one in `src/` goes through these lists or the three locale blocks.
 
@@ -38,19 +51,28 @@ brief (en-US and it-IT as decided; the other ten translated to the same meaning,
 
 ### R3. Tests
 
-- Unit: the key lists and their order (`callInsights.spec.js`, `classifications.spec.js`); `outcomeShare` with
-  `redirected` adds up to `callsWithRequest` and without it is unchanged; `reportOutcome` and `reportThemes` with
-  `redirected`; the locale spec reads the new it-IT label and checks every locale has both keys in all three blocks.
-- Browser: the outcome section shows the redirected line with its count and its `outcomeLine=redirected` link, the lines
+- Unit: the key lists and their order (`callInsights.spec.js`, `classifications.spec.js`, including the menu entries'
+  value list); `insightRows` with resolution `redirected` gives its row; `outcomeShare` with `redirected` in the totals
+  gives five lines adding up to `callsWithRequest`, with it only in the previous totals gives the line at zero with its
+  previous count, and without it gives exactly today's four lines (the existing exact-array cases stay as they are and
+  prove it); `reportOutcome` with `redirected` gives five lines and a base including it, without it today's four;
+  `reportThemes` with `redirected`; the locale spec reads the new it-IT label and checks every locale has both keys in all three blocks.
+- Browser: the opened call's insights read the redirected label (beside the "Handed over" case of
+  `tests/e2e/auth/conversations-insights.spec.js`), and so does the counted-calls list of the outcome line; the outcome
+  section shows the redirected line with its count and its `outcomeLine=redirected` link, the lines
   adding up; a report with `redirected`; a category row with a redirected count, the default request sending no `all` and no outcome, and with `all=true` a
-  redirected request listed; the resolution filter offers it. The
-  tests that read "Handed over" / "Passed to a person" read the new label.
+  redirected request listed; the resolution filter offers it (its exact option list updated). The
+  tests that read "Handed over" / "Passed to a person" read the new label: `conversations-insights.spec.js`,
+  `conversations-feedback.spec.js`, `classification-chips.spec.js`, `admin.spec.js`, `report-detail.spec.js`,
+  `callInsightsLocales.spec.js`. The exact-array cases without the value (`report-detail.spec.js`, the outcome-share and
+  report-outcome units) stay unchanged and must still pass.
 
 ## Verification
 
 - `npm run lint`, `npx vitest run`, `npm run build`.
-- The full Playwright run (all three projects); failures under load rerun with one worker, as recorded in
-  `docs/active-context.md`.
+- The full Playwright run (all three projects). A failure is rerun alone; a case this change touches (the insights,
+  admin and report specs) that fails under the full run is investigated, not waived, because `docs/active-context.md`
+  lists `admin.spec.js` and `analytics-insights.spec.js` among the intermittent ones.
 - A look at the outcome section in the dev build with a mocked `redirected` count (colour and legend).
 
 ## Reviews
@@ -59,7 +81,7 @@ Brief review, plan review, one milestone review after R1-R3, final review throug
 
 ## Release (separately authorised)
 
-Fast-forward `v2.2` to `redirected`, push, tag `v2.2.<next>` and `-test` in the combined pass with StarChat; beta and
+Fast-forward `v2.2` to `redirected` (rebased first if `v2.2` has moved), push, tag `v2.2.<next>` and `-test` in the combined pass with StarChat; beta and
 production later, each authorised. Rollback: redeploy the previous tag of the environment (`v2.2.47-<env>`).
 
 ## Status
@@ -67,4 +89,4 @@ production later, each authorised. Rollback: redeploy the previous tag of the en
 | Step | State | Evidence |
 |---|---|---|
 | Brief | APPROVED at 50c60f1 after one REVISE (ARCHITECTURE.md passage); item 6 worded as acceptance 4 | 956b5a8, 50c60f1 |
-| Plan | written | this commit |
+| Plan | REVISE (zero line, acceptance 1 checks, comments), repaired | d9db588, this commit |
