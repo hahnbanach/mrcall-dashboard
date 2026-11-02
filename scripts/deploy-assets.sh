@@ -68,7 +68,8 @@ done < <(find "$dist" -type f \( -name '*.js' -o -name '*.css' \) -print0)
 # The keys involved: this build's hashed keys, the bucket's, the previous current.txt, the retained lists.
 (cd "$dist" && find . -type f | sed 's#^\./##' | sort) > "$work/build.txt"
 grep -E "$HASHED" "$work/build.txt" > "$work/build-hashed.txt" || true
-aws_s3 s3api list-objects-v2 --bucket "$bucket" --query 'Contents[].Key' --output text > "$work/bucket-raw.txt" || true
+# A failed listing stops the deploy: nothing has been written yet, and retention cannot be decided without it.
+aws_s3 s3api list-objects-v2 --bucket "$bucket" --query 'Contents[].Key' --output text > "$work/bucket-raw.txt"
 tr '\t' '\n' < "$work/bucket-raw.txt" | grep -v '^None$' | grep -v '^$' | sort > "$work/bucket.txt" || true
 grep -E "$HASHED" "$work/bucket.txt" > "$work/bucket-hashed.txt" || true
 if grep -qx 'deploy-manifests/current.txt' "$work/bucket.txt"; then
@@ -127,9 +128,9 @@ aws_s3 s3 sync "$dist/" "$s3/" --delete --only-show-errors \
 # 4. index.html and its route copies, last, raw and no-cache: the bucket answers a key it does not hold with
 #    index.html under 404, so every route without a parameter gets a copy of its own (scripts/static-routes.js).
 echo "step 4: index.html and $(echo "$routes" | grep -c . | tr -d ' ') route copies -> $s3"
-for key in index.html $routes; do
-  aws_s3 s3 cp "$dist/index.html" "$s3/$key" --content-type text/html --cache-control no-cache --only-show-errors
-done
+# eight at a time, as the workflow did before this script
+printf '%s\n' index.html $routes | xargs -P 8 -I{} \
+  aws --endpoint-url "$endpoint" s3 cp "$dist/index.html" "$s3/{}" --content-type text/html --cache-control no-cache --only-show-errors
 
 # 5. The live release's hashed keys, once index.html names them.
 aws_s3 s3 cp "$work/build-hashed.txt" "$s3/deploy-manifests/current.txt" \

@@ -52,7 +52,8 @@ test('a chunk that keeps failing is not reloaded in a loop', async ({ page }) =>
   expect(asked).toBe(2)
 })
 
-// M3: each locale is a chunk loaded before the app mounts. A failure reloads the page once, with the same marker.
+// M3: each locale is a chunk loaded before the app mounts. A failure reloads the page once, with a marker of its own
+// (`locale-reload:`), cleared only when the locale loads.
 const LOCALE_CHUNK = /\/js\/locale-en-US(\.[0-9a-f]+)?\.js(\?.*)?$/
 
 test('a locale whose chunk fails once is loaded again, and the page is in that language', async ({ page }) => {
@@ -83,4 +84,26 @@ test('a locale that keeps failing still lets the page mount, after one reload', 
   expect(documents).toBe(2)
   expect(asked).toBe(2)
   expect(errors.some((e) => e.includes('The interface language could not be loaded'))).toBe(true)
+})
+
+// A tel: or mailto: link hands the address to another application and leaves the page in place. Chromium fires
+// `beforeunload` for it anyway; recovery must still work after one (the M1-M5 review found it disabled for the rest of
+// the page's life). WebKit fires nothing for such a link, so this checks Chromium's case where it occurs.
+test('a chunk failure after a tel: link still reloads its target', async ({ page, browserName }) => {
+  test.skip(browserName !== 'chromium', 'only Chromium fires beforeunload for a tel: link')
+  await page.route('**/googleapis.com/**', (route) => route.abort())
+  await page.route('**/googletagmanager.com/**', (route) => route.abort())
+  await page.goto('/signin')
+  await expect(page.locator('#email')).toBeVisible({ timeout: 15000 })
+  await page.evaluate(() => { window.location.href = 'tel:+390000000000' })
+  await page.waitForTimeout(500)
+  let asked = 0
+  await page.route(/\/js\/legal(\.[0-9a-f]+)?\.js(\?.*)?$/, (route) => {
+    asked += 1
+    return asked === 1 ? route.abort() : route.continue()
+  })
+  // the push itself rejects with the chunk error whatever onError does; the reload is what is checked
+  await page.evaluate(() => { document.querySelector('#app').__vue_app__.config.globalProperties.$router.push('/privacypolicy').catch(() => {}) })
+  await expect(page).toHaveURL(/\/privacypolicy/, { timeout: 15000 })
+  await expect.poll(() => asked, { timeout: 15000 }).toBe(2)
 })

@@ -82,7 +82,7 @@ s3 s3 rm "s3://$bucket" --recursive --only-show-errors
 s3 s3 sync "$work/base/" "s3://$bucket" --exclude '*' --include '*.js' --include '*.css' --content-encoding gzip --only-show-errors
 s3 s3 sync "$work/base/" "s3://$bucket" --delete --exclude '*.js' --exclude '*.css' --only-show-errors
 for b in B1 B2 B3 B4 B5; do rm -rf "$work/$b"; cp -R "$work/cand" "$work/$b"; done
-own "$work/B1" b1own; own "$work/B2" b2own; own "$work/B3" b3own; own "$work/B4" b4own; own "$work/B4" b2own; own "$work/B5" b5own
+own "$work/B1" b1own; own "$work/B2" b2own; own "$work/B2" b2only; own "$work/B3" b3own; own "$work/B4" b4own; own "$work/B4" b2own; own "$work/B5" b5own
 backdate() { # renames the newest list to <days> days ago
   local newest; newest="$(keys | grep -E 'superseded-[0-9]{8}T[0-9]{6}Z' | sort | tail -1)"
   [ -n "$newest" ] || return 0
@@ -98,6 +98,7 @@ for step in "B1 41" "B2 31" "B3 21" "B4 11" "B5 1"; do
 done
 has() { keys | grep -q "$1"; }
 check "B1's own chunk gone (superseded 31 days before)" '! has "js/b1own\."'
+check "B2's chunk that no later build has, gone (21 days)" '! has "js/b2only\."'
 check "B3's own chunk kept (11 days)" 'has "js/b3own\."'
 check "B4's own chunk kept (1 day)" 'has "js/b4own\."'
 check "the B2 chunk that B4 brought back kept (listed again by D5)" 'has "js/b2own\."'

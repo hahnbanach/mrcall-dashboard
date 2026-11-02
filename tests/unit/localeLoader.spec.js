@@ -9,6 +9,9 @@ describe('loadLocaleMessages', () => {
   })
 
   it('registers a locale under its tag and its short alias', async () => {
+    // the unit setup registers every locale; empty this one first, so that only the loader can fill it
+    i18n.global.setLocaleMessage('fr-FR', {})
+    i18n.global.setLocaleMessage('fr', {})
     await loadLocaleMessages('fr-FR')
     const tag = i18n.global.getLocaleMessage('fr-FR')
     expect(Object.keys(tag).length).toBeGreaterThan(0)
