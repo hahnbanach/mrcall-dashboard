@@ -11,7 +11,7 @@ Scope: Current dashboard operating state, unresolved verification limits, and im
 
 ## State now
 
-Production, beta and test serve `v2.2.49` (`68503be`, 2026-11-03), with StarChat 9.34.129 behind production, which
+Production and beta serve `v2.2.49` (`68503be`, 2026-11-03), test `v2.2.50` (below), with StarChat 9.34.129 behind production, which
 sends insight version 8. The `v2.2` line holds:
 - the classification feedback and the analytics UX rework, live since `v2.2.45`
   ([analytics UX brief](briefs/2026-10-31-analytics-ux.md), [plan](execution-plans/2026-10-31-analytics-ux.md));
@@ -26,9 +26,10 @@ sends insight version 8. The `v2.2` line holds:
   [plan](execution-plans/2026-10-23-dashboard-load.md)). Measured on test against `v2.2.48`: the sign-in form at
   10 Mbps 2 210 to 775 ms (splash 103 ms), Businesses 3 073 to 1 866 ms, Analytics 2 734 to 1 368 ms.
 
-Not released yet, on `v2.2` after the `v2.2.49` tags (`ddcfdf7`): the Analytics UX final review's repairs (the Quality
-and no-conversation tables keep their header in view; the admin filter bar's scope note with hysteresis), reviewed and
-tested, waiting for `v2.2.50`.
+Test serves `v2.2.50` (`2d89f42`, 2026-11-03): the Analytics UX final review's repairs (the Quality and
+no-conversation tables keep their header in view, checked live on test with the test owner account: both headers at
+the filter bar's bottom with the table 80 and 59 px past it; the admin filter bar's scope note with hysteresis, checked
+on the mocks only, the test account not being an admin). Beta and production stay on `v2.2.49`.
 
 Session ownership: every nonpublic route needs a session, the Axios interceptor alone ends it, and components suppress
 their failure UI for `isSessionEnded`. Browser tests mock StarChat and mrcall-agent; their ID tokens are JWT-shaped and
@@ -57,7 +58,7 @@ the StarChat mock refuses an unverified one, as StarChat does.
 ## Next
 
 - `redirected`: look at a call analysed at version 8 that carries it, in an environment.
-- Analytics UX: `v2.2.50` with the final review's repairs, test first (authorisation); S3 checked live once a window
+- Analytics UX: `v2.2.50` to beta and production (authorisation); S3 checked live once a window
   has a skill error or an extraction problem.
 - Operator: verify the production flow and actual call results with the chosen account.
 - Remove `__BOOKING__` from `menuGroups` once StarChat's move is on test.
