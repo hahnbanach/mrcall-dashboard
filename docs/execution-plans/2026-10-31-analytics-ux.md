@@ -1,5 +1,5 @@
 ---
-status: active
+status: completed
 brief: ../briefs/2026-10-31-analytics-ux.md
 created: 2026-11-01
 owner: this session (mrcall-dashboard lead), on a temporary branch `analytics-ux` off v2.2 508b014 in the worktree mrcall-dashboard-wt/analytics-ux, merged into v2.2 by the line holder

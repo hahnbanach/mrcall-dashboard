@@ -51,7 +51,7 @@ count opens are read by `src/utils/Classifications.js`, against StarChat's brief
   S1-S4, live since 9.34.128).
 
 - [Dashboard load](briefs/2026-10-23-dashboard-load.md) — [plan](execution-plans/2026-10-23-dashboard-load.md): bundles
-  gzipped (live since `v2.2.47`), pages, locales and heavy libraries on demand, a splash and mounting without waiting
+  gzipped (since `v2.2.47`), pages, locales and heavy libraries on demand (all live since `v2.2.49`), a splash and mounting without waiting
   for the router, one auth readiness with a claim check, the upload with retention and a per-environment cache header.
 
 - [OAuth Google Sheets call log](briefs/2026-10-27-sheets-oauth-call-log.md) —
