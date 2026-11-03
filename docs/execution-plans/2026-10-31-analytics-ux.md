@@ -66,7 +66,10 @@ Substantial: new shared components used on four pages, one moved search composit
   in `tests/e2e/insights/sticky-head.spec.js` seen failing first (-80 and -59 px); this entry; the Live row says S3
   is open; the A8 row records the gates. Survived its walk: focus return from every panel and the dialog, S3's
   filters and "Open in Conversations" on the mocks, `ownerId` on every read with an owner chosen, the business card
-  and narrowed requests, column help on Reports and Processing and on phones.
+  and narrowed requests, column help on Reports and Processing and on phones. Then APPROVED by the same reviewer on
+  ddcfdf7: every header at the bar on desktop and tablet across the pages, the scope note's spec and the loop case 100
+  passed over five repetitions on three projects. Recorded deviation from O4: the two-column table of calls without a
+  conversation stays a table on phones, not cards (ARCHITECTURE.md says so).
 
 ## Dependencies and order
 

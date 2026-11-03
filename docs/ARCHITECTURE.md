@@ -253,7 +253,8 @@ for the four dimensions lives in `src/utils/CallInsights.js`.
   sortable headers with `aria-sort`, page numbers and "1–10 of N", each row a card under 640 pixels with no header
   row drawn), and every
   loading, empty, unavailable and error state is `InsightsState.vue`. Every analytics table keeps its header in view
-  (`v-sticky-head`) and draws its rows as cards under 641 px (one mixin, `src/assets/style/tableCards.less`; PrimeVue
+  (`v-sticky-head`) and draws its rows as cards under 641 px (the two-column table of calls without a conversation
+  stays a table there, and `RequestCategories.vue` draws its own cards; elsewhere one mixin, `src/assets/style/tableCards.less`; PrimeVue
   tables through `cellLabel`); a column whose meaning is not self-evident has `ColumnHelp.vue` on its header (a
   tooltip on hover and focus, drawn on the body, one open at a time, its text the button's description), and on a
   phone the same texts are folded above the cards (`ColumnHelpList.vue`); "Assistants to review" keeps no legend.
@@ -334,7 +335,9 @@ for the four dimensions lives in `src/utils/CallInsights.js`.
     archived"; the request routes count the body's business and owner (StarChat 9.34), and narrowed to one business the
     section draws no column, trend, score help or expansion about several businesses, its purpose line naming the
     business or owner), and MrCall's own configuration suggestions (`ConfigSuggestions.vue`, admin only, the
-    one section that follows no filter, which the bar says while it is on screen).
+    one section that follows no filter, which the bar says while it is on screen: entered at 40% of the screen or 60%
+    of the section, left only under 25% or 40%, because the note can wrap the bar onto a second line and move the
+    section back across a single threshold).
   - Both pages establish the role on mount (the same business search that already sets it,
     `Business.js`'s `checkUserHasBusinesses`) before choosing which sections to show; the server remains the
     actual gate (a 404 hides a section with no toast, a 503 shows a short note).

@@ -1,5 +1,5 @@
 ---
-doc_baseline_commit: 0a363caa7500052baa0a67da623aff37bb889a53
+doc_baseline_commit: 37c063b9d9da53326625f41d662a57dd07f0626d
 doc_baseline_date: 2026-11-03
 ---
 
@@ -26,10 +26,9 @@ sends insight version 8. The `v2.2` line holds:
   [plan](execution-plans/2026-10-23-dashboard-load.md)). Measured on test against `v2.2.48`: the sign-in form at
   10 Mbps 2 210 to 775 ms (splash 103 ms), Businesses 3 073 to 1 866 ms, Analytics 2 734 to 1 368 ms.
 
-`v2.2.50` adds the Analytics UX final review's repairs (the Quality and
-no-conversation tables keep their header in view, checked live on test with the test owner account: both headers at
-the filter bar's bottom with the table 80 and 59 px past it; the admin filter bar's scope note with hysteresis, checked
-on the mocks only, the test account not being an admin).
+`v2.2.50` adds the Analytics UX final review's repairs: the Quality and no-conversation tables keep their header in
+view (checked live on test with the owner account), and the admin filter bar's scope note enters and leaves at
+different thresholds (checked on the mocks only: the test account is not an admin).
 
 Session ownership: every nonpublic route needs a session, the Axios interceptor alone ends it, and components suppress
 their failure UI for `isSessionEnded`. Browser tests mock StarChat and mrcall-agent; their ID tokens are JWT-shaped and
@@ -46,19 +45,20 @@ the StarChat mock refuses an unverified one, as StarChat does.
   call-history reads available returned no record for it.
 - `tests/unit/skillsOwnerSave.spec.js` takes 3.5 to 5.3 s against a 5 s timeout in a fresh
   worktree, and can time out there.
-- Under a full Playwright run, 10 to 24 cases, mostly tablet and mobile, fail under load and pass when rerun alone with
+- Under a full Playwright run, 2 to 24 cases, mostly tablet and mobile, fail under load and pass when rerun alone with
   one worker (commit `c61ddf2`: 10; the `redirected` run: 17, its plan's Status table; the load plan's runs: up to 24,
-  its Status table); it follows the machine's load (more with a rehearsal or a build beside it), the cause is not
-  measured further.
+  and 2 on the `v2.2.49` head, its Status table); it follows the machine's load (more with a rehearsal or a build
+  beside it), the cause is not measured further.
 - A blank first load of about a minute was seen once in a Chrome with extensions, right after a deploy, and not in a
   clean Chromium (5 cold runs, 1.0 to 1.3 s): not reproduced, not explained.
+- GitHub's Dependabot alert 1: `vite` 6.3.4, listed under `dependencies` but run by no npm script (vitest brings its own
+  5.4.21, the app builds with Vue CLI), fixed in 6.4.4; the advisory concerns `launch-editor` on Windows. Not upgraded.
 - The `__BOOKING__` section's move into `__CONVERSATION__` by StarChat, and the U19r6 field names assumed against
   StarChat's U19r7a, were not re-checked on 2026-11-02.
 
 ## Next
 
 - `redirected`: look at a call analysed at version 8 that carries it, in an environment.
-- Analytics UX: S3 checked live once a window
-  has a skill error or an extraction problem.
+- Analytics UX: S3 checked live once a window has a skill error or an extraction problem.
 - Operator: verify the production flow and actual call results with the chosen account.
 - Remove `__BOOKING__` from `menuGroups` once StarChat's move is on test.
