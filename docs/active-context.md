@@ -1,6 +1,6 @@
 ---
-doc_baseline_commit: 933899e387b1dec241c0765873572823bcbde396
-doc_baseline_date: 2026-11-02
+doc_baseline_commit: 0a363caa7500052baa0a67da623aff37bb889a53
+doc_baseline_date: 2026-11-03
 ---
 
 # Active Context
@@ -11,20 +11,28 @@ Scope: Current dashboard operating state, unresolved verification limits, and im
 
 ## State now
 
-Production, beta and test serve `v2.2.47` (production and beta at `adbb851`, test at `8f194be`, the same code), with
-StarChat 9.34.128 behind production (all three pods, 2026-11-02) and the analytics routes it added on beta too. The
-`v2.2` line holds the classification feedback and the analytics UX rework, both live since `v2.2.45`
-([analytics UX brief](briefs/2026-10-31-analytics-ux.md), [plan](execution-plans/2026-10-31-analytics-ux.md)), and the
+Production, beta and test serve `v2.2.48` (`8f2b549`, deployed 2026-11-03), with StarChat 9.34.129 behind production,
+which sends insight version 8. The `v2.2` line holds the classification feedback and the analytics UX rework, both
+live since `v2.2.45` ([analytics UX brief](briefs/2026-10-31-analytics-ux.md),
+[plan](execution-plans/2026-10-31-analytics-ux.md)), the
 bundles uploaded gzipped (`v2.2.47`): 7.9 MB of JavaScript on a first load became 1.98 MB, the login page's first
-paint at 9 Mbps 9.3 s to 3.8 s.
+paint at 9 Mbps 9.3 s to 3.8 s, and the `redirected` outcome (`v2.2.48`, below).
 
 The rest of the load work is on branch `dashboard-load` (worktree `mrcall-dashboard-wt/dashboard-load`, local only,
-not deployed): pages, locales, the call client and the JSON editor on demand (initial JS 462 027 B gzip in 2 files,
+rebased on `v2.2` after `v2.2.48`, not deployed): pages, locales, the call client and the JSON editor on demand (initial JS 462 027 B gzip in 2 files,
 from 1 991 975 B in 103), a splash and mounting without waiting for the router, one auth readiness with a claim check
 instead of forced refreshes, and the upload with 14-day retention and a per-environment cache header, rehearsed on a
 local S3 ([brief](briefs/2026-10-23-dashboard-load.md), [plan](execution-plans/2026-10-23-dashboard-load.md), its
-Status table). Its release (M9) is not authorised yet and needs `ASSET_CACHE_CONTROL` on each GitHub environment first:
+Status table). Its release (M9) is authorised (2026-11-03) and needs `ASSET_CACHE_CONTROL` on each GitHub environment first:
 the new Deploy step stops without it.
+
+`v2.2.48` reads StarChat's insight version 8: `redirected` (the business handles the request through a channel of
+its own the assistant gave the caller) as a resolution, an outcome line shown only when it or the period before has
+calls, and a request outcome outside the not-fulfilled default; `handed_over` labelled as staff ("Escalated to
+staff", "Passato a un operatore") ([brief](briefs/2026-11-02-redirected-outcome.md),
+[plan](execution-plans/2026-11-02-redirected-outcome.md)). Verified on the repository's mocks against StarChat's code,
+and in each environment's served bundle (the new labels present); no call carrying `redirected` has been looked at in
+an environment yet.
 
 Session ownership: every nonpublic route needs a session, the Axios interceptor alone ends it, and components suppress
 their failure UI for `isSessionEnded`. Browser tests mock StarChat and mrcall-agent; their ID tokens are JWT-shaped and
@@ -41,8 +49,10 @@ the StarChat mock refuses an unverified one, as StarChat does.
   call-history reads available returned no record for it.
 - `tests/unit/skillsOwnerSave.spec.js` takes 3.5 to 5.3 s against a 5 s timeout in a fresh
   worktree, and can time out there.
-- Under a full Playwright run, 10 to 24 tablet and mobile cases fail and pass alone with one worker (commit `c61ddf2`, and the load plan's Status table); it follows the
-  machine's load (more with a rehearsal or a build beside it), the cause is not measured further.
+- Under a full Playwright run, 10 to 24 cases, mostly tablet and mobile, fail under load and pass when rerun alone with
+  one worker (commit `c61ddf2`: 10; the `redirected` run: 17, its plan's Status table; the load plan's runs: up to 24,
+  its Status table); it follows the machine's load (more with a rehearsal or a build beside it), the cause is not
+  measured further.
 - A blank first load of about a minute was seen once in a Chrome with extensions, right after a deploy, and not in a
   clean Chromium (5 cold runs, 1.0 to 1.3 s): not reproduced, not explained.
 - The `__BOOKING__` section's move into `__CONVERSATION__` by StarChat, and the U19r6 field names assumed against
@@ -50,9 +60,10 @@ the StarChat mock refuses an unverified one, as StarChat does.
 
 ## Next
 
-- Dashboard load, M9: Angelo authorises creating `ASSET_CACHE_CONTROL` (`none`) on the test, beta and production
-  environments and the test deploy; then the 60 s probe, the immutable header, the protocol's measurements on test,
-  and beta and production with their fallback tags verified.
+- `redirected`: look at a call analysed at version 8 that carries it, in an environment.
+- Dashboard load, M9 (authorised 2026-11-03): the gates again on the rebased head, then `ASSET_CACHE_CONTROL` on
+  test with the 60 s probe and `v2.2.49-test`, the immutable header and the protocol's measurements on test, and beta
+  and production with their fallback tags (`v2.2.48-<env>`) verified.
 - Analytics UX: the final review through the final-user path, then this file's closure with `doc-end`.
 - Operator: verify the production flow and actual call results with the chosen account.
 - Remove `__BOOKING__` from `menuGroups` once StarChat's move is on test.
