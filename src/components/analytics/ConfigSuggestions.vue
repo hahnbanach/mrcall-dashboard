@@ -68,10 +68,25 @@ export default {
   mounted() {
     if (typeof IntersectionObserver === "undefined") return;
     const thresholds = Array.from({ length: 21 }, (_, i) => i / 20);
+    // Entered at 40% of the screen (or 60% of the section) and left only under 25% (or 40%). Without the gap the state
+    // fed itself: the note it turns on can wrap the filter bar onto a second line, which moves the section by that line
+    // (24 px on a tablet, more when the page is scrolled to its end and the bar's growth changes how far it can
+    // scroll), back across a single threshold, so the note went off, the bar shrank, and the two alternated every
+    // frame; the bar's buttons never stood still long enough to be clicked (found by the Analytics UX final review's
+    // repairs, 2026-11-03, in tests/e2e/admin/analytics-insights.spec.js on the tablet). The gap, 15% of the screen,
+    // is far larger than any line the note adds.
+    let inView = false;
     this.observer = new IntersectionObserver((entries) => {
       const entry = entries[entries.length - 1];
       const screen = entry.rootBounds ? entry.rootBounds.height : window.innerHeight;
-      this.$emit("in-view", entry.isIntersecting && (entry.intersectionRect.height >= 0.4 * screen || entry.intersectionRatio >= 0.6));
+      const shown = entry.intersectionRect.height;
+      const next = entry.isIntersecting && (inView
+        ? shown >= 0.25 * screen || entry.intersectionRatio >= 0.4
+        : shown >= 0.4 * screen || entry.intersectionRatio >= 0.6);
+      if (next !== inView) {
+        inView = next;
+        this.$emit("in-view", inView);
+      }
     }, { threshold: thresholds });
     if (this.$el && this.$el.nodeType === 1) this.observer.observe(this.$el);
   },

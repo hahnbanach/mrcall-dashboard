@@ -111,7 +111,7 @@
         <p class="coverage-note">{{ $t("components.callInsights.noConversation.note") }}</p>
         <!-- a ruled table, each count on the line of its reason (the CTO, 2026-11-01: the list's numbers sat at the far
              right with nothing leading the eye back to their label) -->
-        <div class="no-conversation-wrap">
+        <div v-sticky-head class="no-conversation-wrap">
           <table class="no-conversation-table">
             <caption class="visually-hidden">{{ $t("components.callInsights.noConversation.title") }}</caption>
             <thead>

@@ -10,7 +10,7 @@
       <!-- One table for every signal, so that each number sits under its column's name on a ruled line: the CTO found
            the earlier list unreadable (2026-11-01), counts floating at the far right of long explanations, each repeating
            "of N calls". The count, the calls it is counted on and the share are three columns; a group's name is a row. -->
-      <div class="quality-table-wrap">
+      <div v-sticky-head class="quality-table-wrap">
         <table class="quality-table">
           <caption class="visually-hidden">{{ $t("components.callInsights.quality.title") }}</caption>
           <thead>

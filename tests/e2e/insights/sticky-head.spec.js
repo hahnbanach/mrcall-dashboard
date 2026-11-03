@@ -126,4 +126,33 @@ test.describe('a table\'s header stays in view', () => {
     expect(g.tableTop + g.tableHeight).toBeGreaterThan(g.containerTop + g.headHeight)
     expect(g.headTop).toBeGreaterThanOrEqual(g.navbarBottom - 1)
   })
+  // The final review (2026-11-03) found these two scrolling away: the Quality table and the calls without a
+  // conversation, both rewritten as ruled tables after the last milestone review, without v-sticky-head.
+  for (const caption of ['Quality', 'Calls without a conversation']) {
+    test(`the owner's "${caption}" table: header under the filter bar while its rows scroll`, async ({ authenticatedPage: page }) => {
+      test.skip(page.viewportSize().width < 641, 'phones draw the rows as cards, with no header row')
+      await mockInsights(page)
+      await page.goto(`/analytics?id=${BUSINESS_ID}`)
+      const table = page.getByRole('table', { name: caption, exact: true })
+      await expect(table).toBeVisible({ timeout: 15000 })
+      await page.evaluate((name) => {
+        const spacer = document.createElement('div')
+        spacer.style.minHeight = '2000px'
+        spacer.style.flexShrink = '0' // #app-central-content is a flex container: an empty item would shrink to nothing
+        document.getElementById('app-central-content').appendChild(spacer)
+        const t = [...document.querySelectorAll('table')].find((x) => x.querySelector('caption') && x.querySelector('caption').textContent.trim() === name)
+        const scroller = document.getElementById('app-central-content')
+        const bar = document.querySelector('.analytics-filter-bar')
+        // the table's top past the bar by a third of its height (at most 80 px): rows still on screen below the header
+        const past = Math.min(80, Math.round(t.getBoundingClientRect().height / 3))
+        for (let i = 0; i < 4; i++) scroller.scrollTop += t.getBoundingClientRect().top - bar.getBoundingClientRect().bottom + past
+      }, caption)
+      await expect.poll(async () => {
+        const g = await geometry(page, caption)
+        return Math.round(g.headTop - g.barBottom)
+      }).toBe(0)
+      const g = await geometry(page, caption)
+      expect(g.tableTop).toBeLessThan(g.barBottom)
+    })
+  }
 })
