@@ -1,6 +1,6 @@
 ---
-doc_baseline_commit: 37c063b9d9da53326625f41d662a57dd07f0626d
-doc_baseline_date: 2026-11-03
+doc_baseline_commit: 7d4e541c0dbb0053415f4fb34c87dde281f91aad
+doc_baseline_date: 2026-11-04
 ---
 
 # Active Context
@@ -11,8 +11,8 @@ Scope: Current dashboard operating state, unresolved verification limits, and im
 
 ## State now
 
-Production, beta and test serve `v2.2.50` (`2d89f42`, 2026-11-03), with StarChat 9.34.129 behind production, which
-sends insight version 8. The `v2.2` line holds:
+Production and beta serve `v2.2.50` (`2d89f42`, 2026-11-03), test serves `v2.2.51` (below), with StarChat 9.34.129
+behind production, which sends insight version 8. The `v2.2` line holds:
 - the classification feedback and the analytics UX rework, live since `v2.2.45`
   ([analytics UX brief](briefs/2026-10-31-analytics-ux.md), [plan](execution-plans/2026-10-31-analytics-ux.md));
 - the `redirected` outcome (`v2.2.48`): StarChat's insight version 8 read as a resolution, an outcome line shown only
@@ -29,6 +29,12 @@ sends insight version 8. The `v2.2` line holds:
 `v2.2.50` adds the Analytics UX final review's repairs: the Quality and no-conversation tables keep their header in
 view (checked live on test with the owner account), and the admin filter bar's scope note enters and leaves at
 different thresholds (checked on the mocks only: the test account is not an admin).
+
+`v2.2.51` is on test only: the billing data chip on the business card
+([brief](briefs/2026-11-04-billing-data-chip.md), [plan](execution-plans/2026-11-04-billing-data-chip.md)), which says
+whether the owner's billing data is entered, incomplete or missing, names what is missing and links to the billing
+section. Verified against the browser-test mocks on the three viewports; the CTO checks it on test with real data
+before beta and production.
 
 Session ownership: every nonpublic route needs a session, the Axios interceptor alone ends it, and components suppress
 their failure UI for `isSessionEnded`. Browser tests mock StarChat and mrcall-agent; their ID tokens are JWT-shaped and
@@ -56,7 +62,16 @@ the StarChat mock refuses an unverified one, as StarChat does.
 - The `__BOOKING__` section's move into `__CONVERSATION__` by StarChat, and the U19r6 field names assumed against
   StarChat's U19r7a, were not re-checked on 2026-11-02.
 
+- The shared amber `.health-warn` text on the business card (`#e65100` on `#fff3e0`) measures 3.46:1, under the
+  4.5:1 its 0.8rem text needs; the billing chip uses a darker amber, the other pills are unchanged.
+- The issuer of the electronic invoice is outside StarChat, which fills the Stripe customer and creates Stripe invoices
+  but sends nothing to SDI; the billing chip's rule rests on StarChat's field descriptions, not on that issuer's
+  requirements.
+
 ## Next
+
+- Billing chip: the CTO checks the three states on test with real owners' data; then `v2.2.51-beta` and
+  `v2.2.51-production` on authorisation.
 
 - `redirected`: look at a call analysed at version 8 that carries it, in an environment.
 - Analytics UX: S3 checked live once a window has a skill error or an extraction problem.

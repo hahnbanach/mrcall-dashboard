@@ -345,6 +345,19 @@
       "selectButtonTooltip": {
         "enabled": "Åtkomst till assistentens anpassning",
         "disabled": "Anpassning av din assistent är inaktiverad, vänligen verifiera ditt telefonnummer"
+      },
+      "billing": {
+        "complete": "Faktureringsuppgifter angivna",
+        "incomplete": "Faktureringsuppgifter ofullständiga",
+        "missing": "Faktureringsuppgifter saknas",
+        "needed": "För att få den elektroniska fakturan, lägg till: {fields}",
+        "groups": {
+          "name": "företagsnamn",
+          "address": "faktureringsadress",
+          "province": "provins",
+          "taxId": "momsregistreringsnummer eller skattenummer",
+          "channel": "SDI-kod eller PEC"
+        }
       }
     },
     "contacts": {

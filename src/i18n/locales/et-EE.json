@@ -345,6 +345,19 @@
       "selectButtonTooltip": {
         "enabled": "Juurdepääs assistendi kohandamisele",
         "disabled": "Assistendi kohandamine on keelatud, palun kinnitage oma telefoninumber"
+      },
+      "billing": {
+        "complete": "Arveldusandmed sisestatud",
+        "incomplete": "Arveldusandmed puudulikud",
+        "missing": "Arveldusandmed puuduvad",
+        "needed": "E-arve saamiseks lisa: {fields}",
+        "groups": {
+          "name": "ettevõtte nimi",
+          "address": "arveldusaadress",
+          "province": "provints",
+          "taxId": "käibemaksukohustuslase number või maksukood",
+          "channel": "SDI-kood või PEC"
+        }
       }
     },
     "contacts": {

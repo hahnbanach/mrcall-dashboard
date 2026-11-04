@@ -345,6 +345,19 @@
       "selectButtonTooltip": {
         "enabled": "Tilgang til tilpasning av assistenten",
         "disabled": "Tilpasning av assistenten er deaktivert, vennligst bekreft telefonnummeret ditt"
+      },
+      "billing": {
+        "complete": "Fakturaopplysninger registrert",
+        "incomplete": "Fakturaopplysninger ufullstendige",
+        "missing": "Fakturaopplysninger mangler",
+        "needed": "For å motta den elektroniske fakturaen, legg til: {fields}",
+        "groups": {
+          "name": "firmanavn",
+          "address": "fakturaadresse",
+          "province": "provins",
+          "taxId": "MVA-nummer eller skattenummer",
+          "channel": "SDI-kode eller PEC"
+        }
       }
     },
     "contacts": {

@@ -62,6 +62,10 @@ count opens are read by `src/utils/Classifications.js`, against StarChat's brief
   StarChat insight version 8's `redirected` as a resolution, an outcome line and a request outcome, and `handed_over`
   labelled as staff.
 
+- [Billing data chip](briefs/2026-11-04-billing-data-chip.md) — [plan](execution-plans/2026-11-04-billing-data-chip.md):
+  the business card says whether the owner's billing data is entered, names what is missing, and links to the billing
+  section.
+
 ## Quick context
 
 - **Stack**: Vue 3, PrimeVue 4, Vuex, Firebase Auth, Axios, vue-i18n (12 locales)

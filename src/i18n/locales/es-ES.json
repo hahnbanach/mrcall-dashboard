@@ -345,6 +345,19 @@
         "hasMinutes": "Minutos disponibles",
         "noMinutes": "Sin minutos restantes",
         "inDebt": "Crédito negativo"
+      },
+      "billing": {
+        "complete": "Datos de facturación introducidos",
+        "incomplete": "Datos de facturación incompletos",
+        "missing": "Faltan los datos de facturación",
+        "needed": "Para recibir la factura electrónica, añade: {fields}",
+        "groups": {
+          "name": "razón social",
+          "address": "dirección de facturación",
+          "province": "provincia",
+          "taxId": "número de IVA o código fiscal",
+          "channel": "código SDI o PEC"
+        }
       }
     },
     "contacts": {

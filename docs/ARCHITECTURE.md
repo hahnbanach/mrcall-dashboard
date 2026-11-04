@@ -117,6 +117,8 @@ API clients and business logic:
 - `Restaurant.js` — StarChat restaurant book client and answer shapes; `RestaurantModel.js` — what the restaurant page computes from them
 - `PKCE.js` — PKCE flow for OAuth 2.0
 - `Stripe.js` — Stripe billing integration
+- `BillingData.js` — whether a business carries the billing data an invoice needs (`billingDataState`), for the
+  business card's billing chip
 - `UtmTracking.js` — UTM parameter tracking
 - `PhoneOperators.js` — Phone operator data
 - `VoiceEncoding.js` — Browser capability check and preferred direct-voice encoding
@@ -208,6 +210,19 @@ are fetched from `.../resources/count`. The tooltip uses `mrcallCredits.title` a
 `creditTooltipFactor(business)` parses `CALLCREDIT_FACTOR` by template with a
 fallback of 25. All 12 locale files contain these keys. The `/plan` route renders
 `src/views/Plan.vue` for plan and payment selection.
+
+### Billing data chip (`Businesses.vue`)
+
+The card's health strip ends with a chip saying whether the billing data is entered, incomplete or missing
+(`components.businesses.billing.*`), a link to `/businessconfiguration?id=<businessId>&section=__INVOICING__` in every
+state. When the data is not complete, a note under the strip names what to add; it is also the link's accessible
+description. The chip reads only the business object already loaded (its `variables` and `countryAlpha2`): StarChat keeps the `customer.*` billing variables per owner, in
+its customer registry, and `business/search` merges them into each business, so all the cards of one owner share one
+state and no request is added. StarChat gives no verdict of its own; the rule, presence and not format, is
+`billingDataState` in `src/utils/BillingData.js`: a name and an address everywhere; in Italy (the billing address's
+country, else the business's `countryAlpha2`) also the province, a VAT number that is not all zeros or a fiscal code,
+and an SDI code that is not all zeros or a PEC. A business without `variables` shows no chip. Brief
+[2026-11-04-billing-data-chip](briefs/2026-11-04-billing-data-chip.md).
 
 ### Call insights: what calls said
 

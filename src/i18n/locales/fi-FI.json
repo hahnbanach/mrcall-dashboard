@@ -345,6 +345,19 @@
       "selectButtonTooltip": {
         "enabled": "Avustajan mukauttamiseen pääsy",
         "disabled": "Avustajan mukauttaminen on poistettu käytöstä, vahvista puhelinnumerosi"
+      },
+      "billing": {
+        "complete": "Laskutustiedot lisätty",
+        "incomplete": "Laskutustiedot puutteelliset",
+        "missing": "Laskutustiedot puuttuvat",
+        "needed": "Saadaksesi sähköisen laskun lisää: {fields}",
+        "groups": {
+          "name": "yrityksen nimi",
+          "address": "laskutusosoite",
+          "province": "maakunta",
+          "taxId": "ALV-tunniste tai verotunniste",
+          "channel": "SDI-koodi tai PEC"
+        }
       }
     },
     "contacts": {

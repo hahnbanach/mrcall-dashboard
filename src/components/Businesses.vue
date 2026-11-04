@@ -200,7 +200,23 @@
             <i :class="creditPill(business.businessId).icon"></i>
             {{ $t(creditPill(business.businessId).label) }}
           </span>
+          <!-- Billing data: a link to the billing section, whatever its state, so that the data can
+               also be reviewed; what is missing is written under the strip, not only in a tooltip,
+               which touch screens and the app's webview never show. -->
+          <router-link
+              v-if="billingState(business)"
+              :to="{ path: '/businessconfiguration', query: { id: business.businessId, section: billingSection } }"
+              :class="['health-pill', 'billing-pill', billingState(business).state === 'complete' ? 'health-ok' : 'billing-warn']"
+              :aria-describedby="billingState(business).state === 'complete' ? undefined : 'billing-note-' + business.businessId">
+            <i aria-hidden="true" :class="billingState(business).state === 'complete' ? 'pi pi-check-circle' : 'pi pi-exclamation-circle'"></i>
+            {{ $t('components.businesses.billing.' + billingState(business).state) }}
+          </router-link>
         </div>
+        <p v-if="billingState(business) && billingState(business).state !== 'complete'"
+           :id="'billing-note-' + business.businessId"
+           class="billing-note">
+          {{ $t('components.businesses.billing.needed', { fields: billingMissingText(business) }) }}
+        </p>
 
         <!-- Action Buttons -->
         <div v-if="user" class="card-actions">
@@ -292,6 +308,7 @@ import WebcallButton from "@/components/webcall/WebcallButton.vue";
 import DirectVoiceButton from "@/components/webcall/DirectVoiceButton.vue";
 import { preferredVoiceEncoding } from '@/utils/VoiceEncoding'
 import { fetchCreditBalance, creditsToEuro, creditState } from '@/utils/CreditBalance'
+import { billingDataState, BILLING_SECTION } from '@/utils/BillingData'
 import TextChatWidget from "@/components/webcall/TextChatWidget.vue";
 import OwnerSelector from "@/components/reseller/OwnerSelector.vue";
 //import Plans from '@/components/Plans'
@@ -352,6 +369,7 @@ export default {
     const managedOwners = computed(() => store.state.managedOwners || [])
     return {
       languageCountry: "it-IT",
+      billingSection: BILLING_SECTION,
       store,
       isMobile,
       voiceEncoding,
@@ -642,6 +660,20 @@ export default {
         return { cls: 'health-ok', icon: 'pi pi-check-circle', label: 'components.businesses.health.hasMinutes' }
       }
       return { cls: 'health-warn', icon: 'pi pi-exclamation-circle', label: 'components.businesses.health.noMinutes' }
+    },
+    /** Whether the owner's billing data is in place (`src/utils/BillingData.js` holds the rule);
+     *  null when the business carries no variables, and then the card shows no chip. */
+    billingState(business) {
+      return billingDataState(business)
+    },
+    /** The missing groups as one phrase of the current language ("province and SDI code or PEC"). */
+    billingMissingText(business) {
+      const labels = (this.billingState(business)?.missing ?? [])
+        .map((group) => this.$t('components.businesses.billing.groups.' + group))
+      if (typeof Intl !== 'undefined' && typeof Intl.ListFormat === 'function') {
+        return new Intl.ListFormat(this.$i18n.locale, { type: 'conjunction' }).format(labels)
+      }
+      return labels.join(', ')
     },
     async fetchBusinessResources(businessId, subscriptionStatus, category) {
       console.log("Called fetchBusinessResources(" + businessId + ", " + category + ")")
@@ -1191,6 +1223,37 @@ a.service-number-value:hover {
   i {
     font-size: 0.85rem;
   }
+}
+
+// The billing chip is a link: same pill, plus what a link needs. Its warning colour is darker than
+// the shared .health-warn (#e65100 measures 3.5:1 on the pill's background, under the 4.5:1 that
+// text this small needs): #a63c00 measures 5.9:1 there and 6.4:1 on the card's white.
+.billing-pill {
+  text-decoration: none;
+  cursor: pointer;
+  transition: filter 0.15s ease;
+
+  &:hover {
+    filter: brightness(0.95);
+  }
+
+  &:focus-visible {
+    outline: 2px solid @mrcall_blue;
+    outline-offset: 2px;
+  }
+
+  &.billing-warn {
+    background: #fff3e0;
+    color: #a63c00;
+  }
+}
+
+.billing-note {
+  margin: -0.25rem 0 0;
+  padding: 0 1.25rem 0.75rem;
+  font-size: 0.8rem;
+  line-height: 1.35;
+  color: #a63c00;
 }
 
 .card-actions {

@@ -52,6 +52,19 @@ const mockBusiness = {
     opening_hours: '9-18',
     MRZAPPA_ENABLED: 'false',
     OUTBOUND_CALLS_ENABLED: 'false',
+    // complete Italian billing data, as StarChat merges the owner's customer registry into the
+    // business's variables on business/search: the card's billing chip reads "entered"
+    'customer.companyName': 'Test Restaurant S.r.l.',
+    'customer.vatId': 'IT12345678901',
+    'customer.fiscalCode': '',
+    'customer.sdi': 'ABCDEF1',
+    'customer.pec': '',
+    'customer.address.line1': 'Via Roma 1',
+    'customer.address.line2': '',
+    'customer.address.postal_code': '20121',
+    'customer.address.city': 'Milano',
+    'customer.address.state': 'MI',
+    'customer.address.country': 'IT',
   },
   creationDateTime: '2025-01-01T00:00:00Z',
 }

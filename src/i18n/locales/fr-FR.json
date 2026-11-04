@@ -346,6 +346,19 @@
       "selectButtonTooltip": {
         "enabled": "Accédez à la personnalisation de votre entreprise",
         "disabled": "La personnalisation de votre entreprise est désactivée, vérifiez le numéro pour l'activer"
+      },
+      "billing": {
+        "complete": "Données de facturation saisies",
+        "incomplete": "Données de facturation incomplètes",
+        "missing": "Données de facturation manquantes",
+        "needed": "Pour recevoir la facture électronique, ajoutez : {fields}",
+        "groups": {
+          "name": "raison sociale",
+          "address": "adresse de facturation",
+          "province": "province",
+          "taxId": "numéro de TVA ou code fiscal",
+          "channel": "code SDI ou PEC"
+        }
       }
     },
     "contacts": {

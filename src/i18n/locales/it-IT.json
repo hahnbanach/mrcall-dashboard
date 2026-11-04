@@ -350,6 +350,19 @@
       "selectButtonTooltip": {
         "enabled": "Accedi alla personalizzazione del tuo business",
         "disabled": "La personalizzazione del tuo business è disabilitata, verifica il numero per abilitarla"
+      },
+      "billing": {
+        "complete": "Dati di fatturazione inseriti",
+        "incomplete": "Dati di fatturazione incompleti",
+        "missing": "Dati di fatturazione mancanti",
+        "needed": "Per ricevere la fattura elettronica aggiungi: {fields}",
+        "groups": {
+          "name": "ragione sociale",
+          "address": "indirizzo di fatturazione",
+          "province": "provincia",
+          "taxId": "partita IVA o codice fiscale",
+          "channel": "codice SDI o PEC"
+        }
       }
     },
     "contacts": {

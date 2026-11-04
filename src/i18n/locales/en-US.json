@@ -350,6 +350,19 @@
       "selectButtonTooltip": {
         "enabled": "Access to the assistant personalization",
         "disabled": "Personalization of your assistant is disabled, please verify your phone number"
+      },
+      "billing": {
+        "complete": "Billing data entered",
+        "incomplete": "Billing data incomplete",
+        "missing": "Billing data missing",
+        "needed": "To receive the electronic invoice, add: {fields}",
+        "groups": {
+          "name": "company name",
+          "address": "billing address",
+          "province": "province",
+          "taxId": "VAT number or tax code",
+          "channel": "SDI code or PEC"
+        }
       }
     },
     "contacts": {

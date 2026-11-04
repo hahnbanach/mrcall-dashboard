@@ -346,6 +346,19 @@
       "selectButtonTooltip": {
         "enabled": "Greife auf die Personalisierung deines Unternehmens zu",
         "disabled": "Die Personalisierung deines Unternehmens ist deaktiviert, verifiziere die Nummer, um sie zu aktivieren"
+      },
+      "billing": {
+        "complete": "Rechnungsdaten eingetragen",
+        "incomplete": "Rechnungsdaten unvollständig",
+        "missing": "Rechnungsdaten fehlen",
+        "needed": "Um die elektronische Rechnung zu erhalten, ergänzen Sie: {fields}",
+        "groups": {
+          "name": "Firmenname",
+          "address": "Rechnungsadresse",
+          "province": "Provinz",
+          "taxId": "USt-IdNr. oder Steuernummer",
+          "channel": "SDI-Code oder PEC"
+        }
       }
     },
     "contacts": {

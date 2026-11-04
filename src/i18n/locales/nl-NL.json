@@ -345,6 +345,19 @@
       "selectButtonTooltip": {
         "enabled": "Toegang tot de personalisatie van de assistent",
         "disabled": "Personalisatie van uw assistent is uitgeschakeld, verifieer uw telefoonnummer"
+      },
+      "billing": {
+        "complete": "Factuurgegevens ingevuld",
+        "incomplete": "Factuurgegevens onvolledig",
+        "missing": "Factuurgegevens ontbreken",
+        "needed": "Vul aan om de elektronische factuur te ontvangen: {fields}",
+        "groups": {
+          "name": "bedrijfsnaam",
+          "address": "factuuradres",
+          "province": "provincie",
+          "taxId": "btw-nummer of fiscaal nummer",
+          "channel": "SDI-code of PEC"
+        }
       }
     },
     "contacts": {
