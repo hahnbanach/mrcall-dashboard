@@ -111,6 +111,20 @@ test.describe('Businesses Page (Authenticated)', () => {
       await expect(card.locator('.health-debt')).toContainText('Negative credit')
     })
 
+    // StarChat brief 2026-11-04-debt-state-from-net: a member owing 1 credit while its organization's
+    // 56,768 cover it has its calls admitted. Seen failing, 2026-11-04, on e26c56b's Businesses.vue: the
+    // amount in red, the "calls are suspended" notice and the "Negative credit" chip.
+    test('shows an open debt the credit covers as credit, with no notice and minutes available', async ({ authenticatedPage: page }) => {
+      await answerBalance(page, { available: 56768, debt: 1, net: 56767 })
+      await new BusinessesPage(page).goto()
+      const card = page.locator(selectors.businessCard).first()
+      await expect(card).toContainText('€567.67')
+      await expect(card).toContainText('Minutes available')
+      await expect(card.locator('.credit-negative')).toHaveCount(0)
+      await expect(card.locator('.credit-debt-notice')).toHaveCount(0)
+      await expect(card.locator('.health-debt')).toHaveCount(0)
+    })
+
     // Seen failing on 2026-10-11 against v2.2.19 (0d83641): the card read €0.00 and "No minutes left"
     // for an answer that is not a balance.
     test('says the credit is unknown, not zero, when the answer is not a balance', async ({ authenticatedPage: page }) => {

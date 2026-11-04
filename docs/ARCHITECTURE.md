@@ -202,8 +202,12 @@ Each business card displays the `CALLCREDIT` balance as euros using
 `creditsToEuro`: credits divided by 100, formatted as EUR for the current locale.
 The credit comes from StarChat's `.../crm/business/resources/balance`
 (`{available, debt, net}`, through `fetchCreditBalance` in `src/utils/CreditBalance.js`).
-The card shows `net`, which is negative while the business is in debt, together with a
-debt notice. A StarChat without that endpoint answers 404, and the balance falls back to
+The card shows `net`. Whether the business is in debt is decided once, by `creditState` on the
+sign of `net` alone: below zero the amount is red, the debt notice says calls are suspended and
+the pill reads "Negative credit"; at zero the pill reads no minutes; above, minutes available. An
+open debt that the credit the business can draw (its organization's included) still covers is not
+in debt: StarChat admits its calls and repays the debt at its next one (StarChat brief
+`2026-11-04-debt-state-from-net`). A StarChat without that endpoint answers 404, and the balance falls back to
 `.../resources/count` with no debt. An answer that is not a valid balance leaves the
 credit unknown: the card shows a dash and no credit pill, never zero. `CALL` and `SMS`
 are fetched from `.../resources/count`. The tooltip uses `mrcallCredits.title` and `mrcallCredits.tooltip`;

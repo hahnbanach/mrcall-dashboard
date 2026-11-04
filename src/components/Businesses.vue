@@ -178,9 +178,9 @@
                 v-tooltip.bottom="$t('mrcallCredits.tooltip', { factor: creditTooltipFactor(business) })"
               ></i>
             </span>
-            <span v-if="creditKnown(business.businessId)" :class="['info-value', creditDebt[business.businessId] > 0 ? 'credit-negative' : '']">{{ creditsToEuro(counterResources[business.businessId]['CALLCREDIT']) }}</span>
+            <span v-if="creditKnown(business.businessId)" :class="['info-value', inDebt(business.businessId) ? 'credit-negative' : '']">{{ creditsToEuro(counterResources[business.businessId]['CALLCREDIT']) }}</span>
             <span v-else class="info-value credit-unknown">—</span>
-            <small v-if="creditKnown(business.businessId) && creditDebt[business.businessId] > 0" class="credit-debt-notice">
+            <small v-if="inDebt(business.businessId)" class="credit-debt-notice">
               {{ $t('mrcallCredits.debtNotice', { amount: creditsToEuro(counterResources[business.businessId]['CALLCREDIT']) }) }}
             </small>
           </div>
@@ -390,8 +390,6 @@ export default {
       size: 10,
       first: 1,
       counterResources: {},
-      // Credits the business owes, by business id: 0 or absent when it owes nothing.
-      creditDebt: {},
       subscriptionInfo: {},
       businesses: {},
       templates: {},
@@ -648,11 +646,19 @@ export default {
     creditKnown(businessId) {
       return typeof this.counterResources[businessId]?.['CALLCREDIT'] === 'number'
     },
+    /** What the business's credit allows (`creditState`), decided on the net StarChat answered; null
+     *  while unknown. The amount, the notice and the pill all read it, so the card decides once. */
+    creditStateOf(businessId) {
+      if (!this.creditKnown(businessId)) return null
+      return creditState({ net: this.counterResources[businessId]['CALLCREDIT'] })
+    },
+    /** In debt: net below zero, calls refused. An open debt the credit covers is not (StarChat brief
+     *  2026-11-04-debt-state-from-net). */
+    inDebt(businessId) {
+      return this.creditStateOf(businessId) === 'debt'
+    },
     creditPill(businessId) {
-      const state = creditState({
-        net: this.counterResources[businessId]['CALLCREDIT'],
-        debt: this.creditDebt[businessId] ?? 0
-      })
+      const state = this.creditStateOf(businessId)
       if (state === 'debt') {
         return { cls: 'health-debt', icon: 'pi pi-ban', label: 'components.businesses.health.inDebt' }
       }
@@ -702,7 +708,6 @@ export default {
         fetchCreditBalance(axios, process.env.VUE_APP_STARCHAT_URL, headers, body).then((balance) => {
           this.counterResources[businessId] = this.counterResources[businessId] || {}
           this.counterResources[businessId][category] = balance ? balance.net : undefined
-          this.creditDebt[businessId] = balance ? balance.debt : 0
         }).catch((error) => {
           console.error(error)
         })

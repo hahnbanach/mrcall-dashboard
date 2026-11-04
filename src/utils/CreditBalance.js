@@ -58,11 +58,14 @@ export function creditsToEuro(credits, locale) {
 }
 
 /**
- * What the credit of a business allows: `debt` while it owes credit (calls are refused, as at
- * zero), `empty` at zero, `ok` above. Unknown (no answer) is null.
+ * What the credit of a business allows, from the sign of StarChat's `net` alone: `debt` below zero
+ * (calls are refused, as at zero), `empty` at zero, `ok` above. An open debt that the credit the
+ * business can draw (its organization's included) still covers is `ok`: its calls are admitted and the
+ * debt is repaid by its next call (StarChat brief 2026-11-04-debt-state-from-net). Unknown (no answer)
+ * is null.
  */
 export function creditState(balance) {
   if (!balance) return null
-  if (balance.debt > 0) return 'debt'
+  if (balance.net < 0) return 'debt'
   return balance.net > 0 ? 'ok' : 'empty'
 }

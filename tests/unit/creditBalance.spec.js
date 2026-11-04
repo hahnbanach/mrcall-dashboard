@@ -91,6 +91,15 @@ describe('creditState', () => {
     expect(creditState({ net: 300, debt: 0 })).toBe('ok')
     expect(creditState(null)).toBeNull()
   })
+
+  // StarChat brief 2026-11-04-debt-state-from-net: an open debt is not "in debt" while what the business
+  // can draw, its organization's credit included, covers it; its calls are admitted. Seen in production
+  // on 2026-11-04 (1 credit owed, 56,768 of the organization's to draw), read as "calls suspended".
+  // Observed failing, 2026-11-04, against the creditState of e26c56b, which decided on `debt > 0`.
+  it('decides on net alone: an open debt the credit covers is ok, one equal to it empty', () => {
+    expect(creditState({ net: 56767, debt: 1 })).toBe('ok')
+    expect(creditState({ net: 0, debt: 5 })).toBe('empty')
+  })
 })
 
 describe('the debt wording', () => {
