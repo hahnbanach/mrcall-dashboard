@@ -11,8 +11,8 @@ Scope: Current dashboard operating state, unresolved verification limits, and im
 
 ## State now
 
-Production and beta serve `v2.2.50` (`2d89f42`, 2026-11-03), test serves `v2.2.52` (below), with StarChat 9.34.129
-behind production, which sends insight version 8. The `v2.2` line holds:
+Production, beta and test serve `v2.2.52` (`756bf90`, 2026-11-04, below), with StarChat 9.34.129 behind production,
+which sends insight version 8. The `v2.2` line holds:
 - the classification feedback and the analytics UX rework, live since `v2.2.45`
   ([analytics UX brief](briefs/2026-10-31-analytics-ux.md), [plan](execution-plans/2026-10-31-analytics-ux.md));
 - the `redirected` outcome (`v2.2.48`): StarChat's insight version 8 read as a resolution, an outcome line shown only
@@ -30,14 +30,14 @@ behind production, which sends insight version 8. The `v2.2` line holds:
 view (checked live on test with the owner account), and the admin filter bar's scope note enters and leaves at
 different thresholds (checked on the mocks only: the test account is not an admin).
 
-`v2.2.52` is on test only, with two changes to the business card. The billing data chip
+`v2.2.52` adds two changes to the business card. The billing data chip
 ([brief](briefs/2026-11-04-billing-data-chip.md), [plan](execution-plans/2026-11-04-billing-data-chip.md)), which says
 whether the owner's billing data is entered, incomplete or missing, names what is missing and links to the billing
 section. The credit decided on net alone: negative credit and the suspended-calls notice only when net is below zero,
 so an open debt the business's credit still covers no longer shows as negative (StarChat's brief
 `docs/briefs/2026-11-04-debt-state-from-net.md`). Both verified against the browser-test mocks on the three viewports
-(full run: 2214 passed, 14 failed under load, each passing rerun alone with one worker); the CTO checks them on test
-with real data before beta and production.
+(full run: 2214 passed, 14 failed under load, each passing rerun alone with one worker), checked by the CTO on test,
+then deployed to beta and production; the published business chunk on all three carries both.
 
 Session ownership: every nonpublic route needs a session, the Axios interceptor alone ends it, and components suppress
 their failure UI for `isSessionEnded`. Browser tests mock StarChat and mrcall-agent; their ID tokens are JWT-shaped and
@@ -73,8 +73,8 @@ the StarChat mock refuses an unverified one, as StarChat does.
 
 ## Next
 
-- `v2.2.52`: the CTO checks the billing chip's three states and the credit of an owner with a covered debt on test,
-  with real data; then `v2.2.52-beta` and `v2.2.52-production` on authorisation.
+- `v2.2.52`: watch whether owners fill in their billing data from the chip, and whether covered debts stop being
+  reported as negative credit.
 
 - `redirected`: look at a call analysed at version 8 that carries it, in an environment.
 - Analytics UX: S3 checked live once a window has a skill error or an extraction problem.
