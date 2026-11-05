@@ -11,7 +11,7 @@ Scope: Current dashboard operating state, unresolved verification limits, and im
 
 ## State now
 
-Production and beta serve `v2.2.53` (`6e75afa`, 2026-11-05, below), test serves `v2.2.54` (below), with StarChat 9.34.129 behind production,
+Production, beta and test serve `v2.2.54` (`023d7ac`, 2026-11-05, below), with StarChat 9.34.129 behind production,
 which sends insight version 8. The `v2.2` line holds:
 - the classification feedback and the analytics UX rework, live since `v2.2.45`
   ([analytics UX brief](briefs/2026-10-31-analytics-ux.md), [plan](execution-plans/2026-10-31-analytics-ux.md));
@@ -45,11 +45,12 @@ subscription and invitation-code `.status-warn` badges, the billing chip and not
 oranges before measured 3.46:1 and 3.63:1). Checked by the CTO on test; the published business and reseller
 stylesheets on all three carry only `#a63c00`.
 
-`v2.2.54` is on test only: `vue-i18n` 11.1.10 to 11.4.14 (GitHub's Dependabot alert 3, `escapeParameter` letting
+`v2.2.54` moves `vue-i18n` 11.1.10 to 11.4.14 (GitHub's Dependabot alert 3, `escapeParameter` letting
 `srcdoc` through). The dashboard was not exposed: it does not enable `escapeParameter`, and its two translations
 rendered as HTML take no parameters and come from its own locale files. Only the `@intlify` packages moved in the
-lockfile; unit suite green, full run 2221 passed with 10 failing under load, each passing rerun alone. Beta and
-production wait for the CTO's check on test.
+lockfile; unit suite green, full run 2221 passed with 10 failing under load, each passing rerun alone. Checked by the
+CTO on test; the published vendor chunk on all three carries 11.4.14. The alert stays open on GitHub: Dependabot
+reads the default branch, `v2.1`, which still pins 11.1.10.
 
 Session ownership: every nonpublic route needs a session, the Axios interceptor alone ends it, and components suppress
 their failure UI for `isSessionEnded`. Browser tests mock StarChat and mrcall-agent; their ID tokens are JWT-shaped and
