@@ -11,7 +11,7 @@ Scope: Current dashboard operating state, unresolved verification limits, and im
 
 ## State now
 
-Production, beta and test serve `v2.2.52` (`756bf90`, 2026-11-04, below), with StarChat 9.34.129 behind production,
+Production, beta and test serve `v2.2.53` (`6e75afa`, 2026-11-05, below), with StarChat 9.34.129 behind production,
 which sends insight version 8. The `v2.2` line holds:
 - the classification feedback and the analytics UX rework, live since `v2.2.45`
   ([analytics UX brief](briefs/2026-10-31-analytics-ux.md), [plan](execution-plans/2026-10-31-analytics-ux.md));
@@ -39,10 +39,11 @@ so an open debt the business's credit still covers no longer shows as negative (
 (full run: 2214 passed, 14 failed under load, each passing rerun alone with one worker), checked by the CTO on test,
 then deployed to beta and production; the published business chunk on all three carries both.
 
-`v2.2.53` is on test only: every amber warning pill (the business card's `.health-warn`, the
+`v2.2.53` makes every amber warning pill readable: (the business card's `.health-warn`, the
 subscription and invitation-code `.status-warn` badges, the billing chip and note) reads in one pair defined in
 `src/assets/style/colors.less`, `@mrcall_warn_text` `#A63C00` on `@mrcall_warn_surface` `#FFF3E0` (5.86:1; the
-oranges before measured 3.46:1 and 3.63:1). Beta and production wait for the CTO's check on test.
+oranges before measured 3.46:1 and 3.63:1). Checked by the CTO on test; the published business and reseller
+stylesheets on all three carry only `#a63c00`.
 
 Session ownership: every nonpublic route needs a session, the Axios interceptor alone ends it, and components suppress
 their failure UI for `isSessionEnded`. Browser tests mock StarChat and mrcall-agent; their ID tokens are JWT-shaped and
