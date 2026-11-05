@@ -314,8 +314,8 @@ export default {
 }
 
 .status-warn {
-  background: #fff3e0;
-  color: #b86e00;
+  background: @mrcall_warn_surface;
+  color: @mrcall_warn_text;
 }
 
 .status-danger {

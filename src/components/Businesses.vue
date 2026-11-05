@@ -206,7 +206,7 @@
           <router-link
               v-if="billingState(business)"
               :to="{ path: '/businessconfiguration', query: { id: business.businessId, section: billingSection } }"
-              :class="['health-pill', 'billing-pill', billingState(business).state === 'complete' ? 'health-ok' : 'billing-warn']"
+              :class="['health-pill', 'billing-pill', billingState(business).state === 'complete' ? 'health-ok' : 'health-warn']"
               :aria-describedby="billingState(business).state === 'complete' ? undefined : 'billing-note-' + business.businessId">
             <i aria-hidden="true" :class="billingState(business).state === 'complete' ? 'pi pi-check-circle' : 'pi pi-exclamation-circle'"></i>
             {{ $t('components.businesses.billing.' + billingState(business).state) }}
@@ -1046,8 +1046,8 @@ export default {
 }
 
 .status-warn {
-  background: #fff3e0;
-  color: #b86e00;
+  background: @mrcall_warn_surface;
+  color: @mrcall_warn_text;
 }
 
 .status-danger {
@@ -1216,8 +1216,8 @@ a.service-number-value:hover {
   }
 
   &.health-warn {
-    background: #fff3e0;
-    color: #e65100;
+    background: @mrcall_warn_surface;
+    color: @mrcall_warn_text;
   }
 
   &.health-debt {
@@ -1230,9 +1230,7 @@ a.service-number-value:hover {
   }
 }
 
-// The billing chip is a link: same pill, plus what a link needs. Its warning colour is darker than
-// the shared .health-warn (#e65100 measures 3.5:1 on the pill's background, under the 4.5:1 that
-// text this small needs): #a63c00 measures 5.9:1 there and 6.4:1 on the card's white.
+// The billing chip is a link: same pill, plus what a link needs.
 .billing-pill {
   text-decoration: none;
   cursor: pointer;
@@ -1246,11 +1244,6 @@ a.service-number-value:hover {
     outline: 2px solid @mrcall_blue;
     outline-offset: 2px;
   }
-
-  &.billing-warn {
-    background: #fff3e0;
-    color: #a63c00;
-  }
 }
 
 .billing-note {
@@ -1258,7 +1251,7 @@ a.service-number-value:hover {
   padding: 0 1.25rem 0.75rem;
   font-size: 0.8rem;
   line-height: 1.35;
-  color: #a63c00;
+  color: @mrcall_warn_text;
 }
 
 .card-actions {

@@ -125,6 +125,16 @@ test.describe('Businesses Page (Authenticated)', () => {
       await expect(card.locator('.health-debt')).toHaveCount(0)
     })
 
+    // The warning pills' amber text was #e65100, 3.46:1 on the pill's #fff3e0, under the 4.5:1 that
+    // 0.8rem text needs; it reads now in the shared warning text colour, 5.86:1 there.
+    test('says no minutes are left at zero, in a readable amber', async ({ authenticatedPage: page }) => {
+      await answerBalance(page, { available: 0, debt: 0, net: 0 })
+      await new BusinessesPage(page).goto()
+      const pill = page.locator(selectors.businessCard).first().locator('.health-warn', { hasText: 'No minutes left' })
+      await expect(pill).toBeVisible()
+      await expect(pill).toHaveCSS('color', 'rgb(166, 60, 0)')
+    })
+
     // Seen failing on 2026-10-11 against v2.2.19 (0d83641): the card read €0.00 and "No minutes left"
     // for an answer that is not a balance.
     test('says the credit is unknown, not zero, when the answer is not a balance', async ({ authenticatedPage: page }) => {
