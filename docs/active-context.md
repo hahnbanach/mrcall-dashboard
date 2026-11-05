@@ -49,8 +49,8 @@ stylesheets on all three carry only `#a63c00`.
 `srcdoc` through). The dashboard was not exposed: it does not enable `escapeParameter`, and its two translations
 rendered as HTML take no parameters and come from its own locale files. Only the `@intlify` packages moved in the
 lockfile; unit suite green, full run 2221 passed with 10 failing under load, each passing rerun alone. Checked by the
-CTO on test; the published vendor chunk on all three carries 11.4.14. The alert stays open on GitHub: Dependabot
-reads the default branch, `v2.1`, which still pins 11.1.10.
+CTO on test; the published vendor chunk on all three carries 11.4.14. GitHub's default branch, which Dependabot
+reads, is `v2.2` since 2026-11-05 (it was `v2.1`, still pinning 11.1.10).
 
 Session ownership: every nonpublic route needs a session, the Axios interceptor alone ends it, and components suppress
 their failure UI for `isSessionEnded`. Browser tests mock StarChat and mrcall-agent; their ID tokens are JWT-shaped and
