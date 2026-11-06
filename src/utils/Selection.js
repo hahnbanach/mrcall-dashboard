@@ -42,7 +42,8 @@ export function createSelection() {
         pressStart(key, event) {
             if (!state.narrow || state.mode) return;
             const target = event && event.target;
-            if (target && target.closest && target.closest("button, a, input, select, textarea, audio, [role=listbox], [role=option]")) return;
+            // a press on a control is the control's, and one on a call's id selects its text (CallIdCopy.vue)
+            if (target && target.closest && target.closest("button, a, input, select, textarea, audio, [role=listbox], [role=option], .call-id")) return;
             state.pressEnd();
             timer = setTimeout(() => {
                 timer = null;

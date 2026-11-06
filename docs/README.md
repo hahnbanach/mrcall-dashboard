@@ -40,7 +40,8 @@ guide, both in the StarChat repository. No copy of either lives here. A call's j
 and queues, the caller rules, a category's requests, the access record and the conversation search's filters a
 count opens are read by `src/utils/Classifications.js`, against StarChat's brief
 `docs/briefs/2026-10-26-classification-feedback.md` and its routes (this repository's brief
-[2026-10-27-classification-feedback](briefs/2026-10-27-classification-feedback.md) states which).
+[2026-10-27-classification-feedback](briefs/2026-10-27-classification-feedback.md) states which; its
+[plan](execution-plans/2026-10-27-classification-feedback.md)).
 
 - [Readable review and assistant Google connection](briefs/2026-10-26-readable-skill-preview.md)
   — [clean TEST delivery plan](execution-plans/2026-10-26-readable-skill-preview.md).
@@ -65,6 +66,9 @@ count opens are read by `src/utils/Classifications.js`, against StarChat's brief
 - [Billing data chip](briefs/2026-11-04-billing-data-chip.md) — [plan](execution-plans/2026-11-04-billing-data-chip.md):
   the business card says whether the owner's billing data is entered, names what is missing, and links to the billing
   section.
+
+- [Call id](briefs/2026-11-06-call-id-copy.md) — [plan](execution-plans/2026-11-06-call-id-copy.md): every call panel
+  shows the call's id, its first 16 characters, and copies the whole id for StarChat's tools.
 
 ## Quick context
 

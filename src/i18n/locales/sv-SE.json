@@ -603,7 +603,13 @@
         "openedMissing": "Det här samtalet hittades inte bland dina samtal.",
         "closeOpened": "Stäng",
         "inTrash": "I papperskorgen",
-        "inArchive": "Arkiverad"
+        "inArchive": "Arkiverad",
+        "callId": {
+          "label": "Samtals-id",
+          "copy": "Kopiera samtals-id {id}",
+          "copied": "Kopierat",
+          "copyFailed": "Det gick inte att kopiera: markera id:t"
+        }
       }
     },
     "deleteaccount": {

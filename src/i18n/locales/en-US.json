@@ -608,7 +608,13 @@
         "openedMissing": "This call was not found among your conversations.",
         "closeOpened": "Close",
         "inTrash": "In the trash",
-        "inArchive": "Archived"
+        "inArchive": "Archived",
+        "callId": {
+          "label": "Call id",
+          "copy": "Copy call id {id}",
+          "copied": "Copied",
+          "copyFailed": "Could not copy: select the id"
+        }
       }
     },
     "deleteaccount": {

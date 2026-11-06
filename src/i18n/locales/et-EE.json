@@ -603,7 +603,13 @@
         "openedMissing": "Seda kõnet ei leitud teie vestluste hulgast.",
         "closeOpened": "Sulge",
         "inTrash": "Prügikastis",
-        "inArchive": "Arhiveeritud"
+        "inArchive": "Arhiveeritud",
+        "callId": {
+          "label": "Kõne ID",
+          "copy": "Kopeeri kõne ID {id}",
+          "copied": "Kopeeritud",
+          "copyFailed": "Kopeerimine ebaõnnestus: valige ID"
+        }
       }
     },
     "deleteaccount": {

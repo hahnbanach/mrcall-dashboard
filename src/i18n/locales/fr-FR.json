@@ -604,7 +604,13 @@
         "openedMissing": "Cet appel est introuvable parmi vos conversations.",
         "closeOpened": "Fermer",
         "inTrash": "Dans la corbeille",
-        "inArchive": "Archivé"
+        "inArchive": "Archivé",
+        "callId": {
+          "label": "Identifiant de l'appel",
+          "copy": "Copier l'identifiant de l'appel {id}",
+          "copied": "Copié",
+          "copyFailed": "Copie impossible : sélectionnez l'identifiant"
+        }
       }
     },
     "deleteaccount": {

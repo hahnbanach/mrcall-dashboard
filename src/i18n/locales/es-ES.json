@@ -603,7 +603,13 @@
         "openedMissing": "Esta llamada no se encontró entre tus conversaciones.",
         "closeOpened": "Cerrar",
         "inTrash": "En la papelera",
-        "inArchive": "Archivada"
+        "inArchive": "Archivada",
+        "callId": {
+          "label": "ID de la llamada",
+          "copy": "Copiar el ID de la llamada {id}",
+          "copied": "Copiado",
+          "copyFailed": "No se ha podido copiar: selecciona el ID"
+        }
       }
     },
     "deleteaccount": {

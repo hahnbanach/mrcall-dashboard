@@ -1,5 +1,9 @@
 <template>
   <div class="call-details">
+    <!-- The call's id, for passing the call to StarChat when a problem is reported: shown to every reader -->
+    <p v-if="conversation.id" class="call-id-row">
+      <CallIdCopy :id="conversation.id" :length="idLength" />
+    </p>
     <!-- What the business can do about the call, as the call email offers it: the owner's actions, never offered on a
          call opened read-only (U19c m15) -->
     <div v-if="ownerActions && (dialable || calendarLink)" class="call-actions">
@@ -179,6 +183,8 @@ import ConversationApi from "@/utils/Conversation";
 import CallInsights from "@/utils/CallInsights";
 import CallJudgements from "@/components/feedback/CallJudgements.vue";
 import Classifications from "@/utils/Classifications";
+import CallIdCopy from "@/components/conversations/CallIdCopy.vue";
+import { CALL_ID_MIN } from "@/utils/CallId";
 
 /**
  * The body of a call on the conversations page: what the business has to do about it, what the
@@ -190,7 +196,7 @@ import Classifications from "@/utils/Classifications";
  * fetched when the owner asks to listen.
  */
 export default {
-  components: { CallJudgements },
+  components: { CallJudgements, CallIdCopy },
   props: {
     conversation: { type: Object, required: true },
     businessId: { type: String, required: true },
@@ -204,6 +210,8 @@ export default {
     eager: { type: Boolean, default: false },
     // the judgements as chips: a page that carries the undo bar and knows the reader's ownership asks for them
     withJudgements: { type: Boolean, default: false },
+    // how many characters of the id show: more than 16 only where the list drawing it has ids sharing that much
+    idLength: { type: Number, default: CALL_ID_MIN },
   },
   data() {
     return {
@@ -351,6 +359,10 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+
+.call-id-row {
+  margin: 0;
 }
 
 .call-actions {

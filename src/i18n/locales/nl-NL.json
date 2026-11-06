@@ -603,7 +603,13 @@
         "openedMissing": "Dit gesprek is niet gevonden tussen je gesprekken.",
         "closeOpened": "Sluiten",
         "inTrash": "In de prullenbak",
-        "inArchive": "Gearchiveerd"
+        "inArchive": "Gearchiveerd",
+        "callId": {
+          "label": "Gespreks-ID",
+          "copy": "Gespreks-ID {id} kopiëren",
+          "copied": "Gekopieerd",
+          "copyFailed": "Kopiëren mislukt: selecteer de ID"
+        }
       }
     },
     "deleteaccount": {

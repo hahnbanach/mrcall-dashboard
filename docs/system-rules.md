@@ -11,7 +11,7 @@
 | Routing | Vue Router | 4.3.0 |
 | Authentication | Firebase | 11.3.0 |
 | HTTP Client | Axios | 1.11.0 |
-| i18n | vue-i18n | 11.1.10 |
+| i18n | vue-i18n | 11.4.14 |
 | Build (prod) | Vue CLI / Webpack 5 | 5.0.8 / 5.97.1 |
 | Build (dev) | Vue CLI / Webpack | 5.0.8 / 5.97.1 |
 | CSS | Less | 4.2.1 |

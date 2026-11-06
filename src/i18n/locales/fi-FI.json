@@ -603,7 +603,13 @@
         "openedMissing": "Tätä puhelua ei löytynyt keskusteluistasi.",
         "closeOpened": "Sulje",
         "inTrash": "Roskakorissa",
-        "inArchive": "Arkistoitu"
+        "inArchive": "Arkistoitu",
+        "callId": {
+          "label": "Puhelun tunnus",
+          "copy": "Kopioi puhelun tunnus {id}",
+          "copied": "Kopioitu",
+          "copyFailed": "Kopiointi epäonnistui: valitse tunnus"
+        }
       }
     },
     "deleteaccount": {

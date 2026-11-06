@@ -603,7 +603,13 @@
         "openedMissing": "Denne samtalen ble ikke funnet blant samtalene dine.",
         "closeOpened": "Lukk",
         "inTrash": "I papirkurven",
-        "inArchive": "Arkivert"
+        "inArchive": "Arkivert",
+        "callId": {
+          "label": "Samtale-ID",
+          "copy": "Kopier samtale-ID {id}",
+          "copied": "Kopiert",
+          "copyFailed": "Kunne ikke kopiere: merk ID-en"
+        }
       }
     },
     "deleteaccount": {

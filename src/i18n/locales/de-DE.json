@@ -604,7 +604,13 @@
         "openedMissing": "Dieser Anruf wurde in deinen Gesprächen nicht gefunden.",
         "closeOpened": "Schließen",
         "inTrash": "Im Papierkorb",
-        "inArchive": "Archiviert"
+        "inArchive": "Archiviert",
+        "callId": {
+          "label": "Anruf-ID",
+          "copy": "Anruf-ID {id} kopieren",
+          "copied": "Kopiert",
+          "copyFailed": "Kopieren nicht möglich: ID markieren"
+        }
       }
     },
     "deleteaccount": {

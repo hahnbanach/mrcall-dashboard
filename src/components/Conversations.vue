@@ -522,6 +522,7 @@
                 :conversation="conversation"
                 :business-id="businessId"
                 :user="user"
+                :id-length="idLengths.get(conversation.id) || callIdMin"
                 :expanded="messagesExpanded"
                 :read-only="readOnly"
                 :owner-actions="!notOwner"
@@ -629,6 +630,7 @@ import { interval } from "rxjs";
 import Tr from "@/i18n/translation";
 import ConversationApi from "@/utils/Conversation";
 import CallDetailsPanel from "@/components/conversations/CallDetailsPanel";
+import { shortIds, CALL_ID_MIN } from "@/utils/CallId";
 import CallInsights from "@/utils/CallInsights";
 import UndoBar from "@/components/feedback/UndoBar.vue";
 import Classifications from "@/utils/Classifications";
@@ -677,6 +679,8 @@ export default {
       queryConvResultReady: false,
       // the transcripts of the list, closed by default: the summary and the fields come first
       messagesExpanded: false,
+      // the shown length of a call's id when the list has nothing longer to tell apart (CallId.js)
+      callIdMin: CALL_ID_MIN,
       openedId: null,
       opened: null,
       openedState: null,
@@ -714,6 +718,10 @@ export default {
     };
   },
   computed: {
+    // How much of each drawn call's id shows: 16 characters, more where two ids on the page share them (CallId.js)
+    idLengths() {
+      return shortIds([...this.filteredItems.values()].map((conversation) => conversation && conversation.id));
+    },
     // Whether the reader owns these calls (`Classifications.isOwnerOf`): true, false, or null while the business could not
     // be read. A known non-owner sees the read-only page; an unknown reader keeps the owner's controls (StarChat is the
     // gate for writes) but no call or judgement is read on its own, since a non-owner's read is recorded.

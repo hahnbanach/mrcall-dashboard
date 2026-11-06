@@ -608,7 +608,13 @@
         "openedMissing": "Questa chiamata non è stata trovata tra le tue conversazioni.",
         "closeOpened": "Chiudi",
         "inTrash": "Nel cestino",
-        "inArchive": "Archiviata"
+        "inArchive": "Archiviata",
+        "callId": {
+          "label": "Id chiamata",
+          "copy": "Copia id chiamata {id}",
+          "copied": "Copiato",
+          "copyFailed": "Copia non riuscita: seleziona l'id"
+        }
       }
     },
     "deleteaccount": {

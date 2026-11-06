@@ -104,7 +104,9 @@ API clients and business logic:
   scroll container (`#app-central-content` on every page), also used by `v-sticky-head`
 - `UndoGesture.js` — the last gesture on judgements, for the page's one undo bar, with the touched calls' state and
   the signals it wrote, which every other panel of those calls takes when the gesture is made or undone
-- `Selection.js` — the selection of a list's rows (a checkbox on a wide screen, a long-press mode under 600 px)
+- `Selection.js` — the selection of a list's rows (a checkbox on a wide screen, a long-press mode under 600 px,
+  not started from a control or a call's id)
+- `CallId.js` — how many characters of a call's id show: 16, more where ids drawn together share them
 - `KnowledgeBase.js` — "Add the answer": one question/answer pair added to the business's knowledge base
   (`?section=__KNOWLEDGE_BASE__&draftQuestion=`), unsaved until the person saves
 - `Admin.js` — Admin API endpoints
@@ -236,9 +238,17 @@ questions the assistant could not answer, three quality checks); the dashboard's
 for the four dimensions lives in `src/utils/CallInsights.js`.
 
 - **The call's panel** (`CallDetailsPanel.vue`, in `Conversations.vue`'s list and its deep-linked
-  opened call): after the summary, the topics as tags, the four dimensions under the value table, the
+  opened call, and in `conversations/CallDialog.vue`): after the summary, the topics as tags, the four dimensions under the value table, the
   unanswered questions with their reason and suggestion, the checks that fired. A call from before
   the feature draws with none of this.
+- **The call's id** (`conversations/CallIdCopy.vue`, at the top of every `CallDetailsPanel`, so on the conversations
+  page, its opened call and the call dialog of the analytics and restaurant pages; brief
+  [2026-11-06-call-id-copy](briefs/2026-11-06-call-id-copy.md)): `conversation.id` as StarChat sends it, any format.
+  The whole id is in the page, clipped to its first 16 characters and an ellipsis; `src/utils/CallId.js` gives more
+  where ids of the conversations list share 16 characters, and shows whole an id at most one character longer than
+  its shown length. A button, named with the shown id, copies the whole id and says "Copied" in a live region; a refused
+  or missing clipboard shows the whole id, selected. Offered to every reader. A long press on it does not start the
+  list's selection.
 - **The judgements as chips** (`src/components/feedback/`; brief
   [2026-10-27-classification-feedback](briefs/2026-10-27-classification-feedback.md)): `CallJudgements.vue` in the
   call's panel, on the pages that ask for it (`with-judgements`: the conversations page, the call dialog),
