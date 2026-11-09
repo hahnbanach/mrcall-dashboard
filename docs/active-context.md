@@ -11,8 +11,8 @@ Scope: Current dashboard operating state, unresolved verification limits, and im
 
 ## State now
 
-Production, beta and test serve `v2.2.54` (`023d7ac`, 2026-11-05), with StarChat 9.34.129 behind production, which
-sends insight version 8. Beyond the classification feedback, the analytics UX rework, the `redirected` outcome and the
+Production, beta and test serve `v2.2.55` (`00bcf48`, test 2026-11-06, beta and production 2026-11-09), with
+StarChat 9.34.129 behind production, which sends insight version 8. Beyond the classification feedback, the analytics UX rework, the `redirected` outcome and the
 dashboard load work (each with its brief and plan routed in [the index](README.md)), the `v2.2` line holds:
 - the billing data chip on the business card ([brief](briefs/2026-11-04-billing-data-chip.md),
   [plan](execution-plans/2026-11-04-billing-data-chip.md)), and the card's credit decided on net alone (negative only
@@ -24,11 +24,11 @@ dashboard load work (each with its brief and plan routed in [the index](README.m
 
 GitHub's default branch, which Dependabot reads, is `v2.2`.
 
-`v2.2.55` is on test only: the call's id on every call panel
-([brief](briefs/2026-11-06-call-id-copy.md), [plan](execution-plans/2026-11-06-call-id-copy.md)), its first 16
-characters shown and the whole id copied by a button. Verified against the browser-test mocks on the three
-viewports; that a phone's native long press selects the id's text is unverified. Beta and production wait for
-the CTO's check on test.
+Since `v2.2.55`, the call's id on every call panel ([brief](briefs/2026-11-06-call-id-copy.md),
+[plan](execution-plans/2026-11-06-call-id-copy.md)): its first 16 characters shown and the whole id copied by a
+button. Verified against the browser-test mocks on the three viewports; beta and production followed the CTO's check on
+test, which did not report on a phone's native long press. The published chunks of all three environments carry the
+component and its labels.
 
 Session ownership: every nonpublic route needs a session, the Axios interceptor alone ends it, and components suppress
 their failure UI for `isSessionEnded`. Browser tests mock StarChat and mrcall-agent; their ID tokens are JWT-shaped and
@@ -61,8 +61,9 @@ the StarChat mock refuses an unverified one, as StarChat does.
 
 ## Next
 
-- Call id: the CTO checks it on test, with the long press on a phone by hand; then `v2.2.55-beta` and
-  `v2.2.55-production` on authorisation.
+- Caller-repeated check (StarChat's plan `docs/execution-plans/2026-11-06-caller-repeated-check.md`, step K13): after
+  StarChat's test tag, a brief and plan for correcting `caller_repeated` and `caller_unsatisfied` in the call view,
+  each offered only when the call recorded that check, `promise_not_kept_in_call` never; Playwright before the tag.
 - Dependency audit, after the call id: a brief and plan, the runtime dependencies first (`axios` first), each exposure
   measured, then the development tools (vitest, `vite`, the Vue CLI dev server).
 - Billing chip and credit: watch whether owners fill in their billing data, and whether covered debts stop being
