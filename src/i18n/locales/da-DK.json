@@ -1927,7 +1927,8 @@
         "title": "Hvad opkaldet handlede om",
         "unansweredTitle": "Spørgsmål uden svar",
         "checksTitle": "Kontroller",
-        "suggestion": "Hvad du kunne give din assistent: {suggestion}"
+        "suggestion": "Hvad du kunne give din assistent: {suggestion}",
+        "subject": "Emne"
       },
       "filters": {
         "resolutionPlaceholder": "Enhver løsning",
@@ -2734,7 +2735,12 @@
         "withdrawRefused": {
           "not_author": "Kun den, der har lavet et forslag, kan trække det tilbage.",
           "feedback_state": "Der er allerede taget stilling til dette forslag."
-        }
+        },
+        "checkValue": {
+          "true": "Ja",
+          "false": "Nej"
+        },
+        "checkCause": "Med assistentens ord"
       },
       "callDialog": {
         "title": "Samtalen",

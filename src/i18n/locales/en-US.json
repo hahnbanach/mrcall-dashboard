@@ -1932,7 +1932,8 @@
         "title": "What the call was about",
         "unansweredTitle": "Questions left unanswered",
         "checksTitle": "Checks",
-        "suggestion": "What you could give your assistant: {suggestion}"
+        "suggestion": "What you could give your assistant: {suggestion}",
+        "subject": "Subject"
       },
       "filters": {
         "resolutionPlaceholder": "Any resolution",
@@ -2739,7 +2740,12 @@
         "withdrawRefused": {
           "not_author": "Only its author can withdraw a proposal.",
           "feedback_state": "This proposal has already been decided."
-        }
+        },
+        "checkValue": {
+          "true": "Yes",
+          "false": "No"
+        },
+        "checkCause": "In the assistant's words"
       },
       "callDialog": {
         "title": "The call",

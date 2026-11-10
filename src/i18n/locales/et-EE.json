@@ -1927,7 +1927,8 @@
         "title": "Mille kohta kõne käis",
         "unansweredTitle": "Vastuseta jäänud küsimused",
         "checksTitle": "Kontrollid",
-        "suggestion": "Mida saaksid oma assistendile anda: {suggestion}"
+        "suggestion": "Mida saaksid oma assistendile anda: {suggestion}",
+        "subject": "Teema"
       },
       "filters": {
         "resolutionPlaceholder": "Mis tahes lahendus",
@@ -2734,7 +2735,12 @@
         "withdrawRefused": {
           "not_author": "Ettepaneku saab tagasi võtta ainult selle tegija.",
           "feedback_state": "Selle ettepaneku üle on juba otsustatud."
-        }
+        },
+        "checkValue": {
+          "true": "Jah",
+          "false": "Ei"
+        },
+        "checkCause": "Assistendi sõnadega"
       },
       "callDialog": {
         "title": "Kõne",

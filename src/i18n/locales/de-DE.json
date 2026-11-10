@@ -1929,7 +1929,8 @@
         "title": "Worum es in dem Anruf ging",
         "unansweredTitle": "Offen gebliebene Fragen",
         "checksTitle": "Prüfungen",
-        "suggestion": "Was Sie Ihrem Assistenten geben könnten: {suggestion}"
+        "suggestion": "Was Sie Ihrem Assistenten geben könnten: {suggestion}",
+        "subject": "Betreff"
       },
       "filters": {
         "resolutionPlaceholder": "Beliebige Lösung",
@@ -2736,7 +2737,12 @@
         "withdrawRefused": {
           "not_author": "Nur wer einen Vorschlag gemacht hat, kann ihn zurückziehen.",
           "feedback_state": "Über diesen Vorschlag wurde bereits entschieden."
-        }
+        },
+        "checkValue": {
+          "true": "Ja",
+          "false": "Nein"
+        },
+        "checkCause": "In den Worten des Assistenten"
       },
       "callDialog": {
         "title": "Der Anruf",

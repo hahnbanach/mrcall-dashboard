@@ -23,6 +23,12 @@ const cls = require('../e2e/fixtures/classifications')
 
 const DIR = fileURLToPath(new URL('./recorded/starchat-9.34.124/', import.meta.url))
 const recorded = (name) => JSON.parse(readFileSync(DIR + name + '.json', 'utf8'))
+// A call's correctable checks (docs/briefs/2026-11-09-caller-checks-correction.md), recorded on test from StarChat
+// 9.34.131 (b550d9119) with the saved owner session on a call of the owner's business: its judgements after a check's
+// correction and its undo, that signal's answer, and the undo's answer, which left the call as it was. Scrubbed as the
+// 9.34.124 ones (ids, names and the request's text a placeholder; closed-set values kept).
+const DIR_131 = fileURLToPath(new URL('./recorded/starchat-9.34.131/', import.meta.url))
+const recorded131 = (name) => JSON.parse(readFileSync(DIR_131 + name + '.json', 'utf8'))
 
 // Fields StarChat 9.34.124 sends that the recording happened not to hold, by the answer's path, each with its source.
 const REQUEST_GAP = ['gap'] // InsightsFeedback: a request's `gap`, dropped when null (`dropNullValues`)
@@ -42,9 +48,12 @@ const OPTIONAL = {
 }
 
 // Objects keyed by data, not by field (counts by outcome, totals by value, a report's example calls by call id): their
-// keys come and go with the period's calls, so only their values' types are compared.
+// keys come and go with the period's calls, so only their values' types are compared. The analytics' check counts are
+// such a map (`quality.checks`, an assistant's `checks`); a call's `checks` is not: its keys are the checks StarChat
+// lets a person correct, compared field by field, so a fixture cannot carry one StarChat never sends.
 const MAPS = [/\.counts$/, /\.totals$/, /\.previousTotals$/, /content\.resolution$/, /content\.message$/,
-  /topics\[\]\.resolution$/, /businesses\[\]\.resolution$/, /\.noConversation$/, /\.exampleCalls$/, /\.checks$/,
+  /topics\[\]\.resolution$/, /businesses\[\]\.resolution$/, /\.noConversation$/, /\.exampleCalls$/,
+  /^quality\.checks$/, /^assistants\.businesses\[\]\.checks$/,
   /\.gaps$/, /\.previousGaps$/, /\.extractions$/, /\.outcomes$/]
 const isMap = (path) => MAPS.some((re) => re.test(path))
 
@@ -174,6 +183,33 @@ describe('the Playwright fixtures carry only what StarChat 9.34.124 sends', () =
       ...mismatches(undo, recorded('undo-owner').body, 'undo'),
     ]
     expect(found).toEqual([])
+  })
+
+  it('a call with checks: its judgements, a check\'s correction and its undo (StarChat 9.34.131)', async () => {
+    const page = standInPage()
+    const checks = {
+      caller_repeated: { model: 'true', value: 'true', corrected: false },
+      caller_unsatisfied: { model: 'false', value: 'false', corrected: false },
+    }
+    await cls.mockClassifications(page, { calls: { [cls.CALL_ID]: cls.judged({ checks }) } })
+    const judged = (await page.ask('GET', S + '/insights/calls/' + cls.CALL_ID + '/classifications?businessId=' + B)).body
+    const ask = { subject: 'call', conversationId: cls.CALL_ID, field: 'caller_repeated', signal: 'wrong_value', valueFrom: 'true', valueTo: 'false' }
+    const signal = (await page.ask('POST', S + '/insights/feedback', { ...ask, gestureId: 'g1' })).body
+    const undo = (await page.ask('POST', S + '/insights/feedback/gestures/g1/revert', {})).body
+    expect(signal.call.checks.caller_repeated.value).toBe('false')
+    expect(undo.calls[0].checks.caller_repeated.value).toBe('true')
+    const found = [
+      ...mismatches(judged, recorded131('classifications-checks-owner').body, 'classifications'),
+      ...mismatches(signal, recorded131('signal-check-owner').body, 'signal'),
+      ...mismatches(undo, recorded131('undo-check-owner').body, 'undo'),
+    ]
+    expect(found).toEqual([])
+  })
+
+  it('a call\'s checks are compared by name: a check StarChat does not send is found', () => {
+    const fixture = cls.judged({ checks: { caller_repeated: { model: 'true', value: 'true', corrected: false }, promise_not_kept_in_call: { model: 'true', value: 'true', corrected: false } } })
+    expect(mismatches(fixture, recorded131('classifications-checks-owner').body, 'classifications'))
+      .toEqual(['classifications.checks.promise_not_kept_in_call: the fixture carries a field StarChat does not send'])
   })
 
   it('the comparison itself finds a field StarChat does not send (a check of the check)', () => {

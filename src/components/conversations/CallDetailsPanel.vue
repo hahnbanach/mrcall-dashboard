@@ -50,6 +50,12 @@
     <section v-if="hasInsights || withJudgements" :class="{ 'call-box call-insights-box': hasInsights || chips }">
       <h3 v-if="hasInsights || chips" class="call-box-title">{{ $t("components.callInsights.panel.title") }}</h3>
 
+      <!-- the call's subject, as the assistant summed it up (StarChat structure 9; absent before it) -->
+      <dl v-if="subject" class="call-facts insight-fact insight-subject">
+        <dt>{{ $t("components.callInsights.panel.subject") }}</dt>
+        <dd>{{ subject }}</dd>
+      </dl>
+
       <!-- The judgements as chips a person corrects (CallJudgements); while they are not drawn, today's rows -->
       <CallJudgements
         v-if="withJudgements"
@@ -59,6 +65,7 @@
         :read-only="readOnly"
         :eager="eager"
         @chips="chips = $event"
+        @checks="checkChips = $event"
       />
 
       <dl v-for="row in plainRows" :key="row.dimension" class="call-facts insight-fact">
@@ -108,7 +115,14 @@
       <div v-if="checksFired.length > 0" class="insight-checks-wrapper">
         <h4 class="insight-subtitle">{{ $t("components.callInsights.panel.checksTitle") }}</h4>
         <ul class="insight-checks">
-          <li v-for="key in checksFired" :key="key">{{ checkLabel(key) }}</li>
+          <li v-for="key in checksFired" :key="key">
+            {{ checkLabel(key) }}
+            <!-- the assistant's words that made it mark the check, here while the check has no chip -->
+            <p v-if="key === 'caller_repeated' && repeatedCause" class="insight-check-cause">
+              <span class="insight-check-cause-caption">{{ $t("components.callInsights.feedback.checkCause") }}</span>
+              <q>{{ repeatedCause }}</q>
+            </p>
+          </li>
         </ul>
       </div>
     </section>
@@ -222,6 +236,8 @@ export default {
       recordingState: "idle",
       // the judgements are drawn as chips: the plain resolution and message rows step aside
       chips: false,
+      // the checks CallJudgements draws as chips (StarChat 9.34.131): the list of fired checks leaves them out
+      checkChips: [],
     };
   },
   computed: {
@@ -278,8 +294,21 @@ export default {
     unkept() {
       return CallInsights.unkeptRows(this.details);
     },
-    checksFired() {
+    firedChecks() {
       return CallInsights.firedChecks(this.details);
+    },
+    // the fired checks still said as a line: a check with a chip is said there, as resolution and message are
+    checksFired() {
+      return this.firedChecks.filter((key) => !this.checkChips.includes(key));
+    },
+    repeatedCause() {
+      const causes = this.details.checkCauses;
+      const text = causes && typeof causes === "object" ? causes.caller_repeated : null;
+      return typeof text === "string" && text.trim() ? text.trim() : null;
+    },
+    subject() {
+      const s = this.details.subject;
+      return typeof s === "string" && s.trim() ? s.trim() : null;
     },
     insightRows() {
       return CallInsights.insightRows(this.details);
@@ -289,7 +318,7 @@ export default {
     },
     hasInsights() {
       return this.topics.length > 0 || this.unanswered.length > 0 || this.unkept.length > 0 ||
-        this.checksFired.length > 0 || this.insightRows.length > 0;
+        this.firedChecks.length > 0 || this.insightRows.length > 0 || !!this.subject;
     },
     turns() {
       const data = this.conversation.data;
@@ -651,5 +680,16 @@ export default {
   padding-left: 18px;
   font-size: 14px;
   color: @mrcall_dark_grey_text;
+}
+
+.insight-check-cause {
+  margin: 4px 0 0;
+  overflow-wrap: anywhere;
+}
+
+.insight-check-cause-caption {
+  display: block;
+  font-size: 13px;
+  color: @mrcall_grey_text2;
 }
 </style>

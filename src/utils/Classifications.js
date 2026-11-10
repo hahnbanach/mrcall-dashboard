@@ -24,13 +24,21 @@ const REQUEST_OUTCOME_KEYS = ["met", "taken", "redirected", "handed_over", "neit
 // the outcomes the assistant did not fulfil by itself: the categories view's default (decision 13). StarChat's
 // `RequestCategoryRows.NotFulfilled` leaves `redirected` out: the business handles it through its channel.
 const NOT_FULFILLED = ["taken", "handed_over", "neither"];
-const FIELDS = ["resolution", "message", "outcome", "category"];
+// a call's checks a person corrects (StarChat 9.34.131, `InsightsFeedback.effectiveJson`): yes or no, read at
+// `checks.<name>` of the call's judgements; `promise_not_kept_in_call` is not one, and StarChat refuses it
+const CHECK_FIELDS = ["caller_repeated", "caller_unsatisfied"];
+const CHECK_VALUES = ["true", "false"];
+const FIELDS = ["resolution", "message", "outcome", "category", ...CHECK_FIELDS];
 // the facts of a call's own record (StarChat `FeedbackField`, 6d13718c6): reported wrong (`fact_wrong`, "Segnala un
 // errore"), never corrected; a report changes no value and waits for an admin to close or reject it
 const FACT_FIELDS = ["booked", "transferred", "no_conversation", "managed_call", "skill_errors", "unkept"];
 const REQUEST_FIELDS = ["outcome", "category"];
 // StarChat's `RequestCategories.Unclassified`: the requests no category was given yet ("Da classificare")
 const UNCLASSIFIED = "unclassified";
+
+function isCheck(field) {
+    return CHECK_FIELDS.includes(field);
+}
 
 function onRequest(field) {
     return REQUEST_FIELDS.includes(field);
@@ -41,6 +49,7 @@ function valuesOf(field, categories) {
     if (field === "resolution") return [...RESOLUTION_KEYS];
     if (field === "message") return [...MESSAGE_KEYS];
     if (field === "outcome") return [...REQUEST_OUTCOME_KEYS];
+    if (isCheck(field)) return [...CHECK_VALUES];
     if (field === "category") return Array.isArray(categories) ? categories.filter((c) => c && c.active !== false).map((c) => c.key) : [];
     throw new Error("Classifications.valuesOf: " + field + " is not a judgement");
 }
@@ -124,7 +133,8 @@ function chipState(judgement, history, where, role) {
 
 /** A chip's menu: every value with the current one marked, then "right", "wrong", "restore" when allowed, "withdraw" the
  * reader's own proposal still waiting, "history". A category whose list is not known offers nothing (the chip is not
- * drawn: brief, gap table). */
+ * drawn: brief, gap table). A check offers no "wrong": a yes or no has one other value, which is the correction itself,
+ * applied at once; a "wrong" without a value would only wait for an admin to apply what is already determined. */
 function menuEntries(field, state, categories) {
     const values = valuesOf(field, categories);
     if (values.length === 0) return [];
@@ -132,7 +142,7 @@ function menuEntries(field, state, categories) {
     const entries = values.map((value) => ({ kind: "value", value, current: value === s.value }));
     // "right" confirms a value: StarChat refuses it on one that is not set (a request not classified yet)
     if (s.value != null) entries.push({ kind: "right" });
-    entries.push({ kind: "wrong" });
+    if (!isCheck(field)) entries.push({ kind: "wrong" });
     if (s.canRestore && s.correction) entries.push({ kind: "restore", feedbackId: s.correction.feedbackId });
     if (s.ownProposal != null) entries.push({ kind: "withdraw", feedbackId: s.ownProposal });
     entries.push({ kind: "history" });
@@ -306,6 +316,12 @@ function withCurrent(data, current) {
         else if (onRequest(c.field)) {
             const r = next.requests.find((x) => x.requestId === c.requestId);
             if (r) r[c.field] = { ...(r[c.field] || {}), value: c.value == null ? null : c.value };
+        } else if (isCheck(c.field)) {
+            // a check lives under `checks`, not at the top of the call's judgements; a call answered without `checks`
+            // (a StarChat before 9.34.131) gets none
+            if (next.checks && typeof next.checks === "object") {
+                next.checks = { ...next.checks, [c.field]: { ...(next.checks[c.field] || {}), value: c.value == null ? null : c.value } };
+            }
         } else if (next[c.field]) next[c.field] = { ...next[c.field], value: c.value == null ? null : c.value };
     }
     return next;
@@ -541,10 +557,12 @@ export default {
     REQUEST_OUTCOME_KEYS,
     NOT_FULFILLED,
     FIELDS,
+    CHECK_FIELDS,
     FACT_FIELDS,
     UNCLASSIFIED,
     ADDRESS_FILTERS,
     onRequest,
+    isCheck,
     valuesOf,
     statusFor,
     historyOf,

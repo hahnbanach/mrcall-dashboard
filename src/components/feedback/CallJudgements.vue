@@ -26,6 +26,11 @@
               :entries="historyOf(row.field, null)"
               :label-of="(v) => valueLabel(row.field, v)"
             />
+            <!-- the assistant's own words for its answer, whatever the chip now says: the chip says when it was corrected -->
+            <p v-if="row.field === 'caller_repeated' && repeatedCause" class="judgement-cause">
+              <span class="judgement-note">{{ $t("components.callInsights.feedback.checkCause") }}</span>
+              <q>{{ repeatedCause }}</q>
+            </p>
           </dd>
         </template>
       </dl>
@@ -161,6 +166,12 @@ let seq = 0;
  *
  * Until the read answers, and when it answers 404 or 503, the parent's own rows stay (`chips` false). A non-owner sees
  * chips at once, drawn from the call's own details, which open after the read.
+ *
+ * THE CHECKS (docs/briefs/2026-11-09-caller-checks-correction.md). From StarChat 9.34.131 the read carries `checks`,
+ * `caller_repeated` and `caller_unsatisfied` each `{model, value, corrected}`: a chip for each one the call recorded
+ * (`model` non-null), "false" included, after resolution and message. None before the read, for any reader: the
+ * details cannot tell whether the StarChat answering corrects checks, and a chip drawn from them would vanish on an
+ * older one. The names drawn are emitted (`checks`), so the parent's list of fired checks leaves them out.
  */
 export default {
   components: { JudgementChip, JudgementHistory },
@@ -171,7 +182,7 @@ export default {
     readOnly: { type: Boolean, default: false },
     eager: { type: Boolean, default: false },
   },
-  emits: ["chips"],
+  emits: ["chips", "checks"],
   data() {
     seq += 1;
     return {
@@ -221,7 +232,25 @@ export default {
           if (value) rows.push({ field, state: { value, model: value, kind: "model", correction: null, canRestore: false } });
         }
       }
+      if (this.loaded) {
+        const checks = this.data.checks;
+        const served = !!checks && typeof checks === "object" && !Array.isArray(checks);
+        for (const field of Classifications.CHECK_FIELDS) {
+          const j = served ? checks[field] : null;
+          if (j && typeof j === "object" && j.model != null) rows.push({ field, state: Classifications.chipState(j, this.data.history, { field }, this.role) });
+        }
+      }
       return rows;
+    },
+    // the check rows drawn, as one key for the watcher (a new array on every read would emit the same names again)
+    checkRowNames() {
+      return this.showChips ? this.callRows.filter((r) => Classifications.isCheck(r.field)).map((r) => r.field).join(",") : "";
+    },
+    // the assistant's words that made it mark the caller as repeating (StarChat structure 10; absent before it)
+    repeatedCause() {
+      const causes = (this.conversation.details || {}).checkCauses;
+      const text = causes && typeof causes === "object" ? causes.caller_repeated : null;
+      return typeof text === "string" && text.trim() ? text.trim() : null;
     },
     // A non-owner's call before its judgements are read: the requests the call's details list, each outcome a chip that
     // reads them when opened; no category, which the details do not carry.
@@ -265,6 +294,10 @@ export default {
     showChips: {
       immediate: true,
       handler(value) { this.$emit("chips", value); },
+    },
+    checkRowNames: {
+      immediate: true,
+      handler(value) { this.$emit("checks", value ? value.split(",") : []); },
     },
     // another panel or a list changed this call's judgements (a bulk gesture, the same call drawn twice): take the state
     // and the signals the gesture's answer carries, as the panel that made it did
@@ -635,6 +668,16 @@ export default {
   @media screen and (max-width: 640px) {
     grid-template-columns: 1fr;
     gap: 2px;
+  }
+}
+
+.judgement-cause {
+  margin: 6px 0 0;
+  font-size: 14px;
+  color: @mrcall_dark_grey_text;
+
+  .judgement-note {
+    display: block;
   }
 }
 

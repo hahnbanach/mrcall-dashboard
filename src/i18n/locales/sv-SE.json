@@ -1927,7 +1927,8 @@
         "title": "Vad samtalet handlade om",
         "unansweredTitle": "Obesvarade frågor",
         "checksTitle": "Kontroller",
-        "suggestion": "Vad du skulle kunna ge din assistent: {suggestion}"
+        "suggestion": "Vad du skulle kunna ge din assistent: {suggestion}",
+        "subject": "Ämne"
       },
       "filters": {
         "resolutionPlaceholder": "Valfri lösning",
@@ -2734,7 +2735,12 @@
         "withdrawRefused": {
           "not_author": "Bara den som gjorde ett förslag kan dra tillbaka det.",
           "feedback_state": "Det här förslaget är redan avgjort."
-        }
+        },
+        "checkValue": {
+          "true": "Ja",
+          "false": "Nej"
+        },
+        "checkCause": "Med assistentens ord"
       },
       "callDialog": {
         "title": "Samtalet",

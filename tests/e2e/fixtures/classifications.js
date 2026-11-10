@@ -28,6 +28,14 @@ const CATEGORIES = [
   { key: 'retired_key', label: 'Retired', active: false },
 ]
 
+// A call's checks a person corrects (StarChat 9.34.131): `checks.<name>`, `{model, value, corrected}`, model and value
+// "true", "false" or null. A call carries `checks` only when a spec passes them, so every other spec is answered as
+// StarChat before 9.34.131 answered it.
+const CHECK_FIELDS = ['caller_repeated', 'caller_unsatisfied']
+const isCheck = (field) => CHECK_FIELDS.includes(field)
+// a call's judgement on `field`: a check under `checks`, any other at the top
+const callField = (call, field) => (isCheck(field) ? (call.checks || {})[field] : call[field])
+
 function judged (over = {}) {
   return {
     conversationId: CALL_ID,
@@ -65,6 +73,7 @@ function stateOf (call) {
     resolution: strip(call.resolution), message: strip(call.message),
     requests: call.requests.map((r) => ({ requestId: r.requestId, ordinal: r.ordinal, text: r.text, outcome: strip(r.outcome), category: strip(r.category), gap: r.gap, excluded: r.excluded })),
     facts: call.facts,
+    ...(call.checks ? { checks: Object.fromEntries(Object.entries(call.checks).map(([k, j]) => [k, strip(j)])) } : {}),
   }
 }
 
@@ -117,7 +126,7 @@ async function mockClassifications (page, options = {}) {
   const actorName = role === 'owner' ? 'Mario Rossi' : role === 'reseller' ? 'Partner Srl' : 'MrCall'
 
   function judgementOf (call, a) {
-    if (a.subject === 'call') return call[a.field]
+    if (a.subject === 'call') return callField(call, a.field)
     const r = call.requests.find((x) => x.requestId === a.requestId)
     return r ? r[a.field] : null
   }
@@ -145,6 +154,10 @@ async function mockClassifications (page, options = {}) {
       call.history.push({ feedbackId: id, subject: 'call', field: a.field, signal: 'fact_wrong', valueFrom: a.valueFrom, valueTo: null, source: 'person', status: 'proposed', actorRole: role, actorName, byMe: true, createdAt: Date.now(), gestureId })
       return { status: 200, call, body: { feedbackId: id, conversationId: call.conversationId, field: a.field, status: 'proposed', value: (call.facts || {})[a.field], replayed: false } }
     }
+    // StarChat 9.34.131 refuses with a plain 400 a check that is not correctable (`promise_not_kept_in_call`) and a
+    // check the call never recorded (`model` null)
+    if (a.subject === 'call' && a.field === 'promise_not_kept_in_call') return { status: 400, message: 'field is one of resolution, message, caller_repeated, caller_unsatisfied' }
+    if (a.subject === 'call' && isCheck(a.field) && !(judgementOf(call, a) && judgementOf(call, a).model != null)) return { status: 400, message: `conversation ${call.conversationId} has no ${a.field} check` }
     const j = judgementOf(call, a)
     if (!j) return { status: 404 }
     if (a.valueFrom !== j.value) return { status: 409, current: { conversationId: call.conversationId, requestId: a.requestId, field: a.field, value: j.value } }
@@ -178,7 +191,7 @@ async function mockClassifications (page, options = {}) {
   }
 
   function revertEntry (call, h) {
-    const j = h.subject === 'call' ? call[h.field] : call.requests.find((r) => r.requestId === h.requestId)[h.field]
+    const j = h.subject === 'call' ? callField(call, h.field) : call.requests.find((r) => r.requestId === h.requestId)[h.field]
     h.status = 'reverted'
     const previous = (j.previous || []).pop()
     j.value = previous !== undefined ? previous : j.model
@@ -208,13 +221,16 @@ async function mockClassifications (page, options = {}) {
       staleOnce = null
       const call = state.calls[body.conversationId]
       const at = Date.now() - 60000
-      call.history = (call.history || []).concat([{ feedbackId: state.nextId++, subject: 'call', field: s.field, signal: 'wrong_value', valueFrom: call[s.field].value, valueTo: s.value, source: 'person', status: 'applied', actorRole: 'reseller', actorName: 'Partner Srl', byMe: false, createdAt: at, decidedAt: at }])
-      call[s.field] = { ...call[s.field], value: s.value, corrected: s.value !== call[s.field].model }
+      const was = callField(call, s.field)
+      call.history = (call.history || []).concat([{ feedbackId: state.nextId++, subject: 'call', field: s.field, signal: 'wrong_value', valueFrom: was.value, valueTo: s.value, source: 'person', status: 'applied', actorRole: 'reseller', actorName: 'Partner Srl', byMe: false, createdAt: at, decidedAt: at }])
+      const now = { ...was, value: s.value, corrected: s.value !== was.model }
+      if (isCheck(s.field)) call.checks = { ...call.checks, [s.field]: now }
+      else call[s.field] = now
       return json(route, 409, { code: 'stale_value', message: 'a value changed since it was read', current: [{ conversationId: body.conversationId, field: s.field, value: s.value }] })
     }
     const out = write(body, body.gestureId)
     state.gestures[body.gestureId] = (state.gestures[body.gestureId] || []).concat(out.body ? [out.body.feedbackId] : [])
-    if (out.status !== 200) return json(route, out.status, out.status === 409 ? { code: 'stale_value', current: [out.current] } : 'Not found')
+    if (out.status !== 200) return json(route, out.status, out.status === 409 ? { code: 'stale_value', current: [out.current] } : out.status === 400 ? { message: out.message } : 'Not found')
     json(route, 200, { ...out.body, call: answered(out.call) })
   })
   await page.route('**/customer/insights/feedback/bulk', (route) => {
@@ -345,4 +361,4 @@ async function mockConversations (page, docs, { byId, leftOut } = {}) {
   return searches
 }
 
-module.exports = { mockClassifications, mockConversations, judged, stateOf, conversation, searchAnswer, CATEGORIES, CALL_ID, BUSINESS_ID, START }
+module.exports = { mockClassifications, mockConversations, judged, stateOf, conversation, searchAnswer, CATEGORIES, CHECK_FIELDS, CALL_ID, BUSINESS_ID, START }

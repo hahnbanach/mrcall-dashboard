@@ -1929,7 +1929,8 @@
         "title": "De quoi parlait l'appel",
         "unansweredTitle": "Questions restées sans réponse",
         "checksTitle": "Vérifications",
-        "suggestion": "Ce que vous pourriez donner à votre assistant : {suggestion}"
+        "suggestion": "Ce que vous pourriez donner à votre assistant : {suggestion}",
+        "subject": "Objet"
       },
       "filters": {
         "resolutionPlaceholder": "Toute résolution",
@@ -2736,7 +2737,12 @@
         "withdrawRefused": {
           "not_author": "Seul son auteur peut retirer une proposition.",
           "feedback_state": "Cette proposition a déjà été tranchée."
-        }
+        },
+        "checkValue": {
+          "true": "Oui",
+          "false": "Non"
+        },
+        "checkCause": "Selon les mots de l'assistant"
       },
       "callDialog": {
         "title": "L'appel",

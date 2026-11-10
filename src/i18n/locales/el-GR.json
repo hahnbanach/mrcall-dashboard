@@ -1927,7 +1927,8 @@
         "title": "Για τι μιλούσε η κλήση",
         "unansweredTitle": "Ερωτήσεις που έμειναν αναπάντητες",
         "checksTitle": "Έλεγχοι",
-        "suggestion": "Τι θα μπορούσες να δώσεις στον βοηθό σου: {suggestion}"
+        "suggestion": "Τι θα μπορούσες να δώσεις στον βοηθό σου: {suggestion}",
+        "subject": "Θέμα"
       },
       "filters": {
         "resolutionPlaceholder": "Οποιαδήποτε επίλυση",
@@ -2734,7 +2735,12 @@
         "withdrawRefused": {
           "not_author": "Μόνο όποιος έκανε μια πρόταση μπορεί να την αποσύρει.",
           "feedback_state": "Για αυτή την πρόταση έχει ήδη αποφασιστεί."
-        }
+        },
+        "checkValue": {
+          "true": "Ναι",
+          "false": "Όχι"
+        },
+        "checkCause": "Με τα λόγια του βοηθού"
       },
       "callDialog": {
         "title": "Η κλήση",

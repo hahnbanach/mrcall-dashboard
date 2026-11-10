@@ -14,6 +14,8 @@ export function judgementLabels(t, categories, locale) {
         field(f) {
             if (DIMENSIONS.includes(f)) return t(p + "dimensions." + f);
             if (f === "outcome" || f === "category") return t(p + "feedback.fields." + f);
+            // a check's row reads as its own sentence ("The caller had to repeat themselves"), beside Yes or No
+            if (Classifications.isCheck(f)) return t(p + "checks." + f);
             return t(p + "feedback.facts." + f);
         },
         value(f, v) {
@@ -21,6 +23,7 @@ export function judgementLabels(t, categories, locale) {
             if (f === "resolution") return t(p + "resolution." + v);
             if (f === "message") return t(p + "message." + v);
             if (f === "outcome") return t(p + "feedback.outcome." + v);
+            if (Classifications.isCheck(f) && (v === "true" || v === "false")) return t(p + "feedback.checkValue." + v);
             if (f === "booked" && (v === "true" || v === "false")) return t(p + "booked." + v);
             if (f === "transferred" && v === "true") return t(p + "transferred.true");
             if (f === "category") {

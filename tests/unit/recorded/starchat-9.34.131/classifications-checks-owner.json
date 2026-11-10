@@ -1,0 +1,232 @@
+{
+ "status": 200,
+ "body": {
+  "history": [
+   {
+    "feedbackId": 3,
+    "businessId": "<text>",
+    "conversationId": "<text>",
+    "callStart": 1774005824343,
+    "subject": "call",
+    "field": "resolution",
+    "signal": "wrong_value",
+    "valueFrom": "resolved",
+    "valueTo": "unresolved",
+    "source": "person",
+    "status": "reverted",
+    "actorRole": "owner",
+    "actorName": "<text>",
+    "byMe": true,
+    "createdAt": 1793366623180,
+    "decidedAt": 1793366624710,
+    "gestureId": "<text>"
+   },
+   {
+    "feedbackId": 4,
+    "businessId": "<text>",
+    "conversationId": "<text>",
+    "callStart": 1774005824343,
+    "subject": "request",
+    "requestId": 200,
+    "field": "category",
+    "signal": "wrong_value",
+    "valueFrom": "opening_hours",
+    "valueTo": "services_info",
+    "source": "person",
+    "status": "rejected",
+    "actorRole": "owner",
+    "actorName": "<text>",
+    "byMe": true,
+    "createdAt": 1793366660972,
+    "decidedAt": 1793366969776,
+    "gestureId": "<text>"
+   },
+   {
+    "feedbackId": 5,
+    "businessId": "<text>",
+    "conversationId": "<text>",
+    "callStart": 1774005824343,
+    "subject": "call",
+    "field": "booked",
+    "signal": "fact_wrong",
+    "valueFrom": "false",
+    "source": "person",
+    "status": "rejected",
+    "actorRole": "owner",
+    "actorName": "<text>",
+    "byMe": true,
+    "createdAt": 1793366664782,
+    "decidedAt": 1793366968238,
+    "gestureId": "<text>"
+   },
+   {
+    "feedbackId": 6,
+    "businessId": "<text>",
+    "conversationId": "<text>",
+    "callStart": 1774005824343,
+    "subject": "call",
+    "field": "resolution",
+    "signal": "wrong_value",
+    "valueFrom": "resolved",
+    "valueTo": "unresolved",
+    "source": "person",
+    "status": "reverted",
+    "actorRole": "owner",
+    "actorName": "<text>",
+    "byMe": true,
+    "createdAt": 1793366739292,
+    "decidedAt": 1793366740877,
+    "gestureId": "<text>"
+   },
+   {
+    "feedbackId": 13,
+    "businessId": "<text>",
+    "conversationId": "<text>",
+    "callStart": 1774005824343,
+    "subject": "request",
+    "requestId": 200,
+    "field": "category",
+    "signal": "wrong_value",
+    "valueFrom": "opening_hours",
+    "valueTo": "services_info",
+    "source": "person",
+    "status": "withdrawn",
+    "actorRole": "owner",
+    "actorName": "<text>",
+    "byMe": true,
+    "createdAt": 1793399348361,
+    "decidedAt": 1793399349195,
+    "gestureId": "<text>"
+   },
+   {
+    "feedbackId": 14,
+    "businessId": "<text>",
+    "conversationId": "<text>",
+    "callStart": 1774005824343,
+    "subject": "request",
+    "requestId": 200,
+    "field": "category",
+    "signal": "wrong_value",
+    "valueFrom": "opening_hours",
+    "valueTo": "services_info",
+    "source": "person",
+    "status": "withdrawn",
+    "actorRole": "owner",
+    "actorName": "<text>",
+    "byMe": true,
+    "createdAt": 1793399350588,
+    "decidedAt": 1793399351009,
+    "gestureId": "<text>"
+   },
+   {
+    "feedbackId": 15,
+    "businessId": "<text>",
+    "conversationId": "<text>",
+    "callStart": 1774005824343,
+    "subject": "request",
+    "requestId": 200,
+    "field": "category",
+    "signal": "wrong_value",
+    "valueFrom": "other",
+    "valueTo": "services_info",
+    "source": "person",
+    "status": "withdrawn",
+    "actorRole": "owner",
+    "actorName": "<text>",
+    "byMe": true,
+    "createdAt": 1793450921927,
+    "decidedAt": 1793450923493,
+    "gestureId": "<text>"
+   },
+   {
+    "feedbackId": 16,
+    "businessId": "<text>",
+    "conversationId": "<text>",
+    "callStart": 1774005824343,
+    "subject": "call",
+    "field": "booked",
+    "signal": "fact_wrong",
+    "valueFrom": "false",
+    "source": "person",
+    "status": "withdrawn",
+    "actorRole": "owner",
+    "actorName": "<text>",
+    "byMe": true,
+    "createdAt": 1793450925739,
+    "decidedAt": 1793450927338,
+    "gestureId": "<text>"
+   },
+   {
+    "feedbackId": 24,
+    "businessId": "<text>",
+    "conversationId": "<text>",
+    "callStart": 1774005824343,
+    "subject": "call",
+    "field": "caller_repeated",
+    "signal": "wrong_value",
+    "valueFrom": "false",
+    "valueTo": "true",
+    "source": "person",
+    "status": "reverted",
+    "actorRole": "owner",
+    "actorName": "<text>",
+    "byMe": true,
+    "createdAt": 1794291603358,
+    "decidedAt": 1794291603925,
+    "gestureId": "<text>"
+   }
+  ],
+  "conversationId": "<text>",
+  "businessId": "<text>",
+  "callStart": 1774005824343,
+  "version": 7,
+  "resolution": {
+   "model": "resolved",
+   "value": "resolved",
+   "corrected": false
+  },
+  "message": {
+   "model": "none",
+   "value": "none",
+   "corrected": false
+  },
+  "checks": {
+   "caller_repeated": {
+    "model": "false",
+    "value": "false",
+    "corrected": false
+   },
+   "caller_unsatisfied": {
+    "model": "false",
+    "value": "false",
+    "corrected": false
+   }
+  },
+  "requests": [
+   {
+    "requestId": 200,
+    "ordinal": 1,
+    "text": "<text>",
+    "outcome": {
+     "model": "met",
+     "value": "met",
+     "corrected": false
+    },
+    "category": {
+     "model": "other",
+     "value": "other",
+     "corrected": false
+    },
+    "excluded": false
+   }
+  ],
+  "facts": {
+   "booked": "false",
+   "transferred": null,
+   "no_conversation": null,
+   "managed_call": "true",
+   "skill_errors": null,
+   "unkept": null
+  }
+ }
+}

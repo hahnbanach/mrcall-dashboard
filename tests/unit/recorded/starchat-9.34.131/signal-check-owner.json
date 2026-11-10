@@ -1,0 +1,65 @@
+{
+ "status": 200,
+ "body": {
+  "call": {
+   "conversationId": "<text>",
+   "businessId": "<text>",
+   "callStart": 1774005824343,
+   "version": 7,
+   "resolution": {
+    "model": "resolved",
+    "value": "resolved",
+    "corrected": false
+   },
+   "message": {
+    "model": "none",
+    "value": "none",
+    "corrected": false
+   },
+   "checks": {
+    "caller_repeated": {
+     "model": "false",
+     "value": "true",
+     "corrected": true
+    },
+    "caller_unsatisfied": {
+     "model": "false",
+     "value": "false",
+     "corrected": false
+    }
+   },
+   "requests": [
+    {
+     "requestId": 200,
+     "ordinal": 1,
+     "text": "<text>",
+     "outcome": {
+      "model": "met",
+      "value": "met",
+      "corrected": false
+     },
+     "category": {
+      "model": "other",
+      "value": "other",
+      "corrected": false
+     },
+     "excluded": false
+    }
+   ],
+   "facts": {
+    "booked": "false",
+    "transferred": null,
+    "no_conversation": null,
+    "managed_call": "true",
+    "skill_errors": null,
+    "unkept": null
+   }
+  },
+  "value": "true",
+  "feedbackId": 24,
+  "conversationId": "<text>",
+  "field": "caller_repeated",
+  "status": "applied",
+  "replayed": false
+ }
+}

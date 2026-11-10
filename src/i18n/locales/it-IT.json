@@ -1933,7 +1933,8 @@
         "title": "Di cosa parlava la chiamata",
         "unansweredTitle": "Domande rimaste senza risposta",
         "checksTitle": "Controlli",
-        "suggestion": "Cosa potresti dare al tuo assistente: {suggestion}"
+        "suggestion": "Cosa potresti dare al tuo assistente: {suggestion}",
+        "subject": "Oggetto"
       },
       "filters": {
         "resolutionPlaceholder": "Qualsiasi risoluzione",
@@ -2740,7 +2741,12 @@
         "withdrawRefused": {
           "not_author": "Solo chi l'ha fatta può ritirare una proposta.",
           "feedback_state": "Questa proposta è già stata decisa."
-        }
+        },
+        "checkValue": {
+          "true": "Sì",
+          "false": "No"
+        },
+        "checkCause": "Con le parole dell'assistente"
       },
       "callDialog": {
         "title": "La chiamata",
