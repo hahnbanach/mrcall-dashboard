@@ -50,7 +50,7 @@ Two phases, each releasable alone, the runtime phase first.
    the `resolutions` block's `node-fetch` entry. Move `vite` to `devDependencies`. Refresh `follow-redirects` and
    `fast-uri` inside their ranges.
 2. **Development tools.** `vite` 6.4.6 and `webpack` 5.112.2, both pinned. `vitest` 4.1.12 or the lowest major that
-   clears its advisories, with only mechanical edits to the 51 unit spec files. Remove `@intlify/unplugin-vue-i18n`
+   clears its advisories, with only mechanical edits to the unit spec files (53 when phase 2 starts). Remove `@intlify/unplugin-vue-i18n`
    and `vite.config.js`. Lockfile refreshes for the transitive packages listed above.
 
 ## Out of scope

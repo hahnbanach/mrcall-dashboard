@@ -144,3 +144,5 @@ the dashboard simply stops offering them.
 | C1-C7 | written; unit 53 files / 725 tests; build ok; `caller-checks.spec.js` 24/24 on the three projects, its 8 desktop cases failing on `c855a16`; recordings from 9.34.131 on test, the signal applied and its undo leaving the call as it was |
 | M1 gates | full Playwright 2273 passed, 8 failed, 22 skipped; all 8 pass alone with one worker (tablet and mobile `page.goto` timeouts) |
 | M1 | APPROVED (2026-11-10) |
+| Release to test | `a3164d9` as `v2.2.57-test` (2026-11-10), deploy green; the published chunks carry the four keys in the 12 locales and the component; StarChat's session told. The live check of a real call's chips in the browser waits |
+| Call link without its business (reported by StarChat's session on `v2.2.57-test`) | `Conversations.vue` takes the business from the call when the link carries no `id=`; `call-link-business.spec.js` on the three projects; unit 53 / 725, build ok, full Playwright 2282 passed, 2 failed (both pass alone), 22 skipped; released as `v2.2.58-test` |

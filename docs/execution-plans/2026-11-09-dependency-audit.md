@@ -56,8 +56,11 @@ A fresh reviewer reviews the diff, the gates' output and the lockfile's changes.
 CTO's authorisation, as one commit, and released to test on authorisation; after that deploy, the published vendor
 chunk is checked for `axios` 1.21.0.
 
-Phase 2 starts only once the phase-1 commit and the caller-checks commit exist, so the two phases never share a working tree and each stays one
-commit with its own rollback. Its gates compare against M1's results as well as P0's.
+Phase 2 starts only once the phase-1 commit and the caller-checks commit exist (and any other commit already in the
+working tree, such as the call-link fix), so the two phases never share a working tree and each stays one commit with
+its own rollback. Its baseline is the gates of the last commit before it, not P0: from the caller-checks commit
+(`a3164d9`), unit 53 files / 725 tests and Playwright 2273 passed, 8 failed, 22 skipped, all 8 passing alone; a commit
+after it adds its own results to the baseline.
 
 ## Phase 2: development tools (milestone M2)
 
@@ -75,7 +78,7 @@ commit with its own rollback. Its gates compare against M1's results as well as 
 
 1. `npm audit --json`: exactly the 32 entries the brief lists (the 6 runtime ones and the 26 development ones), none
    of the excluded names.
-2. `npm run test:unit`: the 51 spec files pass on `vitest` 4.
+2. `npm run test:unit`: every unit spec file passes on `vitest` 4 (53 at the caller-checks commit), as many tests as the baseline.
 3. `npm run build`.
 4. The full Playwright run, judged as in R2. Playwright starts the Vue CLI dev server, which webpack 5.112.2 now
    runs.
@@ -110,3 +113,5 @@ lockfile returns with the commit, so `npm ci` restores the exact previous tree.
 | P0 | unit 51 files / 702 tests; build ok; Playwright 2243 passed, 14 failed, 22 skipped, all 14 passing alone (no persistent failure) |
 | Phase 1 (R1, R2) | audit `--omit=dev` exactly the 6 recorded entries; `axios@1.21.0`; unit 702/702; build ok, vendor chunk `"1.21.0"`, no `follow-redirects`/`gaxios`/`grpc`; Playwright 2240 passed, 17 failed, 22 skipped, all 17 passing alone |
 | M1 | APPROVED (2026-11-09) |
+| Phase 1 release | committed as `c855a16`, released as `v2.2.56-test` (2026-11-10), deploy green; R3's check done: the published vendor chunk carries `const ko="1.21.0"` and no `follow-redirects`, `gaxios` or `grpc`. Beta and production not released |
+| Post-approval edits | the jsonpointer row, the sequencing with the caller-checks plan, and phase 2's baseline (the caller-checks gates, 53 unit spec files): a fresh reviewer, REVISE on its first pass, APPROVED on its second (2026-11-10) |

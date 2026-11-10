@@ -984,11 +984,30 @@ export default {
       this.openedId = id;
       this.openedState = "loading";
       try {
-        this.opened = await ConversationApi.get(this.user, this.businessId, id);
+        const kept = this.linkedCall && this.linkedCall.id === id ? this.linkedCall.doc : undefined;
+        this.linkedCall = null;
+        this.opened = kept !== undefined ? kept : await ConversationApi.get(this.user, this.businessId, id);
         this.openedState = this.opened ? "found" : "missing";
       } catch (error) {
         console.error("Conversation not opened:", id, error.response ? error.response.status : "");
         this.openedState = "missing";
+      }
+    },
+    // The linked call is read once and kept for `openConversation`, which draws it once the reader's ownership is known
+    // (the panel decides then whether it reads the judgements at once), so StarChat records one opening, not two.
+    async adoptLinkedBusiness(id) {
+      this.openedId = id;
+      this.openedState = "loading";
+      try {
+        const doc = await ConversationApi.get(this.user, undefined, id);
+        this.linkedCall = doc ? { id, doc } : null;
+        if (doc && typeof doc.businessId === "string" && doc.businessId) {
+          this.businessId = doc.businessId;
+          this.router.replace({ path: this.$route.path, query: { ...this.$route.query, id: doc.businessId } });
+        }
+      } catch (error) {
+        // not read here: `openConversation` reads it as for any link, and says it missing if it is
+        console.debug("Linked call not read:", id, error && error.response ? error.response.status : "");
       }
     },
     closeOpened() {
@@ -1684,8 +1703,14 @@ export default {
     // a call by id is recorded by StarChat, and its page shows no owner-only control (brief
     // docs/briefs/2026-10-27-classification-feedback.md, scope 11).
     const proceed = async () => {
+      const linked = this.$route.query.conversation;
+      // A call's link without its business (`?conversation=<id>` alone, trimmed by hand: the dashboard's own links
+      // carry both). The call names its business, which the page takes as if the link had carried it, before the
+      // reader's ownership is read: without it the judgements' read goes out without a business, StarChat refuses it,
+      // and the owner would be taken for a reader of someone else's call.
+      if (linked && !this.businessId) await this.adoptLinkedBusiness(linked);
       await this.establishReader();
-      if (this.$route.query.conversation) this.openConversation(this.$route.query.conversation);
+      if (linked) this.openConversation(linked);
       this.conversationList();
       this.periodicEvent = interval(10000).subscribe(() => {
         this.pollForNewConversations();
