@@ -86,7 +86,7 @@ API clients and business logic:
 - `Classifications.js` — a call's judgements as a person checks and corrects them (brief
   [2026-10-27-classification-feedback](briefs/2026-10-27-classification-feedback.md)): the closed value sets, who
   applies and who proposes, a chip's state from a judgement and the call's history (a correction, a confirmation, the
-  reader's own proposal), a chip's menu, the asks of a gesture (`valueFrom` always sent, `fact_wrong` for a fact), THE
+  reader's own proposal), a chip's menu (a call's two correctable checks, `CHECK_FIELDS` `caller_repeated` and `caller_unsatisfied`, valued "true"/"false" and offered without "wrong"; `withCurrent` writes their value under `checks.<name>`), the asks of a gesture (`valueFrom` always sent, `fact_wrong` for a fact), THE
   FILTER TABLE from every count kind to its conversation-search filter (`countLink`, `searchFromQuery`), the one
   composition of a count list's search (`readCountAddress` reads a count's address once, `composeSearch` builds the
   body from the conversations page's live state or from a link, `searchQuery` the report count's `leftOut` query),
@@ -239,8 +239,12 @@ for the four dimensions lives in `src/utils/CallInsights.js`.
 
 - **The call's panel** (`CallDetailsPanel.vue`, in `Conversations.vue`'s list and its deep-linked
   opened call, and in `conversations/CallDialog.vue`): after the summary, the topics as tags, the four dimensions under the value table, the
-  unanswered questions with their reason and suggestion, the checks that fired. A call from before
-  the feature draws with none of this.
+  unanswered questions with their reason and suggestion, the checks that fired (under `caller_repeated`, the assistant's
+  words from `details.checkCauses` when present; once that check has its chip, the words stand under the chip instead), and the call's `details.subject` at the top of the box when present.
+  A check that has its chip is left out of the fired list (`CallJudgements.vue` emits `checks`, the names of the check
+  chips drawn). A call from before the feature draws with none of this. A link that names a call without its business
+  (`?conversation=<id>`, no `id=`) reads the call first and takes its `businessId`, written into the address, before
+  the reader's role is decided and the call opened.
 - **The call's id** (`conversations/CallIdCopy.vue`, at the top of every `CallDetailsPanel`, so on the conversations
   page, its opened call and the call dialog of the analytics and restaurant pages; brief
   [2026-11-06-call-id-copy](briefs/2026-11-06-call-id-copy.md)): `conversation.id` as StarChat sends it, any format.
@@ -252,7 +256,9 @@ for the four dimensions lives in `src/utils/CallInsights.js`.
 - **The judgements as chips** (`src/components/feedback/`; brief
   [2026-10-27-classification-feedback](briefs/2026-10-27-classification-feedback.md)): `CallJudgements.vue` in the
   call's panel, on the pages that ask for it (`with-judgements`: the conversations page, the call dialog),
-  draws the resolution, the message and each request's outcome and category as `JudgementChip.vue` (a button naming
+  draws the resolution, the message, each request's outcome and category, and each of the two checks the call recorded
+  (`checks.<name>.model` non-null, once the judgements are read; brief
+  [2026-11-09-caller-checks-correction](briefs/2026-11-09-caller-checks-correction.md)) as `JudgementChip.vue` (a button naming
   value and state; a listbox, a bottom sheet under 600 px), with the history under a chip (`JudgementHistory.vue`);
   an owner's call reads its judgements when opened or in view, a non-owner's only when the person opens a chip; after
   a gesture, an undo or a restore every panel of the call takes the state the answer carries, with no read of the

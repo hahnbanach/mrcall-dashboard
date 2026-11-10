@@ -70,6 +70,14 @@ count opens are read by `src/utils/Classifications.js`, against StarChat's brief
 - [Call id](briefs/2026-11-06-call-id-copy.md) — [plan](execution-plans/2026-11-06-call-id-copy.md): every call panel
   shows the call's id, its first 16 characters, and copies the whole id for StarChat's tools.
 
+- [Caller checks corrected from the call view](briefs/2026-11-09-caller-checks-correction.md) —
+  [plan](execution-plans/2026-11-09-caller-checks-correction.md): `caller_repeated` and `caller_unsatisfied` as chips,
+  their cause and the call's subject (StarChat 9.34.131 or later); a call link without its business.
+
+- [Dependency audit](briefs/2026-11-09-dependency-audit.md) — [plan](execution-plans/2026-11-09-dependency-audit.md):
+  runtime first (`axios` 1.21.0, unused packages removed), then the development tools (`vite`, `webpack`, `vitest` 4);
+  the residual advisories recorded.
+
 ## Quick context
 
 - **Stack**: Vue 3, PrimeVue 4, Vuex, Firebase Auth, Axios, vue-i18n (12 locales)

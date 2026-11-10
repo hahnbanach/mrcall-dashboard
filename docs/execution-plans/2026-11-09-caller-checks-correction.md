@@ -1,5 +1,5 @@
 ---
-status: active
+status: completed
 ---
 
 # Plan: correcting a call's checks from the call view
@@ -140,10 +140,11 @@ the dashboard simply stops offering them.
 |---|---|
 | Brief | APPROVED (second pass, 2026-11-09); scope 4 amended after the plan's first review |
 | Plan | APPROVED (second pass, 2026-11-09) |
-| StarChat (2026-11-10, from StarChat's session) | test 9.34.131; beta and production are one StarChat, 9.34.130; 9.34.131 reaches them at StarChat's step K16, after its final review K15, which waits for this release on test |
+| StarChat (2026-11-10, from StarChat's session) | test 9.34.131, then 9.34.132; 9.34.131 never reached beta and production, which run 9.34.132 since 2026-11-10 (~15:00 UTC), with the checks' corrections accepted |
 | C1-C7 | written; unit 53 files / 725 tests; build ok; `caller-checks.spec.js` 24/24 on the three projects, its 8 desktop cases failing on `c855a16`; recordings from 9.34.131 on test, the signal applied and its undo leaving the call as it was |
 | M1 gates | full Playwright 2273 passed, 8 failed, 22 skipped; all 8 pass alone with one worker (tablet and mobile `page.goto` timeouts) |
 | M1 | APPROVED (2026-11-10) |
-| Release to test | `a3164d9` as `v2.2.57-test` (2026-11-10), deploy green; the published chunks carry the four keys in the 12 locales and the component; StarChat's session told. The live check of a real call's chips in the browser waits |
+| Release to test | `a3164d9` as `v2.2.57-test` (2026-11-10), deploy green; the published chunks carry the four keys in the 12 locales and the component; StarChat's session told. The live check of a real call's chips in the browser: done on `v2.2.58-test` by StarChat's session (row below); feedback #25 to #29 (2026-11-10, 08:01 to 08:03 UTC, an admin account) are corrections and confirmations of checks made from the chips on `v2.2.57-test`, read back through StarChat; an undo from the dashboard on a real call was not observed |
 | Call link without its business (reported by StarChat's session on `v2.2.57-test`) | `Conversations.vue` takes the business from the call when the link carries no `id=`; `call-link-business.spec.js` on the three projects; unit 53 / 725, build ok, full Playwright 2282 passed, 2 failed (both pass alone), 22 skipped; released as `v2.2.58-test` |
 | Live check on test (2026-11-10, StarChat's session) | `v2.2.58-test`: a call opened by its link without `id=` gains the business in the address, and after the read draws both check chips, one of them corrected |
+| Beta and production | `v2.2.59` (`d09c2a0`, carrying `v2.2.57` and `v2.2.58`) as `v2.2.59-beta` and `v2.2.59-production` (2026-11-10) on the CTO's authorisation, deploys green; both published bundles carry the checks' component and labels in the 12 locales and the link fix. A real call's chips not yet looked at in production |

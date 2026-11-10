@@ -1,5 +1,5 @@
 ---
-status: active
+status: completed
 ---
 
 # Plan: dependency audit, the runtime dependencies first, then the development tools
@@ -117,4 +117,5 @@ lockfile returns with the commit, so `npm ci` restores the exact previous tree.
 | Post-approval edits | the jsonpointer row, the sequencing with the caller-checks plan, and phase 2's baseline (the caller-checks gates, 53 unit spec files): a fresh reviewer, REVISE on its first pass, APPROVED on its second (2026-11-10) |
 | Phase 2 (D1, D2), on `36d4b65` | `vite@6.4.6`, `webpack@5.112.2`, `vitest@4.1.12`; `@intlify/unplugin-vue-i18n` and `vite.config.js` removed; `vitest.config.mjs` unchanged. `npm audit` 32 entries, none of the excluded names; unit 53 files / 725 tests; build ok; `git grep` clean; Playwright 2284 passed, 0 failed, 22 skipped |
 | M2 | APPROVED (2026-11-10); the install on Node 18 is left to the test deploy, as D3 says |
-| Phase 2 release | committed and released as `v2.2.59-test` (2026-11-10) on the CTO's authorisation |
+| Phase 2 release | `d09c2a0` as `v2.2.59-test` (2026-11-10), deploy green: D3's proof, `npm ci` on Node 18 installs the tree; the published vendor chunk carries `axios` 1.21.0 and no `follow-redirects`, `gaxios` or `grpc` |
+| Beta and production | `v2.2.59-beta` and `v2.2.59-production` (2026-11-10) on the CTO's authorisation, deploys green; both published vendor chunks carry `axios` 1.21.0 and no `follow-redirects`, `gaxios` or `grpc` |

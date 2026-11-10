@@ -1,6 +1,6 @@
 ---
-doc_baseline_commit: af0e955df165799d0c447fb1ba62bf84272bd4db
-doc_baseline_date: 2026-11-06
+doc_baseline_commit: d09c2a074c0f3b69e3ddef7ef09b3707b74cf2ee
+doc_baseline_date: 2026-11-10
 ---
 
 # Active Context
@@ -11,24 +11,28 @@ Scope: Current dashboard operating state, unresolved verification limits, and im
 
 ## State now
 
-Production, beta and test serve `v2.2.55` (`00bcf48`, test 2026-11-06, beta and production 2026-11-09), with
-StarChat 9.34.129 behind production, which sends insight version 8. Beyond the classification feedback, the analytics UX rework, the `redirected` outcome and the
-dashboard load work (each with its brief and plan routed in [the index](README.md)), the `v2.2` line holds:
-- the billing data chip on the business card ([brief](briefs/2026-11-04-billing-data-chip.md),
-  [plan](execution-plans/2026-11-04-billing-data-chip.md)), and the card's credit decided on net alone (negative only
-  below zero, StarChat's brief `docs/briefs/2026-11-04-debt-state-from-net.md`), both since `v2.2.52`;
-- one readable amber for every warning pill, `@mrcall_warn_text` on `@mrcall_warn_surface` in
-  `src/assets/style/colors.less` (5.86:1), since `v2.2.53`;
-- `vue-i18n` 11.4.14 since `v2.2.54`: the dashboard does not enable `escapeParameter`, and its two translations
-  rendered as HTML take no parameters and come from its own locale files.
+Production, beta and test serve `v2.2.59` (`d09c2a0`, test, beta and production 2026-11-10), with StarChat 9.34.132
+behind production since 2026-11-10 (from StarChat's session), which accepts corrections of a call's checks. Beyond the
+classification feedback, the analytics UX rework, the `redirected` outcome, the dashboard load work, the billing data
+chip and the call id (each with its brief and plan routed in [the index](README.md)), the `v2.2` line holds the card's
+credit decided on net alone, one readable amber for warning pills and `vue-i18n` 11.4.14, and since `v2.2.56` to
+`v2.2.59`:
+- the runtime dependencies: `axios` 1.21.0 pinned, `google-auth-library` and `node-fetch` removed; the published vendor
+  chunk of all three environments carries `axios` 1.21.0;
+- a call's checks `caller_repeated` and `caller_unsatisfied` corrected from the call view as chips, the assistant's
+  words for `caller_repeated` and the call's subject when the details carry them
+  ([brief](briefs/2026-11-09-caller-checks-correction.md), [plan](execution-plans/2026-11-09-caller-checks-correction.md)).
+  On test, StarChat's API applied a check's correction with the call's state and undid it (the recordings, before the
+  release); in the browser, a real call drew both check chips, one corrected. Feedback #25 to #29 on test, from an admin
+  account on `v2.2.57-test`, are corrections and confirmations made from the chips; an undo from the dashboard on a
+  real call was not observed;
+- a call link without its business (`?conversation=<id>`) takes the business from the call. Checked live on test by
+  StarChat's session: the address gained `id=`, both check chips drawn;
+- the development tools: `vite` 6.4.6, `webpack` 5.112.2, `vitest` 4.1.12, `vite.config.js` and
+  `@intlify/unplugin-vue-i18n` removed ([brief](briefs/2026-11-09-dependency-audit.md),
+  [plan](execution-plans/2026-11-09-dependency-audit.md)); the deploy's `npm ci` on Node 18 succeeds.
 
 GitHub's default branch, which Dependabot reads, is `v2.2`.
-
-Since `v2.2.55`, the call's id on every call panel ([brief](briefs/2026-11-06-call-id-copy.md),
-[plan](execution-plans/2026-11-06-call-id-copy.md)): its first 16 characters shown and the whole id copied by a
-button. Verified against the browser-test mocks on the three viewports; beta and production followed the CTO's check on
-test, which did not report on a phone's native long press. The published chunks of all three environments carry the
-component and its labels.
 
 Session ownership: every nonpublic route needs a session, the Axios interceptor alone ends it, and components suppress
 their failure UI for `isSessionEnded`. Browser tests mock StarChat and mrcall-agent; their ID tokens are JWT-shaped and
@@ -46,13 +50,17 @@ the StarChat mock refuses an unverified one, as StarChat does.
 - `tests/unit/skillsOwnerSave.spec.js` takes 3.5 to 5.3 s against a 5 s timeout in a fresh
   worktree, and can time out there.
 - Under a full Playwright run, up to about 24 cases, mostly tablet and mobile, fail under load and pass when rerun
-  alone with one worker; the count follows the machine's load, the cause is not measured further.
+  alone with one worker; the count follows the machine's load, the cause is not measured further. Once
+  (`count-list-body.spec.js:54`, desktop) the failure was a search body caught after the list's 10-second poll rather
+  than a timeout; it passed alone.
 - A blank first load of about a minute was seen once in a Chrome with extensions, right after a deploy, and not in a
   clean Chromium: not reproduced, not explained.
-- Dependencies (`npm audit`, 2026-11-06): high-severity entries among the runtime dependencies, among them `axios`
-  1.11.0 (every advisory fixed by 1.20.0) and `firebase`, their exposure not assessed. Dependabot's two open `vite`
-  alerts concern the direct `vite` 6.3.4 (fixed in 6.4.4); it is used, since `vitest.config.mjs` loads
-  `@vitejs/plugin-vue`, which imports it. vitest 2.1.9 nests its own `vite` 5.4.21, also inside the advisories' range.
+- Dependencies after the audit: `npm audit` lists 32 entries with no fix or only a downgrade, recorded in the
+  [brief](briefs/2026-11-09-dependency-audit.md): six runtime (`firebase` and its Firestore and `grpc-js` chain, none
+  of which reaches the browser; `vuex-persist` and `deepmerge`) and 26 development (the Vue CLI 5 chain and its
+  plugins, `eslint`, `@vue/test-utils`). Whether CI should fail on new advisories is not decided.
+- Correcting a check to the model's own value writes a new correction rather than restoring the model's; restore and
+  Undo are the ways back. StarChat's session recorded this as the control's design.
 - The `__BOOKING__` section's move into `__CONVERSATION__` by StarChat, and the U19r6 field names assumed against
   StarChat's U19r7a, were not re-checked on 2026-11-02.
 - The issuer of the electronic invoice is outside StarChat, which fills the Stripe customer and creates Stripe invoices
@@ -61,11 +69,7 @@ the StarChat mock refuses an unverified one, as StarChat does.
 
 ## Next
 
-- Caller-repeated check (StarChat's plan `docs/execution-plans/2026-11-06-caller-repeated-check.md`, step K13): after
-  StarChat's test tag, a brief and plan for correcting `caller_repeated` and `caller_unsatisfied` in the call view,
-  each offered only when the call recorded that check, `promise_not_kept_in_call` never; Playwright before the tag.
-- Dependency audit, after the call id: a brief and plan, the runtime dependencies first (`axios` first), each exposure
-  measured, then the development tools (vitest, `vite`, the Vue CLI dev server).
+- Production: look at a real call's check chips, and one correction undone, with an owner's account.
 - Billing chip and credit: watch whether owners fill in their billing data, and whether covered debts stop being
   reported as negative credit.
 - `redirected`: look at a call analysed at version 8 that carries it, in an environment.

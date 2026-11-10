@@ -4,22 +4,23 @@
 
 | Category | Technology | Version |
 |----------|-----------|---------|
-| Framework | Vue 3 | 3.4.21 |
-| UI Library | PrimeVue | 4.2.5 |
+| Framework | Vue 3 | 3.5.43 |
+| UI Library | PrimeVue | 4.5.5 |
 | UI Layout | PrimeFlex | 3.3.1 |
 | State Management | Vuex | 4.1.0 |
-| Routing | Vue Router | 4.3.0 |
-| Authentication | Firebase | 11.3.0 |
-| HTTP Client | Axios | 1.11.0 |
+| Routing | Vue Router | 4.6.4 |
+| Authentication | Firebase | 11.10.0 |
+| HTTP Client | Axios | 1.21.0 (pinned) |
 | i18n | vue-i18n | 11.4.14 |
-| Build (prod) | Vue CLI / Webpack 5 | 5.0.8 / 5.97.1 |
-| Build (dev) | Vue CLI / Webpack | 5.0.8 / 5.97.1 |
-| CSS | Less | 4.2.1 |
+| Build (prod) | Vue CLI / Webpack 5 | 5.0.9 / 5.112.2 |
+| Build (dev) | Vue CLI / Webpack | 5.0.9 / 5.112.2 |
+| CSS | Less | 4.9.1 |
 | Forms | Vuelidate | 2.0.3 |
 | Persistence | vuex-persist + secure-ls | 3.1.3 / 2.0.0 |
 | Payments | Stripe (via StarChat proxy) | — |
-| Analytics | vue-gtag (GA4) + GTM + Clarity | 2.0.1 |
-| E2E Testing | Playwright | 1.58.2 |
+| Analytics | vue-gtag (GA4) + GTM + Clarity | 2.1.2 |
+| Unit Testing | Vitest (needs Node 20 or later; the deploy installs it and does not run it) | 4.1.12 |
+| E2E Testing | Playwright | 1.61.1 |
 | Node | >= 18.0.0 | — |
 | npm | >= 8.0.0 | — |
 
