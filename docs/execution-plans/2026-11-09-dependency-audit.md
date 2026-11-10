@@ -115,3 +115,6 @@ lockfile returns with the commit, so `npm ci` restores the exact previous tree.
 | M1 | APPROVED (2026-11-09) |
 | Phase 1 release | committed as `c855a16`, released as `v2.2.56-test` (2026-11-10), deploy green; R3's check done: the published vendor chunk carries `const ko="1.21.0"` and no `follow-redirects`, `gaxios` or `grpc`. Beta and production not released |
 | Post-approval edits | the jsonpointer row, the sequencing with the caller-checks plan, and phase 2's baseline (the caller-checks gates, 53 unit spec files): a fresh reviewer, REVISE on its first pass, APPROVED on its second (2026-11-10) |
+| Phase 2 (D1, D2), on `36d4b65` | `vite@6.4.6`, `webpack@5.112.2`, `vitest@4.1.12`; `@intlify/unplugin-vue-i18n` and `vite.config.js` removed; `vitest.config.mjs` unchanged. `npm audit` 32 entries, none of the excluded names; unit 53 files / 725 tests; build ok; `git grep` clean; Playwright 2284 passed, 0 failed, 22 skipped |
+| M2 | APPROVED (2026-11-10); the install on Node 18 is left to the test deploy, as D3 says |
+| Phase 2 release | committed and released as `v2.2.59-test` (2026-11-10) on the CTO's authorisation |
